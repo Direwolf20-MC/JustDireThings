@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.containers.handlers;
 
 import com.direwolf20.justdirethings.common.items.FuelCanister;
+import com.direwolf20.justdirethings.datagen.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.common.CommonHooks;
@@ -26,6 +27,6 @@ public class FuelCanisterHandler extends ItemStackHandler {
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return !(stack.getItem() instanceof FuelCanister) && CommonHooks.getBurnTime(stack, RecipeType.SMELTING) > 0 && !stack.hasCraftingRemainingItem();
+        return !(stack.getItem() instanceof FuelCanister) && CommonHooks.getBurnTime(stack, RecipeType.SMELTING) > 0 && !stack.hasCraftingRemainingItem() && !stack.is(ItemTags.FUEL_CANISTER_DENY);
     }
 }
