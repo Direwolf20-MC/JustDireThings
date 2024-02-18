@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FuelCanister extends Item {
+    public static final int MinFuelAmount = 50; //Todo Config?
 
     public FuelCanister() {
         super(new Properties()
@@ -33,8 +35,11 @@ public class FuelCanister extends Item {
         if (level == null || mc.player == null) {
             return;
         }
-
-        tooltip.add(Component.translatable("justdirethings.fuelcanisteramt", getFuelLevel(stack)).withStyle(ChatFormatting.AQUA));
+        boolean sneakPressed = Screen.hasShiftDown();
+        if (sneakPressed)
+            tooltip.add(Component.translatable("justdirethings.fuelcanisteramt", getFuelLevel(stack)).withStyle(ChatFormatting.AQUA));
+        else
+            tooltip.add(Component.translatable("justdirethings.fuelcanisteritemsamt", ((float) getFuelLevel(stack) / 200)).withStyle(ChatFormatting.AQUA));
 
     }
 
@@ -43,14 +48,14 @@ public class FuelCanister extends Item {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
 
-        incrementFuel(itemstack, 1);
+        incrementFuel(itemstack, 200);
 
         return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
     }
 
     @Override
     public int getBurnTime(ItemStack stack, @Nullable RecipeType<?> recipeType) {
-        return getFuelLevel(stack) > 0 ? 200 : 0;
+        return getFuelLevel(stack) >= MinFuelAmount ? MinFuelAmount : 0;
     }
 
     @Override
@@ -77,15 +82,15 @@ public class FuelCanister extends Item {
 
     public static void decrementFuel(ItemStack stack) {
         int currentFuel = getFuelLevel(stack);
-        if (currentFuel > 0) //Should always be true but lets be sure!
-            currentFuel--;
+        if (currentFuel > MinFuelAmount) //Should always be true but lets be sure!
+            currentFuel = currentFuel - MinFuelAmount;
         setFuelLevel(stack, currentFuel);
     }
 
     public static void incrementFuel(ItemStack stack, int amt) {
         int currentFuel = getFuelLevel(stack);
-        if (currentFuel < 200) //TODO Config Option
-            currentFuel++;
+        if (currentFuel < 20000) //TODO Config Option
+            currentFuel = currentFuel + amt;
         setFuelLevel(stack, currentFuel);
     }
 
