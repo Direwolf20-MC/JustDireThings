@@ -2,11 +2,13 @@ package com.direwolf20.justdirethings.setup;
 
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 @Mod.EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -19,8 +21,13 @@ public class ClientSetup {
 
         //Screens
         /*event.enqueueWork(() -> {
-            MenuScreens.register(Registration.TemplateManager_Container.get(), TemplateManagerGUI::new); // Attach our container to the screen
+            MenuScreens.register(Registration.FuelCanister_Container.get(), FuelCanisterScreen::new); // Attach our container to the screen
         });*/
+    }
+
+    @SubscribeEvent
+    public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(Registration.FuelCanister_Container.get(), FuelCanisterScreen::new);
     }
 
     @SubscribeEvent

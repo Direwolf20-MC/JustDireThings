@@ -5,7 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -16,7 +16,7 @@ public class ModSetup {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB_JUSTDIRETHINGS = CREATIVE_MODE_TABS.register(MODID, () -> CreativeModeTab.builder()
             .title(Component.literal("Just Dire Things"))
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
-            .icon(() -> Items.DIRT.getDefaultInstance()) //Todo Proper Item
+            .icon(() -> new ItemStack(Registration.Fuel_Canister.get()))
             .displayItems((parameters, output) -> {
                 Registration.ITEMS.getEntries().forEach(e -> {
                     Item item = e.get();

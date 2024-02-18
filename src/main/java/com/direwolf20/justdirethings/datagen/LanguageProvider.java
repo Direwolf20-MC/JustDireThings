@@ -23,7 +23,9 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
 
         //Misc
         add("justdirethings.fuelcanisteramt", "Cook time (ticks): %d");
+        add("justdirethings.fuelcanisteramtstack", "Stack Cook time (ticks): %d");
         add("justdirethings.fuelcanisteritemsamt", "Fuel Amount: %f");
+        add("justdirethings.fuelcanisteritemsamtstack", "Stack Fuel Amount: %f");
 
         //Keys
         //add("key.justdirethings.category", "Building Gadgets 2");
