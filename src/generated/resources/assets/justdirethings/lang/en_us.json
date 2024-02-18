@@ -1,4 +1,5 @@
 {
   "item.justdirethings.fuel_canister": "Fuel Canister",
-  "itemGroup.DeferredHolder{ResourceKey[minecraft:creative_mode_tab / justdirethings:justdirethings]}": "Just Dire Things"
+  "itemGroup.DeferredHolder{ResourceKey[minecraft:creative_mode_tab / justdirethings:justdirethings]}": "Just Dire Things",
+  "justdirethings.fuelcanisteramt": "Fuel Amount: %d"
 }
