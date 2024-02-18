@@ -11,6 +11,31 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+
+    maven { //Patchouli && JEI
+        url 'https://maven.blamejared.com'
+        content {
+            includeGroup "vazkii.patchouli"
+            includeGroup "mezz.jei"
+        }
+    }
+
+    maven { //Curios
+        url = "https://maven.theillusivec4.top/"
+        content {
+            includeGroup "top.theillusivec4.curios"
+        }
+    }
+
+    maven { // mek
+        url = 'https://modmaven.dev/'
+        content {
+            includeGroup "mekanism"
+            includeGroup "appeng"
+        }
+    }
+
+    maven { url = "https://www.cursemaven.com" } // curse mods
 }
 
 base {
@@ -86,7 +111,7 @@ dependencies {
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
     // compileOnly "mezz.jei:jei-${mc_version}-forge-api:${jei_version}"
-    // runtimeOnly "mezz.jei:jei-${mc_version}-forge:${jei_version}"
+    runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
