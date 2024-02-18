@@ -88,7 +88,7 @@ public class FuelCanister extends Item {
 
     public static void decrementFuel(ItemStack stack) {
         int currentFuel = getFuelLevel(stack);
-        if (currentFuel > Config.FUEL_CANISTER_MINIMUM_TICKS_CONSUMED.get()) //Should always be true but lets be sure!
+        if (currentFuel >= Config.FUEL_CANISTER_MINIMUM_TICKS_CONSUMED.get()) //Should always be true but lets be sure!
             currentFuel = currentFuel - Config.FUEL_CANISTER_MINIMUM_TICKS_CONSUMED.get();
         setFuelLevel(stack, currentFuel);
     }
