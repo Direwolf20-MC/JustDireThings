@@ -1,7 +1,6 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.slots.PocketGeneratorSlot;
-import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,10 +23,7 @@ public class PocketGeneratorContainer extends BaseContainer {
     public PocketGeneratorContainer(int windowId, Inventory playerInventory, Player player, ItemStack pocketGenerator) {
         super(Registration.PocketGenerator_Container.get(), windowId);
         playerEntity = player;
-        if (pocketGenerator.getItem() instanceof PocketGenerator pocketGeneratorItem)
-            this.handler = pocketGeneratorItem.getStackHandler(pocketGenerator);
-        else
-            this.handler = new ItemStackHandler(SLOTS);
+        handler = pocketGenerator.getData(Registration.HANDLER);
         this.pocketGeneratorItemStack = pocketGenerator;
         if (handler != null)
             addGeneratorSlots(handler, 0, 80, 35, 1, 18);

@@ -33,5 +33,8 @@ public class JustDireThings {
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
                 Registration.Pocket_Generator.get()
         );
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
+                Registration.Pocket_Generator.get()
+        );
     }
 }

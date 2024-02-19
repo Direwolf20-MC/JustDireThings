@@ -2,66 +2,62 @@ package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
+import com.direwolf20.justdirethings.common.items.PocketGenerator;
+import com.direwolf20.justdirethings.util.MagicHelpers;
+import com.direwolf20.justdirethings.util.NBTUtils;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+
+import java.util.Arrays;
 
 public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGeneratorContainer> {
     private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/pocketgenerator.png");
 
     protected final PocketGeneratorContainer container;
     private ItemStack pocketGenerator;
+    private IEnergyStorage energyStorage;
 
     public PocketGeneratorScreen(PocketGeneratorContainer container, Inventory inv, Component name) {
         super(container, inv, name);
         this.container = container;
-        this.pocketGenerator = container.pocketGeneratorItemStack;
+        this.pocketGenerator = container.playerEntity.getMainHandItem();
+        this.energyStorage = pocketGenerator.getCapability(Capabilities.EnergyStorage.ITEM);
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
-        /*MutableComponent msg = Component.translatable("justdirethings.fuelcanisteritemsamt", MagicHelpers.formatted((float) FuelCanister.getFuelLevel(pocketGenerator) / 200));
-        guiGraphics.drawString(font, msg, this.getGuiLeft() + this.imageWidth / 2 - font.width(msg) / 2, getGuiTop() + 5, Color.DARK_GRAY.getRGB(), false);
-        msg = Component.translatable("justdirethings.fuelcanisteramt", MagicHelpers.formatted(FuelCanister.getFuelLevel(pocketGenerator)));
-        guiGraphics.drawString(font, msg, (this.getGuiLeft() + this.imageWidth / 2) - font.width(msg) / 2, getGuiTop() + 15, Color.DARK_GRAY.getRGB(), false);*/
+        if (mouseX > (leftPos + 7) && mouseX < (leftPos + 7) + 18 && mouseY > (topPos + 7) && mouseY < (topPos + 7) + 73) {
+            int counter = NBTUtils.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
+            guiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                    Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(energyStorage.getEnergyStored()), MagicHelpers.withSuffix(energyStorage.getMaxEnergyStored())),
+                    counter <= 0 ?
+                            Component.translatable("justdirethings.screen.no_fuel") :
+                            Component.translatable("justdirethings.screen.burn_time", MagicHelpers.ticksInSeconds(counter))
+            )), mouseX, mouseY);
+        }
     }
 
     @Override
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         super.renderTooltip(pGuiGraphics, pX, pY);
-        /*if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
-            ItemStack itemstack = this.hoveredSlot.getItem();
-            int fuelPerPiece = CommonHooks.getBurnTime(itemstack, RecipeType.SMELTING);
-            List<Component> tooltip = this.getTooltipFromContainerItem(itemstack);
-            if (container.handler.isItemValid(0, itemstack)) {
-                if (hasShiftDown()) {
-                    tooltip.add(Component.translatable("justdirethings.fuelcanisteramt", MagicHelpers.formatted(fuelPerPiece)).withStyle(ChatFormatting.AQUA));
-                    tooltip.add(Component.translatable("justdirethings.fuelcanisteramtstack", MagicHelpers.formatted(fuelPerPiece * itemstack.getCount())).withStyle(ChatFormatting.AQUA));
-                } else {
-                    tooltip.add(Component.translatable("justdirethings.fuelcanisteritemsamt", MagicHelpers.formatted((float) fuelPerPiece / 200)).withStyle(ChatFormatting.AQUA));
-                    tooltip.add(Component.translatable("justdirethings.fuelcanisteritemsamtstack", MagicHelpers.formatted((float) (fuelPerPiece * itemstack.getCount()) / 200)).withStyle(ChatFormatting.AQUA));
-                }
-            }
-            pGuiGraphics.renderTooltip(this.font, tooltip, itemstack.getTooltipImage(), itemstack, pX, pY);
-        }*/
     }
 
     @Override
     protected void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
         super.renderSlot(pGuiGraphics, pSlot);
-        if (!pSlot.getItem().isEmpty() && !container.handler.isItemValid(pSlot.getSlotIndex(), pSlot.getItem()))
-            pGuiGraphics.fill(RenderType.guiOverlay(), pSlot.x, pSlot.y, pSlot.x + 16, pSlot.y + Mth.ceil(16.0F), 0x7FFF0000);
     }
 
     @Override
@@ -71,7 +67,7 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+        //super.renderLabels(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -80,6 +76,23 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(GUI, relX, relY, 0, 0, this.imageWidth, this.imageHeight);
+
+        this.pocketGenerator = container.playerEntity.getMainHandItem();
+        this.energyStorage = pocketGenerator.getCapability(Capabilities.EnergyStorage.ITEM);
+        int maxBurn = NBTUtils.getIntValue(pocketGenerator, PocketGenerator.MAXBURN);
+        int counter = NBTUtils.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
+        int maxHeight = 13;
+        if (maxBurn > 0) {
+            int remaining = (counter * maxHeight) / maxBurn;
+            guiGraphics.blit(GUI, leftPos + 80, topPos + 17 + 13 - remaining, 176, 13 - remaining, 14, remaining + 1);
+        }
+
+        int maxEnergy = energyStorage.getMaxEnergyStored();
+        int height = 70;
+        if (maxEnergy > 0) {
+            int remaining = (energyStorage.getEnergyStored() * height) / maxEnergy;
+            guiGraphics.blit(GUI, leftPos + 8, topPos + 78 - remaining, 176, 84 - remaining, 16, remaining + 1);
+        }
     }
 
     @Override

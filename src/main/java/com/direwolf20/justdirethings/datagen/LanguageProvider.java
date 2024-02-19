@@ -35,7 +35,9 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         //add("justdirethings.tooltips.holdshift", "Hold Shift for details");
 
         //GUI
-        //add("justdirethings.screen.confirm", "Confirm");
+        add("justdirethings.screen.energy", "Energy: %s/%s FE");
+        add("justdirethings.screen.no_fuel", "Fuel source empty");
+        add("justdirethings.screen.burn_time", "Burn time left: %ss");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");
