@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.containers;
 
+import com.direwolf20.justdirethings.common.containers.slots.PocketGeneratorSlot;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.network.FriendlyByteBuf;
@@ -7,6 +8,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class PocketGeneratorContainer extends BaseContainer {
@@ -28,7 +30,7 @@ public class PocketGeneratorContainer extends BaseContainer {
             this.handler = new ItemStackHandler(SLOTS);
         this.pocketGeneratorItemStack = pocketGenerator;
         if (handler != null)
-            addSlotRange(handler, 0, 80, 35, 1, 18);
+            addGeneratorSlots(handler, 0, 80, 35, 1, 18);
 
         addPlayerSlots(playerInventory, 8, 84);
     }
@@ -36,6 +38,15 @@ public class PocketGeneratorContainer extends BaseContainer {
     @Override
     public boolean stillValid(Player playerIn) {
         return playerIn.getMainHandItem().equals(pocketGeneratorItemStack);
+    }
+
+    protected int addGeneratorSlots(IItemHandler handler, int index, int x, int y, int amount, int dx) {
+        for (int i = 0; i < amount; i++) {
+            addSlot(new PocketGeneratorSlot(handler, index, x, y));
+            x += dx;
+            index++;
+        }
+        return index;
     }
 
     @Override
