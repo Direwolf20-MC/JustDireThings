@@ -20,6 +20,7 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
+        add(Registration.Pocket_Generator.get(), "Pocket Generator");
 
         //Misc
         add("justdirethings.fuelcanisteramt", "Cook time (ticks): %d");

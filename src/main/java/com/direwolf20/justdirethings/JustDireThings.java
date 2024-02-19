@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings;
 
+import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.ModSetup;
@@ -8,6 +9,8 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -21,9 +24,19 @@ public class JustDireThings {
         Registration.init(modEventBus);
         Config.register();
         ModSetup.CREATIVE_MODE_TABS.register(modEventBus);
-
+        modEventBus.addListener(this::registerCapabilities);
         if (FMLLoader.getDist().isClient()) {
             modEventBus.addListener(ClientSetup::init);
         }
+    }
+
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> {
+                    if (itemStack.getItem() instanceof PocketGenerator pocketGenerator)
+                        return pocketGenerator.getStackHandler(itemStack);
+                    return null;
+                },
+                Registration.Pocket_Generator.get()
+        );
     }
 }
