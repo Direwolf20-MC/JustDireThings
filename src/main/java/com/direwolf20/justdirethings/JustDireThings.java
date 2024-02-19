@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings;
 
-import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.ModSetup;
@@ -31,11 +30,7 @@ public class JustDireThings {
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> {
-                    if (itemStack.getItem() instanceof PocketGenerator pocketGenerator)
-                        return pocketGenerator.getStackHandler(itemStack);
-                    return null;
-                },
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
                 Registration.Pocket_Generator.get()
         );
     }
