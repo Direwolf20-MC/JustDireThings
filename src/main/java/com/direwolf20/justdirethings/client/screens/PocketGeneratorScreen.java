@@ -78,7 +78,11 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         guiGraphics.blit(GUI, relX, relY, 0, 0, this.imageWidth, this.imageHeight);
 
         this.pocketGenerator = container.playerEntity.getMainHandItem();
+        if (pocketGenerator.isEmpty() || !(pocketGenerator.getItem() instanceof PocketGenerator))
+            return;
         this.energyStorage = pocketGenerator.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energyStorage == null)
+            return;
         int maxBurn = NBTUtils.getIntValue(pocketGenerator, PocketGenerator.MAXBURN);
         int counter = NBTUtils.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
         int maxHeight = 13;

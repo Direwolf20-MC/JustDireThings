@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTUtils;
 import net.minecraft.network.chat.Component;
@@ -69,8 +70,12 @@ public class PocketGenerator extends Item {
         }
     }
 
+    private static int fePerTick() {
+        return (int) (Config.POCKET_GENERATOR_FE_PER_FUEL_TICK.get() * Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get());
+    }
+
     private void tryBurn(IEnergyStorage energyStorage, ItemStack itemStack) {
-        boolean canInsertEnergy = energyStorage.receiveEnergy(625, true) > 0;
+        boolean canInsertEnergy = energyStorage.receiveEnergy(fePerTick(), true) > 0;
         if (NBTUtils.getIntValue(itemStack, COUNTER) > 0 && canInsertEnergy) {
             burn(energyStorage, itemStack);
         } else if (canInsertEnergy) {
@@ -81,7 +86,7 @@ public class PocketGenerator extends Item {
 
 
     private void burn(IEnergyStorage energyStorage, ItemStack itemStack) {
-        energyStorage.receiveEnergy(625, false);
+        energyStorage.receiveEnergy(fePerTick(), false);
         int counter = NBTUtils.getIntValue(itemStack, COUNTER);
         counter--;
         NBTUtils.setIntValue(itemStack, COUNTER, counter);
@@ -103,7 +108,7 @@ public class PocketGenerator extends Item {
                 fuelStack.shrink(1);
 
 
-            int counter = (int) Math.floor(burnTime) / 50;
+            int counter = (int) (Math.floor(burnTime) / Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get());
             int maxBurn = counter;
             NBTUtils.setIntValue(itemStack, COUNTER, counter);
             NBTUtils.setIntValue(itemStack, MAXBURN, maxBurn);
