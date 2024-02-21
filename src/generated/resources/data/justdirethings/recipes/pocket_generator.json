@@ -7,19 +7,19 @@
       "item": "minecraft:coal"
     },
     "f": {
-      "item": "justdirethings:fuel_canister"
+      "item": "minecraft:furnace"
     },
     "i": {
       "tag": "forge:ingots/iron"
     },
     "r": {
-      "tag": "forge:dusts/redstone"
+      "item": "minecraft:redstone_block"
     }
   },
   "pattern": [
-    "ici",
-    "rfr",
-    "ici"
+    "iri",
+    "cfc",
+    "iri"
   ],
   "result": {
     "item": "justdirethings:pocket_generator"

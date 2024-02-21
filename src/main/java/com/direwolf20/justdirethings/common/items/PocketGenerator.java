@@ -3,8 +3,13 @@ package com.direwolf20.justdirethings.common.items;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.NBTUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -13,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -21,6 +27,8 @@ import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class PocketGenerator extends Item {
     public static final String ENABLED = "enabled";
@@ -115,6 +123,62 @@ public class PocketGenerator extends Item {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, level, tooltip, flagIn);
+
+        Minecraft mc = Minecraft.getInstance();
+
+        if (level == null || mc.player == null) {
+            return;
+        }
+        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energy == null) {
+            return;
+        }
+        tooltip.add(Component.translatable("justdirethings.pocketgeneratorrf", MagicHelpers.tidyValue(energy.getEnergyStored()), MagicHelpers.tidyValue(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
+        boolean sneakPressed = Screen.hasShiftDown();
+        if (!sneakPressed) {
+            tooltip.add(Component.translatable("justdirethings.shiftmoreinfo").withStyle(ChatFormatting.GRAY));
+        } else {
+            tooltip.add(Component.translatable("justdirethings.pocketgeneratorburntime", NBTUtils.getIntValue(stack, COUNTER), NBTUtils.getIntValue(stack, MAXBURN)).withStyle(ChatFormatting.DARK_RED));
+            ItemStackHandler itemStackHandler = stack.getData(Registration.HANDLER);
+            ItemStack fuelStack = itemStackHandler.getStackInSlot(0);
+            if (fuelStack.isEmpty())
+                tooltip.add(Component.translatable("justdirethings.pocketgeneratornofuel").withStyle(ChatFormatting.RED));
+            else
+                tooltip.add(Component.translatable("justdirethings.pocketgeneratorfuelstack", fuelStack.getCount(), fuelStack.getItem().getName(fuelStack)).withStyle(ChatFormatting.DARK_AQUA));
+        }
+
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energy == null) {
+            return false;
+        }
+        return (energy.getEnergyStored() < energy.getMaxEnergyStored());
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energy == null) {
+            return 13;
+        }
+        return Math.min(13 * energy.getEnergyStored() / energy.getMaxEnergyStored(), 13);
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energy == null) {
+            super.getBarColor(stack);
+        }
+        return Mth.hsvToRgb(Math.max(0.0F, (float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored()) / 3.0F, 1.0F, 1.0F);
     }
 
     @Override

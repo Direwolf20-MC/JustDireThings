@@ -23,10 +23,15 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
 
         //Misc
+        add("justdirethings.shiftmoreinfo", "Hold Shift for details");
         add("justdirethings.fuelcanisteramt", "Cook time (ticks): %d");
         add("justdirethings.fuelcanisteramtstack", "Stack Cook time (ticks): %d");
         add("justdirethings.fuelcanisteritemsamt", "Fuel Amount: %f");
         add("justdirethings.fuelcanisteritemsamtstack", "Stack Fuel Amount: %f");
+        add("justdirethings.pocketgeneratorburntime", "Burn Time: %f / %f");
+        add("justdirethings.pocketgeneratorfuelstack", "Fuel: %f %s");
+        add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
+        add("justdirethings.pocketgeneratorrf", "Forge Energy: %s / %s");
 
         //Keys
         //add("key.justdirethings.category", "Building Gadgets 2");

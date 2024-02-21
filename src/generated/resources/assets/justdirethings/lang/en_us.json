@@ -6,7 +6,12 @@
   "justdirethings.fuelcanisteramtstack": "Stack Cook time (ticks): %d",
   "justdirethings.fuelcanisteritemsamt": "Fuel Amount: %f",
   "justdirethings.fuelcanisteritemsamtstack": "Stack Fuel Amount: %f",
+  "justdirethings.pocketgeneratorburntime": "Burn Time: %f / %f",
+  "justdirethings.pocketgeneratorfuelstack": "Fuel: %f %s",
+  "justdirethings.pocketgeneratornofuel": "Fuel Empty",
+  "justdirethings.pocketgeneratorrf": "Forge Energy: %s / %s",
   "justdirethings.screen.burn_time": "Burn time left: %ss",
   "justdirethings.screen.energy": "Energy: %s/%s FE",
-  "justdirethings.screen.no_fuel": "Fuel source empty"
+  "justdirethings.screen.no_fuel": "Fuel source empty",
+  "justdirethings.shiftmoreinfo": "Hold Shift for details"
 }

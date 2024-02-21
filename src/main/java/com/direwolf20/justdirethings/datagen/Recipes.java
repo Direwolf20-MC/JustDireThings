@@ -32,13 +32,13 @@ public class Recipes extends RecipeProvider {
                 .unlockedBy("has_coal", InventoryChangeTrigger.TriggerInstance.hasItems(Items.COAL))
                 .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Pocket_Generator.get())
-                .pattern("ici")
-                .pattern("rfr")
-                .pattern("ici")
+                .pattern("iri")
+                .pattern("cfc")
+                .pattern("iri")
                 .define('i', Tags.Items.INGOTS_IRON)
                 .define('c', Items.COAL)
-                .define('r', Tags.Items.DUSTS_REDSTONE)
-                .define('f', Registration.Fuel_Canister.get())
+                .define('r', Items.REDSTONE_BLOCK)
+                .define('f', Items.FURNACE)
                 .group("justdirethings")
                 .unlockedBy("has_fuel_canister", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Fuel_Canister.get()))
                 .save(consumer);
