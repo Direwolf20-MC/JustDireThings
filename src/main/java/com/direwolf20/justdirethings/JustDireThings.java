@@ -8,6 +8,8 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -21,9 +23,18 @@ public class JustDireThings {
         Registration.init(modEventBus);
         Config.register();
         ModSetup.CREATIVE_MODE_TABS.register(modEventBus);
-
+        modEventBus.addListener(this::registerCapabilities);
         if (FMLLoader.getDist().isClient()) {
             modEventBus.addListener(ClientSetup::init);
         }
+    }
+
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
+                Registration.Pocket_Generator.get()
+        );
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
+                Registration.Pocket_Generator.get()
+        );
     }
 }

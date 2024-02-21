@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "c": {
+      "item": "minecraft:coal"
+    },
+    "f": {
+      "item": "minecraft:furnace"
+    },
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "r": {
+      "item": "minecraft:redstone_block"
+    }
+  },
+  "pattern": [
+    "iri",
+    "cfc",
+    "iri"
+  ],
+  "result": {
+    "item": "justdirethings:pocket_generator"
+  }
+}

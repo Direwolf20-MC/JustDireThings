@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
+import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -28,6 +29,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(Registration.FuelCanister_Container.get(), FuelCanisterScreen::new);
+        event.register(Registration.PocketGenerator_Container.get(), PocketGeneratorScreen::new);
     }
 
     @SubscribeEvent
