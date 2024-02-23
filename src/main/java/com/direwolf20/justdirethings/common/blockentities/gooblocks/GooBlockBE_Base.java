@@ -19,6 +19,10 @@ public class GooBlockBE_Base extends BlockEntity {
 
     }
 
+    public int getTier() {
+        return 1;
+    }
+
     public void tickServer() {
         GooSpreadRecipe gooSpreadRecipe = findRecipe(getBlockPos().above());
         if (gooSpreadRecipe != null) {

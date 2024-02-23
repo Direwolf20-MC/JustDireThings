@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:gooblock_tier1-goospread"
+        "recipe": "justdirethings:dire_iron_block-goospread"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:gooblock_tier1-goospread"
+      "justdirethings:dire_iron_block-goospread"
     ]
   }
 }

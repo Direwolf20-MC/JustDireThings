@@ -59,10 +59,13 @@ public class Recipes extends RecipeProvider {
                 .save(consumer);
 
         //GooSpread Recipes
-        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "goospread1"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.GooBlock_Tier1.get().defaultBlockState())
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "goospread1"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.DireIronBlock.get().defaultBlockState())
                 .group("justdirethings")
                 .unlockedBy("has_goo_block", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
+
+        //Resource Conversions
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.DireIronIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.DireIronBlock.get(), Registration.DireIronIngot.getId().getNamespace() + ":" + Registration.DireIronIngot.getId().getPath(), "justdirethings", Registration.DireIronBlock.getId().getNamespace() + ":" + Registration.DireIronBlock.getId().getPath(), "justdirethings");
 
     }
 }

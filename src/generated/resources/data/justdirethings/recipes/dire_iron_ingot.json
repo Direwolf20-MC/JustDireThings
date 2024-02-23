@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "justdirethings",
+  "key": {
+    "#": {
+      "item": "justdirethings:dire_iron_ingot"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "item": "justdirethings:dire_iron_block"
+  }
+}

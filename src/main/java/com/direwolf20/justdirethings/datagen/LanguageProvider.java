@@ -17,10 +17,12 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
 
         //Blocks
         add(Registration.GooBlock_Tier1.get(), "GooBlock Tier1");
+        add(Registration.DireIronBlock.get(), "Dire Iron Block");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
+        add(Registration.DireIronIngot.get(), "Dire Iron Ingot");
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
