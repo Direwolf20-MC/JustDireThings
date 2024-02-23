@@ -16,7 +16,7 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("itemGroup." + ModSetup.TAB_JUSTDIRETHINGS, "Just Dire Things");
 
         //Blocks
-        //add(Registration.TemplateManager.get(), "Template Manager");
+        add(Registration.GooBlock_Tier1.get(), "GooBlock Tier1");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");

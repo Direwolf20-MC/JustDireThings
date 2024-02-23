@@ -20,6 +20,17 @@ public class Recipes extends RecipeProvider {
     @Override
     protected void buildRecipes(RecipeOutput consumer) {
         //Blocks
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.GooBlock_Tier1.get())
+                .pattern("csc")
+                .pattern("fdf")
+                .pattern("csc")
+                .define('d', Items.DIRT)
+                .define('c', Items.CLAY_BALL)
+                .define('s', Items.SUGAR)
+                .define('f', Items.ROTTEN_FLESH)
+                .group("justdirethings")
+                .unlockedBy("has_coal", InventoryChangeTrigger.TriggerInstance.hasItems(Items.COAL))
+                .save(consumer);
 
         //Items
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Fuel_Canister.get())

@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.setup;
 
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier1;
 import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
 import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
 import net.neoforged.api.distmarker.Dist;
@@ -35,6 +36,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         //Register Block Entity Renders
-        //event.registerBlockEntityRenderer(Registration.RenderBlock_BE.get(), RenderBlockBER::new);
+        event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier1.get(), GooBlockRender_Tier1::new);
     }
 }

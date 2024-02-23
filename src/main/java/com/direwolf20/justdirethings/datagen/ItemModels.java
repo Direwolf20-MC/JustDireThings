@@ -14,8 +14,7 @@ public class ItemModels extends ItemModelProvider {
     @Override
     protected void registerModels() {
         //Block Items
-        //withExistingParent(Registration.RenderBlock_ITEM.getId().getPath(), modLoc("block/render_block"));
-        //withExistingParent(Registration.LaserNode_ITEM.getId().getPath(), modLoc("block/laser_node"));
+        withExistingParent(Registration.GooBlock_Tier1_ITEM.getId().getPath(), modLoc("block/gooblock_tier1"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));
