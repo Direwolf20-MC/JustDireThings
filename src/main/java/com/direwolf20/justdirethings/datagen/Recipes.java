@@ -1,5 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
+import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
@@ -7,7 +9,9 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
 public class Recipes extends RecipeProvider {
@@ -52,6 +56,12 @@ public class Recipes extends RecipeProvider {
                 .define('f', Items.FURNACE)
                 .group("justdirethings")
                 .unlockedBy("has_fuel_canister", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Fuel_Canister.get()))
+                .save(consumer);
+
+        //GooSpread Recipes
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "goospread1"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.GooBlock_Tier1.get().defaultBlockState())
+                .group("justdirethings")
+                .unlockedBy("has_goo_block", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
 
     }

@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:goospread",
+  "id": "justdirethings:goospread1",
+  "input": {
+    "Name": "minecraft:iron_block"
+  },
+  "output": {
+    "Name": "justdirethings:gooblock_tier1"
+  }
+}
