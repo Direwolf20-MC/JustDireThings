@@ -38,6 +38,14 @@ public class GooSpreadRecipe implements CraftingRecipe {
         return sourceState.equals(input);
     }
 
+    public BlockState getOutput() {
+        return output;
+    }
+
+    public BlockState getInput() {
+        return input;
+    }
+
     @Override
     public CraftingBookCategory category() {
         return CraftingBookCategory.MISC;
