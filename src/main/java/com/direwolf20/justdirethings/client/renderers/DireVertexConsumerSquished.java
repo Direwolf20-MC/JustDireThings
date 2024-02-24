@@ -90,7 +90,6 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
 
     @Override
     public VertexConsumer uv(float u, float v) {
-        //Todo - Consider supporting other directions someday, its a bit more complicated though since UV is 2 dimension
         if (adjustUV) {
             //Growing up from ground!
             if (bottomUp) {
@@ -112,76 +111,77 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
                 //Building above!
                 if (direction != null) {
                     if (!direction.getAxis().equals(Direction.Axis.Y)) {
-                        float uDistanceToEnd, uDistanceToStart;      // How far is u from its end value?
-                        float vDistanceToEnd = maxV - v;      // How far is v from its end value?
-                        float vDistanceToStart = v - minV;
+                        float uDistanceToEnd, uDistanceToStart;      // How far is u from its start and end value?
+                        float vDistanceToEnd = maxV - v;             // How far is v from its start/end value?
+                        float vDistanceToStart = v - minV;           // This is static because v is always up and down for the 4 sides of a block
                         float adjustedUDistance;
                         float adjustedU2Distance;
                         float adjustedU;
                         if (direction.getAxis().equals(Direction.Axis.X)) {
-                            if (direction.equals(Direction.EAST)) {
+                            if (direction.equals(Direction.EAST)) { //These are reverse for Opposite sides, not quite sure why though
                                 uDistanceToEnd = maxU - u;
                                 uDistanceToStart = u - minU;
-                                adjustedUDistance = uDistanceToEnd * (maxZ); // Adjust for the block height
-                                adjustedU2Distance = uDistanceToStart * (minZ); // Adjust for the block height
-                                adjustedU = maxU - adjustedUDistance - adjustedU2Distance; // Subtracting because we're adjusting from the end.
+                                adjustedUDistance = uDistanceToEnd * (maxZ); //If we're drawing the X axis, shrink the Z axis to its appropriate sizes
+                                adjustedU2Distance = uDistanceToStart * (minZ);
+                                adjustedU = maxU - adjustedUDistance - adjustedU2Distance;
                             } else {
                                 uDistanceToEnd = u - minU;
                                 uDistanceToStart = maxU - u;
-                                adjustedUDistance = uDistanceToEnd * (maxZ); // Adjust for the block height
-                                adjustedU2Distance = uDistanceToStart * (minZ); // Adjust for the block height
-                                adjustedU = minU + adjustedUDistance + adjustedU2Distance; // Subtracting because we're adjusting from the end.
+                                adjustedUDistance = uDistanceToEnd * (maxZ);
+                                adjustedU2Distance = uDistanceToStart * (minZ);
+                                adjustedU = minU + adjustedUDistance + adjustedU2Distance;
                             }
                         } else {
                             if (direction.equals(Direction.NORTH)) {
                                 uDistanceToEnd = maxU - u;
                                 uDistanceToStart = u - minU;
-                                adjustedUDistance = uDistanceToEnd * (maxX); // Adjust for the block height
-                                adjustedU2Distance = uDistanceToStart * (minX); // Adjust for the block height
-                                adjustedU = maxU - adjustedUDistance - adjustedU2Distance; // Subtracting because we're adjusting from the end.
+                                adjustedUDistance = uDistanceToEnd * (maxX); //If we're drawing the Z axis, shrink the X axis to its appropriate sizes
+                                adjustedU2Distance = uDistanceToStart * (minX);
+                                adjustedU = maxU - adjustedUDistance - adjustedU2Distance;
                             } else {
                                 uDistanceToEnd = u - minU;
                                 uDistanceToStart = maxU - u;
-                                adjustedUDistance = uDistanceToEnd * (maxX); // Adjust for the block height
-                                adjustedU2Distance = uDistanceToStart * (minX); // Adjust for the block height
-                                adjustedU = minU + adjustedUDistance + adjustedU2Distance; // Subtracting because we're adjusting from the end.
+                                adjustedUDistance = uDistanceToEnd * (maxX);
+                                adjustedU2Distance = uDistanceToStart * (minX);
+                                adjustedU = minU + adjustedUDistance + adjustedU2Distance;
                             }
                         }
                         float adjustedVDistance = vDistanceToEnd * (maxY); // Adjust for the block height
-                        float adjustedV2Distance = vDistanceToStart * (minY); // Adjust for the block height
+                        float adjustedV2Distance = vDistanceToStart * (minY);
                         float adjustedV = maxV - adjustedVDistance - adjustedV2Distance; // Subtracting because we're adjusting from the end.
                         parent.uv(adjustedU, adjustedV);
                     } else {
-                        float uDistanceToEnd, uDistanceToStart;      // How far is u from its end value?
+                        //When drawing the top/bottom, we do like above, but both U and V are different, so we calculate both
+                        float uDistanceToEnd, uDistanceToStart;
                         float adjustedUDistance, adjustedU2Distance;
                         float adjustedU;
-                        float vDistanceToEnd, vDistanceToStart;      // How far is v from its end value?
+                        float vDistanceToEnd, vDistanceToStart;
                         float adjustedVDistance, adjustedV2Distance;
                         float adjustedV;
                         if (direction.equals(Direction.UP)) {
                             uDistanceToEnd = u - minU;
                             uDistanceToStart = maxU - u;
-                            adjustedUDistance = uDistanceToEnd * (maxX); // Adjust for the block height
+                            adjustedUDistance = uDistanceToEnd * (maxX);
                             adjustedU2Distance = uDistanceToStart * minX;
-                            adjustedU = minU + adjustedUDistance + adjustedU2Distance; // Subtracting because we're adjusting from the end.
+                            adjustedU = minU + adjustedUDistance + adjustedU2Distance;
 
                             vDistanceToEnd = v - minV;
                             vDistanceToStart = maxV - v;
-                            adjustedVDistance = vDistanceToEnd * (maxZ); // Adjust for the block height
+                            adjustedVDistance = vDistanceToEnd * (maxZ);
                             adjustedV2Distance = vDistanceToStart * minZ;
-                            adjustedV = minV + adjustedVDistance + adjustedV2Distance; // Subtracting because we're adjusting from the end.
+                            adjustedV = minV + adjustedVDistance + adjustedV2Distance;
                         } else {
-                            uDistanceToEnd = u - minU;
+                            uDistanceToEnd = u - minU;  //v is reversed, but U isn't, weird
                             uDistanceToStart = maxU - u;
-                            adjustedUDistance = uDistanceToEnd * (maxX); // Adjust for the block height
+                            adjustedUDistance = uDistanceToEnd * (maxX);
                             adjustedU2Distance = uDistanceToStart * minX;
-                            adjustedU = minU + adjustedUDistance + adjustedU2Distance; // Subtracting because we're adjusting from the end.
+                            adjustedU = minU + adjustedUDistance + adjustedU2Distance;
 
-                            vDistanceToEnd = maxV - v;
+                            vDistanceToEnd = maxV - v; //v is reversed, but U isn't, weird
                             vDistanceToStart = v - minV;
-                            adjustedVDistance = vDistanceToEnd * (maxZ); // Adjust for the block height
+                            adjustedVDistance = vDistanceToEnd * (maxZ);
                             adjustedV2Distance = vDistanceToStart * minZ;
-                            adjustedV = maxV - adjustedVDistance - adjustedV2Distance; // Subtracting because we're adjusting from the end.
+                            adjustedV = maxV - adjustedVDistance - adjustedV2Distance;
                         }
                         parent.uv(adjustedU, adjustedV);
                     }

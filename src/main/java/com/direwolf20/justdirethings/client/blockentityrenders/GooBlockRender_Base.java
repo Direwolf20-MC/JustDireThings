@@ -74,14 +74,6 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
                 modelBlockRenderer.renderModelFaceAO(level, renderState, pos, matrixStackIn, chunksConsumer, list, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
             }
         }
-        /*List<BakedQuad> list = ibakedmodel.getQuads(renderState, null, randomSource, ModelData.EMPTY, null);
-        if (!list.isEmpty()) {
-            TextureAtlasSprite sprite = list.get(0).getSprite();
-            chunksConsumer.setSprite(sprite);
-            chunksConsumer.setDirection(null);
-            modelBlockRenderer.renderModelFaceAO(level, renderState, pos, matrixStackIn, chunksConsumer, list, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
-        }*/
-
 
         matrixStackIn.popPose();
     }
