@@ -41,7 +41,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         BakedModel ibakedmodel = blockrendererdispatcher.getBlockModel(renderState);
         BlockColors blockColors = Minecraft.getInstance().getBlockColors();
         ModelBlockRenderer modelBlockRenderer = new ModelBlockRenderer(blockColors);
-        renderSquished(level, pos, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, 0.9f, renderState, ibakedmodel, blockrendererdispatcher, modelBlockRenderer, true, false);
+        renderSquished(level, pos, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, 1f, renderState, ibakedmodel, blockrendererdispatcher, modelBlockRenderer, true, false);
     }
 
     public void renderSquished(Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn, float scale, BlockState renderState, BakedModel ibakedmodel, BlockRenderDispatcher blockrendererdispatcher, ModelBlockRenderer modelBlockRenderer, boolean adjustUV, boolean bottomUp) {
@@ -50,7 +50,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         VertexConsumer builder = bufferIn.getBuffer(OurRenderTypes.RenderBlockBackface);
 
         scale = Mth.lerp(scale, 0f, 1f);
-        DireVertexConsumerSquished chunksConsumer = new DireVertexConsumerSquished(builder, 0, 0, 0, 0.25f, scale, 0.75f, matrixStackIn.last().pose());
+        DireVertexConsumerSquished chunksConsumer = new DireVertexConsumerSquished(builder, 0, 0, 0, 0.75f, scale, 0.75f, matrixStackIn.last().pose());
         chunksConsumer.adjustUV = adjustUV;
         chunksConsumer.bottomUp = bottomUp;
         if (!renderState.isSolidRender(level, pos))

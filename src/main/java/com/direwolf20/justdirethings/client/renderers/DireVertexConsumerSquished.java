@@ -142,15 +142,29 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
                         parent.uv(adjustedU, adjustedV);
                     } else {
                         float uDistanceToEnd;      // How far is u from its end value?
+                        float adjustedUDistance;
+                        float adjustedU;
                         float vDistanceToEnd;      // How far is v from its end value?
                         float adjustedVDistance;
                         float adjustedV;
                         if (direction.equals(Direction.UP)) {
+                            uDistanceToEnd = (u - minU) * (1 - minX);
+                            adjustedUDistance = uDistanceToEnd * (maxX); // Adjust for the block height
+                            adjustedU = minU + adjustedUDistance; // Subtracting because we're adjusting from the end.
 
+                            vDistanceToEnd = (v - minV) * (1 - minZ);
+                            adjustedVDistance = vDistanceToEnd * (maxZ); // Adjust for the block height
+                            adjustedV = minV + adjustedVDistance; // Subtracting because we're adjusting from the end.
                         } else {
+                            uDistanceToEnd = (u - minU) * (1 - minX);
+                            adjustedUDistance = uDistanceToEnd * (maxX); // Adjust for the block height
+                            adjustedU = minU + adjustedUDistance; // Subtracting because we're adjusting from the end.
 
+                            vDistanceToEnd = (maxV - v) * (1 - minZ);
+                            adjustedVDistance = vDistanceToEnd * (maxZ); // Adjust for the block height
+                            adjustedV = maxV - adjustedVDistance; // Subtracting because we're adjusting from the end.
                         }
-                        parent.uv(u, v);
+                        parent.uv(adjustedU, adjustedV);
                     }
                 }
             }
