@@ -104,8 +104,10 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
                     float adjustedV = minV + adjustedVDistance;
 
                     parent.uv(adjustedU, adjustedV);
+                    return this;
                 } else {
                     parent.uv(u, v);
+                    return this;
                 }
             } else {
                 //Building above!
@@ -150,6 +152,7 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
                         float adjustedV2Distance = vDistanceToStart * (minY);
                         float adjustedV = maxV - adjustedVDistance - adjustedV2Distance; // Subtracting because we're adjusting from the end.
                         parent.uv(adjustedU, adjustedV);
+                        return this;
                     } else {
                         //When drawing the top/bottom, we do like above, but both U and V are different, so we calculate both
                         float uDistanceToEnd, uDistanceToStart;
@@ -184,11 +187,12 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
                             adjustedV = maxV - adjustedVDistance - adjustedV2Distance;
                         }
                         parent.uv(adjustedU, adjustedV);
+                        return this;
                     }
                 }
             }
-            parent.uv(u, v);
         }
+        parent.uv(u, v);
         return this;
     }
 }

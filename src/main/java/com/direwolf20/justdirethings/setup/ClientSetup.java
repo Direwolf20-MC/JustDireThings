@@ -15,6 +15,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 @Mod.EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
     public static void init(final FMLClientSetupEvent event) {
+        //Minecraft.getInstance().getMainRenderTarget().enableStencil();
         //NeoForge.EVENT_BUS.addListener(KeyBindings::onClientInput);
 
         //Register our Render Events Class
