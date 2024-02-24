@@ -50,7 +50,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         VertexConsumer builder = bufferIn.getBuffer(OurRenderTypes.RenderBlockBackface);
 
         scale = Mth.lerp(scale, 0f, 1f);
-        DireVertexConsumerSquished chunksConsumer = new DireVertexConsumerSquished(builder, 0, 0, 0, 0.75f, scale, 0.75f, matrixStackIn.last().pose());
+        DireVertexConsumerSquished chunksConsumer = new DireVertexConsumerSquished(builder, (float) 4 / 16, (float) 4 / 16, (float) 4 / 16, (float) 12 / 16, (float) 12 / 16, (float) 12 / 16, matrixStackIn.last().pose());
         chunksConsumer.adjustUV = adjustUV;
         chunksConsumer.bottomUp = bottomUp;
         if (!renderState.isSolidRender(level, pos))
