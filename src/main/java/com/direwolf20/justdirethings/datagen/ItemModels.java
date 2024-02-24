@@ -16,7 +16,6 @@ public class ItemModels extends ItemModelProvider {
         //Block Items
         withExistingParent(Registration.GooBlock_Tier1_ITEM.getId().getPath(), modLoc("block/gooblock_tier1"));
         withExistingParent(Registration.DireIronBlock_ITEM.getId().getPath(), modLoc("block/dire_iron_block"));
-        withExistingParent(Registration.TestBlock.getId().getPath(), modLoc("block/testblock"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));
