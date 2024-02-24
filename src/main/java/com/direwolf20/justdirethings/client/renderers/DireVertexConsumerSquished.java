@@ -22,6 +22,7 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
     private float red = -1;
     private float green = -1;
     private float blue = -1;
+    private float alpha = -1;
 
     public DireVertexConsumerSquished(VertexConsumer parent, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Matrix4f matrix4f) {
         super(parent);
@@ -34,7 +35,7 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
         this.matrix4f = matrix4f;
     }
 
-    public DireVertexConsumerSquished(VertexConsumer parent, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Matrix4f matrix4f, float red, float green, float blue) {
+    public DireVertexConsumerSquished(VertexConsumer parent, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Matrix4f matrix4f, float red, float green, float blue, float alpha) {
         super(parent);
         this.minX = minX;
         this.minY = minY;
@@ -46,6 +47,7 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
         this.red = red;
         this.green = green;
         this.blue = blue;
+        this.alpha = alpha;
     }
 
     @Override
@@ -56,7 +58,8 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
             int rCol = (int) Mth.lerp(red, 0, r);
             int gCol = (int) Mth.lerp(green, 0, g);
             int bCol = (int) Mth.lerp(blue, 0, b);
-            parent.color(rCol, gCol, bCol, a);
+            int aCol = (int) Mth.lerp(alpha, 0, a);
+            parent.color(rCol, gCol, bCol, aCol);
         }
         return this;
     }

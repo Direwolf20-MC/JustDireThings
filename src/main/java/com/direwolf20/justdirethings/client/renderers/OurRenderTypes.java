@@ -72,7 +72,7 @@ public class OurRenderTypes extends RenderType {
                         .setLightmapState(LIGHTMAP)
                         .setTextureState(BLOCK_SHEET)
                         //.setLayeringState(RenderStateShard.NO_LAYERING)
-                        //.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setDepthTestState(GREATER_DEPTH_TEST)
                         .setCullState(CULL)
                         //.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)

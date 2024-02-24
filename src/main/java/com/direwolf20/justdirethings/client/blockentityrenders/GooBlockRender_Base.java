@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.renderers.DireVertexConsumerSquished;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Base;
+import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix3f;
@@ -41,7 +41,8 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
     public void render(T blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
         Level level = blockentity.getLevel();
         BlockPos pos = blockentity.getBlockPos().above(0);
-        BlockState renderState = Blocks.FURNACE.defaultBlockState();
+        //BlockState renderState = Blocks.FURNACE.defaultBlockState();
+        BlockState renderState = Registration.GooBlock_Tier1.get().defaultBlockState();
         BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
         BakedModel ibakedmodel = blockrendererdispatcher.getBlockModel(renderState);
         BlockColors blockColors = Minecraft.getInstance().getBlockColors();
@@ -95,7 +96,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         VertexConsumer vertexconsumer = bufferIn.getBuffer(OurRenderTypes.dragonExplosionAlpha(DRAGON_EXPLODING_LOCATION));
 
         matrixStackIn.pushPose();
-        matrixStackIn.translate(0, 0, -0.003f);
+        matrixStackIn.translate(0, 0, -0.0003f);
 
         PoseStack.Pose posestack$pose = matrixStackIn.last();
         Matrix4f matrix4f = posestack$pose.pose();
@@ -121,7 +122,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
                 1
         );
         matrixStackIn.popPose();
-        matrixStackIn.translate(0, 0, -0.002f);
+        matrixStackIn.translate(0, 0, -0.0002f);
 
         float[] afloat = new float[Direction.values().length * 2];
         BitSet bitset = new BitSet(3);
@@ -133,7 +134,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         Direction direction = Direction.NORTH;
 
         VertexConsumer builder = bufferIn.getBuffer(OurRenderTypes.RenderBlockBackface);
-        DireVertexConsumerSquished chunksConsumer = new DireVertexConsumerSquished(builder, 0, 0, 0, 1, 1, 1, matrixStackIn.last().pose());
+        DireVertexConsumerSquished chunksConsumer = new DireVertexConsumerSquished(builder, 0, 0, 0, 1, 1, 1, matrixStackIn.last().pose(), 1f, 1f, 1f, 0.5f);
 
         chunksConsumer.adjustUV = adjustUV;
         chunksConsumer.bottomUp = bottomUp;
