@@ -65,7 +65,7 @@ public class OurRenderTypes extends RenderType {
                     RenderType.CompositeState overlay = RenderType.CompositeState.builder()
                             .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_ALPHA_SHADER)
                             .setLightmapState(LIGHTMAP)
-                            .setTextureState(new RenderStateShard.TextureStateShard(p_286150_, false, false))
+                            .setTextureState(BLOCK_SHEET)
                             .setCullState(NO_CULL)
                             .setWriteMaskState(RenderStateShard.DEPTH_WRITE)
                             .createCompositeState(true);
