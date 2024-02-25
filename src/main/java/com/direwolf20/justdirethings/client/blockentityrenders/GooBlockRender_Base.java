@@ -31,6 +31,19 @@ import java.util.BitSet;
 import java.util.List;
 
 public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEntityRenderer<T> {
+    public static final ResourceLocation[] patterns = {
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender1.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender2.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender3.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender4.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender5.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender6.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender7.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender8.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender9.png"),
+            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender10.png")
+    };
+
     public GooBlockRender_Base(BlockEntityRendererProvider.Context p_173636_) {
 
     }
@@ -44,13 +57,32 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         BakedModel ibakedmodel = blockrendererdispatcher.getBlockModel(renderState);
         BlockColors blockColors = Minecraft.getInstance().getBlockColors();
         ModelBlockRenderer modelBlockRenderer = new ModelBlockRenderer(blockColors);
-        ResourceLocation patternLocation = new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender4.png");
-        renderTexturePattern(level, pos, matrixStackIn, bufferIn, combinedLightsIn, 1, patternLocation, renderState, ibakedmodel, modelBlockRenderer);
-        ResourceLocation patternLocation2 = new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender6.png");
-        renderTexturePattern(level, pos, matrixStackIn, bufferIn, combinedLightsIn, 0.4f, patternLocation2, renderState, ibakedmodel, modelBlockRenderer);
+        int remainingTicks = blockentity.getRemainingTimeFor(Direction.UP); //Todo All sides
+        if (remainingTicks > 0) {
+            int maxTicks = blockentity.getCraftingDuration();
+            renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, renderState, ibakedmodel, modelBlockRenderer, remainingTicks, maxTicks);
+        }
+
+        //ResourceLocation patternLocation = new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender4.png");
+        //renderTexturePattern(level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1, patternLocation, renderState, ibakedmodel, modelBlockRenderer);
+        //ResourceLocation patternLocation2 = new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender6.png");
+        //renderTexturePattern(level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 0.4f, patternLocation2, renderState, ibakedmodel, modelBlockRenderer);
     }
 
-    public void renderTexturePattern(Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, float transparency, ResourceLocation pattern, BlockState renderState, BakedModel ibakedmodel, ModelBlockRenderer modelBlockRenderer) {
+    public void renderTextures(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, BlockState renderState, BakedModel ibakedmodel, ModelBlockRenderer modelBlockRenderer, int remainingTicks, int maxTicks) {
+        float percentComplete = ((1 - (float) remainingTicks / (float) maxTicks) * 100);
+        int tensDigit = (int) (percentComplete / 10);
+        if (tensDigit > 0) {
+            ResourceLocation patternLocation = patterns[tensDigit - 1];
+            renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1f, patternLocation, renderState, ibakedmodel, modelBlockRenderer);
+        }
+        ResourceLocation patternLocation2 = patterns[tensDigit];
+        float percentagePart = percentComplete % 10;
+        float alpha = percentagePart / (float) 10;
+        renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, alpha, patternLocation2, renderState, ibakedmodel, modelBlockRenderer);
+    }
+
+    public void renderTexturePattern(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, float transparency, ResourceLocation pattern, BlockState renderState, BakedModel ibakedmodel, ModelBlockRenderer modelBlockRenderer) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0, 1, 0); //Todo proper sidedness
 
@@ -81,11 +113,11 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         List<BakedQuad> list;
         ModelBlockRenderer.AmbientOcclusionFace modelblockrenderer$ambientocclusionface = new ModelBlockRenderer.AmbientOcclusionFace();
 
-        Direction direction = Direction.NORTH;
+        Direction renderSide = Direction.NORTH;
 
-        list = ibakedmodel.getQuads(renderState, direction, randomSource, ModelData.EMPTY, null);
+        list = ibakedmodel.getQuads(renderState, renderSide, randomSource, ModelData.EMPTY, null);
         if (!list.isEmpty()) {
-            blockpos$mutableblockpos.setWithOffset(pos, direction);
+            blockpos$mutableblockpos.setWithOffset(pos, renderSide);
             modelBlockRenderer.renderModelFaceAO(level, renderState, pos, matrixStackIn, chunksConsumer, list, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
         }
         matrixStackIn.popPose();

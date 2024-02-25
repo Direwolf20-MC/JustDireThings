@@ -8,4 +8,9 @@ public class GooBlockBE_Tier1 extends GooBlockBE_Base {
     public GooBlockBE_Tier1(BlockPos pos, BlockState state) {
         super(Registration.GooBlockBE_Tier1.get(), pos, state);
     }
+
+    @Override
+    public int getTier() {
+        return -1;
+    }
 }
