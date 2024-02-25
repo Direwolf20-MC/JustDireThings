@@ -1,30 +1,34 @@
 {
   "variants": {
-    "facing=down": {
-      "model": "justdirethings:block/goopatternblock",
-      "x": 180
+    "goostage=0": {
+      "model": "justdirethings:block/goopatternblock0"
     },
-    "facing=east": {
-      "model": "justdirethings:block/goopatternblock",
-      "x": 90,
-      "y": 90
+    "goostage=1": {
+      "model": "justdirethings:block/goopatternblock1"
     },
-    "facing=north": {
-      "model": "justdirethings:block/goopatternblock",
-      "x": 90
+    "goostage=2": {
+      "model": "justdirethings:block/goopatternblock2"
     },
-    "facing=south": {
-      "model": "justdirethings:block/goopatternblock",
-      "x": 90,
-      "y": 180
+    "goostage=3": {
+      "model": "justdirethings:block/goopatternblock3"
     },
-    "facing=up": {
-      "model": "justdirethings:block/goopatternblock"
+    "goostage=4": {
+      "model": "justdirethings:block/goopatternblock4"
     },
-    "facing=west": {
-      "model": "justdirethings:block/goopatternblock",
-      "x": 90,
-      "y": 270
+    "goostage=5": {
+      "model": "justdirethings:block/goopatternblock5"
+    },
+    "goostage=6": {
+      "model": "justdirethings:block/goopatternblock6"
+    },
+    "goostage=7": {
+      "model": "justdirethings:block/goopatternblock7"
+    },
+    "goostage=8": {
+      "model": "justdirethings:block/goopatternblock8"
+    },
+    "goostage=9": {
+      "model": "justdirethings:block/goopatternblock9"
     }
   }
 }

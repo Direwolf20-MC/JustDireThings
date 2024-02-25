@@ -1,9 +1,0 @@
-{
-  "parent": "minecraft:block/orientable_with_bottom",
-  "textures": {
-    "bottom": "justdirethings:block/goopatterblock_bottom",
-    "front": "justdirethings:block/goopatterblock_side",
-    "side": "justdirethings:block/goopatterblock_side",
-    "top": "justdirethings:block/goopatterblock_top"
-  }
-}
