@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 public class GooPatternBlock extends Block {
-    public static final IntegerProperty GOOSTAGE = IntegerProperty.create("goostage", 0, 9);
+    public static final IntegerProperty GOOSTAGE = IntegerProperty.create("goostage", 0, 11);
 
     public GooPatternBlock() {
         super(Properties.of()

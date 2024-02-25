@@ -6,6 +6,12 @@
     "goostage=1": {
       "model": "justdirethings:block/goopatternblock1"
     },
+    "goostage=10": {
+      "model": "justdirethings:block/goopatternblock10"
+    },
+    "goostage=11": {
+      "model": "justdirethings:block/goopatternblock11"
+    },
     "goostage=2": {
       "model": "justdirethings:block/goopatternblock2"
     },

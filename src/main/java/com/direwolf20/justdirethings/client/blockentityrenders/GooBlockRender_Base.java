@@ -28,6 +28,7 @@ import java.util.BitSet;
 import java.util.List;
 
 public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEntityRenderer<T> {
+    private final static float percentageDivisor = (float) 100 / GooPatternBlock.GOOSTAGE.getPossibleValues().size();
     public GooBlockRender_Base(BlockEntityRendererProvider.Context p_173636_) {
 
     }
@@ -36,25 +37,25 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
     public void render(T blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
         Level level = blockentity.getLevel();
         BlockPos pos = blockentity.getBlockPos().above(0);
-
-        int remainingTicks = blockentity.getRemainingTimeFor(Direction.UP); //Todo All sides
-        if (remainingTicks > 0) {
-            int maxTicks = blockentity.getCraftingDuration();
-            renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, remainingTicks, maxTicks, blockentity.getBlockState());
+        for (Direction direction : Direction.values()) {
+            int remainingTicks = blockentity.getRemainingTimeFor(direction);
+            if (remainingTicks > 0) {
+                int maxTicks = blockentity.getCraftingDuration();
+                renderTextures(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, remainingTicks, maxTicks, blockentity.getBlockState());
+            }
         }
-        //renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, renderState, 535, 1000);
     }
 
     public void renderTextures(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, int remainingTicks, int maxTicks, BlockState renderState) {
         float percentComplete = ((1 - (float) remainingTicks / (float) maxTicks) * 100);
-        int tensDigit = (int) (percentComplete / 10);
+        int tensDigit = (int) (percentComplete / percentageDivisor);
         if (tensDigit > 0) {
             BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(BlockStateProperties.FACING, direction).setValue(GooPatternBlock.GOOSTAGE, tensDigit - 1);
             renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1f, patternState, renderState);
         }
         BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(BlockStateProperties.FACING, direction).setValue(GooPatternBlock.GOOSTAGE, tensDigit);
-        float percentagePart = percentComplete % 10;
-        float alpha = percentagePart / (float) 10;
+        float percentagePart = percentComplete % percentageDivisor;
+        float alpha = percentagePart / percentageDivisor;
         renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, alpha, patternState, renderState);
     }
 
@@ -66,11 +67,11 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         float[] afloat = new float[Direction.values().length * 2];
         BitSet bitset = new BitSet(3);
         RandomSource randomSource = RandomSource.create();
-        BlockPos.MutableBlockPos blockpos$mutableblockpos = pos.mutable(); //Todo Offset?
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = pos.relative(direction).mutable();
         ModelBlockRenderer.AmbientOcclusionFace modelblockrenderer$ambientocclusionface = new ModelBlockRenderer.AmbientOcclusionFace();
 
         matrixStackIn.pushPose();
-        matrixStackIn.translate(0, 1, 0); //Todo proper sidedness
+        matrixStackIn.translate(direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ());
         //Slightly larger than a normal block, to prevent z-fighting
         matrixStackIn.translate(-0.0005f, -0.0005f, -0.0005f);
         matrixStackIn.scale(1.001f, 1.001f, 1.001f);

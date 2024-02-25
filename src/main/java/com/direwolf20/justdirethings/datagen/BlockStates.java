@@ -93,6 +93,20 @@ public class BlockStates extends BlockStateProvider {
                         modLoc("block/goopatterns/goorender_full"),
                         modLoc("block/goopatterns/goopatterblock_top")
                 ).renderType("cutout")))
+                .partialState().with(GooPatternBlock.GOOSTAGE, 10).setModels(new ConfiguredModel(models().orientableWithBottom(
+                        Objects.requireNonNull(Registration.GooPatternBlock.getId()).getPath() + "10",
+                        modLoc("block/goopatterns/goorender_full"),
+                        modLoc("block/goopatterns/goorender_full"),
+                        modLoc("block/goopatterns/goorender_full"),
+                        modLoc("block/goopatterns/goorender_full")
+                ).renderType("cutout")))
+                .partialState().with(GooPatternBlock.GOOSTAGE, 11).setModels(new ConfiguredModel(models().orientableWithBottom(
+                        Objects.requireNonNull(Registration.GooPatternBlock.getId()).getPath() + "11",
+                        modLoc("block/goopatterns/goorender_full"),
+                        modLoc("block/goopatterns/goorender_full"),
+                        modLoc("block/goopatterns/goorender_full"),
+                        modLoc("block/goopatterns/goorender_full")
+                ).renderType("cutout")))
         ;
     /*directionalBlock(Registration.GooPatternBlock.get(), models().orientableWithBottom(
                 Objects.requireNonNull(Registration.GooPatternBlock.getId()).getPath(),
