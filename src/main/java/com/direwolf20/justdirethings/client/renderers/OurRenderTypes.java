@@ -18,7 +18,7 @@ public class OurRenderTypes extends RenderType {
                     .setOverlayState(RenderStateShard.OVERLAY)
                     .createCompositeState(false));
 
-    public static final RenderType GooPattern = create("GadgetRenderBlockBackface",
+    public static final RenderType GooPattern = create("GooPattern",
             DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
             RenderType.CompositeState.builder()
                     .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_ALPHA_SHADER)
@@ -49,17 +49,18 @@ public class OurRenderTypes extends RenderType {
     }
 
     /*public static void updateRenders() { //Only used when testing
-        GooPattern = Util.memoize(
-                p_286150_ -> {
-                    RenderType.CompositeState overlay = RenderType.CompositeState.builder()
-                            .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_ALPHA_SHADER)
-                            .setLightmapState(LIGHTMAP)
-                            .setTextureState(BLOCK_SHEET)
-                            .setCullState(NO_CULL)
-                            .setWriteMaskState(RenderStateShard.DEPTH_WRITE)
-                            .createCompositeState(true);
-                    return create("GooPattern", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 1536, false, false, overlay);
-                });
+        GooPattern = create("GooPattern",
+                DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
+                RenderType.CompositeState.builder()
+                        .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_ALPHA_SHADER)
+                        .setLightmapState(LIGHTMAP)
+                        .setTextureState(BLOCK_SHEET)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setDepthTestState(LEQUAL_DEPTH_TEST)
+                        .setCullState(NO_CULL)
+                        .setWriteMaskState(RenderStateShard.DEPTH_WRITE)
+                        .setOverlayState(RenderStateShard.OVERLAY)
+                        .createCompositeState(false));
 
         RenderBlockBackface = create("GadgetRenderBlockBackface",
                 DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
@@ -70,6 +71,7 @@ public class OurRenderTypes extends RenderType {
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setDepthTestState(EQUAL_DEPTH_TEST)
                         .setCullState(NO_CULL)
+                        .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
                         .setOverlayState(RenderStateShard.OVERLAY)
                         .createCompositeState(false));
     }*/
