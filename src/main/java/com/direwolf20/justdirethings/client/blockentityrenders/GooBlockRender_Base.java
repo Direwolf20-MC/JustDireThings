@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.client.blockentityrenders;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.renderers.DireVertexConsumer;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Base;
@@ -16,36 +15,19 @@ import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.data.ModelData;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 
 import java.util.BitSet;
 import java.util.List;
 
 public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEntityRenderer<T> {
-    public static final ResourceLocation[] patterns = {
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender1.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender2.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender3.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender4.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender5.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender6.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender7.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender8.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender9.png"),
-            new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender10.png")
-    };
-
     public GooBlockRender_Base(BlockEntityRendererProvider.Context p_173636_) {
 
     }
@@ -54,131 +36,78 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
     public void render(T blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
         Level level = blockentity.getLevel();
         BlockPos pos = blockentity.getBlockPos().above(0);
-        BlockState renderState = Registration.GooPatternBlock.get().defaultBlockState().setValue(BlockStateProperties.FACING, Direction.UP).setValue(GooPatternBlock.GOOSTAGE, 2);
-        BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
-        BakedModel ibakedmodel = blockrendererdispatcher.getBlockModel(renderState);
-        BlockColors blockColors = Minecraft.getInstance().getBlockColors();
-        ModelBlockRenderer modelBlockRenderer = new ModelBlockRenderer(blockColors);
+
         int remainingTicks = blockentity.getRemainingTimeFor(Direction.UP); //Todo All sides
         if (remainingTicks > 0) {
             int maxTicks = blockentity.getCraftingDuration();
-            //renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, renderState, ibakedmodel, modelBlockRenderer, remainingTicks, maxTicks);
+            renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, remainingTicks, maxTicks, blockentity.getBlockState());
         }
-        renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, renderState, ibakedmodel, modelBlockRenderer, 535, 1000);
-        //ResourceLocation patternLocation = new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender4.png");
-        //renderTexturePattern(level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1, patternLocation, renderState, ibakedmodel, modelBlockRenderer);
-        //ResourceLocation patternLocation2 = new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender6.png");
-        //renderTexturePattern(level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 0.4f, patternLocation2, renderState, ibakedmodel, modelBlockRenderer);
+        //renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, renderState, 535, 1000);
     }
 
-    public void renderTextures(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, BlockState renderState, BakedModel ibakedmodel, ModelBlockRenderer modelBlockRenderer, int remainingTicks, int maxTicks) {
+    public void renderTextures(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, int remainingTicks, int maxTicks, BlockState renderState) {
         float percentComplete = ((1 - (float) remainingTicks / (float) maxTicks) * 100);
         int tensDigit = (int) (percentComplete / 10);
         if (tensDigit > 0) {
-            ResourceLocation patternLocation = patterns[tensDigit - 1];
-            renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1f, patternLocation, renderState, ibakedmodel, modelBlockRenderer);
+            BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(BlockStateProperties.FACING, direction).setValue(GooPatternBlock.GOOSTAGE, tensDigit - 1);
+            renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1f, patternState, renderState);
         }
-        ResourceLocation patternLocation2 = patterns[tensDigit];
+        BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(BlockStateProperties.FACING, direction).setValue(GooPatternBlock.GOOSTAGE, tensDigit);
         float percentagePart = percentComplete % 10;
         float alpha = percentagePart / (float) 10;
-        renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, alpha, patternLocation2, renderState, ibakedmodel, modelBlockRenderer);
+        renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, alpha, patternState, renderState);
     }
 
-    public void renderTexturePattern(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, float transparency, ResourceLocation pattern, BlockState renderState, BakedModel ibakedmodel, ModelBlockRenderer modelBlockRenderer) {
-        //OurRenderTypes.updateRenders();
+    public void renderTexturePattern(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, float transparency, BlockState pattern, BlockState renderState) {
         BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
-
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(0, 1, 0); //Todo proper sidedness
-
-
-        /*VertexConsumer vertexconsumer = bufferIn.getBuffer(OurRenderTypes.gooPatternAlpha(pattern));
-
-        matrixStackIn.pushPose();
-        //matrixStackIn.translate(0, 0, -0.0003f); //Push forward on Z - for the pattern draw TODO variable?
-
-        PoseStack.Pose posestack$pose = matrixStackIn.last();
-        Matrix4f matrix4f = posestack$pose.pose();
-        Matrix3f matrix3f = posestack$pose.normal();
-
-        //renderQuad(matrix4f, matrix3f, vertexconsumer, 1f, 1f, 1f, 1f, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1);
-        matrixStackIn.popPose();
-
-        vertexconsumer = bufferIn.getBuffer(OurRenderTypes.gooPatternColor(patterns[8]));
-        matrixStackIn.pushPose();
-        //matrixStackIn.translate(0, 0, -0.0003f);
-        PoseStack.Pose posestack$pose2 = matrixStackIn.last();
-        Matrix4f matrix4f2 = posestack$pose2.pose();
-        Matrix3f matrix3f2 = posestack$pose2.normal();
-
-        //renderQuad(matrix4f2, matrix3f2, vertexconsumer, 1f, 1f, 1f, 1f, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1);*/
-
-        VertexConsumer builder = bufferIn.getBuffer(OurRenderTypes.GooPattern);
-        DireVertexConsumer chunksConsumer = new DireVertexConsumer(builder, transparency);
+        BlockColors blockColors = Minecraft.getInstance().getBlockColors();
+        ModelBlockRenderer modelBlockRenderer = new ModelBlockRenderer(blockColors);
 
         float[] afloat = new float[Direction.values().length * 2];
         BitSet bitset = new BitSet(3);
         RandomSource randomSource = RandomSource.create();
-        randomSource.setSeed(renderState.getSeed(pos));
-        BlockPos.MutableBlockPos blockpos$mutableblockpos = pos.mutable();
-
-        List<BakedQuad> list;
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = pos.mutable(); //Todo Offset?
         ModelBlockRenderer.AmbientOcclusionFace modelblockrenderer$ambientocclusionface = new ModelBlockRenderer.AmbientOcclusionFace();
+
+        matrixStackIn.pushPose();
+        matrixStackIn.translate(0, 1, 0); //Todo proper sidedness
+        //Slightly larger than a normal block, to prevent z-fighting
         matrixStackIn.translate(-0.0005f, -0.0005f, -0.0005f);
         matrixStackIn.scale(1.001f, 1.001f, 1.001f);
+
+        //Pattern Block - Renders to the depth buffer ONLY, to set the pattern that we draw
+        VertexConsumer builder = bufferIn.getBuffer(OurRenderTypes.GooPattern);
+        DireVertexConsumer chunksConsumer = new DireVertexConsumer(builder, 1f);
+        BakedModel ibakedmodel = blockrendererdispatcher.getBlockModel(pattern);
+        randomSource.setSeed(pattern.getSeed(pos));
+
+        List<BakedQuad> list;
+
+
         for (Direction renderSide : Direction.values()) {
-            list = ibakedmodel.getQuads(renderState, renderSide, randomSource, ModelData.EMPTY, null);
+            list = ibakedmodel.getQuads(pattern, renderSide, randomSource, ModelData.EMPTY, null);
             if (!list.isEmpty()) {
                 blockpos$mutableblockpos.setWithOffset(pos, renderSide);
-                modelBlockRenderer.renderModelFaceAO(level, renderState, pos, matrixStackIn, chunksConsumer, list, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
+                modelBlockRenderer.renderModelFaceAO(level, pattern, pos, matrixStackIn, chunksConsumer, list, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
             }
         }
 
+        //Now draw the REAL block overtop, but with BlendFunction set to EQUALS -- Meaning it'll only draw where theres already a pixel exiting from the pattern above
         VertexConsumer builder2 = bufferIn.getBuffer(OurRenderTypes.RenderBlockBackface);
         DireVertexConsumer chunksConsumer2 = new DireVertexConsumer(builder2, transparency);
-
-
-        float[] afloat2 = new float[Direction.values().length * 2];
-        BitSet bitset2 = new BitSet(3);
-        RandomSource randomSource2 = RandomSource.create();
-        BlockState renderState2 = Registration.GooBlock_Tier1.get().defaultBlockState();
-        BakedModel ibakedmodel2 = blockrendererdispatcher.getBlockModel(renderState2);
-        randomSource2.setSeed(renderState2.getSeed(pos));
-
-        BlockPos.MutableBlockPos blockpos$mutableblockpos2 = pos.mutable();
+        BakedModel ibakedmodel2 = blockrendererdispatcher.getBlockModel(renderState);
+        randomSource.setSeed(renderState.getSeed(pos));
 
         List<BakedQuad> list2;
-        ModelBlockRenderer.AmbientOcclusionFace modelblockrenderer$ambientocclusionface2 = new ModelBlockRenderer.AmbientOcclusionFace();
 
         for (Direction renderSide : Direction.values()) {
-            list2 = ibakedmodel2.getQuads(renderState2, renderSide, randomSource2, ModelData.EMPTY, null);
+            list2 = ibakedmodel2.getQuads(renderState, renderSide, randomSource, ModelData.EMPTY, null);
             if (!list2.isEmpty()) {
-                blockpos$mutableblockpos2.setWithOffset(pos.relative(direction), renderSide);
-                modelBlockRenderer.renderModelFaceAO(level, renderState2, pos.relative(direction), matrixStackIn, chunksConsumer2, list2, afloat2, bitset2, modelblockrenderer$ambientocclusionface2, combinedOverlayIn);
+                blockpos$mutableblockpos.setWithOffset(pos.relative(direction), renderSide);
+                modelBlockRenderer.renderModelFaceAO(level, renderState, pos.relative(direction), matrixStackIn, chunksConsumer2, list2, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
             }
         }
 
         matrixStackIn.popPose();
     }
-
-
-    private static void renderQuad(Matrix4f pPose, Matrix3f pNormal, VertexConsumer pConsumer, float pRed, float pGreen, float pBlue, float pAlpha, int pMinY, int pMaxY,
-                                   float pMinX, float pMinZ, float pMaxX, float pMaxZ, float pMinU, float pMaxU, float pMinV, float pMaxV) {
-        addVertex(pPose, pNormal, pConsumer, pRed, pGreen, pBlue, pAlpha, pMaxY, pMinX, pMinZ, pMaxU, pMinV);
-        addVertex(pPose, pNormal, pConsumer, pRed, pGreen, pBlue, pAlpha, pMinY, pMinX, pMinZ, pMaxU, pMaxV);
-        addVertex(pPose, pNormal, pConsumer, pRed, pGreen, pBlue, pAlpha, pMinY, pMaxX, pMaxZ, pMinU, pMaxV);
-        addVertex(pPose, pNormal, pConsumer, pRed, pGreen, pBlue, pAlpha, pMaxY, pMaxX, pMaxZ, pMinU, pMinV);
-    }
-
-    private static void addVertex(Matrix4f pPose, Matrix3f pNormal, VertexConsumer pConsumer, float pRed, float pGreen, float pBlue, float pAlpha,
-                                  int pY, float pX, float pZ, float pU, float pV) {
-        pConsumer.vertex(pPose, pX, (float) pY, pZ)
-                .color(pRed, pGreen, pBlue, pAlpha)
-                .uv(pU, pV)
-                .overlayCoords(OverlayTexture.NO_OVERLAY)
-                .uv2(15728880)
-                .normal(pNormal, 0.0F, 1.0F, 0.0F)
-                .endVertex();
-    }
-
 }
