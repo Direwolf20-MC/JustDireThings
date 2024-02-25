@@ -36,7 +36,7 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     public int getCraftingDuration() {
-        return 100; //Todo Config or Crafting Recipe setting
+        return 500; //Todo Config or Crafting Recipe setting
     }
 
     public int getRemainingTimeFor(Direction direction) {

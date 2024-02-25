@@ -1,7 +1,6 @@
 package com.direwolf20.justdirethings.client.blockentityrenders;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.client.renderers.DireVertexConsumer;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Base;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -12,7 +11,6 @@ import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -20,15 +18,10 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-
-import java.util.BitSet;
-import java.util.List;
 
 public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEntityRenderer<T> {
     public static final ResourceLocation[] patterns = {
@@ -62,7 +55,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
             int maxTicks = blockentity.getCraftingDuration();
             renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, renderState, ibakedmodel, modelBlockRenderer, remainingTicks, maxTicks);
         }
-
+        renderTextures(Direction.UP, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, renderState, ibakedmodel, modelBlockRenderer, 535, 1000);
         //ResourceLocation patternLocation = new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender4.png");
         //renderTexturePattern(level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1, patternLocation, renderState, ibakedmodel, modelBlockRenderer);
         //ResourceLocation patternLocation2 = new ResourceLocation(JustDireThings.MODID, "textures/misc/goorender6.png");
@@ -83,6 +76,8 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
     }
 
     public void renderTexturePattern(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, float transparency, ResourceLocation pattern, BlockState renderState, BakedModel ibakedmodel, ModelBlockRenderer modelBlockRenderer) {
+        OurRenderTypes.updateRenders();
+
         matrixStackIn.pushPose();
         matrixStackIn.translate(0, 1, 0); //Todo proper sidedness
 
@@ -98,10 +93,16 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         renderQuad(matrix4f, matrix3f, vertexconsumer, 1f, 1f, 1f, 1f, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1);
         matrixStackIn.popPose();
 
+        vertexconsumer = bufferIn.getBuffer(OurRenderTypes.gooPatternColor(patterns[8]));
         matrixStackIn.pushPose();
-        matrixStackIn.translate(0, 0, -0.0002f);
+        matrixStackIn.translate(0, 0, -0.0003f);
+        PoseStack.Pose posestack$pose2 = matrixStackIn.last();
+        Matrix4f matrix4f2 = posestack$pose2.pose();
+        Matrix3f matrix3f2 = posestack$pose2.normal();
 
-        VertexConsumer builder = bufferIn.getBuffer(OurRenderTypes.RenderBlockBackface);
+        renderQuad(matrix4f2, matrix3f2, vertexconsumer, 1f, 1f, 1f, 1f, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1);
+
+        /*VertexConsumer builder = bufferIn.getBuffer(OurRenderTypes.RenderBlockBackface);
         DireVertexConsumer chunksConsumer = new DireVertexConsumer(builder, transparency);
 
         float[] afloat = new float[Direction.values().length * 2];
@@ -119,7 +120,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         if (!list.isEmpty()) {
             blockpos$mutableblockpos.setWithOffset(pos, renderSide);
             modelBlockRenderer.renderModelFaceAO(level, renderState, pos, matrixStackIn, chunksConsumer, list, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
-        }
+        }*/
         matrixStackIn.popPose();
 
         matrixStackIn.popPose();
