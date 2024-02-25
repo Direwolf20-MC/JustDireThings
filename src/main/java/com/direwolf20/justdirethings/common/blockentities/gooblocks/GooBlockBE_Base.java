@@ -10,6 +10,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,7 +36,7 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     public int getCraftingDuration() {
-        return 1000; //Todo Config or Crafting Recipe setting
+        return 100; //Todo Config or Crafting Recipe setting
     }
 
     public int getRemainingTimeFor(Direction direction) {
@@ -85,6 +87,7 @@ public class GooBlockBE_Base extends BlockEntity {
     public void setBlockToTarget(GooSpreadRecipe gooSpreadRecipe, Direction direction) {
         level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput());
         sidedCounters.put(direction, -1);
+        level.playSound(null, getBlockPos(), SoundEvents.SCULK_BLOCK_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     @Nullable
