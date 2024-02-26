@@ -32,6 +32,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import java.util.function.Supplier;
 
 import static com.direwolf20.justdirethings.JustDireThings.MODID;
+import static com.direwolf20.justdirethings.client.particles.ModParticles.PARTICLE_TYPES;
 
 public class Registration {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
@@ -55,6 +56,7 @@ public class Registration {
         ATTACHMENT_TYPES.register(eventBus);
         RECIPE_SERIALIZERS.register(eventBus);
         RECIPE_TYPES.register(eventBus);
+        PARTICLE_TYPES.register(eventBus);
     }
 
     //Blocks

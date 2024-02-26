@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.blockentities.gooblocks;
 
+import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -12,6 +13,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Random;
 
 public class GooBlockBE_Base extends BlockEntity {
     public final Map<Direction, Integer> sidedCounters = new Object2IntOpenHashMap<>();
@@ -30,6 +33,14 @@ public class GooBlockBE_Base extends BlockEntity {
         for (Direction direction : Direction.values()) {
             sidedCounters.put(direction, -1); //Init the counters, -1 means we aren't operating on anything on that side
             sidedDurations.put(direction, -1); //Init the durations, -1 means we aren't operating on anything on that side
+        }
+    }
+
+    public void updateSideCounter(Direction direction, int newCounter) {
+        int oldCounter = sidedCounters.get(direction);
+        sidedCounters.put(direction, newCounter);
+        if (oldCounter >= 0 && newCounter == -1 && level.isClientSide) {
+            spawnParticles(direction);
         }
     }
 
@@ -49,6 +60,21 @@ public class GooBlockBE_Base extends BlockEntity {
         tickCounters(); //We tick on client side too, just for rendering of course!
     }
 
+    public void spawnParticles(Direction side) {
+        Random random = new Random();
+        BlockPos startPos = getBlockPos().relative(side);
+        ItemStack itemStack = new ItemStack(getBlockState().getBlock());
+        ItemFlowParticleData data = new ItemFlowParticleData(itemStack, true, false);
+        for (Direction direction : Direction.values()) {
+            for (int i = 0; i < 100; i++) {
+                double randomX = 0.5 + (0.6 * direction.getNormal().getX()) + (direction.getNormal().getX() == 0 ? random.nextDouble() - 0.5 : 0);
+                double randomY = 0.5 + (0.6 * direction.getNormal().getY()) + (direction.getNormal().getY() == 0 ? random.nextDouble() - 0.5 : 0);
+                double randomZ = 0.5 + (0.6 * direction.getNormal().getZ()) + (direction.getNormal().getZ() == 0 ? random.nextDouble() - 0.5 : 0);
+                level.addParticle(data, startPos.getX() + randomX, startPos.getY() + randomY, startPos.getZ() + randomZ, 0, 0, 0);
+            }
+        }
+    }
+
     public void tickServer() {
         checkSides();
         tickCounters();
@@ -58,8 +84,9 @@ public class GooBlockBE_Base extends BlockEntity {
         for (Direction direction : Direction.values()) {
             int sideCounter = sidedCounters.get(direction);
             if (sideCounter > 0) {
+                //sideCounter = Math.max(sideCounter-40, 0);
                 sideCounter--;
-                sidedCounters.put(direction, sideCounter);
+                updateSideCounter(direction, sideCounter);
             }
         }
     }
@@ -71,7 +98,7 @@ public class GooBlockBE_Base extends BlockEntity {
             if (gooSpreadRecipe != null) {
                 if (sideCounter == -1) { //Valid Recipe and not running yet
                     sideCounter = gooSpreadRecipe.getCraftingDuration();
-                    sidedCounters.put(direction, sideCounter);
+                    updateSideCounter(direction, sideCounter);
                     sidedDurations.put(direction, sideCounter);
                     markDirtyClient(); //Either way, update the client with the new sideCounters
                 } else if (sideCounter == 0) { //Craftings done!
@@ -81,7 +108,7 @@ public class GooBlockBE_Base extends BlockEntity {
             } else { //If the recipe is null, it means this isn't a valid input block (or its already been converted!)
                 if (sideCounter != -1) { //If we have a timer running, cancel it
                     sideCounter = -1;
-                    sidedCounters.put(direction, sideCounter);
+                    updateSideCounter(direction, sideCounter);
                     sidedDurations.put(direction, sideCounter);
                     markDirtyClient();
                 }
@@ -91,7 +118,7 @@ public class GooBlockBE_Base extends BlockEntity {
 
     public void setBlockToTarget(GooSpreadRecipe gooSpreadRecipe, Direction direction) {
         level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput());
-        sidedCounters.put(direction, -1);
+        updateSideCounter(direction, -1);
         sidedDurations.put(direction, -1);
         level.playSound(null, getBlockPos(), SoundEvents.SCULK_BLOCK_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
@@ -140,7 +167,7 @@ public class GooBlockBE_Base extends BlockEntity {
                 CompoundTag sideCounterTag = listNBT.getCompound(i);
                 int direction = sideCounterTag.getInt("side");
                 int counter = sideCounterTag.getInt("counter");
-                this.sidedCounters.put(Direction.values()[direction], counter);
+                this.updateSideCounter(Direction.values()[direction], counter);
             }
         }
         if (tag.contains("sideDurations")) {

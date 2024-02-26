@@ -52,7 +52,8 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
             renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1f, patternState, renderState);
         }
         BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, tensDigit);
-        float percentagePart = percentComplete % percentageDivisor;
+        float startOfCurrentStage = tensDigit * percentageDivisor; // This calculates the starting percentage of the current stage
+        float percentagePart = percentComplete - startOfCurrentStage; // This calculates how far into the current stage we are
         float alpha = percentagePart / percentageDivisor;
         renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, alpha, patternState, renderState);
     }
