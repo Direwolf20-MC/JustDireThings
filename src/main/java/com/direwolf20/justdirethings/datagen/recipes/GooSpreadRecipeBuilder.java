@@ -25,28 +25,27 @@ import java.util.Map;
 
 
 public class GooSpreadRecipeBuilder implements RecipeBuilder {
-    /*private final RecipeCategory category;
-    private final Item result;
-    private final int count;
-    private final ItemStack resultStack; // Neo: add stack result support   */
-
     @Nullable
     private String group;
 
     private final ResourceLocation id;
     protected final BlockState input;
     protected final BlockState output;
+    protected final int tierRequirement;
+    protected final int craftingDuration;
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public GooSpreadRecipeBuilder(ResourceLocation id, BlockState input, BlockState output) {
+    public GooSpreadRecipeBuilder(ResourceLocation id, BlockState input, BlockState output, int tierRequirement, int craftingDuration) {
         this.id = id;
         this.input = input;
         this.output = output;
+        this.tierRequirement = tierRequirement;
+        this.craftingDuration = craftingDuration;
     }
 
-    public static GooSpreadRecipeBuilder shapeless(ResourceLocation id, BlockState input, BlockState output) {
-        return new GooSpreadRecipeBuilder(id, input, output);
+    public static GooSpreadRecipeBuilder shapeless(ResourceLocation id, BlockState input, BlockState output, int tierRequirement, int craftingDuration) {
+        return new GooSpreadRecipeBuilder(id, input, output, tierRequirement, craftingDuration);
     }
 
     public GooSpreadRecipeBuilder requires(TagKey<Item> pTag) {
@@ -93,7 +92,6 @@ public class GooSpreadRecipeBuilder implements RecipeBuilder {
     }
 
     public void save(RecipeOutput pRecipeOutput) {
-        //this.save(pRecipeOutput, new ResourceLocation(JustDireThings.MODID, this.output.getBlock(). + "-goorecipe"));
         this.save(pRecipeOutput, new ResourceLocation(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-goospread"));
     }
 
@@ -108,7 +106,9 @@ public class GooSpreadRecipeBuilder implements RecipeBuilder {
         GooSpreadRecipe shapelessrecipe = new GooSpreadRecipe(
                 this.id,
                 this.input,
-                this.output
+                this.output,
+                this.tierRequirement,
+                this.craftingDuration
         );
         pRecipeOutput.accept(pId, shapelessrecipe, advancement$builder.build(pId.withPrefix("recipes/" + RecipeCategory.MISC.getFolderName() + "/")));
     }

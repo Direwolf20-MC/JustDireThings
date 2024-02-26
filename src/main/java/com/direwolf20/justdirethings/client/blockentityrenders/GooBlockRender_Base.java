@@ -38,7 +38,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         for (Direction direction : Direction.values()) {
             int remainingTicks = blockentity.getRemainingTimeFor(direction);
             if (remainingTicks > 0) {
-                int maxTicks = blockentity.getCraftingDuration();
+                int maxTicks = blockentity.getCraftingDuration(direction);
                 renderTextures(direction, blockentity.getLevel(), blockentity.getBlockPos(), matrixStackIn, bufferIn, combinedOverlayIn, remainingTicks, maxTicks, blockentity.getBlockState());
             }
         }

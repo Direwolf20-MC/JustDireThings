@@ -59,7 +59,7 @@ public class Recipes extends RecipeProvider {
                 .save(consumer);
 
         //GooSpread Recipes
-        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "goospread1"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.DireIronBlock.get().defaultBlockState())
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "goospread1"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.DireIronBlock.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);

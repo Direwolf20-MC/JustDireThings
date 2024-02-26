@@ -23,11 +23,13 @@ import java.util.Map;
 
 public class GooBlockBE_Base extends BlockEntity {
     public final Map<Direction, Integer> sidedCounters = new Object2IntOpenHashMap<>();
+    public final Map<Direction, Integer> sidedDurations = new Object2IntOpenHashMap<>();
 
     public GooBlockBE_Base(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         for (Direction direction : Direction.values()) {
             sidedCounters.put(direction, -1); //Init the counters, -1 means we aren't operating on anything on that side
+            sidedDurations.put(direction, -1); //Init the durations, -1 means we aren't operating on anything on that side
         }
     }
 
@@ -35,8 +37,8 @@ public class GooBlockBE_Base extends BlockEntity {
         return 0;
     }
 
-    public int getCraftingDuration() {
-        return 500; //Todo Config or Crafting Recipe setting
+    public int getCraftingDuration(Direction direction) {
+        return sidedDurations.get(direction);
     }
 
     public int getRemainingTimeFor(Direction direction) {
@@ -68,16 +70,19 @@ public class GooBlockBE_Base extends BlockEntity {
             int sideCounter = sidedCounters.get(direction);
             if (gooSpreadRecipe != null) {
                 if (sideCounter == -1) { //Valid Recipe and not running yet
-                    sideCounter = getCraftingDuration();
+                    sideCounter = gooSpreadRecipe.getCraftingDuration();
                     sidedCounters.put(direction, sideCounter);
+                    sidedDurations.put(direction, sideCounter);
+                    markDirtyClient(); //Either way, update the client with the new sideCounters
                 } else if (sideCounter == 0) { //Craftings done!
                     setBlockToTarget(gooSpreadRecipe, direction);
+                    markDirtyClient(); //Either way, update the client with the new sideCounters
                 }
-                markDirtyClient(); //Either way, update the client with the new sideCounters
             } else { //If the recipe is null, it means this isn't a valid input block (or its already been converted!)
                 if (sideCounter != -1) { //If we have a timer running, cancel it
                     sideCounter = -1;
                     sidedCounters.put(direction, sideCounter);
+                    sidedDurations.put(direction, sideCounter);
                     markDirtyClient();
                 }
             }
@@ -87,6 +92,7 @@ public class GooBlockBE_Base extends BlockEntity {
     public void setBlockToTarget(GooSpreadRecipe gooSpreadRecipe, Direction direction) {
         level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput());
         sidedCounters.put(direction, -1);
+        sidedDurations.put(direction, -1);
         level.playSound(null, getBlockPos(), SoundEvents.SCULK_BLOCK_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
@@ -107,14 +113,23 @@ public class GooBlockBE_Base extends BlockEntity {
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        ListTag nbtList = new ListTag();
+        ListTag counterListTag = new ListTag();
         for (Direction direction : Direction.values()) {
             CompoundTag counterTag = new CompoundTag();
             counterTag.putInt("side", direction.ordinal());
             counterTag.putInt("counter", sidedCounters.get(direction));
-            nbtList.add(counterTag);
+            counterListTag.add(counterTag);
         }
-        tag.put("sideCounters", nbtList);
+        tag.put("sideCounters", counterListTag);
+
+        ListTag durationListTag = new ListTag();
+        for (Direction direction : Direction.values()) {
+            CompoundTag durationTag = new CompoundTag();
+            durationTag.putInt("side", direction.ordinal());
+            durationTag.putInt("duration", sidedDurations.get(direction));
+            durationListTag.add(durationTag);
+        }
+        tag.put("sideDurations", durationListTag);
     }
 
     @Override
@@ -126,6 +141,15 @@ public class GooBlockBE_Base extends BlockEntity {
                 int direction = sideCounterTag.getInt("side");
                 int counter = sideCounterTag.getInt("counter");
                 this.sidedCounters.put(Direction.values()[direction], counter);
+            }
+        }
+        if (tag.contains("sideDurations")) {
+            ListTag listNBT = tag.getList("sideDurations", Tag.TAG_COMPOUND);
+            for (int i = 0; i < listNBT.size(); i++) {
+                CompoundTag sideCounterTag = listNBT.getCompound(i);
+                int direction = sideCounterTag.getInt("side");
+                int duration = sideCounterTag.getInt("duration");
+                this.sidedDurations.put(Direction.values()[direction], duration);
             }
         }
         super.load(tag);

@@ -1,11 +1,11 @@
-// 1.20.4	2024-02-23T16:28:50.7573259	Recipes
+// 1.20.4	2024-02-25T20:53:53.4251434	Recipes
 f6f73dfd076ecb074b29b46120bd82b242954fbe data/justdirethings/advancements/recipes/building_blocks/dire_iron_ingot.json
 0bf954f3a8400603bfda65ddf47c3641a96c42c1 data/justdirethings/advancements/recipes/misc/dire_iron_block-goospread.json
 fde641a29acce64b9f5fae692cb002da028dfa39 data/justdirethings/advancements/recipes/misc/dire_iron_block.json
 08a464b9106de5bf0e3d81194dc205ed42ef7db4 data/justdirethings/advancements/recipes/misc/fuel_canister.json
 40cce3bcf79345790efed77343905f6e29a3e0aa data/justdirethings/advancements/recipes/misc/gooblock_tier1.json
 591f2dd8d997ccead841061e70aedc4a4984a60d data/justdirethings/advancements/recipes/misc/pocket_generator.json
-dd08ab2eb908659a310dc3bc3dd310d7f4cc05cb data/justdirethings/recipes/dire_iron_block-goospread.json
+18f27c8764f406aa8ed69ab43aa1f9258ef3b3b8 data/justdirethings/recipes/dire_iron_block-goospread.json
 134f6a5e6e65f53a207f0d0b073739ba9102496e data/justdirethings/recipes/dire_iron_block.json
 7d9886d78a142fa2a56c0a65034b83ae084399a2 data/justdirethings/recipes/dire_iron_ingot.json
 be43fb76c8ff5e0964f378abece4cf4d77ecd06e data/justdirethings/recipes/fuel_canister.json

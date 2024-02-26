@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.datagen.recipes;
 
+import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Base;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.serialization.Codec;
@@ -22,11 +23,15 @@ public class GooSpreadRecipe implements CraftingRecipe {
     private final ResourceLocation id;
     protected final BlockState input;
     protected final BlockState output;
+    protected int tierRequirement;
+    protected int craftingDuration;
 
-    public GooSpreadRecipe(ResourceLocation id, BlockState input, BlockState output) {
+    public GooSpreadRecipe(ResourceLocation id, BlockState input, BlockState output, int tierRequirement, int craftingDuration) {
         this.id = id;
         this.input = input;
         this.output = output;
+        this.tierRequirement = tierRequirement;
+        this.craftingDuration = craftingDuration;
     }
 
     @Override
@@ -35,7 +40,7 @@ public class GooSpreadRecipe implements CraftingRecipe {
     }
 
     public boolean matches(Level level, BlockPos blockPos, GooBlockBE_Base gooBlockBE_base, BlockState sourceState) {
-        return sourceState.equals(input);
+        return sourceState.equals(input) && gooBlockBE_base.getTier() >= tierRequirement;
     }
 
     public BlockState getOutput() {
@@ -44,6 +49,14 @@ public class GooSpreadRecipe implements CraftingRecipe {
 
     public BlockState getInput() {
         return input;
+    }
+
+    public int getTierRequirement() {
+        return tierRequirement;
+    }
+
+    public int getCraftingDuration() {
+        return craftingDuration;
     }
 
     @Override
@@ -84,12 +97,14 @@ public class GooSpreadRecipe implements CraftingRecipe {
 
 
     public static class Serializer implements RecipeSerializer<GooSpreadRecipe> {
-        private static final net.minecraft.resources.ResourceLocation NAME = new net.minecraft.resources.ResourceLocation("laserio", "cardclear");
+        private static final net.minecraft.resources.ResourceLocation NAME = new net.minecraft.resources.ResourceLocation(JustDireThings.MODID, "goospread");
         private static final Codec<GooSpreadRecipe> CODEC = RecordCodecBuilder.create(
                 p_311734_ -> p_311734_.group(
                                 ResourceLocation.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
                                 BlockState.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
-                                BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output)
+                                BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
+                                Codec.INT.fieldOf("tierRequirement").forGetter(p_301137_ -> p_301137_.tierRequirement),
+                                Codec.INT.fieldOf("craftingDuration").forGetter(p_301138_ -> p_301138_.craftingDuration)
                         )
                         .apply(p_311734_, GooSpreadRecipe::new)
         );
@@ -103,14 +118,18 @@ public class GooSpreadRecipe implements CraftingRecipe {
             ResourceLocation resourceLocation = pBuffer.readResourceLocation();
             BlockState inputState = Block.stateById(pBuffer.readInt());
             BlockState outputState = Block.stateById(pBuffer.readInt());
+            int tierRequirement = pBuffer.readInt();
+            int craftingDuration = pBuffer.readInt();
 
-            return new GooSpreadRecipe(resourceLocation, inputState, outputState);
+            return new GooSpreadRecipe(resourceLocation, inputState, outputState, tierRequirement, craftingDuration);
         }
 
         public void toNetwork(FriendlyByteBuf pBuffer, GooSpreadRecipe pRecipe) {
             pBuffer.writeResourceLocation(pRecipe.id);
             pBuffer.writeInt(Block.getId(pRecipe.input));
             pBuffer.writeInt(Block.getId(pRecipe.output));
+            pBuffer.writeInt(pRecipe.tierRequirement);
+            pBuffer.writeInt(pRecipe.craftingDuration);
         }
     }
 }

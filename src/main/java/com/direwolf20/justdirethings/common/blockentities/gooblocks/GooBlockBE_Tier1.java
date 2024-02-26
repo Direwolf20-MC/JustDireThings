@@ -11,6 +11,6 @@ public class GooBlockBE_Tier1 extends GooBlockBE_Base {
 
     @Override
     public int getTier() {
-        return -1;
+        return 1;
     }
 }
