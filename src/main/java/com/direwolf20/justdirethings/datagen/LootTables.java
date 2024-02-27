@@ -12,6 +12,7 @@ public class LootTables extends VanillaBlockLoot {
     @Override
     protected void generate() {
         dropWhenSilkTouch(Registration.GooBlock_Tier1.get());
+        dropWhenSilkTouch(Registration.GooBlock_Tier2.get());
         dropSelf(Registration.DireIronBlock.get());
         dropSelf(Registration.GooPatternBlock.get());
         //add(Registration.RenderBlock.get(), noDrop());

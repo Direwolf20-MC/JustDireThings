@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.client.blockentityrenders;
 
+import com.direwolf20.justdirethings.client.renderers.DireModelBlockRenderer;
 import com.direwolf20.justdirethings.client.renderers.DireVertexConsumer;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Base;
@@ -39,30 +40,30 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
             int remainingTicks = blockentity.getRemainingTimeFor(direction);
             if (remainingTicks > 0) {
                 int maxTicks = blockentity.getCraftingDuration(direction);
-                renderTextures(direction, blockentity.getLevel(), blockentity.getBlockPos(), matrixStackIn, bufferIn, combinedOverlayIn, remainingTicks, maxTicks, blockentity.getBlockState());
+                renderTextures(direction, blockentity.getLevel(), blockentity.getBlockPos(), matrixStackIn, bufferIn, combinedOverlayIn, remainingTicks, maxTicks, blockentity.getBlockState(), blockentity);
             }
         }
     }
 
-    public void renderTextures(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, int remainingTicks, int maxTicks, BlockState renderState) {
+    public void renderTextures(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, int remainingTicks, int maxTicks, BlockState renderState, GooBlockBE_Base gooBlockBE_base) {
         float percentComplete = ((1 - (float) remainingTicks / (float) maxTicks) * 100);
         int tensDigit = (int) (percentComplete / percentageDivisor);
         if (tensDigit > 0) { //Render the prior stage with full transparency
             BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, tensDigit - 1);
-            renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1f, patternState, renderState);
+            renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, 1f, patternState, renderState, gooBlockBE_base);
         }
         BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, tensDigit);
         float startOfCurrentStage = tensDigit * percentageDivisor; // This calculates the starting percentage of the current stage
         float percentagePart = percentComplete - startOfCurrentStage; // This calculates how far into the current stage we are
         float alpha = percentagePart / percentageDivisor;
-        renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, alpha, patternState, renderState);
+        renderTexturePattern(direction, level, pos, matrixStackIn, bufferIn, combinedOverlayIn, alpha, patternState, renderState, gooBlockBE_base);
     }
 
-    public void renderTexturePattern(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, float transparency, BlockState pattern, BlockState renderState) {
+    public void renderTexturePattern(Direction direction, Level level, BlockPos pos, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedOverlayIn, float transparency, BlockState pattern, BlockState renderState, GooBlockBE_Base gooBlockBE_base) {
         BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
         BlockColors blockColors = Minecraft.getInstance().getBlockColors();
-        ModelBlockRenderer modelBlockRenderer = new ModelBlockRenderer(blockColors);
-        BlockPos renderAtPos = pos.above(255); //Render up in the sky to make it not affected by shading and shadows
+        DireModelBlockRenderer modelBlockRenderer = new DireModelBlockRenderer(blockColors, direction);
+        BlockPos renderAtPos = pos.relative(direction);
 
         //These are used for the rendering below
         float[] afloat = new float[Direction.values().length * 2];
@@ -75,9 +76,12 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         matrixStackIn.pushPose();
         //Offset the render to the direction we're crafting at
         matrixStackIn.translate(direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ());
-        //Slightly larger than a normal block, to prevent z-fighting
-        matrixStackIn.translate(-0.0005f, -0.0005f, -0.0005f);
-        matrixStackIn.scale(1.001f, 1.001f, 1.001f);
+        //Slightly larger than a normal block, to prevent z-fighting -
+        //Based on tier incase someone puts a craft in between 2 different tiers - If they put between two of the same tiers theres a bit of zfighting but oh well
+        float translateF = (float) gooBlockBE_base.getTier() / 20000;
+        matrixStackIn.translate(-translateF, -translateF, -translateF);
+        float scaleF = (float) gooBlockBE_base.getTier() / 10000;
+        matrixStackIn.scale(1 + scaleF, 1 + scaleF, 1 + scaleF);
 
         //Rotate based on the direction of the block we're drawing. If we don't rotate both blocks together we get z-fighting!
         matrixStackIn.translate(0.5, 0.5, 0.5);
@@ -92,7 +96,6 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         randomSource.setSeed(pattern.getSeed(renderAtPos));
 
         List<BakedQuad> list;
-
         for (Direction renderSide : Direction.values()) {
             list = ibakedmodel.getQuads(pattern, renderSide, randomSource, ModelData.EMPTY, null);
             if (!list.isEmpty()) {
@@ -108,6 +111,8 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
 
         List<BakedQuad> list2;
         for (Direction renderSide : Direction.values()) {
+            Direction newDirection = getDirection(direction, renderSide); //Because we've rotated it, we need to draw the correct ambient occlusion side
+            modelBlockRenderer.setDirection(newDirection); //Overrode BlockModelRenderer to allow this
             list2 = ibakedmodel2.getQuads(renderState, renderSide, randomSource, ModelData.EMPTY, null);
             if (!list2.isEmpty()) {
                 blockpos$mutableblockpos.setWithOffset(renderAtPos, renderSide);
@@ -117,5 +122,24 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
 
         matrixStackIn.popPose();
 
+    }
+
+    public Direction getDirection(Direction facing, Direction renderSide) {
+        return switch (renderSide) {
+            case UP -> facing;
+            case DOWN -> facing.getOpposite();
+            case WEST -> facing == Direction.DOWN || facing == Direction.UP ? Direction.WEST : facing.getClockWise();
+            case EAST -> facing == Direction.DOWN || facing == Direction.UP ? Direction.EAST : facing.getCounterClockWise();
+            case NORTH -> switch (facing) {
+                case DOWN -> Direction.SOUTH;
+                case UP -> Direction.NORTH;
+                default -> Direction.UP;
+            };
+            case SOUTH -> switch (facing) {
+                case DOWN -> Direction.NORTH;
+                case UP -> Direction.SOUTH;
+                default -> Direction.DOWN;
+            };
+        };
     }
 }

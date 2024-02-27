@@ -15,6 +15,7 @@ public class ItemModels extends ItemModelProvider {
     protected void registerModels() {
         //Block Items
         withExistingParent(Registration.GooBlock_Tier1_ITEM.getId().getPath(), modLoc("block/gooblock_tier1"));
+        withExistingParent(Registration.GooBlock_Tier2_ITEM.getId().getPath(), modLoc("block/gooblock_tier2"));
         withExistingParent(Registration.DireIronBlock_ITEM.getId().getPath(), modLoc("block/dire_iron_block"));
 
         //Item items

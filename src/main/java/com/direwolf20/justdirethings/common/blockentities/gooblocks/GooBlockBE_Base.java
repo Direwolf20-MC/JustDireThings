@@ -44,6 +44,10 @@ public class GooBlockBE_Base extends BlockEntity {
         }
     }
 
+    public int counterReducer() {
+        return 1;
+    }
+
     public int getTier() {
         return 0;
     }
@@ -58,6 +62,12 @@ public class GooBlockBE_Base extends BlockEntity {
 
     public void tickClient() {
         tickCounters(); //We tick on client side too, just for rendering of course!
+    }
+
+    public void tickServer() {
+        checkSides();
+        tickCounters();
+        this.setChanged();
     }
 
     public void spawnParticles(Direction side) {
@@ -75,17 +85,11 @@ public class GooBlockBE_Base extends BlockEntity {
         }
     }
 
-    public void tickServer() {
-        checkSides();
-        tickCounters();
-    }
-
     public void tickCounters() {
         for (Direction direction : Direction.values()) {
             int sideCounter = sidedCounters.get(direction);
             if (sideCounter > 0) {
-                //sideCounter = Math.max(sideCounter-40, 0);
-                sideCounter--;
+                sideCounter = Math.max(sideCounter - counterReducer(), 0);
                 updateSideCounter(direction, sideCounter);
             }
         }

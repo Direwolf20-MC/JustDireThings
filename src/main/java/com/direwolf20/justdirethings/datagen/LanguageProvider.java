@@ -16,7 +16,8 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("itemGroup." + ModSetup.TAB_JUSTDIRETHINGS, "Just Dire Things");
 
         //Blocks
-        add(Registration.GooBlock_Tier1.get(), "GooBlock Tier1");
+        add(Registration.GooBlock_Tier1.get(), "GooBlock Tier 1");
+        add(Registration.GooBlock_Tier2.get(), "GooBlock Tier 2");
         add(Registration.DireIronBlock.get(), "Dire Iron Block");
 
         //Items

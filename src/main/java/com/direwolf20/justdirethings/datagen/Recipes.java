@@ -35,6 +35,17 @@ public class Recipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_coal", InventoryChangeTrigger.TriggerInstance.hasItems(Items.COAL))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.GooBlock_Tier2.get())
+                .pattern("brb")
+                .pattern("wgw")
+                .pattern("brb")
+                .define('g', Registration.GooBlock_Tier1_ITEM.get())
+                .define('b', Items.BLAZE_POWDER)
+                .define('r', Tags.Items.DUSTS_REDSTONE)
+                .define('w', Items.NETHER_WART)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
+                .save(consumer);
 
         //Items
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Fuel_Canister.get())

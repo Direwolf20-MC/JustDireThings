@@ -20,6 +20,8 @@ public class BlockTags extends BlockTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(Registration.GooBlock_Tier1.get());
+        tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_SHOVEL)
+                .add(Registration.GooBlock_Tier2.get());
         tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(Registration.DireIronBlock.get());
     }

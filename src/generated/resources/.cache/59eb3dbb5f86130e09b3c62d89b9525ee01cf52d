@@ -1,4 +1,5 @@
-// 1.20.4	2024-02-24T23:19:21.1599424	Loot Tables
+// 1.20.4	2024-02-26T19:54:13.134991	Loot Tables
 9d014f2566cbaceeb72689cf25beee59806d4a11 data/justdirethings/loot_tables/blocks/dire_iron_block.json
 9d62cc762313305bbe032473310bafd15bcdb8bd data/justdirethings/loot_tables/blocks/gooblock_tier1.json
+7e92782ed4881463b836c32c2504d92fee72cbfb data/justdirethings/loot_tables/blocks/gooblock_tier2.json
 fcef2a947be7443c277f0bc8a7ac5379f2084822 data/justdirethings/loot_tables/blocks/goopatternblock.json
