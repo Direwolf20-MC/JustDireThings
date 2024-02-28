@@ -4,13 +4,12 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
@@ -70,7 +69,7 @@ public class Recipes extends RecipeProvider {
                 .save(consumer);
 
         //GooSpread Recipes
-        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.FerricoreBlock.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
@@ -78,6 +77,12 @@ public class Recipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);
+
+        //Smelting
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.FerricoreRaw.get()), RecipeCategory.MISC,
+                        Registration.FerricoreIngot.get(), 1.0f, 400)
+                .unlockedBy("has_ferricore_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.FerricoreRaw.get()).build()))
+                .save(consumer, new ResourceLocation(JustDireThings.MODID, "ferricore_ingot_smelted"));
 
         //Resource Conversions
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(), Registration.FerricoreIngot.getId().getNamespace() + ":" + Registration.FerricoreIngot.getId().getPath(), "justdirethings", Registration.FerricoreBlock.getId().getNamespace() + ":" + Registration.FerricoreBlock.getId().getPath(), "justdirethings");

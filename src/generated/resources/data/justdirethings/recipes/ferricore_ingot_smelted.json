@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "category": "misc",
-  "cookingtime": 200,
+  "cookingtime": 400,
   "experience": 1.0,
   "ingredient": {
     "item": "justdirethings:ferricore_raw"

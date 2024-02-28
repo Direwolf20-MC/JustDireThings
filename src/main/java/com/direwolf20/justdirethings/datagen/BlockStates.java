@@ -22,6 +22,7 @@ public class BlockStates extends BlockStateProvider {
         simpleBlock(Registration.GooBlock_Tier1.get(), models().cubeAll(Registration.GooBlock_Tier1_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier1.get())).renderType("cutout"));
         simpleBlock(Registration.GooBlock_Tier2.get(), models().cubeAll(Registration.GooBlock_Tier2_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier2.get())).renderType("cutout"));
         simpleBlock(Registration.FerricoreBlock.get(), models().cubeAll(Registration.FerricoreBlock_ITEM.getId().getPath(), blockTexture(Registration.FerricoreBlock.get())));
+        simpleBlock(Registration.RawFerricoreOre.get(), models().cubeAll(Registration.RawFerricoreOre_ITEM.getId().getPath(), blockTexture(Registration.RawFerricoreOre.get())).renderType("translucent"));
         simpleBlock(Registration.BlazeGoldBlock.get(), models().cubeAll(Registration.BlazeGoldBlock_ITEM.getId().getPath(), blockTexture(Registration.BlazeGoldBlock.get())));
         patternBlock();
     }

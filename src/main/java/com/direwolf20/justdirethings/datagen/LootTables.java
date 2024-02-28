@@ -3,6 +3,9 @@ package com.direwolf20.justdirethings.datagen;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.stream.Collectors;
@@ -16,6 +19,16 @@ public class LootTables extends VanillaBlockLoot {
         dropSelf(Registration.FerricoreBlock.get());
         dropSelf(Registration.BlazeGoldBlock.get());
         dropSelf(Registration.GooPatternBlock.get());
+
+        //Raw Ores
+        add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(
+                Registration.RawFerricoreOre.get(),
+                this.applyExplosionDecay(
+                        Registration.RawFerricoreOre.get(),
+                        LootItem.lootTableItem(Registration.FerricoreRaw.get())
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 5.0F)))
+                )
+        ));
     }
 
     @Override

@@ -6,7 +6,7 @@
     "Name": "minecraft:iron_block"
   },
   "output": {
-    "Name": "justdirethings:ferricore_block"
+    "Name": "justdirethings:raw_ferricore_ore"
   },
   "tierRequirement": 1
 }

@@ -21,6 +21,7 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
+        add(Registration.RawFerricoreOre.get(), "Raw Ferricore Ore");
         add(Registration.BlazeGoldBlock.get(), "Blazegold Block");
 
         //Items
@@ -29,6 +30,7 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
 
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");
+        add(Registration.FerricoreRaw.get(), "Raw Ferricore");
         add(Registration.BlazeGoldIngot.get(), "Blazegold Ingot");
 
         //Misc

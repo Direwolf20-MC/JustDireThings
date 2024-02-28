@@ -8,12 +8,14 @@ import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier2;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.BlazeGoldBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.FerricoreBlock;
+import com.direwolf20.justdirethings.common.blocks.resources.RawFerricoreOre;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.common.items.resources.BlazeGoldIngot;
 import com.direwolf20.justdirethings.common.items.resources.FerricoreIngot;
+import com.direwolf20.justdirethings.common.items.resources.FerricoreRaw;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -73,6 +75,8 @@ public class Registration {
     //Blocks - Resources
     public static final DeferredHolder<Block, FerricoreBlock> FerricoreBlock = BLOCKS.register("ferricore_block", FerricoreBlock::new);
     public static final DeferredHolder<Item, BlockItem> FerricoreBlock_ITEM = ITEMS.register("ferricore_block", () -> new BlockItem(FerricoreBlock.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, RawFerricoreOre> RawFerricoreOre = BLOCKS.register("raw_ferricore_ore", RawFerricoreOre::new);
+    public static final DeferredHolder<Item, BlockItem> RawFerricoreOre_ITEM = ITEMS.register("raw_ferricore_ore", () -> new BlockItem(RawFerricoreOre.get(), new Item.Properties()));
     public static final DeferredHolder<Block, BlazeGoldBlock> BlazeGoldBlock = BLOCKS.register("blazegold_block", BlazeGoldBlock::new);
     public static final DeferredHolder<Item, BlockItem> BlazeGoldBlock_ITEM = ITEMS.register("blazegold_block", () -> new BlockItem(BlazeGoldBlock.get(), new Item.Properties()));
 
@@ -87,6 +91,7 @@ public class Registration {
 
     //Items - Resources
     public static final DeferredHolder<Item, FerricoreIngot> FerricoreIngot = ITEMS.register("ferricore_ingot", FerricoreIngot::new);
+    public static final DeferredHolder<Item, FerricoreRaw> FerricoreRaw = ITEMS.register("ferricore_raw", FerricoreRaw::new);
     public static final DeferredHolder<Item, BlazeGoldIngot> BlazeGoldIngot = ITEMS.register("blazegold_ingot", BlazeGoldIngot::new);
 
     //Containers

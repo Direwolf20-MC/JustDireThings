@@ -25,6 +25,8 @@ public class BlockTags extends BlockTagsProvider {
         tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(Registration.FerricoreBlock.get());
         tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(Registration.RawFerricoreOre.get());
+        tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(Registration.BlazeGoldBlock.get());
     }
 

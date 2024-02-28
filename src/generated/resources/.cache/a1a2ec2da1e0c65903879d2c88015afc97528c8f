@@ -1,9 +1,10 @@
-// 1.20.4	2024-02-27T22:29:37.9500217	Block States: justdirethings
+// 1.20.4	2024-02-28T16:52:11.6114855	Block States: justdirethings
 e5976480ed9485e0bae43d4edde0c8aecaabe8a5 assets/justdirethings/blockstates/blazegold_block.json
 81a237aa7f50c82d19f0cbf52a672edf3d805e23 assets/justdirethings/blockstates/ferricore_block.json
 5a4cd222f3bde8915594a1363e2758ee5208517c assets/justdirethings/blockstates/gooblock_tier1.json
 cc1d5dd5cf3cdaf4e89a9b0dae5372b43c27b88c assets/justdirethings/blockstates/gooblock_tier2.json
 2c7ba1dbdfd5b10ee0de988f03472b4af57f9378 assets/justdirethings/blockstates/goopatternblock.json
+a7d2fa74c5e65b5a5f46b68932e99144d08123ee assets/justdirethings/blockstates/raw_ferricore_ore.json
 9bd3946cfa107459786529b2af21eb125a901fb7 assets/justdirethings/models/block/blazegold_block.json
 183c8ed95d7386a12307a44d3ff68f4085961ed3 assets/justdirethings/models/block/ferricore_block.json
 666b981fefb975985ac85c5d3f6bf59934bf43f6 assets/justdirethings/models/block/gooblock_tier1.json
@@ -20,3 +21,4 @@ de99198085ba7892b69b20c7fba7574aa387c99b assets/justdirethings/models/block/goop
 1017892293e8c2c1fbd6668493696513da801921 assets/justdirethings/models/block/goopatternblock7.json
 7c4b15daa716408edd217af3bdd5f4d40a507116 assets/justdirethings/models/block/goopatternblock8.json
 a8285d4ea09e26951b3019b6e96a43d3d4654269 assets/justdirethings/models/block/goopatternblock9.json
+382857a602e9f295c8e682db8c4cbc5299701263 assets/justdirethings/models/block/raw_ferricore_ore.json

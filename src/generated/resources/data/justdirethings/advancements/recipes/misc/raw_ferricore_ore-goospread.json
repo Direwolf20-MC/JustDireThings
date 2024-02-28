@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:ferricore_block-goospread"
+        "recipe": "justdirethings:raw_ferricore_ore-goospread"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:ferricore_block-goospread"
+      "justdirethings:raw_ferricore_ore-goospread"
     ]
   }
 }
