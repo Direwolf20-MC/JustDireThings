@@ -1,7 +1,9 @@
 {
+  "block.justdirethings.dire_gold_block": "Dire Gold Block",
   "block.justdirethings.dire_iron_block": "Dire Iron Block",
   "block.justdirethings.gooblock_tier1": "GooBlock Tier 1",
   "block.justdirethings.gooblock_tier2": "GooBlock Tier 2",
+  "item.justdirethings.dire_gold_ingot": "Dire Gold Ingot",
   "item.justdirethings.dire_iron_ingot": "Dire Iron Ingot",
   "item.justdirethings.fuel_canister": "Fuel Canister",
   "item.justdirethings.pocket_generator": "Pocket Generator",

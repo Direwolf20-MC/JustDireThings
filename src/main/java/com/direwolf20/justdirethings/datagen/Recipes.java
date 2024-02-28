@@ -70,13 +70,18 @@ public class Recipes extends RecipeProvider {
                 .save(consumer);
 
         //GooSpread Recipes
-        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "goospread1"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.DireIronBlock.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.DireIronBlock.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
+                .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
+                .save(consumer);
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), Registration.DireGoldBlock.get().defaultBlockState(), 2, 2400)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);
 
         //Resource Conversions
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.DireIronIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.DireIronBlock.get(), Registration.DireIronIngot.getId().getNamespace() + ":" + Registration.DireIronIngot.getId().getPath(), "justdirethings", Registration.DireIronBlock.getId().getNamespace() + ":" + Registration.DireIronBlock.getId().getPath(), "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.DireGoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.DireGoldBlock.get(), Registration.DireGoldIngot.getId().getNamespace() + ":" + Registration.DireGoldIngot.getId().getPath(), "justdirethings", Registration.DireGoldBlock.getId().getNamespace() + ":" + Registration.DireGoldBlock.getId().getPath(), "justdirethings");
 
     }
 }

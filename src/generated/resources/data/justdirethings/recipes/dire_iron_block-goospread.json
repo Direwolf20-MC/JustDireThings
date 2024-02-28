@@ -1,7 +1,7 @@
 {
   "type": "justdirethings:goospread",
   "craftingDuration": 2400,
-  "id": "justdirethings:goospread1",
+  "id": "justdirethings:dire_iron_block",
   "input": {
     "Name": "minecraft:iron_block"
   },

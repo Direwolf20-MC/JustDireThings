@@ -3,14 +3,16 @@ package com.direwolf20.justdirethings.setup;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
-import com.direwolf20.justdirethings.common.blocks.DireIronBlock;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier2;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
+import com.direwolf20.justdirethings.common.blocks.resources.DireGoldBlock;
+import com.direwolf20.justdirethings.common.blocks.resources.DireIronBlock;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
+import com.direwolf20.justdirethings.common.items.resources.DireGoldIngot;
 import com.direwolf20.justdirethings.common.items.resources.DireIronIngot;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import net.minecraft.core.registries.Registries;
@@ -71,6 +73,8 @@ public class Registration {
     //Blocks - Resources
     public static final DeferredHolder<Block, DireIronBlock> DireIronBlock = BLOCKS.register("dire_iron_block", DireIronBlock::new);
     public static final DeferredHolder<Item, BlockItem> DireIronBlock_ITEM = ITEMS.register("dire_iron_block", () -> new BlockItem(DireIronBlock.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, DireGoldBlock> DireGoldBlock = BLOCKS.register("dire_gold_block", DireGoldBlock::new);
+    public static final DeferredHolder<Item, BlockItem> DireGoldBlock_ITEM = ITEMS.register("dire_gold_block", () -> new BlockItem(DireGoldBlock.get(), new Item.Properties()));
 
     //BlockEntities (Not TileEntities - Honest)
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier1>> GooBlockBE_Tier1 = BLOCK_ENTITIES.register("gooblock_tier1", () -> BlockEntityType.Builder.of(GooBlockBE_Tier1::new, GooBlock_Tier1.get()).build(null));
@@ -83,6 +87,7 @@ public class Registration {
 
     //Items - Resources
     public static final DeferredHolder<Item, DireIronIngot> DireIronIngot = ITEMS.register("dire_iron_ingot", DireIronIngot::new);
+    public static final DeferredHolder<Item, DireGoldIngot> DireGoldIngot = ITEMS.register("dire_gold_ingot", DireGoldIngot::new);
 
     //Containers
     public static final DeferredHolder<MenuType<?>, MenuType<FuelCanisterContainer>> FuelCanister_Container = CONTAINERS.register("fuelcanister",

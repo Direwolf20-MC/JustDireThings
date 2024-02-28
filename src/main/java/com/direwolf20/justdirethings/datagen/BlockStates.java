@@ -22,6 +22,7 @@ public class BlockStates extends BlockStateProvider {
         simpleBlock(Registration.GooBlock_Tier1.get(), models().cubeAll(Registration.GooBlock_Tier1_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier1.get())).renderType("cutout"));
         simpleBlock(Registration.GooBlock_Tier2.get(), models().cubeAll(Registration.GooBlock_Tier2_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier2.get())).renderType("cutout"));
         simpleBlock(Registration.DireIronBlock.get(), models().cubeAll(Registration.DireIronBlock_ITEM.getId().getPath(), blockTexture(Registration.DireIronBlock.get())));
+        simpleBlock(Registration.DireGoldBlock.get(), models().cubeAll(Registration.DireGoldBlock_ITEM.getId().getPath(), blockTexture(Registration.DireGoldBlock.get())));
         patternBlock();
     }
 

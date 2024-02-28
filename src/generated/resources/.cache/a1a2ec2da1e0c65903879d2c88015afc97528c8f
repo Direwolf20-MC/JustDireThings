@@ -1,8 +1,10 @@
-// 1.20.4	2024-02-26T19:54:13.1329884	Block States: justdirethings
+// 1.20.4	2024-02-27T21:45:14.1870088	Block States: justdirethings
+c06af8194db50219a93edd05c4c11c736e41ecd1 assets/justdirethings/blockstates/dire_gold_block.json
 920cb18580ea999cb4670bf40b25ba5c2a914032 assets/justdirethings/blockstates/dire_iron_block.json
 5a4cd222f3bde8915594a1363e2758ee5208517c assets/justdirethings/blockstates/gooblock_tier1.json
 cc1d5dd5cf3cdaf4e89a9b0dae5372b43c27b88c assets/justdirethings/blockstates/gooblock_tier2.json
 2c7ba1dbdfd5b10ee0de988f03472b4af57f9378 assets/justdirethings/blockstates/goopatternblock.json
+d09280640fc309acec5c7f6e8addbbd2f204cfde assets/justdirethings/models/block/dire_gold_block.json
 cffdbed997636075f20d3cdcd18712085357f847 assets/justdirethings/models/block/dire_iron_block.json
 666b981fefb975985ac85c5d3f6bf59934bf43f6 assets/justdirethings/models/block/gooblock_tier1.json
 22057daa37e8a86c27f5772c0b3c6af31e517787 assets/justdirethings/models/block/gooblock_tier2.json

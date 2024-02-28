@@ -24,6 +24,8 @@ public class BlockTags extends BlockTagsProvider {
                 .add(Registration.GooBlock_Tier2.get());
         tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(Registration.DireIronBlock.get());
+        tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(Registration.DireGoldBlock.get());
     }
 
     @Override
