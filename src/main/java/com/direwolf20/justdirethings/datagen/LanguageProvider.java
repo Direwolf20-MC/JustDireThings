@@ -53,5 +53,8 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         //Messages to Player
         //add("justdirethings.messages.invalidblock", "Invalid Block");
 
+        //Recipes
+        add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");
+
     }
 }
