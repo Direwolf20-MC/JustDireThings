@@ -16,16 +16,20 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add("itemGroup." + ModSetup.TAB_JUSTDIRETHINGS, "Just Dire Things");
 
         //Blocks
-        add(Registration.GooBlock_Tier1.get(), "GooBlock Tier 1");
-        add(Registration.GooBlock_Tier2.get(), "GooBlock Tier 2");
-        add(Registration.DireIronBlock.get(), "Dire Iron Block");
-        add(Registration.DireGoldBlock.get(), "Dire Gold Block");
+        add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
+        add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
+
+        //Resources
+        add(Registration.FerricoreBlock.get(), "Ferricore Block");
+        add(Registration.BlazeGoldBlock.get(), "Blazegold Block");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
-        add(Registration.DireIronIngot.get(), "Dire Iron Ingot");
-        add(Registration.DireGoldIngot.get(), "Dire Gold Ingot");
+
+        //Resources
+        add(Registration.FerricoreIngot.get(), "Ferricore Ingot");
+        add(Registration.BlazeGoldIngot.get(), "Blazegold Ingot");
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");

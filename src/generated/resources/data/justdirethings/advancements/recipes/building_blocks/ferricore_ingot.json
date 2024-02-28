@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_dire_iron_ingot": {
+    "has_ferricore_ingot": {
       "conditions": {
         "items": [
           {
             "items": [
-              "justdirethings:dire_iron_ingot"
+              "justdirethings:ferricore_ingot"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:dire_iron_ingot"
+        "recipe": "justdirethings:ferricore_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_dire_iron_ingot"
+      "has_ferricore_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:dire_iron_ingot"
+      "justdirethings:ferricore_ingot"
     ]
   }
 }

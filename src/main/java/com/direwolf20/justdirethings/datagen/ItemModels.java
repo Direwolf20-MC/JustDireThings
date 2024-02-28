@@ -16,13 +16,13 @@ public class ItemModels extends ItemModelProvider {
         //Block Items
         withExistingParent(Registration.GooBlock_Tier1_ITEM.getId().getPath(), modLoc("block/gooblock_tier1"));
         withExistingParent(Registration.GooBlock_Tier2_ITEM.getId().getPath(), modLoc("block/gooblock_tier2"));
-        withExistingParent(Registration.DireIronBlock_ITEM.getId().getPath(), modLoc("block/dire_iron_block"));
-        withExistingParent(Registration.DireGoldBlock_ITEM.getId().getPath(), modLoc("block/dire_gold_block"));
+        withExistingParent(Registration.FerricoreBlock_ITEM.getId().getPath(), modLoc("block/ferricore_block"));
+        withExistingParent(Registration.BlazeGoldBlock_ITEM.getId().getPath(), modLoc("block/blazegold_block"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));
         singleTexture(Registration.Pocket_Generator.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/pocketgenerator"));
-        singleTexture(Registration.DireIronIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/dire_iron_ingot"));
-        singleTexture(Registration.DireGoldIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/dire_gold_ingot"));
+        singleTexture(Registration.FerricoreIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ferricore_ingot"));
+        singleTexture(Registration.BlazeGoldIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/blazegold_ingot"));
     }
 }

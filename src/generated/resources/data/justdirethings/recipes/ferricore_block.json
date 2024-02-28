@@ -4,11 +4,11 @@
   "group": "justdirethings",
   "ingredients": [
     {
-      "item": "justdirethings:dire_iron_block"
+      "item": "justdirethings:ferricore_block"
     }
   ],
   "result": {
     "count": 9,
-    "item": "justdirethings:dire_iron_ingot"
+    "item": "justdirethings:ferricore_ingot"
   }
 }

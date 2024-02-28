@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "justdirethings:item/dire_iron_ingot"
+    "layer0": "justdirethings:item/blazegold_ingot"
   }
 }

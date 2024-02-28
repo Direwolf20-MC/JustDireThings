@@ -70,18 +70,18 @@ public class Recipes extends RecipeProvider {
                 .save(consumer);
 
         //GooSpread Recipes
-        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.DireIronBlock.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.FerricoreBlock.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), Registration.DireGoldBlock.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), Registration.BlazeGoldBlock.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);
 
         //Resource Conversions
-        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.DireIronIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.DireIronBlock.get(), Registration.DireIronIngot.getId().getNamespace() + ":" + Registration.DireIronIngot.getId().getPath(), "justdirethings", Registration.DireIronBlock.getId().getNamespace() + ":" + Registration.DireIronBlock.getId().getPath(), "justdirethings");
-        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.DireGoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.DireGoldBlock.get(), Registration.DireGoldIngot.getId().getNamespace() + ":" + Registration.DireGoldIngot.getId().getPath(), "justdirethings", Registration.DireGoldBlock.getId().getNamespace() + ":" + Registration.DireGoldBlock.getId().getPath(), "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(), Registration.FerricoreIngot.getId().getNamespace() + ":" + Registration.FerricoreIngot.getId().getPath(), "justdirethings", Registration.FerricoreBlock.getId().getNamespace() + ":" + Registration.FerricoreBlock.getId().getPath(), "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.BlazeGoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.BlazeGoldBlock.get(), Registration.BlazeGoldIngot.getId().getNamespace() + ":" + Registration.BlazeGoldIngot.getId().getPath(), "justdirethings", Registration.BlazeGoldBlock.getId().getNamespace() + ":" + Registration.BlazeGoldBlock.getId().getPath(), "justdirethings");
 
     }
 }

@@ -6,14 +6,14 @@ import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_T
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier2;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
-import com.direwolf20.justdirethings.common.blocks.resources.DireGoldBlock;
-import com.direwolf20.justdirethings.common.blocks.resources.DireIronBlock;
+import com.direwolf20.justdirethings.common.blocks.resources.BlazeGoldBlock;
+import com.direwolf20.justdirethings.common.blocks.resources.FerricoreBlock;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
-import com.direwolf20.justdirethings.common.items.resources.DireGoldIngot;
-import com.direwolf20.justdirethings.common.items.resources.DireIronIngot;
+import com.direwolf20.justdirethings.common.items.resources.BlazeGoldIngot;
+import com.direwolf20.justdirethings.common.items.resources.FerricoreIngot;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -71,10 +71,10 @@ public class Registration {
     public static final DeferredHolder<Block, GooPatternBlock> GooPatternBlock = BLOCKS.register("goopatternblock", GooPatternBlock::new);
 
     //Blocks - Resources
-    public static final DeferredHolder<Block, DireIronBlock> DireIronBlock = BLOCKS.register("dire_iron_block", DireIronBlock::new);
-    public static final DeferredHolder<Item, BlockItem> DireIronBlock_ITEM = ITEMS.register("dire_iron_block", () -> new BlockItem(DireIronBlock.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, DireGoldBlock> DireGoldBlock = BLOCKS.register("dire_gold_block", DireGoldBlock::new);
-    public static final DeferredHolder<Item, BlockItem> DireGoldBlock_ITEM = ITEMS.register("dire_gold_block", () -> new BlockItem(DireGoldBlock.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, FerricoreBlock> FerricoreBlock = BLOCKS.register("ferricore_block", FerricoreBlock::new);
+    public static final DeferredHolder<Item, BlockItem> FerricoreBlock_ITEM = ITEMS.register("ferricore_block", () -> new BlockItem(FerricoreBlock.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, BlazeGoldBlock> BlazeGoldBlock = BLOCKS.register("blazegold_block", BlazeGoldBlock::new);
+    public static final DeferredHolder<Item, BlockItem> BlazeGoldBlock_ITEM = ITEMS.register("blazegold_block", () -> new BlockItem(BlazeGoldBlock.get(), new Item.Properties()));
 
     //BlockEntities (Not TileEntities - Honest)
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier1>> GooBlockBE_Tier1 = BLOCK_ENTITIES.register("gooblock_tier1", () -> BlockEntityType.Builder.of(GooBlockBE_Tier1::new, GooBlock_Tier1.get()).build(null));
@@ -86,8 +86,8 @@ public class Registration {
     public static final DeferredHolder<Item, PocketGenerator> Pocket_Generator = ITEMS.register("pocket_generator", PocketGenerator::new);
 
     //Items - Resources
-    public static final DeferredHolder<Item, DireIronIngot> DireIronIngot = ITEMS.register("dire_iron_ingot", DireIronIngot::new);
-    public static final DeferredHolder<Item, DireGoldIngot> DireGoldIngot = ITEMS.register("dire_gold_ingot", DireGoldIngot::new);
+    public static final DeferredHolder<Item, FerricoreIngot> FerricoreIngot = ITEMS.register("ferricore_ingot", FerricoreIngot::new);
+    public static final DeferredHolder<Item, BlazeGoldIngot> BlazeGoldIngot = ITEMS.register("blazegold_ingot", BlazeGoldIngot::new);
 
     //Containers
     public static final DeferredHolder<MenuType<?>, MenuType<FuelCanisterContainer>> FuelCanister_Container = CONTAINERS.register("fuelcanister",

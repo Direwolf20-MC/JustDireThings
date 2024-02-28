@@ -4,7 +4,7 @@
   "group": "justdirethings",
   "key": {
     "#": {
-      "item": "justdirethings:dire_iron_ingot"
+      "item": "justdirethings:blazegold_ingot"
     }
   },
   "pattern": [
@@ -13,6 +13,6 @@
     "###"
   ],
   "result": {
-    "item": "justdirethings:dire_iron_block"
+    "item": "justdirethings:blazegold_block"
   }
 }

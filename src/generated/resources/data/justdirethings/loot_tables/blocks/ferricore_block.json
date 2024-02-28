@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "justdirethings:dire_iron_block"
+          "name": "justdirethings:ferricore_block"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "justdirethings:blocks/dire_iron_block"
+  "random_sequence": "justdirethings:blocks/ferricore_block"
 }

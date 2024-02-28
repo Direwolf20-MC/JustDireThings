@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "justdirethings:block/dire_iron_block"
+    "all": "justdirethings:block/ferricore_block"
   }
 }

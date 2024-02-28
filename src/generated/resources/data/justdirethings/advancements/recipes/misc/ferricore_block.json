@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ferricore_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "justdirethings:ferricore_block"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:ferricore_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ferricore_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:ferricore_block"
+    ]
+  }
+}

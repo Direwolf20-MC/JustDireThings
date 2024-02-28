@@ -1,8 +1,8 @@
-// 1.20.4	2024-02-27T21:45:14.1865085	Item Models: justdirethings
-e54d4c61475edf6c10d91f84872d159deb9074ed assets/justdirethings/models/item/dire_gold_block.json
-20b8f1e2059231a202d8baad3c51f77b4ced9b64 assets/justdirethings/models/item/dire_gold_ingot.json
-e465ae52244667022d3ec84f7b9ba7277ded6ac5 assets/justdirethings/models/item/dire_iron_block.json
-cc689b22f0c6c9518ffe455897cc66247515d38d assets/justdirethings/models/item/dire_iron_ingot.json
+// 1.20.4	2024-02-27T22:29:37.9495216	Item Models: justdirethings
+6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
+b0950f50f6a6d742e497a6275b3ee049055b941d assets/justdirethings/models/item/blazegold_ingot.json
+6c85011e764ec697b9be64a2f7fc12ddacf56f74 assets/justdirethings/models/item/ferricore_block.json
+759ac9a72139623d3d7933c1b72eea98d1a30748 assets/justdirethings/models/item/ferricore_ingot.json
 af62c31381c904f86fde9370e374e01d828fa643 assets/justdirethings/models/item/fuel_canister.json
 2ec271fed6a1fb15d49837326283ca1f0e269689 assets/justdirethings/models/item/gooblock_tier1.json
 8e2f93de57bf331b80c25882febe5601d1b9d26a assets/justdirethings/models/item/gooblock_tier2.json

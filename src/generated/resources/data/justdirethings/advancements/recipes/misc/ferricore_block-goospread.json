@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_goo_block_t1": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "justdirethings:gooblock_tier1"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:ferricore_block-goospread"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_goo_block_t1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:ferricore_block-goospread"
+    ]
+  }
+}

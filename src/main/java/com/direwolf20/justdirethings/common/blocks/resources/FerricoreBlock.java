@@ -3,8 +3,8 @@ package com.direwolf20.justdirethings.common.blocks.resources;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 
-public class DireIronBlock extends Block {
-    public DireIronBlock() {
+public class FerricoreBlock extends Block {
+    public FerricoreBlock() {
         super(Properties.of()
                 .sound(SoundType.METAL)
                 .requiresCorrectToolForDrops()
