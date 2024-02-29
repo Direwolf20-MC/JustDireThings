@@ -2,8 +2,8 @@ package com.direwolf20.justdirethings.common.items.resources;
 
 import net.minecraft.world.item.Item;
 
-public class FerricoreRaw extends Item {
-    public FerricoreRaw() {
+public class RawBlazegold extends Item {
+    public RawBlazegold() {
         super(new Properties());
     }
 }

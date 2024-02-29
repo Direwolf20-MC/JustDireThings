@@ -24,7 +24,7 @@
                   }
                 }
               ],
-              "name": "justdirethings:raw_ferricore_ore"
+              "name": "justdirethings:raw_blazegold_ore"
             },
             {
               "type": "minecraft:item",
@@ -42,7 +42,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "justdirethings:raw_ferricore"
+              "name": "justdirethings:raw_blazegold"
             }
           ]
         }
@@ -50,5 +50,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "justdirethings:blocks/raw_ferricore_ore"
+  "random_sequence": "justdirethings:blocks/raw_blazegold_ore"
 }

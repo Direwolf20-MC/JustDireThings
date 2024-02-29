@@ -23,6 +23,7 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
         add(Registration.RawFerricoreOre.get(), "Raw Ferricore Ore");
         add(Registration.BlazeGoldBlock.get(), "Blazegold Block");
+        add(Registration.RawBlazegoldOre.get(), "Raw Blazegold Ore");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
@@ -30,8 +31,9 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
 
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");
-        add(Registration.FerricoreRaw.get(), "Raw Ferricore");
-        add(Registration.BlazeGoldIngot.get(), "Blazegold Ingot");
+        add(Registration.RawFerricore.get(), "Raw Ferricore");
+        add(Registration.BlazegoldIngot.get(), "Blazegold Ingot");
+        add(Registration.RawBlazegold.get(), "Raw Blazegold");
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");

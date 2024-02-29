@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ferricore_raw": {
+    "has_goo_block_t2": {
       "conditions": {
         "items": [
           {
             "items": [
-              "justdirethings:raw_ferricore"
+              "justdirethings:gooblock_tier2"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:ferricore_ingot_smelted"
+        "recipe": "justdirethings:raw_blazegold_ore-goospread"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_ferricore_raw"
+      "has_goo_block_t2"
     ]
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:ferricore_ingot_smelted"
+      "justdirethings:raw_blazegold_ore-goospread"
     ]
   }
 }

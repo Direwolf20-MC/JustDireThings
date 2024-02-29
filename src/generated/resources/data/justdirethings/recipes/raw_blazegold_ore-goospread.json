@@ -6,7 +6,7 @@
     "Name": "minecraft:gold_block"
   },
   "output": {
-    "Name": "justdirethings:blazegold_block"
+    "Name": "justdirethings:raw_blazegold_ore"
   },
   "tierRequirement": 2
 }

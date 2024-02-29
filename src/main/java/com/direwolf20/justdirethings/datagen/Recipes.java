@@ -73,20 +73,24 @@ public class Recipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), Registration.BlazeGoldBlock.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), Registration.RawBlazegoldOre.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);
 
         //Smelting
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.FerricoreRaw.get()), RecipeCategory.MISC,
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC,
                         Registration.FerricoreIngot.get(), 1.0f, 400)
-                .unlockedBy("has_ferricore_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.FerricoreRaw.get()).build()))
+                .unlockedBy("has_ferricore_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawFerricore.get()).build()))
                 .save(consumer, new ResourceLocation(JustDireThings.MODID, "ferricore_ingot_smelted"));
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawBlazegold.get()), RecipeCategory.MISC,
+                        Registration.BlazegoldIngot.get(), 1.0f, 400)
+                .unlockedBy("has_blazegold_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawBlazegold.get()).build()))
+                .save(consumer, new ResourceLocation(JustDireThings.MODID, "blazegold_ingot_smelted"));
 
         //Resource Conversions
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(), Registration.FerricoreIngot.getId().getNamespace() + ":" + Registration.FerricoreIngot.getId().getPath(), "justdirethings", Registration.FerricoreBlock.getId().getNamespace() + ":" + Registration.FerricoreBlock.getId().getPath(), "justdirethings");
-        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.BlazeGoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.BlazeGoldBlock.get(), Registration.BlazeGoldIngot.getId().getNamespace() + ":" + Registration.BlazeGoldIngot.getId().getPath(), "justdirethings", Registration.BlazeGoldBlock.getId().getNamespace() + ":" + Registration.BlazeGoldBlock.getId().getPath(), "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.BlazegoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.BlazeGoldBlock.get(), Registration.BlazegoldIngot.getId().getNamespace() + ":" + Registration.BlazegoldIngot.getId().getPath(), "justdirethings", Registration.BlazeGoldBlock.getId().getNamespace() + ":" + Registration.BlazeGoldBlock.getId().getPath(), "justdirethings");
 
     }
 }

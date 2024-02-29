@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_goo_block_t2": {
+    "has_blazegold_raw": {
       "conditions": {
         "items": [
           {
             "items": [
-              "justdirethings:gooblock_tier2"
+              "justdirethings:raw_blazegold"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:blazegold_block-goospread"
+        "recipe": "justdirethings:blazegold_ingot_smelted"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_goo_block_t2"
+      "has_blazegold_raw"
     ]
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:blazegold_block-goospread"
+      "justdirethings:blazegold_ingot_smelted"
     ]
   }
 }
