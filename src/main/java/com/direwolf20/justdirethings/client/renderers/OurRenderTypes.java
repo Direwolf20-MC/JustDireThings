@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 
 public class OurRenderTypes extends RenderType {
-    public static RenderType RenderBlock = create("GadgetRenderBlock",
+    /*public static final RenderType RenderBlock = create("GadgetRenderBlock",
             DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
             RenderType.CompositeState.builder()
                     .setShaderState(RenderStateShard.RENDERTYPE_SOLID_SHADER)
@@ -17,7 +17,7 @@ public class OurRenderTypes extends RenderType {
                     .setDepthTestState(LEQUAL_DEPTH_TEST)
                     .setCullState(CULL)
                     .setWriteMaskState(COLOR_WRITE)
-                    .createCompositeState(false));
+                    .createCompositeState(false));*/
     public static final RenderType RenderBlockBackface = create("GadgetRenderBlockBackface",
             DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
             RenderType.CompositeState.builder()
@@ -60,7 +60,7 @@ public class OurRenderTypes extends RenderType {
         super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
     }
 
-    public static void updateRenders() { //Only used when testing
+    /*public static void updateRenders() { //Only used when testing
         RenderBlock = create("GadgetRenderBlock",
                 DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
                 RenderType.CompositeState.builder()
@@ -73,7 +73,7 @@ public class OurRenderTypes extends RenderType {
                         .setCullState(CULL)
                         .setWriteMaskState(COLOR_WRITE)
                         .createCompositeState(false));
-        /*GooPattern = create("GooPattern",
+        GooPattern = create("GooPattern",
                 DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_ALPHA_SHADER)
@@ -97,6 +97,6 @@ public class OurRenderTypes extends RenderType {
                         .setCullState(NO_CULL)
                         .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
                         .setOverlayState(RenderStateShard.OVERLAY)
-                        .createCompositeState(false));*/
-    }
+                        .createCompositeState(false));
+    }*/
 }
