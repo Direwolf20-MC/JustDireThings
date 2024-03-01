@@ -2,6 +2,8 @@ package com.direwolf20.justdirethings.client.renderactions;
 
 import com.direwolf20.justdirethings.client.particles.alwaysvisibleparticle.AlwaysVisibleParticleData;
 import com.direwolf20.justdirethings.client.renderers.DireBufferBuilder;
+import com.direwolf20.justdirethings.common.items.tools.TieredGooItem;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,10 +19,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
@@ -34,11 +39,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class OreFinder {
-    public static long visibleStartTime;
-    public static long particleStartTime;
+public class ThingFinder {
+    public static long xRayStartTime;
+    public static long blockParticlesStartTime;
+    public static long entityParticlesStartTime;
     //public static Map<BlockPos, BlockState> oreMap = new HashMap<>();
     public static List<BlockPos> oreBlocksList = new ArrayList<>();
+    public static List<Entity> entityList = new ArrayList<>();
     private static int sortCounter = 0;
 
     //A eBufferBuilder, so we can draw the render
@@ -51,13 +58,23 @@ public class OreFinder {
     private static final RenderType renderType = RenderType.translucent();
 
     public static void render(RenderLevelStageEvent evt, Player player, ItemStack heldItemMain) {
-        if (((System.currentTimeMillis() - visibleStartTime) / 1000) < 10)  //Lasts for 10 seconds
+        if (((System.currentTimeMillis() - xRayStartTime) / 1000) < 10)  //Lasts for 10 seconds
             drawVBO(evt, player);
         if (!oreBlocksList.isEmpty()) {
-            if (((System.currentTimeMillis() - particleStartTime) / 1000) < 10)
-                drawParticles(evt, player);
+            if (((System.currentTimeMillis() - blockParticlesStartTime) / 1000) < 10)
+                drawParticlesOre(evt, player);
             else
                 oreBlocksList.clear();
+        }
+        if (!entityList.isEmpty()) {
+            if (((System.currentTimeMillis() - entityParticlesStartTime) / 1000) < 10) {
+                if (((System.currentTimeMillis() - entityParticlesStartTime) / 1000) < 1) {
+                    int tier = ((TieredGooItem) heldItemMain.getItem()).getGooTier();
+                    discoverMobs(player, heldItemMain, tier, false); // Todo Lookup
+                }
+                drawParticlesEntity(evt, player);
+            } else
+                entityList.clear();
         }
     }
 
@@ -70,21 +87,56 @@ public class OreFinder {
                 .map(BlockPos::immutable)
                 .collect(Collectors.toList());
         if (tier >= 3) {
-            visibleStartTime = System.currentTimeMillis();
+            xRayStartTime = System.currentTimeMillis();
             generateVBO(player);
         } else {
-            particleStartTime = System.currentTimeMillis();
+            blockParticlesStartTime = System.currentTimeMillis();
         }
     }
 
-    public static void drawParticles(RenderLevelStageEvent evt, Player player) {
+    public static void discoverMobs(Player player, ItemStack heldItemMain, int tier, boolean startTimer) {
+        entityList.clear();
+        BlockPos playerPos = player.getOnPos();
+        int radius = 10; //TODO 50 seems to be ok perf wise but ridiculous
+
+        entityList = player.level().getEntities(player, AABB.encapsulatingFullBlocks(playerPos.offset(-radius, -radius, -radius), playerPos.offset(radius, radius, radius)))
+                .stream()
+                .filter(entity -> entity instanceof Monster)
+                .collect(Collectors.toList());
+        /*if (tier >= 3) { //TODO
+            xRayStartTime = System.currentTimeMillis();
+            generateVBO(player);
+        } else {*/
+        if (startTimer)
+            entityParticlesStartTime = System.currentTimeMillis();
+        //}
+    }
+
+    public static void drawParticlesOre(RenderLevelStageEvent evt, Player player) {
         Random random = new Random();
+        if (random.nextDouble() < 0.98d)
+            return;
         Level level = player.level();
-        AlwaysVisibleParticleData data = new AlwaysVisibleParticleData(BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.BUBBLE));
+        AlwaysVisibleParticleData data = new AlwaysVisibleParticleData(BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.HAPPY_VILLAGER));
         for (BlockPos pos : oreBlocksList) {
             double d0 = (double) pos.getX() + random.nextDouble();
             double d1 = (double) pos.getY() + random.nextDouble();
             double d2 = (double) pos.getZ() + random.nextDouble();
+            level.addParticle(data, d0, d1, d2, 0.0, 0.0, 0.0);
+        }
+    }
+
+    public static void drawParticlesEntity(RenderLevelStageEvent evt, Player player) {
+        Random random = new Random();
+        if (random.nextDouble() < 0.85d)
+            return;
+        Level level = player.level();
+        AlwaysVisibleParticleData data = new AlwaysVisibleParticleData(BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.SOUL));
+        for (Entity entity : entityList) {
+            AABB aabb = entity.getBoundingBox();
+            double d0 = MiscHelpers.nextDouble(aabb.minX, aabb.maxX);
+            double d1 = MiscHelpers.nextDouble(aabb.minY, aabb.maxY);
+            double d2 = MiscHelpers.nextDouble(aabb.minZ, aabb.maxZ);
             level.addParticle(data, d0, d1, d2, 0.0, 0.0, 0.0);
         }
     }

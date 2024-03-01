@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
-import com.direwolf20.justdirethings.client.renderactions.OreFinder;
+import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -28,7 +28,7 @@ public class FerricorePickaxe extends PickaxeItem implements FerricoreItem {
         if (level.isClientSide) {
             ItemStack itemStack = player.getItemInHand(hand);
             if (itemStack.getItem() instanceof TieredGooItem tieredGooItem)
-                OreFinder.discoverOres(player, itemStack, tieredGooItem.getGooTier());
+                ThingFinder.discoverOres(player, itemStack, tieredGooItem.getGooTier());
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
