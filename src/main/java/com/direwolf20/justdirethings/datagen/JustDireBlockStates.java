@@ -12,8 +12,8 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import java.util.Objects;
 
 
-public class BlockStates extends BlockStateProvider {
-    public BlockStates(PackOutput output, ExistingFileHelper helper) {
+public class JustDireBlockStates extends BlockStateProvider {
+    public JustDireBlockStates(PackOutput output, ExistingFileHelper helper) {
         super(output, JustDireThings.MODID, helper);
     }
 

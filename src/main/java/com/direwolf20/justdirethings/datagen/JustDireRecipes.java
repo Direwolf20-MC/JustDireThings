@@ -13,10 +13,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
-public class Recipes extends RecipeProvider {
+public class JustDireRecipes extends RecipeProvider {
 
 
-    public Recipes(PackOutput output) {
+    public JustDireRecipes(PackOutput output) {
         super(output);
     }
 
@@ -87,6 +87,53 @@ public class Recipes extends RecipeProvider {
                         Registration.BlazegoldIngot.get(), 1.0f, 400)
                 .unlockedBy("has_blazegold_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawBlazegold.get()).build()))
                 .save(consumer, new ResourceLocation(JustDireThings.MODID, "blazegold_ingot_smelted"));
+
+        //Tools
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreSword.get())
+                .pattern(" f ")
+                .pattern(" f ")
+                .pattern(" s ")
+                .define('f', Registration.FerricoreIngot.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricorePickaxe.get())
+                .pattern("fff")
+                .pattern(" s ")
+                .pattern(" s ")
+                .define('f', Registration.FerricoreIngot.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreShovel.get())
+                .pattern(" f ")
+                .pattern(" s ")
+                .pattern(" s ")
+                .define('f', Registration.FerricoreIngot.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreAxe.get())
+                .pattern("ff ")
+                .pattern("fs ")
+                .pattern(" s ")
+                .define('f', Registration.FerricoreIngot.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreHoe.get())
+                .pattern("ff ")
+                .pattern(" s ")
+                .pattern(" s ")
+                .define('f', Registration.FerricoreIngot.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
 
         //Resource Conversions
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(), Registration.FerricoreIngot.getId().getNamespace() + ":" + Registration.FerricoreIngot.getId().getPath(), "justdirethings", Registration.FerricoreBlock.getId().getNamespace() + ":" + Registration.FerricoreBlock.getId().getPath(), "justdirethings");

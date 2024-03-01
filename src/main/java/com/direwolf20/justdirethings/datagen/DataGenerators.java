@@ -22,17 +22,17 @@ public class DataGenerators {
         PackOutput packOutput = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        generator.addProvider(event.includeServer(), new Recipes(packOutput));
+        generator.addProvider(event.includeServer(), new JustDireRecipes(packOutput));
         generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(LootTables::new, LootContextParamSets.BLOCK))));
-        BlockTags blockTags = new BlockTags(packOutput, lookupProvider, event.getExistingFileHelper());
+                List.of(new LootTableProvider.SubProviderEntry(JustDireLootTables::new, LootContextParamSets.BLOCK))));
+        JustDireBlockTags blockTags = new JustDireBlockTags(packOutput, lookupProvider, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), blockTags);
-        ItemTags itemTags = new ItemTags(packOutput, lookupProvider, blockTags, event.getExistingFileHelper());
+        JustDireItemTags itemTags = new JustDireItemTags(packOutput, lookupProvider, blockTags, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), itemTags);
 
-        generator.addProvider(event.includeClient(), new BlockStates(packOutput, event.getExistingFileHelper()));
-        generator.addProvider(event.includeClient(), new ItemModels(packOutput, event.getExistingFileHelper()));
-        generator.addProvider(event.includeClient(), new LanguageProvider(packOutput, "en_us"));
+        generator.addProvider(event.includeClient(), new JustDireBlockStates(packOutput, event.getExistingFileHelper()));
+        generator.addProvider(event.includeClient(), new JustDireItemModels(packOutput, event.getExistingFileHelper()));
+        generator.addProvider(event.includeClient(), new JustDireLanguageProvider(packOutput, "en_us"));
 
     }
 }

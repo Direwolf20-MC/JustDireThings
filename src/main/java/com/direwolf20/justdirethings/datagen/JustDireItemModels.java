@@ -6,8 +6,8 @@ import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-public class ItemModels extends ItemModelProvider {
-    public ItemModels(PackOutput output, ExistingFileHelper existingFileHelper) {
+public class JustDireItemModels extends ItemModelProvider {
+    public JustDireItemModels(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, JustDireThings.MODID, existingFileHelper);
     }
 
@@ -28,5 +28,15 @@ public class ItemModels extends ItemModelProvider {
         singleTexture(Registration.FerricoreIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ferricore_ingot"));
         singleTexture(Registration.RawBlazegold.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/raw_blazegold"));
         singleTexture(Registration.BlazegoldIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/blazegold_ingot"));
+
+        //Tool Items
+        registerTools();
+
+    }
+
+    public void registerTools() {
+        for (var tool : Registration.TOOLS.getEntries()) {
+            singleTexture(tool.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/" + tool.getId().getPath()));
+        }
     }
 }

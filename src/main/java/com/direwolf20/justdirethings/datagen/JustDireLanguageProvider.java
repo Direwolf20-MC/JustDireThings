@@ -6,8 +6,8 @@ import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
 
 
-public class LanguageProvider extends net.neoforged.neoforge.common.data.LanguageProvider {
-    public LanguageProvider(PackOutput output, String locale) {
+public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data.LanguageProvider {
+    public JustDireLanguageProvider(PackOutput output, String locale) {
         super(output, JustDireThings.MODID, locale);
     }
 
@@ -28,6 +28,14 @@ public class LanguageProvider extends net.neoforged.neoforge.common.data.Languag
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
+
+        //Tools
+        add(Registration.FerricoreSword.get(), "Ferricore Sword");
+        add(Registration.FerricorePickaxe.get(), "Ferricore Pickaxe");
+        add(Registration.FerricoreShovel.get(), "Ferricore Shovel");
+        add(Registration.FerricoreAxe.get(), "Ferricore Axe");
+        add(Registration.FerricoreHoe.get(), "Ferricore Hoe");
+
 
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");

@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.stream.Collectors;
 
-public class LootTables extends VanillaBlockLoot {
+public class JustDireLootTables extends VanillaBlockLoot {
 
     @Override
     protected void generate() {
