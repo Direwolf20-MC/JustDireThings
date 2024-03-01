@@ -26,7 +26,7 @@ public class LootTables extends VanillaBlockLoot {
                 this.applyExplosionDecay(
                         Registration.RawFerricoreOre.get(),
                         LootItem.lootTableItem(Registration.RawFerricore.get())
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 5.0F)))
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
         add(Registration.RawBlazegoldOre.get(), createSilkTouchDispatchTable(
@@ -34,7 +34,7 @@ public class LootTables extends VanillaBlockLoot {
                 this.applyExplosionDecay(
                         Registration.RawBlazegoldOre.get(),
                         LootItem.lootTableItem(Registration.RawBlazegold.get())
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 5.0F)))
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
     }
