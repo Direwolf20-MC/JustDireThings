@@ -7,14 +7,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 
-public class FerricoreSword extends SwordItem implements FerricoreItem {
+public class FerricoreSword extends SwordItem implements TieredGooItem {
     public FerricoreSword() {
-        super(Tiers.IRON, 3, -2.0F, new Item.Properties());
+        super(GooTier.FERRICORE, 3, -2.0F, new Item.Properties());
     }
 
+    @Override
+    public GooTier gooTier() {
+        return (GooTier) this.getTier();
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {

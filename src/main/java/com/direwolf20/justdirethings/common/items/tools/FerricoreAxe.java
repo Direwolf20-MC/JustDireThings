@@ -2,10 +2,14 @@ package com.direwolf20.justdirethings.common.items.tools;
 
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Tiers;
 
-public class FerricoreAxe extends AxeItem implements FerricoreItem {
+public class FerricoreAxe extends AxeItem implements TieredGooItem {
     public FerricoreAxe() {
-        super(Tiers.IRON, 7.0F, -2.5F, new Item.Properties());
+        super(GooTier.FERRICORE, 7.0F, -2.5F, new Item.Properties());
+    }
+
+    @Override
+    public GooTier gooTier() {
+        return (GooTier) this.getTier();
     }
 }

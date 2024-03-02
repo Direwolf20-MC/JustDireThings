@@ -9,14 +9,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 
-public class FerricorePickaxe extends PickaxeItem implements FerricoreItem {
+public class FerricorePickaxe extends PickaxeItem implements TieredGooItem {
     public FerricorePickaxe() {
-        super(Tiers.IRON, 1, -2.8F, new Item.Properties());
+        super(GooTier.FERRICORE, 1, -2.8F, new Item.Properties());
+    }
+
+    @Override
+    public GooTier gooTier() {
+        return (GooTier) this.getTier();
     }
 
     @Override
