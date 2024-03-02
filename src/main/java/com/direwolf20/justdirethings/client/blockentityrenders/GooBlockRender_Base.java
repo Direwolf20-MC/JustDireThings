@@ -78,9 +78,9 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         matrixStackIn.translate(direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ());
         //Slightly larger than a normal block, to prevent z-fighting -
         //Based on tier incase someone puts a craft in between 2 different tiers - If they put between two of the same tiers theres a bit of zfighting but oh well
-        float translateF = (float) gooBlockBE_base.getTier() / 20000;
+        float translateF = (float) gooBlockBE_base.getTier() / 2000;
         matrixStackIn.translate(-translateF, -translateF, -translateF);
-        float scaleF = (float) gooBlockBE_base.getTier() / 10000;
+        float scaleF = (float) gooBlockBE_base.getTier() / 1000;
         matrixStackIn.scale(1 + scaleF, 1 + scaleF, 1 + scaleF);
 
         //Rotate based on the direction of the block we're drawing. If we don't rotate both blocks together we get z-fighting!
