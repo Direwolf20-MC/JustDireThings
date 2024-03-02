@@ -16,6 +16,6 @@ public class GooBlockBE_Tier2 extends GooBlockBE_Base {
 
     @Override
     public int counterReducer() {
-        return 20;
+        return 2;
     }
 }
