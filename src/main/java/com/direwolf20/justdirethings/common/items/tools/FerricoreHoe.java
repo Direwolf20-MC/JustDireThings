@@ -8,4 +8,6 @@ public class FerricoreHoe extends HoeItem implements FerricoreItem {
     public FerricoreHoe() {
         super(Tiers.IRON, -2, -1.0F, new Item.Properties());
     }
+
+
 }

@@ -4,6 +4,8 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -25,7 +27,27 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.RawFerricoreOre.get(), models().cubeAll(Registration.RawFerricoreOre_ITEM.getId().getPath(), blockTexture(Registration.RawFerricoreOre.get())).renderType("translucent"));
         simpleBlock(Registration.BlazeGoldBlock.get(), models().cubeAll(Registration.BlazeGoldBlock_ITEM.getId().getPath(), blockTexture(Registration.BlazeGoldBlock.get())));
         simpleBlock(Registration.RawBlazegoldOre.get(), models().cubeAll(Registration.RawBlazegoldOre_ITEM.getId().getPath(), blockTexture(Registration.RawBlazegoldOre.get())).renderType("translucent"));
+
         patternBlock();
+        soilBlocks();
+    }
+
+    private void soilBlocks() {
+        getVariantBuilder(Registration.GooSoil.get()).forAllStates(s -> {
+            ModelFile model;
+            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
+            if (Moisture == 7) { //Moist
+                model = models().withExistingParent(Registration.GooSoil.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/dirt"))
+                        .texture("top", modLoc("block/farmland_moist"));
+            } else {
+                model = models().withExistingParent(Registration.GooSoil.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/dirt"))
+                        .texture("top", modLoc("block/farmland"));
+            }
+            return ConfiguredModel.builder()
+                    .modelFile(model).build();
+        });
     }
 
     private void patternBlock() {

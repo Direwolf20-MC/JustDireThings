@@ -1,8 +1,9 @@
-// 1.20.4	2024-02-29T21:09:12.2809107	Loot Tables
+// 1.20.4	2024-03-01T15:36:16.4003748	Loot Tables
 16a0ab61513717ab1cb8c1df9718722a643d9728 data/justdirethings/loot_tables/blocks/blazegold_block.json
 1374ed53b2d6c1462b64a99f3ca1b290388d36c5 data/justdirethings/loot_tables/blocks/ferricore_block.json
 9d62cc762313305bbe032473310bafd15bcdb8bd data/justdirethings/loot_tables/blocks/gooblock_tier1.json
 7e92782ed4881463b836c32c2504d92fee72cbfb data/justdirethings/loot_tables/blocks/gooblock_tier2.json
 fcef2a947be7443c277f0bc8a7ac5379f2084822 data/justdirethings/loot_tables/blocks/goopatternblock.json
+9c8536a418114b2885b7662a77029757c8da8152 data/justdirethings/loot_tables/blocks/goosoil.json
 817a643c3ef7d120e72236ffc75349531a290d80 data/justdirethings/loot_tables/blocks/raw_blazegold_ore.json
 9a3a9b5226f317f041d8b874ca09fd6b8925b2ef data/justdirethings/loot_tables/blocks/raw_ferricore_ore.json

@@ -16,6 +16,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("itemGroup." + ModSetup.TAB_JUSTDIRETHINGS, "Just Dire Things");
 
         //Blocks
+        add(Registration.GooSoil.get(), "Goo Soil");
         add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
 

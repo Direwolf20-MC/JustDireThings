@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.setup;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
+import com.direwolf20.justdirethings.common.blocks.GooSoil;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier2;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
@@ -70,6 +71,11 @@ public class Registration {
     }
 
     //Blocks
+    public static final DeferredHolder<Block, GooSoil> GooSoil = BLOCKS.register("goosoil", GooSoil::new);
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM = ITEMS.register("goosoil", () -> new BlockItem(GooSoil.get(), new Item.Properties()));
+
+
+    //Gooblocks
     public static final DeferredHolder<Block, GooBlock_Tier1> GooBlock_Tier1 = BLOCKS.register("gooblock_tier1", GooBlock_Tier1::new);
     public static final DeferredHolder<Item, BlockItem> GooBlock_Tier1_ITEM = ITEMS.register("gooblock_tier1", () -> new BlockItem(GooBlock_Tier1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, GooBlock_Tier2> GooBlock_Tier2 = BLOCKS.register("gooblock_tier2", GooBlock_Tier2::new);

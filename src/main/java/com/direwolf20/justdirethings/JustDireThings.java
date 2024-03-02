@@ -19,9 +19,10 @@ public class JustDireThings {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public JustDireThings(IEventBus modEventBus) {
-
         Registration.init(modEventBus);
         Config.register();
+
+        modEventBus.addListener(ModSetup::init);
         ModSetup.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(this::registerCapabilities);
         if (FMLLoader.getDist().isClient()) {

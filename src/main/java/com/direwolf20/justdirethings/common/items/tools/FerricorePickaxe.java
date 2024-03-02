@@ -12,6 +12,7 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.Tags;
 
 public class FerricorePickaxe extends PickaxeItem implements FerricoreItem {
     public FerricorePickaxe() {
@@ -31,5 +32,14 @@ public class FerricorePickaxe extends PickaxeItem implements FerricoreItem {
                 ThingFinder.discoverOres(player, itemStack, tieredGooItem.getGooTier());
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
+    }
+
+    @Override
+    public float getDestroySpeed(ItemStack stack, BlockState state) {
+        float defaultSpeed = super.getDestroySpeed(stack, state);
+        if (state.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES))) {
+            return defaultSpeed;
+        }
+        return defaultSpeed + defaultSpeed / 2;
     }
 }

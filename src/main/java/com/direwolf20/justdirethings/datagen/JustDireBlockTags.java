@@ -19,16 +19,12 @@ public class JustDireBlockTags extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_SHOVEL)
-                .add(Registration.GooBlock_Tier1.get());
-        tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_SHOVEL)
+                .add(Registration.GooBlock_Tier1.get())
                 .add(Registration.GooBlock_Tier2.get());
         tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(Registration.FerricoreBlock.get());
-        tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(Registration.RawFerricoreOre.get());
-        tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(Registration.BlazeGoldBlock.get());
-        tag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(Registration.FerricoreBlock.get())
+                .add(Registration.RawFerricoreOre.get())
+                .add(Registration.BlazeGoldBlock.get())
                 .add(Registration.RawBlazegoldOre.get());
     }
 

@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
@@ -19,6 +20,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.FerricoreBlock.get());
         dropSelf(Registration.BlazeGoldBlock.get());
         dropSelf(Registration.GooPatternBlock.get());
+        dropOther(Registration.GooSoil.get(), Items.DIRT);
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(
