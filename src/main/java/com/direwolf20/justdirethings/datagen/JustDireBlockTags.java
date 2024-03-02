@@ -4,7 +4,11 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +21,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
         super(output, lookupProvider, JustDireThings.MODID, existingFileHelper);
     }
 
+    public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "lawnmowerable"));
+
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_SHOVEL)
@@ -27,6 +33,12 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.RawFerricoreOre.get())
                 .add(Registration.BlazeGoldBlock.get())
                 .add(Registration.RawBlazegoldOre.get());
+        tag(LAWNMOWERABLE)
+                .addTag(BlockTags.FLOWERS)
+                .add(Blocks.TALL_GRASS)
+                .add(Blocks.SHORT_GRASS)
+                .add(Blocks.DEAD_BUSH)
+                .add(Blocks.SWEET_BERRY_BUSH);
     }
 
     @Override

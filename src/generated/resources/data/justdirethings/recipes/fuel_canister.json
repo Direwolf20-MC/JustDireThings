@@ -7,7 +7,7 @@
       "item": "minecraft:coal"
     },
     "i": {
-      "tag": "forge:ingots/iron"
+      "item": "justdirethings:ferricore_ingot"
     }
   },
   "pattern": [

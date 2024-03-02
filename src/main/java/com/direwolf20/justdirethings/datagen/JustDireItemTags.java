@@ -20,7 +20,7 @@ public class JustDireItemTags extends ItemTagsProvider {
         super(packOutput, lookupProvider, blockTags.contentsGetter(), JustDireThings.MODID, helper);
     }
 
-    public static final TagKey<Item> FUEL_CANISTER_DENY = net.minecraft.tags.ItemTags.create(new ResourceLocation(JustDireThings.MODID, "deny_fuel_canister"));
+    public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "deny_fuel_canister"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {

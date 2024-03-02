@@ -3,7 +3,6 @@ package com.direwolf20.justdirethings.common.items.tools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,11 +11,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class FerricoreAxe extends AxeItem implements TieredGooItem {
@@ -32,8 +28,6 @@ public class FerricoreAxe extends AxeItem implements TieredGooItem {
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
-            List<TagKey<Block>> extraTags = new ArrayList<>();
-            extraTags.add(BlockTags.LEAVES);
             if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LOGS))) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
