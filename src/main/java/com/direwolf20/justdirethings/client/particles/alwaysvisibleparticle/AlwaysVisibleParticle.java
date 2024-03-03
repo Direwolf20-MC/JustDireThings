@@ -18,10 +18,11 @@ public class AlwaysVisibleParticle extends TextureSheetParticle {
         @Override
         public void begin(BufferBuilder pBuilder, TextureManager pTextureManager) {
             RenderSystem.disableBlend();
-            RenderSystem.depthMask(false);
+            RenderSystem.depthMask(true);
             RenderSystem.setShader(GameRenderer::getParticleShader);
             RenderSystem.disableDepthTest();
             RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+            Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
             pBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 
@@ -29,6 +30,7 @@ public class AlwaysVisibleParticle extends TextureSheetParticle {
         public void end(Tesselator pTesselator) {
             pTesselator.end();
             RenderSystem.enableDepthTest();
+            Minecraft.getInstance().gameRenderer.lightTexture().turnOffLightLayer();
         }
 
         @Override
