@@ -56,10 +56,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratorrf", "Forge Energy: %s / %s");
 
         //Keys
-        //add("key.justdirethings.category", "Building Gadgets 2");
+        add("justdirethings.key.category", "Just Dire Things");
+        add("justdirethings.key.toggle_tool", "Toggle Tool Abilities");
 
-        //Tooltips
-        //add("justdirethings.tooltips.holdshift", "Hold Shift for details");
+        //Abilities
+        add("justdirethings.ability.mobscanner", "Mob Scanner");
+        add("justdirethings.ability.orescanner", "Ore Scanner");
+        add("justdirethings.ability.oreminer", "Ore Miner");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

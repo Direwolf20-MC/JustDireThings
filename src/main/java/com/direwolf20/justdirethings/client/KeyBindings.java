@@ -46,7 +46,7 @@ public class KeyBindings {
     }
 
     private static String getKey(String name) {
-        return String.join(".", "key", JustDireThings.MODID, name);
+        return String.join(".", JustDireThings.MODID, "key", name);
     }
 
     public static void onClientInput(InputEvent.Key event) {
