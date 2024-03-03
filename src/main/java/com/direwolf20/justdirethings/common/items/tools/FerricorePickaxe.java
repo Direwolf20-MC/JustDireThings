@@ -1,9 +1,9 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
+import com.direwolf20.justdirethings.common.items.tools.basetools.BasePickaxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -14,34 +14,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.breakBlocks;
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.findLikeBlocks;
 
-public class FerricorePickaxe extends PickaxeItem implements TieredGooItem, ToggleableTool {
-    private final EnumSet<ToolAbility> abilities = EnumSet.noneOf(ToolAbility.class);
-
+public class FerricorePickaxe extends BasePickaxe {
     public FerricorePickaxe() {
         super(GooTier.FERRICORE, 1, -2.8F, new Item.Properties());
         abilities.add(ToolAbility.ORESCANNER);
         abilities.add(ToolAbility.OREMINER);
-    }
-
-    @Override
-    public EnumSet<ToolAbility> getAbilities() {
-        return abilities;
-    }
-
-    @Override
-    public GooTier gooTier() {
-        return (GooTier) this.getTier();
     }
 
     @Override
@@ -63,11 +49,11 @@ public class FerricorePickaxe extends PickaxeItem implements TieredGooItem, Togg
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (canUseAbility(itemStack, ToolAbility.ORESCANNER) && level.isClientSide) {
+        if (canUseAbility(itemStack, ToolAbility.ORESCANNER) && level.isClientSide && !player.isShiftKeyDown()) {
             if (itemStack.getItem() instanceof TieredGooItem tieredGooItem)
                 ThingFinder.discoverOres(player, itemStack, tieredGooItem.getGooTier());
         }
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
+        return super.use(level, player, hand);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
+import com.direwolf20.justdirethings.common.items.tools.basetools.BaseShovel;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FallingBlock;
@@ -26,14 +25,9 @@ import java.util.Set;
 
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
-public class FerricoreShovel extends ShovelItem implements TieredGooItem {
+public class FerricoreShovel extends BaseShovel {
     public FerricoreShovel() {
         super(GooTier.FERRICORE, 1.5F, -3.0F, new Item.Properties());
-    }
-
-    @Override
-    public GooTier gooTier() {
-        return (GooTier) this.getTier();
     }
 
     @Override
@@ -66,6 +60,6 @@ public class FerricoreShovel extends ShovelItem implements TieredGooItem {
                     itemStack.hurtAndBreak(1, player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
         }
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
+        return super.use(level, player, hand);
     }
 }

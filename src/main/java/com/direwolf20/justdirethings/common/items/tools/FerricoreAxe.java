@@ -1,14 +1,13 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
+import com.direwolf20.justdirethings.common.items.tools.basetools.BaseAxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -20,14 +19,9 @@ import java.util.Set;
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.breakBlocks;
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.findLikeBlocks;
 
-public class FerricoreAxe extends AxeItem implements TieredGooItem {
+public class FerricoreAxe extends BaseAxe {
     public FerricoreAxe() {
         super(GooTier.FERRICORE, 7.0F, -2.5F, new Item.Properties());
-    }
-
-    @Override
-    public GooTier gooTier() {
-        return (GooTier) this.getTier();
     }
 
     @Override
