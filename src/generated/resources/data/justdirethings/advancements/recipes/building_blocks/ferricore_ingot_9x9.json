@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:ferricore_ingot"
+        "recipe": "justdirethings:ferricore_ingot_9x9"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:ferricore_ingot"
+      "justdirethings:ferricore_ingot_9x9"
     ]
   }
 }

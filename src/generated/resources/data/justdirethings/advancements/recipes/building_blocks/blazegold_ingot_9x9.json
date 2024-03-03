@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:blazegold_ingot"
+        "recipe": "justdirethings:blazegold_ingot_9x9"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:blazegold_ingot"
+      "justdirethings:blazegold_ingot_9x9"
     ]
   }
 }

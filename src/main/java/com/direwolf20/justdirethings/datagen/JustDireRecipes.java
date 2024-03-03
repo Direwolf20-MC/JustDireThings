@@ -136,8 +136,8 @@ public class JustDireRecipes extends RecipeProvider {
                 .save(consumer);
 
         //Resource Conversions
-        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(), Registration.FerricoreIngot.getId().getNamespace() + ":" + Registration.FerricoreIngot.getId().getPath(), "justdirethings", Registration.FerricoreBlock.getId().getNamespace() + ":" + Registration.FerricoreBlock.getId().getPath(), "justdirethings");
-        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.BlazegoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.BlazeGoldBlock.get(), Registration.BlazegoldIngot.getId().getNamespace() + ":" + Registration.BlazegoldIngot.getId().getPath(), "justdirethings", Registration.BlazeGoldBlock.getId().getNamespace() + ":" + Registration.BlazeGoldBlock.getId().getPath(), "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(), Registration.FerricoreIngot.getId().toString() + "_9x9", "justdirethings", Registration.FerricoreBlock.getId().toString() + "_9x9", "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.BlazegoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.BlazeGoldBlock.get(), Registration.BlazegoldIngot.getId().toString() + "_9x9", "justdirethings", Registration.BlazeGoldBlock.getId().toString() + "_9x9", "justdirethings");
 
     }
 }

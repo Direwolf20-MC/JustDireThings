@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:ferricore_block"
+        "recipe": "justdirethings:ferricore_block_9x9"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:ferricore_block"
+      "justdirethings:ferricore_block_9x9"
     ]
   }
 }
