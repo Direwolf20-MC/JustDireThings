@@ -26,7 +26,7 @@ public class EventKeyInput {
             return;
 
         if (KeyBindings.toggleTool.consumeClick()) {
-            PacketDistributor.SERVER.noArg().send(new ToggleToolPayload());
+            PacketDistributor.SERVER.noArg().send(new ToggleToolPayload("enabled"));
         } /*else if (KeyBindings.anchor.consumeClick()) {
             PacketDistributor.SERVER.noArg().send(new GadgetActionPayload(ActionGadget.ANCHOR));
         } else if (KeyBindings.range.consumeClick()) {

@@ -36,7 +36,7 @@ public class FerricoreSword extends SwordItem implements TieredGooItem, Toggleab
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (level.isClientSide) {
+        if (level.isClientSide && !player.isShiftKeyDown()) {
             if (canUseAbility(itemStack, ToolAbility.MOBSCANNER)) {
                 if (itemStack.getItem() instanceof TieredGooItem tieredGooItem)
                     ThingFinder.discoverMobs(player, itemStack, tieredGooItem.getGooTier(), true);

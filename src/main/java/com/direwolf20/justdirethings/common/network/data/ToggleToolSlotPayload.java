@@ -5,18 +5,20 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public record ToggleToolPayload(
-        String settingName
+public record ToggleToolSlotPayload(
+        String settingName,
+        int slot
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "toggle_tool_setting");
+    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "toggle_tool_slot_setting");
 
-    public ToggleToolPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readUtf());
+    public ToggleToolSlotPayload(final FriendlyByteBuf buffer) {
+        this(buffer.readUtf(), buffer.readInt());
     }
 
     @Override
     public void write(FriendlyByteBuf buffer) {
         buffer.writeUtf(settingName);
+        buffer.writeInt(slot);
     }
 
     @Override

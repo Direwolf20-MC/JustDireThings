@@ -1,30 +1,74 @@
 package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
+import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
+import com.direwolf20.justdirethings.util.MiscTools;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.EnumSet;
 
 public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContainer> {
     private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/settings.png");
 
     protected final ToolSettingContainer container;
+    Player player;
     protected ItemStack tool;
+    private EnumSet<ToolAbility> abilities = EnumSet.noneOf(ToolAbility.class);
+    int buttonsStartX = getGuiLeft() + 5;
+    int buttonsStartY = getGuiTop() + 15;
+    int toolSlot;
 
     public ToolSettingScreen(ToolSettingContainer container, Inventory inv, Component name) {
         super(container, inv, name);
         this.container = container;
-        this.tool = ToggleableTool.getToggleableTool(container.playerEntity);
+        this.player = container.playerEntity;
+        if (player.getMainHandItem().getItem() instanceof ToggleableTool) {
+            tool = player.getMainHandItem();
+            toolSlot = player.getInventory().selected;
+        } else if (player.getOffhandItem().getItem() instanceof ToggleableTool) {
+            tool = player.getOffhandItem();
+            toolSlot = 40;
+        }
+    }
+
+    public void refreshButtons() {
+        buttonsStartX = getGuiLeft() + 5;
+        buttonsStartY = getGuiTop() + 25;
+        clearWidgets();
+        int counter = 0;
+        for (ToolAbility toolAbility : abilities) {
+            if (toolAbility.getSettingType() == ToolAbility.SettingType.TOGGLE) {
+                boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
+                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), toolAbility.getLocalization(), isActive, (clicked) -> {
+                    toggleSetting(toolAbility.getName());
+                    ((GrayscaleButton) clicked).toggleActive();
+                });
+                addRenderableWidget(button);
+                counter++;
+            }
+        }
+    }
+
+    public void toggleSetting(String settingName) {
+        PacketDistributor.SERVER.noArg().send(new ToggleToolSlotPayload(settingName, toolSlot));
     }
 
     @Override
@@ -45,6 +89,13 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     @Override
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         super.renderTooltip(pGuiGraphics, pX, pY);
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof GrayscaleButton button) {
+                if (MiscTools.inBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight(), pX, pY)) {
+                    pGuiGraphics.renderTooltip(font, Component.translatable(button.getLocalization()), pX, pY);
+                }
+            }
+        }
     }
 
     @Override
@@ -55,6 +106,10 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     @Override
     public void init() {
         super.init();
+        if (this.tool.getItem() instanceof ToggleableTool toggleableTool) {
+            this.abilities = toggleableTool.getAbilities();
+            refreshButtons();
+        }
     }
 
     @Override
@@ -94,8 +149,11 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
 
     @Override
     public boolean mouseClicked(double x, double y, int btn) {
-        if (hoveredSlot != null && hoveredSlot.getItem().getItem() instanceof ToggleableTool) {
+        if (hoveredSlot != null && hoveredSlot.getItem().getItem() instanceof ToggleableTool toggleableTool) {
             tool = hoveredSlot.getItem();
+            toolSlot = hoveredSlot.getSlotIndex();
+            this.abilities = toggleableTool.getAbilities();
+            refreshButtons();
             return true;
         }
         return super.mouseClicked(x, y, btn);
