@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -21,18 +22,19 @@ public interface TieredGooItem {
     }
 
     default void breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
-        /*BlockState state = level.getBlockState(pos); //Todo: Tier 2 and 3
-        List<ItemStack> Block.getDrops();
-        LootParams.Builder lootparams$builder = new LootParams.Builder(level)
-                .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
-                .withParameter(LootContextParams.THIS_ENTITY, pPlayer)
-                .withParameter(LootContextParams.TOOL, pStack)
-                .withParameter(LootContextParams.BLOCK_STATE, state)
-                .withParameter(LootContextParams.TOOL, new ItemStack(Registration.FerricoreHoe.get()));*/
-
-        // If specific block conditions are needed, set them in the LootContext builder.
-
         level.destroyBlock(pos, true);
+    }
+
+    default void breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, BlockPos dropAtPos) {
+        BlockState state = level.getBlockState(pos); //Todo: Tier 2 and 3
+        List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
+
+        level.destroyBlock(pos, false);
+        for (ItemStack drop : drops) {
+            ItemEntity itemEntity = new ItemEntity(level, dropAtPos.getX(), dropAtPos.getY(), dropAtPos.getZ(), drop);
+            //itemEntity.setPickUpDelay(40);
+            level.addFreshEntity(itemEntity);
+        }
     }
 
     /**

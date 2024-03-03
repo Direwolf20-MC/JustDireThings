@@ -31,14 +31,13 @@ public class FerricoreAxe extends AxeItem implements TieredGooItem {
             if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LOGS)) && pStack.isCorrectToolForDrops(pState)) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
-                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack);
+                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
                     pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             } else {
                 pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
         }
-
         return true;
     }
 
@@ -54,7 +53,7 @@ public class FerricoreAxe extends AxeItem implements TieredGooItem {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
                 System.out.println(alsoBreakSet.size());
                 for (BlockPos breakPos : alsoBreakSet) {
-                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack);
+                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
                     pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                     if (Math.random() < 0.1) //10% chance to damage tool
                         pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));

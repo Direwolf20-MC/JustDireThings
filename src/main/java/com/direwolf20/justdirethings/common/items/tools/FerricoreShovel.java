@@ -38,7 +38,7 @@ public class FerricoreShovel extends ShovelItem implements TieredGooItem {
             if (pState.getBlock() instanceof FallingBlock && pStack.isCorrectToolForDrops(pState)) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, Direction.UP, 24); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
-                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack);
+                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
                     pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             } else {
