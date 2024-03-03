@@ -13,7 +13,7 @@ public class BlockToolModification {
     @SubscribeEvent
     public static void handleTickEndEvent(BlockEvent.BlockToolModificationEvent event) {
         if (event.getToolAction().equals(ToolActions.HOE_TILL) && event.getHeldItemStack().getItem() instanceof FerricoreHoe) {
-            BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getToolAction(), event.isSimulated());
+            BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getToolAction(), true);
             if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
                 event.setFinalState(Registration.GooSoil.get().defaultBlockState());
         }
