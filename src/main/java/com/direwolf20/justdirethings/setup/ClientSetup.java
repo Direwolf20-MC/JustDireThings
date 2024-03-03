@@ -2,8 +2,10 @@ package com.direwolf20.justdirethings.setup;
 
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier1;
 import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier2;
+import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
 import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
@@ -18,12 +20,11 @@ import net.neoforged.neoforge.common.NeoForge;
 @Mod.EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
     public static void init(final FMLClientSetupEvent event) {
-        //Minecraft.getInstance().getMainRenderTarget().enableStencil();
-        //NeoForge.EVENT_BUS.addListener(KeyBindings::onClientInput);
+        NeoForge.EVENT_BUS.addListener(KeyBindings::onClientInput);
 
         //Register our Render Events Class
         NeoForge.EVENT_BUS.register(RenderLevelLast.class);
-        //NeoForge.EVENT_BUS.register(EventKeyInput.class);
+        NeoForge.EVENT_BUS.register(EventKeyInput.class);
 
         //Screens
         /*event.enqueueWork(() -> {

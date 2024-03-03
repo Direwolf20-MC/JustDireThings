@@ -1,5 +1,7 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
+import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 

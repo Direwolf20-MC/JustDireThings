@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.client.renderactions;
 
 import com.direwolf20.justdirethings.client.particles.alwaysvisibleparticle.AlwaysVisibleParticleData;
 import com.direwolf20.justdirethings.client.renderers.DireBufferBuilder;
-import com.direwolf20.justdirethings.common.items.tools.TieredGooItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;

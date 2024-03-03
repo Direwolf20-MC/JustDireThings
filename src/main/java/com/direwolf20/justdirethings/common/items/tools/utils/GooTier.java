@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.items.tools;
+package com.direwolf20.justdirethings.common.items.tools.utils;
 
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.util.LazyLoadedValue;

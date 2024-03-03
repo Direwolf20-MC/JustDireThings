@@ -1,5 +1,7 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
+import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
 public class FerricoreShovel extends ShovelItem implements TieredGooItem {
     public FerricoreShovel() {

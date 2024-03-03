@@ -1,5 +1,7 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
+import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -14,6 +16,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Set;
+
+import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.breakBlocks;
+import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.findLikeBlocks;
 
 public class FerricoreAxe extends AxeItem implements TieredGooItem {
     public FerricoreAxe() {

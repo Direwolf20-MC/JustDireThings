@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.items.tools;
+package com.direwolf20.justdirethings.common.items.tools.utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,18 +14,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public interface TieredGooItem {
-    GooTier gooTier();
-
-    default int getGooTier() {
-        return gooTier().getGooTier();
-    }
-
-    default void breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
+public class Helpers {
+    public static void breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
         level.destroyBlock(pos, true);
     }
 
-    default void breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, BlockPos dropAtPos) {
+    public static void breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, BlockPos dropAtPos) {
         BlockState state = level.getBlockState(pos); //Todo: Tier 2 and 3
         List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
 
@@ -40,7 +34,7 @@ public interface TieredGooItem {
     /**
      * Basically a veinminer
      */
-    default Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, int radius) {
+    public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, int radius) {
         Set<BlockPos> foundBlocks = new HashSet<>(); //The matching Blocks
         Queue<BlockPos> blocksToCheck = new LinkedList<>(); //A list of blocks to check around
         Set<BlockPos> checkedBlocks = new HashSet<>(); //A list of blocks we already checked
@@ -74,7 +68,7 @@ public interface TieredGooItem {
     /**
      * Looks in a specified direction for similar blocks - used by shovels to clear all like blocks above them
      */
-    default Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, Direction direction, int range) {
+    public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, Direction direction, int range) {
         Set<BlockPos> foundBlocks = new HashSet<>(); //The matching Blocks
         foundBlocks.add(pPos); //Obviously the block we broke is included in the return!
 
@@ -95,7 +89,7 @@ public interface TieredGooItem {
     /**
      * Basically a veinminer
      */
-    default Set<BlockPos> findTaggedBlocks(Level pLevel, List<TagKey<Block>> tags, BlockPos pPos, int maxBreak, int radius) {
+    public static Set<BlockPos> findTaggedBlocks(Level pLevel, List<TagKey<Block>> tags, BlockPos pPos, int maxBreak, int radius) {
         Set<BlockPos> foundBlocks = new HashSet<>(); //The matching Blocks
         Queue<BlockPos> blocksToCheck = new LinkedList<>(); //A list of blocks to check around
         Set<BlockPos> checkedBlocks = new HashSet<>(); //A list of blocks we already checked
@@ -129,7 +123,7 @@ public interface TieredGooItem {
      * Same as above, but you can pass in extra block tags to break - for example, if you wanna also break all leaves when blockstate is a log
      */
 
-    default Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, int radius, List<TagKey<Block>> extraTags) {
+    public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, int radius, List<TagKey<Block>> extraTags) {
         Set<BlockPos> foundBlocks = new HashSet<>(); //The matching Blocks
         Queue<BlockPos> blocksToCheck = new LinkedList<>(); //A list of blocks to check around
         Queue<BlockPos> secondaryBlocksToCheck = new LinkedList<>(); // Matching states will always iterate first, extraTags will be scanned second!

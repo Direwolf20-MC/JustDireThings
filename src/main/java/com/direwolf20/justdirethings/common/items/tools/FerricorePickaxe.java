@@ -1,6 +1,10 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
+import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -15,11 +19,24 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.EnumSet;
 import java.util.Set;
 
-public class FerricorePickaxe extends PickaxeItem implements TieredGooItem {
+import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.breakBlocks;
+import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.findLikeBlocks;
+
+public class FerricorePickaxe extends PickaxeItem implements TieredGooItem, ToggleableTool {
+    private final EnumSet<ToolAbility> abilities = EnumSet.noneOf(ToolAbility.class);
+
     public FerricorePickaxe() {
         super(GooTier.FERRICORE, 1, -2.8F, new Item.Properties());
+        abilities.add(ToolAbility.ORESCANNER);
+        abilities.add(ToolAbility.OREMINER);
+    }
+
+    @Override
+    public EnumSet<ToolAbility> getAbilities() {
+        return abilities;
     }
 
     @Override
@@ -30,7 +47,7 @@ public class FerricorePickaxe extends PickaxeItem implements TieredGooItem {
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
-            if (pState.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)) && pStack.isCorrectToolForDrops(pState)) {
+            if (canUseAbility(pStack, ToolAbility.OREMINER) && pState.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)) && pStack.isCorrectToolForDrops(pState)) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 16, 2); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
                     breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
@@ -45,8 +62,8 @@ public class FerricorePickaxe extends PickaxeItem implements TieredGooItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (level.isClientSide) {
-            ItemStack itemStack = player.getItemInHand(hand);
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (canUseAbility(itemStack, ToolAbility.ORESCANNER) && level.isClientSide) {
             if (itemStack.getItem() instanceof TieredGooItem tieredGooItem)
                 ThingFinder.discoverOres(player, itemStack, tieredGooItem.getGooTier());
         }
