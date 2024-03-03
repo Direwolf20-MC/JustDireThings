@@ -1,6 +1,9 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
+import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -8,6 +11,12 @@ import java.util.EnumSet;
 
 public interface ToggleableTool {
     EnumSet<ToolAbility> getAbilities();
+
+    default void openSettings(Player player) {
+        player.openMenu(new SimpleMenuProvider(
+                (windowId, playerInventory, playerEntity) -> new ToolSettingContainer(windowId, playerInventory, player), Component.translatable("")));
+
+    }
 
     default void registerAbility(ToolAbility ability) {
         getAbilities().add(ability);

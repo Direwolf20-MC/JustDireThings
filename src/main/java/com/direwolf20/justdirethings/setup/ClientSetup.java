@@ -9,6 +9,7 @@ import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
 import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
+import com.direwolf20.justdirethings.client.screens.ToolSettingScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -36,6 +37,7 @@ public class ClientSetup {
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(Registration.FuelCanister_Container.get(), FuelCanisterScreen::new);
         event.register(Registration.PocketGenerator_Container.get(), PocketGeneratorScreen::new);
+        event.register(Registration.Tool_Settings_Container.get(), ToolSettingScreen::new);
     }
 
     @SubscribeEvent
