@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseShovel;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,12 +29,14 @@ import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 public class FerricoreShovel extends BaseShovel {
     public FerricoreShovel() {
         super(GooTier.FERRICORE, 1.5F, -3.0F, new Item.Properties());
+        registerAbility(ToolAbility.SKYSWEEPER);
+        registerAbility(ToolAbility.LAWNMOWER);
     }
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
-            if (pState.getBlock() instanceof FallingBlock && pStack.isCorrectToolForDrops(pState)) {
+            if (canUseAbility(pStack, ToolAbility.SKYSWEEPER) && pState.getBlock() instanceof FallingBlock && pStack.isCorrectToolForDrops(pState)) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, Direction.UP, 24); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
                     breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
@@ -49,8 +52,8 @@ public class FerricoreShovel extends BaseShovel {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (!level.isClientSide) {
-            ItemStack itemStack = player.getItemInHand(hand);
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (!level.isClientSide && canUseAbility(itemStack, ToolAbility.LAWNMOWER)) {
             List<TagKey<Block>> tags = new ArrayList<>();
             tags.add(JustDireBlockTags.LAWNMOWERABLE);
             Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?

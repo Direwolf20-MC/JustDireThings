@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseAxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -22,12 +23,14 @@ import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.fin
 public class FerricoreAxe extends BaseAxe {
     public FerricoreAxe() {
         super(GooTier.FERRICORE, 7.0F, -2.5F, new Item.Properties());
+        registerAbility(ToolAbility.TREEFELLER);
+        registerAbility(ToolAbility.LEAFBREAKER);
     }
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
-            if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LOGS)) && pStack.isCorrectToolForDrops(pState)) {
+            if (canUseAbility(pStack, ToolAbility.TREEFELLER) && pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LOGS)) && pStack.isCorrectToolForDrops(pState)) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
                     breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
@@ -47,7 +50,7 @@ public class FerricoreAxe extends BaseAxe {
         BlockState pState = pLevel.getBlockState(pPos);
         LivingEntity pEntityLiving = pContext.getPlayer();
         ItemStack pStack = pContext.getItemInHand();
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide && canUseAbility(pStack, ToolAbility.LEAFBREAKER)) {
             if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
                 System.out.println(alsoBreakSet.size());

@@ -63,6 +63,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.ability.mobscanner", "Mob Scanner");
         add("justdirethings.ability.orescanner", "Ore Scanner");
         add("justdirethings.ability.oreminer", "Ore Miner");
+        add("justdirethings.ability.lawnmower", "Lawnmower");
+        add("justdirethings.ability.skysweeper", "Sky Sweeper");
+        add("justdirethings.ability.treefeller", "Tree Feller");
+        add("justdirethings.ability.leafbreaker", "Leaf Breaker");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

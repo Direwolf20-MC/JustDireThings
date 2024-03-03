@@ -4,9 +4,13 @@ import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.resources.ResourceLocation;
 
 public enum ToolAbility {
-    MOBSCANNER("mobscanner", SettingType.TOGGLE, "justdirethings.ability.mobscanner", "mobscanner.png"),
-    OREMINER("oreminer", SettingType.TOGGLE, "justdirethings.ability.oreminer", "mobscanner.png"),
-    ORESCANNER("orescanner", SettingType.TOGGLE, "justdirethings.ability.orescanner", "mobscanner.png");
+    MOBSCANNER("mobscanner", SettingType.TOGGLE),
+    OREMINER("oreminer", SettingType.TOGGLE),
+    ORESCANNER("orescanner", SettingType.TOGGLE),
+    LAWNMOWER("lawnmower", SettingType.TOGGLE),
+    SKYSWEEPER("skysweeper", SettingType.TOGGLE),
+    TREEFELLER("treefeller", SettingType.TOGGLE),
+    LEAFBREAKER("leafbreaker", SettingType.TOGGLE);
 
     public enum SettingType {
         TOGGLE,
@@ -20,11 +24,21 @@ public enum ToolAbility {
     int minSlider;
     int maxSlider;
 
+    ToolAbility(String name, SettingType settingType) {
+        this(name, settingType, "justdirethings.ability." + name, name + ".png");
+    }
+
     ToolAbility(String name, SettingType settingType, String localization, String iconFileName) {
         this.name = name;
         this.settingType = settingType;
         this.localization = localization;
         this.iconLocation = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/" + iconFileName);
+    }
+
+    ToolAbility(String name, SettingType settingType, int minSlider, int maxSlider) {
+        this(name, settingType);
+        this.minSlider = minSlider;
+        this.maxSlider = maxSlider;
     }
 
     ToolAbility(String name, SettingType settingType, String localization, String iconFileName, int minSlider, int maxSlider) {

@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 public class FerricoreSword extends BaseSword {
     public FerricoreSword() {
         super(GooTier.FERRICORE, 3, -2.0F, new Item.Properties());
-        abilities.add(ToolAbility.MOBSCANNER);
+        registerAbility(ToolAbility.MOBSCANNER);
     }
 
     @Override

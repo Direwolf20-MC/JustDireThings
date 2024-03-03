@@ -26,8 +26,8 @@ import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.fin
 public class FerricorePickaxe extends BasePickaxe {
     public FerricorePickaxe() {
         super(GooTier.FERRICORE, 1, -2.8F, new Item.Properties());
-        abilities.add(ToolAbility.ORESCANNER);
-        abilities.add(ToolAbility.OREMINER);
+        registerAbility(ToolAbility.ORESCANNER);
+        registerAbility(ToolAbility.OREMINER);
     }
 
     @Override
