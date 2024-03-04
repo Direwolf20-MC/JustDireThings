@@ -9,6 +9,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +40,9 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Blocks.SHORT_GRASS)
                 .add(Blocks.DEAD_BUSH)
                 .add(Blocks.SWEET_BERRY_BUSH);
+        tag(Tags.Blocks.ORES)
+                .add(Registration.RawFerricoreOre.get())
+                .add(Registration.RawBlazegoldOre.get());
     }
 
     @Override

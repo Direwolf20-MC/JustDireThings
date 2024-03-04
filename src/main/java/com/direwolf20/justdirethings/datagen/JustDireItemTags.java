@@ -10,6 +10,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -36,6 +37,12 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.FerricoreAxe.get());
         tag(ItemTags.HOES)
                 .add(Registration.FerricoreHoe.get());
+        tag(Tags.Items.INGOTS)
+                .add(Registration.FerricoreIngot.get())
+                .add(Registration.BlazegoldIngot.get());
+        tag(Tags.Items.RAW_MATERIALS)
+                .add(Registration.RawFerricore.get())
+                .add(Registration.RawBlazegold.get());
     }
 
     @Override

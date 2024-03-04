@@ -1,4 +1,6 @@
-// 1.20.4	2024-02-29T21:09:12.2779071	JustDireThings Item Tags
+// 1.20.4	2024-03-03T19:23:22.438985	JustDireThings Item Tags
+0033dd5135cf3676982c66d94ea18e83565a9c7e data/forge/tags/items/ingots.json
+8366e2a2f30d00a706b146401144f02e8c8983a4 data/forge/tags/items/raw_materials.json
 efe9e0caf089100a228c46379f3aa70d7f602ddc data/justdirethings/tags/items/deny_fuel_canister.json
 3350c72c3bc1e748eaadfed5ed86d7aaf342bcdb data/minecraft/tags/items/axes.json
 07072793f0efa210e8a1cb39411dd508caad819a data/minecraft/tags/items/hoes.json
