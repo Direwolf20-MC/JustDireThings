@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,11 +21,18 @@ public class FerricoreSword extends BaseSword {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (level.isClientSide && !player.isShiftKeyDown()) {
+        if (!player.isShiftKeyDown()) {
             ItemStack itemStack = player.getItemInHand(hand);
-            if (canUseAbility(itemStack, ToolAbility.MOBSCANNER)) {
-                if (itemStack.getItem() instanceof TieredGooItem tieredGooItem)
-                    ThingFinder.discoverMobs(player, itemStack, tieredGooItem.getGooTier(), true);
+            if (level.isClientSide) {
+                if (canUseAbility(itemStack, ToolAbility.MOBSCANNER)) {
+                    if (itemStack.getItem() instanceof TieredGooItem tieredGooItem) {
+                        ThingFinder.discoverMobs(player, itemStack, tieredGooItem.getGooTier(), true);
+                    }
+                }
+            } else { //ServerSide
+                if (canUseAbility(itemStack, ToolAbility.MOBSCANNER)) {
+                    itemStack.hurtAndBreak(ToolAbility.MOBSCANNER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
             }
         }
         return super.use(level, player, hand);

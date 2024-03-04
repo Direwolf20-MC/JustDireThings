@@ -40,7 +40,7 @@ public class FerricoreShovel extends BaseShovel {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, Direction.UP, 24); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
                     breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
-                    pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    pStack.hurtAndBreak(ToolAbility.SKYSWEEPER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             } else {
                 pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -60,7 +60,7 @@ public class FerricoreShovel extends BaseShovel {
             for (BlockPos breakPos : breakBlocks) {
                 breakBlocks((ServerLevel) level, breakPos, player, itemStack);
                 if (Math.random() < 0.1) //10% chance to damage tool
-                    itemStack.hurtAndBreak(1, player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    itemStack.hurtAndBreak(ToolAbility.LAWNMOWER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
         }
         return super.use(level, player, hand);

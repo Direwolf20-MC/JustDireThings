@@ -34,7 +34,7 @@ public class FerricoreAxe extends BaseAxe {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
                     breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
-                    pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    pStack.hurtAndBreak(ToolAbility.TREEFELLER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             } else {
                 pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -58,7 +58,7 @@ public class FerricoreAxe extends BaseAxe {
                     breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
                     pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                     if (Math.random() < 0.1) //10% chance to damage tool
-                        pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        pStack.hurtAndBreak(ToolAbility.LEAFBREAKER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             }
         }

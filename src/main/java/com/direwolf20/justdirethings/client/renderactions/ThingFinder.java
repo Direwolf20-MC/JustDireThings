@@ -42,6 +42,8 @@ import java.util.stream.Collectors;
 public class ThingFinder {
     public static long xRayStartTime;
     public static long blockParticlesStartTime;
+    private static long lastBlockDrawTime = 0; // The last time particles were drawn
+    private static long lastEntityDrawTime = 0; // The last time particles were drawn
     public static long entityParticlesStartTime;
     //public static Map<BlockPos, BlockState> oreMap = new HashMap<>();
     public static List<BlockPos> oreBlocksList = new ArrayList<>();
@@ -61,18 +63,24 @@ public class ThingFinder {
         if (((System.currentTimeMillis() - xRayStartTime) / 1000) < 10)  //Lasts for 10 seconds
             drawVBO(evt, player);
         if (!oreBlocksList.isEmpty()) {
-            if (((System.currentTimeMillis() - blockParticlesStartTime) / 1000) < 10)
-                drawParticlesOre(evt, player);
-            else
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - blockParticlesStartTime) < 10000) { //Lasts for 10 seconds
+                if ((currentTime - lastBlockDrawTime) >= 500) { //Every 1/2 second
+                    drawParticlesOre(evt, player);
+                    lastBlockDrawTime = currentTime;
+                }
+            } else
                 oreBlocksList.clear();
         }
         if (!entityList.isEmpty()) {
-            if (((System.currentTimeMillis() - entityParticlesStartTime) / 1000) < 10) {
-                if (((System.currentTimeMillis() - entityParticlesStartTime) / 1000) < 1) {
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - entityParticlesStartTime) < 10000) { //Lasts for 10 seconds
+                if ((currentTime - lastEntityDrawTime) >= 500) { //Every 1/2 second
                     int tier = ((TieredGooItem) heldItemMain.getItem()).getGooTier();
-                    discoverMobs(player, heldItemMain, tier, false); // Todo Lookup
+                    discoverMobs(player, heldItemMain, tier, false);
+                    drawParticlesEntity(evt, player);
+                    lastEntityDrawTime = currentTime;
                 }
-                drawParticlesEntity(evt, player);
             } else
                 entityList.clear();
         }
@@ -103,41 +111,35 @@ public class ThingFinder {
                 .stream()
                 .filter(entity -> entity instanceof Monster)
                 .collect(Collectors.toList());
-        /*if (tier >= 3) { //TODO
-            xRayStartTime = System.currentTimeMillis();
-            generateVBO(player);
-        } else {*/
         if (startTimer)
             entityParticlesStartTime = System.currentTimeMillis();
-        //}
     }
 
     public static void drawParticlesOre(RenderLevelStageEvent evt, Player player) {
         Random random = new Random();
-        if (random.nextDouble() < 0.98d)
-            return;
         Level level = player.level();
         AlwaysVisibleParticleData data = new AlwaysVisibleParticleData(BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.HAPPY_VILLAGER));
-        for (BlockPos pos : oreBlocksList) {
-            double d0 = (double) pos.getX() + random.nextDouble();
-            double d1 = (double) pos.getY() + random.nextDouble();
-            double d2 = (double) pos.getZ() + random.nextDouble();
-            level.addParticle(data, d0, d1, d2, 0.0, 0.0, 0.0);
+        for (int i = 0; i < 2; i++) {
+            for (BlockPos pos : oreBlocksList) {
+                double d0 = (double) pos.getX() + random.nextDouble();
+                double d1 = (double) pos.getY() + random.nextDouble();
+                double d2 = (double) pos.getZ() + random.nextDouble();
+                level.addParticle(data, d0, d1, d2, 0.0, 0.0, 0.0);
+            }
         }
     }
 
     public static void drawParticlesEntity(RenderLevelStageEvent evt, Player player) {
-        Random random = new Random();
-        if (random.nextDouble() < 0.85d)
-            return;
         Level level = player.level();
         AlwaysVisibleParticleData data = new AlwaysVisibleParticleData(BuiltInRegistries.PARTICLE_TYPE.getKey(ParticleTypes.SOUL));
-        for (Entity entity : entityList) {
-            AABB aabb = entity.getBoundingBox();
-            double d0 = MiscHelpers.nextDouble(aabb.minX, aabb.maxX);
-            double d1 = MiscHelpers.nextDouble(aabb.minY, aabb.maxY);
-            double d2 = MiscHelpers.nextDouble(aabb.minZ, aabb.maxZ);
-            level.addParticle(data, d0, d1, d2, 0.0, 0.0, 0.0);
+        for (int i = 0; i < 5; i++) {
+            for (Entity entity : entityList) {
+                AABB aabb = entity.getBoundingBox();
+                double d0 = MiscHelpers.nextDouble(aabb.minX, aabb.maxX);
+                double d1 = MiscHelpers.nextDouble(aabb.minY, aabb.maxY);
+                double d2 = MiscHelpers.nextDouble(aabb.minZ, aabb.maxZ);
+                level.addParticle(data, d0, d1, d2, 0.0, 0.0, 0.0);
+            }
         }
     }
 

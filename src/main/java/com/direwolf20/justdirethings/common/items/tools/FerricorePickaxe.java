@@ -37,7 +37,7 @@ public class FerricorePickaxe extends BasePickaxe {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 16, 2); //Todo: Balance and Config?
                 for (BlockPos breakPos : alsoBreakSet) {
                     breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
-                    pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    pStack.hurtAndBreak(ToolAbility.OREMINER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             } else {
                 pStack.hurtAndBreak(1, pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -48,10 +48,19 @@ public class FerricorePickaxe extends BasePickaxe {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        if (canUseAbility(itemStack, ToolAbility.ORESCANNER) && level.isClientSide && !player.isShiftKeyDown()) {
-            if (itemStack.getItem() instanceof TieredGooItem tieredGooItem)
-                ThingFinder.discoverOres(player, itemStack, tieredGooItem.getGooTier());
+        if (!player.isShiftKeyDown()) {
+            ItemStack itemStack = player.getItemInHand(hand);
+            if (level.isClientSide) {
+                if (canUseAbility(itemStack, ToolAbility.ORESCANNER)) {
+                    if (itemStack.getItem() instanceof TieredGooItem tieredGooItem) {
+                        ThingFinder.discoverOres(player, itemStack, tieredGooItem.getGooTier());
+                    }
+                }
+            } else { //ServerSide
+                if (canUseAbility(itemStack, ToolAbility.ORESCANNER)) {
+                    itemStack.hurtAndBreak(ToolAbility.ORESCANNER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
+            }
         }
         return super.use(level, player, hand);
     }
