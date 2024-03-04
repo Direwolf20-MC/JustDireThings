@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings;
 
+import com.direwolf20.justdirethings.common.network.PacketHandler;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.ModSetup;
@@ -19,11 +20,13 @@ public class JustDireThings {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public JustDireThings(IEventBus modEventBus) {
-
         Registration.init(modEventBus);
         Config.register();
+
+        modEventBus.addListener(ModSetup::init);
         ModSetup.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(this::registerCapabilities);
+        modEventBus.addListener(PacketHandler::registerNetworking);
         if (FMLLoader.getDist().isClient()) {
             modEventBus.addListener(ClientSetup::init);
         }

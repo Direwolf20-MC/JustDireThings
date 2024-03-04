@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_coal": {
+    "has_ferricore_ingot": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:coal"
+              "justdirethings:ferricore_ingot"
             ]
           }
         ]
@@ -23,7 +23,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_coal"
+      "has_ferricore_ingot"
     ]
   ],
   "rewards": {

@@ -64,7 +64,7 @@ public class Config {
         POCKET_GENERATOR_FE_PER_FUEL_TICK = COMMON_BUILDER.comment("The amount of Forge Energy created per burn tick of fuel. Coal has 1600 burn ticks. Sticks have 100 burn ticks.")
                 .defineInRange("pocket_generator_fe_per_fuel_tick", 12.5, 1, Integer.MAX_VALUE);
         POCKET_GENERATOR_BURN_SPEED_MULTIPLIER = COMMON_BUILDER.comment("The multiplier for the burn speed, making the generator run faster. Coal is 1600 ticks to burn, if you set this to 10, it will burn in 160 ticks")
-                .defineInRange("pocket_generator_burn_speed_multiplier", 10, 1, 1000);
+                .defineInRange("pocket_generator_burn_speed_multiplier", 2, 1, 1000);
         COMMON_BUILDER.pop();
     }
 }

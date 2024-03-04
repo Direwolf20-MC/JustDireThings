@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "justdirethings",
+  "ingredients": [
+    {
+      "item": "justdirethings:blazegold_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "justdirethings:blazegold_ingot"
+  }
+}

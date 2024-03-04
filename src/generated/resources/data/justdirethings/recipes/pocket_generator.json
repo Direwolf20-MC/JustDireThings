@@ -10,7 +10,7 @@
       "item": "minecraft:furnace"
     },
     "i": {
-      "tag": "forge:ingots/iron"
+      "item": "justdirethings:ferricore_ingot"
     },
     "r": {
       "item": "minecraft:redstone_block"

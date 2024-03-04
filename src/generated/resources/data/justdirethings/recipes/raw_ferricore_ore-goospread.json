@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:goospread",
+  "craftingDuration": 2400,
+  "id": "justdirethings:dire_iron_block",
+  "input": {
+    "Name": "minecraft:iron_block"
+  },
+  "output": {
+    "Name": "justdirethings:raw_ferricore_ore"
+  },
+  "tierRequirement": 1
+}

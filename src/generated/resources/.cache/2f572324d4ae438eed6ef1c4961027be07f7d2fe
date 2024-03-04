@@ -1,1 +1,5 @@
-// 1.20.4	2024-02-17T22:37:21.9243006	JustDireThings Tags
+// 1.20.4	2024-03-03T19:23:22.4374836	JustDireThings Tags
+5b5cbf374921a9647606a861d5a8c35ea64cc9c7 data/forge/tags/blocks/ores.json
+2d8e1cc89c55f97e9aa87799af87ddd8a74b2e34 data/justdirethings/tags/blocks/lawnmowerable.json
+dff9db68e86925ee97c0161c983644c87debb3c3 data/minecraft/tags/blocks/mineable/pickaxe.json
+11232a655ecdf0e32c632d145759b8a0de2e09fa data/minecraft/tags/blocks/mineable/shovel.json

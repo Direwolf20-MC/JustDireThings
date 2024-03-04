@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:goospread",
+  "craftingDuration": 2400,
+  "id": "justdirethings:dire_gold_block",
+  "input": {
+    "Name": "minecraft:gold_block"
+  },
+  "output": {
+    "Name": "justdirethings:raw_blazegold_ore"
+  },
+  "tierRequirement": 2
+}
