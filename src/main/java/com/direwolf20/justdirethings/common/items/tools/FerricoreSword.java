@@ -23,20 +23,16 @@ public class FerricoreSword extends BaseSword {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (!player.isShiftKeyDown()) {
             ItemStack itemStack = player.getItemInHand(hand);
-            if (level.isClientSide) {
-                if (canUseAbility(itemStack, ToolAbility.MOBSCANNER)) {
+            if (canUseAbility(itemStack, ToolAbility.MOBSCANNER)) {
+                if (level.isClientSide) {
                     if (itemStack.getItem() instanceof TieredGooItem tieredGooItem) {
                         ThingFinder.discoverMobs(player, itemStack, tieredGooItem.getGooTier(), true);
                     }
-                }
-            } else { //ServerSide
-                if (canUseAbility(itemStack, ToolAbility.MOBSCANNER)) {
+                } else { //ServerSide
                     itemStack.hurtAndBreak(ToolAbility.MOBSCANNER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             }
         }
         return super.use(level, player, hand);
     }
-
-
 }

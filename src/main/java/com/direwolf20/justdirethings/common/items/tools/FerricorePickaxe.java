@@ -50,14 +50,12 @@ public class FerricorePickaxe extends BasePickaxe {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (!player.isShiftKeyDown()) {
             ItemStack itemStack = player.getItemInHand(hand);
-            if (level.isClientSide) {
-                if (canUseAbility(itemStack, ToolAbility.ORESCANNER)) {
+            if (canUseAbility(itemStack, ToolAbility.ORESCANNER)) {
+                if (level.isClientSide) {
                     if (itemStack.getItem() instanceof TieredGooItem tieredGooItem) {
                         ThingFinder.discoverOres(player, itemStack, tieredGooItem.getGooTier());
                     }
-                }
-            } else { //ServerSide
-                if (canUseAbility(itemStack, ToolAbility.ORESCANNER)) {
+                } else { //ServerSide
                     itemStack.hurtAndBreak(ToolAbility.ORESCANNER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
             }
