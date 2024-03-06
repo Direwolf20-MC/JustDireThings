@@ -31,10 +31,17 @@ public class Helpers {
         }
     }
 
+    public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, Direction direction, int maxBreak, int range) {
+        if (direction == null)
+            return findBlocks(pLevel, pState, pPos, maxBreak, range);
+        else
+            return findBlocks(pLevel, pState, pPos, maxBreak, direction, maxBreak);
+    }
+
     /**
      * Basically a veinminer
      */
-    public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, int radius) {
+    private static Set<BlockPos> findBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, int radius) {
         Set<BlockPos> foundBlocks = new HashSet<>(); //The matching Blocks
         Queue<BlockPos> blocksToCheck = new LinkedList<>(); //A list of blocks to check around
         Set<BlockPos> checkedBlocks = new HashSet<>(); //A list of blocks we already checked
@@ -68,7 +75,7 @@ public class Helpers {
     /**
      * Looks in a specified direction for similar blocks - used by shovels to clear all like blocks above them
      */
-    public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, Direction direction, int range) {
+    private static Set<BlockPos> findBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, Direction direction, int range) {
         Set<BlockPos> foundBlocks = new HashSet<>(); //The matching Blocks
         foundBlocks.add(pPos); //Obviously the block we broke is included in the return!
 

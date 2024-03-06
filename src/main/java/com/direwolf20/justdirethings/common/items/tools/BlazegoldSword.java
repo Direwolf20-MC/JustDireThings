@@ -6,13 +6,12 @@ import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class FerricoreSword extends BaseSword {
-    public FerricoreSword() {
-        super(GooTier.FERRICORE, 3, -2.0F, new Item.Properties());
+public class BlazegoldSword extends BaseSword {
+    public BlazegoldSword() {
+        super(GooTier.BLAZEGOLD, 3, -2.0F, new Properties());
         registerAbility(ToolAbility.MOBSCANNER);
     }
 

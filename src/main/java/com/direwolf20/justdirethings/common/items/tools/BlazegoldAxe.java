@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -15,9 +14,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Predicate;
 
-public class FerricoreAxe extends BaseAxe {
-    public FerricoreAxe() {
-        super(GooTier.FERRICORE, 7.0F, -2.5F, new Item.Properties());
+public class BlazegoldAxe extends BaseAxe {
+    public BlazegoldAxe() {
+        super(GooTier.BLAZEGOLD, 7.0F, -2.5F, new Properties());
         registerAbility(ToolAbility.TREEFELLER);
         registerAbility(ToolAbility.LEAFBREAKER);
     }

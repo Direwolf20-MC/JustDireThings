@@ -36,6 +36,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FerricoreShovel.get(), "Ferricore Shovel");
         add(Registration.FerricoreAxe.get(), "Ferricore Axe");
         add(Registration.FerricoreHoe.get(), "Ferricore Hoe");
+        add(Registration.BlazegoldSword.get(), "Blazegold Sword");
+        add(Registration.BlazegoldPickaxe.get(), "Blazegold Pickaxe");
+        add(Registration.BlazegoldShovel.get(), "Blazegold Shovel");
+        add(Registration.BlazegoldAxe.get(), "Blazegold Axe");
+        add(Registration.BlazegoldHoe.get(), "Blazegold Hoe");
 
 
         //Resources

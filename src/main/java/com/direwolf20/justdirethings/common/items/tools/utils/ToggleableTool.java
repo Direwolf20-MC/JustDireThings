@@ -1,13 +1,33 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
+import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
+import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+
+import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
 public interface ToggleableTool {
     EnumSet<ToolAbility> getAbilities();
@@ -28,6 +48,116 @@ public interface ToggleableTool {
 
     default boolean canUseAbility(ItemStack itemStack, ToolAbility toolAbility) {
         return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name);
+    }
+
+    //Abilities
+    default boolean mineBlocksAbility(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving, ToolAbility toolAbility, Direction direction, Predicate<BlockState> condition) {
+        if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
+            if (canUseAbility(pStack, toolAbility) && condition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
+                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, direction, 64, 2); //Todo: Balance and Config?
+                for (BlockPos breakPos : alsoBreakSet) {
+                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
+                    pStack.hurtAndBreak(toolAbility.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*default boolean treefeller(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
+        if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
+            if (canUseAbility(pStack, ToolAbility.TREEFELLER) && pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LOGS)) && pStack.isCorrectToolForDrops(pState)) {
+                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
+                for (BlockPos breakPos : alsoBreakSet) {
+                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
+                    pStack.hurtAndBreak(ToolAbility.TREEFELLER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    default boolean oreMiner(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
+        if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
+            if (canUseAbility(pStack, ToolAbility.OREMINER) && pState.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)) && pStack.isCorrectToolForDrops(pState)) {
+                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
+                for (BlockPos breakPos : alsoBreakSet) {
+                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
+                    pStack.hurtAndBreak(ToolAbility.OREMINER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    default boolean skySweeper(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
+        if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
+            if (canUseAbility(pStack, ToolAbility.SKYSWEEPER) && pState.getBlock() instanceof FallingBlock && pStack.isCorrectToolForDrops(pState)) {
+                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 24, Direction.UP, 24); //Todo: Balance and Config?
+                for (BlockPos breakPos : alsoBreakSet) {
+                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
+                    pStack.hurtAndBreak(ToolAbility.SKYSWEEPER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
+                return true;
+            }
+        }
+        return false;
+    }*/
+
+    default boolean scanFor(Level level, Player player, InteractionHand hand, ToolAbility toolAbility) {
+        if (!player.isShiftKeyDown()) {
+            ItemStack itemStack = player.getItemInHand(hand);
+            if (canUseAbility(itemStack, toolAbility)) {
+                if (level.isClientSide) {
+                    if (itemStack.getItem() instanceof TieredGooItem tieredGooItem) {
+                        ThingFinder.discover(player, tieredGooItem.getGooTier(), toolAbility);
+                    }
+                } else { //ServerSide
+                    itemStack.hurtAndBreak(toolAbility.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
+            }
+        }
+        return false;
+    }
+
+    default boolean leafbreaker(UseOnContext pContext) {
+        Level pLevel = pContext.getLevel();
+        BlockPos pPos = pContext.getClickedPos();
+        BlockState pState = pLevel.getBlockState(pPos);
+        LivingEntity pEntityLiving = pContext.getPlayer();
+        ItemStack pStack = pContext.getItemInHand();
+        if (!pLevel.isClientSide && canUseAbility(pStack, ToolAbility.LEAFBREAKER)) { //TODO MineBlocks Method Above?
+            if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
+                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
+                for (BlockPos breakPos : alsoBreakSet) {
+                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
+                    pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
+                    if (Math.random() < 0.1) //10% chance to damage tool
+                        pStack.hurtAndBreak(ToolAbility.LEAFBREAKER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    default boolean lawnmower(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (!level.isClientSide && canUseAbility(itemStack, ToolAbility.LAWNMOWER)) {
+            List<TagKey<Block>> tags = new ArrayList<>();
+            tags.add(JustDireBlockTags.LAWNMOWERABLE);
+            Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?
+            for (BlockPos breakPos : breakBlocks) {
+                breakBlocks((ServerLevel) level, breakPos, player, itemStack);
+                if (Math.random() < 0.1) //10% chance to damage tool
+                    itemStack.hurtAndBreak(ToolAbility.LAWNMOWER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            }
+            return true;
+        }
+        return false;
     }
 
     static ItemStack getToggleableTool(Player player) {
