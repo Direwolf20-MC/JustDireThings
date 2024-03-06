@@ -14,8 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 
-import java.util.function.Predicate;
-
 public class FerricorePickaxe extends BasePickaxe {
     public FerricorePickaxe() {
         super(GooTier.FERRICORE, 1, -2.8F, new Item.Properties());
@@ -25,7 +23,6 @@ public class FerricorePickaxe extends BasePickaxe {
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        Predicate<BlockState> oreCondition = s -> s.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES));
         if (mineBlocksAbility(pStack, pLevel, pState, pPos, pEntityLiving, ToolAbility.OREMINER, null, oreCondition))
             return true;
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);

@@ -12,10 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.function.Predicate;
 
 public class FerricoreShovel extends BaseShovel {
     public FerricoreShovel() {
@@ -26,7 +23,6 @@ public class FerricoreShovel extends BaseShovel {
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        Predicate<BlockState> fallingBlockCondition = s -> s.getBlock() instanceof FallingBlock;
         if (mineBlocksAbility(pStack, pLevel, pState, pPos, pEntityLiving, ToolAbility.SKYSWEEPER, Direction.UP, fallingBlockCondition))
             return true;
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);

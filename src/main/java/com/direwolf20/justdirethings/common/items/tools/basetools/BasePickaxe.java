@@ -12,11 +12,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.EnumSet;
+import java.util.function.Predicate;
 
 public class BasePickaxe extends PickaxeItem implements TieredGooItem, ToggleableTool {
     protected final EnumSet<ToolAbility> abilities = EnumSet.noneOf(ToolAbility.class);
+    protected Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES);
 
     public BasePickaxe(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Item.Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);

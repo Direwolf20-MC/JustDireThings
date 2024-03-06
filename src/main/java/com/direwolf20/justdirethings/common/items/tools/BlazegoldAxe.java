@@ -4,15 +4,12 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BaseAxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.function.Predicate;
 
 public class BlazegoldAxe extends BaseAxe {
     public BlazegoldAxe() {
@@ -23,7 +20,6 @@ public class BlazegoldAxe extends BaseAxe {
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        Predicate<BlockState> oreCondition = s -> s.getTags().anyMatch(tag -> tag.equals(BlockTags.LOGS));
         if (mineBlocksAbility(pStack, pLevel, pState, pPos, pEntityLiving, ToolAbility.TREEFELLER, null, oreCondition))
             return true;
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
