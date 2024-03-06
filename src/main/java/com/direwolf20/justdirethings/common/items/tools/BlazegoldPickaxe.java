@@ -18,6 +18,7 @@ public class BlazegoldPickaxe extends BasePickaxe {
         super(GooTier.BLAZEGOLD, 1, -2.8F, new Properties());
         registerAbility(ToolAbility.ORESCANNER);
         registerAbility(ToolAbility.OREMINER);
+        registerAbility(ToolAbility.SMELTER);
     }
 
     @Override

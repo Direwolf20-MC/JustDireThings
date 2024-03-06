@@ -29,6 +29,7 @@
   "justdirethings.ability.oreminer": "Ore Miner",
   "justdirethings.ability.orescanner": "Ore Scanner",
   "justdirethings.ability.skysweeper": "Sky Sweeper",
+  "justdirethings.ability.smelter": "Auto Smelter",
   "justdirethings.ability.treefeller": "Tree Feller",
   "justdirethings.fuelcanisteramt": "Cook time (ticks): %d",
   "justdirethings.fuelcanisteramtstack": "Stack Cook time (ticks): %d",

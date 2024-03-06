@@ -10,7 +10,8 @@ public enum ToolAbility {
     LAWNMOWER("lawnmower", SettingType.TOGGLE, 1, 10),
     SKYSWEEPER("skysweeper", SettingType.TOGGLE, 1, 0),
     TREEFELLER("treefeller", SettingType.TOGGLE, 1, 0),
-    LEAFBREAKER("leafbreaker", SettingType.TOGGLE, 1, 10);
+    LEAFBREAKER("leafbreaker", SettingType.TOGGLE, 1, 10),
+    SMELTER("smelter", SettingType.TOGGLE, 1, 10);
 
     public enum SettingType {
         TOGGLE,

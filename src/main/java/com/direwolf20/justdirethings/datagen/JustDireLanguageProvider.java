@@ -72,6 +72,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.ability.skysweeper", "Sky Sweeper");
         add("justdirethings.ability.treefeller", "Tree Feller");
         add("justdirethings.ability.leafbreaker", "Leaf Breaker");
+        add("justdirethings.ability.smelter", "Auto Smelter");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

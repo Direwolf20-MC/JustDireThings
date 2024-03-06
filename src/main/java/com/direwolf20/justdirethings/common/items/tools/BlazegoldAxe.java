@@ -16,6 +16,7 @@ public class BlazegoldAxe extends BaseAxe {
         super(GooTier.BLAZEGOLD, 7.0F, -2.5F, new Properties());
         registerAbility(ToolAbility.TREEFELLER);
         registerAbility(ToolAbility.LEAFBREAKER);
+        registerAbility(ToolAbility.SMELTER);
     }
 
     @Override

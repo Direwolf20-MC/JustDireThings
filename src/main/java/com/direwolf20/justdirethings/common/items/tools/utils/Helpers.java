@@ -2,11 +2,18 @@ package com.direwolf20.justdirethings.common.items.tools.utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,18 +22,83 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Helpers {
-    public static void breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
+    public static void breakBlocks(ServerLevel level, BlockPos pos) {
         level.destroyBlock(pos, true);
     }
 
-    public static void breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, BlockPos dropAtPos) {
+    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
         BlockState state = level.getBlockState(pos); //Todo: Tier 2 and 3
         List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
 
         level.destroyBlock(pos, false);
+        return drops;
+    }
+
+    public static void combineDrops(List<ItemStack> drops, List<ItemStack> newDrops) {
+        for (ItemStack newDrop : newDrops) {
+            // Attempt to find a matching ItemStack in 'drops' that can be merged with 'newDrop'
+            Optional<ItemStack> match = drops.stream()
+                    .filter(drop -> ItemStack.isSameItemSameTags(drop, newDrop))
+                    .findFirst();
+
+            if (match.isPresent()) {
+                // Found a match, try to add the counts together
+                ItemStack existingDrop = match.get();
+                // Calculate how much of the 'newDrop' stack can actually be moved over
+                int transferableAmount = Math.min(newDrop.getCount(), existingDrop.getMaxStackSize() - existingDrop.getCount());
+
+                if (transferableAmount > 0) {
+                    // Increase the count of the existing stack
+                    existingDrop.grow(transferableAmount);
+                    // Decrease the count of the new stack accordingly
+                    newDrop.shrink(transferableAmount);
+                }
+
+                // If after transferring, the newDrop still has items left, add it as a new entry.
+                if (!newDrop.isEmpty()) {
+                    drops.add(newDrop);
+                }
+            } else {
+                // No existing ItemStack could be found or modified, so add 'newDrop' directly
+                drops.add(newDrop);
+            }
+        }
+    }
+
+    public static List<ItemStack> smeltDrops(ServerLevel level, List<ItemStack> drops, ItemStack tool, LivingEntity entityLiving, boolean[] didISmelt) {
+        List<ItemStack> returnList = new ArrayList<>();
+        RegistryAccess registryAccess = level.registryAccess();
+        RecipeManager recipeManager = level.getRecipeManager();
+        didISmelt[0] = false;
+        for (ItemStack drop : drops) {
+            // Check if there's a smelting recipe for the drop
+            Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(drop), level);
+
+            if (smeltingRecipe.isPresent()) {
+                // Get the result of the smelting recipe
+                ItemStack smeltedResult = smeltingRecipe.get().value().getResultItem(registryAccess);
+
+                if (!smeltedResult.isEmpty()) {
+                    // If the smelting result is valid, prepare to replace the original drop with the smelted result
+                    ItemStack resultStack = smeltedResult.copy();
+                    resultStack.setCount(drop.getCount()); // Assume all items in the stack are smelted
+                    if (!tool.isEmpty())
+                        tool.hurtAndBreak(ToolAbility.SMELTER.getDurabilityCost() * resultStack.getCount(), entityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    returnList.add(resultStack);
+                    didISmelt[0] = true;
+                } else {
+                    returnList.add(drop);
+                }
+            } else {
+                returnList.add(drop);
+            }
+        }
+        return returnList;
+    }
+
+    public static void dropDrops(List<ItemStack> drops, ServerLevel level, BlockPos dropAtPos) {
         for (ItemStack drop : drops) {
             ItemEntity itemEntity = new ItemEntity(level, dropAtPos.getX(), dropAtPos.getY(), dropAtPos.getZ(), drop);
-            //itemEntity.setPickUpDelay(40);
             level.addFreshEntity(itemEntity);
         }
     }

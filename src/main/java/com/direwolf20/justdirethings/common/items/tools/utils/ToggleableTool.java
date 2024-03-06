@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -21,10 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
@@ -53,16 +51,42 @@ public interface ToggleableTool {
     //Abilities
     default boolean mineBlocksAbility(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving, ToolAbility toolAbility, Direction direction, Predicate<BlockState> condition) {
         if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
+            Set<BlockPos> breakBlockPositions = new HashSet<>();
+            List<ItemStack> drops = new ArrayList<>();
             if (canUseAbility(pStack, toolAbility) && condition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, direction, 64, 2); //Todo: Balance and Config?
-                for (BlockPos breakPos : alsoBreakSet) {
-                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
-                    pStack.hurtAndBreak(toolAbility.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                }
-                return true;
+                breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, direction, 64, 2)); //Todo: Balance and Config?
+            } else {
+                breakBlockPositions.add(pPos);
             }
+
+            for (BlockPos breakPos : breakBlockPositions) {
+                Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
+                pStack.hurtAndBreak(toolAbility.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            }
+            if (canUseAbility(pStack, ToolAbility.SMELTER)) {
+                boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
+                drops = smeltDrops((ServerLevel) pLevel, drops, pStack, pEntityLiving, smeltedItemsFlag);
+                if (smeltedItemsFlag[0])
+                    smelterParticles((ServerLevel) pLevel, breakBlockPositions);
+            }
+            if (!drops.isEmpty()) {
+                Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
+            }
+            return true;
         }
         return false;
+    }
+
+    default void smelterParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            for (BlockPos pos : oreBlocksList) {
+                double d0 = (double) pos.getX() + random.nextDouble();
+                double d1 = (double) pos.getY() + random.nextDouble();
+                double d2 = (double) pos.getZ() + random.nextDouble();
+                level.sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+            }
+        }
     }
 
     /*default boolean treefeller(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
@@ -132,11 +156,15 @@ public interface ToggleableTool {
         if (!pLevel.isClientSide && canUseAbility(pStack, ToolAbility.LEAFBREAKER)) { //TODO MineBlocks Method Above?
             if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
+                List<ItemStack> drops = new ArrayList<>();
                 for (BlockPos breakPos : alsoBreakSet) {
-                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
+                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
                     pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                     if (Math.random() < 0.1) //10% chance to damage tool
                         pStack.hurtAndBreak(ToolAbility.LEAFBREAKER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                }
+                if (!drops.isEmpty()) {
+                    Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
                 }
                 return true;
             }
@@ -151,7 +179,7 @@ public interface ToggleableTool {
             tags.add(JustDireBlockTags.LAWNMOWERABLE);
             Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?
             for (BlockPos breakPos : breakBlocks) {
-                breakBlocks((ServerLevel) level, breakPos, player, itemStack);
+                breakBlocks((ServerLevel) level, breakPos);
                 if (Math.random() < 0.1) //10% chance to damage tool
                     itemStack.hurtAndBreak(ToolAbility.LAWNMOWER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }

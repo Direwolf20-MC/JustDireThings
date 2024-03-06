@@ -18,6 +18,7 @@ public class BlazegoldShovel extends BaseShovel {
         super(GooTier.BLAZEGOLD, 1.5F, -3.0F, new Properties());
         registerAbility(ToolAbility.SKYSWEEPER);
         registerAbility(ToolAbility.LAWNMOWER);
+        registerAbility(ToolAbility.SMELTER);
     }
 
     @Override
