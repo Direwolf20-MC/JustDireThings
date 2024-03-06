@@ -50,7 +50,7 @@ public interface ToggleableTool {
 
     //Abilities
     default boolean mineBlocksAbility(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving, ToolAbility toolAbility, Direction direction, Predicate<BlockState> condition) {
-        if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
+        if (!pLevel.isClientSide) {
             Set<BlockPos> breakBlockPositions = new HashSet<>();
             List<ItemStack> drops = new ArrayList<>();
             if (canUseAbility(pStack, toolAbility) && condition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
@@ -58,10 +58,10 @@ public interface ToggleableTool {
             } else {
                 breakBlockPositions.add(pPos);
             }
-
             for (BlockPos breakPos : breakBlockPositions) {
                 Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
-                pStack.hurtAndBreak(toolAbility.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                if (pState.getDestroySpeed(pLevel, pPos) != 0.0F)
+                    pStack.hurtAndBreak(toolAbility.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
             if (canUseAbility(pStack, ToolAbility.SMELTER)) {
                 boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
