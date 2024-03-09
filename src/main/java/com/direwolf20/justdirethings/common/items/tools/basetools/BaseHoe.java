@@ -1,26 +1,32 @@
 package com.direwolf20.justdirethings.common.items.tools.basetools;
 
-import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
+import com.direwolf20.justdirethings.common.items.tools.utils.*;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.Map;
 
 public class BaseHoe extends HoeItem implements TieredGooItem, ToggleableTool {
-    protected final EnumSet<ToolAbility> abilities = EnumSet.noneOf(ToolAbility.class);
+    protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
+    protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 
     public BaseHoe(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Item.Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
 
     @Override
-    public EnumSet<ToolAbility> getAbilities() {
+    public EnumSet<Ability> getAbilities() {
         return abilities;
     }
+
+    @Override
+    public Map<Ability, AbilityParams> getAbilityParamsMap() {
+        return abilityParams;
+    }
+
 
     @Override
     public GooTier gooTier() {

@@ -2,8 +2,8 @@ package com.direwolf20.justdirethings.client.renderactions;
 
 import com.direwolf20.justdirethings.client.particles.alwaysvisibleparticle.AlwaysVisibleParticleData;
 import com.direwolf20.justdirethings.client.renderers.DireBufferBuilder;
+import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -87,10 +87,10 @@ public class ThingFinder {
         }
     }
 
-    public static void discover(Player player, int tier, ToolAbility toolAbility) {
-        if (toolAbility.equals(ToolAbility.MOBSCANNER))
+    public static void discover(Player player, int tier, Ability toolAbility) {
+        if (toolAbility.equals(Ability.MOBSCANNER))
             discoverMobs(player, tier, true);
-        else if (toolAbility.equals(ToolAbility.ORESCANNER))
+        else if (toolAbility.equals(Ability.ORESCANNER))
             discoverOres(player, tier);
     }
 

@@ -3,9 +3,11 @@ package com.direwolf20.justdirethings.common.items.tools.utils;
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.EnumMap;
 import java.util.Locale;
+import java.util.Map;
 
-public enum ToolAbility {
+public enum Ability {
     MOBSCANNER(SettingType.TOGGLE, 10, 100), //TODO Configs
     OREMINER(SettingType.TOGGLE, 1, 0),
     ORESCANNER(SettingType.TOGGLE, 10, 100),
@@ -14,8 +16,7 @@ public enum ToolAbility {
     TREEFELLER(SettingType.TOGGLE, 1, 0),
     LEAFBREAKER(SettingType.TOGGLE, 1, 10),
     SMELTER(SettingType.TOGGLE, 1, 10),
-    HAMMER3(SettingType.CYCLE, 1, 10, 3, 3, 2),
-    HAMMER5(SettingType.CYCLE, 1, 10, 3, 5, 2);
+    HAMMER(SettingType.CYCLE, 1, 10);
 
     public enum SettingType {
         TOGGLE,
@@ -29,11 +30,10 @@ public enum ToolAbility {
     final ResourceLocation iconLocation;
     final int durabilityCost;
     final int feCost;
-    int minSlider;
-    int maxSlider;
-    int increment;
+    // Dynamic parameter map
+    private static final Map<Ability, AbilityParams> dynamicParams = new EnumMap<>(Ability.class);
 
-    ToolAbility(SettingType settingType, int durabilityCost, int feCost) {
+    Ability(SettingType settingType, int durabilityCost, int feCost) {
         this.name = this.name().toLowerCase(Locale.ROOT);
         this.settingType = settingType;
         this.localization = "justdirethings.ability." + name;
@@ -42,17 +42,8 @@ public enum ToolAbility {
         this.feCost = feCost;
     }
 
-    ToolAbility(SettingType settingType, int durabilityCost, int feCost, int minSlider, int maxSlider) {
-        this(settingType, durabilityCost, feCost);
-        this.minSlider = minSlider;
-        this.maxSlider = maxSlider;
-    }
-
-    ToolAbility(SettingType settingType, int durabilityCost, int feCost, int minSlider, int maxSlider, int increment) {
-        this(settingType, durabilityCost, feCost);
-        this.minSlider = minSlider;
-        this.maxSlider = maxSlider;
-        this.increment = increment;
+    public boolean hasDynamicParams(Ability toolAbility) {
+        return dynamicParams.containsKey(toolAbility);
     }
 
     public String getLocalization() {
@@ -71,23 +62,11 @@ public enum ToolAbility {
         return iconLocation;
     }
 
-    public int getMinSlider() {
-        return minSlider;
-    }
-
-    public int getMaxSlider() {
-        return maxSlider;
-    }
-
     public int getDurabilityCost() {
         return durabilityCost;
     }
 
     public int getFeCost() {
         return feCost;
-    }
-
-    public int getIncrement() {
-        return increment;
     }
 }

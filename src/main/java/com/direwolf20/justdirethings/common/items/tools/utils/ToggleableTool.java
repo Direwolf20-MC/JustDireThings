@@ -28,7 +28,30 @@ import java.util.function.Predicate;
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
 public interface ToggleableTool {
-    EnumSet<ToolAbility> getAbilities();
+    EnumSet<Ability> getAbilities();
+
+    Map<Ability, AbilityParams> getAbilityParamsMap();
+
+    default AbilityParams getAbilityParams(Ability toolAbility) {
+        return getAbilityParamsMap().getOrDefault(toolAbility, new AbilityParams(-1, -1, -1));
+    }
+
+    default void registerAbility(Ability ability) {
+        getAbilities().add(ability);
+    }
+
+    default void registerAbility(Ability ability, AbilityParams abilityParams) {
+        getAbilities().add(ability);
+        getAbilityParamsMap().put(ability, abilityParams);
+    }
+
+    default boolean hasAbility(Ability ability) {
+        return getAbilities().contains(ability);
+    }
+
+    default boolean canUseAbility(ItemStack itemStack, Ability toolAbility) {
+        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name);
+    }
 
     default void openSettings(Player player) {
         player.openMenu(new SimpleMenuProvider(
@@ -36,20 +59,8 @@ public interface ToggleableTool {
 
     }
 
-    default void registerAbility(ToolAbility ability) {
-        getAbilities().add(ability);
-    }
-
-    default boolean hasAbility(ToolAbility ability) {
-        return getAbilities().contains(ability);
-    }
-
-    default boolean canUseAbility(ItemStack itemStack, ToolAbility toolAbility) {
-        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name);
-    }
-
     //Abilities
-    default boolean mineBlocksAbility(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving, ToolAbility toolAbility, Direction direction, Predicate<BlockState> condition) {
+    default boolean mineBlocksAbility(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving, Ability toolAbility, Direction direction, Predicate<BlockState> condition) {
         if (!pLevel.isClientSide) {
             Set<BlockPos> breakBlockPositions = new HashSet<>();
             List<ItemStack> drops = new ArrayList<>();
@@ -63,7 +74,7 @@ public interface ToggleableTool {
                 if (pState.getDestroySpeed(pLevel, pPos) != 0.0F)
                     pStack.hurtAndBreak(toolAbility.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
-            if (canUseAbility(pStack, ToolAbility.SMELTER)) {
+            if (canUseAbility(pStack, Ability.SMELTER)) {
                 boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
                 drops = smeltDrops((ServerLevel) pLevel, drops, pStack, pEntityLiving, smeltedItemsFlag);
                 if (smeltedItemsFlag[0])
@@ -131,7 +142,7 @@ public interface ToggleableTool {
         return false;
     }*/
 
-    default boolean scanFor(Level level, Player player, InteractionHand hand, ToolAbility toolAbility) {
+    default boolean scanFor(Level level, Player player, InteractionHand hand, Ability toolAbility) {
         if (!player.isShiftKeyDown()) {
             ItemStack itemStack = player.getItemInHand(hand);
             if (canUseAbility(itemStack, toolAbility)) {
@@ -153,7 +164,7 @@ public interface ToggleableTool {
         BlockState pState = pLevel.getBlockState(pPos);
         LivingEntity pEntityLiving = pContext.getPlayer();
         ItemStack pStack = pContext.getItemInHand();
-        if (!pLevel.isClientSide && canUseAbility(pStack, ToolAbility.LEAFBREAKER)) { //TODO MineBlocks Method Above?
+        if (!pLevel.isClientSide && canUseAbility(pStack, Ability.LEAFBREAKER)) { //TODO MineBlocks Method Above?
             if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
                 List<ItemStack> drops = new ArrayList<>();
@@ -161,7 +172,7 @@ public interface ToggleableTool {
                     Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
                     pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                     if (Math.random() < 0.1) //10% chance to damage tool
-                        pStack.hurtAndBreak(ToolAbility.LEAFBREAKER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        pStack.hurtAndBreak(Ability.LEAFBREAKER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                 }
                 if (!drops.isEmpty()) {
                     Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
@@ -174,14 +185,14 @@ public interface ToggleableTool {
 
     default boolean lawnmower(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        if (!level.isClientSide && canUseAbility(itemStack, ToolAbility.LAWNMOWER)) {
+        if (!level.isClientSide && canUseAbility(itemStack, Ability.LAWNMOWER)) {
             List<TagKey<Block>> tags = new ArrayList<>();
             tags.add(JustDireBlockTags.LAWNMOWERABLE);
             Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?
             for (BlockPos breakPos : breakBlocks) {
                 breakBlocks((ServerLevel) level, breakPos);
                 if (Math.random() < 0.1) //10% chance to damage tool
-                    itemStack.hurtAndBreak(ToolAbility.LAWNMOWER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    itemStack.hurtAndBreak(Ability.LAWNMOWER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
             }
             return true;
         }
@@ -209,15 +220,16 @@ public interface ToggleableTool {
      * When it reaches the end, it'll next disable the ability entirely. Next cycle it will re-enable it at the min value
      */
     static boolean cycleSetting(ItemStack stack, String setting) {
-        ToolAbility toolAbility = ToolAbility.valueOf(setting.toUpperCase(Locale.ROOT));
+        Ability toolAbility = Ability.valueOf(setting.toUpperCase(Locale.ROOT));
+        AbilityParams abilityParams = ((ToggleableTool) stack.getItem()).getAbilityParams(toolAbility);
         CompoundTag tagCompound = stack.getOrCreateTag();
         int currentValue = getToolValue(stack, setting);
-        int nextValue = currentValue + toolAbility.getIncrement();
-        if (nextValue > toolAbility.getMaxSlider()) {
+        int nextValue = Math.min(abilityParams.maxSlider, currentValue + abilityParams.increment);
+        if (nextValue == currentValue && getSetting(stack, setting)) { //If the next value is equal to the current one, its because we max'd out, so toggle it off
             setSetting(stack, setting, false);
-            nextValue = toolAbility.getMinSlider();
-        } else if (currentValue == toolAbility.getMinSlider() && !getSetting(stack, setting)) {
-            nextValue = toolAbility.getMinSlider();
+            nextValue = abilityParams.minSlider;
+        } else if (currentValue == abilityParams.minSlider && !getSetting(stack, setting)) {
+            nextValue = abilityParams.minSlider;
             setSetting(stack, setting, true);
         }
         setToolValue(stack, setting, nextValue);
@@ -244,17 +256,19 @@ public interface ToggleableTool {
     }
 
     static void setToolValue(ItemStack stack, String valueName, int value) {
-        ToolAbility toolAbility = ToolAbility.valueOf(valueName.toUpperCase(Locale.ROOT));
-        int min = toolAbility.getMinSlider();
-        int max = toolAbility.getMaxSlider();
+        Ability toolAbility = Ability.valueOf(valueName.toUpperCase(Locale.ROOT));
+        AbilityParams abilityParams = ((ToggleableTool) stack.getItem()).getAbilityParams(toolAbility);
+        int min = abilityParams.minSlider;
+        int max = abilityParams.maxSlider;
         int setValue = Math.max(min, Math.min(max, value));
         stack.getOrCreateTag().putInt(valueName + "_value", setValue);
     }
 
     static int getToolValue(ItemStack stack, String valueName) {
-        ToolAbility toolAbility = ToolAbility.valueOf(valueName.toUpperCase(Locale.ROOT));
-        int min = toolAbility.getMinSlider();
-        int max = toolAbility.getMaxSlider();
+        Ability toolAbility = Ability.valueOf(valueName.toUpperCase(Locale.ROOT));
+        AbilityParams abilityParams = ((ToggleableTool) stack.getItem()).getAbilityParams(toolAbility);
+        int min = abilityParams.minSlider;
+        int max = abilityParams.maxSlider;
         return Math.max(min, Math.min(max, stack.getOrCreateTag().getInt(valueName + "_value")));
     }
 }

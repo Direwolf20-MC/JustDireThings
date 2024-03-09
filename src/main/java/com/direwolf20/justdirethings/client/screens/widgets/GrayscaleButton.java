@@ -1,12 +1,15 @@
 package com.direwolf20.justdirethings.client.screens.widgets;
 
-import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
+import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
+import com.direwolf20.justdirethings.common.items.tools.utils.AbilityParams;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public class GrayscaleButton extends Button {
     private ResourceLocation texture;
@@ -52,13 +55,14 @@ public class GrayscaleButton extends Button {
         buttonActive = !buttonActive;
     }
 
-    public void cyleValue(ToolAbility toolAbility) {
-        int nextValue = value + toolAbility.getIncrement();
-        if (nextValue > toolAbility.getMaxSlider()) {
+    public void cyleValue(Ability toolAbility, ItemStack stack) {
+        AbilityParams abilityParams = ((ToggleableTool) stack.getItem()).getAbilityParams(toolAbility);
+        int nextValue = Math.min(abilityParams.maxSlider, value + abilityParams.increment);
+        if (nextValue == value && buttonActive) { //If the next value is equal to the current one, its because we max'd out, so toggle it off
             buttonActive = false;
-            nextValue = toolAbility.getMinSlider();
-        } else if (value == toolAbility.getMinSlider() && !buttonActive) {
-            nextValue = toolAbility.getMinSlider();
+            nextValue = abilityParams.minSlider;
+        } else if (value == abilityParams.minSlider && !buttonActive) {
+            nextValue = abilityParams.minSlider;
             buttonActive = true;
         }
         value = nextValue;

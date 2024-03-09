@@ -83,7 +83,7 @@ public class Helpers {
                     ItemStack resultStack = smeltedResult.copy();
                     resultStack.setCount(drop.getCount()); // Assume all items in the stack are smelted
                     if (!tool.isEmpty())
-                        tool.hurtAndBreak(ToolAbility.SMELTER.getDurabilityCost() * resultStack.getCount(), entityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        tool.hurtAndBreak(Ability.SMELTER.getDurabilityCost() * resultStack.getCount(), entityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
                     returnList.add(resultStack);
                     didISmelt[0] = true;
                 } else {

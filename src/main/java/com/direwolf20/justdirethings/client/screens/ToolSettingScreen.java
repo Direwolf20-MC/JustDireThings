@@ -3,8 +3,8 @@ package com.direwolf20.justdirethings.client.screens;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
+import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
 import com.direwolf20.justdirethings.util.MiscTools;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -31,7 +31,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected final ToolSettingContainer container;
     Player player;
     protected ItemStack tool;
-    private EnumSet<ToolAbility> abilities = EnumSet.noneOf(ToolAbility.class);
+    private EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     int buttonsStartX = getGuiLeft() + 5;
     int buttonsStartY = getGuiTop() + 15;
     int toolSlot;
@@ -54,8 +54,8 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         buttonsStartY = getGuiTop() + 25;
         clearWidgets();
         int counter = 0;
-        for (ToolAbility toolAbility : abilities) {
-            if (toolAbility.getSettingType() == ToolAbility.SettingType.TOGGLE) {
+        for (Ability toolAbility : abilities) {
+            if (toolAbility.getSettingType() == Ability.SettingType.TOGGLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
                 Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), toolAbility.getLocalization(), isActive, -1, (clicked) -> {
                     toggleSetting(toolAbility.getName());
@@ -64,12 +64,12 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 addRenderableWidget(button);
                 counter++;
             }
-            if (toolAbility.getSettingType() == ToolAbility.SettingType.CYCLE) {
+            if (toolAbility.getSettingType() == Ability.SettingType.CYCLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
                 int currentValue = ToggleableTool.getToolValue(tool, toolAbility.getName());
                 Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), toolAbility.getLocalization(), isActive, currentValue, (clicked) -> {
                     cycleSetting(toolAbility.getName());
-                    ((GrayscaleButton) clicked).cyleValue(toolAbility);
+                    ((GrayscaleButton) clicked).cyleValue(toolAbility, tool);
                 });
                 addRenderableWidget(button);
                 counter++;

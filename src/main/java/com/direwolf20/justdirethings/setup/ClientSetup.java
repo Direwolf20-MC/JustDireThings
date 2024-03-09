@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier1;
 import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier2;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
+import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
 import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
@@ -26,6 +27,7 @@ public class ClientSetup {
         //Register our Render Events Class
         NeoForge.EVENT_BUS.register(RenderLevelLast.class);
         NeoForge.EVENT_BUS.register(EventKeyInput.class);
+        NeoForge.EVENT_BUS.register(RenderHighlight.class);
 
         //Screens
         /*event.enqueueWork(() -> {

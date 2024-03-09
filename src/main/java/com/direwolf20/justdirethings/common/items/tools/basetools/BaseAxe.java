@@ -1,9 +1,6 @@
 package com.direwolf20.justdirethings.common.items.tools.basetools;
 
-import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
+import com.direwolf20.justdirethings.common.items.tools.utils.*;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,11 +12,14 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class BaseAxe extends AxeItem implements TieredGooItem, ToggleableTool {
-    protected final EnumSet<ToolAbility> abilities = EnumSet.noneOf(ToolAbility.class);
+    protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
+    protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
     protected Predicate<BlockState> oreCondition = s -> s.is(BlockTags.LOGS);
 
     public BaseAxe(Tier pTier, float pAttackDamageModifier, float pAttackSpeedModifier, Item.Properties pProperties) {
@@ -27,8 +27,13 @@ public class BaseAxe extends AxeItem implements TieredGooItem, ToggleableTool {
     }
 
     @Override
-    public EnumSet<ToolAbility> getAbilities() {
+    public EnumSet<Ability> getAbilities() {
         return abilities;
+    }
+
+    @Override
+    public Map<Ability, AbilityParams> getAbilityParamsMap() {
+        return abilityParams;
     }
 
     @Override

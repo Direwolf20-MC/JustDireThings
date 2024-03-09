@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseShovel;
+import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -17,13 +17,13 @@ import net.minecraft.world.level.block.state.BlockState;
 public class FerricoreShovel extends BaseShovel {
     public FerricoreShovel() {
         super(GooTier.FERRICORE, 1.5F, -3.0F, new Item.Properties());
-        registerAbility(ToolAbility.SKYSWEEPER);
-        registerAbility(ToolAbility.LAWNMOWER);
+        registerAbility(Ability.SKYSWEEPER);
+        registerAbility(Ability.LAWNMOWER);
     }
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        if (mineBlocksAbility(pStack, pLevel, pState, pPos, pEntityLiving, ToolAbility.SKYSWEEPER, Direction.UP, fallingBlockCondition))
+        if (mineBlocksAbility(pStack, pLevel, pState, pPos, pEntityLiving, Ability.SKYSWEEPER, Direction.UP, fallingBlockCondition))
             return true;
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
     }
