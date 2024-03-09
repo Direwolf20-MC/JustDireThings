@@ -9,6 +9,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -17,6 +18,8 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,7 +30,11 @@ public class Helpers {
     }
 
     public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
-        BlockState state = level.getBlockState(pos); //Todo: Tier 2 and 3
+        if (pPlayer instanceof Player player) {
+            BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
+            if (NeoForge.EVENT_BUS.post(event).isCanceled()) return new ArrayList<>();
+        }
+        BlockState state = level.getBlockState(pos);
         List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
 
         level.destroyBlock(pos, false);
