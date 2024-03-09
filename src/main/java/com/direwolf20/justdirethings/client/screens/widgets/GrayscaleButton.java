@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.client.screens.widgets;
 
+import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -9,14 +10,16 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GrayscaleButton extends Button {
     private ResourceLocation texture;
-    boolean buttonActive;
+    private boolean buttonActive;
     private String localization;
+    private int value;
 
-    public GrayscaleButton(int x, int y, int width, int height, ResourceLocation texture, String localization, boolean active, OnPress onPress) {
+    public GrayscaleButton(int x, int y, int width, int height, ResourceLocation texture, String localization, boolean active, int value, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
         this.texture = texture;
         this.buttonActive = active;
         this.localization = localization;
+        this.value = value;
     }
 
     @Override
@@ -49,7 +52,23 @@ public class GrayscaleButton extends Button {
         buttonActive = !buttonActive;
     }
 
+    public void cyleValue(ToolAbility toolAbility) {
+        int nextValue = value + toolAbility.getIncrement();
+        if (nextValue > toolAbility.getMaxSlider()) {
+            buttonActive = false;
+            nextValue = toolAbility.getMinSlider();
+        } else if (value == toolAbility.getMinSlider() && !buttonActive) {
+            nextValue = toolAbility.getMinSlider();
+            buttonActive = true;
+        }
+        value = nextValue;
+    }
+
     public String getLocalization() {
         return localization;
+    }
+
+    public int getValue() {
+        return value;
     }
 }

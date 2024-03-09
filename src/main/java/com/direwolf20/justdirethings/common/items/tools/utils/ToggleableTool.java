@@ -204,13 +204,38 @@ public interface ToggleableTool {
         return tagCompound.getBoolean(setting);
     }
 
+    /**
+     * Cycle will move through each possible value of a tool ability, incrementing by the increment value.
+     * When it reaches the end, it'll next disable the ability entirely. Next cycle it will re-enable it at the min value
+     */
+    static boolean cycleSetting(ItemStack stack, String setting) {
+        ToolAbility toolAbility = ToolAbility.valueOf(setting.toUpperCase(Locale.ROOT));
+        CompoundTag tagCompound = stack.getOrCreateTag();
+        int currentValue = getToolValue(stack, setting);
+        int nextValue = currentValue + toolAbility.getIncrement();
+        if (nextValue > toolAbility.getMaxSlider()) {
+            setSetting(stack, setting, false);
+            nextValue = toolAbility.getMinSlider();
+        } else if (currentValue == toolAbility.getMinSlider() && !getSetting(stack, setting)) {
+            nextValue = toolAbility.getMinSlider();
+            setSetting(stack, setting, true);
+        }
+        setToolValue(stack, setting, nextValue);
+        return tagCompound.getBoolean(setting);
+    }
+
+    static boolean setSetting(ItemStack stack, String setting, boolean value) {
+        CompoundTag tagCompound = stack.getOrCreateTag();
+        tagCompound.putBoolean(setting, value);
+        return tagCompound.getBoolean(setting);
+    }
+
     static boolean getSetting(ItemStack stack, String setting) {
         CompoundTag tagCompound = stack.getOrCreateTag();
         return !tagCompound.contains(setting) || tagCompound.getBoolean(setting); //Enabled by default
     }
 
     static boolean getEnabled(ItemStack stack) {
-        CompoundTag tagCompound = stack.getOrCreateTag();
         return getSetting(stack, "enabled");
     }
 
@@ -218,11 +243,18 @@ public interface ToggleableTool {
         return toggleSetting(stack, "enabled");
     }
 
-    static void setToolValue(ItemStack stack, int value, String valueName) {
-        stack.getOrCreateTag().putInt(valueName, value);
+    static void setToolValue(ItemStack stack, String valueName, int value) {
+        ToolAbility toolAbility = ToolAbility.valueOf(valueName.toUpperCase(Locale.ROOT));
+        int min = toolAbility.getMinSlider();
+        int max = toolAbility.getMaxSlider();
+        int setValue = Math.max(min, Math.min(max, value));
+        stack.getOrCreateTag().putInt(valueName + "_value", setValue);
     }
 
     static int getToolValue(ItemStack stack, String valueName) {
-        return stack.getOrCreateTag().getInt(valueName);
+        ToolAbility toolAbility = ToolAbility.valueOf(valueName.toUpperCase(Locale.ROOT));
+        int min = toolAbility.getMinSlider();
+        int max = toolAbility.getMaxSlider();
+        return Math.max(min, Math.min(max, stack.getOrCreateTag().getInt(valueName + "_value")));
     }
 }

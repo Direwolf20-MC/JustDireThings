@@ -3,19 +3,24 @@ package com.direwolf20.justdirethings.common.items.tools.utils;
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Locale;
+
 public enum ToolAbility {
-    MOBSCANNER("mobscanner", SettingType.TOGGLE, 10, 100), //TODO Configs
-    OREMINER("oreminer", SettingType.TOGGLE, 1, 0),
-    ORESCANNER("orescanner", SettingType.TOGGLE, 10, 100),
-    LAWNMOWER("lawnmower", SettingType.TOGGLE, 1, 10),
-    SKYSWEEPER("skysweeper", SettingType.TOGGLE, 1, 0),
-    TREEFELLER("treefeller", SettingType.TOGGLE, 1, 0),
-    LEAFBREAKER("leafbreaker", SettingType.TOGGLE, 1, 10),
-    SMELTER("smelter", SettingType.TOGGLE, 1, 10);
+    MOBSCANNER(SettingType.TOGGLE, 10, 100), //TODO Configs
+    OREMINER(SettingType.TOGGLE, 1, 0),
+    ORESCANNER(SettingType.TOGGLE, 10, 100),
+    LAWNMOWER(SettingType.TOGGLE, 1, 10),
+    SKYSWEEPER(SettingType.TOGGLE, 1, 0),
+    TREEFELLER(SettingType.TOGGLE, 1, 0),
+    LEAFBREAKER(SettingType.TOGGLE, 1, 10),
+    SMELTER(SettingType.TOGGLE, 1, 10),
+    HAMMER3(SettingType.CYCLE, 1, 10, 3, 3, 2),
+    HAMMER5(SettingType.CYCLE, 1, 10, 3, 5, 2);
 
     public enum SettingType {
         TOGGLE,
-        SLIDER
+        SLIDER,
+        CYCLE
     }
 
     final String name;
@@ -26,30 +31,28 @@ public enum ToolAbility {
     final int feCost;
     int minSlider;
     int maxSlider;
+    int increment;
 
-    ToolAbility(String name, SettingType settingType, int durabilityCost, int feCost) {
-        this(name, settingType, "justdirethings.ability." + name, name + ".png", durabilityCost, feCost);
-    }
-
-    ToolAbility(String name, SettingType settingType, String localization, String iconFileName, int durabilityCost, int feCost) {
-        this.name = name;
+    ToolAbility(SettingType settingType, int durabilityCost, int feCost) {
+        this.name = this.name().toLowerCase(Locale.ROOT);
         this.settingType = settingType;
-        this.localization = localization;
-        this.iconLocation = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/" + iconFileName);
+        this.localization = "justdirethings.ability." + name;
+        this.iconLocation = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/" + name + ".png");
         this.durabilityCost = durabilityCost;
         this.feCost = feCost;
     }
 
-    ToolAbility(String name, SettingType settingType, int minSlider, int maxSlider, int durabilityCost, int feCost) {
-        this(name, settingType, durabilityCost, feCost);
+    ToolAbility(SettingType settingType, int durabilityCost, int feCost, int minSlider, int maxSlider) {
+        this(settingType, durabilityCost, feCost);
         this.minSlider = minSlider;
         this.maxSlider = maxSlider;
     }
 
-    ToolAbility(String name, SettingType settingType, String localization, String iconFileName, int minSlider, int maxSlider, int durabilityCost, int feCost) {
-        this(name, settingType, localization, iconFileName, durabilityCost, feCost);
+    ToolAbility(SettingType settingType, int durabilityCost, int feCost, int minSlider, int maxSlider, int increment) {
+        this(settingType, durabilityCost, feCost);
         this.minSlider = minSlider;
         this.maxSlider = maxSlider;
+        this.increment = increment;
     }
 
     public String getLocalization() {
@@ -82,5 +85,9 @@ public enum ToolAbility {
 
     public int getFeCost() {
         return feCost;
+    }
+
+    public int getIncrement() {
+        return increment;
     }
 }

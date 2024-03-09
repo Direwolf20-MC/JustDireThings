@@ -24,8 +24,12 @@ public class ToggleToolSlotPacket {
 
 
             ItemStack stack = player.getInventory().getItem(payload.slot());
-            if (stack.getItem() instanceof ToggleableTool)
-                ToggleableTool.toggleSetting(stack, payload.settingName());
+            if (stack.getItem() instanceof ToggleableTool) {
+                if (payload.type() == 0) //Toggle
+                    ToggleableTool.toggleSetting(stack, payload.settingName());
+                else if (payload.type() == 1) //Cycle
+                    ToggleableTool.cycleSetting(stack, payload.settingName());
+            }
         });
     }
 }

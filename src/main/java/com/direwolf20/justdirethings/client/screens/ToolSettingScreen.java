@@ -57,9 +57,19 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         for (ToolAbility toolAbility : abilities) {
             if (toolAbility.getSettingType() == ToolAbility.SettingType.TOGGLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
-                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), toolAbility.getLocalization(), isActive, (clicked) -> {
+                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), toolAbility.getLocalization(), isActive, -1, (clicked) -> {
                     toggleSetting(toolAbility.getName());
                     ((GrayscaleButton) clicked).toggleActive();
+                });
+                addRenderableWidget(button);
+                counter++;
+            }
+            if (toolAbility.getSettingType() == ToolAbility.SettingType.CYCLE) {
+                boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
+                int currentValue = ToggleableTool.getToolValue(tool, toolAbility.getName());
+                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), toolAbility.getLocalization(), isActive, currentValue, (clicked) -> {
+                    cycleSetting(toolAbility.getName());
+                    ((GrayscaleButton) clicked).cyleValue(toolAbility);
                 });
                 addRenderableWidget(button);
                 counter++;
@@ -68,7 +78,11 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     }
 
     public void toggleSetting(String settingName) {
-        PacketDistributor.SERVER.noArg().send(new ToggleToolSlotPayload(settingName, toolSlot));
+        PacketDistributor.SERVER.noArg().send(new ToggleToolSlotPayload(settingName, toolSlot, 0));
+    }
+
+    public void cycleSetting(String settingName) {
+        PacketDistributor.SERVER.noArg().send(new ToggleToolSlotPayload(settingName, toolSlot, 1));
     }
 
     @Override
@@ -92,7 +106,10 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof GrayscaleButton button) {
                 if (MiscTools.inBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight(), pX, pY)) {
-                    pGuiGraphics.renderTooltip(font, Component.translatable(button.getLocalization()), pX, pY);
+                    if (button.getValue() == -1 || !button.getButtonActive())
+                        pGuiGraphics.renderTooltip(font, Component.translatable(button.getLocalization()), pX, pY);
+                    else
+                        pGuiGraphics.renderTooltip(font, Component.translatable(button.getLocalization() + "value", button.getValue()), pX, pY);
                 }
             }
         }

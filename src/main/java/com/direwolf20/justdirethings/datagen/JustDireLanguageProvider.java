@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToolAbility;
 import com.direwolf20.justdirethings.setup.ModSetup;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
@@ -65,14 +66,18 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.key.toggle_tool", "Toggle Tool Abilities");
 
         //Abilities
-        add("justdirethings.ability.mobscanner", "Mob Scanner");
-        add("justdirethings.ability.orescanner", "Ore Scanner");
-        add("justdirethings.ability.oreminer", "Ore Miner");
-        add("justdirethings.ability.lawnmower", "Lawnmower");
-        add("justdirethings.ability.skysweeper", "Sky Sweeper");
-        add("justdirethings.ability.treefeller", "Tree Feller");
-        add("justdirethings.ability.leafbreaker", "Leaf Breaker");
-        add("justdirethings.ability.smelter", "Auto Smelter");
+        add(ToolAbility.MOBSCANNER.getLocalization(), "Mob Scanner");
+        add(ToolAbility.ORESCANNER.getLocalization(), "Ore Scanner");
+        add(ToolAbility.OREMINER.getLocalization(), "Ore Miner");
+        add(ToolAbility.LAWNMOWER.getLocalization(), "Lawnmower");
+        add(ToolAbility.SKYSWEEPER.getLocalization(), "Sky Sweeper");
+        add(ToolAbility.TREEFELLER.getLocalization(), "Tree Feller");
+        add(ToolAbility.LEAFBREAKER.getLocalization(), "Leaf Breaker");
+        add(ToolAbility.SMELTER.getLocalization(), "Auto Smelter");
+        add(ToolAbility.HAMMER3.getLocalization(), "Hammer");
+        add(ToolAbility.HAMMER5.getLocalization(), "Hammer");
+        add(ToolAbility.HAMMER3.getLocalization() + "value", "Hammer: %s");
+        add(ToolAbility.HAMMER5.getLocalization() + "value", "Hammer: %s");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
