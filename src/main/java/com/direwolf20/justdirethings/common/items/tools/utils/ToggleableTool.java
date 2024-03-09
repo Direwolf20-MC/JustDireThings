@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.items.tools.utils;
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import com.direwolf20.justdirethings.util.MiningCollect;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -18,9 +19,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -69,6 +73,9 @@ public interface ToggleableTool {
             } else {
                 breakBlockPositions.add(pPos);
             }
+            if (canUseAbility(pStack, Ability.HAMMER)) {
+                breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
+            }
             for (BlockPos breakPos : breakBlockPositions) {
                 Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
                 if (pState.getDestroySpeed(pLevel, pPos) != 0.0F)
@@ -99,48 +106,6 @@ public interface ToggleableTool {
             }
         }
     }
-
-    /*default boolean treefeller(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
-            if (canUseAbility(pStack, ToolAbility.TREEFELLER) && pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LOGS)) && pStack.isCorrectToolForDrops(pState)) {
-                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
-                for (BlockPos breakPos : alsoBreakSet) {
-                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
-                    pStack.hurtAndBreak(ToolAbility.TREEFELLER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    default boolean oreMiner(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
-            if (canUseAbility(pStack, ToolAbility.OREMINER) && pState.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)) && pStack.isCorrectToolForDrops(pState)) {
-                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 64, 2); //Todo: Balance and Config?
-                for (BlockPos breakPos : alsoBreakSet) {
-                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
-                    pStack.hurtAndBreak(ToolAbility.OREMINER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    default boolean skySweeper(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        if (!pLevel.isClientSide && pState.getDestroySpeed(pLevel, pPos) != 0.0F) {
-            if (canUseAbility(pStack, ToolAbility.SKYSWEEPER) && pState.getBlock() instanceof FallingBlock && pStack.isCorrectToolForDrops(pState)) {
-                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, 24, Direction.UP, 24); //Todo: Balance and Config?
-                for (BlockPos breakPos : alsoBreakSet) {
-                    breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, pPos);
-                    pStack.hurtAndBreak(ToolAbility.SKYSWEEPER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                }
-                return true;
-            }
-        }
-        return false;
-    }*/
 
     default boolean scanFor(Level level, Player player, InteractionHand hand, Ability toolAbility) {
         if (!player.isShiftKeyDown()) {
@@ -197,6 +162,17 @@ public interface ToggleableTool {
             return true;
         }
         return false;
+    }
+
+    //Thanks Soaryn!
+    @NotNull
+    static Direction getTargetLookDirection(LivingEntity livingEntity) {
+        var playerLook = new Vec3(livingEntity.getX(), livingEntity.getY() + livingEntity.getEyeHeight(), livingEntity.getZ());
+        var lookVec = livingEntity.getViewVector(1.0F);
+        var reach = livingEntity instanceof Player player ? player.getBlockReach() : 1; //Todo check if this is good
+        var endLook = playerLook.add(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
+        var hitResult = livingEntity.level().clip(new ClipContext(playerLook, endLook, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, livingEntity));
+        return hitResult.getDirection().getOpposite();
     }
 
     static ItemStack getToggleableTool(Player player) {

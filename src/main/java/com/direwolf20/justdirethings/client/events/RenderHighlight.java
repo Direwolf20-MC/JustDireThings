@@ -31,10 +31,8 @@ public class RenderHighlight {
         Player player = mc.player;
         if (mc.player == null)
             return;
-        ItemStack toggleableToolStack = ToggleableTool.getToggleableTool(player);
-        if (toggleableToolStack.isEmpty()) return;
-
-        ToggleableTool toggleableTool = ((ToggleableTool) toggleableToolStack.getItem());
+        ItemStack toggleableToolStack = player.getMainHandItem();
+        if (!(toggleableToolStack.getItem() instanceof ToggleableTool toggleableTool)) return;
 
         if (toggleableTool.canUseAbility(toggleableToolStack, Ability.HAMMER)) {
             Level level = player.level();
@@ -48,7 +46,7 @@ public class RenderHighlight {
             VertexConsumer vertexconsumer2 = evt.getMultiBufferSource().getBuffer(RenderType.lines());
             if (toggleableToolStack.isCorrectToolForDrops(blockState)) {
                 int range = ToggleableTool.getToolValue(toggleableToolStack, Ability.HAMMER.getName());
-                List<BlockPos> coords = MiningCollect.collect(mc.player, blockHitResult, mc.level, range, MiningCollect.SizeMode.AUTO, toggleableToolStack);
+                List<BlockPos> coords = MiningCollect.collect(mc.player, blockHitResult.getBlockPos(), blockHitResult.getDirection(), mc.level, range, MiningCollect.SizeMode.AUTO, toggleableToolStack);
                 for (BlockPos blockPos : coords) {
                     if (blockPos.equals(targetPos)) continue; //Let the original event draw this one!
                     renderHitOutline(evt.getPoseStack(), vertexconsumer2, player, d0, d1, d2, level, blockPos, level.getBlockState(blockPos));
