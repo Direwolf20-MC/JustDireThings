@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_goo_block1": {
+    "has_celestigem": {
       "conditions": {
         "items": [
           {
             "items": [
-              "justdirethings:gooblock_tier1"
+              "justdirethings:celestigem"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:gooblock_tier2"
+        "recipe": "justdirethings:celestigem_9x9"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_goo_block1"
+      "has_celestigem"
     ]
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:gooblock_tier2"
+      "justdirethings:celestigem_9x9"
     ]
   }
 }

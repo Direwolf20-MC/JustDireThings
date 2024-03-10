@@ -17,8 +17,10 @@ public class JustDireLootTables extends VanillaBlockLoot {
     protected void generate() {
         dropWhenSilkTouch(Registration.GooBlock_Tier1.get());
         dropWhenSilkTouch(Registration.GooBlock_Tier2.get());
+        dropWhenSilkTouch(Registration.GooBlock_Tier3.get());
         dropSelf(Registration.FerricoreBlock.get());
         dropSelf(Registration.BlazeGoldBlock.get());
+        dropSelf(Registration.CelestigemBlock.get());
         dropSelf(Registration.GooPatternBlock.get());
         dropOther(Registration.GooSoil_Tier1.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier2.get(), Items.DIRT);
@@ -37,6 +39,14 @@ public class JustDireLootTables extends VanillaBlockLoot {
                 this.applyExplosionDecay(
                         Registration.RawBlazegoldOre.get(),
                         LootItem.lootTableItem(Registration.RawBlazegold.get())
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
+                )
+        ));
+        add(Registration.RawCelestigemOre.get(), createSilkTouchDispatchTable(
+                Registration.RawCelestigemOre.get(),
+                this.applyExplosionDecay(
+                        Registration.RawCelestigemOre.get(),
+                        LootItem.lootTableItem(Registration.Celestigem.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));

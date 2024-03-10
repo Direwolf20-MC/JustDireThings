@@ -21,12 +21,14 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.GooSoil_Tier2.get(), "Goo Soil Tier2");
         add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
+        add(Registration.GooBlock_Tier3.get(), "VoidShimmer Goo");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
         add(Registration.RawFerricoreOre.get(), "Raw Ferricore Ore");
         add(Registration.BlazeGoldBlock.get(), "Blazegold Block");
         add(Registration.RawBlazegoldOre.get(), "Raw Blazegold Ore");
+        add(Registration.RawCelestigemOre.get(), "Raw Celestigem Ore");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
@@ -50,6 +52,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.RawFerricore.get(), "Raw Ferricore");
         add(Registration.BlazegoldIngot.get(), "Blazegold Ingot");
         add(Registration.RawBlazegold.get(), "Raw Blazegold");
+        add(Registration.Celestigem.get(), "Celestigem");
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");

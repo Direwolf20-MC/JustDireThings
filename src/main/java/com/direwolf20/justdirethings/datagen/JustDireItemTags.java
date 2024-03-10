@@ -48,6 +48,8 @@ public class JustDireItemTags extends ItemTagsProvider {
         tag(Tags.Items.RAW_MATERIALS)
                 .add(Registration.RawFerricore.get())
                 .add(Registration.RawBlazegold.get());
+        tag(Tags.Items.GEMS)
+                .add(Registration.Celestigem.get());
     }
 
     @Override

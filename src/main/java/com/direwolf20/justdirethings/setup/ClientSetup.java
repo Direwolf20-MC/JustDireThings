@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier1;
 import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier2;
+import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier3;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
@@ -54,5 +55,6 @@ public class ClientSetup {
         //Register Block Entity Renders
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier1.get(), GooBlockRender_Tier1::new);
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier2.get(), GooBlockRender_Tier2::new);
+        event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier3.get(), GooBlockRender_Tier3::new);
     }
 }

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": {
+      "item": "minecraft:ender_pearl"
+    },
+    "g": {
+      "item": "justdirethings:gooblock_tier2"
+    },
+    "r": {
+      "item": "minecraft:chorus_fruit"
+    },
+    "w": {
+      "item": "minecraft:shulker_shell"
+    }
+  },
+  "pattern": [
+    "brb",
+    "wgw",
+    "brb"
+  ],
+  "result": {
+    "item": "justdirethings:gooblock_tier3"
+  }
+}

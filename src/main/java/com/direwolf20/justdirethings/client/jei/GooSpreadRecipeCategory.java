@@ -82,6 +82,8 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe>
             catalystlist.add(new ItemStack(Registration.GooBlock_Tier1.get()));
         if (recipe.getTierRequirement() <= 2)
             catalystlist.add(new ItemStack(Registration.GooBlock_Tier2.get()));
+        if (recipe.getTierRequirement() <= 3)
+            catalystlist.add(new ItemStack(Registration.GooBlock_Tier3.get()));
         builder.addSlot(RecipeIngredientRole.CATALYST, 39, 12)
                 .addItemStacks(catalystlist);
 

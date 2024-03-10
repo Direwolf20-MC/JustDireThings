@@ -35,7 +35,9 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.FerricoreBlock.get())
                 .add(Registration.RawFerricoreOre.get())
                 .add(Registration.BlazeGoldBlock.get())
-                .add(Registration.RawBlazegoldOre.get());
+                .add(Registration.RawBlazegoldOre.get())
+                .add(Registration.CelestigemBlock.get())
+                .add(Registration.RawCelestigemOre.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
@@ -44,7 +46,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Blocks.SWEET_BERRY_BUSH);
         tag(Tags.Blocks.ORES)
                 .add(Registration.RawFerricoreOre.get())
-                .add(Registration.RawBlazegoldOre.get());
+                .add(Registration.RawBlazegoldOre.get())
+                .add(Registration.RawCelestigemOre.get());
     }
 
     @Override
