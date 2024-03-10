@@ -33,17 +33,33 @@ public class JustDireBlockStates extends BlockStateProvider {
     }
 
     private void soilBlocks() {
-        getVariantBuilder(Registration.GooSoil.get()).forAllStates(s -> {
+        getVariantBuilder(Registration.GooSoil_Tier1.get()).forAllStates(s -> {
             ModelFile model;
             int Moisture = s.getValue(BlockStateProperties.MOISTURE);
             if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/dirt"))
-                        .texture("top", modLoc("block/farmland_moist"));
+                model = models().withExistingParent(Registration.GooSoil_Tier1.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/goosoilside_tier1"))
+                        .texture("top", modLoc("block/goofarmland_tier1_moist"));
             } else {
-                model = models().withExistingParent(Registration.GooSoil.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/dirt"))
-                        .texture("top", modLoc("block/farmland"));
+                model = models().withExistingParent(Registration.GooSoil_Tier1.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/goosoilside_tier1"))
+                        .texture("top", modLoc("block/goofarmland_tier1"));
+            }
+            return ConfiguredModel.builder()
+                    .modelFile(model).build();
+        });
+
+        getVariantBuilder(Registration.GooSoil_Tier2.get()).forAllStates(s -> {
+            ModelFile model;
+            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
+            if (Moisture == 7) { //Moist
+                model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/goosoilside_tier2"))
+                        .texture("top", modLoc("block/goofarmland_tier2_moist"));
+            } else {
+                model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/goosoilside_tier2"))
+                        .texture("top", modLoc("block/goofarmland_tier2"));
             }
             return ConfiguredModel.builder()
                     .modelFile(model).build();

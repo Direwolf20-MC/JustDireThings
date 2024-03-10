@@ -1,20 +1,23 @@
-package com.direwolf20.justdirethings.common.blocks;
+package com.direwolf20.justdirethings.common.blocks.soil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.IPlantable;
 
-public class GooSoil extends FarmBlock {
-    public GooSoil() {
+import java.util.List;
+
+public class GooSoilBase extends FarmBlock {
+    public GooSoilBase() {
         super(Properties.of()
                 .sound(SoundType.GRAVEL)
                 .strength(2.0f)
@@ -29,7 +32,7 @@ public class GooSoil extends FarmBlock {
 
     @Override
     public void fallOn(Level pLevel, BlockState pState, BlockPos pPos, Entity pEntity, float pFallDistance) {
-        //pEntity.causeFallDamage(pFallDistance, 1.0F, pEntity.damageSources().fall()); // Todo should I do this?
+        pEntity.causeFallDamage(pFallDistance, 1.0F, pEntity.damageSources().fall());
     }
 
     @Override
@@ -43,27 +46,31 @@ public class GooSoil extends FarmBlock {
     @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         super.randomTick(pState, pLevel, pPos, pRandom);
+    }
+
+    /**
+     * @param odds The chance of bonemeal occuring, 1 in odds chance - lower == more likely
+     */
+    public static void bonemealMe(ServerLevel pLevel, BlockPos pPos, RandomSource pRandom, int odds) {
         BlockPos cropPos = pPos.above();
         BlockState crop = pLevel.getBlockState(cropPos);
         if (crop.getBlock() instanceof CropBlock cropBlock) {
             if (crop.isRandomlyTicking()) {
-                float f = 2;
-                if (cropBlock.isValidBonemealTarget(pLevel, cropPos, crop) && pRandom.nextInt((int) (25.0F / f) + 1) == 0) {
+                if (cropBlock.isValidBonemealTarget(pLevel, cropPos, crop) && pRandom.nextInt(odds) == 0) {
                     cropBlock.performBonemeal(pLevel, pRandom, cropPos, crop);
                     pLevel.levelEvent(1505, cropPos, 0); //Does Bonemeal Particles
                 }
             }
-            /*if (cropBlock.isMaxAge(crop)) { // Todo: Tier 2
-                BlockState state = pLevel.getBlockState(cropPos);
-                LootParams.Builder lootparams$builder = new LootParams.Builder(pLevel)
-                        .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(cropPos))
-                        .withParameter(LootContextParams.BLOCK_STATE, crop)
-                        .withParameter(LootContextParams.TOOL, new ItemStack(Registration.FerricoreHoe.get()));
+        }
+    }
 
-                // If specific block conditions are needed, set them in the LootContext builder.
-
+    public static void autoHarvest(ServerLevel pLevel, BlockPos pPos) {
+        BlockPos cropPos = pPos.above();
+        BlockState crop = pLevel.getBlockState(cropPos);
+        if (crop.getBlock() instanceof CropBlock cropBlock) {
+            if (cropBlock.isMaxAge(crop)) {
                 BlockState placeState = Blocks.AIR.defaultBlockState();
-                List<ItemStack> drops = state.getDrops(lootparams$builder);
+                List<ItemStack> drops = Block.getDrops(crop, pLevel, cropPos, null);
                 for (ItemStack drop : drops) {
                     if (drop.getItem() instanceof BlockItem blockItem) {
                         placeState = blockItem.getBlock().defaultBlockState();
@@ -76,12 +83,12 @@ public class GooSoil extends FarmBlock {
                     pLevel.destroyBlock(cropPos, false);
                     for (ItemStack drop : drops) {
                         ItemEntity itemEntity = new ItemEntity(pLevel, cropPos.getX(), cropPos.getY(), cropPos.getZ(), drop);
-                        itemEntity.setPickUpDelay(40);
+                        itemEntity.lifespan = 40;
                         pLevel.addFreshEntity(itemEntity);
                     }
                     pLevel.setBlockAndUpdate(cropPos, placeState);
                 }
-            }*/
+            }
         }
     }
 }

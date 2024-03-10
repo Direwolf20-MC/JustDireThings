@@ -6,10 +6,14 @@ import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier1;
 import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier2;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
+import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
 import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
 import com.direwolf20.justdirethings.client.screens.ToolSettingScreen;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -26,11 +30,16 @@ public class ClientSetup {
         //Register our Render Events Class
         NeoForge.EVENT_BUS.register(RenderLevelLast.class);
         NeoForge.EVENT_BUS.register(EventKeyInput.class);
+        NeoForge.EVENT_BUS.register(RenderHighlight.class);
 
-        //Screens
-        /*event.enqueueWork(() -> {
-            MenuScreens.register(Registration.FuelCanister_Container.get(), FuelCanisterScreen::new); // Attach our container to the screen
-        });*/
+        //Item Properties
+        event.enqueueWork(() -> {
+            ItemProperties.register(Registration.BlazegoldPickaxe.get(),
+                    new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
+                        return ToggleableTool.getEnabled(stack) ? 1.0f : 0.0f;
+                    });
+        });
+
     }
 
     @SubscribeEvent

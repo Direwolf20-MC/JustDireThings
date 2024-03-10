@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.setup.ModSetup;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
@@ -16,7 +17,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("itemGroup." + ModSetup.TAB_JUSTDIRETHINGS, "Just Dire Things");
 
         //Blocks
-        add(Registration.GooSoil.get(), "Goo Soil");
+        add(Registration.GooSoil_Tier1.get(), "Goo Soil Tier1");
+        add(Registration.GooSoil_Tier2.get(), "Goo Soil Tier2");
         add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
 
@@ -36,6 +38,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FerricoreShovel.get(), "Ferricore Shovel");
         add(Registration.FerricoreAxe.get(), "Ferricore Axe");
         add(Registration.FerricoreHoe.get(), "Ferricore Hoe");
+        add(Registration.BlazegoldSword.get(), "Blazegold Sword");
+        add(Registration.BlazegoldPickaxe.get(), "Blazegold Pickaxe");
+        add(Registration.BlazegoldShovel.get(), "Blazegold Shovel");
+        add(Registration.BlazegoldAxe.get(), "Blazegold Axe");
+        add(Registration.BlazegoldHoe.get(), "Blazegold Hoe");
 
 
         //Resources
@@ -46,6 +53,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
+        add("justdirethings.presshotkey", "<Press %s>");
+        add("justdirethings.enabled", "Enabled");
+        add("justdirethings.disabled", "Disabled");
         add("justdirethings.fuelcanisteramt", "Cook time (ticks): %d");
         add("justdirethings.fuelcanisteramtstack", "Stack Cook time (ticks): %d");
         add("justdirethings.fuelcanisteritemsamt", "Fuel Amount: %f");
@@ -60,13 +70,16 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.key.toggle_tool", "Toggle Tool Abilities");
 
         //Abilities
-        add("justdirethings.ability.mobscanner", "Mob Scanner");
-        add("justdirethings.ability.orescanner", "Ore Scanner");
-        add("justdirethings.ability.oreminer", "Ore Miner");
-        add("justdirethings.ability.lawnmower", "Lawnmower");
-        add("justdirethings.ability.skysweeper", "Sky Sweeper");
-        add("justdirethings.ability.treefeller", "Tree Feller");
-        add("justdirethings.ability.leafbreaker", "Leaf Breaker");
+        add(Ability.MOBSCANNER.getLocalization(), "Mob Scanner");
+        add(Ability.ORESCANNER.getLocalization(), "Ore Scanner");
+        add(Ability.OREMINER.getLocalization(), "Ore Miner");
+        add(Ability.LAWNMOWER.getLocalization(), "Lawnmower");
+        add(Ability.SKYSWEEPER.getLocalization(), "Sky Sweeper");
+        add(Ability.TREEFELLER.getLocalization(), "Tree Feller");
+        add(Ability.LEAFBREAKER.getLocalization(), "Leaf Breaker");
+        add(Ability.SMELTER.getLocalization(), "Auto Smelter");
+        add(Ability.HAMMER.getLocalization(), "Hammer");
+        add(Ability.HAMMER.getLocalization() + "value", "Hammer: %s");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

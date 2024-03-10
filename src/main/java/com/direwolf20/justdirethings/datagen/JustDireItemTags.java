@@ -28,15 +28,20 @@ public class JustDireItemTags extends ItemTagsProvider {
         tag(FUEL_CANISTER_DENY)
                 .add(Items.LAVA_BUCKET);
         tag(ItemTags.SWORDS)
-                .add(Registration.FerricoreSword.get());
+                .add(Registration.FerricoreSword.get())
+                .add(Registration.BlazegoldSword.get());
         tag(ItemTags.PICKAXES)
-                .add(Registration.FerricorePickaxe.get());
+                .add(Registration.FerricorePickaxe.get())
+                .add(Registration.BlazegoldPickaxe.get());
         tag(ItemTags.SHOVELS)
-                .add(Registration.FerricoreShovel.get());
+                .add(Registration.FerricoreShovel.get())
+                .add(Registration.BlazegoldShovel.get());
         tag(ItemTags.AXES)
-                .add(Registration.FerricoreAxe.get());
+                .add(Registration.FerricoreAxe.get())
+                .add(Registration.BlazegoldAxe.get());
         tag(ItemTags.HOES)
-                .add(Registration.FerricoreHoe.get());
+                .add(Registration.FerricoreHoe.get())
+                .add(Registration.BlazegoldHoe.get());
         tag(Tags.Items.INGOTS)
                 .add(Registration.FerricoreIngot.get())
                 .add(Registration.BlazegoldIngot.get());

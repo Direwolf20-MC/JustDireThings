@@ -3,7 +3,6 @@ package com.direwolf20.justdirethings.setup;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
-import com.direwolf20.justdirethings.common.blocks.GooSoil;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier2;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
@@ -11,6 +10,8 @@ import com.direwolf20.justdirethings.common.blocks.resources.BlazeGoldBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.FerricoreBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.RawBlazegoldOre;
 import com.direwolf20.justdirethings.common.blocks.resources.RawFerricoreOre;
+import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier1;
+import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
@@ -21,7 +22,9 @@ import com.direwolf20.justdirethings.common.items.resources.FerricoreIngot;
 import com.direwolf20.justdirethings.common.items.resources.RawBlazegold;
 import com.direwolf20.justdirethings.common.items.resources.RawFerricore;
 import com.direwolf20.justdirethings.common.items.tools.*;
+import com.direwolf20.justdirethings.common.items.tools.utils.AutoSmeltLootModifier;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
@@ -34,6 +37,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -59,6 +63,13 @@ public class Registration {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, JustDireThings.MODID);
     public static final Supplier<GooSpreadRecipe.Serializer> GOO_SPREAD_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("goospread", GooSpreadRecipe.Serializer::new);
 
+    /**
+     * An alternate way to smelt drops - I wrote all this, but went back to my old approach. Will re-implement if told its necessary
+     */
+    private static final DeferredRegister<Codec<? extends IGlobalLootModifier>> GLOBAL_LOOT_MODIFIER_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, JustDireThings.MODID);
+    public static final DeferredHolder<Codec<? extends IGlobalLootModifier>, Codec<AutoSmeltLootModifier>> AUTO_SMELT_LOOT_MODIFIER = GLOBAL_LOOT_MODIFIER_SERIALIZERS.register("auto_smelt", AutoSmeltLootModifier.CODEC);
+
+
     public static void init(IEventBus eventBus) {
         BLOCKS.register(eventBus);
         ITEMS.register(eventBus);
@@ -69,11 +80,14 @@ public class Registration {
         RECIPE_SERIALIZERS.register(eventBus);
         RECIPE_TYPES.register(eventBus);
         PARTICLE_TYPES.register(eventBus);
+        //GLOBAL_LOOT_MODIFIER_SERIALIZERS.register(eventBus);
     }
 
     //Blocks
-    public static final DeferredHolder<Block, GooSoil> GooSoil = BLOCKS.register("goosoil", GooSoil::new);
-    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM = ITEMS.register("goosoil", () -> new BlockItem(GooSoil.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, GooSoilTier1> GooSoil_Tier1 = BLOCKS.register("goosoil_tier1", GooSoilTier1::new);
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier1 = ITEMS.register("goosoil_tier1", () -> new BlockItem(GooSoil_Tier1.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, GooSoilTier2> GooSoil_Tier2 = BLOCKS.register("goosoil_tier2", GooSoilTier2::new);
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier2 = ITEMS.register("goosoil_tier2", () -> new BlockItem(GooSoil_Tier2.get(), new Item.Properties()));
 
 
     //Gooblocks
@@ -115,6 +129,11 @@ public class Registration {
     public static final DeferredHolder<Item, FerricoreShovel> FerricoreShovel = TOOLS.register("ferricore_shovel", FerricoreShovel::new);
     public static final DeferredHolder<Item, FerricoreAxe> FerricoreAxe = TOOLS.register("ferricore_axe", FerricoreAxe::new);
     public static final DeferredHolder<Item, FerricoreHoe> FerricoreHoe = TOOLS.register("ferricore_hoe", FerricoreHoe::new);
+    public static final DeferredHolder<Item, BlazegoldSword> BlazegoldSword = TOOLS.register("blazegold_sword", BlazegoldSword::new);
+    public static final DeferredHolder<Item, com.direwolf20.justdirethings.common.items.tools.BlazegoldPickaxe> BlazegoldPickaxe = TOOLS.register("blazegold_pickaxe", BlazegoldPickaxe::new);
+    public static final DeferredHolder<Item, BlazegoldShovel> BlazegoldShovel = TOOLS.register("blazegold_shovel", BlazegoldShovel::new);
+    public static final DeferredHolder<Item, com.direwolf20.justdirethings.common.items.tools.BlazegoldAxe> BlazegoldAxe = TOOLS.register("blazegold_axe", BlazegoldAxe::new);
+    public static final DeferredHolder<Item, BlazegoldHoe> BlazegoldHoe = TOOLS.register("blazegold_hoe", BlazegoldHoe::new);
 
     //Containers
     public static final DeferredHolder<MenuType<?>, MenuType<FuelCanisterContainer>> FuelCanister_Container = CONTAINERS.register("fuelcanister",

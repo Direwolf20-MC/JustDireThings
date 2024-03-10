@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.client.renderactions;
 
 import com.direwolf20.justdirethings.client.particles.alwaysvisibleparticle.AlwaysVisibleParticleData;
 import com.direwolf20.justdirethings.client.renderers.DireBufferBuilder;
+import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -77,7 +78,7 @@ public class ThingFinder {
             if ((currentTime - entityParticlesStartTime) < 10000) { //Lasts for 10 seconds
                 if ((currentTime - lastEntityDrawTime) >= 500) { //Every 1/2 second
                     int tier = ((TieredGooItem) heldItemMain.getItem()).getGooTier();
-                    discoverMobs(player, heldItemMain, tier, false);
+                    discoverMobs(player, tier, false);
                     drawParticlesEntity(evt, player);
                     lastEntityDrawTime = currentTime;
                 }
@@ -86,7 +87,14 @@ public class ThingFinder {
         }
     }
 
-    public static void discoverOres(Player player, ItemStack heldItemMain, int tier) {
+    public static void discover(Player player, int tier, Ability toolAbility) {
+        if (toolAbility.equals(Ability.MOBSCANNER))
+            discoverMobs(player, tier, true);
+        else if (toolAbility.equals(Ability.ORESCANNER))
+            discoverOres(player, tier);
+    }
+
+    private static void discoverOres(Player player, int tier) {
         oreBlocksList.clear();
         BlockPos playerPos = player.getOnPos();
         int radius = 10; //TODO 50 seems to be ok perf wise but ridiculous
@@ -102,7 +110,7 @@ public class ThingFinder {
         }
     }
 
-    public static void discoverMobs(Player player, ItemStack heldItemMain, int tier, boolean startTimer) {
+    private static void discoverMobs(Player player, int tier, boolean startTimer) {
         entityList.clear();
         BlockPos playerPos = player.getOnPos();
         int radius = 10; //TODO 50 seems to be ok perf wise but ridiculous

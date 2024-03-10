@@ -28,7 +28,9 @@ public class JustDireBlockTags extends BlockTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(Registration.GooBlock_Tier1.get())
-                .add(Registration.GooBlock_Tier2.get());
+                .add(Registration.GooBlock_Tier2.get())
+                .add(Registration.GooSoil_Tier1.get())
+                .add(Registration.GooSoil_Tier2.get());
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(Registration.FerricoreBlock.get())
                 .add(Registration.RawFerricoreOre.get())
