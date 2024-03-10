@@ -38,6 +38,9 @@ public class Helpers {
         List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
 
         level.destroyBlock(pos, false);
+        if (state.getDestroySpeed(level, pos) != 0.0F)
+            pStack.hurtAndBreak(1, pPlayer, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+
         return drops;
     }
 

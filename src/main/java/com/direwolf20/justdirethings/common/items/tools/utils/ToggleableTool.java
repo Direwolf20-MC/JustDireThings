@@ -78,10 +78,10 @@ public interface ToggleableTool {
             }
             for (BlockPos breakPos : breakBlockPositions) {
                 Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
-                if (pState.getDestroySpeed(pLevel, pPos) != 0.0F)
-                    pStack.hurtAndBreak(toolAbility.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                if (pStack.getDamageValue() >= pStack.getMaxDamage())
+                    break;
             }
-            if (canUseAbility(pStack, Ability.SMELTER)) {
+            if (canUseAbility(pStack, Ability.SMELTER) && pStack.getDamageValue() < pStack.getMaxDamage()) {
                 boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
                 drops = smeltDrops((ServerLevel) pLevel, drops, pStack, pEntityLiving, smeltedItemsFlag);
                 if (smeltedItemsFlag[0])
