@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public enum GooTier implements Tier {
     FERRICORE(2, 500, 7.0F, 2.5F, 15, () -> Ingredient.of(Registration.FerricoreIngot.get()), 1),
-    BLAZEGOLD(3, 500, 12.0F, 3.0F, 22, () -> Ingredient.of(Registration.BlazegoldIngot.get()), 2);
+    BLAZEGOLD(3, 1440, 12.0F, 3.0F, 22, () -> Ingredient.of(Registration.BlazegoldIngot.get()), 2);
     //CELESTIGEM(3, 250, 6.0F, 2.0F, 18, () -> Ingredient.of(Items.IRON_INGOT), 3), TODO
     //ECLIPSEALLOY(4, 1561, 8.0F, 3.0F, 25, () -> Ingredient.of(Items.DIAMOND), 4); TODO
 
