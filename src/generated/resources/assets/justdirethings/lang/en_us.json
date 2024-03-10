@@ -34,6 +34,8 @@
   "justdirethings.ability.skysweeper": "Sky Sweeper",
   "justdirethings.ability.smelter": "Auto Smelter",
   "justdirethings.ability.treefeller": "Tree Feller",
+  "justdirethings.disabled": "Disabled",
+  "justdirethings.enabled": "Enabled",
   "justdirethings.fuelcanisteramt": "Cook time (ticks): %d",
   "justdirethings.fuelcanisteramtstack": "Stack Cook time (ticks): %d",
   "justdirethings.fuelcanisteritemsamt": "Fuel Amount: %f",
