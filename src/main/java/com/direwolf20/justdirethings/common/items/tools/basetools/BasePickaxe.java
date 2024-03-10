@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.items.tools.basetools;
 
+import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.common.items.tools.utils.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -41,9 +42,19 @@ public class BasePickaxe extends PickaxeItem implements TieredGooItem, Toggleabl
         if (stack.getItem() instanceof ToggleableTool toggleableTool) {
             if (sneakPressed) {
                 if (ToggleableTool.getEnabled(stack))
-                    tooltip.add(Component.translatable("justdirethings.enabled").withStyle(ChatFormatting.GREEN));
+                    tooltip.add(Component.translatable("justdirethings.enabled")
+                            .withStyle(ChatFormatting.GREEN)
+                            .append(Component.literal(" ")
+                                    .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
+                                            .withStyle(ChatFormatting.DARK_GRAY)))
+                    );
                 else
-                    tooltip.add(Component.translatable("justdirethings.disabled").withStyle(ChatFormatting.DARK_RED));
+                    tooltip.add(Component.translatable("justdirethings.disabled")
+                            .withStyle(ChatFormatting.DARK_RED)
+                            .append(Component.literal(" ")
+                                    .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
+                                            .withStyle(ChatFormatting.DARK_GRAY)))
+                    );
                 for (Ability ability : toggleableTool.getAbilities()) {
                     boolean active = ToggleableTool.getSetting(stack, ability.getName());
                     ChatFormatting chatFormatting = active ? ChatFormatting.GREEN : ChatFormatting.DARK_RED;
@@ -51,9 +62,19 @@ public class BasePickaxe extends PickaxeItem implements TieredGooItem, Toggleabl
                 }
             } else {
                 if (ToggleableTool.getEnabled(stack))
-                    tooltip.add(Component.translatable("justdirethings.enabled").withStyle(ChatFormatting.GREEN));
+                    tooltip.add(Component.translatable("justdirethings.enabled")
+                            .withStyle(ChatFormatting.GREEN)
+                            .append(Component.literal(" ")
+                                    .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
+                                            .withStyle(ChatFormatting.DARK_GRAY)))
+                    );
                 else
-                    tooltip.add(Component.translatable("justdirethings.disabled").withStyle(ChatFormatting.DARK_RED));
+                    tooltip.add(Component.translatable("justdirethings.disabled")
+                            .withStyle(ChatFormatting.DARK_RED)
+                            .append(Component.literal(" ")
+                                    .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
+                                            .withStyle(ChatFormatting.DARK_GRAY)))
+                    );
                 tooltip.add(Component.translatable("justdirethings.shiftmoreinfo").withStyle(ChatFormatting.GRAY));
             }
         }

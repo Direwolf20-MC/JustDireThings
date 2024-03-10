@@ -47,6 +47,7 @@
   "justdirethings.pocketgeneratorfuelstack": "Fuel: %f %s",
   "justdirethings.pocketgeneratornofuel": "Fuel Empty",
   "justdirethings.pocketgeneratorrf": "Forge Energy: %s / %s",
+  "justdirethings.presshotkey": "<Press %s>",
   "justdirethings.screen.burn_time": "Burn time left: %ss",
   "justdirethings.screen.energy": "Energy: %s/%s FE",
   "justdirethings.screen.no_fuel": "Fuel source empty",

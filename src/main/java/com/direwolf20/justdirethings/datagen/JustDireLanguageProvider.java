@@ -53,6 +53,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
+        add("justdirethings.presshotkey", "<Press %s>");
         add("justdirethings.enabled", "Enabled");
         add("justdirethings.disabled", "Disabled");
         add("justdirethings.fuelcanisteramt", "Cook time (ticks): %d");
