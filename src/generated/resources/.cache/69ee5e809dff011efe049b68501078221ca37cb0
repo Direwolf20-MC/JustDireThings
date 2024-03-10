@@ -1,9 +1,10 @@
-// 1.20.4	2024-03-09T22:09:15.1667399	Item Models: justdirethings
+// 1.20.4	2024-03-09T23:35:17.6647985	Item Models: justdirethings
 466c7b94dc8f9f5e4707bf9c94aa8cf9f2d1b0a5 assets/justdirethings/models/item/blazegold_axe.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
 8f9d758bd421ca9bb1fdb24e06b2b0df0910b9e0 assets/justdirethings/models/item/blazegold_hoe.json
 b0950f50f6a6d742e497a6275b3ee049055b941d assets/justdirethings/models/item/blazegold_ingot.json
-102ad1f1f379b5495e6837f5dad50c874c3098d7 assets/justdirethings/models/item/blazegold_pickaxe.json
+2a49814df821f776cd88985d62a6d754087bc476 assets/justdirethings/models/item/blazegold_pickaxe.json
+8e09334eca90af8dbbf6b08e1b5d0a3b7710b394 assets/justdirethings/models/item/blazegold_pickaxe_active.json
 eac5d7b3ad3832edd0fded6b00d66b3c2f3327f5 assets/justdirethings/models/item/blazegold_shovel.json
 cfaff834c4d17c9ba73ed9000b20a8414af3e114 assets/justdirethings/models/item/blazegold_sword.json
 f6b8a12a30fddf981e22bbc015945cb63bc0e559 assets/justdirethings/models/item/ferricore_axe.json
