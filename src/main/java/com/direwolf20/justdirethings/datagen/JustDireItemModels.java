@@ -38,7 +38,7 @@ public class JustDireItemModels extends ItemModelProvider {
 
     public void registerTools() {
         for (var tool : Registration.TOOLS.getEntries()) {
-            singleTexture(tool.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/" + tool.getId().getPath()));
+            singleTexture(tool.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/" + tool.getId().getPath()));
         }
     }
 }
