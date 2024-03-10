@@ -20,7 +20,7 @@ public class BlazegoldPickaxe extends BasePickaxe {
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);
-        registerAbility(Ability.HAMMER, new AbilityParams(3, 7, 2));
+        registerAbility(Ability.HAMMER, new AbilityParams(3, 3, 2));
     }
 
     @Override

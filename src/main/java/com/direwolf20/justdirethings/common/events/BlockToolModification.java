@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.events;
 
+import com.direwolf20.justdirethings.common.items.tools.BlazegoldHoe;
 import com.direwolf20.justdirethings.common.items.tools.FerricoreHoe;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.world.level.block.Blocks;
@@ -12,10 +13,16 @@ public class BlockToolModification {
 
     @SubscribeEvent
     public static void handleTickEndEvent(BlockEvent.BlockToolModificationEvent event) {
-        if (event.getToolAction().equals(ToolActions.HOE_TILL) && event.getHeldItemStack().getItem() instanceof FerricoreHoe) {
-            BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getToolAction(), true);
-            if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
-                event.setFinalState(Registration.GooSoil.get().defaultBlockState());
+        if (event.getToolAction().equals(ToolActions.HOE_TILL)) {
+            if (event.getHeldItemStack().getItem() instanceof FerricoreHoe) {
+                BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getToolAction(), true);
+                if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
+                    event.setFinalState(Registration.GooSoil_Tier1.get().defaultBlockState());
+            } else if (event.getHeldItemStack().getItem() instanceof BlazegoldHoe) {
+                BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getToolAction(), true);
+                if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
+                    event.setFinalState(Registration.GooSoil_Tier2.get().defaultBlockState());
+            }
         }
     }
 }

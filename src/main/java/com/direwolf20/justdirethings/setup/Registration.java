@@ -3,7 +3,6 @@ package com.direwolf20.justdirethings.setup;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
-import com.direwolf20.justdirethings.common.blocks.GooSoil;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier2;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
@@ -11,6 +10,8 @@ import com.direwolf20.justdirethings.common.blocks.resources.BlazeGoldBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.FerricoreBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.RawBlazegoldOre;
 import com.direwolf20.justdirethings.common.blocks.resources.RawFerricoreOre;
+import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier1;
+import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
@@ -83,8 +84,10 @@ public class Registration {
     }
 
     //Blocks
-    public static final DeferredHolder<Block, GooSoil> GooSoil = BLOCKS.register("goosoil", GooSoil::new);
-    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM = ITEMS.register("goosoil", () -> new BlockItem(GooSoil.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, GooSoilTier1> GooSoil_Tier1 = BLOCKS.register("goosoil_tier1", GooSoilTier1::new);
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier1 = ITEMS.register("goosoil_tier1", () -> new BlockItem(GooSoil_Tier1.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, GooSoilTier2> GooSoil_Tier2 = BLOCKS.register("goosoil_tier2", GooSoilTier2::new);
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier2 = ITEMS.register("goosoil_tier2", () -> new BlockItem(GooSoil_Tier2.get(), new Item.Properties()));
 
 
     //Gooblocks
