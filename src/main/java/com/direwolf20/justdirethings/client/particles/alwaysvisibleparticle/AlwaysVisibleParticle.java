@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 
 public class AlwaysVisibleParticle extends TextureSheetParticle {
-    ParticleRenderType AlwaysOn = new ParticleRenderType() {
+    static final ParticleRenderType AlwaysOn = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder pBuilder, TextureManager pTextureManager) {
             RenderSystem.disableBlend();
