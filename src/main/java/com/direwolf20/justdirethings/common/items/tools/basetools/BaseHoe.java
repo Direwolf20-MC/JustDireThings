@@ -30,9 +30,7 @@ public class BaseHoe extends HoeItem implements TieredGooItem, ToggleableTool {
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        if (mineBlocksAbility(pStack, pLevel, pState, pPos, pEntityLiving))
-            return true;
-        return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
+        return true;  //We handle damage in the BlockEvent.BreakEvent
     }
 
     @Override

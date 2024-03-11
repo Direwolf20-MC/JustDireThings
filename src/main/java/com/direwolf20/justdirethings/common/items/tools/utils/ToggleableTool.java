@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.tools.utils;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
+import com.direwolf20.justdirethings.common.events.BlockToolModification;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import net.minecraft.core.BlockPos;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -67,40 +69,44 @@ public interface ToggleableTool {
         return true;
     }
 
-    default boolean mineBlocksAbility(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        if (!pLevel.isClientSide) {
-            Set<BlockPos> breakBlockPositions = new HashSet<>();
-            List<ItemStack> drops = new ArrayList<>();
-            if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-                breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
-            }
-            if (canUseAbility(pStack, Ability.TREEFELLER) && logCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-                breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
-            }
-            if (canUseAbility(pStack, Ability.SKYSWEEPER) && fallingBlockCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-                breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, Direction.UP, 64, 2)); //Todo: Balance and Config?
-            }
-            if (canUseAbility(pStack, Ability.HAMMER)) {
-                breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
-            }
-            breakBlockPositions.add(pPos);
-            for (BlockPos breakPos : breakBlockPositions) {
-                if (testUseTool(pStack) < 0)
-                    break;
-                Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
-            }
-            if (canUseAbility(pStack, Ability.SMELTER) && pStack.getDamageValue() < pStack.getMaxDamage()) {
-                boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
-                drops = smeltDrops((ServerLevel) pLevel, drops, pStack, pEntityLiving, smeltedItemsFlag);
-                if (smeltedItemsFlag[0])
-                    smelterParticles((ServerLevel) pLevel, breakBlockPositions);
-            }
-            if (!drops.isEmpty()) {
-                Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
-            }
-            return true;
+    default void mineBlocksAbility(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving) {
+        BlockState pState = pLevel.getBlockState(pPos);
+        Set<BlockPos> breakBlockPositions = new HashSet<>();
+        List<ItemStack> drops = new ArrayList<>();
+        int totalExp = 0;
+        int fortuneLevel = pEntityLiving.getMainHandItem().getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
+        int silkTouchLevel = pEntityLiving.getMainHandItem().getEnchantmentLevel(Enchantments.SILK_TOUCH);
+        if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
         }
-        return false;
+        if (canUseAbility(pStack, Ability.TREEFELLER) && logCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
+        }
+        if (canUseAbility(pStack, Ability.SKYSWEEPER) && fallingBlockCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, Direction.UP, 64, 2)); //Todo: Balance and Config?
+        }
+        if (canUseAbility(pStack, Ability.HAMMER)) {
+            breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
+        }
+        breakBlockPositions.add(pPos);
+        BlockToolModification.addAllToIgnoreList(breakBlockPositions); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
+        for (BlockPos breakPos : breakBlockPositions) {
+            if (testUseTool(pStack) < 0)
+                break;
+            int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pLevel.random, pPos, fortuneLevel, silkTouchLevel);
+            totalExp = totalExp + exp;
+            Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
+        }
+        if (canUseAbility(pStack, Ability.SMELTER) && pStack.getDamageValue() < pStack.getMaxDamage()) {
+            boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
+            drops = smeltDrops((ServerLevel) pLevel, drops, pStack, pEntityLiving, smeltedItemsFlag);
+            if (smeltedItemsFlag[0])
+                smelterParticles((ServerLevel) pLevel, breakBlockPositions);
+        }
+        if (!drops.isEmpty()) {
+            Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
+            pState.getBlock().popExperience((ServerLevel) pLevel, pPos, totalExp);
+        }
     }
 
     default void smelterParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {

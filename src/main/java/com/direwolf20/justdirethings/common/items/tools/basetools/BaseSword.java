@@ -33,9 +33,7 @@ public class BaseSword extends SwordItem implements TieredGooItem, ToggleableToo
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        if (mineBlocksAbility(pStack, pLevel, pState, pPos, pEntityLiving))
-            return true;
-        return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
+        return true; //We handle damage in the BlockEvent.BreakEvent
     }
 
     @Override

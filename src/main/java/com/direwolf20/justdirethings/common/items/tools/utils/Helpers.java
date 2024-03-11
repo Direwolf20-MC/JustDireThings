@@ -43,15 +43,21 @@ public class Helpers {
         if (pPlayer instanceof Player player) {
             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
             if (NeoForge.EVENT_BUS.post(event).isCanceled()) return new ArrayList<>();
+
+            BlockState state = level.getBlockState(pos);
+            List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
+
+            //This is how vanilla does it?
+            boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
+            if (removed) {
+                state.getBlock().destroy(level, pos, state);
+            }
+            if (state.getDestroySpeed(level, pos) != 0.0F)
+                damageTool(pStack, pPlayer);
+
+            return drops;
         }
-        BlockState state = level.getBlockState(pos);
-        List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
-
-        level.destroyBlock(pos, false);
-        if (state.getDestroySpeed(level, pos) != 0.0F)
-            damageTool(pStack, pPlayer);
-
-        return drops;
+        return new ArrayList<>();
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player) {
