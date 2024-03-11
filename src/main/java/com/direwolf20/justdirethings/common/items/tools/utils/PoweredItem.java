@@ -30,7 +30,6 @@ public interface PoweredItem {
                     if (!entry.getKey().equals(Attributes.ATTACK_DAMAGE))
                         modifiers.put(entry.getKey(), entry.getValue());
                 }
-                System.out.println(modifiers);
             }
         }
         return modifiers;

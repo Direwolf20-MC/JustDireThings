@@ -26,7 +26,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
@@ -63,22 +62,32 @@ public interface ToggleableTool {
     }
 
     //Abilities
-    default boolean mineBlocksAbility(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving, Ability toolAbility, Direction direction, Predicate<BlockState> condition) {
+    default boolean hurtEnemyAbility(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+        damageTool(pStack, pAttacker);
+        return true;
+    }
+
+    default boolean mineBlocksAbility(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (!pLevel.isClientSide) {
             Set<BlockPos> breakBlockPositions = new HashSet<>();
             List<ItemStack> drops = new ArrayList<>();
-            if (canUseAbility(pStack, toolAbility) && condition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-                breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, direction, 64, 2)); //Todo: Balance and Config?
-            } else {
-                breakBlockPositions.add(pPos);
+            if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
+                breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
+            }
+            if (canUseAbility(pStack, Ability.TREEFELLER) && logCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
+                breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
+            }
+            if (canUseAbility(pStack, Ability.SKYSWEEPER) && fallingBlockCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
+                breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, Direction.UP, 64, 2)); //Todo: Balance and Config?
             }
             if (canUseAbility(pStack, Ability.HAMMER)) {
                 breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
             }
+            breakBlockPositions.add(pPos);
             for (BlockPos breakPos : breakBlockPositions) {
-                if (testUseTool(pStack, toolAbility) < 0)
+                if (testUseTool(pStack) < 0)
                     break;
-                Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, toolAbility));
+                Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
             }
             if (canUseAbility(pStack, Ability.SMELTER) && pStack.getDamageValue() < pStack.getMaxDamage()) {
                 boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
@@ -135,7 +144,7 @@ public interface ToggleableTool {
                 for (BlockPos breakPos : alsoBreakSet) {
                     if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
                         break;
-                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, Ability.LEAFBREAKER));
+                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
                     pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                     if (Math.random() < 0.1) //10% chance to damage tool
                         damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);

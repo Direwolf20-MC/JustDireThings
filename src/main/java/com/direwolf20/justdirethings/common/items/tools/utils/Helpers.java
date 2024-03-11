@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,21 +18,28 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Helpers {
+    public static final Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES);
+    public static final Predicate<BlockState> fallingBlockCondition = s -> s.getBlock() instanceof FallingBlock;
+    public static final Predicate<BlockState> logCondition = s -> s.is(BlockTags.LOGS);
+
     public static void breakBlocks(ServerLevel level, BlockPos pos) {
         level.destroyBlock(pos, true);
     }
 
-    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, Ability ability) {
+    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
         if (pPlayer instanceof Player player) {
             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
             if (NeoForge.EVENT_BUS.post(event).isCanceled()) return new ArrayList<>();
@@ -41,16 +49,26 @@ public class Helpers {
 
         level.destroyBlock(pos, false);
         if (state.getDestroySpeed(level, pos) != 0.0F)
-            damageTool(pStack, pPlayer, ability);
+            damageTool(pStack, pPlayer);
 
         return drops;
+    }
+
+    public static void damageTool(ItemStack stack, LivingEntity player) {
+        if (stack.getItem() instanceof PoweredItem poweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return;
+            energyStorage.extractEnergy(poweredItem.getBlockBreakFECost(), false);
+        } else {
+            stack.hurtAndBreak(1, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
         if (stack.getItem() instanceof PoweredItem) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
-            energyStorage.extractEnergy(ability.getFeCost(), false); //Should have been tested first so yea?
+            energyStorage.extractEnergy(ability.getFeCost(), false);
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
@@ -60,9 +78,19 @@ public class Helpers {
         if (stack.getItem() instanceof PoweredItem) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
-            energyStorage.extractEnergy(ability.getFeCost() * multiplier, false); //Should have been tested first so yea?
+            energyStorage.extractEnergy(ability.getFeCost() * multiplier, false);
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+    }
+
+    public static int testUseTool(ItemStack stack) {
+        if (stack.getItem() instanceof PoweredItem poweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return -1; //Shouldn't Happen!
+            return energyStorage.getEnergyStored() - poweredItem.getBlockBreakFECost();
+        } else {
+            return stack.getMaxDamage() - stack.getDamageValue() - 1;
         }
     }
 
@@ -150,7 +178,7 @@ public class Helpers {
 
     public static void dropDrops(List<ItemStack> drops, ServerLevel level, BlockPos dropAtPos) {
         for (ItemStack drop : drops) {
-            ItemEntity itemEntity = new ItemEntity(level, dropAtPos.getX(), dropAtPos.getY(), dropAtPos.getZ(), drop);
+            ItemEntity itemEntity = new ItemEntity(level, dropAtPos.getX() + 0.5f, dropAtPos.getY() + 0.5f, dropAtPos.getZ() + 0.5f, drop);
             level.addFreshEntity(itemEntity);
         }
     }
