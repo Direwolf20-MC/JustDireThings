@@ -196,6 +196,52 @@ public class JustDireRecipes extends RecipeProvider {
                 .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
                 .save(consumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemSword.get())
+                .pattern(" f ")
+                .pattern(" f ")
+                .pattern(" s ")
+                .define('f', Registration.Celestigem.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemPickaxe.get())
+                .pattern("fff")
+                .pattern(" s ")
+                .pattern(" s ")
+                .define('f', Registration.Celestigem.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemShovel.get())
+                .pattern(" f ")
+                .pattern(" s ")
+                .pattern(" s ")
+                .define('f', Registration.Celestigem.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemAxe.get())
+                .pattern("ff ")
+                .pattern("fs ")
+                .pattern(" s ")
+                .define('f', Registration.Celestigem.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemHoe.get())
+                .pattern("ff ")
+                .pattern(" s ")
+                .pattern(" s ")
+                .define('f', Registration.Celestigem.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+
         //Resource Conversions
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(), Registration.FerricoreIngot.getId().toString() + "_9x9", "justdirethings", Registration.FerricoreBlock.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.BlazegoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.BlazeGoldBlock.get(), Registration.BlazegoldIngot.getId().toString() + "_9x9", "justdirethings", Registration.BlazeGoldBlock.getId().toString() + "_9x9", "justdirethings");

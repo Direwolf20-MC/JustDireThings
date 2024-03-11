@@ -1,15 +1,14 @@
 package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
-import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.NBTUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -30,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PocketGenerator extends Item {
+public class PocketGenerator extends Item implements PoweredItem {
     public static final String ENABLED = "enabled";
     public static final String COUNTER = "counter";
     public static final String MAXBURN = "maxburn";
@@ -62,12 +61,12 @@ public class PocketGenerator extends Item {
             IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
             tryBurn(energyStorage, itemStack);
-            if (energyStorage.getEnergyStored() >= 1000) {
+            if (energyStorage.getEnergyStored() >= 50) { //Todo Balance and Config?
                 for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                     ItemStack slotStack = player.getInventory().getItem(i);
                     IEnergyStorage slotEnergy = slotStack.getCapability(Capabilities.EnergyStorage.ITEM);
                     if (slotEnergy != null) {
-                        int acceptedEnergy = slotEnergy.receiveEnergy(1000, true);
+                        int acceptedEnergy = slotEnergy.receiveEnergy(1000, true);  //Todo Balance and Config?
                         if (acceptedEnergy > 0) {
                             int extractedEnergy = energyStorage.extractEnergy(acceptedEnergy, false);
                             slotEnergy.receiveEnergy(extractedEnergy, false);
@@ -134,11 +133,7 @@ public class PocketGenerator extends Item {
         if (level == null || mc.player == null) {
             return;
         }
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            return;
-        }
-        tooltip.add(Component.translatable("justdirethings.pocketgeneratorrf", MagicHelpers.tidyValue(energy.getEnergyStored()), MagicHelpers.tidyValue(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
+        PoweredItem.appendFEText(stack, level, tooltip, flagIn);
         boolean sneakPressed = Screen.hasShiftDown();
         if (!sneakPressed) {
             tooltip.add(Component.translatable("justdirethings.shiftmoreinfo").withStyle(ChatFormatting.GRAY));
@@ -156,29 +151,20 @@ public class PocketGenerator extends Item {
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            return false;
-        }
-        return (energy.getEnergyStored() < energy.getMaxEnergyStored());
+        return isPowerBarVisible(stack);
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            return 13;
-        }
-        return Math.min(13 * energy.getEnergyStored() / energy.getMaxEnergyStored(), 13);
+        return getPowerBarWidth(stack);
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            super.getBarColor(stack);
-        }
-        return Mth.hsvToRgb(Math.max(0.0F, (float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored()) / 3.0F, 1.0F, 1.0F);
+        int color = getPowerBarColor(stack);
+        if (color == -1)
+            return super.getBarColor(stack);
+        return color;
     }
 
     @Override
@@ -194,5 +180,10 @@ public class PocketGenerator extends Item {
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
+    }
+
+    @Override
+    public int getMaxEnergy() {
+        return 100000;
     }
 }

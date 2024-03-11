@@ -39,5 +39,12 @@ public class JustDireThings {
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
                 Registration.Pocket_Generator.get()
         );
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
+                Registration.CelestigemSword.get(),
+                Registration.CelestigemPickaxe.get(),
+                Registration.CelestigemAxe.get(),
+                Registration.CelestigemShovel.get(),
+                Registration.CelestigemHoe.get()
+        );
     }
 }

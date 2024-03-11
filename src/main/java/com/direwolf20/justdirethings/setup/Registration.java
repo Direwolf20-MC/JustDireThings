@@ -19,6 +19,7 @@ import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
 import com.direwolf20.justdirethings.common.items.tools.utils.AutoSmeltLootModifier;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
@@ -26,6 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -139,6 +141,11 @@ public class Registration {
     public static final DeferredHolder<Item, BlazegoldShovel> BlazegoldShovel = TOOLS.register("blazegold_shovel", BlazegoldShovel::new);
     public static final DeferredHolder<Item, BlazegoldAxe> BlazegoldAxe = TOOLS.register("blazegold_axe", BlazegoldAxe::new);
     public static final DeferredHolder<Item, BlazegoldHoe> BlazegoldHoe = TOOLS.register("blazegold_hoe", BlazegoldHoe::new);
+    public static final DeferredHolder<Item, CelestigemSword> CelestigemSword = TOOLS.register("celestigem_sword", CelestigemSword::new);
+    public static final DeferredHolder<Item, CelestigemPickaxe> CelestigemPickaxe = TOOLS.register("celestigem_pickaxe", CelestigemPickaxe::new);
+    public static final DeferredHolder<Item, CelestigemShovel> CelestigemShovel = TOOLS.register("celestigem_shovel", CelestigemShovel::new);
+    public static final DeferredHolder<Item, CelestigemAxe> CelestigemAxe = TOOLS.register("celestigem_axe", CelestigemAxe::new);
+    public static final DeferredHolder<Item, CelestigemHoe> CelestigemHoe = TOOLS.register("celestigem_hoe", CelestigemHoe::new);
 
     //Containers
     public static final DeferredHolder<MenuType<?>, MenuType<FuelCanisterContainer>> FuelCanister_Container = CONTAINERS.register("fuelcanister",
@@ -153,5 +160,17 @@ public class Registration {
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(
             "handler", () -> AttachmentType.serializable(() -> new ItemStackHandler(1)).build());
     public static final Supplier<AttachmentType<EnergyStorage>> ENERGYSTORAGE = ATTACHMENT_TYPES.register(
-            "energystorage", () -> AttachmentType.serializable(() -> new EnergyStorage(1000000)).build());
+            "energystorage", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof ItemStack itemStack) {
+                    int capacity = 1000000; //Default
+                    if (itemStack.getItem() instanceof PoweredItem poweredTool) {
+                        capacity = poweredTool.getMaxEnergy();
+                    }
+                    return new EnergyStorage(capacity);
+                } else {
+                    throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
+                }
+            }).build());
+
+
 }

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "f": {
+      "item": "justdirethings:celestigem"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "ff ",
+    " s ",
+    " s "
+  ],
+  "result": {
+    "item": "justdirethings:celestigem_hoe"
+  }
+}

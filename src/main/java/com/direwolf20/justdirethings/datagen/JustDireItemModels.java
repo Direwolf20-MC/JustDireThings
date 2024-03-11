@@ -55,7 +55,7 @@ public class JustDireItemModels extends ItemModelProvider {
                         .texture("layer0", defaultModelPath)
                         .override()
                         .predicate(new ResourceLocation("justdirethings", "enabled"), 1.0F) // Using custom property
-                        .model(singleTexture(tool.getId().getPath() + "_active", mcLoc("item/handheld"), "layer0", modLoc("item/" + tool.getId().getPath() + "_active")))
+                        .model(singleTexture(tool.getId().getPath() + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
                         .end();
 
             }

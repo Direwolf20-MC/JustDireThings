@@ -12,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.Tags;
 
 public class FerricorePickaxe extends BasePickaxe {
     public FerricorePickaxe() {
@@ -32,14 +31,5 @@ public class FerricorePickaxe extends BasePickaxe {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         scanFor(level, player, hand, Ability.ORESCANNER);
         return super.use(level, player, hand);
-    }
-
-    @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
-        float defaultSpeed = super.getDestroySpeed(stack, state);
-        if (state.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES))) {
-            return defaultSpeed;
-        }
-        return defaultSpeed + defaultSpeed / 2;
     }
 }

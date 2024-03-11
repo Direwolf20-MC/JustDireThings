@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BasePickaxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.AbilityParams;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -13,9 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlazegoldPickaxe extends BasePickaxe {
-    public BlazegoldPickaxe() {
-        super(GooTier.BLAZEGOLD, 1, -2.8F, new Properties());
+public class CelestigemPickaxe extends BasePickaxe implements PoweredItem {
+    public CelestigemPickaxe() {
+        super(GooTier.CELESTIGEM, 1, -2.8F, new Properties());
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);
@@ -33,5 +34,23 @@ public class BlazegoldPickaxe extends BasePickaxe {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         scanFor(level, player, hand, Ability.ORESCANNER);
         return super.use(level, player, hand);
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return isPowerBarVisible(stack);
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        return getPowerBarWidth(stack);
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        int color = getPowerBarColor(stack);
+        if (color == -1)
+            return super.getBarColor(stack);
+        return color;
     }
 }

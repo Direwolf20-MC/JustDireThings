@@ -9,11 +9,11 @@ import java.util.Map;
 
 public enum Ability {
     MOBSCANNER(SettingType.TOGGLE, 10, 100), //TODO Configs
-    OREMINER(SettingType.TOGGLE, 1, 0),
+    OREMINER(SettingType.TOGGLE, 1, 10),
     ORESCANNER(SettingType.TOGGLE, 10, 100),
     LAWNMOWER(SettingType.TOGGLE, 1, 10),
-    SKYSWEEPER(SettingType.TOGGLE, 1, 0),
-    TREEFELLER(SettingType.TOGGLE, 1, 0),
+    SKYSWEEPER(SettingType.TOGGLE, 1, 10),
+    TREEFELLER(SettingType.TOGGLE, 1, 10),
     LEAFBREAKER(SettingType.TOGGLE, 1, 10),
     SMELTER(SettingType.TOGGLE, 1, 10),
     HAMMER(SettingType.CYCLE, 1, 10);

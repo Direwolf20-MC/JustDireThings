@@ -14,7 +14,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -77,9 +76,9 @@ public interface ToggleableTool {
                 breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
             }
             for (BlockPos breakPos : breakBlockPositions) {
-                Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
-                if (pStack.getDamageValue() >= pStack.getMaxDamage())
+                if (testUseTool(pStack, toolAbility) < 0)
                     break;
+                Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, toolAbility));
             }
             if (canUseAbility(pStack, Ability.SMELTER) && pStack.getDamageValue() < pStack.getMaxDamage()) {
                 boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
@@ -110,13 +109,13 @@ public interface ToggleableTool {
     default boolean scanFor(Level level, Player player, InteractionHand hand, Ability toolAbility) {
         if (!player.isShiftKeyDown()) {
             ItemStack itemStack = player.getItemInHand(hand);
-            if (canUseAbility(itemStack, toolAbility)) {
+            if (canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0)) {
                 if (level.isClientSide) {
                     if (itemStack.getItem() instanceof TieredGooItem tieredGooItem) {
                         ThingFinder.discover(player, tieredGooItem.getGooTier(), toolAbility);
                     }
                 } else { //ServerSide
-                    itemStack.hurtAndBreak(toolAbility.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    damageTool(itemStack, player, toolAbility);
                 }
             }
         }
@@ -134,10 +133,12 @@ public interface ToggleableTool {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
                 List<ItemStack> drops = new ArrayList<>();
                 for (BlockPos breakPos : alsoBreakSet) {
-                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
+                    if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
+                        break;
+                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, Ability.LEAFBREAKER));
                     pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                     if (Math.random() < 0.1) //10% chance to damage tool
-                        pStack.hurtAndBreak(Ability.LEAFBREAKER.getDurabilityCost(), pEntityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
                 }
                 if (!drops.isEmpty()) {
                     Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
@@ -155,9 +156,11 @@ public interface ToggleableTool {
             tags.add(JustDireBlockTags.LAWNMOWERABLE);
             Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?
             for (BlockPos breakPos : breakBlocks) {
+                if (testUseTool(itemStack, Ability.LAWNMOWER) < 0)
+                    break;
                 breakBlocks((ServerLevel) level, breakPos);
                 if (Math.random() < 0.1) //10% chance to damage tool
-                    itemStack.hurtAndBreak(Ability.LAWNMOWER.getDurabilityCost(), player, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                    damageTool(itemStack, player, Ability.LAWNMOWER);
             }
             return true;
         }

@@ -45,6 +45,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlazegoldShovel.get(), "Blazegold Shovel");
         add(Registration.BlazegoldAxe.get(), "Blazegold Axe");
         add(Registration.BlazegoldHoe.get(), "Blazegold Hoe");
+        add(Registration.CelestigemSword.get(), "Celestigem Sword");
+        add(Registration.CelestigemPickaxe.get(), "Celestigem Pickaxe");
+        add(Registration.CelestigemShovel.get(), "Celestigem Shovel");
+        add(Registration.CelestigemAxe.get(), "Celestigem Axe");
+        add(Registration.CelestigemHoe.get(), "Celestigem Hoe");
 
 
         //Resources
@@ -66,7 +71,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratorburntime", "Burn Time: %f / %f");
         add("justdirethings.pocketgeneratorfuelstack", "Fuel: %f %s");
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
-        add("justdirethings.pocketgeneratorrf", "Forge Energy: %s / %s");
+        add("justdirethings.festored", "Forge Energy: %s / %s");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");

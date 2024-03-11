@@ -18,7 +18,9 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.*;
@@ -29,7 +31,7 @@ public class Helpers {
         level.destroyBlock(pos, true);
     }
 
-    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
+    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, Ability ability) {
         if (pPlayer instanceof Player player) {
             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
             if (NeoForge.EVENT_BUS.post(event).isCanceled()) return new ArrayList<>();
@@ -39,9 +41,49 @@ public class Helpers {
 
         level.destroyBlock(pos, false);
         if (state.getDestroySpeed(level, pos) != 0.0F)
-            pStack.hurtAndBreak(1, pPlayer, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            damageTool(pStack, pPlayer, ability);
 
         return drops;
+    }
+
+    public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
+        if (stack.getItem() instanceof PoweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return;
+            energyStorage.extractEnergy(ability.getFeCost(), false); //Should have been tested first so yea?
+        } else {
+            stack.hurtAndBreak(ability.getDurabilityCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+    }
+
+    public static void damageTool(ItemStack stack, LivingEntity player, Ability ability, int multiplier) {
+        if (stack.getItem() instanceof PoweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return;
+            energyStorage.extractEnergy(ability.getFeCost() * multiplier, false); //Should have been tested first so yea?
+        } else {
+            stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+    }
+
+    public static int testUseTool(ItemStack stack, Ability ability) {
+        if (stack.getItem() instanceof PoweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return -1; //Shouldn't Happen!
+            return energyStorage.getEnergyStored() - ability.getFeCost();
+        } else {
+            return stack.getMaxDamage() - stack.getDamageValue() - ability.getDurabilityCost();
+        }
+    }
+
+    public static int testUseTool(ItemStack stack, Ability ability, int multiplier) {
+        if (stack.getItem() instanceof PoweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return -1; //Shouldn't Happen!
+            return energyStorage.getEnergyStored() - (ability.getFeCost() * multiplier);
+        } else {
+            return stack.getMaxDamage() - stack.getDamageValue() - (ability.getDurabilityCost() * multiplier);
+        }
     }
 
     public static void combineDrops(List<ItemStack> drops, List<ItemStack> newDrops) {
@@ -88,12 +130,12 @@ public class Helpers {
                 // Get the result of the smelting recipe
                 ItemStack smeltedResult = smeltingRecipe.get().value().getResultItem(registryAccess);
 
-                if (!smeltedResult.isEmpty()) {
+                if (!smeltedResult.isEmpty() && (testUseTool(tool, Ability.SMELTER, drop.getCount()) >= 0)) {
                     // If the smelting result is valid, prepare to replace the original drop with the smelted result
                     ItemStack resultStack = smeltedResult.copy();
                     resultStack.setCount(drop.getCount()); // Assume all items in the stack are smelted
                     if (!tool.isEmpty())
-                        tool.hurtAndBreak(Ability.SMELTER.getDurabilityCost() * resultStack.getCount(), entityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        damageTool(tool, entityLiving, Ability.SMELTER, drop.getCount());
                     returnList.add(resultStack);
                     didISmelt[0] = true;
                 } else {

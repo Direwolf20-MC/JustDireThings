@@ -1,12 +1,16 @@
 package com.direwolf20.justdirethings.common.items.tools.basetools;
 
 import com.direwolf20.justdirethings.common.items.tools.utils.*;
+import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -35,6 +39,7 @@ public class BaseSword extends SwordItem implements TieredGooItem, ToggleableToo
         }
         boolean sneakPressed = Screen.hasShiftDown();
         if (stack.getItem() instanceof ToggleableTool toggleableTool) {
+            PoweredItem.appendFEText(stack, level, tooltip, flagIn);
             if (sneakPressed) {
                 if (ToggleableTool.getEnabled(stack))
                     tooltip.add(Component.translatable("justdirethings.enabled").withStyle(ChatFormatting.GREEN));
@@ -54,6 +59,18 @@ public class BaseSword extends SwordItem implements TieredGooItem, ToggleableToo
             }
         }
 
+    }
+
+    /**
+     * Reduces the attack damage of a tool when unpowered
+     */
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> modifiers = super.getAttributeModifiers(slot, stack);
+        if (!(stack.getItem() instanceof PoweredItem poweredItem))
+            return modifiers;
+
+        return poweredItem.getPoweredAttributeModifiers(slot, stack, modifiers);
     }
 
     @Override
