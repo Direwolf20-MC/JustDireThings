@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.client.events;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
-import com.direwolf20.justdirethings.common.items.tools.utils.TieredGooItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,9 +21,9 @@ public class RenderLevelLast {
         ItemStack heldItemMain = player.getMainHandItem();
         ItemStack heldItemOff = player.getOffhandItem();
 
-        if (heldItemMain.getItem() instanceof TieredGooItem) {
+        if (heldItemMain.getItem() instanceof ToggleableTool) {
             ThingFinder.render(evt, player, heldItemMain);
-        } else if (heldItemOff.getItem() instanceof TieredGooItem) {
+        } else if (heldItemOff.getItem() instanceof ToggleableTool) {
             ThingFinder.render(evt, player, heldItemOff);
         }
     }

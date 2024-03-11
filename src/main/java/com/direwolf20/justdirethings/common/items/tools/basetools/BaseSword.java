@@ -23,7 +23,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
-public class BaseSword extends SwordItem implements TieredGooItem, ToggleableTool {
+public class BaseSword extends SwordItem implements ToggleableTool {
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 

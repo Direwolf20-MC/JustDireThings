@@ -32,6 +32,12 @@ import java.util.*;
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
 public interface ToggleableTool {
+    GooTier gooTier();
+
+    default int getGooTier() {
+        return gooTier().getGooTier();
+    }
+
     EnumSet<Ability> getAbilities();
 
     Map<Ability, AbilityParams> getAbilityParamsMap();
@@ -126,9 +132,7 @@ public interface ToggleableTool {
             ItemStack itemStack = player.getItemInHand(hand);
             if (canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0)) {
                 if (level.isClientSide) {
-                    if (itemStack.getItem() instanceof TieredGooItem tieredGooItem) {
-                        ThingFinder.discover(player, tieredGooItem.getGooTier(), toolAbility);
-                    }
+                    ThingFinder.discover(player, toolAbility);
                 } else { //ServerSide
                     damageTool(itemStack, player, toolAbility);
                 }
