@@ -5,8 +5,11 @@ import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.events.BlockToolModification;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
+import com.direwolf20.justdirethings.util.MiscHelpers;
+import com.direwolf20.justdirethings.util.NBTUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -23,8 +26,11 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -109,6 +115,16 @@ public interface ToggleableTool {
             if (smeltedItemsFlag[0])
                 smelterParticles((ServerLevel) pLevel, breakBlockPositions);
         }
+        if (!drops.isEmpty() && canUseAbility(pStack, Ability.DROPTELEPORT)) {
+            GlobalPos globalPos = getBoundInventory(pStack);
+            if (globalPos != null) {
+                IItemHandler handler = MiscHelpers.getAttachedInventory(pLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
+                if (handler != null) {
+                    teleportDrops(drops, handler);
+                    teleportParticles((ServerLevel) pLevel, breakBlockPositions);
+                }
+            }
+        }
         if (!drops.isEmpty()) {
             Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
             pState.getBlock().popExperience((ServerLevel) pLevel, pPos, totalExp);
@@ -123,6 +139,18 @@ public interface ToggleableTool {
                 double d1 = (double) pos.getY() + random.nextDouble();
                 double d2 = (double) pos.getZ() + random.nextDouble();
                 level.sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+            }
+        }
+    }
+
+    default void teleportParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            for (BlockPos pos : oreBlocksList) {
+                double d0 = (double) pos.getX() + random.nextDouble();
+                double d1 = (double) pos.getY() + random.nextDouble();
+                double d2 = (double) pos.getZ() + random.nextDouble();
+                level.sendParticles(ParticleTypes.PORTAL, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
             }
         }
     }
@@ -186,6 +214,23 @@ public interface ToggleableTool {
         return false;
     }
 
+    default boolean bindDrops(UseOnContext pContext) {
+        Player player = pContext.getPlayer();
+        if (player == null) return false;
+        if (!player.isShiftKeyDown()) return false;
+        ItemStack pStack = pContext.getItemInHand();
+        if (!(pStack.getItem() instanceof ToggleableTool toggleableTool)) return false;
+        if (!toggleableTool.hasAbility(Ability.DROPTELEPORT)) return false;
+        Level pLevel = pContext.getLevel();
+        BlockPos pPos = pContext.getClickedPos();
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        if (blockEntity == null) return false;
+        IItemHandler handler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK, pPos, pContext.getClickedFace());
+        if (handler == null) return false;
+        setBoundInventory(pStack, GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace());
+        return true;
+    }
+
     //Thanks Soaryn!
     @NotNull
     static Direction getTargetLookDirection(LivingEntity livingEntity) {
@@ -232,6 +277,26 @@ public interface ToggleableTool {
         }
         setToolValue(stack, setting, nextValue);
         return tagCompound.getBoolean(setting);
+    }
+
+    static void setBoundInventory(ItemStack stack, GlobalPos bindLocation, Direction side) {
+        CompoundTag tagCompound = stack.getOrCreateTag();
+        tagCompound.put("boundinventory", NBTUtils.globalPosToNBT(bindLocation));
+        tagCompound.putInt("boundinventory_side", side.ordinal());
+    }
+
+    static GlobalPos getBoundInventory(ItemStack stack) {
+        CompoundTag tagCompound = stack.getOrCreateTag();
+        if (tagCompound.contains("boundinventory"))
+            return NBTUtils.nbtToGlobalPos(tagCompound.getCompound("boundinventory"));
+        return null;
+    }
+
+    static Direction getBoundInventorySide(ItemStack stack) {
+        CompoundTag tagCompound = stack.getOrCreateTag();
+        if (tagCompound.contains("boundinventory_side"))
+            return Direction.values()[tagCompound.getInt("boundinventory_side")];
+        return null;
     }
 
     static boolean setSetting(ItemStack stack, String setting, boolean value) {

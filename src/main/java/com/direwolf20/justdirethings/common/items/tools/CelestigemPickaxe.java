@@ -14,15 +14,16 @@ import net.minecraft.world.level.Level;
 public class CelestigemPickaxe extends BasePickaxe implements PoweredItem {
     public CelestigemPickaxe() {
         super(GooTier.CELESTIGEM, 1, -2.8F, new Properties());
-        registerAbility(Ability.ORESCANNER);
+        registerAbility(Ability.OREXRAY);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);
-        registerAbility(Ability.HAMMER, new AbilityParams(3, 3, 2));
+        registerAbility(Ability.HAMMER, new AbilityParams(3, 5, 2));
+        registerAbility(Ability.DROPTELEPORT);
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        scanFor(level, player, hand, Ability.ORESCANNER);
+        scanFor(level, player, hand, Ability.OREXRAY);
         return super.use(level, player, hand);
     }
 

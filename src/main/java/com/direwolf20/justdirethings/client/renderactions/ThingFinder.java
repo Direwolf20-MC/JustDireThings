@@ -88,7 +88,7 @@ public class ThingFinder {
     public static void discover(Player player, Ability toolAbility) {
         if (toolAbility.equals(Ability.MOBSCANNER))
             discoverMobs(player, true);
-        else if (toolAbility.equals(Ability.ORESCANNER))
+        else if (toolAbility.equals(Ability.ORESCANNER) || toolAbility.equals(Ability.OREXRAY))
             discoverOres(player, toolAbility);
     }
 
@@ -100,10 +100,10 @@ public class ThingFinder {
                 .filter(blockPos -> player.level().getBlockState(blockPos).getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)))
                 .map(BlockPos::immutable)
                 .collect(Collectors.toList());
-        if (!toolAbility.equals(Ability.ORESCANNER)) { //Todo Proper
+        if (toolAbility.equals(Ability.OREXRAY)) {
             xRayStartTime = System.currentTimeMillis();
             generateVBO(player);
-        } else {
+        } else if (toolAbility.equals(Ability.ORESCANNER)) {
             blockParticlesStartTime = System.currentTimeMillis();
         }
     }

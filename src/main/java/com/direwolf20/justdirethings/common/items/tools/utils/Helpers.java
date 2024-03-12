@@ -25,6 +25,8 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -187,6 +189,19 @@ public class Helpers {
             ItemEntity itemEntity = new ItemEntity(level, dropAtPos.getX() + 0.5f, dropAtPos.getY() + 0.5f, dropAtPos.getZ() + 0.5f, drop);
             level.addFreshEntity(itemEntity);
         }
+    }
+
+    public static void teleportDrops(List<ItemStack> drops, IItemHandler handler) {
+        List<ItemStack> leftovers = new ArrayList<>();
+        for (ItemStack drop : drops) {
+            ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, drop, false);
+            if (!leftover.isEmpty()) {
+                leftovers.add(leftover);
+            }
+        }
+        // Clear the original drops list and add all leftovers to it
+        drops.clear();
+        drops.addAll(leftovers);
     }
 
     public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, Direction direction, int maxBreak, int range) {

@@ -6,9 +6,12 @@ import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +19,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -31,6 +35,12 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool {
 
     public BasePickaxe(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Item.Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext pContext) {
+        bindDrops(pContext);
+        return super.useOn(pContext);
     }
 
     @Override
@@ -54,6 +64,7 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool {
         }
         boolean sneakPressed = Screen.hasShiftDown();
         if (stack.getItem() instanceof ToggleableTool toggleableTool) {
+            GlobalPos boundInventory = ToggleableTool.getBoundInventory(stack);
             PoweredItem.appendFEText(stack, level, tooltip, flagIn);
             if (sneakPressed) {
                 if (ToggleableTool.getEnabled(stack))
@@ -74,6 +85,15 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool {
                     boolean active = ToggleableTool.getSetting(stack, ability.getName());
                     ChatFormatting chatFormatting = active ? ChatFormatting.GREEN : ChatFormatting.DARK_RED;
                     tooltip.add(Component.translatable(ability.getLocalization()).withStyle(chatFormatting));
+                    if (ability.equals(Ability.DROPTELEPORT)) {
+                        chatFormatting = ChatFormatting.DARK_PURPLE;
+                        String dimString;
+                        if (boundInventory == null)
+                            dimString = " -Unbound";
+                        else
+                            dimString = " -" + I18n.get(boundInventory.dimension().location().getPath()) + ": [" + boundInventory.pos().getX() + "," + boundInventory.pos().getY() + "," + boundInventory.pos().getZ() + "]";
+                        tooltip.add(Component.literal(dimString).withStyle(chatFormatting));
+                    }
                 }
             } else {
                 if (ToggleableTool.getEnabled(stack))

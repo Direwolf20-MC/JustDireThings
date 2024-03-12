@@ -89,6 +89,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.SMELTER.getLocalization(), "Auto Smelter");
         add(Ability.HAMMER.getLocalization(), "Hammer");
         add(Ability.HAMMER.getLocalization() + "value", "Hammer: %s");
+        add(Ability.OREXRAY.getLocalization(), "X-Ray");
+        add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
