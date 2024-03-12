@@ -1,4 +1,4 @@
-// 1.20.4	2024-03-10T15:11:56.9239258	Recipes
+// 1.20.4	2024-03-11T19:49:00.7746805	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 42a6f06a52d5255659743340ff802b42b35a382c data/justdirethings/advancements/recipes/building_blocks/ferricore_ingot_9x9.json
@@ -27,6 +27,7 @@ e81d82034bec749e70aedd7481fee704f16d4449 data/justdirethings/advancements/recipe
 29a442bf474e5acc9502eed2d6d31bfb0748df24 data/justdirethings/advancements/recipes/misc/gooblock_tier2.json
 a55bc88d5aeddd676589402dfcbecdd8aae1f6a7 data/justdirethings/advancements/recipes/misc/gooblock_tier3.json
 591f2dd8d997ccead841061e70aedc4a4984a60d data/justdirethings/advancements/recipes/misc/pocket_generator.json
+5b7785082d33b200eee869116e5eb482c069222d data/justdirethings/advancements/recipes/misc/pocket_generator_t2.json
 8b754485663be06dd091f1b221d0523bfacca088 data/justdirethings/advancements/recipes/misc/raw_blazegold_ore-goospread.json
 4e211c87e7371a2a3d90dfb8ca1bdc2bb38adee6 data/justdirethings/advancements/recipes/misc/raw_celestigem_ore-goospread.json
 2e7f18748d1dfb5082ff77aa180c979e16a032e5 data/justdirethings/advancements/recipes/misc/raw_ferricore_ore-goospread.json
@@ -58,6 +59,7 @@ f76f61ef06edd8372831620ce4168c11859cd25c data/justdirethings/recipes/ferricore_s
 e5917a0e540128bfbb34b7c27c9bbefcb791b043 data/justdirethings/recipes/gooblock_tier2.json
 bf1de03eb5942cb062164314552b2272f780b991 data/justdirethings/recipes/gooblock_tier3.json
 c5d49397578e44089f27177b9643bdc442d38bf8 data/justdirethings/recipes/pocket_generator.json
+5cb219c38a16365eafbebc5e09acf1b4c31b7865 data/justdirethings/recipes/pocket_generator_t2.json
 e6b824e89c9b85c5e91b2d1a1dc00d63dcb23e0e data/justdirethings/recipes/raw_blazegold_ore-goospread.json
 07171250a180f0d3836cfe9136b0adc9fda4131d data/justdirethings/recipes/raw_celestigem_ore-goospread.json
 dbd8a27f78b0f2ecc66f7d582fbfead734671b26 data/justdirethings/recipes/raw_ferricore_ore-goospread.json

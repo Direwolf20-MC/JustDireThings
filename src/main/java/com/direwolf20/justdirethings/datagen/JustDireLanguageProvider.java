@@ -33,6 +33,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
+        add(Registration.Pocket_GeneratorT2.get(), "Improved Pocket Generator");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");

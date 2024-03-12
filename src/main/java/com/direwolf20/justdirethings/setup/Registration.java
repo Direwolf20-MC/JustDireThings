@@ -11,11 +11,13 @@ import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.*;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier1;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
+import com.direwolf20.justdirethings.common.items.PocketGeneratorT2;
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
 import com.direwolf20.justdirethings.common.items.tools.utils.AutoSmeltLootModifier;
@@ -122,6 +124,7 @@ public class Registration {
     //Items
     public static final DeferredHolder<Item, FuelCanister> Fuel_Canister = ITEMS.register("fuel_canister", FuelCanister::new);
     public static final DeferredHolder<Item, PocketGenerator> Pocket_Generator = ITEMS.register("pocket_generator", PocketGenerator::new);
+    public static final DeferredHolder<Item, PocketGeneratorT2> Pocket_GeneratorT2 = ITEMS.register("pocket_generator_t2", PocketGeneratorT2::new);
 
     //Items - Resources
     public static final DeferredHolder<Item, FerricoreIngot> FerricoreIngot = ITEMS.register("ferricore_ingot", FerricoreIngot::new);
@@ -171,6 +174,17 @@ public class Registration {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
                 }
             }).build());
-
+    public static final Supplier<AttachmentType<EnergyStorageNoReceive>> ENERGYSTORAGENORECEIVE = ATTACHMENT_TYPES.register(
+            "energystoragenoreceive", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof ItemStack itemStack) {
+                    int capacity = 1000000; //Default
+                    if (itemStack.getItem() instanceof PoweredItem poweredTool) {
+                        capacity = poweredTool.getMaxEnergy();
+                    }
+                    return new EnergyStorageNoReceive(capacity);
+                } else {
+                    throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
+                }
+            }).build());
 
 }

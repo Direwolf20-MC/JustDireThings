@@ -1,4 +1,4 @@
-// 1.20.4	2024-03-10T15:11:56.921924	Item Models: justdirethings
+// 1.20.4	2024-03-11T19:49:00.7711772	Item Models: justdirethings
 466c7b94dc8f9f5e4707bf9c94aa8cf9f2d1b0a5 assets/justdirethings/models/item/blazegold_axe.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
 8f9d758bd421ca9bb1fdb24e06b2b0df0910b9e0 assets/justdirethings/models/item/blazegold_hoe.json
@@ -28,6 +28,7 @@ cc98bc0d383b0498f6be07bb24d21da6c9e4bebc assets/justdirethings/models/item/goobl
 a48cecdb5ad78ee95ffb4e98458804d64cd1f608 assets/justdirethings/models/item/goosoil_tier1.json
 d42f004ad7ff6b67416aa3265ce45f6c3ec717f4 assets/justdirethings/models/item/goosoil_tier2.json
 3f50e98f22d6abc6b3edab6c01b82deec145ec78 assets/justdirethings/models/item/pocket_generator.json
+fc73206a63cc84147edd81de37ee337c0fbe6cab assets/justdirethings/models/item/pocket_generator_t2.json
 d8ea68a75b8b49f7765e715d62ad23c2f1939281 assets/justdirethings/models/item/raw_blazegold.json
 0eb4cfb03ddec169426214f46beb6f8781ce9421 assets/justdirethings/models/item/raw_blazegold_ore.json
 25030312eb5c78f39bd20a90f142b38e0610b54f assets/justdirethings/models/item/raw_celestigem_ore.json

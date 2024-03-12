@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.items;
 
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
@@ -60,16 +61,18 @@ public class PocketGenerator extends Item implements PoweredItem {
         if (entity instanceof Player player && NBTUtils.getBoolean(itemStack, ENABLED)) {
             IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
-            tryBurn(energyStorage, itemStack);
-            if (energyStorage.getEnergyStored() >= 50) { //Todo Balance and Config?
-                for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                    ItemStack slotStack = player.getInventory().getItem(i);
-                    IEnergyStorage slotEnergy = slotStack.getCapability(Capabilities.EnergyStorage.ITEM);
-                    if (slotEnergy != null) {
-                        int acceptedEnergy = slotEnergy.receiveEnergy(1000, true);  //Todo Balance and Config?
-                        if (acceptedEnergy > 0) {
-                            int extractedEnergy = energyStorage.extractEnergy(acceptedEnergy, false);
-                            slotEnergy.receiveEnergy(extractedEnergy, false);
+            if (energyStorage instanceof EnergyStorageNoReceive energyStorageNoReceive) {
+                tryBurn(energyStorageNoReceive, itemStack);
+                if (energyStorage.getEnergyStored() >= (getFEPerTick() / 10)) { //If we have 1/10th the max transfer speed, go ahead and let it rip
+                    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                        ItemStack slotStack = player.getInventory().getItem(i);
+                        IEnergyStorage slotEnergy = slotStack.getCapability(Capabilities.EnergyStorage.ITEM);
+                        if (slotEnergy != null) {
+                            int acceptedEnergy = slotEnergy.receiveEnergy(getFEPerTick(), true);
+                            if (acceptedEnergy > 0) {
+                                int extractedEnergy = energyStorage.extractEnergy(acceptedEnergy, false);
+                                slotEnergy.receiveEnergy(extractedEnergy, false);
+                            }
                         }
                     }
                 }
@@ -77,12 +80,12 @@ public class PocketGenerator extends Item implements PoweredItem {
         }
     }
 
-    private static int fePerTick() {
-        return (int) (Config.POCKET_GENERATOR_FE_PER_FUEL_TICK.get() * Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get());
+    private int fePerTick() {
+        return (int) (getFePerFuelTick() * getBurnSpeedMultiplier());
     }
 
-    private void tryBurn(IEnergyStorage energyStorage, ItemStack itemStack) {
-        boolean canInsertEnergy = energyStorage.receiveEnergy(fePerTick(), true) > 0;
+    private void tryBurn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
+        boolean canInsertEnergy = energyStorage.forceReceiveEnergy(fePerTick(), true) > 0;
         if (NBTUtils.getIntValue(itemStack, COUNTER) > 0 && canInsertEnergy) {
             burn(energyStorage, itemStack);
         } else if (canInsertEnergy) {
@@ -92,8 +95,8 @@ public class PocketGenerator extends Item implements PoweredItem {
     }
 
 
-    private void burn(IEnergyStorage energyStorage, ItemStack itemStack) {
-        energyStorage.receiveEnergy(fePerTick(), false);
+    private void burn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
+        energyStorage.forceReceiveEnergy(fePerTick(), false);
         int counter = NBTUtils.getIntValue(itemStack, COUNTER);
         counter--;
         NBTUtils.setIntValue(itemStack, COUNTER, counter);
@@ -115,7 +118,7 @@ public class PocketGenerator extends Item implements PoweredItem {
                 fuelStack.shrink(1);
 
 
-            int counter = (int) (Math.floor(burnTime) / Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get());
+            int counter = (int) (Math.floor(burnTime) / getBurnSpeedMultiplier());
             int maxBurn = counter;
             NBTUtils.setIntValue(itemStack, COUNTER, counter);
             NBTUtils.setIntValue(itemStack, MAXBURN, maxBurn);
@@ -184,6 +187,18 @@ public class PocketGenerator extends Item implements PoweredItem {
 
     @Override
     public int getMaxEnergy() {
-        return 100000;
+        return Config.POCKET_GENERATOR_MAX_FE.get();
+    }
+
+    public int getFEPerTick() {
+        return Config.POCKET_GENERATOR_FE_PER_TICK.get();
+    }
+
+    public double getFePerFuelTick() {
+        return Config.POCKET_GENERATOR_FE_PER_FUEL_TICK.get();
+    }
+
+    public int getBurnSpeedMultiplier() {
+        return Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get();
     }
 }
