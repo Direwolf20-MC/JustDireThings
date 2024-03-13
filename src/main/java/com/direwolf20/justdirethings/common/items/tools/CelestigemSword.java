@@ -14,6 +14,7 @@ public class CelestigemSword extends BaseSword implements PoweredItem {
     public CelestigemSword() {
         super(GooTier.CELESTIGEM, 3, -2.0F, new Properties());
         registerAbility(Ability.MOBSCANNER);
+        registerAbility(Ability.DROPTELEPORT);
     }
 
     @Override

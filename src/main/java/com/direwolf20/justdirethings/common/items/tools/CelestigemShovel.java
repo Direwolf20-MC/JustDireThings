@@ -17,7 +17,8 @@ public class CelestigemShovel extends BaseShovel implements PoweredItem {
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
         registerAbility(Ability.SMELTER);
-        registerAbility(Ability.HAMMER, new AbilityParams(3, 3, 2));
+        registerAbility(Ability.HAMMER, new AbilityParams(3, 5, 2));
+        registerAbility(Ability.DROPTELEPORT);
     }
 
     @Override

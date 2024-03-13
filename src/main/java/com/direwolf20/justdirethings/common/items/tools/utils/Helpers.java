@@ -191,10 +191,15 @@ public class Helpers {
         }
     }
 
+    public static ItemStack teleportDrop(ItemStack itemStack, IItemHandler handler) {
+        ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, itemStack, false);
+        return leftover;
+    }
+
     public static void teleportDrops(List<ItemStack> drops, IItemHandler handler) {
         List<ItemStack> leftovers = new ArrayList<>();
         for (ItemStack drop : drops) {
-            ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, drop, false);
+            ItemStack leftover = teleportDrop(drop, handler);
             if (!leftover.isEmpty()) {
                 leftovers.add(leftover);
             }

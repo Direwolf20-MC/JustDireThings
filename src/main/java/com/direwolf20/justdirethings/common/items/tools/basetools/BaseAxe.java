@@ -36,7 +36,8 @@ public class BaseAxe extends AxeItem implements ToggleableTool {
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
-        bindDrops(pContext);
+        if (bindDrops(pContext))
+            return InteractionResult.SUCCESS;
         return super.useOn(pContext);
     }
 

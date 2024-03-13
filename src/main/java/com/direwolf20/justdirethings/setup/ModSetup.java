@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.setup;
 
-import com.direwolf20.justdirethings.common.events.BlockToolModification;
+import com.direwolf20.justdirethings.common.events.BlockEvents;
+import com.direwolf20.justdirethings.common.events.LivingEntityEvents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -16,7 +17,8 @@ import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
 public class ModSetup {
     public static void init(final FMLCommonSetupEvent event) {
-        NeoForge.EVENT_BUS.register(BlockToolModification.class);
+        NeoForge.EVENT_BUS.register(BlockEvents.class);
+        NeoForge.EVENT_BUS.register(LivingEntityEvents.class);
     }
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);

@@ -14,6 +14,7 @@ public class CelestigemAxe extends BaseAxe implements PoweredItem {
         registerAbility(Ability.TREEFELLER);
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);
+        registerAbility(Ability.DROPTELEPORT);
     }
 
     @Override

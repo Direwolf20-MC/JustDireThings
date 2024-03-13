@@ -16,7 +16,7 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BlockToolModification {
+public class BlockEvents {
     private static final Set<BlockPos> ignoredBlocks = new HashSet<>();
 
     public static void addAllToIgnoreList(Set<BlockPos> posList) {

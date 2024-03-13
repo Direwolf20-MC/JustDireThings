@@ -40,7 +40,8 @@ public class BaseSword extends SwordItem implements ToggleableTool {
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
-        bindDrops(pContext);
+        if (bindDrops(pContext))
+            return InteractionResult.SUCCESS;
         return super.useOn(pContext);
     }
 

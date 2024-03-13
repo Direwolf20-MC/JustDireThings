@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.items.tools.utils;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
-import com.direwolf20.justdirethings.common.events.BlockToolModification;
+import com.direwolf20.justdirethings.common.events.BlockEvents;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -101,7 +101,7 @@ public interface ToggleableTool {
             breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
         }
         breakBlockPositions.add(pPos);
-        BlockToolModification.addAllToIgnoreList(breakBlockPositions); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
+        BlockEvents.addAllToIgnoreList(breakBlockPositions); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
         for (BlockPos breakPos : breakBlockPositions) {
             if (testUseTool(pStack) < 0)
                 break;
