@@ -45,6 +45,7 @@
   "justdirethings.ability.skysweeper": "Sky Sweeper",
   "justdirethings.ability.smelter": "Auto Smelter",
   "justdirethings.ability.treefeller": "Tree Feller",
+  "justdirethings.boundto": "Bound to: %s:%s",
   "justdirethings.disabled": "Disabled",
   "justdirethings.enabled": "Enabled",
   "justdirethings.festored": "Forge Energy: %s / %s",
@@ -62,5 +63,6 @@
   "justdirethings.screen.burn_time": "Burn time left: %ss",
   "justdirethings.screen.energy": "Energy: %s/%s FE",
   "justdirethings.screen.no_fuel": "Fuel source empty",
-  "justdirethings.shiftmoreinfo": "Hold Shift for details"
+  "justdirethings.shiftmoreinfo": "Hold Shift for details",
+  "justdirethings.unbound": " -Not Bound"
 }

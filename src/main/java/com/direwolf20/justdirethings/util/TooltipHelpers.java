@@ -59,9 +59,9 @@ public class TooltipHelpers {
                     chatFormatting = ChatFormatting.DARK_PURPLE;
                     String dimString;
                     if (boundInventory == null)
-                        dimString = " -Unbound";
+                        dimString = I18n.get("justdirethings.unbound");
                     else
-                        dimString = " -" + I18n.get(boundInventory.dimension().location().getPath()) + ": [" + boundInventory.pos().getX() + "," + boundInventory.pos().getY() + "," + boundInventory.pos().getZ() + "]";
+                        dimString = " -" + I18n.get(boundInventory.dimension().location().getPath()) + ": [" + boundInventory.pos().toShortString() + "]";
                     tooltip.add(Component.literal(dimString).withStyle(chatFormatting));
                 }
             }

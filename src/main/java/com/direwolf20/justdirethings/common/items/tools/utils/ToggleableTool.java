@@ -7,6 +7,9 @@ import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
@@ -14,6 +17,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -171,6 +176,7 @@ public interface ToggleableTool {
             if (canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0)) {
                 if (level.isClientSide) {
                     ThingFinder.discover(player, toolAbility);
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 3.0F));
                 } else { //ServerSide
                     damageTool(itemStack, player, toolAbility);
                 }
@@ -238,6 +244,8 @@ public interface ToggleableTool {
         IItemHandler handler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK, pPos, pContext.getClickedFace());
         if (handler == null) return false;
         setBoundInventory(pStack, GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace());
+        pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", I18n.get(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
+        player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
         return true;
     }
 
