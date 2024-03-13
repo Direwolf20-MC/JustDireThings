@@ -1,14 +1,10 @@
 package com.direwolf20.justdirethings.common.items.tools.basetools;
 
-import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.common.items.tools.utils.*;
 import com.google.common.collect.Multimap;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,6 +23,8 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+
+import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class BasePickaxe extends PickaxeItem implements ToggleableTool {
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
@@ -57,64 +55,20 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool {
     @Override
     public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, level, tooltip, flagIn);
-
         Minecraft mc = Minecraft.getInstance();
-
         if (level == null || mc.player == null) {
             return;
         }
-        boolean sneakPressed = Screen.hasShiftDown();
-        if (stack.getItem() instanceof ToggleableTool toggleableTool) {
-            GlobalPos boundInventory = ToggleableTool.getBoundInventory(stack);
-            PoweredItem.appendFEText(stack, level, tooltip, flagIn);
-            if (sneakPressed) {
-                if (ToggleableTool.getEnabled(stack))
-                    tooltip.add(Component.translatable("justdirethings.enabled")
-                            .withStyle(ChatFormatting.GREEN)
-                            .append(Component.literal(" ")
-                                    .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
-                                            .withStyle(ChatFormatting.DARK_GRAY)))
-                    );
-                else
-                    tooltip.add(Component.translatable("justdirethings.disabled")
-                            .withStyle(ChatFormatting.DARK_RED)
-                            .append(Component.literal(" ")
-                                    .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
-                                            .withStyle(ChatFormatting.DARK_GRAY)))
-                    );
-                for (Ability ability : toggleableTool.getAbilities()) {
-                    boolean active = ToggleableTool.getSetting(stack, ability.getName());
-                    ChatFormatting chatFormatting = active ? ChatFormatting.GREEN : ChatFormatting.DARK_RED;
-                    tooltip.add(Component.translatable(ability.getLocalization()).withStyle(chatFormatting));
-                    if (ability.equals(Ability.DROPTELEPORT)) {
-                        chatFormatting = ChatFormatting.DARK_PURPLE;
-                        String dimString;
-                        if (boundInventory == null)
-                            dimString = " -Unbound";
-                        else
-                            dimString = " -" + I18n.get(boundInventory.dimension().location().getPath()) + ": [" + boundInventory.pos().getX() + "," + boundInventory.pos().getY() + "," + boundInventory.pos().getZ() + "]";
-                        tooltip.add(Component.literal(dimString).withStyle(chatFormatting));
-                    }
-                }
-            } else {
-                if (ToggleableTool.getEnabled(stack))
-                    tooltip.add(Component.translatable("justdirethings.enabled")
-                            .withStyle(ChatFormatting.GREEN)
-                            .append(Component.literal(" ")
-                                    .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
-                                            .withStyle(ChatFormatting.DARK_GRAY)))
-                    );
-                else
-                    tooltip.add(Component.translatable("justdirethings.disabled")
-                            .withStyle(ChatFormatting.DARK_RED)
-                            .append(Component.literal(" ")
-                                    .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
-                                            .withStyle(ChatFormatting.DARK_GRAY)))
-                    );
-                tooltip.add(Component.translatable("justdirethings.shiftmoreinfo").withStyle(ChatFormatting.GRAY));
-            }
-        }
 
+        boolean sneakPressed = Screen.hasShiftDown();
+        appendFEText(stack, tooltip);
+        if (sneakPressed) {
+            appendToolEnabled(stack, tooltip);
+            appendAbilityList(stack, tooltip);
+        } else {
+            appendToolEnabled(stack, tooltip);
+            appendShiftForInfo(stack, tooltip);
+        }
     }
 
     /**

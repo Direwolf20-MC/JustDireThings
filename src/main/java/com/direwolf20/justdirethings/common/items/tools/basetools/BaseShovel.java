@@ -2,7 +2,6 @@ package com.direwolf20.justdirethings.common.items.tools.basetools;
 
 import com.direwolf20.justdirethings.common.items.tools.utils.*;
 import com.google.common.collect.Multimap;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -24,6 +23,8 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+
+import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class BaseShovel extends ShovelItem implements ToggleableTool {
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
@@ -53,34 +54,20 @@ public class BaseShovel extends ShovelItem implements ToggleableTool {
     @Override
     public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, level, tooltip, flagIn);
-
         Minecraft mc = Minecraft.getInstance();
-
         if (level == null || mc.player == null) {
             return;
         }
-        boolean sneakPressed = Screen.hasShiftDown();
-        if (stack.getItem() instanceof ToggleableTool toggleableTool) {
-            PoweredItem.appendFEText(stack, level, tooltip, flagIn);
-            if (sneakPressed) {
-                if (ToggleableTool.getEnabled(stack))
-                    tooltip.add(Component.translatable("justdirethings.enabled").withStyle(ChatFormatting.GREEN));
-                else
-                    tooltip.add(Component.translatable("justdirethings.disabled").withStyle(ChatFormatting.DARK_RED));
-                for (Ability ability : toggleableTool.getAbilities()) {
-                    boolean active = ToggleableTool.getSetting(stack, ability.getName());
-                    ChatFormatting chatFormatting = active ? ChatFormatting.GREEN : ChatFormatting.DARK_RED;
-                    tooltip.add(Component.translatable(ability.getLocalization()).withStyle(chatFormatting));
-                }
-            } else {
-                if (ToggleableTool.getEnabled(stack))
-                    tooltip.add(Component.translatable("justdirethings.enabled").withStyle(ChatFormatting.GREEN));
-                else
-                    tooltip.add(Component.translatable("justdirethings.disabled").withStyle(ChatFormatting.DARK_RED));
-                tooltip.add(Component.translatable("justdirethings.shiftmoreinfo").withStyle(ChatFormatting.GRAY));
-            }
-        }
 
+        boolean sneakPressed = Screen.hasShiftDown();
+        appendFEText(stack, tooltip);
+        if (sneakPressed) {
+            appendToolEnabled(stack, tooltip);
+            appendAbilityList(stack, tooltip);
+        } else {
+            appendToolEnabled(stack, tooltip);
+            appendShiftForInfo(stack, tooltip);
+        }
     }
 
     /**

@@ -6,7 +6,6 @@ import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -29,6 +28,8 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class PocketGenerator extends Item implements PoweredItem {
     public static final String ENABLED = "enabled";
@@ -136,18 +137,12 @@ public class PocketGenerator extends Item implements PoweredItem {
         if (level == null || mc.player == null) {
             return;
         }
-        PoweredItem.appendFEText(stack, level, tooltip, flagIn);
+        appendFEText(stack, tooltip);
         boolean sneakPressed = Screen.hasShiftDown();
         if (!sneakPressed) {
-            tooltip.add(Component.translatable("justdirethings.shiftmoreinfo").withStyle(ChatFormatting.GRAY));
+            appendShiftForInfo(stack, tooltip);
         } else {
-            tooltip.add(Component.translatable("justdirethings.pocketgeneratorburntime", NBTUtils.getIntValue(stack, COUNTER), NBTUtils.getIntValue(stack, MAXBURN)).withStyle(ChatFormatting.DARK_RED));
-            ItemStackHandler itemStackHandler = stack.getData(Registration.HANDLER);
-            ItemStack fuelStack = itemStackHandler.getStackInSlot(0);
-            if (fuelStack.isEmpty())
-                tooltip.add(Component.translatable("justdirethings.pocketgeneratornofuel").withStyle(ChatFormatting.RED));
-            else
-                tooltip.add(Component.translatable("justdirethings.pocketgeneratorfuelstack", fuelStack.getCount(), fuelStack.getItem().getName(fuelStack)).withStyle(ChatFormatting.DARK_AQUA));
+            appendGeneratorDetails(stack, tooltip);
         }
 
     }

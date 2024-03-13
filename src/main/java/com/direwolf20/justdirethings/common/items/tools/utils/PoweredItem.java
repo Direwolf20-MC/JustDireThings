@@ -1,22 +1,15 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
-import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
-import java.util.List;
 import java.util.Map;
 
 public interface PoweredItem {
@@ -73,21 +66,5 @@ public interface PoweredItem {
 
     default int getMaxEnergy() {
         return 10000;
-    }
-
-
-    static void appendFEText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        if (!(stack.getItem() instanceof PoweredItem poweredItem))
-            return;
-        Minecraft mc = Minecraft.getInstance();
-
-        if (level == null || mc.player == null) {
-            return;
-        }
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            return;
-        }
-        tooltip.add(Component.translatable("justdirethings.festored", MagicHelpers.tidyValue(energy.getEnergyStored()), MagicHelpers.tidyValue(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
     }
 }
