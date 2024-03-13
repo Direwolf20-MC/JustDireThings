@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.items.tools.utils.Helpers;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,6 +45,7 @@ public class LivingEntityEvents {
                                 // Otherwise, update the ItemEntity with the modified stack
                                 itemEntity.setItem(leftover);
                             }
+                            toggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
                         }
                         if (event.getDrops().isEmpty())
                             event.setCanceled(true);

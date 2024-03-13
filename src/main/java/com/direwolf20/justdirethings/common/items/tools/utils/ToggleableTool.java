@@ -143,6 +143,16 @@ public interface ToggleableTool {
         }
     }
 
+    default void teleportParticles(ServerLevel level, Vec3 pos) {
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            double d0 = pos.x() + random.nextDouble();
+            double d1 = pos.y() + random.nextDouble();
+            double d2 = pos.z() + random.nextDouble();
+            level.sendParticles(ParticleTypes.PORTAL, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+        }
+    }
+
     default void teleportParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
