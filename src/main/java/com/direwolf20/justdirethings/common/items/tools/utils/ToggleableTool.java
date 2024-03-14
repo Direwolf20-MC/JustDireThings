@@ -370,6 +370,8 @@ public interface ToggleableTool {
         AbilityParams abilityParams = ((ToggleableTool) stack.getItem()).getAbilityParams(toolAbility);
         int min = abilityParams.minSlider;
         int max = abilityParams.maxSlider;
-        return Math.max(min, Math.min(max, stack.getOrCreateTag().getInt(valueName + "_value")));
+        if (stack.getOrCreateTag().contains(valueName + "_value"))
+            return Math.max(min, Math.min(max, stack.getOrCreateTag().getInt(valueName + "_value")));
+        return max; //By default, new tools have their max ability enabled, like hammer on celestigem starts out with 5.
     }
 }
