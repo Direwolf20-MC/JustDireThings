@@ -139,7 +139,8 @@ public interface ToggleableTool {
 
     default void smelterParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
         Random random = new Random();
-        for (int i = 0; i < 5; i++) {
+        int iterations = oreBlocksList.size() > 10 ? 1 : 5;
+        for (int i = 0; i < iterations; i++) {
             for (BlockPos pos : oreBlocksList) {
                 double d0 = (double) pos.getX() + random.nextDouble();
                 double d1 = (double) pos.getY() + random.nextDouble();
@@ -161,7 +162,8 @@ public interface ToggleableTool {
 
     default void teleportParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
         Random random = new Random();
-        for (int i = 0; i < 5; i++) {
+        int iterations = oreBlocksList.size() > 10 ? 1 : 5;
+        for (int i = 0; i < iterations; i++) {
             for (BlockPos pos : oreBlocksList) {
                 /*// Generate random positions within the block
                 double xOffset = random.nextDouble(); // Random offset within the block
