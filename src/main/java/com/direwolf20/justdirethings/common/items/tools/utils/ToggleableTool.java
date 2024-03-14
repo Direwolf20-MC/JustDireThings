@@ -124,9 +124,10 @@ public interface ToggleableTool {
             GlobalPos globalPos = getBoundInventory(pStack);
             if (globalPos != null) {
                 IItemHandler handler = MiscHelpers.getAttachedInventory(pLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
-                if (handler != null) {
-                    teleportDrops(drops, handler);
-                    teleportParticles((ServerLevel) pLevel, breakBlockPositions);
+                if (handler != null && pEntityLiving instanceof Player player) {
+                    teleportDrops(drops, handler, pStack, player);
+                    if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
+                        teleportParticles((ServerLevel) pLevel, breakBlockPositions);
                 }
             }
         }
@@ -152,7 +153,7 @@ public interface ToggleableTool {
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
             double d0 = pos.x() + random.nextDouble();
-            double d1 = pos.y() + random.nextDouble();
+            double d1 = pos.y() - 0.5d + random.nextDouble();
             double d2 = pos.z() + random.nextDouble();
             level.sendParticles(ParticleTypes.PORTAL, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
         }
@@ -162,8 +163,27 @@ public interface ToggleableTool {
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
             for (BlockPos pos : oreBlocksList) {
+                /*// Generate random positions within the block
+                double xOffset = random.nextDouble(); // Random offset within the block
+                double yOffset = random.nextDouble(); // Random offset within the block
+                double zOffset = random.nextDouble(); // Random offset within the block
+
+                // Calculate the position to spawn each particle, adding random offset to the block's position
+                double spawnX = pos.getX() + xOffset;
+                double spawnY = pos.getY() + yOffset;
+                double spawnZ = pos.getZ() + zOffset;
+
+                // Calculate velocity to make the particle move towards the center of the block
+                // Since we want them to collapse to the center, we calculate the difference from the center (0.5 offset) and use a negative multiplier
+                double xVelocity = (0.5 - xOffset) * 0.2; // Adjust multiplier for speed
+                double yVelocity = (0.5 - yOffset) * 0.2; // Adjust multiplier for speed
+                double zVelocity = (0.5 - zOffset) * 0.2; // Adjust multiplier for speed
+
+                // Spawn a particle with calculated velocity to move it towards the center of the block
+                level.sendParticles(ParticleTypes.PORTAL, spawnX, spawnY, spawnZ, 1, xVelocity, yVelocity, zVelocity, 0.0);
+                */
                 double d0 = (double) pos.getX() + random.nextDouble();
-                double d1 = (double) pos.getY() + random.nextDouble();
+                double d1 = (double) pos.getY() - 0.5d + random.nextDouble();
                 double d2 = (double) pos.getZ() + random.nextDouble();
                 level.sendParticles(ParticleTypes.PORTAL, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
             }

@@ -36,7 +36,7 @@ public class LivingEntityEvents {
                             ItemEntity itemEntity = iterator.next();
                             ItemStack stack = itemEntity.getItem();
 
-                            ItemStack leftover = Helpers.teleportDrop(stack, handler);
+                            ItemStack leftover = Helpers.teleportDrop(stack, handler, mainHand, player);
 
                             if (leftover.isEmpty()) {
                                 // If the stack is now empty, remove the ItemEntity from the collection
@@ -45,10 +45,11 @@ public class LivingEntityEvents {
                                 // Otherwise, update the ItemEntity with the modified stack
                                 itemEntity.setItem(leftover);
                             }
-                            toggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
                         }
-                        if (event.getDrops().isEmpty())
+                        if (event.getDrops().isEmpty()) { //Only spawn particles if we teleported everything - not perfect but better than exhaustive testing
+                            toggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
                             event.setCanceled(true);
+                        }
                     }
                 }
             }

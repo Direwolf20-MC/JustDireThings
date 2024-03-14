@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,10 @@ public class TooltipHelpers {
         if (energy == null) {
             return;
         }
-        tooltip.add(Component.translatable("justdirethings.festored", MagicHelpers.tidyValue(energy.getEnergyStored()), MagicHelpers.tidyValue(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
+        if (Screen.hasShiftDown())
+            tooltip.add(Component.translatable("justdirethings.festored", MagicHelpers.formatted(energy.getEnergyStored()), MagicHelpers.formatted(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
+        else
+            tooltip.add(Component.translatable("justdirethings.festored", MagicHelpers.tidyValue(energy.getEnergyStored()), MagicHelpers.tidyValue(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
     }
 
     public static void appendToolEnabled(ItemStack stack, List<Component> tooltip) {
