@@ -240,21 +240,38 @@ public interface ToggleableTool {
         BlockState pState = pLevel.getBlockState(pPos);
         LivingEntity pEntityLiving = pContext.getPlayer();
         ItemStack pStack = pContext.getItemInHand();
-        if (!pLevel.isClientSide && canUseAbility(pStack, Ability.LEAFBREAKER)) {
+        if (canUseAbility(pStack, Ability.LEAFBREAKER)) {
             if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
-                List<ItemStack> drops = new ArrayList<>();
-                BlockEvents.addAllToIgnoreList(alsoBreakSet); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
-                for (BlockPos breakPos : alsoBreakSet) {
-                    if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
-                        break;
-                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, false));
-                    pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
-                    if (Math.random() < 0.1) //10% chance to damage tool
-                        damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
-                }
-                if (!drops.isEmpty()) {
-                    Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
+                if (!pLevel.isClientSide) {
+                    List<ItemStack> drops = new ArrayList<>();
+                    BlockEvents.addAllToIgnoreList(alsoBreakSet); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
+                    for (BlockPos breakPos : alsoBreakSet) {
+                        if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
+                            break;
+                        Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, false));
+                        pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
+                        if (Math.random() < 0.1) //10% chance to damage tool
+                            damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
+                    }
+                    if (!drops.isEmpty() && canUseAbility(pStack, Ability.DROPTELEPORT)) {
+                        GlobalPos globalPos = getBoundInventory(pStack);
+                        if (globalPos != null) {
+                            IItemHandler handler = MiscHelpers.getAttachedInventory(pLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
+                            if (handler != null && pEntityLiving instanceof Player player) {
+                                teleportDrops(drops, handler, pStack, player);
+                                if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
+                                    teleportParticles((ServerLevel) pLevel, alsoBreakSet);
+                            }
+                        }
+                    }
+                    if (!drops.isEmpty()) {
+                        Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
+                    }
+                } else {
+                    for (BlockPos breakPos : alsoBreakSet) {
+                        pState.onDestroyedByPlayer(pLevel, breakPos, (Player) pEntityLiving, true, pLevel.getFluidState(breakPos));
+                    }
                 }
                 return true;
             }
