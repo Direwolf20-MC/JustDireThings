@@ -5,11 +5,7 @@ import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.AbilityParams;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
 public class CelestigemShovel extends BaseShovel implements PoweredItem {
     public CelestigemShovel() {
@@ -19,12 +15,6 @@ public class CelestigemShovel extends BaseShovel implements PoweredItem {
         registerAbility(Ability.SMELTER);
         registerAbility(Ability.HAMMER, new AbilityParams(3, 5, 2));
         registerAbility(Ability.DROPTELEPORT);
-    }
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        lawnmower(level, player, hand);
-        return super.use(level, player, hand);
     }
 
     @Override

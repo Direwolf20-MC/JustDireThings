@@ -74,6 +74,14 @@ public interface ToggleableTool {
         return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name);
     }
 
+    default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility) {
+        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name) && (testUseTool(itemStack, toolAbility) > 0);
+    }
+
+    default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility, int multiplier) {
+        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name) && (testUseTool(itemStack, toolAbility, multiplier) > 0);
+    }
+
     default void openSettings(Player player) {
         player.openMenu(new SimpleMenuProvider(
                 (windowId, playerInventory, playerEntity) -> new ToolSettingContainer(windowId, playerInventory, player), Component.translatable("")));
@@ -112,7 +120,7 @@ public interface ToggleableTool {
                 break;
             int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pLevel.random, pPos, fortuneLevel, silkTouchLevel);
             totalExp = totalExp + exp;
-            Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
+            Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, true));
         }
         if (canUseAbility(pStack, Ability.SMELTER) && pStack.getDamageValue() < pStack.getMaxDamage()) {
             boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
@@ -196,9 +204,24 @@ public interface ToggleableTool {
         }
     }
 
-    default boolean scanFor(Level level, Player player, InteractionHand hand, Ability toolAbility) {
+    default void useAbility(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.MOBSCANNER))
+            scanFor(level, player, itemStack, Ability.MOBSCANNER);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.ORESCANNER))
+            scanFor(level, player, itemStack, Ability.ORESCANNER);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.LAWNMOWER))
+            lawnmower(level, player, itemStack);
+    }
+
+    default void useOnAbility(UseOnContext pContext) {
+        ItemStack itemStack = pContext.getItemInHand();
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.LEAFBREAKER))
+            leafbreaker(pContext);
+    }
+
+    default boolean scanFor(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
         if (!player.isShiftKeyDown()) {
-            ItemStack itemStack = player.getItemInHand(hand);
             if (canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0)) {
                 if (level.isClientSide) {
                     ThingFinder.discover(player, toolAbility);
@@ -217,14 +240,15 @@ public interface ToggleableTool {
         BlockState pState = pLevel.getBlockState(pPos);
         LivingEntity pEntityLiving = pContext.getPlayer();
         ItemStack pStack = pContext.getItemInHand();
-        if (!pLevel.isClientSide && canUseAbility(pStack, Ability.LEAFBREAKER)) { //TODO MineBlocks Method Above?
+        if (!pLevel.isClientSide && canUseAbility(pStack, Ability.LEAFBREAKER)) {
             if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
                 Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
                 List<ItemStack> drops = new ArrayList<>();
+                BlockEvents.addAllToIgnoreList(alsoBreakSet); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
                 for (BlockPos breakPos : alsoBreakSet) {
                     if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
                         break;
-                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack));
+                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, false));
                     pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                     if (Math.random() < 0.1) //10% chance to damage tool
                         damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
@@ -238,8 +262,7 @@ public interface ToggleableTool {
         return false;
     }
 
-    default boolean lawnmower(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
+    default boolean lawnmower(Level level, Player player, ItemStack itemStack) {
         if (!level.isClientSide && canUseAbility(itemStack, Ability.LAWNMOWER)) {
             List<TagKey<Block>> tags = new ArrayList<>();
             tags.add(JustDireBlockTags.LAWNMOWERABLE);

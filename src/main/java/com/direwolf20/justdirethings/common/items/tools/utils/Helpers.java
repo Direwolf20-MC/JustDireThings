@@ -41,7 +41,7 @@ public class Helpers {
         level.destroyBlock(pos, true);
     }
 
-    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
+    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool) {
         if (pPlayer instanceof Player player) {
             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
             if (NeoForge.EVENT_BUS.post(event).isCanceled()) return new ArrayList<>();
@@ -54,7 +54,7 @@ public class Helpers {
             if (removed) {
                 state.getBlock().destroy(level, pos, state);
             }
-            if (state.getDestroySpeed(level, pos) != 0.0F)
+            if (damageTool && state.getDestroySpeed(level, pos) != 0.0F)
                 damageTool(pStack, pPlayer);
 
             return drops;

@@ -43,6 +43,7 @@ public class BaseSword extends SwordItem implements ToggleableTool {
     public InteractionResult useOn(UseOnContext pContext) {
         if (bindDrops(pContext))
             return InteractionResult.SUCCESS;
+        useOnAbility(pContext);
         return super.useOn(pContext);
     }
 
@@ -102,6 +103,7 @@ public class BaseSword extends SwordItem implements ToggleableTool {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide && player.isShiftKeyDown())
             openSettings(player);
+        useAbility(level, player, hand);
         return super.use(level, player, hand);
     }
 

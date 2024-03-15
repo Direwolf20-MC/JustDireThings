@@ -4,9 +4,7 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BaseAxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 
 public class CelestigemAxe extends BaseAxe implements PoweredItem {
     public CelestigemAxe() {
@@ -15,12 +13,6 @@ public class CelestigemAxe extends BaseAxe implements PoweredItem {
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);
         registerAbility(Ability.DROPTELEPORT);
-    }
-
-    @Override
-    public InteractionResult useOn(UseOnContext pContext) {
-        leafbreaker(pContext);
-        return super.useOn(pContext);
     }
 
     @Override

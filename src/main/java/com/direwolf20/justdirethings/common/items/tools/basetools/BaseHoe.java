@@ -80,6 +80,7 @@ public class BaseHoe extends HoeItem implements ToggleableTool {
                 player.playNotifySound(SoundEvents.ANVIL_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
         }
+        useOnAbility(pContext);
         return interactionResult;
     }
 
@@ -155,6 +156,7 @@ public class BaseHoe extends HoeItem implements ToggleableTool {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide && player.isShiftKeyDown())
             openSettings(player);
+        useAbility(level, player, hand);
         return super.use(level, player, hand);
     }
 }
