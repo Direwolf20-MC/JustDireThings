@@ -30,6 +30,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlazeGoldBlock.get(), "Blazegold Block");
         add(Registration.RawBlazegoldOre.get(), "Raw Blazegold Ore");
         add(Registration.RawCelestigemOre.get(), "Raw Celestigem Ore");
+        add(Registration.CelestigemBlock.get(), "Celestigem Block");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
