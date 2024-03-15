@@ -20,8 +20,9 @@ public enum Ability {
     SMELTER(SettingType.TOGGLE, 1, 10),
     HAMMER(SettingType.CYCLE, 1, 10),
     //Tier 3
-    OREXRAY(SettingType.TOGGLE, 100, 1000),
-    DROPTELEPORT(SettingType.TOGGLE, 10, 100);
+    DROPTELEPORT(SettingType.TOGGLE, 10, 100),
+    //Tier 4
+    OREXRAY(SettingType.TOGGLE, 100, 1000);
 
     public enum SettingType {
         TOGGLE,

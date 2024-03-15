@@ -191,6 +191,11 @@ public class Helpers {
         }
     }
 
+    public static ItemStack teleportDrop(ItemStack itemStack, IItemHandler handler) {
+        ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, itemStack, false);
+        return leftover;
+    }
+
     public static ItemStack teleportDrop(ItemStack itemStack, IItemHandler handler, ItemStack tool, Player player) {
         if (testUseTool(tool, Ability.DROPTELEPORT) < 0)
             return itemStack;
@@ -198,6 +203,19 @@ public class Helpers {
         if (leftover.isEmpty())
             damageTool(tool, player, Ability.DROPTELEPORT);
         return leftover;
+    }
+
+    public static void teleportDrops(List<ItemStack> drops, IItemHandler handler) {
+        List<ItemStack> leftovers = new ArrayList<>();
+        for (ItemStack drop : drops) {
+            ItemStack leftover = teleportDrop(drop, handler);
+            if (!leftover.isEmpty()) {
+                leftovers.add(leftover);
+            }
+        }
+        // Clear the original drops list and add all leftovers to it
+        drops.clear();
+        drops.addAll(leftovers);
     }
 
     public static void teleportDrops(List<ItemStack> drops, IItemHandler handler, ItemStack tool, Player player) {

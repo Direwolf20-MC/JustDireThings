@@ -150,7 +150,7 @@ public interface ToggleableTool {
         }
     }
 
-    default void teleportParticles(ServerLevel level, Vec3 pos) {
+    static void teleportParticles(ServerLevel level, Vec3 pos) {
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
             double d0 = pos.x() + random.nextDouble();
@@ -160,11 +160,8 @@ public interface ToggleableTool {
         }
     }
 
-    default void teleportParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
+    static void teleportParticles(ServerLevel level, BlockPos pos, int iterations) {
         Random random = new Random();
-        int iterations = oreBlocksList.size() > 10 ? 1 : 5;
-        for (int i = 0; i < iterations; i++) {
-            for (BlockPos pos : oreBlocksList) {
                 /*// Generate random positions within the block
                 double xOffset = random.nextDouble(); // Random offset within the block
                 double yOffset = random.nextDouble(); // Random offset within the block
@@ -184,11 +181,18 @@ public interface ToggleableTool {
                 // Spawn a particle with calculated velocity to move it towards the center of the block
                 level.sendParticles(ParticleTypes.PORTAL, spawnX, spawnY, spawnZ, 1, xVelocity, yVelocity, zVelocity, 0.0);
                 */
-                double d0 = (double) pos.getX() + random.nextDouble();
-                double d1 = (double) pos.getY() - 0.5d + random.nextDouble();
-                double d2 = (double) pos.getZ() + random.nextDouble();
-                level.sendParticles(ParticleTypes.PORTAL, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
-            }
+        for (int i = 0; i < iterations; i++) {
+            double d0 = (double) pos.getX() + random.nextDouble();
+            double d1 = (double) pos.getY() - 0.5d + random.nextDouble();
+            double d2 = (double) pos.getZ() + random.nextDouble();
+            level.sendParticles(ParticleTypes.PORTAL, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+        }
+    }
+
+    static void teleportParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
+        int iterations = oreBlocksList.size() > 10 ? 1 : 5;
+        for (BlockPos pos : oreBlocksList) {
+            teleportParticles(level, pos, iterations);
         }
     }
 
@@ -267,7 +271,7 @@ public interface ToggleableTool {
         if (handler == null) return false;
         setBoundInventory(pStack, GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace());
         pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", I18n.get(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
-        player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
+        player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
         return true;
     }
 

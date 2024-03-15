@@ -47,7 +47,7 @@ public class LivingEntityEvents {
                             }
                         }
                         if (event.getDrops().isEmpty()) { //Only spawn particles if we teleported everything - not perfect but better than exhaustive testing
-                            toggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
+                            ToggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
                             event.setCanceled(true);
                         }
                     }

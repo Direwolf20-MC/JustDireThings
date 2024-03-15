@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "moisture=0": {
+      "model": "justdirethings:block/goosoil_tier3"
+    },
+    "moisture=1": {
+      "model": "justdirethings:block/goosoil_tier3"
+    },
+    "moisture=2": {
+      "model": "justdirethings:block/goosoil_tier3"
+    },
+    "moisture=3": {
+      "model": "justdirethings:block/goosoil_tier3"
+    },
+    "moisture=4": {
+      "model": "justdirethings:block/goosoil_tier3"
+    },
+    "moisture=5": {
+      "model": "justdirethings:block/goosoil_tier3"
+    },
+    "moisture=6": {
+      "model": "justdirethings:block/goosoil_tier3"
+    },
+    "moisture=7": {
+      "model": "justdirethings:block/goosoil_tier3_moist"
+    }
+  }
+}

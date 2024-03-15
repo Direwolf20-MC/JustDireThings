@@ -67,6 +67,22 @@ public class JustDireBlockStates extends BlockStateProvider {
             return ConfiguredModel.builder()
                     .modelFile(model).build();
         });
+
+        getVariantBuilder(Registration.GooSoil_Tier3.get()).forAllStates(s -> {
+            ModelFile model;
+            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
+            if (Moisture == 7) { //Moist
+                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/goosoilside_tier3"))
+                        .texture("top", modLoc("block/goofarmland_tier3_moist"));
+            } else {
+                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/goosoilside_tier3"))
+                        .texture("top", modLoc("block/goofarmland_tier3"));
+            }
+            return ConfiguredModel.builder()
+                    .modelFile(model).build();
+        });
     }
 
     private void patternBlock() {

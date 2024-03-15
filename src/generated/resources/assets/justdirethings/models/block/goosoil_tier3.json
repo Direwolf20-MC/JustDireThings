@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_farmland",
+  "textures": {
+    "dirt": "justdirethings:block/goosoilside_tier3",
+    "top": "justdirethings:block/goofarmland_tier3"
+  }
+}

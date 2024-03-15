@@ -17,8 +17,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("itemGroup." + ModSetup.TAB_JUSTDIRETHINGS, "Just Dire Things");
 
         //Blocks
-        add(Registration.GooSoil_Tier1.get(), "Goo Soil Tier1");
-        add(Registration.GooSoil_Tier2.get(), "Goo Soil Tier2");
+        add(Registration.GooSoil_Tier1.get(), "Primogel Soil");
+        add(Registration.GooSoil_Tier2.get(), "Blazebloom Soil");
+        add(Registration.GooSoil_Tier3.get(), "VoidShimmer Soil");
         add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
         add(Registration.GooBlock_Tier3.get(), "VoidShimmer Goo");
@@ -75,6 +76,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.boundto", "Bound to: %s:%s");
         add("justdirethings.unbound", " -Not Bound");
+        add("justdirethings.bindfailed", "Binding Failed");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
