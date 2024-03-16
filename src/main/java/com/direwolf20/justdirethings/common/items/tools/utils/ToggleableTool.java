@@ -1,12 +1,15 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
+import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
+import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.events.BlockEvents;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -312,6 +315,42 @@ public interface ToggleableTool {
         pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", I18n.get(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
         player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
         return true;
+    }
+
+    default boolean bindSoil(UseOnContext pContext) {
+        boolean bindingSuccess = false;
+        if (!pContext.getPlayer().level().isClientSide) {
+            Level pLevel = pContext.getLevel();
+            Player player = pContext.getPlayer();
+            ItemStack heldItem = pContext.getItemInHand();
+            BlockPos clickedPos = pContext.getClickedPos();
+            BlockState blockState = pLevel.getBlockState(clickedPos);
+            if (blockState.getBlock() instanceof GooSoilBase) {
+                if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
+                    if (toggleableTool.canUseAbility(heldItem, Ability.DROPTELEPORT)) {
+                        if (Helpers.testUseTool(heldItem, Ability.DROPTELEPORT, 10) > 0) {
+                            GlobalPos boundPos = ToggleableTool.getBoundInventory(heldItem);
+                            Direction direction = ToggleableTool.getBoundInventorySide(heldItem);
+                            if (boundPos != null) {
+                                BlockEntity blockEntity = pLevel.getBlockEntity(clickedPos);
+                                if (blockEntity instanceof GooSoilBE gooSoilBE) {
+                                    gooSoilBE.bindInventory(boundPos, direction);
+                                    pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundPos.dimension().location().getPath()), "[" + boundPos.pos().toShortString() + "]"), true);
+                                    player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
+                                    Helpers.damageTool(heldItem, player, Ability.DROPTELEPORT, 10);
+                                    bindingSuccess = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!bindingSuccess) {
+                pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.bindfailed").withStyle(ChatFormatting.RED), true);
+                player.playNotifySound(SoundEvents.ANVIL_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
+            }
+        }
+        return bindingSuccess;
     }
 
     //Thanks Soaryn!

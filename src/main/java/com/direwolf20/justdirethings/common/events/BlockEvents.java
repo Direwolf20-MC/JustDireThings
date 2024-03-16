@@ -32,7 +32,7 @@ public class BlockEvents {
     public static void BreakEvent(BlockEvent.BreakEvent event) {
         Player player = event.getPlayer();
         ItemStack stack = player.getMainHandItem(); // Assuming the tool is in the main hand
-        if (stack.getItem() instanceof ToggleableTool toggleableTool) {
+        if (stack.getItem() instanceof ToggleableTool toggleableTool && stack.isCorrectToolForDrops(event.getState())) {
             if (!ignoredBlocks.contains(event.getPos())) {
                 toggleableTool.mineBlocksAbility(stack, player.level(), event.getPos(), player);
                 event.setCanceled(true);
