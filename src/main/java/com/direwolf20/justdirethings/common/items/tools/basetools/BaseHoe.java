@@ -7,7 +7,6 @@ import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
@@ -65,7 +64,7 @@ public class BaseHoe extends HoeItem implements ToggleableTool {
                                 BlockEntity blockEntity = pLevel.getBlockEntity(clickedPos);
                                 if (blockEntity != null && blockEntity instanceof GooSoilBE gooSoilBE) {
                                     gooSoilBE.bindInventory(boundPos, direction);
-                                    pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", I18n.get(boundPos.dimension().location().getPath()), "[" + boundPos.pos().toShortString() + "]"), true);
+                                    pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundPos.dimension().location().getPath()), "[" + boundPos.pos().toShortString() + "]"), true);
                                     player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
                                     Helpers.damageTool(heldItem, player, Ability.DROPTELEPORT, 10);
                                     bindingSuccess = true;
