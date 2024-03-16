@@ -3,6 +3,8 @@
     "justdirethings:ferricore_block",
     "justdirethings:raw_ferricore_ore",
     "justdirethings:blazegold_block",
-    "justdirethings:raw_blazegold_ore"
+    "justdirethings:raw_blazegold_ore",
+    "justdirethings:celestigem_block",
+    "justdirethings:raw_celestigem_ore"
   ]
 }

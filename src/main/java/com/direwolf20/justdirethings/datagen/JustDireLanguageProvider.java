@@ -17,20 +17,25 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("itemGroup." + ModSetup.TAB_JUSTDIRETHINGS, "Just Dire Things");
 
         //Blocks
-        add(Registration.GooSoil_Tier1.get(), "Goo Soil Tier1");
-        add(Registration.GooSoil_Tier2.get(), "Goo Soil Tier2");
+        add(Registration.GooSoil_Tier1.get(), "Primogel Soil");
+        add(Registration.GooSoil_Tier2.get(), "Blazebloom Soil");
+        add(Registration.GooSoil_Tier3.get(), "VoidShimmer Soil");
         add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
+        add(Registration.GooBlock_Tier3.get(), "VoidShimmer Goo");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
         add(Registration.RawFerricoreOre.get(), "Raw Ferricore Ore");
         add(Registration.BlazeGoldBlock.get(), "Blazegold Block");
         add(Registration.RawBlazegoldOre.get(), "Raw Blazegold Ore");
+        add(Registration.RawCelestigemOre.get(), "Raw Celestigem Ore");
+        add(Registration.CelestigemBlock.get(), "Celestigem Block");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
+        add(Registration.Pocket_GeneratorT2.get(), "Improved Pocket Generator");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -43,6 +48,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlazegoldShovel.get(), "Blazegold Shovel");
         add(Registration.BlazegoldAxe.get(), "Blazegold Axe");
         add(Registration.BlazegoldHoe.get(), "Blazegold Hoe");
+        add(Registration.CelestigemSword.get(), "Celestigem Sword");
+        add(Registration.CelestigemPickaxe.get(), "Celestigem Pickaxe");
+        add(Registration.CelestigemShovel.get(), "Celestigem Shovel");
+        add(Registration.CelestigemAxe.get(), "Celestigem Axe");
+        add(Registration.CelestigemHoe.get(), "Celestigem Hoe");
 
 
         //Resources
@@ -50,6 +60,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.RawFerricore.get(), "Raw Ferricore");
         add(Registration.BlazegoldIngot.get(), "Blazegold Ingot");
         add(Registration.RawBlazegold.get(), "Raw Blazegold");
+        add(Registration.Celestigem.get(), "Celestigem");
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
@@ -63,7 +74,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratorburntime", "Burn Time: %f / %f");
         add("justdirethings.pocketgeneratorfuelstack", "Fuel: %f %s");
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
-        add("justdirethings.pocketgeneratorrf", "Forge Energy: %s / %s");
+        add("justdirethings.festored", "Forge Energy: %s / %s");
+        add("justdirethings.boundto", "Bound to: %s:%s");
+        add("justdirethings.unbound", " -Not Bound");
+        add("justdirethings.bindfailed", "Binding Failed");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -80,6 +94,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.SMELTER.getLocalization(), "Auto Smelter");
         add(Ability.HAMMER.getLocalization(), "Hammer");
         add(Ability.HAMMER.getLocalization() + "value", "Hammer: %s");
+        add(Ability.OREXRAY.getLocalization(), "X-Ray");
+        add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

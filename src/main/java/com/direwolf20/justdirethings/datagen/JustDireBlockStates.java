@@ -23,10 +23,13 @@ public class JustDireBlockStates extends BlockStateProvider {
     protected void registerStatesAndModels() {
         simpleBlock(Registration.GooBlock_Tier1.get(), models().cubeAll(Registration.GooBlock_Tier1_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier1.get())).renderType("cutout"));
         simpleBlock(Registration.GooBlock_Tier2.get(), models().cubeAll(Registration.GooBlock_Tier2_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier2.get())).renderType("cutout"));
+        simpleBlock(Registration.GooBlock_Tier3.get(), models().cubeAll(Registration.GooBlock_Tier3_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier3.get())).renderType("cutout"));
         simpleBlock(Registration.FerricoreBlock.get(), models().cubeAll(Registration.FerricoreBlock_ITEM.getId().getPath(), blockTexture(Registration.FerricoreBlock.get())));
         simpleBlock(Registration.RawFerricoreOre.get(), models().cubeAll(Registration.RawFerricoreOre_ITEM.getId().getPath(), blockTexture(Registration.RawFerricoreOre.get())).renderType("translucent"));
         simpleBlock(Registration.BlazeGoldBlock.get(), models().cubeAll(Registration.BlazeGoldBlock_ITEM.getId().getPath(), blockTexture(Registration.BlazeGoldBlock.get())));
         simpleBlock(Registration.RawBlazegoldOre.get(), models().cubeAll(Registration.RawBlazegoldOre_ITEM.getId().getPath(), blockTexture(Registration.RawBlazegoldOre.get())).renderType("translucent"));
+        simpleBlock(Registration.CelestigemBlock.get(), models().cubeAll(Registration.CelestigemBlock_ITEM.getId().getPath(), blockTexture(Registration.CelestigemBlock.get())));
+        simpleBlock(Registration.RawCelestigemOre.get(), models().cubeAll(Registration.RawCelestigemOre_ITEM.getId().getPath(), blockTexture(Registration.RawCelestigemOre.get())).renderType("translucent"));
 
         patternBlock();
         soilBlocks();
@@ -60,6 +63,22 @@ public class JustDireBlockStates extends BlockStateProvider {
                 model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier2"))
                         .texture("top", modLoc("block/goofarmland_tier2"));
+            }
+            return ConfiguredModel.builder()
+                    .modelFile(model).build();
+        });
+
+        getVariantBuilder(Registration.GooSoil_Tier3.get()).forAllStates(s -> {
+            ModelFile model;
+            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
+            if (Moisture == 7) { //Moist
+                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/goosoilside_tier3"))
+                        .texture("top", modLoc("block/goofarmland_tier3_moist"));
+            } else {
+                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                        .texture("dirt", modLoc("block/goosoilside_tier3"))
+                        .texture("top", modLoc("block/goofarmland_tier3"));
             }
             return ConfiguredModel.builder()
                     .modelFile(model).build();

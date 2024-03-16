@@ -1,28 +1,29 @@
 package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
+import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier3;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier2;
+import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Tier3;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
-import com.direwolf20.justdirethings.common.blocks.resources.BlazeGoldBlock;
-import com.direwolf20.justdirethings.common.blocks.resources.FerricoreBlock;
-import com.direwolf20.justdirethings.common.blocks.resources.RawBlazegoldOre;
-import com.direwolf20.justdirethings.common.blocks.resources.RawFerricoreOre;
+import com.direwolf20.justdirethings.common.blocks.resources.*;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier1;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
+import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
-import com.direwolf20.justdirethings.common.items.resources.BlazeGoldIngot;
-import com.direwolf20.justdirethings.common.items.resources.FerricoreIngot;
-import com.direwolf20.justdirethings.common.items.resources.RawBlazegold;
-import com.direwolf20.justdirethings.common.items.resources.RawFerricore;
+import com.direwolf20.justdirethings.common.items.PocketGeneratorT2;
+import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
 import com.direwolf20.justdirethings.common.items.tools.utils.AutoSmeltLootModifier;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
@@ -30,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -88,6 +90,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier1 = ITEMS.register("goosoil_tier1", () -> new BlockItem(GooSoil_Tier1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, GooSoilTier2> GooSoil_Tier2 = BLOCKS.register("goosoil_tier2", GooSoilTier2::new);
     public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier2 = ITEMS.register("goosoil_tier2", () -> new BlockItem(GooSoil_Tier2.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, GooSoilTier3> GooSoil_Tier3 = BLOCKS.register("goosoil_tier3", GooSoilTier3::new);
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier3 = ITEMS.register("goosoil_tier3", () -> new BlockItem(GooSoil_Tier3.get(), new Item.Properties()));
 
 
     //Gooblocks
@@ -95,6 +99,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> GooBlock_Tier1_ITEM = ITEMS.register("gooblock_tier1", () -> new BlockItem(GooBlock_Tier1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, GooBlock_Tier2> GooBlock_Tier2 = BLOCKS.register("gooblock_tier2", GooBlock_Tier2::new);
     public static final DeferredHolder<Item, BlockItem> GooBlock_Tier2_ITEM = ITEMS.register("gooblock_tier2", () -> new BlockItem(GooBlock_Tier2.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, GooBlock_Tier3> GooBlock_Tier3 = BLOCKS.register("gooblock_tier3", GooBlock_Tier3::new);
+    public static final DeferredHolder<Item, BlockItem> GooBlock_Tier3_ITEM = ITEMS.register("gooblock_tier3", () -> new BlockItem(GooBlock_Tier3.get(), new Item.Properties()));
 
     public static final DeferredHolder<Block, GooPatternBlock> GooPatternBlock = BLOCKS.register("goopatternblock", GooPatternBlock::new);
 
@@ -107,21 +113,30 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> BlazeGoldBlock_ITEM = ITEMS.register("blazegold_block", () -> new BlockItem(BlazeGoldBlock.get(), new Item.Properties()));
     public static final DeferredHolder<Block, RawBlazegoldOre> RawBlazegoldOre = BLOCKS.register("raw_blazegold_ore", RawBlazegoldOre::new);
     public static final DeferredHolder<Item, BlockItem> RawBlazegoldOre_ITEM = ITEMS.register("raw_blazegold_ore", () -> new BlockItem(RawBlazegoldOre.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, CelestigemBlock> CelestigemBlock = BLOCKS.register("celestigem_block", CelestigemBlock::new);
+    public static final DeferredHolder<Item, BlockItem> CelestigemBlock_ITEM = ITEMS.register("celestigem_block", () -> new BlockItem(CelestigemBlock.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, RawCelestigemOre> RawCelestigemOre = BLOCKS.register("raw_celestigem_ore", RawCelestigemOre::new);
+    public static final DeferredHolder<Item, BlockItem> RawCelestigemOre_ITEM = ITEMS.register("raw_celestigem_ore", () -> new BlockItem(RawCelestigemOre.get(), new Item.Properties()));
+
 
     //BlockEntities (Not TileEntities - Honest)
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier1>> GooBlockBE_Tier1 = BLOCK_ENTITIES.register("gooblock_tier1", () -> BlockEntityType.Builder.of(GooBlockBE_Tier1::new, GooBlock_Tier1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier2>> GooBlockBE_Tier2 = BLOCK_ENTITIES.register("gooblock_tier2", () -> BlockEntityType.Builder.of(GooBlockBE_Tier2::new, GooBlock_Tier2.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier3>> GooBlockBE_Tier3 = BLOCK_ENTITIES.register("gooblock_tier3", () -> BlockEntityType.Builder.of(GooBlockBE_Tier3::new, GooBlock_Tier3.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooSoilBE>> GooSoilBE = BLOCK_ENTITIES.register("goosoilbe", () -> BlockEntityType.Builder.of(GooSoilBE::new, GooSoil_Tier3.get()).build(null));
 
 
     //Items
     public static final DeferredHolder<Item, FuelCanister> Fuel_Canister = ITEMS.register("fuel_canister", FuelCanister::new);
     public static final DeferredHolder<Item, PocketGenerator> Pocket_Generator = ITEMS.register("pocket_generator", PocketGenerator::new);
+    public static final DeferredHolder<Item, PocketGeneratorT2> Pocket_GeneratorT2 = ITEMS.register("pocket_generator_t2", PocketGeneratorT2::new);
 
     //Items - Resources
     public static final DeferredHolder<Item, FerricoreIngot> FerricoreIngot = ITEMS.register("ferricore_ingot", FerricoreIngot::new);
     public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
     public static final DeferredHolder<Item, BlazeGoldIngot> BlazegoldIngot = ITEMS.register("blazegold_ingot", BlazeGoldIngot::new);
     public static final DeferredHolder<Item, RawBlazegold> RawBlazegold = ITEMS.register("raw_blazegold", RawBlazegold::new);
+    public static final DeferredHolder<Item, Celestigem> Celestigem = ITEMS.register("celestigem", Celestigem::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);
@@ -130,10 +145,15 @@ public class Registration {
     public static final DeferredHolder<Item, FerricoreAxe> FerricoreAxe = TOOLS.register("ferricore_axe", FerricoreAxe::new);
     public static final DeferredHolder<Item, FerricoreHoe> FerricoreHoe = TOOLS.register("ferricore_hoe", FerricoreHoe::new);
     public static final DeferredHolder<Item, BlazegoldSword> BlazegoldSword = TOOLS.register("blazegold_sword", BlazegoldSword::new);
-    public static final DeferredHolder<Item, com.direwolf20.justdirethings.common.items.tools.BlazegoldPickaxe> BlazegoldPickaxe = TOOLS.register("blazegold_pickaxe", BlazegoldPickaxe::new);
+    public static final DeferredHolder<Item, BlazegoldPickaxe> BlazegoldPickaxe = TOOLS.register("blazegold_pickaxe", BlazegoldPickaxe::new);
     public static final DeferredHolder<Item, BlazegoldShovel> BlazegoldShovel = TOOLS.register("blazegold_shovel", BlazegoldShovel::new);
-    public static final DeferredHolder<Item, com.direwolf20.justdirethings.common.items.tools.BlazegoldAxe> BlazegoldAxe = TOOLS.register("blazegold_axe", BlazegoldAxe::new);
+    public static final DeferredHolder<Item, BlazegoldAxe> BlazegoldAxe = TOOLS.register("blazegold_axe", BlazegoldAxe::new);
     public static final DeferredHolder<Item, BlazegoldHoe> BlazegoldHoe = TOOLS.register("blazegold_hoe", BlazegoldHoe::new);
+    public static final DeferredHolder<Item, CelestigemSword> CelestigemSword = TOOLS.register("celestigem_sword", CelestigemSword::new);
+    public static final DeferredHolder<Item, CelestigemPickaxe> CelestigemPickaxe = TOOLS.register("celestigem_pickaxe", CelestigemPickaxe::new);
+    public static final DeferredHolder<Item, CelestigemShovel> CelestigemShovel = TOOLS.register("celestigem_shovel", CelestigemShovel::new);
+    public static final DeferredHolder<Item, CelestigemAxe> CelestigemAxe = TOOLS.register("celestigem_axe", CelestigemAxe::new);
+    public static final DeferredHolder<Item, CelestigemHoe> CelestigemHoe = TOOLS.register("celestigem_hoe", CelestigemHoe::new);
 
     //Containers
     public static final DeferredHolder<MenuType<?>, MenuType<FuelCanisterContainer>> FuelCanister_Container = CONTAINERS.register("fuelcanister",
@@ -148,5 +168,28 @@ public class Registration {
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(
             "handler", () -> AttachmentType.serializable(() -> new ItemStackHandler(1)).build());
     public static final Supplier<AttachmentType<EnergyStorage>> ENERGYSTORAGE = ATTACHMENT_TYPES.register(
-            "energystorage", () -> AttachmentType.serializable(() -> new EnergyStorage(1000000)).build());
+            "energystorage", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof ItemStack itemStack) {
+                    int capacity = 1000000; //Default
+                    if (itemStack.getItem() instanceof PoweredItem poweredTool) {
+                        capacity = poweredTool.getMaxEnergy();
+                    }
+                    return new EnergyStorage(capacity);
+                } else {
+                    throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
+                }
+            }).build());
+    public static final Supplier<AttachmentType<EnergyStorageNoReceive>> ENERGYSTORAGENORECEIVE = ATTACHMENT_TYPES.register(
+            "energystoragenoreceive", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof ItemStack itemStack) {
+                    int capacity = 1000000; //Default
+                    if (itemStack.getItem() instanceof PoweredItem poweredTool) {
+                        capacity = poweredTool.getMaxEnergy();
+                    }
+                    return new EnergyStorageNoReceive(capacity);
+                } else {
+                    throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
+                }
+            }).build());
+
 }

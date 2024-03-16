@@ -29,25 +29,32 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Items.LAVA_BUCKET);
         tag(ItemTags.SWORDS)
                 .add(Registration.FerricoreSword.get())
-                .add(Registration.BlazegoldSword.get());
+                .add(Registration.BlazegoldSword.get())
+                .add(Registration.CelestigemSword.get());
         tag(ItemTags.PICKAXES)
                 .add(Registration.FerricorePickaxe.get())
-                .add(Registration.BlazegoldPickaxe.get());
+                .add(Registration.BlazegoldPickaxe.get())
+                .add(Registration.CelestigemPickaxe.get());
         tag(ItemTags.SHOVELS)
                 .add(Registration.FerricoreShovel.get())
-                .add(Registration.BlazegoldShovel.get());
+                .add(Registration.BlazegoldShovel.get())
+                .add(Registration.CelestigemShovel.get());
         tag(ItemTags.AXES)
                 .add(Registration.FerricoreAxe.get())
-                .add(Registration.BlazegoldAxe.get());
+                .add(Registration.BlazegoldAxe.get())
+                .add(Registration.CelestigemAxe.get());
         tag(ItemTags.HOES)
                 .add(Registration.FerricoreHoe.get())
-                .add(Registration.BlazegoldHoe.get());
+                .add(Registration.BlazegoldHoe.get())
+                .add(Registration.CelestigemHoe.get());
         tag(Tags.Items.INGOTS)
                 .add(Registration.FerricoreIngot.get())
                 .add(Registration.BlazegoldIngot.get());
         tag(Tags.Items.RAW_MATERIALS)
                 .add(Registration.RawFerricore.get())
                 .add(Registration.RawBlazegold.get());
+        tag(Tags.Items.GEMS)
+                .add(Registration.Celestigem.get());
     }
 
     @Override

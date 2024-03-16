@@ -36,6 +36,8 @@ public class MiningCollect {
 
     public static List<BlockPos> collect(LivingEntity player, BlockPos startBlock, Direction side, Level world, int range, SizeMode sizeMode, ItemStack tool) {
         List<BlockPos> coordinates = new ArrayList<>();
+        if (world.getBlockState(startBlock).getDestroySpeed(world, startBlock) == 0)
+            return coordinates; // Don't Operate on things like torches, plants, etc
         BlockPos startPos = startBlock;
 
         if (range == 1) {

@@ -34,10 +34,20 @@ public class JustDireThings {
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
-                Registration.Pocket_Generator.get()
+                Registration.Pocket_Generator.get(),
+                Registration.Pocket_GeneratorT2.get()
+
+        );
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGENORECEIVE),
+                Registration.Pocket_Generator.get(),
+                Registration.Pocket_GeneratorT2.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
-                Registration.Pocket_Generator.get()
+                Registration.CelestigemSword.get(),
+                Registration.CelestigemPickaxe.get(),
+                Registration.CelestigemAxe.get(),
+                Registration.CelestigemShovel.get(),
+                Registration.CelestigemHoe.get()
         );
     }
 }

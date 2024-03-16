@@ -1,15 +1,14 @@
 package com.direwolf20.justdirethings.common.items;
 
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
-import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.NBTUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -30,7 +29,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PocketGenerator extends Item {
+import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
+
+public class PocketGenerator extends Item implements PoweredItem {
     public static final String ENABLED = "enabled";
     public static final String COUNTER = "counter";
     public static final String MAXBURN = "maxburn";
@@ -61,16 +62,18 @@ public class PocketGenerator extends Item {
         if (entity instanceof Player player && NBTUtils.getBoolean(itemStack, ENABLED)) {
             IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
-            tryBurn(energyStorage, itemStack);
-            if (energyStorage.getEnergyStored() >= 1000) {
-                for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                    ItemStack slotStack = player.getInventory().getItem(i);
-                    IEnergyStorage slotEnergy = slotStack.getCapability(Capabilities.EnergyStorage.ITEM);
-                    if (slotEnergy != null) {
-                        int acceptedEnergy = slotEnergy.receiveEnergy(1000, true);
-                        if (acceptedEnergy > 0) {
-                            int extractedEnergy = energyStorage.extractEnergy(acceptedEnergy, false);
-                            slotEnergy.receiveEnergy(extractedEnergy, false);
+            if (energyStorage instanceof EnergyStorageNoReceive energyStorageNoReceive) {
+                tryBurn(energyStorageNoReceive, itemStack);
+                if (energyStorage.getEnergyStored() >= (getFEPerTick() / 10)) { //If we have 1/10th the max transfer speed, go ahead and let it rip
+                    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                        ItemStack slotStack = player.getInventory().getItem(i);
+                        IEnergyStorage slotEnergy = slotStack.getCapability(Capabilities.EnergyStorage.ITEM);
+                        if (slotEnergy != null) {
+                            int acceptedEnergy = slotEnergy.receiveEnergy(getFEPerTick(), true);
+                            if (acceptedEnergy > 0) {
+                                int extractedEnergy = energyStorage.extractEnergy(acceptedEnergy, false);
+                                slotEnergy.receiveEnergy(extractedEnergy, false);
+                            }
                         }
                     }
                 }
@@ -78,12 +81,12 @@ public class PocketGenerator extends Item {
         }
     }
 
-    private static int fePerTick() {
-        return (int) (Config.POCKET_GENERATOR_FE_PER_FUEL_TICK.get() * Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get());
+    private int fePerTick() {
+        return (int) (getFePerFuelTick() * getBurnSpeedMultiplier());
     }
 
-    private void tryBurn(IEnergyStorage energyStorage, ItemStack itemStack) {
-        boolean canInsertEnergy = energyStorage.receiveEnergy(fePerTick(), true) > 0;
+    private void tryBurn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
+        boolean canInsertEnergy = energyStorage.forceReceiveEnergy(fePerTick(), true) > 0;
         if (NBTUtils.getIntValue(itemStack, COUNTER) > 0 && canInsertEnergy) {
             burn(energyStorage, itemStack);
         } else if (canInsertEnergy) {
@@ -93,8 +96,8 @@ public class PocketGenerator extends Item {
     }
 
 
-    private void burn(IEnergyStorage energyStorage, ItemStack itemStack) {
-        energyStorage.receiveEnergy(fePerTick(), false);
+    private void burn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
+        energyStorage.forceReceiveEnergy(fePerTick(), false);
         int counter = NBTUtils.getIntValue(itemStack, COUNTER);
         counter--;
         NBTUtils.setIntValue(itemStack, COUNTER, counter);
@@ -116,7 +119,7 @@ public class PocketGenerator extends Item {
                 fuelStack.shrink(1);
 
 
-            int counter = (int) (Math.floor(burnTime) / Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get());
+            int counter = (int) (Math.floor(burnTime) / getBurnSpeedMultiplier());
             int maxBurn = counter;
             NBTUtils.setIntValue(itemStack, COUNTER, counter);
             NBTUtils.setIntValue(itemStack, MAXBURN, maxBurn);
@@ -134,51 +137,32 @@ public class PocketGenerator extends Item {
         if (level == null || mc.player == null) {
             return;
         }
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            return;
-        }
-        tooltip.add(Component.translatable("justdirethings.pocketgeneratorrf", MagicHelpers.tidyValue(energy.getEnergyStored()), MagicHelpers.tidyValue(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
+        appendFEText(stack, tooltip);
         boolean sneakPressed = Screen.hasShiftDown();
         if (!sneakPressed) {
-            tooltip.add(Component.translatable("justdirethings.shiftmoreinfo").withStyle(ChatFormatting.GRAY));
+            appendShiftForInfo(stack, tooltip);
         } else {
-            tooltip.add(Component.translatable("justdirethings.pocketgeneratorburntime", NBTUtils.getIntValue(stack, COUNTER), NBTUtils.getIntValue(stack, MAXBURN)).withStyle(ChatFormatting.DARK_RED));
-            ItemStackHandler itemStackHandler = stack.getData(Registration.HANDLER);
-            ItemStack fuelStack = itemStackHandler.getStackInSlot(0);
-            if (fuelStack.isEmpty())
-                tooltip.add(Component.translatable("justdirethings.pocketgeneratornofuel").withStyle(ChatFormatting.RED));
-            else
-                tooltip.add(Component.translatable("justdirethings.pocketgeneratorfuelstack", fuelStack.getCount(), fuelStack.getItem().getName(fuelStack)).withStyle(ChatFormatting.DARK_AQUA));
+            appendGeneratorDetails(stack, tooltip);
         }
 
     }
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            return false;
-        }
-        return (energy.getEnergyStored() < energy.getMaxEnergyStored());
+        return isPowerBarVisible(stack);
     }
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            return 13;
-        }
-        return Math.min(13 * energy.getEnergyStored() / energy.getMaxEnergyStored(), 13);
+        return getPowerBarWidth(stack);
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-        if (energy == null) {
-            super.getBarColor(stack);
-        }
-        return Mth.hsvToRgb(Math.max(0.0F, (float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored()) / 3.0F, 1.0F, 1.0F);
+        int color = getPowerBarColor(stack);
+        if (color == -1)
+            return super.getBarColor(stack);
+        return color;
     }
 
     @Override
@@ -194,5 +178,22 @@ public class PocketGenerator extends Item {
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
+    }
+
+    @Override
+    public int getMaxEnergy() {
+        return Config.POCKET_GENERATOR_MAX_FE.get();
+    }
+
+    public int getFEPerTick() {
+        return Config.POCKET_GENERATOR_FE_PER_TICK.get();
+    }
+
+    public double getFePerFuelTick() {
+        return Config.POCKET_GENERATOR_FE_PER_FUEL_TICK.get();
+    }
+
+    public int getBurnSpeedMultiplier() {
+        return Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get();
     }
 }

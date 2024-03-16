@@ -8,15 +8,21 @@ import java.util.Locale;
 import java.util.Map;
 
 public enum Ability {
+    //Tier 1
     MOBSCANNER(SettingType.TOGGLE, 10, 100), //TODO Configs
-    OREMINER(SettingType.TOGGLE, 1, 0),
+    OREMINER(SettingType.TOGGLE, 1, 10),
     ORESCANNER(SettingType.TOGGLE, 10, 100),
     LAWNMOWER(SettingType.TOGGLE, 1, 10),
-    SKYSWEEPER(SettingType.TOGGLE, 1, 0),
-    TREEFELLER(SettingType.TOGGLE, 1, 0),
+    SKYSWEEPER(SettingType.TOGGLE, 1, 10),
+    TREEFELLER(SettingType.TOGGLE, 1, 10),
     LEAFBREAKER(SettingType.TOGGLE, 1, 10),
+    //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 10),
-    HAMMER(SettingType.CYCLE, 1, 10);
+    HAMMER(SettingType.CYCLE, 1, 10),
+    //Tier 3
+    DROPTELEPORT(SettingType.TOGGLE, 10, 100),
+    //Tier 4
+    OREXRAY(SettingType.TOGGLE, 100, 1000);
 
     public enum SettingType {
         TOGGLE,

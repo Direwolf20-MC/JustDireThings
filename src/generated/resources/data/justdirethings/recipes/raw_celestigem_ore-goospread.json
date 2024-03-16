@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:goospread",
+  "craftingDuration": 4800,
+  "id": "justdirethings:dire_diamond_block",
+  "input": {
+    "Name": "minecraft:diamond_block"
+  },
+  "output": {
+    "Name": "justdirethings:raw_celestigem_ore"
+  },
+  "tierRequirement": 3
+}

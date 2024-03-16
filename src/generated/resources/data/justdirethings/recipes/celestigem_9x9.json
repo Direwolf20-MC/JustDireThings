@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "justdirethings",
+  "key": {
+    "#": {
+      "item": "justdirethings:celestigem"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "item": "justdirethings:celestigem_block"
+  }
+}

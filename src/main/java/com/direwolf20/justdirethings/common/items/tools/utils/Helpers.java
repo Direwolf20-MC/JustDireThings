@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -17,31 +18,102 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Helpers {
+    public static final Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES);
+    public static final Predicate<BlockState> fallingBlockCondition = s -> s.getBlock() instanceof FallingBlock;
+    public static final Predicate<BlockState> logCondition = s -> s.is(BlockTags.LOGS);
+
     public static void breakBlocks(ServerLevel level, BlockPos pos) {
         level.destroyBlock(pos, true);
     }
 
-    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack) {
+    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool) {
         if (pPlayer instanceof Player player) {
             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
             if (NeoForge.EVENT_BUS.post(event).isCanceled()) return new ArrayList<>();
+
+            BlockState state = level.getBlockState(pos);
+            List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
+
+            //This is how vanilla does it?
+            boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
+            if (removed) {
+                state.getBlock().destroy(level, pos, state);
+            }
+            if (damageTool && state.getDestroySpeed(level, pos) != 0.0F)
+                damageTool(pStack, pPlayer);
+
+            return drops;
         }
-        BlockState state = level.getBlockState(pos);
-        List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
+        return new ArrayList<>();
+    }
 
-        level.destroyBlock(pos, false);
-        if (state.getDestroySpeed(level, pos) != 0.0F)
-            pStack.hurtAndBreak(1, pPlayer, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+    public static void damageTool(ItemStack stack, LivingEntity player) {
+        if (stack.getItem() instanceof PoweredItem poweredItem) {
+            stack.hurtAndBreak(poweredItem.getBlockBreakFECost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        } else {
+            stack.hurtAndBreak(1, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+    }
 
-        return drops;
+    public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
+        if (stack.getItem() instanceof PoweredItem) {
+            stack.hurtAndBreak(ability.getFeCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        } else {
+            stack.hurtAndBreak(ability.getDurabilityCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+    }
+
+    public static void damageTool(ItemStack stack, LivingEntity player, Ability ability, int multiplier) {
+        if (stack.getItem() instanceof PoweredItem) {
+            stack.hurtAndBreak(ability.getFeCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        } else {
+            stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+    }
+
+    public static int testUseTool(ItemStack stack) {
+        if (stack.getItem() instanceof PoweredItem poweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return -1; //Shouldn't Happen!
+            return energyStorage.getEnergyStored() - poweredItem.getBlockBreakFECost();
+        } else {
+            return stack.getMaxDamage() - stack.getDamageValue() - 1;
+        }
+    }
+
+    public static int testUseTool(ItemStack stack, Ability ability) {
+        if (stack.getItem() instanceof PoweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return -1; //Shouldn't Happen!
+            return energyStorage.getEnergyStored() - ability.getFeCost();
+        } else {
+            return stack.getMaxDamage() - stack.getDamageValue() - ability.getDurabilityCost();
+        }
+    }
+
+    public static int testUseTool(ItemStack stack, Ability ability, int multiplier) {
+        if (stack.getItem() instanceof PoweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return -1; //Shouldn't Happen!
+            return energyStorage.getEnergyStored() - (ability.getFeCost() * multiplier);
+        } else {
+            return stack.getMaxDamage() - stack.getDamageValue() - (ability.getDurabilityCost() * multiplier);
+        }
     }
 
     public static void combineDrops(List<ItemStack> drops, List<ItemStack> newDrops) {
@@ -88,12 +160,12 @@ public class Helpers {
                 // Get the result of the smelting recipe
                 ItemStack smeltedResult = smeltingRecipe.get().value().getResultItem(registryAccess);
 
-                if (!smeltedResult.isEmpty()) {
+                if (!smeltedResult.isEmpty() && (testUseTool(tool, Ability.SMELTER, drop.getCount()) >= 0)) {
                     // If the smelting result is valid, prepare to replace the original drop with the smelted result
                     ItemStack resultStack = smeltedResult.copy();
                     resultStack.setCount(drop.getCount()); // Assume all items in the stack are smelted
                     if (!tool.isEmpty())
-                        tool.hurtAndBreak(Ability.SMELTER.getDurabilityCost() * resultStack.getCount(), entityLiving, p_40992_ -> p_40992_.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        damageTool(tool, entityLiving, Ability.SMELTER, drop.getCount());
                     returnList.add(resultStack);
                     didISmelt[0] = true;
                 } else {
@@ -108,9 +180,49 @@ public class Helpers {
 
     public static void dropDrops(List<ItemStack> drops, ServerLevel level, BlockPos dropAtPos) {
         for (ItemStack drop : drops) {
-            ItemEntity itemEntity = new ItemEntity(level, dropAtPos.getX(), dropAtPos.getY(), dropAtPos.getZ(), drop);
+            ItemEntity itemEntity = new ItemEntity(level, dropAtPos.getX() + 0.5f, dropAtPos.getY() + 0.5f, dropAtPos.getZ() + 0.5f, drop);
             level.addFreshEntity(itemEntity);
         }
+    }
+
+    public static ItemStack teleportDrop(ItemStack itemStack, IItemHandler handler) {
+        ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, itemStack, false);
+        return leftover;
+    }
+
+    public static ItemStack teleportDrop(ItemStack itemStack, IItemHandler handler, ItemStack tool, Player player) {
+        if (testUseTool(tool, Ability.DROPTELEPORT) < 0)
+            return itemStack;
+        ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, itemStack, false);
+        if (leftover.isEmpty())
+            damageTool(tool, player, Ability.DROPTELEPORT);
+        return leftover;
+    }
+
+    public static void teleportDrops(List<ItemStack> drops, IItemHandler handler) {
+        List<ItemStack> leftovers = new ArrayList<>();
+        for (ItemStack drop : drops) {
+            ItemStack leftover = teleportDrop(drop, handler);
+            if (!leftover.isEmpty()) {
+                leftovers.add(leftover);
+            }
+        }
+        // Clear the original drops list and add all leftovers to it
+        drops.clear();
+        drops.addAll(leftovers);
+    }
+
+    public static void teleportDrops(List<ItemStack> drops, IItemHandler handler, ItemStack tool, Player player) {
+        List<ItemStack> leftovers = new ArrayList<>();
+        for (ItemStack drop : drops) {
+            ItemStack leftover = teleportDrop(drop, handler, tool, player);
+            if (!leftover.isEmpty()) {
+                leftovers.add(leftover);
+            }
+        }
+        // Clear the original drops list and add all leftovers to it
+        drops.clear();
+        drops.addAll(leftovers);
     }
 
     public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, Direction direction, int maxBreak, int range) {
