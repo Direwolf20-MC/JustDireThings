@@ -18,11 +18,14 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
@@ -117,5 +120,16 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool {
             openSettings(player);
         useAbility(level, player, hand);
         return super.use(level, player, hand);
+    }
+
+    @Override
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+        if (stack.getItem() instanceof PoweredItem poweredItem) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return amount;
+            energyStorage.extractEnergy(amount, false);
+            return 0;
+        }
+        return amount;
     }
 }

@@ -64,9 +64,7 @@ public class Helpers {
 
     public static void damageTool(ItemStack stack, LivingEntity player) {
         if (stack.getItem() instanceof PoweredItem poweredItem) {
-            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-            if (energyStorage == null) return;
-            energyStorage.extractEnergy(poweredItem.getBlockBreakFECost(), false);
+            stack.hurtAndBreak(poweredItem.getBlockBreakFECost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(1, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
@@ -74,9 +72,7 @@ public class Helpers {
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
         if (stack.getItem() instanceof PoweredItem) {
-            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-            if (energyStorage == null) return;
-            energyStorage.extractEnergy(ability.getFeCost(), false);
+            stack.hurtAndBreak(ability.getFeCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
@@ -84,9 +80,7 @@ public class Helpers {
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability, int multiplier) {
         if (stack.getItem() instanceof PoweredItem) {
-            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-            if (energyStorage == null) return;
-            energyStorage.extractEnergy(ability.getFeCost() * multiplier, false);
+            stack.hurtAndBreak(ability.getFeCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
