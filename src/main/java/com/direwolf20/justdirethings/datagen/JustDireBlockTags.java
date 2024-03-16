@@ -29,6 +29,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(Registration.GooBlock_Tier1.get())
                 .add(Registration.GooBlock_Tier2.get())
+                .add(Registration.GooBlock_Tier3.get())
+                .add(Registration.GooBlock_Tier4.get())
                 .add(Registration.GooSoil_Tier1.get())
                 .add(Registration.GooSoil_Tier2.get())
                 .add(Registration.GooSoil_Tier3.get());
@@ -38,7 +40,9 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.BlazeGoldBlock.get())
                 .add(Registration.RawBlazegoldOre.get())
                 .add(Registration.CelestigemBlock.get())
-                .add(Registration.RawCelestigemOre.get());
+                .add(Registration.RawCelestigemOre.get())
+                .add(Registration.EclipseAlloyBlock.get())
+                .add(Registration.RawEclipseAlloyOre.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
@@ -48,7 +52,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
         tag(Tags.Blocks.ORES)
                 .add(Registration.RawFerricoreOre.get())
                 .add(Registration.RawBlazegoldOre.get())
-                .add(Registration.RawCelestigemOre.get());
+                .add(Registration.RawCelestigemOre.get())
+                .add(Registration.RawEclipseAlloyOre.get());
     }
 
     @Override

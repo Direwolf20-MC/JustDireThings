@@ -5,6 +5,8 @@
     "justdirethings:blazegold_block",
     "justdirethings:raw_blazegold_ore",
     "justdirethings:celestigem_block",
-    "justdirethings:raw_celestigem_ore"
+    "justdirethings:raw_celestigem_ore",
+    "justdirethings:eclipsealloy_block",
+    "justdirethings:raw_eclipsealloy_ore"
   ]
 }

@@ -211,6 +211,8 @@ public interface ToggleableTool {
             scanFor(level, player, itemStack, Ability.MOBSCANNER);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.ORESCANNER))
             scanFor(level, player, itemStack, Ability.ORESCANNER);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.OREXRAY))
+            scanFor(level, player, itemStack, Ability.OREXRAY);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.LAWNMOWER))
             lawnmower(level, player, itemStack);
     }
