@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 public class EclipseAlloySword extends BaseSword implements PoweredItem {
     public EclipseAlloySword() {
         super(GooTier.ECLIPSEALLOY, 3, -2.0F, new Properties());
-        registerAbility(Ability.MOBSCANNER);
+        registerAbility(Ability.GLOWING);
         registerAbility(Ability.DROPTELEPORT);
     }
 

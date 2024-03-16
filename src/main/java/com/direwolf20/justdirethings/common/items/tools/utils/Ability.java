@@ -22,7 +22,8 @@ public enum Ability {
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 10, 100),
     //Tier 4
-    OREXRAY(SettingType.TOGGLE, 100, 1000);
+    OREXRAY(SettingType.TOGGLE, 100, 1000),
+    GLOWING(SettingType.TOGGLE, 100, 1000);
 
     public enum SettingType {
         TOGGLE,
