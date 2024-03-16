@@ -27,7 +27,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -237,10 +237,10 @@ public interface ToggleableTool {
         // Define the search area
         AABB searchArea = new AABB(playerPos).inflate(radius, radius, radius);
 
-        List<Monster> entityList = level.getEntitiesOfClass(Monster.class, searchArea, entity -> true)
+        List<Mob> entityList = level.getEntitiesOfClass(Mob.class, searchArea, entity -> true)
                 .stream().toList();
 
-        for (Monster entity : entityList) {
+        for (Mob entity : entityList) {
             entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 200, 0)); // 200 ticks = 10 seconds
         }
         player.playNotifySound(SoundEvents.SCULK_CLICKING, SoundSource.PLAYERS, 1.0F, 1.0F);
