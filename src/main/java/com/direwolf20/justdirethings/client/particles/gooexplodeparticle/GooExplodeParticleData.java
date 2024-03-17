@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.client.particles.itemparticle;
+package com.direwolf20.justdirethings.client.particles.gooexplodeparticle;
 
 import com.direwolf20.justdirethings.client.particles.ModParticles;
 import com.mojang.brigadier.StringReader;
@@ -16,21 +16,17 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 import java.util.Locale;
 
-public class ItemFlowParticleData implements ParticleOptions {
+public class GooExplodeParticleData implements ParticleOptions {
     private final ItemStack itemStack;
-    public final boolean doGravity;
-    public final boolean shrinking;
 
-    public ItemFlowParticleData(ItemStack itemStack, boolean doGravity, boolean shrinking) {
+    public GooExplodeParticleData(ItemStack itemStack) {
         this.itemStack = itemStack.copy(); //Forge: Fix stack updating after the fact causing particle changes.
-        this.doGravity = doGravity;
-        this.shrinking = shrinking;
     }
 
     @Nonnull
     @Override
-    public ParticleType<ItemFlowParticleData> getType() {
-        return ModParticles.ITEMFLOWPARTICLE.get();
+    public ParticleType<GooExplodeParticleData> getType() {
+        return ModParticles.GOOEXPLODEPARTICLE.get();
     }
 
     @Override
@@ -41,8 +37,8 @@ public class ItemFlowParticleData implements ParticleOptions {
     @Nonnull
     @Override
     public String writeToString() {
-        return String.format(Locale.ROOT, "%s %b %b",
-                this.getType(), this.doGravity, this.shrinking);
+        return String.format(Locale.ROOT, "%s",
+                this.getType());
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -50,25 +46,21 @@ public class ItemFlowParticleData implements ParticleOptions {
         return this.itemStack;
     }
 
-    public static final Deserializer<ItemFlowParticleData> DESERIALIZER = new Deserializer<ItemFlowParticleData>() {
+    public static final Deserializer<GooExplodeParticleData> DESERIALIZER = new Deserializer<GooExplodeParticleData>() {
         @Nonnull
         @Override
-        public ItemFlowParticleData fromCommand(ParticleType<ItemFlowParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
+        public GooExplodeParticleData fromCommand(ParticleType<GooExplodeParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
             ItemParser.ItemResult itemparser$itemresult = ItemParser.parseForItem(BuiltInRegistries.ITEM.asLookup(), reader);
             ItemStack itemstack = (new ItemInput(itemparser$itemresult.item(), itemparser$itemresult.nbt())).createItemStack(1, false);
 
-            reader.expect(' ');
-            boolean doGravity = reader.readBoolean();
-            reader.expect(' ');
-            boolean building = reader.readBoolean();
 
-            return new ItemFlowParticleData(itemstack, doGravity, building);
+            return new GooExplodeParticleData(itemstack);
         }
 
         @Override
-        public ItemFlowParticleData fromNetwork(ParticleType<ItemFlowParticleData> particleTypeIn, FriendlyByteBuf buffer) {
-            return new ItemFlowParticleData(buffer.readItem(), buffer.readBoolean(), buffer.readBoolean());
+        public GooExplodeParticleData fromNetwork(ParticleType<GooExplodeParticleData> particleTypeIn, FriendlyByteBuf buffer) {
+            return new GooExplodeParticleData(buffer.readItem());
         }
     };
 }

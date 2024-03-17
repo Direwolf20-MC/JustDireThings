@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.client.particles.itemparticle;
+package com.direwolf20.justdirethings.client.particles.gooexplodeparticle;
 
 
 import net.minecraft.client.Minecraft;
@@ -12,16 +12,12 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Random;
 
-public class ItemFlowParticle extends BreakingItemParticle {
+public class GooExplodeParticle extends BreakingItemParticle {
     Random random = new Random();
     private float partSize;
-    private boolean doGravity;
-    private boolean shrinking;
 
-    public ItemFlowParticle(ClientLevel world, double x, double y, double z, ItemStack itemStack, boolean gravity, boolean shrinking) {
+    public GooExplodeParticle(ClientLevel world, double x, double y, double z, ItemStack itemStack) {
         super(world, x, y, z, itemStack);
-        this.doGravity = gravity;
-        this.shrinking = shrinking;
         float minSize = 0.25f;
         float maxSize = 0.5f;
         this.partSize = minSize + random.nextFloat() * (maxSize - minSize);
@@ -58,8 +54,8 @@ public class ItemFlowParticle extends BreakingItemParticle {
         return 0xF00080;
     }
 
-    public static ParticleProvider<ItemFlowParticleData> FACTORY =
+    public static ParticleProvider<GooExplodeParticleData> FACTORY =
             (data, world, x, y, z, xSpeed, ySpeed, zSpeed) ->
-                    new ItemFlowParticle(world, x, y, z, data.getItemStack(), data.doGravity, data.shrinking);
+                    new GooExplodeParticle(world, x, y, z, data.getItemStack());
 }
 
