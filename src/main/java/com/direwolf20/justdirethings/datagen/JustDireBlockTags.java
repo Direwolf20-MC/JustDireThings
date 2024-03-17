@@ -33,7 +33,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.GooBlock_Tier4.get())
                 .add(Registration.GooSoil_Tier1.get())
                 .add(Registration.GooSoil_Tier2.get())
-                .add(Registration.GooSoil_Tier3.get());
+                .add(Registration.GooSoil_Tier3.get())
+                .add(Registration.GooSoil_Tier4.get());
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(Registration.FerricoreBlock.get())
                 .add(Registration.RawFerricoreOre.get())
@@ -54,6 +55,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.RawBlazegoldOre.get())
                 .add(Registration.RawCelestigemOre.get())
                 .add(Registration.RawEclipseAlloyOre.get());
+        tag(BlockTags.BAMBOO_PLANTABLE_ON)
+                .add(Registration.GooSoil_Tier1.get())
+                .add(Registration.GooSoil_Tier2.get())
+                .add(Registration.GooSoil_Tier3.get())
+                .add(Registration.GooSoil_Tier4.get());
     }
 
     @Override

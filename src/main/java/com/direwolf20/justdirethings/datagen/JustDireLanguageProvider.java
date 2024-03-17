@@ -20,6 +20,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.GooSoil_Tier1.get(), "Primogel Soil");
         add(Registration.GooSoil_Tier2.get(), "Blazebloom Soil");
         add(Registration.GooSoil_Tier3.get(), "VoidShimmer Soil");
+        add(Registration.GooSoil_Tier4.get(), "Shadowpulse Soil");
         add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
         add(Registration.GooBlock_Tier3.get(), "VoidShimmer Goo");
