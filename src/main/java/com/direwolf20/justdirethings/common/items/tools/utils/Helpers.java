@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
+import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -161,7 +162,7 @@ public class Helpers {
             // Check if there's a smelting recipe for the drop
             Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(drop), level);
 
-            if (smeltingRecipe.isPresent()) {
+            if (smeltingRecipe.isPresent() && !drop.is(JustDireItemTags.AUTO_SMELT_DENY)) {
                 // Get the result of the smelting recipe
                 ItemStack smeltedResult = smeltingRecipe.get().value().getResultItem(registryAccess);
 
