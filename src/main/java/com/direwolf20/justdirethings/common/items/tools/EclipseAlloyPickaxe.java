@@ -13,7 +13,7 @@ public class EclipseAlloyPickaxe extends BasePickaxe implements PoweredItem {
         registerAbility(Ability.OREXRAY);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);
-        registerAbility(Ability.HAMMER, new AbilityParams(3, 5, 2));
+        registerAbility(Ability.HAMMER, new AbilityParams(3, 7, 2));
         registerAbility(Ability.DROPTELEPORT);
     }
 

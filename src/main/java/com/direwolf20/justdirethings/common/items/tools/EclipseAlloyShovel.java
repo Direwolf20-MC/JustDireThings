@@ -13,7 +13,7 @@ public class EclipseAlloyShovel extends BaseShovel implements PoweredItem {
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
         registerAbility(Ability.SMELTER);
-        registerAbility(Ability.HAMMER, new AbilityParams(3, 5, 2));
+        registerAbility(Ability.HAMMER, new AbilityParams(3, 7, 2));
         registerAbility(Ability.DROPTELEPORT);
     }
 

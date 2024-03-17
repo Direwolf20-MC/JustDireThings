@@ -11,7 +11,7 @@ public enum GooTier implements Tier {
     FERRICORE(2, 500, 7.0F, 2.5F, 15, () -> Ingredient.of(Registration.FerricoreIngot.get()), 1),
     BLAZEGOLD(3, 1440, 12.0F, 3.0F, 22, () -> Ingredient.of(Registration.BlazegoldIngot.get()), 2),
     CELESTIGEM(4, 1561, 10.0F, 4.0F, 18, () -> Ingredient.of(Registration.Celestigem.get()), 3),
-    ECLIPSEALLOY(5, 2561, 18.0F, 5.0F, 25, () -> Ingredient.of(Registration.EclipseAlloyIngot.get()), 4);
+    ECLIPSEALLOY(5, 2561, 16.0F, 5.0F, 25, () -> Ingredient.of(Registration.EclipseAlloyIngot.get()), 4);
 
     private final int level;
     private final int uses;

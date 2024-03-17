@@ -58,11 +58,11 @@ public class Helpers {
                 state.getBlock().destroy(level, pos, state);
                 player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
                 player.causeFoodExhaustion(0.005F);
-            }
-            if (damageTool && state.getDestroySpeed(level, pos) != 0.0F)
-                damageTool(pStack, pPlayer);
+                if (damageTool && state.getDestroySpeed(level, pos) != 0.0F)
+                    damageTool(pStack, pPlayer);
 
-            return drops;
+                return drops;
+            }
         }
         return new ArrayList<>();
     }

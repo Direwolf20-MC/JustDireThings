@@ -30,7 +30,8 @@ public class PlayerEvents {
                 float originalDestroySpeed = originalState.getDestroySpeed(level, originalPos);
                 if (originalDestroySpeed <= 0) return;
                 Set<BlockPos> breakBlockPositions = new HashSet<>();
-                breakBlockPositions.addAll(MiningCollect.collect(player, event.getPosition().get(), getTargetLookDirection(player), level, getToolValue(stack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, stack));
+                int radius = getToolValue(stack, Ability.HAMMER.getName());
+                breakBlockPositions.addAll(MiningCollect.collect(player, event.getPosition().get(), getTargetLookDirection(player), level, radius, MiningCollect.SizeMode.AUTO, stack));
                 if (breakBlockPositions.isEmpty()) return; //Avoid potential divide by zero
                 float cumulativeDestroy = 0;
                 for (BlockPos pos : breakBlockPositions) {
@@ -38,7 +39,7 @@ public class PlayerEvents {
                     float destroySpeedTarget = blockState.getDestroySpeed(level, pos);
                     cumulativeDestroy = cumulativeDestroy + destroySpeedTarget;
                 }
-                float modifier = ((float) breakBlockPositions.size() / 3) < 1 ? 1 : ((float) breakBlockPositions.size() / 3);
+                float modifier = ((float) breakBlockPositions.size() / radius) < 1 ? 1 : ((float) breakBlockPositions.size() / radius);
                 cumulativeDestroy = (cumulativeDestroy / breakBlockPositions.size()) * modifier; //Up to 3 times slower
                 float relative = originalDestroySpeed / cumulativeDestroy;
                 float targetSpeed = event.getOriginalSpeed() * relative;
