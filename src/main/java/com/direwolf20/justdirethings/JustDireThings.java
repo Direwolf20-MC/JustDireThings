@@ -47,7 +47,12 @@ public class JustDireThings {
                 Registration.CelestigemPickaxe.get(),
                 Registration.CelestigemAxe.get(),
                 Registration.CelestigemShovel.get(),
-                Registration.CelestigemHoe.get()
+                Registration.CelestigemHoe.get(),
+                Registration.EclipseAlloySword.get(),
+                Registration.EclipseAlloyPickaxe.get(),
+                Registration.EclipseAlloyAxe.get(),
+                Registration.EclipseAlloyShovel.get(),
+                Registration.EclipseAlloyHoe.get()
         );
     }
 }

@@ -16,6 +16,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -126,9 +129,34 @@ public class BaseAxe extends AxeItem implements ToggleableTool {
         if (stack.getItem() instanceof PoweredItem poweredItem) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
-            energyStorage.extractEnergy(amount, false);
+            int unbreakingLevel = stack.getEnchantmentLevel(Enchantments.UNBREAKING);
+            double reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
+            int finalEnergyCost = (int) Math.max(0, amount - (amount * reductionFactor));
+            energyStorage.extractEnergy(finalEnergyCost, false);
             return 0;
         }
         return amount;
+    }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        if (stack.getItem() instanceof PoweredItem)
+            return super.isBookEnchantable(stack, book) && canAcceptEnchantments(book);
+        return super.isBookEnchantable(stack, book);
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        if (stack.getItem() instanceof PoweredItem)
+            return super.canApplyAtEnchantingTable(stack, enchantment) && canAcceptEnchantments(enchantment);
+        return super.canApplyAtEnchantingTable(stack, enchantment);
+    }
+
+    private boolean canAcceptEnchantments(ItemStack book) {
+        return !EnchantmentHelper.getEnchantments(book).containsKey(Enchantments.MENDING);
+    }
+
+    private boolean canAcceptEnchantments(Enchantment enchantment) {
+        return enchantment != Enchantments.MENDING;
     }
 }

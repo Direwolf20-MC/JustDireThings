@@ -16,6 +16,6 @@ public class GooSoilTier1 extends GooSoilBase {
     @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         super.randomTick(pState, pLevel, pPos, pRandom);
-        bonemealMe(pLevel, pPos, pRandom, 13); //1 in 13 chance of the random tick causing a bonemeal
+        bonemealMe(pLevel, pPos);
     }
 }

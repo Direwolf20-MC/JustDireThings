@@ -30,29 +30,36 @@ public class JustDireItemTags extends ItemTagsProvider {
         tag(ItemTags.SWORDS)
                 .add(Registration.FerricoreSword.get())
                 .add(Registration.BlazegoldSword.get())
-                .add(Registration.CelestigemSword.get());
+                .add(Registration.CelestigemSword.get())
+                .add(Registration.EclipseAlloySword.get());
         tag(ItemTags.PICKAXES)
                 .add(Registration.FerricorePickaxe.get())
                 .add(Registration.BlazegoldPickaxe.get())
-                .add(Registration.CelestigemPickaxe.get());
+                .add(Registration.CelestigemPickaxe.get())
+                .add(Registration.EclipseAlloyPickaxe.get());
         tag(ItemTags.SHOVELS)
                 .add(Registration.FerricoreShovel.get())
                 .add(Registration.BlazegoldShovel.get())
-                .add(Registration.CelestigemShovel.get());
+                .add(Registration.CelestigemShovel.get())
+                .add(Registration.EclipseAlloyShovel.get());
         tag(ItemTags.AXES)
                 .add(Registration.FerricoreAxe.get())
                 .add(Registration.BlazegoldAxe.get())
-                .add(Registration.CelestigemAxe.get());
+                .add(Registration.CelestigemAxe.get())
+                .add(Registration.EclipseAlloyAxe.get());
         tag(ItemTags.HOES)
                 .add(Registration.FerricoreHoe.get())
                 .add(Registration.BlazegoldHoe.get())
-                .add(Registration.CelestigemHoe.get());
+                .add(Registration.CelestigemHoe.get())
+                .add(Registration.EclipseAlloyHoe.get());
         tag(Tags.Items.INGOTS)
                 .add(Registration.FerricoreIngot.get())
-                .add(Registration.BlazegoldIngot.get());
+                .add(Registration.BlazegoldIngot.get())
+                .add(Registration.EclipseAlloyIngot.get());
         tag(Tags.Items.RAW_MATERIALS)
                 .add(Registration.RawFerricore.get())
-                .add(Registration.RawBlazegold.get());
+                .add(Registration.RawBlazegold.get())
+                .add(Registration.RawEclipseAlloy.get());
         tag(Tags.Items.GEMS)
                 .add(Registration.Celestigem.get());
     }

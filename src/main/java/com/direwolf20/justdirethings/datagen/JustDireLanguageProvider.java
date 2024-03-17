@@ -20,9 +20,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.GooSoil_Tier1.get(), "Primogel Soil");
         add(Registration.GooSoil_Tier2.get(), "Blazebloom Soil");
         add(Registration.GooSoil_Tier3.get(), "VoidShimmer Soil");
+        add(Registration.GooSoil_Tier4.get(), "Shadowpulse Soil");
         add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
         add(Registration.GooBlock_Tier3.get(), "VoidShimmer Goo");
+        add(Registration.GooBlock_Tier4.get(), "Shadowpulse Goo");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -31,6 +33,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.RawBlazegoldOre.get(), "Raw Blazegold Ore");
         add(Registration.RawCelestigemOre.get(), "Raw Celestigem Ore");
         add(Registration.CelestigemBlock.get(), "Celestigem Block");
+        add(Registration.RawEclipseAlloyOre.get(), "Raw Eclipse Alloy Ore");
+        add(Registration.EclipseAlloyBlock.get(), "Eclipse Alloy Block");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
@@ -53,6 +57,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CelestigemShovel.get(), "Celestigem Shovel");
         add(Registration.CelestigemAxe.get(), "Celestigem Axe");
         add(Registration.CelestigemHoe.get(), "Celestigem Hoe");
+        add(Registration.EclipseAlloySword.get(), "Eclipse Alloy Sword");
+        add(Registration.EclipseAlloyPickaxe.get(), "Eclipse Alloy Pickaxe");
+        add(Registration.EclipseAlloyShovel.get(), "Eclipse Alloy Shovel");
+        add(Registration.EclipseAlloyAxe.get(), "Eclipse Alloy Axe");
+        add(Registration.EclipseAlloyHoe.get(), "Eclipse Alloy Hoe");
 
 
         //Resources
@@ -61,6 +70,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlazegoldIngot.get(), "Blazegold Ingot");
         add(Registration.RawBlazegold.get(), "Raw Blazegold");
         add(Registration.Celestigem.get(), "Celestigem");
+        add(Registration.EclipseAlloyIngot.get(), "Eclipse Alloy Ingot");
+        add(Registration.RawEclipseAlloy.get(), "Raw Eclipse Alloy");
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
@@ -96,6 +107,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.HAMMER.getLocalization() + "value", "Hammer: %s");
         add(Ability.OREXRAY.getLocalization(), "X-Ray");
         add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
+        add(Ability.GLOWING.getLocalization(), "Monster X-Ray");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

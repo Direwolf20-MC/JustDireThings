@@ -24,7 +24,10 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -34,6 +37,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -206,32 +210,52 @@ public interface ToggleableTool {
     }
 
     default void useAbility(Level level, Player player, InteractionHand hand) {
+        if (player.isShiftKeyDown()) return;
         ItemStack itemStack = player.getItemInHand(hand);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.MOBSCANNER))
             scanFor(level, player, itemStack, Ability.MOBSCANNER);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.GLOWING))
+            glowing(level, player, itemStack, Ability.GLOWING);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.ORESCANNER))
             scanFor(level, player, itemStack, Ability.ORESCANNER);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.OREXRAY))
+            scanFor(level, player, itemStack, Ability.OREXRAY);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.LAWNMOWER))
             lawnmower(level, player, itemStack);
     }
 
     default void useOnAbility(UseOnContext pContext) {
+        if (pContext.getPlayer().isShiftKeyDown()) return;
         ItemStack itemStack = pContext.getItemInHand();
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.LEAFBREAKER))
             leafbreaker(pContext);
     }
 
+    default void glowing(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
+        BlockPos playerPos = player.getOnPos();
+        int radius = 20; //TODO 50 seems to be ok perf wise but ridiculous
+        // Define the search area
+        AABB searchArea = new AABB(playerPos).inflate(radius, radius, radius);
+
+        List<Mob> entityList = level.getEntitiesOfClass(Mob.class, searchArea, entity -> true)
+                .stream().toList();
+
+        for (Mob entity : entityList) {
+            entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 200, 0)); // 200 ticks = 10 seconds
+        }
+        player.playNotifySound(SoundEvents.SCULK_CLICKING, SoundSource.PLAYERS, 1.0F, 1.0F);
+        damageTool(itemStack, player, toolAbility);
+    }
+
     default boolean scanFor(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
-        if (!player.isShiftKeyDown()) {
-            if (canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0)) {
-                if (level.isClientSide) {
-                    ThingFinder.discover(player, toolAbility);
-                    player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
-                    //Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 3.0F));
-                } else { //ServerSide
-                    damageTool(itemStack, player, toolAbility);
-                }
-            }
+        if (level.isClientSide) {
+            ThingFinder.discover(player, toolAbility);
+            if (toolAbility.equals(Ability.OREXRAY))
+                player.playNotifySound(SoundEvents.SCULK_CLICKING, SoundSource.PLAYERS, 1.0F, 1.0F);
+            else
+                player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
+        } else { //ServerSide
+            damageTool(itemStack, player, toolAbility);
         }
         return false;
     }
@@ -242,41 +266,39 @@ public interface ToggleableTool {
         BlockState pState = pLevel.getBlockState(pPos);
         LivingEntity pEntityLiving = pContext.getPlayer();
         ItemStack pStack = pContext.getItemInHand();
-        if (canUseAbility(pStack, Ability.LEAFBREAKER)) {
-            if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
-                Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
-                if (!pLevel.isClientSide) {
-                    List<ItemStack> drops = new ArrayList<>();
-                    BlockEvents.addAllToIgnoreList(alsoBreakSet); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
-                    for (BlockPos breakPos : alsoBreakSet) {
-                        if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
-                            break;
-                        Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, false));
-                        pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
-                        if (Math.random() < 0.1) //10% chance to damage tool
-                            damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
-                    }
-                    if (!drops.isEmpty() && canUseAbility(pStack, Ability.DROPTELEPORT)) {
-                        GlobalPos globalPos = getBoundInventory(pStack);
-                        if (globalPos != null) {
-                            IItemHandler handler = MiscHelpers.getAttachedInventory(pLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
-                            if (handler != null && pEntityLiving instanceof Player player) {
-                                teleportDrops(drops, handler, pStack, player);
-                                if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
-                                    teleportParticles((ServerLevel) pLevel, alsoBreakSet);
-                            }
+        if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
+            Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
+            if (!pLevel.isClientSide) {
+                List<ItemStack> drops = new ArrayList<>();
+                BlockEvents.addAllToIgnoreList(alsoBreakSet); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
+                for (BlockPos breakPos : alsoBreakSet) {
+                    if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
+                        break;
+                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, false));
+                    pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
+                    if (Math.random() < 0.1) //10% chance to damage tool
+                        damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
+                }
+                if (!drops.isEmpty() && canUseAbility(pStack, Ability.DROPTELEPORT)) {
+                    GlobalPos globalPos = getBoundInventory(pStack);
+                    if (globalPos != null) {
+                        IItemHandler handler = MiscHelpers.getAttachedInventory(pLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
+                        if (handler != null && pEntityLiving instanceof Player player) {
+                            teleportDrops(drops, handler, pStack, player);
+                            if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
+                                teleportParticles((ServerLevel) pLevel, alsoBreakSet);
                         }
                     }
-                    if (!drops.isEmpty()) {
-                        Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
-                    }
-                } else {
-                    for (BlockPos breakPos : alsoBreakSet) {
-                        pState.onDestroyedByPlayer(pLevel, breakPos, (Player) pEntityLiving, true, pLevel.getFluidState(breakPos));
-                    }
                 }
-                return true;
+                if (!drops.isEmpty()) {
+                    Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
+                }
+            } else {
+                for (BlockPos breakPos : alsoBreakSet) {
+                    pState.onDestroyedByPlayer(pLevel, breakPos, (Player) pEntityLiving, true, pLevel.getFluidState(breakPos));
+                }
             }
+            return true;
         }
         return false;
     }
