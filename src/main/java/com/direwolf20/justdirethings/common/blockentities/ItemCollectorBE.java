@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
+import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -33,6 +35,15 @@ public class ItemCollectorBE extends BlockEntity {
         findItemsAndStore();
     }
 
+    public void doParticles(ItemStack itemStack, Vec3 sourcePos) {
+        BlockPos blockPos = getBlockPos();
+        ItemFlowParticleData data = new ItemFlowParticleData(itemStack, blockPos.getX() + 0.5f, blockPos.getY() + 0.5f, blockPos.getZ() + 0.5f, 5);
+        double d0 = sourcePos.x();
+        double d1 = sourcePos.y();
+        double d2 = sourcePos.z();
+        ((ServerLevel) level).sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
+    }
+
     private void findItemsAndStore() {
         assert level != null;
         int radius = 5; //Todo UI
@@ -53,6 +64,7 @@ public class ItemCollectorBE extends BlockEntity {
             ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, stack, false);
             if (leftover.isEmpty()) {
                 // If the stack is now empty, remove the ItemEntity from the collection
+                doParticles(itemEntity.getItem(), itemEntity.getPosition(0));
                 itemEntity.remove(DISCARDED);
             } else {
                 // Otherwise, update the ItemEntity with the modified stack
