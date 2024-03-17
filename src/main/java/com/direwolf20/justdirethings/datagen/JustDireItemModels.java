@@ -31,6 +31,7 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.RawCelestigemOre_ITEM.getId().getPath(), modLoc("block/raw_celestigem_ore"));
         withExistingParent(Registration.EclipseAlloyBlock_ITEM.getId().getPath(), modLoc("block/eclipsealloy_block"));
         withExistingParent(Registration.RawEclipseAlloyOre_ITEM.getId().getPath(), modLoc("block/raw_eclipsealloy_ore"));
+        withExistingParent(Registration.ItemCollector_ITEM.getId().getPath(), modLoc("block/itemcollector"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));

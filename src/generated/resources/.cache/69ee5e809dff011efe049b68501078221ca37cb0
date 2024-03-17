@@ -1,4 +1,4 @@
-// 1.20.4	2024-03-16T17:42:11.5947102	Item Models: justdirethings
+// 1.20.4	2024-03-17T15:37:02.305814	Item Models: justdirethings
 466c7b94dc8f9f5e4707bf9c94aa8cf9f2d1b0a5 assets/justdirethings/models/item/blazegold_axe.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
 8f9d758bd421ca9bb1fdb24e06b2b0df0910b9e0 assets/justdirethings/models/item/blazegold_hoe.json
@@ -37,6 +37,7 @@ a48cecdb5ad78ee95ffb4e98458804d64cd1f608 assets/justdirethings/models/item/gooso
 d42f004ad7ff6b67416aa3265ce45f6c3ec717f4 assets/justdirethings/models/item/goosoil_tier2.json
 e4ec28bbb693fef607a9a59e130c9c741c2c4ec2 assets/justdirethings/models/item/goosoil_tier3.json
 ac932db480bd510a82b5f207cc05152877106e2e assets/justdirethings/models/item/goosoil_tier4.json
+87ad4ff946b952807517ec6ef4b434215dc6fb51 assets/justdirethings/models/item/itemcollector.json
 3f50e98f22d6abc6b3edab6c01b82deec145ec78 assets/justdirethings/models/item/pocket_generator.json
 fc73206a63cc84147edd81de37ee337c0fbe6cab assets/justdirethings/models/item/pocket_generator_t2.json
 d8ea68a75b8b49f7765e715d62ad23c2f1939281 assets/justdirethings/models/item/raw_blazegold.json

@@ -1,4 +1,4 @@
-// 1.20.4	2024-03-16T15:50:48.0738604	Recipes
+// 1.20.4	2024-03-17T15:37:02.3088164	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 2e741e987f248c3c04079fb6a6b0bf4f7bbc0459 data/justdirethings/advancements/recipes/building_blocks/eclipsealloy_ingot_9x9.json
@@ -35,6 +35,7 @@ e81d82034bec749e70aedd7481fee704f16d4449 data/justdirethings/advancements/recipe
 29a442bf474e5acc9502eed2d6d31bfb0748df24 data/justdirethings/advancements/recipes/misc/gooblock_tier2.json
 a55bc88d5aeddd676589402dfcbecdd8aae1f6a7 data/justdirethings/advancements/recipes/misc/gooblock_tier3.json
 f2201aad87fe2a7e500b60ec4b764876cfa3a183 data/justdirethings/advancements/recipes/misc/gooblock_tier4.json
+b1efeb6a5dbcc25e2699bfcffdc9e7f4b28e95f6 data/justdirethings/advancements/recipes/misc/itemcollector.json
 591f2dd8d997ccead841061e70aedc4a4984a60d data/justdirethings/advancements/recipes/misc/pocket_generator.json
 5b7785082d33b200eee869116e5eb482c069222d data/justdirethings/advancements/recipes/misc/pocket_generator_t2.json
 8b754485663be06dd091f1b221d0523bfacca088 data/justdirethings/advancements/recipes/misc/raw_blazegold_ore-goospread.json
@@ -77,6 +78,7 @@ f76f61ef06edd8372831620ce4168c11859cd25c data/justdirethings/recipes/ferricore_s
 e5917a0e540128bfbb34b7c27c9bbefcb791b043 data/justdirethings/recipes/gooblock_tier2.json
 bf1de03eb5942cb062164314552b2272f780b991 data/justdirethings/recipes/gooblock_tier3.json
 21eb4b955ae6240c19471a4f660fcdca91ff0c51 data/justdirethings/recipes/gooblock_tier4.json
+9481eec83dfa2d11a9ecb70c3111a879f2a674b9 data/justdirethings/recipes/itemcollector.json
 c5d49397578e44089f27177b9643bdc442d38bf8 data/justdirethings/recipes/pocket_generator.json
 5cb219c38a16365eafbebc5e09acf1b4c31b7865 data/justdirethings/recipes/pocket_generator_t2.json
 e6b824e89c9b85c5e91b2d1a1dc00d63dcb23e0e data/justdirethings/recipes/raw_blazegold_ore-goospread.json
