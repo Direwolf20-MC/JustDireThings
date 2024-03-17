@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.client.renderactions;
 
 import com.direwolf20.justdirethings.client.particles.alwaysvisibleparticle.AlwaysVisibleParticleData;
 import com.direwolf20.justdirethings.client.renderers.DireBufferBuilder;
+import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -32,7 +33,6 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.common.Tags;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +58,7 @@ public class ThingFinder {
     private static final VertexBuffer vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
     //The render type
     private static final RenderType renderType = RenderType.translucent();
+    private static final RenderType xRayRender = OurRenderTypes.OreXRAY;
 
     public static void render(RenderLevelStageEvent evt, Player player, ItemStack heldItemMain) {
         if (((System.currentTimeMillis() - xRayStartTime) / 1000) < 10)  //Lasts for 10 seconds
@@ -167,6 +168,11 @@ public class ThingFinder {
             matrix.pushPose();
             matrix.translate(pos.getX(), pos.getY(), pos.getZ());
 
+            //We make this just a TINY bit smaller than a full block - because we're doing GREATERTHAN depth testing.
+            float translateF = (float) 1 / 2000;
+            matrix.translate(translateF, translateF, translateF);
+            float scaleF = (float) 1 / 1000;
+            matrix.scale(1 - scaleF, 1 - scaleF, 1 - scaleF);
 
             for (RenderType renderTypeDraw : ibakedmodel.getRenderTypes(renderState, random, ModelData.EMPTY)) {
                 try {
@@ -211,19 +217,17 @@ public class ThingFinder {
         matrix.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
         //matrix.translate(0,5,0);
         //Draw the renders in the specified order
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
         try {
             if (vertexBuffer.getFormat() == null)
                 return; //IDE says this is never null, but if we remove this check we crash because its null so....
-            renderType.setupRenderState();
+            xRayRender.setupRenderState();
             vertexBuffer.bind();
             vertexBuffer.drawWithShader(matrix.last().pose(), new Matrix4f(evt.getProjectionMatrix()), RenderSystem.getShader());
             VertexBuffer.unbind();
-            renderType.clearRenderState();
+            xRayRender.clearRenderState();
         } catch (Exception e) {
             System.out.println(e);
         }
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
         matrix.popPose();
     }
 

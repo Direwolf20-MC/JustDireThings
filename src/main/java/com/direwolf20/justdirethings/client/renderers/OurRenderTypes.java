@@ -18,6 +18,18 @@ public class OurRenderTypes extends RenderType {
                     .setCullState(CULL)
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false));*/
+    public static RenderType OreXRAY = create("OreXRAY",
+            DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 786432, true, true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RenderStateShard.RENDERTYPE_TRANSLUCENT_SHADER)
+                    .setLightmapState(LIGHTMAP)
+                    .setTextureState(BLOCK_SHEET)
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setWriteMaskState(RenderStateShard.COLOR_WRITE)
+                    .setDepthTestState(GREATER_DEPTH_TEST)
+                    .setOverlayState(RenderStateShard.OVERLAY)
+                    .createCompositeState(false));
+
     public static final RenderType RenderBlockBackface = create("GadgetRenderBlockBackface",
             DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
             RenderType.CompositeState.builder()
@@ -61,41 +73,15 @@ public class OurRenderTypes extends RenderType {
     }
 
     /*public static void updateRenders() { //Only used when testing
-        RenderBlock = create("GadgetRenderBlock",
-                DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
-                RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.RENDERTYPE_SOLID_SHADER)
-                        .setLightmapState(LIGHTMAP)
-                        .setTextureState(BLOCK_SHEET_MIPPED)
-                        .setLayeringState(VIEW_OFFSET_Z_LAYERING)
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setDepthTestState(LEQUAL_DEPTH_TEST)
-                        .setCullState(CULL)
-                        .setWriteMaskState(COLOR_WRITE)
-                        .createCompositeState(false));
-        GooPattern = create("GooPattern",
-                DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
-                RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_ALPHA_SHADER)
-                        .setLightmapState(LIGHTMAP)
-                        .setTextureState(BLOCK_SHEET)
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setDepthTestState(LEQUAL_DEPTH_TEST)
-                        .setCullState(NO_CULL)
-                        .setWriteMaskState(RenderStateShard.DEPTH_WRITE)
-                        .setOverlayState(RenderStateShard.OVERLAY)
-                        .createCompositeState(false));
-
-        RenderBlockBackface = create("GadgetRenderBlockBackface",
-                DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
+        OreXRAY = create("OreXRAY",
+                DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 786432, true, true,
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.RENDERTYPE_TRANSLUCENT_SHADER)
                         .setLightmapState(LIGHTMAP)
                         .setTextureState(BLOCK_SHEET)
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setDepthTestState(EQUAL_DEPTH_TEST)
-                        .setCullState(NO_CULL)
-                        .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                        .setWriteMaskState(RenderStateShard.COLOR_WRITE)
+                        .setDepthTestState(GREATER_DEPTH_TEST)
                         .setOverlayState(RenderStateShard.OVERLAY)
                         .createCompositeState(false));
     }*/
