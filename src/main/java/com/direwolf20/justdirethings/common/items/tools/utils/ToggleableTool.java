@@ -4,7 +4,6 @@ import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
-import com.direwolf20.justdirethings.common.events.BlockEvents;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -119,35 +118,39 @@ public interface ToggleableTool {
             breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
         }
         breakBlockPositions.add(pPos);
-        BlockEvents.addAllToIgnoreList(breakBlockPositions); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
         for (BlockPos breakPos : breakBlockPositions) {
             if (testUseTool(pStack) < 0)
                 break;
             int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pLevel.random, pPos, fortuneLevel, silkTouchLevel);
             totalExp = totalExp + exp;
-            Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, true));
+            Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, true));
         }
+        if (!pLevel.isClientSide)
+            handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, breakBlockPositions, drops, pState, totalExp);
+    }
+
+    default void handleDrops(ItemStack pStack, ServerLevel serverLevel, BlockPos pPos, LivingEntity pEntityLiving, Set<BlockPos> breakBlockPositions, List<ItemStack> drops, BlockState pState, int totalExp) {
         if (canUseAbility(pStack, Ability.SMELTER) && pStack.getDamageValue() < pStack.getMaxDamage()) {
             boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
-            drops = smeltDrops((ServerLevel) pLevel, drops, pStack, pEntityLiving, smeltedItemsFlag);
+            drops = smeltDrops(serverLevel, drops, pStack, pEntityLiving, smeltedItemsFlag);
             if (smeltedItemsFlag[0])
-                smelterParticles((ServerLevel) pLevel, breakBlockPositions);
+                smelterParticles(serverLevel, breakBlockPositions);
         }
         if (!drops.isEmpty() && canUseAbility(pStack, Ability.DROPTELEPORT)) {
             GlobalPos globalPos = getBoundInventory(pStack);
             if (globalPos != null) {
-                IItemHandler handler = MiscHelpers.getAttachedInventory(pLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
+                IItemHandler handler = MiscHelpers.getAttachedInventory(serverLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
                 if (handler != null && pEntityLiving instanceof Player player) {
                     teleportDrops(drops, handler, pStack, player);
                     if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
-                        teleportParticles((ServerLevel) pLevel, breakBlockPositions);
+                        teleportParticles(serverLevel, breakBlockPositions);
                 }
             }
         }
-        if (!drops.isEmpty()) {
-            Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
-            pState.getBlock().popExperience((ServerLevel) pLevel, pPos, totalExp);
-        }
+        if (!drops.isEmpty())
+            Helpers.dropDrops(drops, serverLevel, pPos);
+        if (totalExp > 0)
+            pState.getBlock().popExperience(serverLevel, pPos, totalExp);
     }
 
     default void smelterParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
@@ -233,7 +236,7 @@ public interface ToggleableTool {
 
     default void glowing(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
         BlockPos playerPos = player.getOnPos();
-        int radius = 20; //TODO 50 seems to be ok perf wise but ridiculous
+        int radius = 20;
         // Define the search area
         AABB searchArea = new AABB(playerPos).inflate(radius, radius, radius);
 
@@ -268,36 +271,17 @@ public interface ToggleableTool {
         ItemStack pStack = pContext.getItemInHand();
         if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
             Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
-            if (!pLevel.isClientSide) {
-                List<ItemStack> drops = new ArrayList<>();
-                BlockEvents.addAllToIgnoreList(alsoBreakSet); //All these blocks to the list of blocks we ignore in the BlockBreakEvent
-                for (BlockPos breakPos : alsoBreakSet) {
-                    if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
-                        break;
-                    Helpers.combineDrops(drops, breakBlocks((ServerLevel) pLevel, breakPos, pEntityLiving, pStack, false));
-                    pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
-                    if (Math.random() < 0.1) //10% chance to damage tool
-                        damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
-                }
-                if (!drops.isEmpty() && canUseAbility(pStack, Ability.DROPTELEPORT)) {
-                    GlobalPos globalPos = getBoundInventory(pStack);
-                    if (globalPos != null) {
-                        IItemHandler handler = MiscHelpers.getAttachedInventory(pLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
-                        if (handler != null && pEntityLiving instanceof Player player) {
-                            teleportDrops(drops, handler, pStack, player);
-                            if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
-                                teleportParticles((ServerLevel) pLevel, alsoBreakSet);
-                        }
-                    }
-                }
-                if (!drops.isEmpty()) {
-                    Helpers.dropDrops(drops, (ServerLevel) pLevel, pPos);
-                }
-            } else {
-                for (BlockPos breakPos : alsoBreakSet) {
-                    pState.onDestroyedByPlayer(pLevel, breakPos, (Player) pEntityLiving, true, pLevel.getFluidState(breakPos));
-                }
+            List<ItemStack> drops = new ArrayList<>();
+            for (BlockPos breakPos : alsoBreakSet) {
+                if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
+                    break;
+                Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, false));
+                pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
+                if (Math.random() < 0.1) //10% chance to damage tool
+                    damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
             }
+            if (!pLevel.isClientSide)
+                handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, alsoBreakSet, drops, pState, 0);
             return true;
         }
         return false;

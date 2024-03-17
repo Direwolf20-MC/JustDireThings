@@ -50,6 +50,15 @@ public class BaseAxe extends AxeItem implements ToggleableTool {
     }
 
     @Override
+    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
+        BlockState blockState = player.level().getBlockState(pos);
+        if (itemstack.getItem() instanceof ToggleableTool toggleableTool && itemstack.isCorrectToolForDrops(blockState)) {
+            toggleableTool.mineBlocksAbility(itemstack, player.level(), pos, player);
+        }
+        return false;
+    }
+
+    @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         return true; //We handle damage in the BlockEvent.BreakEvent
     }

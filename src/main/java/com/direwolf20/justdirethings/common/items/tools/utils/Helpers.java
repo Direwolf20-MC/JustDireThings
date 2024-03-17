@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleContainer;
@@ -41,18 +42,22 @@ public class Helpers {
         level.destroyBlock(pos, true);
     }
 
-    public static List<ItemStack> breakBlocks(ServerLevel level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool) {
+    public static List<ItemStack> breakBlocks(Level level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool) {
+        List<ItemStack> drops = new ArrayList<>();
         if (pPlayer instanceof Player player) {
             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
-            if (NeoForge.EVENT_BUS.post(event).isCanceled()) return new ArrayList<>();
+            if (NeoForge.EVENT_BUS.post(event).isCanceled()) return drops;
 
             BlockState state = level.getBlockState(pos);
-            List<ItemStack> drops = Block.getDrops(state, level, pos, level.getBlockEntity(pos), pPlayer, pStack);
+            if (level instanceof ServerLevel serverLevel)
+                drops.addAll(Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos), pPlayer, pStack));
 
             //This is how vanilla does it?
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
                 state.getBlock().destroy(level, pos, state);
+                player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
+                player.causeFoodExhaustion(0.005F);
             }
             if (damageTool && state.getDestroySpeed(level, pos) != 0.0F)
                 damageTool(pStack, pPlayer);
