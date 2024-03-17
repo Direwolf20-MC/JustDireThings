@@ -5,7 +5,7 @@ import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
-import com.direwolf20.justdirethings.util.NBTUtils;
+import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -47,7 +47,7 @@ public class PocketGenerator extends Item implements PoweredItem {
         if (level.isClientSide()) return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
 
         if (player.isShiftKeyDown())
-            NBTUtils.toggleBoolean(itemstack, ENABLED);
+            NBTHelpers.toggleBoolean(itemstack, ENABLED);
         else {
             player.openMenu(new SimpleMenuProvider(
                     (windowId, playerInventory, playerEntity) -> new PocketGeneratorContainer(windowId, playerInventory, player, itemstack), Component.translatable("")), (buf -> {
@@ -59,7 +59,7 @@ public class PocketGenerator extends Item implements PoweredItem {
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level world, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        if (entity instanceof Player player && NBTUtils.getBoolean(itemStack, ENABLED)) {
+        if (entity instanceof Player player && NBTHelpers.getBoolean(itemStack, ENABLED)) {
             IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
             if (energyStorage instanceof EnergyStorageNoReceive energyStorageNoReceive) {
@@ -87,7 +87,7 @@ public class PocketGenerator extends Item implements PoweredItem {
 
     private void tryBurn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
         boolean canInsertEnergy = energyStorage.forceReceiveEnergy(fePerTick(), true) > 0;
-        if (NBTUtils.getIntValue(itemStack, COUNTER) > 0 && canInsertEnergy) {
+        if (NBTHelpers.getIntValue(itemStack, COUNTER) > 0 && canInsertEnergy) {
             burn(energyStorage, itemStack);
         } else if (canInsertEnergy) {
             if (initBurn(itemStack))
@@ -98,11 +98,11 @@ public class PocketGenerator extends Item implements PoweredItem {
 
     private void burn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
         energyStorage.forceReceiveEnergy(fePerTick(), false);
-        int counter = NBTUtils.getIntValue(itemStack, COUNTER);
+        int counter = NBTHelpers.getIntValue(itemStack, COUNTER);
         counter--;
-        NBTUtils.setIntValue(itemStack, COUNTER, counter);
+        NBTHelpers.setIntValue(itemStack, COUNTER, counter);
         if (counter == 0) {
-            NBTUtils.setIntValue(itemStack, MAXBURN, 0);
+            NBTHelpers.setIntValue(itemStack, MAXBURN, 0);
             initBurn(itemStack);
         }
     }
@@ -121,8 +121,8 @@ public class PocketGenerator extends Item implements PoweredItem {
 
             int counter = (int) (Math.floor(burnTime) / getBurnSpeedMultiplier());
             int maxBurn = counter;
-            NBTUtils.setIntValue(itemStack, COUNTER, counter);
-            NBTUtils.setIntValue(itemStack, MAXBURN, maxBurn);
+            NBTHelpers.setIntValue(itemStack, COUNTER, counter);
+            NBTHelpers.setIntValue(itemStack, MAXBURN, maxBurn);
             return true;
         }
         return false;
@@ -167,7 +167,7 @@ public class PocketGenerator extends Item implements PoweredItem {
 
     @Override
     public boolean isFoil(ItemStack itemStack) {
-        return NBTUtils.getBoolean(itemStack, ENABLED);
+        return NBTHelpers.getBoolean(itemStack, ENABLED);
     }
 
     @Override

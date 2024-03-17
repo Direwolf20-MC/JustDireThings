@@ -7,7 +7,7 @@ import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
-import com.direwolf20.justdirethings.util.NBTUtils;
+import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -137,14 +137,11 @@ public interface ToggleableTool {
                 smelterParticles(serverLevel, breakBlockPositions);
         }
         if (!drops.isEmpty() && canUseAbility(pStack, Ability.DROPTELEPORT)) {
-            GlobalPos globalPos = getBoundInventory(pStack);
-            if (globalPos != null) {
-                IItemHandler handler = MiscHelpers.getAttachedInventory(serverLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), getBoundInventorySide(pStack));
-                if (handler != null && pEntityLiving instanceof Player player) {
-                    teleportDrops(drops, handler, pStack, player);
-                    if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
-                        teleportParticles(serverLevel, breakBlockPositions);
-                }
+            IItemHandler handler = getBoundHandler(serverLevel, pStack);
+            if (handler != null && pEntityLiving instanceof Player player) {
+                teleportDrops(drops, handler, pStack, player);
+                if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
+                    teleportParticles(serverLevel, breakBlockPositions);
             }
         }
         if (!drops.isEmpty())
@@ -317,7 +314,7 @@ public interface ToggleableTool {
         if (blockEntity == null) return false;
         IItemHandler handler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK, pPos, pContext.getClickedFace());
         if (handler == null) return false;
-        setBoundInventory(pStack, GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace());
+        setBoundInventory(pStack, new NBTHelpers.BoundInventory(GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace()));
         pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", I18n.get(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
         player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
         return true;
@@ -335,13 +332,12 @@ public interface ToggleableTool {
                 if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
                     if (toggleableTool.canUseAbility(heldItem, Ability.DROPTELEPORT)) {
                         if (Helpers.testUseTool(heldItem, Ability.DROPTELEPORT, 10) > 0) {
-                            GlobalPos boundPos = ToggleableTool.getBoundInventory(heldItem);
-                            Direction direction = ToggleableTool.getBoundInventorySide(heldItem);
-                            if (boundPos != null) {
+                            NBTHelpers.BoundInventory boundInventory = ToggleableTool.getBoundInventory(heldItem);
+                            if (boundInventory != null) {
                                 BlockEntity blockEntity = pLevel.getBlockEntity(clickedPos);
                                 if (blockEntity instanceof GooSoilBE gooSoilBE) {
-                                    gooSoilBE.bindInventory(boundPos, direction);
-                                    pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundPos.dimension().location().getPath()), "[" + boundPos.pos().toShortString() + "]"), true);
+                                    gooSoilBE.bindInventory(boundInventory);
+                                    pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundInventory.globalPos().dimension().location().getPath()), "[" + boundInventory.globalPos().pos().toShortString() + "]"), true);
                                     player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
                                     Helpers.damageTool(heldItem, player, Ability.DROPTELEPORT, 10);
                                     bindingSuccess = true;
@@ -407,23 +403,22 @@ public interface ToggleableTool {
         return tagCompound.getBoolean(setting);
     }
 
-    static void setBoundInventory(ItemStack stack, GlobalPos bindLocation, Direction side) {
+    static void setBoundInventory(ItemStack stack, NBTHelpers.BoundInventory boundInventory) {
         CompoundTag tagCompound = stack.getOrCreateTag();
-        tagCompound.put("boundinventory", NBTUtils.globalPosToNBT(bindLocation));
-        tagCompound.putInt("boundinventory_side", side.ordinal());
+        tagCompound.put("boundinventory", NBTHelpers.BoundInventory.toNBT(boundInventory));
     }
 
-    static GlobalPos getBoundInventory(ItemStack stack) {
+    static NBTHelpers.BoundInventory getBoundInventory(ItemStack stack) {
         CompoundTag tagCompound = stack.getOrCreateTag();
         if (tagCompound.contains("boundinventory"))
-            return NBTUtils.nbtToGlobalPos(tagCompound.getCompound("boundinventory"));
+            return NBTHelpers.BoundInventory.fromNBT(tagCompound.getCompound("boundinventory"));
         return null;
     }
 
-    static Direction getBoundInventorySide(ItemStack stack) {
-        CompoundTag tagCompound = stack.getOrCreateTag();
-        if (tagCompound.contains("boundinventory_side"))
-            return Direction.values()[tagCompound.getInt("boundinventory_side")];
+    static IItemHandler getBoundHandler(ServerLevel serverLevel, ItemStack stack) {
+        NBTHelpers.BoundInventory boundInventory = getBoundInventory(stack);
+        if (boundInventory != null)
+            return MiscHelpers.getAttachedInventory(serverLevel.getServer().getLevel(boundInventory.globalPos().dimension()), boundInventory.globalPos().pos(), boundInventory.direction());
         return null;
     }
 

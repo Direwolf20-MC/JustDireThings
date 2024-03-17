@@ -3,10 +3,8 @@ package com.direwolf20.justdirethings.common.blocks.soil;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.items.tools.utils.Helpers;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
-import com.direwolf20.justdirethings.util.MiscHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -167,15 +165,11 @@ public class GooSoilBase extends FarmBlock {
     public static void teleportDrops(ServerLevel pLevel, BlockPos pPos, List<ItemStack> drops, BlockPos cropPos) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (blockEntity != null && blockEntity instanceof GooSoilBE gooSoilBE) {
-            GlobalPos globalPos = gooSoilBE.getBoundInventory();
-            Direction direction = gooSoilBE.getInventorySide();
-            if (globalPos != null) {
-                IItemHandler handler = MiscHelpers.getAttachedInventory(pLevel.getServer().getLevel(globalPos.dimension()), globalPos.pos(), direction);
-                if (handler != null) {
-                    Helpers.teleportDrops(drops, handler);
-                    if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
-                        ToggleableTool.teleportParticles(pLevel, cropPos, 5);
-                }
+            IItemHandler handler = gooSoilBE.getAttachedInventory(pLevel);
+            if (handler != null) {
+                Helpers.teleportDrops(drops, handler);
+                if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
+                    ToggleableTool.teleportParticles(pLevel, cropPos, 5);
             }
         }
     }

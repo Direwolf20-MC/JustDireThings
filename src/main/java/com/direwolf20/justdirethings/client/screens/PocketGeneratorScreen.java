@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.util.MagicHelpers;
-import com.direwolf20.justdirethings.util.NBTUtils;
+import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -40,7 +40,7 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
         if (mouseX > (leftPos + 7) && mouseX < (leftPos + 7) + 18 && mouseY > (topPos + 7) && mouseY < (topPos + 7) + 73) {
-            int counter = NBTUtils.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
+            int counter = NBTHelpers.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
             guiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
                     Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(energyStorage.getEnergyStored()), MagicHelpers.withSuffix(energyStorage.getMaxEnergyStored())),
                     counter <= 0 ?
@@ -83,8 +83,8 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         this.energyStorage = pocketGenerator.getCapability(Capabilities.EnergyStorage.ITEM);
         if (energyStorage == null)
             return;
-        int maxBurn = NBTUtils.getIntValue(pocketGenerator, PocketGenerator.MAXBURN);
-        int counter = NBTUtils.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
+        int maxBurn = NBTHelpers.getIntValue(pocketGenerator, PocketGenerator.MAXBURN);
+        int counter = NBTHelpers.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
         int maxHeight = 13;
         if (maxBurn > 0) {
             int remaining = (counter * maxHeight) / maxBurn;
