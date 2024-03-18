@@ -1,7 +1,13 @@
 package com.direwolf20.justdirethings.common.blocks;
 
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
+import com.direwolf20.justdirethings.common.containers.ItemCollectorContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -15,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -156,6 +163,22 @@ public class ItemCollector extends Block implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ItemCollectorBE(pos, state);
+    }
+
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (level.isClientSide)
+            return InteractionResult.SUCCESS;
+
+        BlockEntity te = level.getBlockEntity(blockPos);
+        if (!(te instanceof ItemCollectorBE))
+            return InteractionResult.FAIL;
+
+        player.openMenu(new SimpleMenuProvider(
+                (windowId, playerInventory, playerEntity) -> new ItemCollectorContainer(windowId, playerInventory, blockPos), Component.translatable("")), (buf -> {
+            buf.writeBlockPos(blockPos);
+        }));
+        return InteractionResult.SUCCESS;
     }
 
     @Nullable

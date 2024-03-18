@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
+import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +34,10 @@ public class ItemCollectorBE extends BlockEntity {
 
     public void tickServer() {
         findItemsAndStore();
+    }
+
+    public FilterBasicHandler getHandler() {
+        return getData(Registration.HANDLER_ITEM_COLLECTOR);
     }
 
     public void doParticles(ItemStack itemStack, Vec3 sourcePos) {
