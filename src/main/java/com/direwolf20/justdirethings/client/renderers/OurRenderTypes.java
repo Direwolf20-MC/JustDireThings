@@ -18,16 +18,15 @@ public class OurRenderTypes extends RenderType {
                     .setCullState(CULL)
                     .setWriteMaskState(COLOR_WRITE)
                     .createCompositeState(false));*/
-    public static RenderType OreXRAY = create("OreXRAY",
-            DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 786432, true, true,
+    public static final RenderType OreXRAY = create("OreXRAY",
+            DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
             RenderType.CompositeState.builder()
-                    .setShaderState(RenderStateShard.RENDERTYPE_TRANSLUCENT_SHADER)
+                    .setShaderState(RenderStateShard.RENDERTYPE_SOLID_SHADER)
                     .setLightmapState(LIGHTMAP)
                     .setTextureState(BLOCK_SHEET)
-                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setTransparencyState(NO_TRANSPARENCY)
                     .setWriteMaskState(RenderStateShard.COLOR_WRITE)
                     .setDepthTestState(GREATER_DEPTH_TEST)
-                    .setOverlayState(RenderStateShard.OVERLAY)
                     .createCompositeState(false));
 
     public static final RenderType RenderBlockBackface = create("GadgetRenderBlockBackface",
@@ -74,15 +73,14 @@ public class OurRenderTypes extends RenderType {
 
     /*public static void updateRenders() { //Only used when testing
         OreXRAY = create("OreXRAY",
-                DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 786432, true, true,
+                DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
                 RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.RENDERTYPE_TRANSLUCENT_SHADER)
+                        .setShaderState(RenderStateShard.RENDERTYPE_SOLID_SHADER)
                         .setLightmapState(LIGHTMAP)
                         .setTextureState(BLOCK_SHEET)
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setTransparencyState(NO_TRANSPARENCY)
                         .setWriteMaskState(RenderStateShard.COLOR_WRITE)
                         .setDepthTestState(GREATER_DEPTH_TEST)
-                        .setOverlayState(RenderStateShard.OVERLAY)
                         .createCompositeState(false));
     }*/
 }
