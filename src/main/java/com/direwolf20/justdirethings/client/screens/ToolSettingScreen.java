@@ -1,12 +1,12 @@
 package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.screens.widgets.BaseButton;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
-import com.direwolf20.justdirethings.util.MiscTools;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
@@ -57,7 +57,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         for (Ability toolAbility : abilities) {
             if (toolAbility.getSettingType() == Ability.SettingType.TOGGLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
-                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), toolAbility.getLocalization(), isActive, -1, (clicked) -> {
+                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, (clicked) -> {
                     toggleSetting(toolAbility.getName());
                     ((GrayscaleButton) clicked).toggleActive();
                 });
@@ -67,7 +67,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             if (toolAbility.getSettingType() == Ability.SettingType.CYCLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
                 int currentValue = ToggleableTool.getToolValue(tool, toolAbility.getName());
-                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), toolAbility.getLocalization(), isActive, currentValue, (clicked) -> {
+                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, currentValue, (clicked) -> {
                     cycleSetting(toolAbility.getName());
                     ((GrayscaleButton) clicked).cyleValue(toolAbility, tool);
                 });
@@ -104,14 +104,8 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         super.renderTooltip(pGuiGraphics, pX, pY);
         for (Renderable renderable : this.renderables) {
-            if (renderable instanceof GrayscaleButton button) {
-                if (MiscTools.inBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight(), pX, pY)) {
-                    if (button.getValue() == -1 || !button.getButtonActive())
-                        pGuiGraphics.renderTooltip(font, Component.translatable(button.getLocalization()), pX, pY);
-                    else
-                        pGuiGraphics.renderTooltip(font, Component.translatable(button.getLocalization() + "value", button.getValue()), pX, pY);
-                }
-            }
+            if (renderable instanceof BaseButton button && !button.getLocalization(pX, pY).equals(Component.empty()))
+                pGuiGraphics.renderTooltip(font, button.getLocalization(), pX, pY);
         }
     }
 

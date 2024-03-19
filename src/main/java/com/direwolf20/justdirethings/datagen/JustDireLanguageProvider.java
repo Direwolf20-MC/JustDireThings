@@ -114,6 +114,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
         add("justdirethings.screen.no_fuel", "Fuel source empty");
         add("justdirethings.screen.burn_time", "Burn time left: %ss");
+        add("justdirethings.screen.ignored", "Ignored");
+        add("justdirethings.screen.low", "Low");
+        add("justdirethings.screen.high", "High");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

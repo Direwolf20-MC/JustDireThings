@@ -19,7 +19,7 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 public class ItemCollectorContainer extends BaseContainer {
     public static final int SLOTS = 9;
     public FilterBasicHandler handler;
-    private ItemCollectorBE itemCollectorBE;
+    public ItemCollectorBE itemCollectorBE;
     private Player player;
     private BlockPos pos;
 
