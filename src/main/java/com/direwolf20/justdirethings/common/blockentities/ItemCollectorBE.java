@@ -3,7 +3,9 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.ItemStackKey;
 import com.direwolf20.justdirethings.util.MiscHelpers;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,29 +25,33 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.world.entity.Entity.RemovalReason.DISCARDED;
 
 public class ItemCollectorBE extends BlockEntity {
     protected BlockCapabilityCache<IItemHandler, Direction> attachedInventory;
-    public static final int maxRadius = 9;
-    public static final int maxOffset = 16;
+    public static final int maxRadius = 5;
+    public static final int maxOffset = 9;
     public int xRadius = 3, yRadius = 3, zRadius = 3;
     public int xOffset = 0, yOffset = 0, zOffset = 0;
     public boolean allowlist = false, compareNBT = false, renderArea = false;
     public MiscHelpers.RedstoneMode redstoneMode = MiscHelpers.RedstoneMode.IGNORED;
+
+    //This is not saved in NBT, and is recreated as needed on demand
+    public final Map<ItemStackKey, Boolean> filterCache = new Object2BooleanOpenHashMap<>();
 
     public ItemCollectorBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ItemCollectorBE.get(), pPos, pBlockState);
     }
 
     public void setSettings(int x, int y, int z, int xo, int yo, int zo, boolean allowlist, boolean compareNBT, boolean renderArea, int redstoneMode) {
-        this.xRadius = Math.min(x, maxRadius);
-        this.yRadius = Math.min(y, maxRadius);
-        this.zRadius = Math.min(z, maxRadius);
-        this.xOffset = Math.min(xo, maxOffset);
-        this.yOffset = Math.min(yo, maxOffset);
-        this.zOffset = Math.min(zo, maxOffset);
+        this.xRadius = Math.max(0, Math.min(x, maxRadius));
+        this.yRadius = Math.max(0, Math.min(y, maxRadius));
+        this.zRadius = Math.max(0, Math.min(z, maxRadius));
+        this.xOffset = Math.max(-maxOffset, Math.min(xo, maxOffset));
+        this.yOffset = Math.max(-maxOffset, Math.min(yo, maxOffset));
+        this.zOffset = Math.max(-maxOffset, Math.min(zo, maxOffset));
         this.allowlist = allowlist;
         this.compareNBT = compareNBT;
         this.renderArea = renderArea;
@@ -73,9 +79,17 @@ public class ItemCollectorBE extends BlockEntity {
         ((ServerLevel) level).sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
     }
 
+    public AABB getAABB() {
+        return getAABB(getBlockPos());
+    }
+
+    public AABB getAABB(BlockPos relativePos) {
+        return new AABB(relativePos.offset(xOffset, yOffset, zOffset)).inflate(xRadius, yRadius, zRadius);
+    }
+
     private void findItemsAndStore() {
         assert level != null;
-        AABB searchArea = new AABB(getBlockPos().offset(xOffset, yOffset, zOffset)).inflate(xRadius, yRadius, zRadius);
+        AABB searchArea = getAABB();
 
         List<ItemEntity> entityList = level.getEntitiesOfClass(ItemEntity.class, searchArea, entity -> true)
                 .stream().toList();
@@ -88,6 +102,7 @@ public class ItemCollectorBE extends BlockEntity {
 
         for (ItemEntity itemEntity : entityList) {
             ItemStack stack = itemEntity.getItem();
+            if (!isStackValidFilter(stack)) continue;
             ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, stack, false);
             if (leftover.isEmpty()) {
                 // If the stack is now empty, remove the ItemEntity from the collection
@@ -98,6 +113,23 @@ public class ItemCollectorBE extends BlockEntity {
                 itemEntity.setItem(leftover);
             }
         }
+    }
+
+    public boolean isStackValidFilter(ItemStack testStack) {
+        ItemStackKey key = new ItemStackKey(testStack, compareNBT);
+        if (filterCache.containsKey(key)) return filterCache.get(key);
+
+        FilterBasicHandler filteredItems = getHandler();
+        for (int i = 0; i < filteredItems.getSlots(); i++) {
+            ItemStack stack = filteredItems.getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            if (key.equals(new ItemStackKey(stack, compareNBT))) {
+                filterCache.put(key, allowlist);
+                return allowlist;
+            }
+        }
+        filterCache.put(key, !allowlist);
+        return !allowlist;
     }
 
     private IItemHandler getAttachedInventory() {
@@ -114,6 +146,12 @@ public class ItemCollectorBE extends BlockEntity {
             );
         }
         return attachedInventory.getCapability();
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        filterCache.clear();
     }
 
     @Override

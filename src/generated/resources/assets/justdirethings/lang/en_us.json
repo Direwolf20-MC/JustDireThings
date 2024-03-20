@@ -76,12 +76,16 @@
   "justdirethings.pocketgeneratorfuelstack": "Fuel: %f %s",
   "justdirethings.pocketgeneratornofuel": "Fuel Empty",
   "justdirethings.presshotkey": "<Press %s>",
+  "justdirethings.screen.allowlist": "Allow List",
   "justdirethings.screen.burn_time": "Burn time left: %ss",
+  "justdirethings.screen.comparenbt": "Compare NBT",
+  "justdirethings.screen.denylist": "Deny List",
   "justdirethings.screen.energy": "Energy: %s/%s FE",
   "justdirethings.screen.high": "High",
   "justdirethings.screen.ignored": "Ignored",
   "justdirethings.screen.low": "Low",
   "justdirethings.screen.no_fuel": "Fuel source empty",
+  "justdirethings.screen.renderarea": "Render Area",
   "justdirethings.shiftmoreinfo": "Hold Shift for details",
   "justdirethings.unbound": " -Not Bound"
 }

@@ -43,17 +43,14 @@ public class ToggleButton extends BaseButton {
     }
 
     public void setTexturePosition(int texturePosition) {
-        if (texturePosition > textureLocalizations.size())
+        if (texturePosition >= textureLocalizations.size())
             this.texturePosition = textureLocalizations.size();
         else
             this.texturePosition = texturePosition;
     }
 
     public void nextTexturePosition() {
-        if (texturePosition == textureLocalizations.size())
-            texturePosition = 0;
-        else
-            texturePosition++;
+        texturePosition = (texturePosition + 1) % textureLocalizations.size();
     }
 
     @Override

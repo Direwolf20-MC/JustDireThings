@@ -51,6 +51,19 @@ public class OurRenderTypes extends RenderType {
                     .setWriteMaskState(RenderStateShard.DEPTH_WRITE)
                     .createCompositeState(true));
 
+    public static final RenderType SolidBoxArea = create("SolidBoxArea",
+            DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, false, false,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
+                    .setLayeringState(VIEW_OFFSET_Z_LAYERING) // view_offset_z_layering
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                    .setTextureState(NO_TEXTURE)
+                    .setDepthTestState(LEQUAL_DEPTH_TEST)
+                    .setCullState(NO_CULL)
+                    .setLightmapState(NO_LIGHTMAP)
+                    .setWriteMaskState(COLOR_WRITE)
+                    .createCompositeState(false));
+
     /*private static final Function<ResourceLocation, RenderType> GooPattern = Util.memoize(
             p_286150_ -> {
                 RenderType.CompositeState overlay = RenderType.CompositeState.builder()

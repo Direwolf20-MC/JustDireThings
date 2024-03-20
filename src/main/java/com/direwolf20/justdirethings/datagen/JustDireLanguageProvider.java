@@ -117,6 +117,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.ignored", "Ignored");
         add("justdirethings.screen.low", "Low");
         add("justdirethings.screen.high", "High");
+        add("justdirethings.screen.allowlist", "Allow List");
+        add("justdirethings.screen.denylist", "Deny List");
+        add("justdirethings.screen.renderarea", "Render Area");
+        add("justdirethings.screen.comparenbt", "Compare NBT");
+
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

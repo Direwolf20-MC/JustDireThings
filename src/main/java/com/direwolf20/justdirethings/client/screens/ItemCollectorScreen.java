@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtons;
 import com.direwolf20.justdirethings.client.screens.widgets.BaseButton;
+import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.containers.ItemCollectorContainer;
@@ -76,23 +77,60 @@ public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorCo
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.createStandardToggleButton(getGuiLeft() + 10, getGuiTop() + 10, redstoneMode.ordinal(), b -> {
+        valueButtonsList.clear();
+        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 98, getGuiTop() + 45, redstoneMode.ordinal(), b -> {
             redstoneMode = redstoneMode.next();
             ((ToggleButton) b).nextTexturePosition();
             saveSettings();
         }));
 
-        ValueButtons xRadiusButtons = new ValueButtons(getGuiLeft() + 30, getGuiTop() + 10, xRadius, 0, ItemCollectorBE.maxRadius, font, b -> {
-            xRadius = valueButtonsList.get(0).getValue();
+        addRenderableWidget(ToggleButtonFactory.RENDERAREABUTTON(getGuiLeft() + 116, getGuiTop() + 45, renderArea, b -> {
+            renderArea = !renderArea;
+            ((GrayscaleButton) b).toggleActive();
             saveSettings();
-        });
-        valueButtonsList.add(xRadiusButtons);
+        }));
 
-        ValueButtons yRadiusButtons = new ValueButtons(getGuiLeft() + 30, getGuiTop() + 30, yRadius, 0, ItemCollectorBE.maxRadius, font, b -> {
-            yRadius = valueButtonsList.get(1).getValue();
+        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 134, getGuiTop() + 45, allowlist, b -> {
+            allowlist = !allowlist;
+            ((GrayscaleButton) b).toggleActive();
             saveSettings();
-        });
-        valueButtonsList.add(yRadiusButtons);
+        }));
+
+        addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(getGuiLeft() + 152, getGuiTop() + 45, compareNBT, b -> {
+            compareNBT = !compareNBT;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 25, getGuiTop() + 10, xRadius, 0, 30, font, (button, value) -> {
+            xRadius = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 75, getGuiTop() + 10, yRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+            yRadius = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 125, getGuiTop() + 10, zRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+            zRadius = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 25, getGuiTop() + 25, xOffset, 0, 30, font, (button, value) -> {
+            xOffset = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 75, getGuiTop() + 25, yOffset, -ItemCollectorBE.maxOffset, ItemCollectorBE.maxOffset, font, (button, value) -> {
+            yOffset = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 125, getGuiTop() + 25, zOffset, -ItemCollectorBE.maxOffset, ItemCollectorBE.maxOffset, font, (button, value) -> {
+            zOffset = value;
+            saveSettings();
+        }));
 
         valueButtonsList.forEach(valueButtons -> valueButtons.widgetList.forEach(this::addRenderableWidget));
     }
@@ -100,6 +138,11 @@ public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorCo
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         //super.renderLabels(guiGraphics, mouseX, mouseY);
+        guiGraphics.drawString(this.font, Component.literal("Rad"), 5, 12, 4210752, false);
+        guiGraphics.drawString(this.font, Component.literal("Off"), 5, 27, 4210752, false);
+        guiGraphics.drawString(this.font, Component.literal("X"), 43, 4, 4210752, false);
+        guiGraphics.drawString(this.font, Component.literal("Y"), 93, 4, 4210752, false);
+        guiGraphics.drawString(this.font, Component.literal("Z"), 143, 4, 4210752, false);
     }
 
     @Override
