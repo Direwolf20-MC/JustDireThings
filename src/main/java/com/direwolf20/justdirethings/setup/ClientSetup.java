@@ -3,14 +3,16 @@ package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
-import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier1;
-import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier2;
-import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier3;
-import com.direwolf20.justdirethings.client.blockentityrenders.GooBlockRender_Tier4;
+import com.direwolf20.justdirethings.client.blockentityrenders.ItemCollectorRenderer;
+import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier1;
+import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier2;
+import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier3;
+import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier4;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
+import com.direwolf20.justdirethings.client.screens.ItemCollectorScreen;
 import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
 import com.direwolf20.justdirethings.client.screens.ToolSettingScreen;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
@@ -49,6 +51,7 @@ public class ClientSetup {
         event.register(Registration.FuelCanister_Container.get(), FuelCanisterScreen::new);
         event.register(Registration.PocketGenerator_Container.get(), PocketGeneratorScreen::new);
         event.register(Registration.Tool_Settings_Container.get(), ToolSettingScreen::new);
+        event.register(Registration.Item_Collector_Container.get(), ItemCollectorScreen::new);
     }
 
     @SubscribeEvent
@@ -58,5 +61,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier2.get(), GooBlockRender_Tier2::new);
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier3.get(), GooBlockRender_Tier3::new);
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier4.get(), GooBlockRender_Tier4::new);
+        event.registerBlockEntityRenderer(Registration.ItemCollectorBE.get(), ItemCollectorRenderer::new);
     }
 }

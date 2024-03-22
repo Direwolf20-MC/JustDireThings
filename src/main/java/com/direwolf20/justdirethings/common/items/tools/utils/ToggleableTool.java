@@ -344,12 +344,12 @@ public interface ToggleableTool {
                                 }
                             }
                         }
+                        if (!bindingSuccess) {
+                            pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.bindfailed").withStyle(ChatFormatting.RED), true);
+                            player.playNotifySound(SoundEvents.ANVIL_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                        }
                     }
                 }
-            }
-            if (!bindingSuccess) {
-                pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.bindfailed").withStyle(ChatFormatting.RED), true);
-                player.playNotifySound(SoundEvents.ANVIL_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
         }
         return bindingSuccess;

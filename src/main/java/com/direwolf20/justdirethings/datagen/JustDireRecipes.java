@@ -22,7 +22,7 @@ public class JustDireRecipes extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput consumer) {
-        //Blocks
+        //Goo Blocks
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.GooBlock_Tier1.get())
                 .pattern("csc")
                 .pattern("fdf")
@@ -66,6 +66,19 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('w', Items.ECHO_SHARD)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
+                .save(consumer);
+
+        //Machines
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.ItemCollector.get())
+                .pattern(" d ")
+                .pattern("heh")
+                .pattern("fff")
+                .define('e', Items.ENDER_PEARL)
+                .define('f', Registration.FerricoreIngot.get())
+                .define('d', Items.DIAMOND)
+                .define('h', Items.HOPPER)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
 
         //Items

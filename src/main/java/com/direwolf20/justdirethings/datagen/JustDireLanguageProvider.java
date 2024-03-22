@@ -25,6 +25,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
         add(Registration.GooBlock_Tier3.get(), "VoidShimmer Goo");
         add(Registration.GooBlock_Tier4.get(), "Shadowpulse Goo");
+        add(Registration.ItemCollector.get(), "Item Collector");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -113,6 +114,14 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
         add("justdirethings.screen.no_fuel", "Fuel source empty");
         add("justdirethings.screen.burn_time", "Burn time left: %ss");
+        add("justdirethings.screen.ignored", "Ignored");
+        add("justdirethings.screen.low", "Low");
+        add("justdirethings.screen.high", "High");
+        add("justdirethings.screen.allowlist", "Allow List");
+        add("justdirethings.screen.denylist", "Deny List");
+        add("justdirethings.screen.renderarea", "Render Area");
+        add("justdirethings.screen.comparenbt", "Compare NBT");
+
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

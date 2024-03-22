@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.blockentities.gooblocks;
 
-import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
+import com.direwolf20.justdirethings.client.particles.gooexplodeparticle.GooExplodeParticleData;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -74,7 +74,7 @@ public class GooBlockBE_Base extends BlockEntity {
         Random random = new Random();
         BlockPos startPos = getBlockPos().relative(side);
         ItemStack itemStack = new ItemStack(getBlockState().getBlock());
-        ItemFlowParticleData data = new ItemFlowParticleData(itemStack, true, false);
+        GooExplodeParticleData data = new GooExplodeParticleData(itemStack);
         for (Direction direction : Direction.values()) {
             for (int i = 0; i < 100; i++) {
                 double randomX = 0.5 + (0.6 * direction.getNormal().getX()) + (direction.getNormal().getX() == 0 ? random.nextDouble() - 0.5 : 0);

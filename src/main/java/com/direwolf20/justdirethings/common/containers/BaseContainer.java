@@ -24,7 +24,7 @@ public abstract class BaseContainer extends AbstractContainerMenu {
     }
 
     protected void addPlayerSlots(Inventory playerInventory) {
-        addPlayerSlots(playerInventory, 8, 56);
+        addPlayerSlots(playerInventory, 8, 84);
     }
 
     protected int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {

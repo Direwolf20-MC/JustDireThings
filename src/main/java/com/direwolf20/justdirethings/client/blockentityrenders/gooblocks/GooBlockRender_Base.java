@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.client.blockentityrenders;
+package com.direwolf20.justdirethings.client.blockentityrenders.gooblocks;
 
 import com.direwolf20.justdirethings.client.renderers.DireModelBlockRenderer;
 import com.direwolf20.justdirethings.client.renderers.DireVertexConsumer;
