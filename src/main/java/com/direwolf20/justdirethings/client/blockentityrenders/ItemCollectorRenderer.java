@@ -1,37 +1,28 @@
 package com.direwolf20.justdirethings.client.blockentityrenders;
 
-import com.direwolf20.justdirethings.client.renderers.RenderHelpers;
+import com.direwolf20.justdirethings.client.blockentityrenders.baseber.AreaAffectingBER;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 
-import java.awt.*;
-
-public class ItemCollectorRenderer<T extends ItemCollectorBE> implements BlockEntityRenderer<T> {
+public class ItemCollectorRenderer<T extends ItemCollectorBE> extends AreaAffectingBER<T> {
     public ItemCollectorRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
     public void render(ItemCollectorBE blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
+        super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
         long gameTime = blockentity.getLevel().getGameTime();
         Matrix4f matrix4f = matrixStackIn.last().pose();
         this.renderCube(blockentity, matrix4f, bufferIn.getBuffer(this.renderType()), gameTime, partialTicks);
-
-        if (blockentity.renderArea) {
-            RenderHelpers.renderLines(matrixStackIn, blockentity.getAABB(BlockPos.ZERO), Color.GREEN, bufferIn);
-            RenderHelpers.renderBoxSolid(matrix4f, bufferIn, blockentity.getAABB(BlockPos.ZERO), 1, 0, 0, 0.125f);
-        }
     }
 
     private void renderCube(ItemCollectorBE blockEntity, Matrix4f matrixStack, VertexConsumer vertexConsumer, long gameTime, float partialTicks) {
@@ -123,11 +114,6 @@ public class ItemCollectorRenderer<T extends ItemCollectorBE> implements BlockEn
 
     protected RenderType renderType() {
         return RenderType.endPortal();
-    }
-
-    @Override
-    public AABB getRenderBoundingBox(T blockEntity) {
-        return AABB.encapsulatingFullBlocks(blockEntity.getBlockPos().above(10).north(10).east(10), blockEntity.getBlockPos().below(10).south(10).west(10));
     }
 
 }

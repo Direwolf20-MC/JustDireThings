@@ -5,16 +5,16 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-public record ItemCollectorPayload(
+public record AreaAffectingPayload(
         int xRadius, int yRadius, int zRadius,
         int xOffset, int yOffset, int zOffset,
-        boolean allowlist, boolean compareNBT, boolean renderArea,
+        boolean renderArea,
         int redstoneMode
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "item_collector_packet");
+    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "area_affecting_packet");
 
-    public ItemCollectorPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean(), buffer.readInt());
+    public AreaAffectingPayload(final FriendlyByteBuf buffer) {
+        this(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readBoolean(), buffer.readInt());
     }
 
     @Override
@@ -25,8 +25,6 @@ public record ItemCollectorPayload(
         buffer.writeInt(xOffset);
         buffer.writeInt(yOffset);
         buffer.writeInt(zOffset);
-        buffer.writeBoolean(allowlist);
-        buffer.writeBoolean(compareNBT);
         buffer.writeBoolean(renderArea);
         buffer.writeInt(redstoneMode);
     }

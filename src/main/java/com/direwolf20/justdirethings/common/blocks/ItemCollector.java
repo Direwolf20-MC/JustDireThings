@@ -207,20 +207,10 @@ public class ItemCollector extends Block implements EntityBlock {
         }
     }
 
-    /*@Override
-    public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        return super.getSignal(pBlockState, pBlockAccess, pPos, pSide);
-    }*/
-
     @Override
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         return true;
     }
-
-    /*@Override
-    public int getDirectSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        return super.getDirectSignal(pBlockState, pBlockAccess, pPos, pSide);
-    }*/
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {

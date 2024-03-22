@@ -13,7 +13,8 @@ public class MiscHelpers {
     public enum RedstoneMode {
         IGNORED,
         LOW,
-        HIGH;
+        HIGH,
+        PULSE;
 
         public RedstoneMode next() {
             RedstoneMode[] values = values();
@@ -21,7 +22,6 @@ public class MiscHelpers {
             return values[nextOrdinal];
         }
     }
-
     private static final Random rand = new Random();
 
     public static double nextDouble(double min, double max) {

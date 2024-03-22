@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.containers;
 
+import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
 import com.direwolf20.justdirethings.common.containers.handlers.FuelCanisterHandler;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.network.FriendlyByteBuf;

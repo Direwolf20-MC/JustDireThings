@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
+import com.direwolf20.justdirethings.common.containers.basecontainers.AreaAffectingContainer;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -16,10 +17,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
-public class ItemCollectorContainer extends BaseContainer {
+public class ItemCollectorContainer extends AreaAffectingContainer {
     public static final int SLOTS = 9;
     public FilterBasicHandler handler;
-    public ItemCollectorBE itemCollectorBE;
     private Player player;
     private BlockPos pos;
 
@@ -33,7 +33,7 @@ public class ItemCollectorContainer extends BaseContainer {
         this.player = playerInventory.player;
         BlockEntity blockEntity = player.level().getBlockEntity(pos);
         if (blockEntity instanceof ItemCollectorBE itemCollectorBE) {
-            this.itemCollectorBE = itemCollectorBE;
+            this.areaAffectingBE = itemCollectorBE;
             handler = itemCollectorBE.getHandler();
             addSlotRange(handler, 0, 8, 63, 9, 18);
         }
@@ -57,21 +57,13 @@ public class ItemCollectorContainer extends BaseContainer {
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasItem()) {
-            ItemStack currentStack = slot.getItem().copy();
-            currentStack.setCount(1);
-            //Only do this if we click from the players inventory
-            if (index >= SLOTS) {
-                for (int i = 0; i < SLOTS; i++) { //Prevents the same item from going in there more than once.
-                    if (ItemStack.isSameItemSameTags(this.slots.get(i).getItem(), currentStack)) //Don't limit tags
-                        return ItemStack.EMPTY;
-                }
-                if (!this.moveItemStackTo(currentStack, 0, SLOTS, false)) {
-                    return ItemStack.EMPTY;
-                }
+        if (slot.hasItem()) {
+            if (index >= SLOTS) { //Only do this if we click from the players inventory
+                ItemStack currentStack = slot.getItem().copy();
+                currentStack.setCount(1);
+                return quickMoveBasicFilter(currentStack, SLOTS);
             }
         }
-
         return itemstack;
     }
 
