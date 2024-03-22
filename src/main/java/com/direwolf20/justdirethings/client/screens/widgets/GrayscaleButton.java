@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -108,7 +109,7 @@ public class GrayscaleButton extends BaseButton {
         if (getValue() == -1 || !getButtonActive())
             return localization;
         else
-            return Component.translatable(localization.getString() + "value", getValue());
+            return Component.translatable(((TranslatableContents) (localization).getContents()).getKey() + "value", getValue());
     }
 
     public int getValue() {
