@@ -38,10 +38,12 @@ public class ClientSetup {
 
         //Item Properties
         event.enqueueWork(() -> {
-            ItemProperties.register(Registration.BlazegoldPickaxe.get(),
-                    new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
-                        return ToggleableTool.getEnabled(stack) ? 1.0f : 0.0f;
-                    });
+            for (var tool : Registration.TOOLS.getEntries()) {
+                ItemProperties.register(tool.get(),
+                        new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
+                            return ToggleableTool.getEnabled(stack) ? 1.0f : 0.0f;
+                        });
+            }
         });
 
     }

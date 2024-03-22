@@ -54,22 +54,22 @@ public class JustDireItemModels extends ItemModelProvider {
 
     public void registerTools() {
         for (var tool : Registration.TOOLS.getEntries()) {
-            if (!tool.is(Registration.BlazegoldPickaxe.getId()))
-                singleTexture(tool.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/" + tool.getId().getPath()));
-            else {
-                ResourceLocation enabledModelPath = modLoc("item/" + tool.getId().getPath() + "_active"); // Path to your enabled model
-                ResourceLocation defaultModelPath = modLoc("item/" + tool.getId().getPath()); // Path to your default model
+            //if (!tool.is(Registration.BlazegoldPickaxe.getId()))
+            //    singleTexture(tool.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/" + tool.getId().getPath()));
+            //else {
+            ResourceLocation enabledModelPath = modLoc("item/" + tool.getId().getPath() + "_active"); // Path to your enabled model
+            ResourceLocation defaultModelPath = modLoc("item/" + tool.getId().getPath()); // Path to your default model
 
-                // Start building your item model
-                getBuilder(tool.getId().getPath()) // This should match your item's registry name
-                        .parent(getExistingFile(mcLoc("item/handheld")))
-                        .texture("layer0", defaultModelPath)
-                        .override()
-                        .predicate(new ResourceLocation("justdirethings", "enabled"), 1.0F) // Using custom property
-                        .model(singleTexture(tool.getId().getPath() + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
+            // Start building your item model
+            getBuilder(tool.getId().getPath()) // This should match your item's registry name
+                    .parent(getExistingFile(mcLoc("item/handheld")))
+                    .texture("layer0", defaultModelPath)
+                    .override()
+                    .predicate(new ResourceLocation("justdirethings", "enabled"), 1.0F) // Using custom property
+                    .model(singleTexture(tool.getId().getPath() + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
                         .end();
 
-            }
+            // }
         }
     }
 }
