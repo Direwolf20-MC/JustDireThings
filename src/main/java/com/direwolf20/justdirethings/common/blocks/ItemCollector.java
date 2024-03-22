@@ -203,7 +203,7 @@ public class ItemCollector extends Block implements EntityBlock {
         super.neighborChanged(blockState, level, pos, blockIn, fromPos, isMoving);
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof ItemCollectorBE itemCollectorBE) {
-            itemCollectorBE.getAreaAffectingData().checkedRedstone = false;
+            itemCollectorBE.getRedstoneControlData().checkedRedstone = false;
         }
     }
 

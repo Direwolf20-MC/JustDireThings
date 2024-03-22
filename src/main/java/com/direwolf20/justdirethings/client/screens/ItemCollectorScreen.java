@@ -4,11 +4,14 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.basescreens.AreaAffectingScreen;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
+import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.containers.ItemCollectorContainer;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import com.direwolf20.justdirethings.common.network.data.FilterSettingPayload;
 import com.direwolf20.justdirethings.common.network.data.GhostSlotPayload;
+import com.direwolf20.justdirethings.common.network.data.RedstoneSettingPayload;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -21,18 +24,26 @@ public class ItemCollectorScreen extends AreaAffectingScreen<ItemCollectorContai
     private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/itemcollector.png");
     protected boolean allowlist = false;
     protected boolean compareNBT = false;
+    protected MiscHelpers.RedstoneMode redstoneMode;
 
     public ItemCollectorScreen(ItemCollectorContainer container, Inventory inv, Component name) {
         super(container, inv, name);
         if (areaAffectingBE instanceof ItemCollectorBE itemCollectorBE) {
             this.allowlist = itemCollectorBE.getFilterData().allowlist;
             this.compareNBT = itemCollectorBE.getFilterData().compareNBT;
+            this.redstoneMode = itemCollectorBE.getRedstoneControlData().redstoneMode;
         }
     }
 
     @Override
     public void init() {
         super.init();
+
+        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 134, getGuiTop() + 45, redstoneMode.ordinal(), b -> {
+            redstoneMode = redstoneMode.next();
+            ((ToggleButton) b).nextTexturePosition();
+            saveSettings();
+        }));
 
         addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, getGuiTop() + 45, allowlist, b -> {
             allowlist = !allowlist;
@@ -73,6 +84,7 @@ public class ItemCollectorScreen extends AreaAffectingScreen<ItemCollectorContai
     public void saveSettings() {
         super.saveSettings();
         PacketDistributor.SERVER.noArg().send(new FilterSettingPayload(allowlist, compareNBT));
+        PacketDistributor.SERVER.noArg().send(new RedstoneSettingPayload(redstoneMode.ordinal()));
     }
 
 }

@@ -1,15 +1,16 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.util.FilterData;
 import com.direwolf20.justdirethings.util.ItemStackKey;
+import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
-public interface FilterableBE {
+public interface FilterableBE extends BaseBEInterface {
     FilterBasicHandler getHandler();
 
     FilterData getFilterData();
+
 
     default void saveFilterSettings(CompoundTag tag) {
         tag.putBoolean("allowlist", getFilterData().allowlist);
@@ -24,6 +25,7 @@ public interface FilterableBE {
     default void setFilterSettings(boolean allowlist, boolean compareNBT) {
         getFilterData().allowlist = allowlist;
         getFilterData().compareNBT = compareNBT;
+        markDirtyClient();
     }
 
     default boolean isStackValidFilter(ItemStack testStack) {

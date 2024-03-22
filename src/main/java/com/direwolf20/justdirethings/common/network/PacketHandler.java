@@ -14,6 +14,7 @@ public class PacketHandler {
         registrar.play(ToggleToolPayload.ID, ToggleToolPayload::new, handler -> handler.server(ToggleToolPacket.get()::handle));
         registrar.play(AreaAffectingPayload.ID, AreaAffectingPayload::new, handler -> handler.server(AreaAffectingPacket.get()::handle));
         registrar.play(FilterSettingPayload.ID, FilterSettingPayload::new, handler -> handler.server(FilterSettingPacket.get()::handle));
+        registrar.play(RedstoneSettingPayload.ID, RedstoneSettingPayload::new, handler -> handler.server(RedstoneSettingPacket.get()::handle));
         registrar.play(ToggleToolSlotPayload.ID, ToggleToolSlotPayload::new, handler -> handler.server(ToggleToolSlotPacket.get()::handle));
         registrar.play(GhostSlotPayload.ID, GhostSlotPayload::new, handler -> handler.server(GhostSlotPacket.get()::handle));
 

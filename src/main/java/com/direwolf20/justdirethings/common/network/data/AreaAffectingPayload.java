@@ -8,13 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 public record AreaAffectingPayload(
         int xRadius, int yRadius, int zRadius,
         int xOffset, int yOffset, int zOffset,
-        boolean renderArea,
-        int redstoneMode
+        boolean renderArea
 ) implements CustomPacketPayload {
     public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "area_affecting_packet");
 
     public AreaAffectingPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readBoolean(), buffer.readInt());
+        this(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readBoolean());
     }
 
     @Override
@@ -26,7 +25,6 @@ public record AreaAffectingPayload(
         buffer.writeInt(yOffset);
         buffer.writeInt(zOffset);
         buffer.writeBoolean(renderArea);
-        buffer.writeInt(redstoneMode);
     }
 
     @Override

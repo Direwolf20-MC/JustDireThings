@@ -1,21 +1,22 @@
 package com.direwolf20.justdirethings.common.network.handler;
 
+import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.containers.basecontainers.AreaAffectingContainer;
-import com.direwolf20.justdirethings.common.network.data.AreaAffectingPayload;
+import com.direwolf20.justdirethings.common.network.data.RedstoneSettingPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 import java.util.Optional;
 
-public class AreaAffectingPacket {
-    public static final AreaAffectingPacket INSTANCE = new AreaAffectingPacket();
+public class RedstoneSettingPacket {
+    public static final RedstoneSettingPacket INSTANCE = new RedstoneSettingPacket();
 
-    public static AreaAffectingPacket get() {
+    public static RedstoneSettingPacket get() {
         return INSTANCE;
     }
 
-    public void handle(final AreaAffectingPayload payload, final PlayPayloadContext context) {
+    public void handle(final RedstoneSettingPayload payload, final PlayPayloadContext context) {
         context.workHandler().submitAsync(() -> {
             Optional<Player> senderOptional = context.player();
             if (senderOptional.isEmpty())
@@ -24,7 +25,9 @@ public class AreaAffectingPacket {
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof AreaAffectingContainer areaAffectingContainer) {
-                areaAffectingContainer.areaAffectingBE.setAreaSettings(payload.xRadius(), payload.yRadius(), payload.zRadius(), payload.xOffset(), payload.yOffset(), payload.zOffset(), payload.renderArea());
+                if (areaAffectingContainer.areaAffectingBE instanceof RedstoneControlledBE redstoneControlledBE) {
+                    redstoneControlledBE.setRedstoneSettings(payload.redstoneMode());
+                }
             }
         });
     }

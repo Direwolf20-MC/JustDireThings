@@ -1,5 +1,6 @@
-package com.direwolf20.justdirethings.util;
+package com.direwolf20.justdirethings.util.interfacehelpers;
 
+import com.direwolf20.justdirethings.util.ItemStackKey;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 
 import java.util.Map;

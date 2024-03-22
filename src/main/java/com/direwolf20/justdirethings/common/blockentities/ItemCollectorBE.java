@@ -3,10 +3,12 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.Registration;
-import com.direwolf20.justdirethings.util.AreaAffectingData;
-import com.direwolf20.justdirethings.util.FilterData;
+import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
+import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
+import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,10 +31,11 @@ import java.util.List;
 
 import static net.minecraft.world.entity.Entity.RemovalReason.DISCARDED;
 
-public class ItemCollectorBE extends BlockEntity implements FilterableBE, AreaAffectingBE {
+public class ItemCollectorBE extends BlockEntity implements FilterableBE, AreaAffectingBE, RedstoneControlledBE {
     protected BlockCapabilityCache<IItemHandler, Direction> attachedInventory;
     public FilterData filterData = new FilterData();
     public AreaAffectingData areaAffectingData = new AreaAffectingData();
+    public RedstoneControlData redstoneControlData = new RedstoneControlData();
 
     public ItemCollectorBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ItemCollectorBE.get(), pPos, pBlockState);
@@ -49,6 +52,11 @@ public class ItemCollectorBE extends BlockEntity implements FilterableBE, AreaAf
     }
 
     @Override
+    public RedstoneControlData getRedstoneControlData() {
+        return redstoneControlData;
+    }
+
+    @Override
     public AreaAffectingData getAreaAffectingData() {
         return areaAffectingData;
     }
@@ -57,7 +65,7 @@ public class ItemCollectorBE extends BlockEntity implements FilterableBE, AreaAf
     }
 
     public void tickServer() {
-        AreaAffectingBE.super.tickServer();
+        RedstoneControlledBE.super.tickServer();
         findItemsAndStore();
     }
 
@@ -131,13 +139,15 @@ public class ItemCollectorBE extends BlockEntity implements FilterableBE, AreaAf
         super.saveAdditional(tag);
         saveAreaSettings(tag);
         saveFilterSettings(tag);
+        saveRedstoneSettings(tag);
     }
 
     @Override
     public void load(CompoundTag tag) {
-        super.load(tag);
         loadAreaSettings(tag);
         loadFilterSettings(tag);
+        loadRedstoneSettings(tag);
+        super.load(tag);
     }
 
     @Override
@@ -154,13 +164,13 @@ public class ItemCollectorBE extends BlockEntity implements FilterableBE, AreaAf
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
-        saveAreaSettings(tag);
+        saveAdditional(tag);
         return tag;
     }
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.loadAreaSettings(pkt.getTag());
+        this.load(pkt.getTag());
         getAreaAffectingData().area = null; //Clear this cache when a packet comes in, so it can redraw properly if the area was changed
     }
 }

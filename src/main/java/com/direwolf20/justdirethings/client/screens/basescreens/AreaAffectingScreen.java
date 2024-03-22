@@ -3,12 +3,10 @@ package com.direwolf20.justdirethings.client.screens.basescreens;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtons;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
-import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
 import com.direwolf20.justdirethings.common.containers.basecontainers.AreaAffectingContainer;
 import com.direwolf20.justdirethings.common.network.data.AreaAffectingPayload;
-import com.direwolf20.justdirethings.util.MiscHelpers;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,7 +21,6 @@ public abstract class AreaAffectingScreen<T extends AreaAffectingContainer> exte
     protected int xRadius = 3, yRadius = 3, zRadius = 3;
     protected int xOffset = 0, yOffset = 0, zOffset = 0;
     protected boolean renderArea = false;
-    protected MiscHelpers.RedstoneMode redstoneMode;
     protected List<ValueButtons> valueButtonsList = new ArrayList<>();
 
     public AreaAffectingScreen(T container, Inventory pPlayerInventory, Component pTitle) {
@@ -37,18 +34,12 @@ public abstract class AreaAffectingScreen<T extends AreaAffectingContainer> exte
         this.yOffset = areaAffectingBE.getAreaAffectingData().yOffset;
         this.zOffset = areaAffectingBE.getAreaAffectingData().zOffset;
         this.renderArea = areaAffectingBE.getAreaAffectingData().renderArea;
-        this.redstoneMode = areaAffectingBE.getAreaAffectingData().redstoneMode;
     }
 
     @Override
     public void init() {
         super.init();
         valueButtonsList.clear();
-        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 134, getGuiTop() + 45, redstoneMode.ordinal(), b -> {
-            redstoneMode = redstoneMode.next();
-            ((ToggleButton) b).nextTexturePosition();
-            saveSettings();
-        }));
 
         addRenderableWidget(ToggleButtonFactory.RENDERAREABUTTON(getGuiLeft() + 152, getGuiTop() + 45, renderArea, b -> {
             renderArea = !renderArea;
@@ -106,6 +97,6 @@ public abstract class AreaAffectingScreen<T extends AreaAffectingContainer> exte
     }
 
     public void saveSettings() {
-        PacketDistributor.SERVER.noArg().send(new AreaAffectingPayload(xRadius, yRadius, zRadius, xOffset, yOffset, zOffset, renderArea, redstoneMode.ordinal()));
+        PacketDistributor.SERVER.noArg().send(new AreaAffectingPayload(xRadius, yRadius, zRadius, xOffset, yOffset, zOffset, renderArea));
     }
 }
