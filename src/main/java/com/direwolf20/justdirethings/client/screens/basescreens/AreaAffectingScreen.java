@@ -30,14 +30,14 @@ public abstract class AreaAffectingScreen<T extends AreaAffectingContainer> exte
         super(container, pPlayerInventory, pTitle);
         this.container = container;
         areaAffectingBE = container.areaAffectingBE;
-        this.xRadius = areaAffectingBE.xRadius;
-        this.yRadius = areaAffectingBE.yRadius;
-        this.zRadius = areaAffectingBE.zRadius;
-        this.xOffset = areaAffectingBE.xOffset;
-        this.yOffset = areaAffectingBE.yOffset;
-        this.zOffset = areaAffectingBE.zOffset;
-        this.renderArea = areaAffectingBE.renderArea;
-        this.redstoneMode = areaAffectingBE.redstoneMode;
+        this.xRadius = areaAffectingBE.getAreaAffectingData().xRadius;
+        this.yRadius = areaAffectingBE.getAreaAffectingData().yRadius;
+        this.zRadius = areaAffectingBE.getAreaAffectingData().zRadius;
+        this.xOffset = areaAffectingBE.getAreaAffectingData().xOffset;
+        this.yOffset = areaAffectingBE.getAreaAffectingData().yOffset;
+        this.zOffset = areaAffectingBE.getAreaAffectingData().zOffset;
+        this.renderArea = areaAffectingBE.getAreaAffectingData().renderArea;
+        this.redstoneMode = areaAffectingBE.getAreaAffectingData().redstoneMode;
     }
 
     @Override

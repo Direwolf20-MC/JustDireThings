@@ -9,20 +9,22 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.joml.Matrix4f;
 
-public class ItemCollectorRenderer<T extends ItemCollectorBE> extends AreaAffectingBER<T> {
+public class ItemCollectorRenderer extends AreaAffectingBER {
     public ItemCollectorRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
     @Override
-    public void render(ItemCollectorBE blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
+    public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
         super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
         long gameTime = blockentity.getLevel().getGameTime();
         Matrix4f matrix4f = matrixStackIn.last().pose();
-        this.renderCube(blockentity, matrix4f, bufferIn.getBuffer(this.renderType()), gameTime, partialTicks);
+        if (blockentity instanceof ItemCollectorBE itemCollectorBE)
+            this.renderCube(itemCollectorBE, matrix4f, bufferIn.getBuffer(this.renderType()), gameTime, partialTicks);
     }
 
     private void renderCube(ItemCollectorBE blockEntity, Matrix4f matrixStack, VertexConsumer vertexConsumer, long gameTime, float partialTicks) {
