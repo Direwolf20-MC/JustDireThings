@@ -37,12 +37,29 @@ public class ItemCollectorBE extends BlockEntity {
     public int xOffset = 0, yOffset = 0, zOffset = 0;
     public boolean allowlist = false, compareNBT = false, renderArea = false;
     public MiscHelpers.RedstoneMode redstoneMode = MiscHelpers.RedstoneMode.IGNORED;
+    public boolean receivingRedstone = false;
+    public boolean checkedRedstone = false;
 
     //This is not saved in NBT, and is recreated as needed on demand
     public final Map<ItemStackKey, Boolean> filterCache = new Object2BooleanOpenHashMap<>();
 
     public ItemCollectorBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ItemCollectorBE.get(), pPos, pBlockState);
+    }
+
+    public void tickClient() {
+    }
+
+    public void tickServer() {
+        if (!checkedRedstone)
+            evaluateRedstone();
+        findItemsAndStore();
+    }
+
+    public void evaluateRedstone() {
+        this.receivingRedstone = this.level.hasNeighborSignal(this.getBlockPos());
+        this.checkedRedstone = true;
+
     }
 
     public void setSettings(int x, int y, int z, int xo, int yo, int zo, boolean allowlist, boolean compareNBT, boolean renderArea, int redstoneMode) {
@@ -59,11 +76,14 @@ public class ItemCollectorBE extends BlockEntity {
         markDirtyClient();
     }
 
-    public void tickClient() {
-    }
-
-    public void tickServer() {
-        findItemsAndStore();
+    public boolean isActive() {
+        if (redstoneMode.equals(MiscHelpers.RedstoneMode.IGNORED))
+            return true;
+        if (redstoneMode.equals(MiscHelpers.RedstoneMode.LOW))
+            return !receivingRedstone;
+        if (redstoneMode.equals(MiscHelpers.RedstoneMode.HIGH))
+            return receivingRedstone;
+        return false;
     }
 
     public FilterBasicHandler getHandler() {
@@ -88,6 +108,7 @@ public class ItemCollectorBE extends BlockEntity {
     }
 
     private void findItemsAndStore() {
+        if (!isActive()) return;
         assert level != null;
         AABB searchArea = getAABB();
 
