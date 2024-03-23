@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "render_type": "minecraft:translucent",
-  "textures": {
-    "all": "justdirethings:block/raw_celestigem_ore"
-  }
-}
