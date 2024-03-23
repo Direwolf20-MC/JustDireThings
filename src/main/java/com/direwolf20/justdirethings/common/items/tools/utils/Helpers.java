@@ -50,12 +50,12 @@ public class Helpers {
             if (NeoForge.EVENT_BUS.post(event).isCanceled()) return drops;
 
             BlockState state = level.getBlockState(pos);
-            if (level instanceof ServerLevel serverLevel)
-                drops.addAll(Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos), pPlayer, pStack));
 
             //This is how vanilla does it?
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
+                if (level instanceof ServerLevel serverLevel)
+                    drops.addAll(Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos), pPlayer, pStack));
                 state.getBlock().destroy(level, pos, state);
                 player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
                 player.causeFoodExhaustion(0.005F);

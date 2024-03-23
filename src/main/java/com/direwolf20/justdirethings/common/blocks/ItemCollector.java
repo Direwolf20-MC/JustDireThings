@@ -1,10 +1,9 @@
 package com.direwolf20.justdirethings.common.blocks;
 
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
-import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.containers.ItemCollectorContainer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -14,11 +13,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -32,7 +28,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class ItemCollector extends Block implements EntityBlock {
+public class ItemCollector extends BaseMachineBlock {
     protected static final VoxelShape[] shapes = new VoxelShape[]{
             Stream.of(
                     Block.box(6.5, 4.25, 6.5, 9.5, 4.75, 9.5),
@@ -181,36 +177,6 @@ public class ItemCollector extends Block implements EntityBlock {
             buf.writeBlockPos(blockPos);
         }));
         return InteractionResult.SUCCESS;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        if (level.isClientSide()) {
-            return (lvl, pos, blockState, t) -> {
-                if (t instanceof ItemCollectorBE tile) {
-                    tile.tickClient();
-                }
-            };
-        }
-        return (lvl, pos, blockState, t) -> {
-            if (t instanceof ItemCollectorBE tile) {
-                tile.tickServer();
-            }
-        };
-    }
-
-    public void neighborChanged(BlockState blockState, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(blockState, level, pos, blockIn, fromPos, isMoving);
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof RedstoneControlledBE redstoneControlledBE) {
-            redstoneControlledBE.getRedstoneControlData().checkedRedstone = false;
-        }
-    }
-
-    @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
-        return true;
     }
 
     @Override

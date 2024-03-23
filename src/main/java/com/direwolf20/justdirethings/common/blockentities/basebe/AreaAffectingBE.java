@@ -33,9 +33,6 @@ public interface AreaAffectingBE {
             baseMachineBE.markDirtyClient();
     }
 
-    default void tickClient() {
-    }
-
     default void saveAreaSettings(CompoundTag tag) {
         tag.putInt("xRadius", getAreaAffectingData().xRadius);
         tag.putInt("yRadius", getAreaAffectingData().yRadius);

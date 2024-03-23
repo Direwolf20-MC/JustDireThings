@@ -63,7 +63,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     }
 
     public void tickServer() {
-        RedstoneControlledBE.super.tickServer();
+        super.tickServer();
         findItemsAndStore();
     }
 

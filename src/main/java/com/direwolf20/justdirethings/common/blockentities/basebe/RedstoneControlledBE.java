@@ -16,17 +16,14 @@ public interface RedstoneControlledBE {
             baseMachineBE.markDirtyClient();
     }
 
-    default void tickServer() {
-        if (!getRedstoneControlData().checkedRedstone)
-            evaluateRedstone();
-    }
-
     default void evaluateRedstone() {
-        boolean newRedstoneSignal = getBlockEntity().getLevel().hasNeighborSignal(getBlockEntity().getBlockPos());
-        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE) && !getRedstoneControlData().receivingRedstone && newRedstoneSignal)
-            getRedstoneControlData().pulsed = true;
-        getRedstoneControlData().receivingRedstone = newRedstoneSignal;
-        getRedstoneControlData().checkedRedstone = true;
+        if (!getRedstoneControlData().checkedRedstone) {
+            boolean newRedstoneSignal = getBlockEntity().getLevel().hasNeighborSignal(getBlockEntity().getBlockPos());
+            if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE) && !getRedstoneControlData().receivingRedstone && newRedstoneSignal)
+                getRedstoneControlData().pulsed = true;
+            getRedstoneControlData().receivingRedstone = newRedstoneSignal;
+            getRedstoneControlData().checkedRedstone = true;
+        }
     }
 
     default boolean isActive() {
