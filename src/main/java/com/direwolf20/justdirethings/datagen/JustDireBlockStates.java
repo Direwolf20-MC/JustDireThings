@@ -36,6 +36,21 @@ public class JustDireBlockStates extends BlockStateProvider {
 
         patternBlock();
         soilBlocks();
+        sidedBlocks();
+    }
+
+    private void sidedBlocks() {
+        for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
+            ModelFile model = models().orientableWithBottom(
+                    Objects.requireNonNull(sidedBlock.getId()).getPath(),
+                    modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                    modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                    modLoc("block/" + sidedBlock.getId().getPath() + "_bottom"),
+                    modLoc("block/" + sidedBlock.getId().getPath() + "_top")
+            ).renderType("solid");
+
+            directionalBlock(sidedBlock.get(), model);
+        }
     }
 
     private void soilBlocks() {

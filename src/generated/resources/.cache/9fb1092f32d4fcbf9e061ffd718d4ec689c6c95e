@@ -1,4 +1,4 @@
-// 1.20.4	2024-03-17T15:37:02.3088164	Recipes
+// 1.20.4	2024-03-22T22:53:06.8279987	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 2e741e987f248c3c04079fb6a6b0bf4f7bbc0459 data/justdirethings/advancements/recipes/building_blocks/eclipsealloy_ingot_9x9.json
@@ -10,6 +10,7 @@ e3abdeaa9e20ee13e877c54808b611a26ac08286 data/justdirethings/advancements/recipe
 5588eec1b317d4a08110aac7b4cc07e939ae1966 data/justdirethings/advancements/recipes/misc/blazegold_pickaxe.json
 38ffc91a72936662b783c5df60f2c58a146979fd data/justdirethings/advancements/recipes/misc/blazegold_shovel.json
 e4aec9b6a5d4ec4be107ab01e9cdeff40b2800c1 data/justdirethings/advancements/recipes/misc/blazegold_sword.json
+c9072d3e327c87eb1b7a1994100c1123c8b51b7f data/justdirethings/advancements/recipes/misc/blockbreakert1.json
 8b29620f85b86171fdfe6cf21ad775df28cb0bd9 data/justdirethings/advancements/recipes/misc/celestigem_axe.json
 3eb7cdea1f98213eb462e7819368b084c8e2fec6 data/justdirethings/advancements/recipes/misc/celestigem_block_9x9.json
 7285d6a6c73b5ef805c4102d5029b7a9482d6b69 data/justdirethings/advancements/recipes/misc/celestigem_hoe.json
@@ -50,6 +51,7 @@ e351d674ffb58c5186f85512476905228d5d22a7 data/justdirethings/recipes/blazegold_a
 e76b9021c128274a60be6b03da3ad0767c0a6724 data/justdirethings/recipes/blazegold_pickaxe.json
 a2238ab5cd51016a56fbeca6012e73535047f341 data/justdirethings/recipes/blazegold_shovel.json
 8aa4fdaa349c3f4459c0940815763f27d1a1b2a4 data/justdirethings/recipes/blazegold_sword.json
+ce8fdfacde7ab0fb3997e90fb284e97675861f8a data/justdirethings/recipes/blockbreakert1.json
 d1e659e96559ddec7b507597cf984d12eb674464 data/justdirethings/recipes/celestigem_9x9.json
 9d31efc5522ee228acb2e4b79ee3309527eaa514 data/justdirethings/recipes/celestigem_axe.json
 fe4fb2ba1820d85791d72f86b13dab3eb8916b91 data/justdirethings/recipes/celestigem_block_9x9.json
