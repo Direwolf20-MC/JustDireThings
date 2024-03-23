@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.network.handler;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
-import com.direwolf20.justdirethings.common.containers.basecontainers.AreaAffectingContainer;
+import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
 import com.direwolf20.justdirethings.common.network.data.FilterSettingPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -24,10 +24,8 @@ public class FilterSettingPacket {
             Player sender = senderOptional.get();
             AbstractContainerMenu container = sender.containerMenu;
 
-            if (container instanceof AreaAffectingContainer areaAffectingContainer) {
-                if (areaAffectingContainer.areaAffectingBE instanceof FilterableBE filterableBE) {
-                    filterableBE.setFilterSettings(payload.allowList(), payload.compareNBT());
-                }
+            if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof FilterableBE filterableBE) {
+                filterableBE.setFilterSettings(payload.allowList(), payload.compareNBT());
             }
         });
     }

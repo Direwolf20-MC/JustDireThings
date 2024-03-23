@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.blocks;
 
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.containers.ItemCollectorContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -202,8 +203,8 @@ public class ItemCollector extends Block implements EntityBlock {
     public void neighborChanged(BlockState blockState, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(blockState, level, pos, blockIn, fromPos, isMoving);
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof ItemCollectorBE itemCollectorBE) {
-            itemCollectorBE.getRedstoneControlData().checkedRedstone = false;
+        if (blockEntity instanceof RedstoneControlledBE redstoneControlledBE) {
+            redstoneControlledBE.getRedstoneControlData().checkedRedstone = false;
         }
     }
 

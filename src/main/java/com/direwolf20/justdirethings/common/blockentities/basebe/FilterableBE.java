@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public interface FilterableBE {
-    FilterBasicHandler getHandler();
+    FilterBasicHandler getFilterHandler();
 
     FilterData getFilterData();
 
@@ -36,7 +36,7 @@ public interface FilterableBE {
         ItemStackKey key = new ItemStackKey(testStack, getFilterData().compareNBT);
         if (getFilterData().filterCache.containsKey(key)) return getFilterData().filterCache.get(key);
 
-        FilterBasicHandler filteredItems = getHandler();
+        FilterBasicHandler filteredItems = getFilterHandler();
         for (int i = 0; i < filteredItems.getSlots(); i++) {
             ItemStack stack = filteredItems.getStackInSlot(i);
             if (stack.isEmpty()) continue;

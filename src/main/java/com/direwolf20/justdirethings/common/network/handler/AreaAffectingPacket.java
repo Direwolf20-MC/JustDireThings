@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.network.handler;
 
-import com.direwolf20.justdirethings.common.containers.basecontainers.AreaAffectingContainer;
+import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
+import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
 import com.direwolf20.justdirethings.common.network.data.AreaAffectingPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,8 +24,8 @@ public class AreaAffectingPacket {
             Player sender = senderOptional.get();
             AbstractContainerMenu container = sender.containerMenu;
 
-            if (container instanceof AreaAffectingContainer areaAffectingContainer) {
-                areaAffectingContainer.areaAffectingBE.setAreaSettings(payload.xRadius(), payload.yRadius(), payload.zRadius(), payload.xOffset(), payload.yOffset(), payload.zOffset(), payload.renderArea());
+            if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof AreaAffectingBE areaAffectingBE) {
+                areaAffectingBE.setAreaSettings(payload.xRadius(), payload.yRadius(), payload.zRadius(), payload.xOffset(), payload.yOffset(), payload.zOffset(), payload.renderArea());
             }
         });
     }

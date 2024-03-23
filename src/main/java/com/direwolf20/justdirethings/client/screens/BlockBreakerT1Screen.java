@@ -3,19 +3,18 @@ package com.direwolf20.justdirethings.client.screens;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
-import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
-import com.direwolf20.justdirethings.common.containers.ItemCollectorContainer;
+import com.direwolf20.justdirethings.common.containers.BlockBreakerT1Container;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class ItemCollectorScreen extends BaseMachineScreen<ItemCollectorContainer> {
-    private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/itemcollector.png");
+public class BlockBreakerT1Screen extends BaseMachineScreen<BlockBreakerT1Container> {
+    private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/blockbreakert1.png");
 
-    public ItemCollectorScreen(ItemCollectorContainer container, Inventory inv, Component name) {
+    public BlockBreakerT1Screen(BlockBreakerT1Container container, Inventory inv, Component name) {
         super(container, inv, name);
     }
 
@@ -28,18 +27,6 @@ public class ItemCollectorScreen extends BaseMachineScreen<ItemCollectorContaine
             ((ToggleButton) b).nextTexturePosition();
             saveSettings();
         }));
-
-        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, getGuiTop() + 45, allowlist, b -> {
-            allowlist = !allowlist;
-            ((GrayscaleButton) b).toggleActive();
-            saveSettings();
-        }));
-
-        addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(getGuiLeft() + 26, getGuiTop() + 45, compareNBT, b -> {
-            compareNBT = !compareNBT;
-            ((GrayscaleButton) b).toggleActive();
-            saveSettings();
-        }));
     }
 
     @Override
@@ -50,8 +37,4 @@ public class ItemCollectorScreen extends BaseMachineScreen<ItemCollectorContaine
         guiGraphics.blit(GUI, relX, relY, 0, 0, this.imageWidth, this.imageHeight);
     }
 
-    @Override
-    public boolean mouseClicked(double x, double y, int btn) {
-        return super.mouseClicked(x, y, btn);
-    }
 }

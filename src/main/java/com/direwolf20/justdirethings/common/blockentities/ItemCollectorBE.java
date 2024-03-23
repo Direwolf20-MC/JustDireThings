@@ -12,9 +12,6 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -71,8 +68,8 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     }
 
     @Override
-    public FilterBasicHandler getHandler() {
-        return getData(Registration.HANDLER_ITEM_COLLECTOR);
+    public FilterBasicHandler getFilterHandler() {
+        return getData(Registration.HANDLER_BASIC_FILTER);
     }
 
     public void doParticles(ItemStack itemStack, Vec3 sourcePos) {
@@ -127,33 +124,5 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
             );
         }
         return attachedInventory.getCapability();
-    }
-
-    @Override
-    public void setChanged() {
-        super.setChanged();
-        getFilterData().filterCache.clear();
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        saveAreaSettings(tag);
-        saveFilterSettings(tag);
-        saveRedstoneSettings(tag);
-    }
-
-    @Override
-    public void load(CompoundTag tag) {
-        loadAreaSettings(tag);
-        loadFilterSettings(tag);
-        loadRedstoneSettings(tag);
-        super.load(tag);
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        getAreaAffectingData().area = null; //Clear this cache when a packet comes in, so it can redraw properly if the area was changed
     }
 }

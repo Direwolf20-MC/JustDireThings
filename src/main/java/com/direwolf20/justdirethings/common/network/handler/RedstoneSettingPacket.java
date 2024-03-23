@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.network.handler;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.common.containers.basecontainers.AreaAffectingContainer;
+import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
 import com.direwolf20.justdirethings.common.network.data.RedstoneSettingPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -24,10 +24,8 @@ public class RedstoneSettingPacket {
             Player sender = senderOptional.get();
             AbstractContainerMenu container = sender.containerMenu;
 
-            if (container instanceof AreaAffectingContainer areaAffectingContainer) {
-                if (areaAffectingContainer.areaAffectingBE instanceof RedstoneControlledBE redstoneControlledBE) {
-                    redstoneControlledBE.setRedstoneSettings(payload.redstoneMode());
-                }
+            if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof RedstoneControlledBE redstoneControlledBE) {
+                redstoneControlledBE.setRedstoneSettings(payload.redstoneMode());
             }
         });
     }

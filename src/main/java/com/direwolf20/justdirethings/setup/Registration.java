@@ -1,8 +1,10 @@
 package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT1BE;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier3;
@@ -16,10 +18,7 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
-import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
-import com.direwolf20.justdirethings.common.containers.ItemCollectorContainer;
-import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
-import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
+import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
@@ -133,6 +132,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier4>> GooBlockBE_Tier4 = BLOCK_ENTITIES.register("gooblock_tier4", () -> BlockEntityType.Builder.of(GooBlockBE_Tier4::new, GooBlock_Tier4.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooSoilBE>> GooSoilBE = BLOCK_ENTITIES.register("goosoilbe", () -> BlockEntityType.Builder.of(GooSoilBE::new, GooSoil_Tier3.get(), GooSoil_Tier4.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemCollectorBE>> ItemCollectorBE = BLOCK_ENTITIES.register("itemcollectorbe", () -> BlockEntityType.Builder.of(ItemCollectorBE::new, ItemCollector.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT1BE>> BlockBreakerT1BE = BLOCK_ENTITIES.register("blockbreakert1", () -> BlockEntityType.Builder.of(BlockBreakerT1BE::new, BlockBreakerT1.get()).build(null));
 
 
     //Items
@@ -180,12 +180,20 @@ public class Registration {
             () -> IMenuTypeExtension.create((windowId, inv, data) -> new ToolSettingContainer(windowId, inv, inv.player, data)));
     public static final DeferredHolder<MenuType<?>, MenuType<ItemCollectorContainer>> Item_Collector_Container = CONTAINERS.register("item_collector_container",
             () -> IMenuTypeExtension.create(ItemCollectorContainer::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<BlockBreakerT1Container>> BlockBreakerT1_Container = CONTAINERS.register("blockbreakert1_container",
+            () -> IMenuTypeExtension.create(BlockBreakerT1Container::new));
 
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(
             "handler", () -> AttachmentType.serializable(() -> new ItemStackHandler(1)).build());
-    public static final Supplier<AttachmentType<FilterBasicHandler>> HANDLER_ITEM_COLLECTOR = ATTACHMENT_TYPES.register(
+    public static final Supplier<AttachmentType<ItemStackHandler>> MACHINE_HANDLER = ATTACHMENT_TYPES.register(
+            "machine_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof BaseMachineBE baseMachineBE)
+                    return new ItemStackHandler(baseMachineBE.MACHINE_SLOTS);
+                return new ItemStackHandler(1);
+            }).build());
+    public static final Supplier<AttachmentType<FilterBasicHandler>> HANDLER_BASIC_FILTER = ATTACHMENT_TYPES.register(
             "handler_item_collector", () -> AttachmentType.serializable(() -> new FilterBasicHandler(9)).build()); //Todo how to generalize these
     public static final Supplier<AttachmentType<EnergyStorage>> ENERGYSTORAGE = ATTACHMENT_TYPES.register(
             "energystorage", () -> AttachmentType.serializable(holder -> {

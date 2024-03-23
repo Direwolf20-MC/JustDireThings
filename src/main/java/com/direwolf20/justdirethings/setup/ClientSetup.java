@@ -11,10 +11,7 @@ import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBloc
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
-import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
-import com.direwolf20.justdirethings.client.screens.ItemCollectorScreen;
-import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
-import com.direwolf20.justdirethings.client.screens.ToolSettingScreen;
+import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -54,6 +51,7 @@ public class ClientSetup {
         event.register(Registration.PocketGenerator_Container.get(), PocketGeneratorScreen::new);
         event.register(Registration.Tool_Settings_Container.get(), ToolSettingScreen::new);
         event.register(Registration.Item_Collector_Container.get(), ItemCollectorScreen::new);
+        event.register(Registration.BlockBreakerT1_Container.get(), BlockBreakerT1Screen::new);
     }
 
     @SubscribeEvent
