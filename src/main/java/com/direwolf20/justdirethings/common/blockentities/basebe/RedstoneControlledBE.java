@@ -3,13 +3,17 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public interface RedstoneControlledBE extends BaseBEInterface {
+public interface RedstoneControlledBE {
     RedstoneControlData getRedstoneControlData();
+
+    BlockEntity getBlockEntity();
 
     default void setRedstoneSettings(int redstoneMode) {
         getRedstoneControlData().redstoneMode = MiscHelpers.RedstoneMode.values()[redstoneMode];
-        markDirtyClient();
+        if (getBlockEntity() instanceof BaseMachineBE baseMachineBE)
+            baseMachineBE.markDirtyClient();
     }
 
     default void tickServer() {

@@ -5,11 +5,14 @@ import com.direwolf20.justdirethings.util.ItemStackKey;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public interface FilterableBE extends BaseBEInterface {
+public interface FilterableBE {
     FilterBasicHandler getHandler();
 
     FilterData getFilterData();
+
+    BlockEntity getBlockEntity();
 
 
     default void saveFilterSettings(CompoundTag tag) {
@@ -25,7 +28,8 @@ public interface FilterableBE extends BaseBEInterface {
     default void setFilterSettings(boolean allowlist, boolean compareNBT) {
         getFilterData().allowlist = allowlist;
         getFilterData().compareNBT = compareNBT;
-        markDirtyClient();
+        if (getBlockEntity() instanceof BaseMachineBE baseMachineBE)
+            baseMachineBE.markDirtyClient();
     }
 
     default boolean isStackValidFilter(ItemStack testStack) {

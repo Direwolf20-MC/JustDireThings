@@ -3,11 +3,14 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 
-public interface AreaAffectingBE extends BaseBEInterface {
+public interface AreaAffectingBE {
     int maxRadius = 5;
     int maxOffset = 9;
+
+    BlockEntity getBlockEntity();
 
     AreaAffectingData getAreaAffectingData();
 
@@ -26,7 +29,8 @@ public interface AreaAffectingBE extends BaseBEInterface {
         getAreaAffectingData().zOffset = Math.max(-maxOffset, Math.min(zo, maxOffset));
         getAreaAffectingData().renderArea = renderArea;
         getAreaAffectingData().area = null;
-        markDirtyClient();
+        if (getBlockEntity() instanceof BaseMachineBE baseMachineBE)
+            baseMachineBE.markDirtyClient();
     }
 
     default void tickClient() {
