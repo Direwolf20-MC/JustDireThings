@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT2BE;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier3;
@@ -212,6 +213,15 @@ public class Registration {
                     return new EnergyStorage(capacity);
                 } else {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
+                }
+            }).build());
+    public static final Supplier<AttachmentType<EnergyStorage>> ENERGYSTORAGE_MACHINES = ATTACHMENT_TYPES.register(
+            "energystorage_machines", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof PoweredMachineBE feMachineBE) {
+                    int capacity = feMachineBE.getMaxEnergy(); //Default
+                    return new EnergyStorage(capacity);
+                } else {
+                    throw new IllegalStateException("Cannot attach energy handler item to a non-PoweredMachine.");
                 }
             }).build());
     public static final Supplier<AttachmentType<EnergyStorageNoReceive>> ENERGYSTORAGENORECEIVE = ATTACHMENT_TYPES.register(

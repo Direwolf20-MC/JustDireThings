@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.UUID;
@@ -61,6 +62,12 @@ public class BaseMachineBE extends BlockEntity {
 
     public ItemStackHandler getMachineHandler() {
         return getData(Registration.MACHINE_HANDLER);
+    }
+
+    public IEnergyStorage getEnergyStorage() {
+        if (this instanceof PoweredMachineBE)
+            return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return null;
     }
 
     @Override
