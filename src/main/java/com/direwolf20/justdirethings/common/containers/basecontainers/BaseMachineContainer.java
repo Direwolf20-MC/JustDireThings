@@ -2,12 +2,14 @@ package com.direwolf20.justdirethings.common.containers.basecontainers;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -18,13 +20,14 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseMachineContainer extends BaseContainer {
-    public static final int FILTER_SLOTS = 9;
+    public int FILTER_SLOTS = 0;
     public int MACHINE_SLOTS = 0;
     public BaseMachineBE baseMachineBE;
     public FilterBasicHandler filterHandler;
     public ItemStackHandler machineHandler;
     protected Player player;
     protected BlockPos pos;
+    public ContainerData data;
 
     public BaseMachineContainer(@Nullable MenuType<?> menuType, int windowId, Inventory playerInventory, BlockPos blockPos) {
         super(menuType, windowId);
@@ -37,15 +40,24 @@ public abstract class BaseMachineContainer extends BaseContainer {
         }
         if (blockEntity instanceof FilterableBE filterableBE) {
             filterHandler = filterableBE.getFilterHandler();
-            addFilterSlots(filterHandler, 0, 8, 63, FILTER_SLOTS, 18);
+            FILTER_SLOTS = filterHandler.getSlots();
+            addFilterSlots(filterHandler, 0, 8, 48, FILTER_SLOTS, 18);
         }
         if (MACHINE_SLOTS > 0)
             addMachineSlots();
+        if (blockEntity instanceof PoweredMachineBE poweredMachineBE) {
+            data = poweredMachineBE.getContainerData();
+        }
     }
 
     //Override this if you want the slot layout to be different...
     public void addMachineSlots() {
-        addSlotRange(baseMachineBE.getMachineHandler(), 0, 80, 35, 1, 18);
+        machineHandler = baseMachineBE.getMachineHandler();
+        addSlotRange(machineHandler, 0, 80, 35, 1, 18);
+    }
+
+    public int getEnergy() {
+        return this.data == null ? 0 : this.data.get(0) * 32;
     }
 
     @Override

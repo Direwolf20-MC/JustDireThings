@@ -70,6 +70,12 @@ public class BaseMachineBE extends BlockEntity {
         return null;
     }
 
+    public int getEnergyStored() {
+        if (this instanceof PoweredMachineBE)
+            return getEnergyStorage().getEnergyStored();
+        return -1;
+    }
+
     @Override
     public void handleUpdateTag(CompoundTag tag) {
         this.load(tag);
