@@ -7,7 +7,9 @@ import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -21,9 +23,14 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlledBE {
-    private record BlockBreakingProgress(BlockState blockState, int ticks) {
+    private record BlockBreakingProgress(BlockState blockState, int ticks, int lastSentProgress) {
+        public BlockBreakingProgress(BlockState blockState, int ticks) {
+            this(blockState, ticks, -1); // Initialize with -1 to indicate no progress sent yet
+        }
     }
 
     HashMap<BlockPos, BlockBreakingProgress> blockBreakingTracker = new HashMap<>();
@@ -50,13 +57,30 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public void tickClient() {
     }
 
-    public void clearTrackerIfNeeded(ItemStack tool) {
+    public void clearTracker(FakePlayer fakePlayer) {
+        Iterator<Map.Entry<BlockPos, BlockBreakingProgress>> iterator = blockBreakingTracker.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<BlockPos, BlockBreakingProgress> entry = iterator.next();
+            BlockPos pos = entry.getKey();
+            removeTrackerEntry(pos, fakePlayer);
+        }
+    }
+
+    public void removeTrackerEntry(BlockPos blockPos, FakePlayer fakePlayer) {
+        sendPackets(fakePlayer.getId(), blockPos, -1);
+        blockBreakingTracker.remove(blockPos);
+    }
+
+    public void clearTrackerIfNeeded(ItemStack tool, BlockPos blockPos, FakePlayer fakePlayer) {
         if (blockBreakingTracker.isEmpty())
             return;
         if (tool.isEmpty())
-            blockBreakingTracker.clear(); //If we were breaking blocks before, and removed the tool, clear the progress
+            clearTracker(fakePlayer); //If we were breaking blocks before, and removed the tool, clear the progress
+        if (blockBreakingTracker.containsKey(blockPos) && !level.getBlockState(blockPos).equals(blockBreakingTracker.get(blockPos).blockState))
+            removeTrackerEntry(blockPos, fakePlayer);
         if (!isActive() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
-            blockBreakingTracker.clear(); //If we are in Pulse Mode, don't clear, but otherwise, do clear on redstone signal turned off
+            clearTracker(fakePlayer); //If we are in Pulse Mode, don't clear, but otherwise, do clear on redstone signal turned off
     }
 
     @Override
@@ -67,9 +91,9 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public void doBlockBreak() {
         ItemStack tool = getTool();
-        clearTrackerIfNeeded(tool);
         BlockPos blockPos = getBlockPos().relative(direction);
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
+        clearTrackerIfNeeded(tool, blockPos, fakePlayer);
         if (!level.mayInteract(fakePlayer, blockPos)) return;
         BlockState blockState = level.getBlockState(blockPos);
         if (!tool.isCorrectToolForDrops(blockState)) {
@@ -94,19 +118,22 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public void mineBlock(BlockPos blockPos, ItemStack tool, FakePlayer player, BlockState blockState) {
         if (blockState.isAir()) { //If we got here, and the block is air, it means we had a block there before and it has since been removed
-            blockBreakingTracker.remove(blockPos);
+            removeTrackerEntry(blockPos, player);
             return;
         }
         BlockBreakingProgress progress = blockBreakingTracker.compute(blockPos, (pos, oldProgress) -> {
-            if (oldProgress != null && oldProgress.blockState().equals(blockState)) {
-                return new BlockBreakingProgress(blockState, oldProgress.ticks + 1);
-            }
-            return new BlockBreakingProgress(blockState, 1);
+            int updatedTicks = oldProgress == null ? 1 : oldProgress.ticks + 1;
+            return new BlockBreakingProgress(blockState, updatedTicks, oldProgress == null ? -1 : oldProgress.lastSentProgress);
         });
-        System.out.println(progress.ticks + ":" + (getDestroyProgress(blockPos, tool, player, blockState) * progress.ticks));
-        if ((getDestroyProgress(blockPos, tool, player, blockState) * progress.ticks) >= 1.0f) {
+        float destroyProgress = (getDestroyProgress(blockPos, tool, player, blockState) * progress.ticks);
+        int currentProgress = (int) (destroyProgress * 10.0F);
+        if (currentProgress != progress.lastSentProgress && currentProgress < 10) {
+            sendPackets(player.getId(), blockPos, currentProgress);
+            blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, progress.ticks, currentProgress));
+        }
+        if (destroyProgress >= 1.0f) {
             tryBreakBlock(tool, player, blockPos, blockState);
-            blockBreakingTracker.remove(blockPos); //Remove it from the tracker whether we successfully broke or not!
+            removeTrackerEntry(blockPos, player); //Remove it from the tracker whether we successfully broke or not!
         }
     }
 
@@ -150,6 +177,19 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
             if (state.getDestroySpeed(level, breakPos) != 0.0F)
                 itemStack.hurtAndBreak(1, player, pOnBroken -> {
                 });
+        }
+    }
+
+    public void sendPackets(int pBreakerId, BlockPos pPos, int pProgress) {
+        for (ServerPlayer serverplayer : level.getServer().getPlayerList().getPlayers()) {
+            if (serverplayer != null && serverplayer.level() == level && serverplayer.getId() != pBreakerId) {
+                double d0 = (double) pPos.getX() - serverplayer.getX();
+                double d1 = (double) pPos.getY() - serverplayer.getY();
+                double d2 = (double) pPos.getZ() - serverplayer.getZ();
+                if (d0 * d0 + d1 * d1 + d2 * d2 < 1024.0) {
+                    serverplayer.connection.send(new ClientboundBlockDestructionPacket(pBreakerId, pPos, pProgress));
+                }
+            }
         }
     }
 }
