@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,19 +50,24 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public void tickClient() {
     }
 
-    public void validateTracker(ItemStack tool) {
-
+    public void clearTrackerIfNeeded(ItemStack tool) {
+        if (blockBreakingTracker.isEmpty())
+            return;
+        if (tool.isEmpty())
+            blockBreakingTracker.clear(); //If we were breaking blocks before, and removed the tool, clear the progress
+        if (!isActive() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
+            blockBreakingTracker.clear(); //If we are in Pulse Mode, don't clear, but otherwise, do clear on redstone signal turned off
     }
 
     @Override
     public void tickServer() {
         super.tickServer();
+        doBlockBreak();
+    }
+
+    public void doBlockBreak() {
         ItemStack tool = getTool();
-        if (tool.isEmpty()) { //Todo handle redstone states
-            if (!blockBreakingTracker.isEmpty())
-                blockBreakingTracker.clear(); //If we were breaking blocks before, and removed the tool, clear the progress!
-            return;
-        }
+        clearTrackerIfNeeded(tool);
         BlockPos blockPos = getBlockPos().relative(direction);
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         if (!level.mayInteract(fakePlayer, blockPos)) return;
