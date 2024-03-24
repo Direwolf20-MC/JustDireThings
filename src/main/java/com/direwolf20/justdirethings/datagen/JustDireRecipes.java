@@ -92,6 +92,17 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlockBreakerT2.get())
+                .pattern("fdf")
+                .pattern("dod")
+                .pattern("frf")
+                .define('o', Registration.BlockBreakerT1_ITEM.get())
+                .define('f', Registration.Celestigem.get())
+                .define('d', Items.ENDER_EYE)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
 
         //Items
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Fuel_Canister.get())

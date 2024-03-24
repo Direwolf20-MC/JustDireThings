@@ -52,6 +52,7 @@ public class ClientSetup {
         event.register(Registration.Tool_Settings_Container.get(), ToolSettingScreen::new);
         event.register(Registration.Item_Collector_Container.get(), ItemCollectorScreen::new);
         event.register(Registration.BlockBreakerT1_Container.get(), BlockBreakerT1Screen::new);
+        event.register(Registration.BlockBreakerT2_Container.get(), BlockBreakerT2Screen::new);
     }
 
     @SubscribeEvent

@@ -27,6 +27,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.GooBlock_Tier4.get(), "Shadowpulse Goo");
         add(Registration.ItemCollector.get(), "Item Collector");
         add(Registration.BlockBreakerT1.get(), "Simple Block Breaker");
+        add(Registration.BlockBreakerT2.get(), "Advanced Block Breaker");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");

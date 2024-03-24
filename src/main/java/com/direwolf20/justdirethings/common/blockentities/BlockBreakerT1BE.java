@@ -16,6 +16,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.common.NeoForge;
@@ -37,10 +38,14 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     private final Direction direction;
 
-    public BlockBreakerT1BE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.BlockBreakerT1BE.get(), pPos, pBlockState);
+    public BlockBreakerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
+        super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1; //Slot for a pickaxe
         direction = getBlockState().getValue(BlockStateProperties.FACING);
+    }
+
+    public BlockBreakerT1BE(BlockPos pPos, BlockState pBlockState) {
+        this(Registration.BlockBreakerT1BE.get(), pPos, pBlockState);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT1BE;
+import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT2BE;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
@@ -10,6 +11,7 @@ import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_T
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier3;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier4;
 import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
+import com.direwolf20.justdirethings.common.blocks.BlockBreakerT2;
 import com.direwolf20.justdirethings.common.blocks.ItemCollector;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.*;
 import com.direwolf20.justdirethings.common.blocks.resources.*;
@@ -92,6 +94,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> ItemCollector_ITEM = ITEMS.register("itemcollector", () -> new BlockItem(ItemCollector.get(), new Item.Properties()));
     public static final DeferredHolder<Block, BlockBreakerT1> BlockBreakerT1 = SIDEDBLOCKS.register("blockbreakert1", BlockBreakerT1::new);
     public static final DeferredHolder<Item, BlockItem> BlockBreakerT1_ITEM = ITEMS.register("blockbreakert1", () -> new BlockItem(BlockBreakerT1.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, BlockBreakerT2> BlockBreakerT2 = SIDEDBLOCKS.register("blockbreakert2", BlockBreakerT2::new);
+    public static final DeferredHolder<Item, BlockItem> BlockBreakerT2_ITEM = ITEMS.register("blockbreakert2", () -> new BlockItem(BlockBreakerT2.get(), new Item.Properties()));
 
 
     //Gooblocks
@@ -133,6 +137,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooSoilBE>> GooSoilBE = BLOCK_ENTITIES.register("goosoilbe", () -> BlockEntityType.Builder.of(GooSoilBE::new, GooSoil_Tier3.get(), GooSoil_Tier4.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemCollectorBE>> ItemCollectorBE = BLOCK_ENTITIES.register("itemcollectorbe", () -> BlockEntityType.Builder.of(ItemCollectorBE::new, ItemCollector.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT1BE>> BlockBreakerT1BE = BLOCK_ENTITIES.register("blockbreakert1", () -> BlockEntityType.Builder.of(BlockBreakerT1BE::new, BlockBreakerT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT2BE>> BlockBreakerT2BE = BLOCK_ENTITIES.register("blockbreakert2", () -> BlockEntityType.Builder.of(BlockBreakerT2BE::new, BlockBreakerT2.get()).build(null));
 
 
     //Items
@@ -182,6 +187,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(ItemCollectorContainer::new));
     public static final DeferredHolder<MenuType<?>, MenuType<BlockBreakerT1Container>> BlockBreakerT1_Container = CONTAINERS.register("blockbreakert1_container",
             () -> IMenuTypeExtension.create(BlockBreakerT1Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<BlockBreakerT2Container>> BlockBreakerT2_Container = CONTAINERS.register("blockbreakert2_container",
+            () -> IMenuTypeExtension.create(BlockBreakerT2Container::new));
 
 
     //Data Attachments

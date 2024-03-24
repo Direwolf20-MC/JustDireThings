@@ -45,7 +45,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.EclipseAlloyBlock.get())
                 .add(Registration.RawEclipseAlloyOre.get())
                 .add(Registration.ItemCollector.get())
-                .add(Registration.BlockBreakerT1.get());
+                .add(Registration.BlockBreakerT1.get())
+                .add(Registration.BlockBreakerT2.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
