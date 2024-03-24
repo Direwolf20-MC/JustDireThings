@@ -53,7 +53,7 @@ public class BlockBreakerT1 extends BaseMachineBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getClickedFace());
+        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
