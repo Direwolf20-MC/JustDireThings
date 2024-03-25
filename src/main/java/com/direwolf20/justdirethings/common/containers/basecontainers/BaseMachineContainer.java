@@ -47,6 +47,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
         }
         if (blockEntity instanceof PoweredMachineBE poweredMachineBE) {
             data = poweredMachineBE.getContainerData();
+            addDataSlots(data);
         }
     }
 

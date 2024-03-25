@@ -6,19 +6,18 @@ import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtons
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
-import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
-import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
-import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
-import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import com.direwolf20.justdirethings.common.network.data.AreaAffectingPayload;
 import com.direwolf20.justdirethings.common.network.data.FilterSettingPayload;
 import com.direwolf20.justdirethings.common.network.data.GhostSlotPayload;
 import com.direwolf20.justdirethings.common.network.data.RedstoneSettingPayload;
+import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,10 +26,12 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends BaseScreen<T> {
     private final ResourceLocation JUSTSLOT = new ResourceLocation(JustDireThings.MODID, "textures/gui/justslot.png");
+    private final ResourceLocation POWERBAR = new ResourceLocation(JustDireThings.MODID, "textures/gui/powerbar.png");
     private final ResourceLocation SOCIALBACKGROUND = new ResourceLocation(JustDireThings.MODID, "background");
     protected BaseMachineContainer container;
     protected BaseMachineBE baseMachineBE;
@@ -187,6 +188,26 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         guiGraphics.blitSprite(SOCIALBACKGROUND, relX, relY + 83 - 8, this.imageWidth, this.imageHeight - 73); //Inventory Section
         for (Slot slot : container.slots) {
             guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
+        }
+        if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
+            guiGraphics.blit(POWERBAR, topSectionLeft + 5, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+            int maxEnergy = poweredMachineBE.getMaxEnergy(), height = 70;
+            if (maxEnergy > 0) {
+                int remaining = (this.container.getEnergy() * height) / maxEnergy;
+                guiGraphics.blit(POWERBAR, topSectionLeft + 5 + 1, topSectionTop + 5 + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
+            }
+        }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        super.renderTooltip(pGuiGraphics, pX, pY);
+        if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
+            if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
+                pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                        Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(this.container.getEnergy()), MagicHelpers.withSuffix(poweredMachineBE.getMaxEnergy()))
+                )), pX, pY);
+            }
         }
     }
 

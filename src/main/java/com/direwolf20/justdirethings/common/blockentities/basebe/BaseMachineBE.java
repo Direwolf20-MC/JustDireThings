@@ -7,9 +7,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -23,11 +25,37 @@ public class BaseMachineBE extends BlockEntity {
     public static final GameProfile defaultFakePlayerProfile = new GameProfile(defaultFakePlayerUUID, "[JustDiresFakePlayer]");
     public UUID placedByUUID;
 
+    public final ContainerData poweredMachineData = new ContainerData() {
+        @Override
+        public int get(int index) {
+            return switch (index) {
+                case 0 -> getEnergyStored() / 32;
+                default -> throw new IllegalArgumentException("Invalid index: " + index);
+            };
+        }
+
+        @Override
+        public void set(int index, int value) {
+            IEnergyStorage cap = level.getCapability(Capabilities.EnergyStorage.BLOCK, getBlockPos(), null);
+            if (cap == null) return;
+            cap.receiveEnergy((value * 32) - cap.getEnergyStored(), false);
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+    };
+
     public BaseMachineBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }
 
     public void tickClient() {
+    }
+
+    public ContainerData getContainerData() {
+        return poweredMachineData;
     }
 
     public void tickServer() {
