@@ -58,7 +58,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
     }
 
     public int getEnergy() {
-        return this.data == null ? 0 : this.data.get(0) * 32;
+        return this.data == null ? 0 : ((this.data.get(1) << 16) | this.data.get(0));
     }
 
     @Override

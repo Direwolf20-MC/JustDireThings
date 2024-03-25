@@ -204,9 +204,14 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         super.renderTooltip(pGuiGraphics, pX, pY);
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
             if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
-                pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
-                        Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(this.container.getEnergy()), MagicHelpers.withSuffix(poweredMachineBE.getMaxEnergy()))
-                )), pX, pY);
+                if (hasShiftDown())
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.energy", MagicHelpers.formatted(this.container.getEnergy()), MagicHelpers.formatted(poweredMachineBE.getMaxEnergy()))
+                    )), pX, pY);
+                else
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(this.container.getEnergy()), MagicHelpers.withSuffix(poweredMachineBE.getMaxEnergy()))
+                    )), pX, pY);
             }
         }
     }

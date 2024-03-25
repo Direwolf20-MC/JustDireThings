@@ -21,6 +21,7 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
@@ -215,11 +216,11 @@ public class Registration {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
                 }
             }).build());
-    public static final Supplier<AttachmentType<EnergyStorage>> ENERGYSTORAGE_MACHINES = ATTACHMENT_TYPES.register(
+    public static final Supplier<AttachmentType<MachineEnergyStorage>> ENERGYSTORAGE_MACHINES = ATTACHMENT_TYPES.register(
             "energystorage_machines", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof PoweredMachineBE feMachineBE) {
                     int capacity = feMachineBE.getMaxEnergy(); //Default
-                    return new EnergyStorage(capacity);
+                    return new MachineEnergyStorage(capacity);
                 } else {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-PoweredMachine.");
                 }

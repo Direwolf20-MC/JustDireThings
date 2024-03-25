@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
+import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -11,10 +12,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.UUID;
@@ -29,21 +28,24 @@ public class BaseMachineBE extends BlockEntity {
         @Override
         public int get(int index) {
             return switch (index) {
-                case 0 -> getEnergyStored() / 32;
+                case 0 -> getEnergyStored() & 0xFFFF;
+                case 1 -> getEnergyStored() >> 16;
                 default -> throw new IllegalArgumentException("Invalid index: " + index);
             };
         }
 
         @Override
         public void set(int index, int value) {
-            IEnergyStorage cap = level.getCapability(Capabilities.EnergyStorage.BLOCK, getBlockPos(), null);
-            if (cap == null) return;
-            cap.receiveEnergy((value * 32) - cap.getEnergyStored(), false);
+            switch (index) {
+                case 0 -> setEnergyStored((getEnergyStored() & 0xFFFF0000) | (value & 0xFFFF));
+                case 1 -> setEnergyStored((getEnergyStored() & 0xFFFF) | (value << 16));
+                default -> throw new IllegalArgumentException("Invalid index: " + index);
+            }
         }
 
         @Override
         public int getCount() {
-            return 1;
+            return 2;
         }
     };
 
@@ -92,7 +94,7 @@ public class BaseMachineBE extends BlockEntity {
         return getData(Registration.MACHINE_HANDLER);
     }
 
-    public IEnergyStorage getEnergyStorage() {
+    public MachineEnergyStorage getEnergyStorage() {
         if (this instanceof PoweredMachineBE)
             return getData(Registration.ENERGYSTORAGE_MACHINES);
         return null;
@@ -102,6 +104,11 @@ public class BaseMachineBE extends BlockEntity {
         if (this instanceof PoweredMachineBE)
             return getEnergyStorage().getEnergyStored();
         return -1;
+    }
+
+    public void setEnergyStored(int value) {
+        if (this instanceof PoweredMachineBE)
+            getEnergyStorage().setEnergy(value);
     }
 
     @Override
