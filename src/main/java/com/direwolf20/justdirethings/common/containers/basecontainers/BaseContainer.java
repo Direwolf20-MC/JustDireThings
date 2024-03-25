@@ -45,12 +45,12 @@ public abstract class BaseContainer extends AbstractContainerMenu {
         return index;
     }
 
-    protected ItemStack quickMoveBasicFilter(ItemStack currentStack, int SLOTS) {
-        for (int i = 0; i < SLOTS; i++) { //Prevents the same item from going in there more than once.
+    protected ItemStack quickMoveBasicFilter(ItemStack currentStack, int startSlot, int SLOTS) {
+        for (int i = startSlot; i < startSlot + SLOTS; i++) { //Prevents the same item from going in there more than once.
             if (ItemStack.isSameItemSameTags(this.slots.get(i).getItem(), currentStack)) //Don't limit tags
                 return ItemStack.EMPTY;
         }
-        if (!this.moveItemStackTo(currentStack, 0, SLOTS, false)) {
+        if (!this.moveItemStackTo(currentStack, startSlot, startSlot + SLOTS, false)) {
             return ItemStack.EMPTY;
         }
         return currentStack;

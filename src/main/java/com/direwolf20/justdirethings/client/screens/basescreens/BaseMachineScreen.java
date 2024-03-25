@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtons;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
+import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
@@ -87,45 +88,74 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         setTopSection();
         calculateTopSection();
         valueButtonsList.clear();
-        if (baseMachineBE instanceof AreaAffectingBE) {
-            addRenderableWidget(ToggleButtonFactory.RENDERAREABUTTON(getGuiLeft() + 152, topSectionTop + 55, renderArea, b -> {
-                renderArea = !renderArea;
-                ((GrayscaleButton) b).toggleActive();
-                saveSettings();
-            }));
+        if (baseMachineBE instanceof AreaAffectingBE)
+            addAreaButtons();
+        if (baseMachineBE instanceof RedstoneControlledBE)
+            addRedstoneButtons();
+        if (baseMachineBE instanceof FilterableBE)
+            addFilterButtons();
+    }
 
-            valueButtonsList.add(new ValueButtons(getGuiLeft() + 25, topSectionTop + 18, xRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
-                xRadius = value;
-                saveSettings();
-            }));
+    public void addRedstoneButtons() {
+        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 134, topSectionTop + 62, redstoneMode.ordinal(), b -> {
+            redstoneMode = redstoneMode.next();
+            ((ToggleButton) b).nextTexturePosition();
+            saveSettings();
+        }));
+    }
 
-            valueButtonsList.add(new ValueButtons(getGuiLeft() + 75, topSectionTop + 18, yRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
-                yRadius = value;
-                saveSettings();
-            }));
+    public void addFilterButtons() {
+        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, topSectionTop + 62, allowlist, b -> {
+            allowlist = !allowlist;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
 
-            valueButtonsList.add(new ValueButtons(getGuiLeft() + 125, topSectionTop + 18, zRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
-                zRadius = value;
-                saveSettings();
-            }));
+        addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(getGuiLeft() + 26, topSectionTop + 62, compareNBT, b -> {
+            compareNBT = !compareNBT;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
+    }
 
-            valueButtonsList.add(new ValueButtons(getGuiLeft() + 25, topSectionTop + 33, xOffset, -ItemCollectorBE.maxOffset, ItemCollectorBE.maxOffset, font, (button, value) -> {
-                xOffset = value;
-                saveSettings();
-            }));
+    public void addAreaButtons() {
+        addRenderableWidget(ToggleButtonFactory.RENDERAREABUTTON(getGuiLeft() + 152, topSectionTop + 62, renderArea, b -> {
+            renderArea = !renderArea;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
 
-            valueButtonsList.add(new ValueButtons(getGuiLeft() + 75, topSectionTop + 33, yOffset, -ItemCollectorBE.maxOffset, ItemCollectorBE.maxOffset, font, (button, value) -> {
-                yOffset = value;
-                saveSettings();
-            }));
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 25, topSectionTop + 12, xRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+            xRadius = value;
+            saveSettings();
+        }));
 
-            valueButtonsList.add(new ValueButtons(getGuiLeft() + 125, topSectionTop + 33, zOffset, -ItemCollectorBE.maxOffset, ItemCollectorBE.maxOffset, font, (button, value) -> {
-                zOffset = value;
-                saveSettings();
-            }));
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 75, topSectionTop + 12, yRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+            yRadius = value;
+            saveSettings();
+        }));
 
-            valueButtonsList.forEach(valueButtons -> valueButtons.widgetList.forEach(this::addRenderableWidget));
-        }
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 125, topSectionTop + 12, zRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+            zRadius = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 25, topSectionTop + 27, xOffset, -ItemCollectorBE.maxOffset, ItemCollectorBE.maxOffset, font, (button, value) -> {
+            xOffset = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 75, topSectionTop + 27, yOffset, -ItemCollectorBE.maxOffset, ItemCollectorBE.maxOffset, font, (button, value) -> {
+            yOffset = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.add(new ValueButtons(getGuiLeft() + 125, topSectionTop + 27, zOffset, -ItemCollectorBE.maxOffset, ItemCollectorBE.maxOffset, font, (button, value) -> {
+            zOffset = value;
+            saveSettings();
+        }));
+
+        valueButtonsList.forEach(valueButtons -> valueButtons.widgetList.forEach(this::addRenderableWidget));
     }
 
     @Override
@@ -141,11 +171,11 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         if (baseMachineBE instanceof AreaAffectingBE) {
             int areaWidth = 158; //The width of the area buttons is 157, including labels
             int xStart = topSectionLeft + (topSectionWidth / 2) - (areaWidth / 2) - getGuiLeft();
-            guiGraphics.drawString(this.font, Component.literal("Rad"), xStart - 4, topSectionTop - 73, 4210752, false);
-            guiGraphics.drawString(this.font, Component.literal("Off"), xStart - 4, topSectionTop - 58, 4210752, false);
-            guiGraphics.drawString(this.font, Component.literal("X"), xStart + 35, topSectionTop - 83, 4210752, false);
-            guiGraphics.drawString(this.font, Component.literal("Y"), xStart + 85, topSectionTop - 83, 4210752, false);
-            guiGraphics.drawString(this.font, Component.literal("Z"), xStart + 135, topSectionTop - 83, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("Rad"), xStart - 4, topSectionTop - 79, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("Off"), xStart - 4, topSectionTop - 64, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("X"), xStart + 35, topSectionTop - 89, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("Y"), xStart + 85, topSectionTop - 89, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("Z"), xStart + 135, topSectionTop - 89, 4210752, false);
         }
     }
 

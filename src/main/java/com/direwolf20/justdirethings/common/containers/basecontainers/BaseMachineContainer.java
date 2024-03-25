@@ -38,13 +38,13 @@ public abstract class BaseMachineContainer extends BaseContainer {
             this.baseMachineBE = baseMachineBE;
             this.MACHINE_SLOTS = baseMachineBE.MACHINE_SLOTS;
         }
+        if (MACHINE_SLOTS > 0)
+            addMachineSlots();
         if (blockEntity instanceof FilterableBE filterableBE) {
             filterHandler = filterableBE.getFilterHandler();
             FILTER_SLOTS = filterHandler.getSlots();
-            addFilterSlots(filterHandler, 0, 8, 48, FILTER_SLOTS, 18);
+            addFilterSlots(filterHandler, 0, 8, 54, FILTER_SLOTS, 18);
         }
-        if (MACHINE_SLOTS > 0)
-            addMachineSlots();
         if (blockEntity instanceof PoweredMachineBE poweredMachineBE) {
             data = poweredMachineBE.getContainerData();
         }
@@ -62,7 +62,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
 
     @Override
     public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
-        if (baseMachineBE instanceof FilterableBE && slotId >= 0 && slotId < FILTER_SLOTS) {
+        if (baseMachineBE instanceof FilterableBE && slotId >= MACHINE_SLOTS && slotId < FILTER_SLOTS) {
             return;
         }
         super.clicked(slotId, dragType, clickTypeIn, player);
@@ -71,28 +71,18 @@ public abstract class BaseMachineContainer extends BaseContainer {
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        if (baseMachineBE instanceof FilterableBE) {
-            Slot slot = this.slots.get(index);
-            if (slot.hasItem()) {
-                if (index >= FILTER_SLOTS) { //Only do this if we click from the players inventory
-                    ItemStack currentStack = slot.getItem().copy();
-                    currentStack.setCount(1);
-                    return quickMoveBasicFilter(currentStack, FILTER_SLOTS);
-                }
-            }
-        }
         if (MACHINE_SLOTS > 0) {
             Slot slot = this.slots.get(index);
             if (slot.hasItem()) {
                 ItemStack currentStack = slot.getItem();
-                if (index < MACHINE_SLOTS) { //Slot to Player Inventory
+                if (index < MACHINE_SLOTS) { //Machine Slots to Player Inventory
                     if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS, Inventory.INVENTORY_SIZE + MACHINE_SLOTS, true)) {
                         return ItemStack.EMPTY;
                     }
                 }
-                if (index >= MACHINE_SLOTS) { //Player Inventory to Slots
+                if (index >= MACHINE_SLOTS + FILTER_SLOTS) { //Player Inventory to Machine Slots
                     if (!this.moveItemStackTo(currentStack, 0, MACHINE_SLOTS, false)) {
-                        return ItemStack.EMPTY;
+                        //No-Op, pass along to Filter Handler below
                     }
                 }
 
@@ -107,6 +97,16 @@ public abstract class BaseMachineContainer extends BaseContainer {
                 }
 
                 slot.onTake(playerIn, currentStack);
+            }
+        }
+        if (baseMachineBE instanceof FilterableBE) {
+            Slot slot = this.slots.get(index);
+            if (slot.hasItem()) {
+                if (index >= MACHINE_SLOTS + FILTER_SLOTS) { //Only do this if we click from the players inventory
+                    ItemStack currentStack = slot.getItem().copy();
+                    currentStack.setCount(1);
+                    return quickMoveBasicFilter(currentStack, MACHINE_SLOTS, FILTER_SLOTS);
+                }
             }
         }
         return itemstack;
