@@ -21,6 +21,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
@@ -50,12 +51,12 @@ public class Helpers {
             if (NeoForge.EVENT_BUS.post(event).isCanceled()) return drops;
 
             BlockState state = level.getBlockState(pos);
-
+            BlockEntity blockEntity = level.getBlockEntity(pos);
             //This is how vanilla does it?
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
                 if (level instanceof ServerLevel serverLevel)
-                    drops.addAll(Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos), pPlayer, pStack));
+                    drops.addAll(Block.getDrops(state, serverLevel, pos, blockEntity, pPlayer, pStack));
                 state.getBlock().destroy(level, pos, state);
                 player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
                 player.causeFoodExhaustion(0.005F);
