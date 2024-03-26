@@ -172,11 +172,11 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         if (baseMachineBE instanceof AreaAffectingBE) {
             int areaWidth = 158; //The width of the area buttons is 157, including labels
             int xStart = topSectionLeft + (topSectionWidth / 2) - (areaWidth / 2) - getGuiLeft();
-            guiGraphics.drawString(this.font, Component.literal("Rad"), xStart - 4, topSectionTop - 79, 4210752, false);
-            guiGraphics.drawString(this.font, Component.literal("Off"), xStart - 4, topSectionTop - 64, 4210752, false);
-            guiGraphics.drawString(this.font, Component.literal("X"), xStart + 35, topSectionTop - 89, 4210752, false);
-            guiGraphics.drawString(this.font, Component.literal("Y"), xStart + 85, topSectionTop - 89, 4210752, false);
-            guiGraphics.drawString(this.font, Component.literal("Z"), xStart + 135, topSectionTop - 89, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("Rad"), xStart - 4, topSectionTop - getGuiTop() + 14, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("Off"), xStart - 4, topSectionTop - getGuiTop() + 29, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("X"), xStart + 35, topSectionTop - getGuiTop() + 4, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("Y"), xStart + 85, topSectionTop - getGuiTop() + 4, 4210752, false);
+            guiGraphics.drawString(this.font, Component.literal("Z"), xStart + 135, topSectionTop - getGuiTop() + 4, 4210752, false);
         }
     }
 
