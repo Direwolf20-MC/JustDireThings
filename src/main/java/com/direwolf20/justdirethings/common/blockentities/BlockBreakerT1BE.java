@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -35,20 +36,25 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     HashMap<BlockPos, BlockBreakingProgress> blockBreakingTracker = new HashMap<>();
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
-    protected Direction direction;
+    protected Direction direction = Direction.DOWN; //To avoid nulls
 
     public BlockBreakerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1; //Slot for a pickaxe
-        setDirection();
+        if (pBlockState.getBlock() instanceof BlockBreakerT1) //Only do this for the Tier 1, as its the only one with a facing....
+            direction = getBlockState().getValue(BlockStateProperties.FACING);
     }
 
     public BlockBreakerT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.BlockBreakerT1BE.get(), pPos, pBlockState);
     }
 
-    public void setDirection() {
-        direction = getBlockState().getValue(BlockStateProperties.FACING);
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
     @Override
@@ -195,9 +201,11 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
-        float xRot = direction == Direction.DOWN ? -90 : direction == Direction.UP ? -90 : 0;
+        fakePlayer.setPos(breakPos.below().relative(direction).getX() + 0.5, breakPos.below().relative(direction).getY(), breakPos.below().relative(direction).getZ() + 0.5);
+        float xRot = direction == Direction.DOWN ? -90 : direction == Direction.UP ? 90 : 0;
         fakePlayer.setXRot(xRot);
         fakePlayer.setYRot(direction.toYRot());
+        fakePlayer.setYHeadRot(direction.toYRot());
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, tool);
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
         if (NeoForge.EVENT_BUS.post(event).isCanceled()) return false;

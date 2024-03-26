@@ -124,6 +124,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.denylist", "Deny List");
         add("justdirethings.screen.renderarea", "Render Area");
         add("justdirethings.screen.comparenbt", "Compare NBT");
+        add("justdirethings.screen.direction-down", "Down");
+        add("justdirethings.screen.direction-up", "Up");
+        add("justdirethings.screen.direction-north", "North");
+        add("justdirethings.screen.direction-south", "South");
+        add("justdirethings.screen.direction-west", "West");
+        add("justdirethings.screen.direction-east", "East");
 
 
         //Buttons

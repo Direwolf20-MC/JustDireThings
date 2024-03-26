@@ -9,6 +9,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -21,11 +22,6 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
 
     public BlockBreakerT2BE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.BlockBreakerT2BE.get(), pPos, pBlockState);
-    }
-
-    @Override
-    public void setDirection() {
-        direction = Direction.UP; //Todo UI Button
     }
 
     @Override
@@ -61,5 +57,18 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
                 })
                 .map(BlockPos::immutable)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        if (direction != null)
+            tag.putInt("direction", direction.ordinal());
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        direction = Direction.values()[tag.getInt("direction")];
+        super.load(tag);
     }
 }
