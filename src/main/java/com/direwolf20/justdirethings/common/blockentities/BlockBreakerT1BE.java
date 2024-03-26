@@ -35,16 +35,20 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     HashMap<BlockPos, BlockBreakingProgress> blockBreakingTracker = new HashMap<>();
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
-    private final Direction direction;
+    protected Direction direction;
 
     public BlockBreakerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1; //Slot for a pickaxe
-        direction = getBlockState().getValue(BlockStateProperties.FACING);
+        setDirection();
     }
 
     public BlockBreakerT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.BlockBreakerT1BE.get(), pPos, pBlockState);
+    }
+
+    public void setDirection() {
+        direction = getBlockState().getValue(BlockStateProperties.FACING);
     }
 
     @Override

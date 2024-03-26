@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -16,10 +17,15 @@ import java.util.stream.Collectors;
 
 public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
     public FilterData filterData = new FilterData();
-    public AreaAffectingData areaAffectingData = new AreaAffectingData(1, 1, 1, 0, 0, 0);
+    public AreaAffectingData areaAffectingData = new AreaAffectingData(0, 0, 0, 0, 1, 0);
 
     public BlockBreakerT2BE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.BlockBreakerT2BE.get(), pPos, pBlockState);
+    }
+
+    @Override
+    public void setDirection() {
+        direction = Direction.UP; //Todo UI Button
     }
 
     @Override
@@ -47,6 +53,8 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
         AABB area = getAABB(getBlockPos());
         return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
                 .filter(blockPos -> {
+                    if (blockPos.equals(getBlockPos()))
+                        return false;
                     if (blockBreakingTracker.containsKey(blockPos))
                         return false;
                     return true;

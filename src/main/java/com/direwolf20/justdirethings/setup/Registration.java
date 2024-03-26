@@ -96,7 +96,7 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> ItemCollector_ITEM = ITEMS.register("itemcollector", () -> new BlockItem(ItemCollector.get(), new Item.Properties()));
     public static final DeferredHolder<Block, BlockBreakerT1> BlockBreakerT1 = SIDEDBLOCKS.register("blockbreakert1", BlockBreakerT1::new);
     public static final DeferredHolder<Item, BlockItem> BlockBreakerT1_ITEM = ITEMS.register("blockbreakert1", () -> new BlockItem(BlockBreakerT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, BlockBreakerT2> BlockBreakerT2 = SIDEDBLOCKS.register("blockbreakert2", BlockBreakerT2::new);
+    public static final DeferredHolder<Block, BlockBreakerT2> BlockBreakerT2 = BLOCKS.register("blockbreakert2", BlockBreakerT2::new);
     public static final DeferredHolder<Item, BlockItem> BlockBreakerT2_ITEM = ITEMS.register("blockbreakert2", () -> new BlockItem(BlockBreakerT2.get(), new Item.Properties()));
 
 
