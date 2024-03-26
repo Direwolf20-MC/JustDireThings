@@ -23,14 +23,13 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlledBE {
-    private record BlockBreakingProgress(BlockState blockState, int ticks, int lastSentProgress) {
-        public BlockBreakingProgress(BlockState blockState, int ticks) {
-            this(blockState, ticks, -1); // Initialize with -1 to indicate no progress sent yet
+    //BlockState we're breaking, ticks since we started, lastpacket progress we sent, and an iterator, because each packet needs a unique breaker ID
+    private record BlockBreakingProgress(BlockState blockState, int ticks, int lastSentProgress, int iterator) {
+        public BlockBreakingProgress(BlockState blockState, int ticks, int iterator) {
+            this(blockState, ticks, -1, iterator); // Initialize with -1 to indicate no progress sent yet
         }
     }
 
@@ -68,22 +67,24 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, BlockBreakingProgress> entry = iterator.next();
             BlockPos pos = entry.getKey();
-            removeTrackerEntry(pos, fakePlayer);
+            removeTrackerEntry(pos, fakePlayer.getId() + entry.getValue().iterator);
         }
     }
 
-    public void removeTrackerEntry(BlockPos blockPos, FakePlayer fakePlayer) {
-        sendPackets(fakePlayer.getId(), blockPos, -1);
+    public void sendClearPacket(BlockPos blockPos, int pBreakerId) {
+        sendPackets(pBreakerId, blockPos, -1);
+    }
+
+    public void removeTrackerEntry(BlockPos blockPos, int pBreakerId) {
+        sendClearPacket(blockPos, pBreakerId);
         blockBreakingTracker.remove(blockPos);
     }
 
-    public void clearTrackerIfNeeded(ItemStack tool, BlockPos blockPos, FakePlayer fakePlayer) {
+    public void clearTrackerIfNeeded(ItemStack tool, FakePlayer fakePlayer) {
         if (blockBreakingTracker.isEmpty())
             return;
         if (tool.isEmpty())
             clearTracker(fakePlayer); //If we were breaking blocks before, and removed the tool, clear the progress
-        if (blockBreakingTracker.containsKey(blockPos) && !level.getBlockState(blockPos).equals(blockBreakingTracker.get(blockPos).blockState))
-            removeTrackerEntry(blockPos, fakePlayer);
         if (!isActive() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
             clearTracker(fakePlayer); //If we are in Pulse Mode, don't clear, but otherwise, do clear on redstone signal turned off
     }
@@ -96,50 +97,76 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public void doBlockBreak() {
         ItemStack tool = getTool();
-        BlockPos blockPos = getBlockPos().relative(direction);
+        Set<BlockPos> blocksToMine = findBlocksToMine();
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
-        clearTrackerIfNeeded(tool, blockPos, fakePlayer);
-        if (!level.mayInteract(fakePlayer, blockPos)) return;
-        BlockState blockState = level.getBlockState(blockPos);
-        if (!tool.isCorrectToolForDrops(blockState)) {
-            return;
-        }
+        clearTrackerIfNeeded(tool, fakePlayer);
+        if (tool.isEmpty()) return;
         if (isActive()) {
-            if (!blockState.isAir() && !blockBreakingTracker.containsKey(blockPos)) //Start tracking the mine!
-                startMining(blockPos, blockState);
+            for (BlockPos blockPos : blocksToMine) {
+                BlockState blockState = level.getBlockState(blockPos);
+                if (!blockState.isAir() && !blockBreakingTracker.containsKey(blockPos)) //Start tracking the mine!
+                    startMining(fakePlayer, blockPos, blockState, tool);
+            }
         }
-        for (BlockPos mineBlocks : blockBreakingTracker.keySet()) {
-            mineBlock(mineBlocks, tool, fakePlayer, blockState);
+        Iterator<Map.Entry<BlockPos, BlockBreakingProgress>> iterator = blockBreakingTracker.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<BlockPos, BlockBreakingProgress> entry = iterator.next();
+            if (mineBlock(entry.getKey(), tool, fakePlayer)) {
+                sendClearPacket(entry.getKey(), fakePlayer.getId() + entry.getValue().iterator);
+                iterator.remove();
+            }
         }
+    }
+
+    public Set<BlockPos> findBlocksToMine() {
+        Set<BlockPos> returnList = new HashSet<>();
+        BlockPos blockPos = getBlockPos().relative(direction);
+        if (!blockBreakingTracker.containsKey(blockPos))
+            returnList.add(blockPos);
+        return returnList;
     }
 
     public ItemStack getTool() {
         return getMachineHandler().getStackInSlot(0);
     }
 
-    public void startMining(BlockPos blockPos, BlockState blockState) {
-        blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0));
+    public int generatePosHash() {
+        BlockPos blockPos = getBlockPos();
+        return blockPos.getX() + blockPos.getY() + blockPos.getZ(); //For now this is probably good enough, will add more randomness if needed
     }
 
-    public void mineBlock(BlockPos blockPos, ItemStack tool, FakePlayer player, BlockState blockState) {
-        if (blockState.isAir()) { //If we got here, and the block is air, it means we had a block there before and it has since been removed
-            removeTrackerEntry(blockPos, player);
-            return;
+    public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
+        if (!tool.isCorrectToolForDrops(blockState)) return;
+        if (!level.mayInteract(fakePlayer, blockPos)) return;
+        blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash()));
+    }
+
+    /**
+     * @return true if we should remove the block from the map (Via the iterator - above)
+     */
+    public boolean mineBlock(BlockPos blockPos, ItemStack tool, FakePlayer player) {
+        BlockState blockState = level.getBlockState(blockPos);
+        if (blockState.isAir() || !tool.isCorrectToolForDrops(blockState)) { //If we got here, and the block is air, it means we had a block there before and it has since been removed
+            return true;
+        }
+        if (blockBreakingTracker.containsKey(blockPos) && !level.getBlockState(blockPos).equals(blockBreakingTracker.get(blockPos).blockState)) {
+            return true;
         }
         BlockBreakingProgress progress = blockBreakingTracker.compute(blockPos, (pos, oldProgress) -> {
             int updatedTicks = oldProgress == null ? 1 : oldProgress.ticks + 1;
-            return new BlockBreakingProgress(blockState, updatedTicks, oldProgress == null ? -1 : oldProgress.lastSentProgress);
+            return new BlockBreakingProgress(blockState, updatedTicks, oldProgress == null ? -1 : oldProgress.lastSentProgress, oldProgress.iterator);
         });
         float destroyProgress = (getDestroyProgress(blockPos, tool, player, blockState) * progress.ticks);
         int currentProgress = (int) (destroyProgress * 10.0F);
         if (currentProgress != progress.lastSentProgress && currentProgress < 10) {
-            sendPackets(player.getId(), blockPos, currentProgress);
-            blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, progress.ticks, currentProgress));
+            sendPackets(player.getId() + progress.iterator, blockPos, currentProgress);
+            blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, progress.ticks, currentProgress, progress.iterator));
         }
         if (destroyProgress >= 1.0f) {
             tryBreakBlock(tool, player, blockPos, blockState);
-            removeTrackerEntry(blockPos, player); //Remove it from the tracker whether we successfully broke or not!
+            return true;
         }
+        return false;
     }
 
     public float getDestroyProgress(BlockPos blockPos, ItemStack tool, FakePlayer player, BlockState blockState) {

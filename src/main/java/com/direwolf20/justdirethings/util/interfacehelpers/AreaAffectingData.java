@@ -11,4 +11,13 @@ public class AreaAffectingData {
     public AreaAffectingData() {
 
     }
+
+    public AreaAffectingData(int xRadius, int yRadius, int zRadius, int xOffset, int yOffset, int zOffset) {
+        this.xRadius = xRadius;
+        this.yRadius = yRadius;
+        this.zRadius = zRadius;
+        this.xOffset = xOffset;
+        this.yOffset = yOffset;
+        this.zOffset = zOffset;
+    }
 }

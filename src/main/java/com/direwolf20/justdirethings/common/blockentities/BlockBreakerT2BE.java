@@ -9,10 +9,14 @@ import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
     public FilterData filterData = new FilterData();
-    public AreaAffectingData areaAffectingData = new AreaAffectingData();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData(1, 1, 1, 0, 0, 0);
 
     public BlockBreakerT2BE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.BlockBreakerT2BE.get(), pPos, pBlockState);
@@ -36,5 +40,18 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     @Override
     public FilterData getFilterData() {
         return filterData;
+    }
+
+    @Override
+    public Set<BlockPos> findBlocksToMine() {
+        AABB area = getAABB(getBlockPos());
+        return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
+                .filter(blockPos -> {
+                    if (blockBreakingTracker.containsKey(blockPos))
+                        return false;
+                    return true;
+                })
+                .map(BlockPos::immutable)
+                .collect(Collectors.toSet());
     }
 }
