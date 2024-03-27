@@ -34,7 +34,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         }
     }
 
-    HashMap<BlockPos, BlockBreakingProgress> blockBreakingTracker = new HashMap<>();
+    LinkedHashMap<BlockPos, BlockBreakingProgress> blockBreakingTracker = new LinkedHashMap<>();
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     protected Direction direction = Direction.DOWN; //To avoid nulls
 
@@ -76,18 +76,13 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, BlockBreakingProgress> entry = iterator.next();
-            BlockPos pos = entry.getKey();
-            removeTrackerEntry(pos, fakePlayer.getId() + entry.getValue().iterator);
+            sendClearPacket(entry.getKey(), fakePlayer.getId() + entry.getValue().iterator);
+            iterator.remove();
         }
     }
 
     public void sendClearPacket(BlockPos blockPos, int pBreakerId) {
         sendPackets(pBreakerId, blockPos, -1);
-    }
-
-    public void removeTrackerEntry(BlockPos blockPos, int pBreakerId) {
-        sendClearPacket(blockPos, pBreakerId);
-        blockBreakingTracker.remove(blockPos);
     }
 
     public void clearTrackerIfNeeded(ItemStack tool, FakePlayer fakePlayer) {
@@ -107,11 +102,11 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public void doBlockBreak() {
         ItemStack tool = getTool();
-        Set<BlockPos> blocksToMine = findBlocksToMine();
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         clearTrackerIfNeeded(tool, fakePlayer);
         if (tool.isEmpty()) return;
-        if (isActive()) {
+        if (isActive() && blockBreakingTracker.isEmpty()) {
+            List<BlockPos> blocksToMine = findBlocksToMine();
             for (BlockPos blockPos : blocksToMine) {
                 BlockState blockState = level.getBlockState(blockPos);
                 if (!blockState.isAir() && !blockBreakingTracker.containsKey(blockPos)) //Start tracking the mine!
@@ -119,17 +114,20 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
             }
         }
         Iterator<Map.Entry<BlockPos, BlockBreakingProgress>> iterator = blockBreakingTracker.entrySet().iterator();
+        int i = 0;
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, BlockBreakingProgress> entry = iterator.next();
             if (mineBlock(entry.getKey(), tool, fakePlayer)) {
                 sendClearPacket(entry.getKey(), fakePlayer.getId() + entry.getValue().iterator);
                 iterator.remove();
             }
+            i++;
+            if (i == 1) break;
         }
     }
 
-    public Set<BlockPos> findBlocksToMine() {
-        Set<BlockPos> returnList = new HashSet<>();
+    public List<BlockPos> findBlocksToMine() {
+        List<BlockPos> returnList = new ArrayList<>();
         BlockPos blockPos = getBlockPos().relative(direction);
         if (!blockBreakingTracker.containsKey(blockPos))
             returnList.add(blockPos);
