@@ -89,6 +89,8 @@
   "justdirethings.screen.direction-up": "Up",
   "justdirethings.screen.direction-west": "West",
   "justdirethings.screen.energy": "Energy: %s/%s FE",
+  "justdirethings.screen.filter-block": "Filter: Block",
+  "justdirethings.screen.filter-item": "Filter: Item",
   "justdirethings.screen.high": "High",
   "justdirethings.screen.ignored": "Ignored",
   "justdirethings.screen.low": "Low",

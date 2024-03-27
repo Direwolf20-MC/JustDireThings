@@ -16,6 +16,7 @@ import com.direwolf20.justdirethings.common.network.data.RedstoneSettingPayload;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
+import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
@@ -38,8 +39,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     protected int xRadius = 3, yRadius = 3, zRadius = 3;
     protected int xOffset = 0, yOffset = 0, zOffset = 0;
     protected boolean renderArea = false;
-    protected boolean allowlist = false;
-    protected boolean compareNBT = false;
+    protected FilterData filterData;
     protected MiscHelpers.RedstoneMode redstoneMode;
     protected List<ValueButtons> valueButtonsList = new ArrayList<>();
     protected int topSectionLeft;
@@ -63,8 +63,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             this.renderArea = areaAffectingBE.getAreaAffectingData().renderArea;
         }
         if (baseMachineBE instanceof FilterableBE filterableBE) {
-            this.allowlist = filterableBE.getFilterData().allowlist;
-            this.compareNBT = filterableBE.getFilterData().compareNBT;
+            this.filterData = filterableBE.getFilterData();
         }
         if (baseMachineBE instanceof RedstoneControlledBE redstoneControlledBE) {
             this.redstoneMode = redstoneControlledBE.getRedstoneControlData().redstoneMode;
@@ -106,17 +105,25 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     }
 
     public void addFilterButtons() {
-        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, topSectionTop + 62, allowlist, b -> {
-            allowlist = !allowlist;
+        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, topSectionTop + 62, filterData.allowlist, b -> {
+            filterData.allowlist = !filterData.allowlist;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
 
-        addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(getGuiLeft() + 26, topSectionTop + 62, compareNBT, b -> {
-            compareNBT = !compareNBT;
+        addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(getGuiLeft() + 26, topSectionTop + 62, filterData.compareNBT, b -> {
+            filterData.compareNBT = !filterData.compareNBT;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
+
+        if (filterData.blockItemFilter != -1) {
+            addRenderableWidget(ToggleButtonFactory.FILTERBLOCKITEMBUTTON(getGuiLeft() + 44, topSectionTop + 62, filterData.blockItemFilter, b -> {
+                filterData.blockItemFilter = filterData.blockItemFilter == 0 ? 1 : 0;
+                ((ToggleButton) b).setTexturePosition(filterData.blockItemFilter);
+                saveSettings();
+            }));
+        }
     }
 
     public void addAreaButtons() {
@@ -242,7 +249,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         if (baseMachineBE instanceof AreaAffectingBE)
             PacketDistributor.SERVER.noArg().send(new AreaAffectingPayload(xRadius, yRadius, zRadius, xOffset, yOffset, zOffset, renderArea));
         if (baseMachineBE instanceof FilterableBE)
-            PacketDistributor.SERVER.noArg().send(new FilterSettingPayload(allowlist, compareNBT));
+            PacketDistributor.SERVER.noArg().send(new FilterSettingPayload(filterData.allowlist, filterData.compareNBT, filterData.blockItemFilter));
         if (baseMachineBE instanceof RedstoneControlledBE)
             PacketDistributor.SERVER.noArg().send(new RedstoneSettingPayload(redstoneMode.ordinal()));
     }

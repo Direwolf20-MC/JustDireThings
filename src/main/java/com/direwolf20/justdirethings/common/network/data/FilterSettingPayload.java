@@ -7,18 +7,20 @@ import net.minecraft.resources.ResourceLocation;
 
 public record FilterSettingPayload(
         boolean allowList,
-        boolean compareNBT
+        boolean compareNBT,
+        int blockItemFilter
 ) implements CustomPacketPayload {
     public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "filter_setting_packet");
 
     public FilterSettingPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readBoolean(), buffer.readBoolean());
+        this(buffer.readBoolean(), buffer.readBoolean(), buffer.readInt());
     }
 
     @Override
     public void write(FriendlyByteBuf buffer) {
         buffer.writeBoolean(allowList);
         buffer.writeBoolean(compareNBT);
+        buffer.writeInt(blockItemFilter);
     }
 
     @Override

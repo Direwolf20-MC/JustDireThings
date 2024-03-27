@@ -154,6 +154,18 @@ public class Helpers {
         }
     }
 
+    public static ItemStack getSmeltedItem(Level level, ItemStack itemStack) {
+        RegistryAccess registryAccess = level.registryAccess();
+        RecipeManager recipeManager = level.getRecipeManager();
+        ItemStack returnStack = ItemStack.EMPTY;
+        Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(itemStack), level);
+        if (smeltingRecipe.isPresent() && !itemStack.is(JustDireItemTags.AUTO_SMELT_DENY))
+            returnStack = smeltingRecipe.get().value().getResultItem(registryAccess);
+        if (returnStack.isEmpty()) return itemStack;
+        return returnStack;
+    }
+
+
     public static List<ItemStack> smeltDrops(ServerLevel level, List<ItemStack> drops, ItemStack tool, LivingEntity entityLiving, boolean[] didISmelt) {
         List<ItemStack> returnList = new ArrayList<>();
         RegistryAccess registryAccess = level.registryAccess();

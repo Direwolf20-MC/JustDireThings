@@ -130,6 +130,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.direction-south", "South");
         add("justdirethings.screen.direction-west", "West");
         add("justdirethings.screen.direction-east", "East");
+        add("justdirethings.screen.filter-block", "Filter: Block");
+        add("justdirethings.screen.filter-item", "Filter: Item");
 
 
         //Buttons

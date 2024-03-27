@@ -116,7 +116,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         clearTrackerIfNeeded(tool, fakePlayer);
         if (tool.isEmpty()) return;
         if (isActive() && blockBreakingTracker.isEmpty()) {
-            List<BlockPos> blocksToMine = findBlocksToMine();
+            List<BlockPos> blocksToMine = findBlocksToMine(fakePlayer);
             for (BlockPos blockPos : blocksToMine) {
                 BlockState blockState = level.getBlockState(blockPos);
                 if (!blockState.isAir() && !blockBreakingTracker.containsKey(blockPos)) //Start tracking the mine!
@@ -142,7 +142,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         }*/
     }
 
-    public List<BlockPos> findBlocksToMine() {
+    public List<BlockPos> findBlocksToMine(FakePlayer fakePlayer) {
         List<BlockPos> returnList = new ArrayList<>();
         BlockPos blockPos = getBlockPos().relative(direction);
         if (!blockBreakingTracker.containsKey(blockPos))
