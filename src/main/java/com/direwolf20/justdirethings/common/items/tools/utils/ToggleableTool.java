@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -46,7 +47,7 @@ import java.util.*;
 
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
-public interface ToggleableTool {
+public interface ToggleableTool extends ToggleableItem {
     GooTier gooTier();
 
     default int getGooTier() {
@@ -433,12 +434,9 @@ public interface ToggleableTool {
         return !tagCompound.contains(setting) || tagCompound.getBoolean(setting); //Enabled by default
     }
 
-    static boolean getEnabled(ItemStack stack) {
+    @Override
+    default boolean getEnabled(ItemStack stack) {
         return getSetting(stack, "enabled");
-    }
-
-    static boolean toggleEnabled(ItemStack stack) {
-        return toggleSetting(stack, "enabled");
     }
 
     static void setToolValue(ItemStack stack, String valueName, int value) {

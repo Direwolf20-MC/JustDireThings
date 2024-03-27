@@ -1,8 +1,9 @@
 package com.direwolf20.justdirethings.util;
 
 import com.direwolf20.justdirethings.client.KeyBindings;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.ChatFormatting;
@@ -35,26 +36,22 @@ public class TooltipHelpers {
     }
 
     public static void appendToolEnabled(ItemStack stack, List<Component> tooltip) {
-        boolean enabled = false;
-        if (stack.getItem() instanceof ToggleableTool) {
-            enabled = ToggleableTool.getEnabled(stack);
-        } else {
-            enabled = NBTHelpers.getEnabled(stack);
+        if (stack.getItem() instanceof ToggleableItem toggleableItem) {
+            if (toggleableItem.getEnabled(stack))
+                tooltip.add(Component.translatable("justdirethings.enabled")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(Component.literal(" ")
+                                .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
+                                        .withStyle(ChatFormatting.DARK_GRAY)))
+                );
+            else
+                tooltip.add(Component.translatable("justdirethings.disabled")
+                        .withStyle(ChatFormatting.DARK_RED)
+                        .append(Component.literal(" ")
+                                .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
+                                        .withStyle(ChatFormatting.DARK_GRAY)))
+                );
         }
-        if (enabled)
-            tooltip.add(Component.translatable("justdirethings.enabled")
-                    .withStyle(ChatFormatting.GREEN)
-                    .append(Component.literal(" ")
-                            .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
-                                    .withStyle(ChatFormatting.DARK_GRAY)))
-            );
-        else
-            tooltip.add(Component.translatable("justdirethings.disabled")
-                    .withStyle(ChatFormatting.DARK_RED)
-                    .append(Component.literal(" ")
-                            .append(Component.translatable("justdirethings.presshotkey", KeyBindings.toggleTool.getKey().getDisplayName())
-                                    .withStyle(ChatFormatting.DARK_GRAY)))
-            );
     }
 
     public static void appendAbilityList(ItemStack stack, List<Component> tooltip) {

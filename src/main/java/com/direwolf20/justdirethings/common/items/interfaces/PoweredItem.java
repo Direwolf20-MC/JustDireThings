@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;

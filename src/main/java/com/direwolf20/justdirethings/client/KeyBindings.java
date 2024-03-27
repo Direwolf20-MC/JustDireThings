@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.client;
 
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -60,7 +60,7 @@ public class KeyBindings {
         public boolean isActive() {
             Player player = Minecraft.getInstance().player;
             return !KeyConflictContext.GUI.isActive() && player != null
-                    && (!ToggleableTool.getToggleableTool(player).isEmpty());
+                    && (!ToggleableItem.getToggleableItem(player).isEmpty());
         }
 
         @Override

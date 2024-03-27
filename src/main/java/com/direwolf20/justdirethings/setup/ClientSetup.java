@@ -13,8 +13,7 @@ import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.*;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
-import com.direwolf20.justdirethings.util.NBTHelpers;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -49,15 +48,10 @@ public class ClientSetup {
     }
 
     public static void registerEnabledToolTextures(Item tool) {
-        if (tool instanceof ToggleableTool) {
+        if (tool instanceof ToggleableItem toggleableItem) {
             ItemProperties.register(tool,
                     new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
-                        return ToggleableTool.getEnabled(stack) ? 1.0f : 0.0f;
-                    });
-        } else {
-            ItemProperties.register(tool,
-                    new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
-                        return NBTHelpers.getEnabled(stack) ? 1.0f : 0.0f;
+                        return toggleableItem.getEnabled(stack) ? 1.0f : 0.0f;
                     });
         }
     }

@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.EquipmentSlot;

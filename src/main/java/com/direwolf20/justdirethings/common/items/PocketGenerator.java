@@ -2,7 +2,8 @@ package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -30,7 +31,7 @@ import java.util.List;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
-public class PocketGenerator extends Item implements PoweredItem {
+public class PocketGenerator extends Item implements PoweredItem, ToggleableItem {
     public static final String ENABLED = "enabled";
     public static final String COUNTER = "counter";
     public static final String MAXBURN = "maxburn";
@@ -45,9 +46,7 @@ public class PocketGenerator extends Item implements PoweredItem {
         ItemStack itemstack = player.getItemInHand(hand);
         if (level.isClientSide()) return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
 
-        if (player.isShiftKeyDown())
-            NBTHelpers.toggleBoolean(itemstack, ENABLED);
-        else {
+        if (!player.isShiftKeyDown()) {
             player.openMenu(new SimpleMenuProvider(
                     (windowId, playerInventory, playerEntity) -> new PocketGeneratorContainer(windowId, playerInventory, player, itemstack), Component.translatable("")), (buf -> {
                 buf.writeItem(itemstack);
