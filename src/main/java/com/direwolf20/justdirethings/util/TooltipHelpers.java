@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.util;
 
 import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.ChatFormatting;
@@ -21,7 +21,7 @@ import static com.direwolf20.justdirethings.common.items.PocketGenerator.MAXBURN
 public class TooltipHelpers {
 
     public static void appendFEText(ItemStack stack, List<Component> tooltip) {
-        if (!(stack.getItem() instanceof PoweredTool poweredItem))
+        if (!(stack.getItem() instanceof PoweredItem poweredItem))
             return;
 
         var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
@@ -35,7 +35,13 @@ public class TooltipHelpers {
     }
 
     public static void appendToolEnabled(ItemStack stack, List<Component> tooltip) {
-        if (ToggleableTool.getEnabled(stack))
+        boolean enabled = false;
+        if (stack.getItem() instanceof ToggleableTool) {
+            enabled = ToggleableTool.getEnabled(stack);
+        } else {
+            enabled = NBTHelpers.getEnabled(stack);
+        }
+        if (enabled)
             tooltip.add(Component.translatable("justdirethings.enabled")
                     .withStyle(ChatFormatting.GREEN)
                     .append(Component.literal(" ")
@@ -76,12 +82,17 @@ public class TooltipHelpers {
     }
 
     public static void appendGeneratorDetails(ItemStack stack, List<Component> tooltip) {
-        tooltip.add(Component.translatable("justdirethings.pocketgeneratorburntime", NBTHelpers.getIntValue(stack, COUNTER), NBTHelpers.getIntValue(stack, MAXBURN)).withStyle(ChatFormatting.DARK_RED));
         ItemStackHandler itemStackHandler = stack.getData(Registration.HANDLER);
         ItemStack fuelStack = itemStackHandler.getStackInSlot(0);
-        if (fuelStack.isEmpty())
-            tooltip.add(Component.translatable("justdirethings.pocketgeneratornofuel").withStyle(ChatFormatting.RED));
-        else
-            tooltip.add(Component.translatable("justdirethings.pocketgeneratorfuelstack", fuelStack.getCount(), fuelStack.getItem().getName(fuelStack)).withStyle(ChatFormatting.DARK_AQUA));
+        if (Screen.hasShiftDown()) {
+            tooltip.add(Component.translatable("justdirethings.pocketgeneratorburntime", NBTHelpers.getIntValue(stack, COUNTER), NBTHelpers.getIntValue(stack, MAXBURN)).withStyle(ChatFormatting.DARK_RED));
+            if (fuelStack.isEmpty())
+                tooltip.add(Component.translatable("justdirethings.pocketgeneratornofuel").withStyle(ChatFormatting.RED));
+            else
+                tooltip.add(Component.translatable("justdirethings.pocketgeneratorfuelstack", fuelStack.getCount(), fuelStack.getItem().getName(fuelStack)).withStyle(ChatFormatting.DARK_AQUA));
+        } else {
+            if (fuelStack.isEmpty())
+                tooltip.add(Component.translatable("justdirethings.pocketgeneratornofuel").withStyle(ChatFormatting.RED));
+        }
     }
 }

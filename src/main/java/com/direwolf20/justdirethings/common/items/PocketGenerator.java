@@ -7,7 +7,6 @@ import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -138,13 +137,9 @@ public class PocketGenerator extends Item implements PoweredItem {
             return;
         }
         appendFEText(stack, tooltip);
-        boolean sneakPressed = Screen.hasShiftDown();
-        if (!sneakPressed) {
-            appendShiftForInfo(stack, tooltip);
-        } else {
-            appendGeneratorDetails(stack, tooltip);
-        }
-
+        appendToolEnabled(stack, tooltip);
+        appendGeneratorDetails(stack, tooltip);
+        appendShiftForInfo(stack, tooltip);
     }
 
     @Override
