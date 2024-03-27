@@ -17,12 +17,12 @@ import java.util.stream.Stream;
 public class BaseRawOre extends Block {
     protected static final VoxelShape[] shapes = new VoxelShape[]{
             Stream.of(
-                    Block.box(8, 8, 8, 12, 14, 12),
-                    Block.box(2, 10, 2, 8, 16, 8),
-                    Block.box(4, 14, 4, 14, 16, 14),
+                    Block.box(8, 12, 10, 12, 16, 14),
+                    Block.box(8, 8, 4, 12, 14, 8),
+                    Block.box(2, 10, 8, 8, 16, 14),
+                    Block.box(4, 14, 2, 14, 16, 12),
                     Block.box(6, 2, 6, 10, 14, 10),
-                    Block.box(8, 12, 2, 12, 16, 6),
-                    Block.box(4, 6, 4, 8, 10, 8)
+                    Block.box(4, 6, 8, 8, 10, 12)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //DOWN
             Stream.of(
                     Block.box(8, 2, 8, 12, 8, 12),
@@ -33,37 +33,37 @@ public class BaseRawOre extends Block {
                     Block.box(4, 6, 4, 8, 10, 8)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //UP
             Stream.of(
-                    Block.box(8, 4, 8, 12, 8, 14),
-                    Block.box(2, 8, 10, 8, 14, 16),
-                    Block.box(4, 2, 14, 14, 12, 16),
+                    Block.box(8, 2, 12, 12, 6, 16),
+                    Block.box(8, 8, 8, 12, 12, 14),
+                    Block.box(2, 2, 10, 8, 8, 16),
+                    Block.box(4, 4, 14, 14, 14, 16),
                     Block.box(6, 6, 2, 10, 10, 14),
-                    Block.box(8, 10, 12, 12, 14, 16),
-                    Block.box(4, 8, 6, 8, 12, 10)
+                    Block.box(4, 4, 6, 8, 8, 10)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //NORTH
             Stream.of(
-                    Block.box(8, 4, 2, 12, 8, 8),
-                    Block.box(2, 8, 0, 8, 14, 6),
-                    Block.box(4, 2, 0, 14, 12, 2),
+                    Block.box(4, 2, 0, 8, 6, 4),
+                    Block.box(4, 8, 2, 8, 12, 8),
+                    Block.box(8, 2, 0, 14, 8, 6),
+                    Block.box(2, 4, 0, 12, 14, 2),
                     Block.box(6, 6, 2, 10, 10, 14),
-                    Block.box(8, 10, 0, 12, 14, 4),
-                    Block.box(4, 8, 6, 8, 12, 10)
+                    Block.box(8, 4, 6, 12, 8, 10)
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //SOUTH
             Stream.of(
-                    Block.box(8, 4, 8, 14, 8, 12),
-                    Block.box(10, 8, 2, 16, 14, 8),
-                    Block.box(14, 2, 4, 16, 12, 14),
+                    Block.box(12, 2, 4, 16, 6, 8),
+                    Block.box(8, 8, 4, 14, 12, 8),
+                    Block.box(10, 2, 8, 16, 8, 14),
+                    Block.box(14, 4, 2, 16, 14, 12),
                     Block.box(2, 6, 6, 14, 10, 10),
-                    Block.box(12, 10, 8, 16, 14, 12),
-                    Block.box(6, 8, 4, 10, 12, 8)
-            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //WEST
+                    Block.box(6, 4, 8, 10, 8, 12)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //West
             Stream.of(
-                    Block.box(2, 4, 8, 8, 8, 12),
-                    Block.box(0, 8, 2, 6, 14, 8),
-                    Block.box(0, 2, 4, 2, 12, 14),
+                    Block.box(0, 2, 8, 4, 6, 12),
+                    Block.box(2, 8, 8, 8, 12, 12),
+                    Block.box(0, 2, 2, 6, 8, 8),
+                    Block.box(0, 4, 4, 2, 14, 14),
                     Block.box(2, 6, 6, 14, 10, 10),
-                    Block.box(0, 10, 8, 4, 14, 12),
-                    Block.box(6, 8, 4, 10, 12, 8)
-            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()//EAST
+                    Block.box(6, 4, 4, 10, 8, 8)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get() //East
     };
 
     public BaseRawOre(Properties properties) {
