@@ -21,6 +21,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
@@ -50,12 +51,12 @@ public class Helpers {
             if (NeoForge.EVENT_BUS.post(event).isCanceled()) return drops;
 
             BlockState state = level.getBlockState(pos);
-            if (level instanceof ServerLevel serverLevel)
-                drops.addAll(Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos), pPlayer, pStack));
-
+            BlockEntity blockEntity = level.getBlockEntity(pos);
             //This is how vanilla does it?
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
+                if (level instanceof ServerLevel serverLevel)
+                    drops.addAll(Block.getDrops(state, serverLevel, pos, blockEntity, pPlayer, pStack));
                 state.getBlock().destroy(level, pos, state);
                 player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
                 player.causeFoodExhaustion(0.005F);
@@ -69,15 +70,15 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
-            stack.hurtAndBreak(poweredItem.getBlockBreakFECost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        if (stack.getItem() instanceof PoweredTool poweredTool) {
+            stack.hurtAndBreak(poweredTool.getBlockBreakFECost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(1, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
-        if (stack.getItem() instanceof PoweredItem) {
+        if (stack.getItem() instanceof PoweredTool) {
             stack.hurtAndBreak(ability.getFeCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -85,7 +86,7 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability, int multiplier) {
-        if (stack.getItem() instanceof PoweredItem) {
+        if (stack.getItem() instanceof PoweredTool) {
             stack.hurtAndBreak(ability.getFeCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -93,17 +94,17 @@ public class Helpers {
     }
 
     public static int testUseTool(ItemStack stack) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
+        if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
-            return energyStorage.getEnergyStored() - poweredItem.getBlockBreakFECost();
+            return energyStorage.getEnergyStored() - poweredTool.getBlockBreakFECost();
         } else {
             return stack.getMaxDamage() - stack.getDamageValue() - 1;
         }
     }
 
     public static int testUseTool(ItemStack stack, Ability ability) {
-        if (stack.getItem() instanceof PoweredItem) {
+        if (stack.getItem() instanceof PoweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getEnergyStored() - ability.getFeCost();
@@ -113,7 +114,7 @@ public class Helpers {
     }
 
     public static int testUseTool(ItemStack stack, Ability ability, int multiplier) {
-        if (stack.getItem() instanceof PoweredItem) {
+        if (stack.getItem() instanceof PoweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getEnergyStored() - (ability.getFeCost() * multiplier);
@@ -152,6 +153,18 @@ public class Helpers {
             }
         }
     }
+
+    public static ItemStack getSmeltedItem(Level level, ItemStack itemStack) {
+        RegistryAccess registryAccess = level.registryAccess();
+        RecipeManager recipeManager = level.getRecipeManager();
+        ItemStack returnStack = ItemStack.EMPTY;
+        Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(itemStack), level);
+        if (smeltingRecipe.isPresent() && !itemStack.is(JustDireItemTags.AUTO_SMELT_DENY))
+            returnStack = smeltingRecipe.get().value().getResultItem(registryAccess);
+        if (returnStack.isEmpty()) return itemStack;
+        return returnStack;
+    }
+
 
     public static List<ItemStack> smeltDrops(ServerLevel level, List<ItemStack> drops, ItemStack tool, LivingEntity entityLiving, boolean[] didISmelt) {
         List<ItemStack> returnList = new ArrayList<>();

@@ -3,10 +3,10 @@ package com.direwolf20.justdirethings.common.items.tools;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseAxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
 import net.minecraft.world.item.ItemStack;
 
-public class CelestigemAxe extends BaseAxe implements PoweredItem {
+public class CelestigemAxe extends BaseAxe implements PoweredTool {
     public CelestigemAxe() {
         super(GooTier.CELESTIGEM, 7.0F, -2.5F, new Properties());
         registerAbility(Ability.TREEFELLER);

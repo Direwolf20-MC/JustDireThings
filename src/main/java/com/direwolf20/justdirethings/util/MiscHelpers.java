@@ -10,6 +10,18 @@ import net.neoforged.neoforge.items.IItemHandler;
 import java.util.Random;
 
 public class MiscHelpers {
+    public enum RedstoneMode {
+        IGNORED,
+        LOW,
+        HIGH,
+        PULSE;
+
+        public RedstoneMode next() {
+            RedstoneMode[] values = values();
+            int nextOrdinal = (this.ordinal() + 1) % values.length;
+            return values[nextOrdinal];
+        }
+    }
     private static final Random rand = new Random();
 
     public static double nextDouble(double min, double max) {

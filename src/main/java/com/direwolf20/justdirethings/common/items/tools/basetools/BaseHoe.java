@@ -85,18 +85,18 @@ public class BaseHoe extends HoeItem implements ToggleableTool {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> modifiers = super.getAttributeModifiers(slot, stack);
-        if (!(stack.getItem() instanceof PoweredItem poweredItem))
+        if (!(stack.getItem() instanceof PoweredTool poweredTool))
             return modifiers;
 
-        return poweredItem.getPoweredAttributeModifiers(slot, stack, modifiers);
+        return poweredTool.getPoweredAttributeModifiers(slot, stack, modifiers);
     }
 
     @Override
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (!(stack.getItem() instanceof PoweredItem poweredItem))
+        if (!(stack.getItem() instanceof PoweredTool poweredTool))
             return super.getDestroySpeed(stack, state);
         float defaultSpeed = super.getDestroySpeed(stack, state);
-        if (poweredItem.getAvailableEnergy(stack) < poweredItem.getBlockBreakFECost()) {
+        if (poweredTool.getAvailableEnergy(stack) < poweredTool.getBlockBreakFECost()) {
             return defaultSpeed * 0.01f;
         }
         return defaultSpeed;
@@ -128,7 +128,7 @@ public class BaseHoe extends HoeItem implements ToggleableTool {
 
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
+        if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
             int unbreakingLevel = stack.getEnchantmentLevel(Enchantments.UNBREAKING);
@@ -142,14 +142,14 @@ public class BaseHoe extends HoeItem implements ToggleableTool {
 
     @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        if (stack.getItem() instanceof PoweredItem)
+        if (stack.getItem() instanceof PoweredTool)
             return super.isBookEnchantable(stack, book) && canAcceptEnchantments(book);
         return super.isBookEnchantable(stack, book);
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (stack.getItem() instanceof PoweredItem)
+        if (stack.getItem() instanceof PoweredTool)
             return super.canApplyAtEnchantingTable(stack, enchantment) && canAcceptEnchantments(enchantment);
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }
@@ -160,5 +160,15 @@ public class BaseHoe extends HoeItem implements ToggleableTool {
 
     private boolean canAcceptEnchantments(Enchantment enchantment) {
         return enchantment != Enchantments.MENDING;
+    }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.NONE;
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
     }
 }

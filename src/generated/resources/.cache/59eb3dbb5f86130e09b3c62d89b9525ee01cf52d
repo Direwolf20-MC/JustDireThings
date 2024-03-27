@@ -1,5 +1,7 @@
-// 1.20.4	2024-03-16T17:42:11.5982131	Loot Tables
+// 1.20.4	2024-03-24T14:04:09.2283957	Loot Tables
 16a0ab61513717ab1cb8c1df9718722a643d9728 data/justdirethings/loot_tables/blocks/blazegold_block.json
+b2953e2dcd4960e7f275bb42e4ad626219213fe1 data/justdirethings/loot_tables/blocks/blockbreakert1.json
+bb65fdba3c1b14526a629aacb462661b5853008b data/justdirethings/loot_tables/blocks/blockbreakert2.json
 db5eebe1105a78a3cc495f52f15653d62ef252fb data/justdirethings/loot_tables/blocks/celestigem_block.json
 33bae530c3d366588774b7fd2be61e8eae4d2f59 data/justdirethings/loot_tables/blocks/eclipsealloy_block.json
 1374ed53b2d6c1462b64a99f3ca1b290388d36c5 data/justdirethings/loot_tables/blocks/ferricore_block.json
@@ -12,6 +14,7 @@ ec24d4e64ad8c73bb13ad3153e02193c0c4e286d data/justdirethings/loot_tables/blocks/
 dbc0b95e979a373cff9226804660f79e55dead0b data/justdirethings/loot_tables/blocks/goosoil_tier2.json
 e5dc519a36800fe39f9b40f5e1d912d9df6f7c3b data/justdirethings/loot_tables/blocks/goosoil_tier3.json
 7d4fef11b44bce90cb85c09d118d03c23521e5cb data/justdirethings/loot_tables/blocks/goosoil_tier4.json
+ef34320ffe3a06c2453936f1b1e64b1d0a15236a data/justdirethings/loot_tables/blocks/itemcollector.json
 817a643c3ef7d120e72236ffc75349531a290d80 data/justdirethings/loot_tables/blocks/raw_blazegold_ore.json
 85d1dca0e6645c006708f98304f65e938d3237d0 data/justdirethings/loot_tables/blocks/raw_celestigem_ore.json
 e6e31b3bfee4a6caa533f61014fd5dae5fc5938e data/justdirethings/loot_tables/blocks/raw_eclipsealloy_ore.json

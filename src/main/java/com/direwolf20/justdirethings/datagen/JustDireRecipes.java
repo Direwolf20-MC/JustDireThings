@@ -22,7 +22,7 @@ public class JustDireRecipes extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput consumer) {
-        //Blocks
+        //Goo Blocks
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.GooBlock_Tier1.get())
                 .pattern("csc")
                 .pattern("fdf")
@@ -68,6 +68,42 @@ public class JustDireRecipes extends RecipeProvider {
                 .unlockedBy("has_goo_block3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
                 .save(consumer);
 
+        //Machines
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.ItemCollector.get())
+                .pattern(" d ")
+                .pattern("heh")
+                .pattern("fff")
+                .define('e', Items.ENDER_PEARL)
+                .define('f', Registration.FerricoreIngot.get())
+                .define('d', Items.DIAMOND)
+                .define('h', Items.HOPPER)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlockBreakerT1.get())
+                .pattern("fdf")
+                .pattern("lol")
+                .pattern("frf")
+                .define('o', Items.OBSERVER)
+                .define('f', Registration.FerricoreIngot.get())
+                .define('d', Items.DIAMOND)
+                .define('l', Items.LAPIS_LAZULI)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlockBreakerT2.get())
+                .pattern("fdf")
+                .pattern("dod")
+                .pattern("frf")
+                .define('o', Registration.BlockBreakerT1_ITEM.get())
+                .define('f', Registration.Celestigem.get())
+                .define('d', Items.ENDER_EYE)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+
         //Items
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Fuel_Canister.get())
                 .pattern(" i ")
@@ -87,18 +123,40 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('r', Items.REDSTONE_BLOCK)
                 .define('f', Items.FURNACE)
                 .group("justdirethings")
-                .unlockedBy("has_fuel_canister", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Fuel_Canister.get()))
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Pocket_GeneratorT2.get())
+                .pattern("iri")
+                .pattern("cfc")
+                .pattern("iri")
+                .define('i', Registration.BlazegoldIngot.get())
+                .define('c', Items.COAL)
+                .define('r', Items.REDSTONE_BLOCK)
+                .define('f', Registration.Pocket_Generator.get())
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Pocket_GeneratorT3.get())
                 .pattern("iri")
                 .pattern("cfc")
                 .pattern("iri")
                 .define('i', Registration.Celestigem.get())
                 .define('c', Items.COAL)
                 .define('r', Items.REDSTONE_BLOCK)
-                .define('f', Registration.Pocket_Generator.get())
+                .define('f', Registration.Pocket_GeneratorT2.get())
                 .group("justdirethings")
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Pocket_GeneratorT4.get())
+                .pattern("iri")
+                .pattern("cfc")
+                .pattern("iri")
+                .define('i', Registration.EclipseAlloyIngot.get())
+                .define('c', Items.COAL)
+                .define('r', Items.REDSTONE_BLOCK)
+                .define('f', Registration.Pocket_GeneratorT3.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
 
         //GooSpread Recipes

@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_fuel_canister": {
+    "has_ferricore_ingot": {
       "conditions": {
         "items": [
           {
             "items": [
-              "justdirethings:fuel_canister"
+              "justdirethings:ferricore_ingot"
             ]
           }
         ]
@@ -23,7 +23,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_fuel_canister"
+      "has_ferricore_ingot"
     ]
   ],
   "rewards": {

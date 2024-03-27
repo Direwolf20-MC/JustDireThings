@@ -1,6 +1,14 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "minecraft:item/handheld",
+  "overrides": [
+    {
+      "model": "justdirethings:item/pocket_generator_active",
+      "predicate": {
+        "justdirethings:enabled": 1.0
+      }
+    }
+  ],
   "textures": {
-    "layer0": "justdirethings:item/pocketgenerator"
+    "layer0": "justdirethings:item/pocket_generator"
   }
 }

@@ -1,9 +1,9 @@
 package com.direwolf20.justdirethings.common.blocks.resources;
 
-import net.minecraft.world.level.block.Block;
+import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseRawOre;
 import net.minecraft.world.level.block.SoundType;
 
-public class RawFerricoreOre extends Block {
+public class RawFerricoreOre extends BaseRawOre {
     public RawFerricoreOre() {
         super(Properties.of()
                 .sound(SoundType.AMETHYST)

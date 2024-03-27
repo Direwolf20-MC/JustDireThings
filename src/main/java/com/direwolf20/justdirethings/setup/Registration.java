@@ -1,11 +1,19 @@
 package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT1BE;
+import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT2BE;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
+import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier3;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier4;
+import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
+import com.direwolf20.justdirethings.common.blocks.BlockBreakerT2;
+import com.direwolf20.justdirethings.common.blocks.ItemCollector;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.*;
 import com.direwolf20.justdirethings.common.blocks.resources.*;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier1;
@@ -13,15 +21,13 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
-import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
-import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
-import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
-import com.direwolf20.justdirethings.common.items.FuelCanister;
-import com.direwolf20.justdirethings.common.items.PocketGenerator;
-import com.direwolf20.justdirethings.common.items.PocketGeneratorT2;
+import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
+import com.direwolf20.justdirethings.common.containers.*;
+import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
+import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -49,6 +55,7 @@ import static com.direwolf20.justdirethings.client.particles.ModParticles.PARTIC
 
 public class Registration {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister.Blocks SIDEDBLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
@@ -63,6 +70,7 @@ public class Registration {
 
     public static void init(IEventBus eventBus) {
         BLOCKS.register(eventBus);
+        SIDEDBLOCKS.register(eventBus);
         ITEMS.register(eventBus);
         TOOLS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);
@@ -82,6 +90,12 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier3 = ITEMS.register("goosoil_tier3", () -> new BlockItem(GooSoil_Tier3.get(), new Item.Properties()));
     public static final DeferredHolder<Block, GooSoilTier4> GooSoil_Tier4 = BLOCKS.register("goosoil_tier4", GooSoilTier4::new);
     public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier4 = ITEMS.register("goosoil_tier4", () -> new BlockItem(GooSoil_Tier4.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, ItemCollector> ItemCollector = BLOCKS.register("itemcollector", ItemCollector::new);
+    public static final DeferredHolder<Item, BlockItem> ItemCollector_ITEM = ITEMS.register("itemcollector", () -> new BlockItem(ItemCollector.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, BlockBreakerT1> BlockBreakerT1 = SIDEDBLOCKS.register("blockbreakert1", BlockBreakerT1::new);
+    public static final DeferredHolder<Item, BlockItem> BlockBreakerT1_ITEM = ITEMS.register("blockbreakert1", () -> new BlockItem(BlockBreakerT1.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, BlockBreakerT2> BlockBreakerT2 = BLOCKS.register("blockbreakert2", BlockBreakerT2::new);
+    public static final DeferredHolder<Item, BlockItem> BlockBreakerT2_ITEM = ITEMS.register("blockbreakert2", () -> new BlockItem(BlockBreakerT2.get(), new Item.Properties()));
 
 
     //Gooblocks
@@ -121,12 +135,17 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier3>> GooBlockBE_Tier3 = BLOCK_ENTITIES.register("gooblock_tier3", () -> BlockEntityType.Builder.of(GooBlockBE_Tier3::new, GooBlock_Tier3.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier4>> GooBlockBE_Tier4 = BLOCK_ENTITIES.register("gooblock_tier4", () -> BlockEntityType.Builder.of(GooBlockBE_Tier4::new, GooBlock_Tier4.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooSoilBE>> GooSoilBE = BLOCK_ENTITIES.register("goosoilbe", () -> BlockEntityType.Builder.of(GooSoilBE::new, GooSoil_Tier3.get(), GooSoil_Tier4.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemCollectorBE>> ItemCollectorBE = BLOCK_ENTITIES.register("itemcollectorbe", () -> BlockEntityType.Builder.of(ItemCollectorBE::new, ItemCollector.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT1BE>> BlockBreakerT1BE = BLOCK_ENTITIES.register("blockbreakert1", () -> BlockEntityType.Builder.of(BlockBreakerT1BE::new, BlockBreakerT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT2BE>> BlockBreakerT2BE = BLOCK_ENTITIES.register("blockbreakert2", () -> BlockEntityType.Builder.of(BlockBreakerT2BE::new, BlockBreakerT2.get()).build(null));
 
 
     //Items
     public static final DeferredHolder<Item, FuelCanister> Fuel_Canister = ITEMS.register("fuel_canister", FuelCanister::new);
     public static final DeferredHolder<Item, PocketGenerator> Pocket_Generator = ITEMS.register("pocket_generator", PocketGenerator::new);
     public static final DeferredHolder<Item, PocketGeneratorT2> Pocket_GeneratorT2 = ITEMS.register("pocket_generator_t2", PocketGeneratorT2::new);
+    public static final DeferredHolder<Item, PocketGeneratorT3> Pocket_GeneratorT3 = ITEMS.register("pocket_generator_t3", PocketGeneratorT3::new);
+    public static final DeferredHolder<Item, PocketGeneratorT4> Pocket_GeneratorT4 = ITEMS.register("pocket_generator_t4", PocketGeneratorT4::new);
 
     //Items - Resources
     public static final DeferredHolder<Item, FerricoreIngot> FerricoreIngot = ITEMS.register("ferricore_ingot", FerricoreIngot::new);
@@ -166,16 +185,30 @@ public class Registration {
             () -> IMenuTypeExtension.create((windowId, inv, data) -> new PocketGeneratorContainer(windowId, inv, inv.player, data)));
     public static final DeferredHolder<MenuType<?>, MenuType<ToolSettingContainer>> Tool_Settings_Container = CONTAINERS.register("tool_settings",
             () -> IMenuTypeExtension.create((windowId, inv, data) -> new ToolSettingContainer(windowId, inv, inv.player, data)));
+    public static final DeferredHolder<MenuType<?>, MenuType<ItemCollectorContainer>> Item_Collector_Container = CONTAINERS.register("item_collector_container",
+            () -> IMenuTypeExtension.create(ItemCollectorContainer::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<BlockBreakerT1Container>> BlockBreakerT1_Container = CONTAINERS.register("blockbreakert1_container",
+            () -> IMenuTypeExtension.create(BlockBreakerT1Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<BlockBreakerT2Container>> BlockBreakerT2_Container = CONTAINERS.register("blockbreakert2_container",
+            () -> IMenuTypeExtension.create(BlockBreakerT2Container::new));
 
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(
             "handler", () -> AttachmentType.serializable(() -> new ItemStackHandler(1)).build());
+    public static final Supplier<AttachmentType<ItemStackHandler>> MACHINE_HANDLER = ATTACHMENT_TYPES.register(
+            "machine_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof BaseMachineBE baseMachineBE)
+                    return new ItemStackHandler(baseMachineBE.MACHINE_SLOTS);
+                return new ItemStackHandler(1);
+            }).build());
+    public static final Supplier<AttachmentType<FilterBasicHandler>> HANDLER_BASIC_FILTER = ATTACHMENT_TYPES.register(
+            "handler_item_collector", () -> AttachmentType.serializable(() -> new FilterBasicHandler(9)).build()); //Todo how to generalize these
     public static final Supplier<AttachmentType<EnergyStorage>> ENERGYSTORAGE = ATTACHMENT_TYPES.register(
             "energystorage", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof ItemStack itemStack) {
                     int capacity = 1000000; //Default
-                    if (itemStack.getItem() instanceof PoweredItem poweredTool) {
+                    if (itemStack.getItem() instanceof PoweredTool poweredTool) {
                         capacity = poweredTool.getMaxEnergy();
                     }
                     return new EnergyStorage(capacity);
@@ -183,11 +216,20 @@ public class Registration {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
                 }
             }).build());
+    public static final Supplier<AttachmentType<MachineEnergyStorage>> ENERGYSTORAGE_MACHINES = ATTACHMENT_TYPES.register(
+            "energystorage_machines", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof PoweredMachineBE feMachineBE) {
+                    int capacity = feMachineBE.getMaxEnergy(); //Default
+                    return new MachineEnergyStorage(capacity);
+                } else {
+                    throw new IllegalStateException("Cannot attach energy handler item to a non-PoweredMachine.");
+                }
+            }).build());
     public static final Supplier<AttachmentType<EnergyStorageNoReceive>> ENERGYSTORAGENORECEIVE = ATTACHMENT_TYPES.register(
             "energystoragenoreceive", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof ItemStack itemStack) {
                     int capacity = 1000000; //Default
-                    if (itemStack.getItem() instanceof PoweredItem poweredTool) {
+                    if (itemStack.getItem() instanceof PoweredTool poweredTool) {
                         capacity = poweredTool.getMaxEnergy();
                     }
                     return new EnergyStorageNoReceive(capacity);

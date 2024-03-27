@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -46,7 +47,7 @@ import java.util.*;
 
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
-public interface ToggleableTool {
+public interface ToggleableTool extends ToggleableItem {
     GooTier gooTier();
 
     default int getGooTier() {
@@ -75,15 +76,15 @@ public interface ToggleableTool {
     }
 
     default boolean canUseAbility(ItemStack itemStack, Ability toolAbility) {
-        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name);
+        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName());
     }
 
     default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility) {
-        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name) && (testUseTool(itemStack, toolAbility) > 0);
+        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName()) && (testUseTool(itemStack, toolAbility) > 0);
     }
 
     default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility, int multiplier) {
-        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.name) && (testUseTool(itemStack, toolAbility, multiplier) > 0);
+        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName()) && (testUseTool(itemStack, toolAbility, multiplier) > 0);
     }
 
     default void openSettings(Player player) {
@@ -344,12 +345,12 @@ public interface ToggleableTool {
                                 }
                             }
                         }
+                        if (!bindingSuccess) {
+                            pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.bindfailed").withStyle(ChatFormatting.RED), true);
+                            player.playNotifySound(SoundEvents.ANVIL_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                        }
                     }
                 }
-            }
-            if (!bindingSuccess) {
-                pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.bindfailed").withStyle(ChatFormatting.RED), true);
-                player.playNotifySound(SoundEvents.ANVIL_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
             }
         }
         return bindingSuccess;
@@ -433,12 +434,9 @@ public interface ToggleableTool {
         return !tagCompound.contains(setting) || tagCompound.getBoolean(setting); //Enabled by default
     }
 
-    static boolean getEnabled(ItemStack stack) {
+    @Override
+    default boolean getEnabled(ItemStack stack) {
         return getSetting(stack, "enabled");
-    }
-
-    static boolean toggleEnabled(ItemStack stack) {
-        return toggleSetting(stack, "enabled");
     }
 
     static void setToolValue(ItemStack stack, String valueName, int value) {

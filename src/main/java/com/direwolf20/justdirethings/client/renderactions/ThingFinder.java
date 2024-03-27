@@ -59,6 +59,7 @@ public class ThingFinder {
     //The render type
     private static final RenderType renderType = RenderType.translucent();
     private static final RenderType xRayRender = OurRenderTypes.OreXRAY;
+    private static BlockPos renderedAtPos = BlockPos.ZERO;
 
     public static void render(RenderLevelStageEvent evt, Player player, ItemStack heldItemMain) {
         if (((System.currentTimeMillis() - xRayStartTime) / 1000) < 10)  //Lasts for 10 seconds
@@ -157,6 +158,7 @@ public class ThingFinder {
         ModelBlockRenderer modelBlockRenderer = dispatcher.getModelRenderer();
         final RandomSource random = RandomSource.create();
         Level level = player.level();
+        renderedAtPos = player.getOnPos();
 
         builder.begin(renderType.mode(), renderType.format());
 
@@ -166,6 +168,7 @@ public class ThingFinder {
 
             BakedModel ibakedmodel = dispatcher.getBlockModel(renderState);
             matrix.pushPose();
+            matrix.translate(-renderedAtPos.getX(), -renderedAtPos.getY(), -renderedAtPos.getZ());
             matrix.translate(pos.getX(), pos.getY(), pos.getZ());
 
             //We make this just a TINY bit smaller than a full block - because we're doing GREATERTHAN depth testing.
@@ -185,7 +188,8 @@ public class ThingFinder {
         }
         //Sort all the builder's vertices and then upload them to the vertex buffer
         Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        Vector3f sortPos = new Vector3f((float) projectedView.x, (float) projectedView.y, (float) projectedView.z);
+        Vec3 subtracted = projectedView.subtract(renderedAtPos.getX(), renderedAtPos.getY(), renderedAtPos.getZ());
+        Vector3f sortPos = new Vector3f((float) subtracted.x, (float) subtracted.y, (float) subtracted.z);
 
         builder.setQuadSorting(VertexSorting.byDistance(sortPos));
         sortState = builder.getSortState();
@@ -202,11 +206,17 @@ public class ThingFinder {
         }
 
         Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        BlockPos renderPos = player.getOnPos();
+        BlockPos currentPos = player.getOnPos();
+        BlockPos renderPos = new BlockPos(
+                currentPos.getX() - (currentPos.getX() - renderedAtPos.getX()),
+                currentPos.getY() - (currentPos.getY() - renderedAtPos.getY()),
+                currentPos.getZ() - (currentPos.getZ() - renderedAtPos.getZ())
+        );
 
         //Sort every <X> Frames to prevent screendoor effect
         if (sortCounter > 20) {
-            sortAll(renderPos);
+            if (sortState != null)
+                sortAll(renderPos);
             sortCounter = 0;
         } else {
             sortCounter++;
@@ -215,7 +225,7 @@ public class ThingFinder {
         PoseStack matrix = evt.getPoseStack();
         matrix.pushPose();
         matrix.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
-        //matrix.translate(0,5,0);
+        matrix.translate(renderPos.getX(), renderPos.getY(), renderPos.getZ());
         //Draw the renders in the specified order
         try {
             if (vertexBuffer.getFormat() == null)
@@ -242,7 +252,8 @@ public class ThingFinder {
     //Sort the render type we pass in - using DireBufferBuilder because we want to sort in the opposite direction from normal
     public static BufferBuilder.RenderedBuffer sort(BlockPos lookingAt, RenderType renderType) {
         Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        Vector3f sortPos = new Vector3f((float) projectedView.x, (float) projectedView.y, (float) projectedView.z);
+        Vec3 subtracted = projectedView.subtract(lookingAt.getX(), lookingAt.getY(), lookingAt.getZ());
+        Vector3f sortPos = new Vector3f((float) subtracted.x, (float) subtracted.y, (float) subtracted.z);
         builder.begin(renderType.mode(), renderType.format());
         builder.restoreSortState(sortState);
         builder.setQuadSorting(VertexSorting.byDistance(sortPos));

@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.network.handler;
 
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +23,11 @@ public class ToggleToolPacket {
             Player player = senderOptional.get();
 
 
-            ItemStack stack = ToggleableTool.getToggleableTool(player);
-            ToggleableTool.toggleSetting(stack, payload.settingName());
+            ItemStack toggleableItem = ToggleableItem.getToggleableItem(player);
+            if (toggleableItem.getItem() instanceof ToggleableItem toggleableTool) {
+                toggleableTool.toggleEnabled(toggleableItem);
+            }
+
         });
     }
 }

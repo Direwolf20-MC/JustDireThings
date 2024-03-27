@@ -25,6 +25,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
         add(Registration.GooBlock_Tier3.get(), "VoidShimmer Goo");
         add(Registration.GooBlock_Tier4.get(), "Shadowpulse Goo");
+        add(Registration.ItemCollector.get(), "Item Collector");
+        add(Registration.BlockBreakerT1.get(), "Simple Block Breaker");
+        add(Registration.BlockBreakerT2.get(), "Advanced Block Breaker");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -39,7 +42,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
-        add(Registration.Pocket_GeneratorT2.get(), "Improved Pocket Generator");
+        add(Registration.Pocket_GeneratorT2.get(), "Blazing Pocket Generator");
+        add(Registration.Pocket_GeneratorT3.get(), "Celestial Pocket Generator");
+        add(Registration.Pocket_GeneratorT4.get(), "Eclipse Pocket Generator");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -113,6 +118,23 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
         add("justdirethings.screen.no_fuel", "Fuel source empty");
         add("justdirethings.screen.burn_time", "Burn time left: %ss");
+        add("justdirethings.screen.ignored", "Ignored");
+        add("justdirethings.screen.low", "Low");
+        add("justdirethings.screen.high", "High");
+        add("justdirethings.screen.pulse", "Pulse");
+        add("justdirethings.screen.allowlist", "Allow List");
+        add("justdirethings.screen.denylist", "Deny List");
+        add("justdirethings.screen.renderarea", "Render Area");
+        add("justdirethings.screen.comparenbt", "Compare NBT");
+        add("justdirethings.screen.direction-down", "Down");
+        add("justdirethings.screen.direction-up", "Up");
+        add("justdirethings.screen.direction-north", "North");
+        add("justdirethings.screen.direction-south", "South");
+        add("justdirethings.screen.direction-west", "West");
+        add("justdirethings.screen.direction-east", "East");
+        add("justdirethings.screen.filter-block", "Filter: Block");
+        add("justdirethings.screen.filter-item", "Filter: Item");
+
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

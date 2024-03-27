@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "justdirethings:item/ferricore_axe_active"
+  }
+}

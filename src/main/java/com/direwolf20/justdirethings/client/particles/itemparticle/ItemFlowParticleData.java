@@ -18,13 +18,17 @@ import java.util.Locale;
 
 public class ItemFlowParticleData implements ParticleOptions {
     private final ItemStack itemStack;
-    public final boolean doGravity;
-    public final boolean shrinking;
+    public final double targetX;
+    public final double targetY;
+    public final double targetZ;
+    public final int ticksPerBlock;
 
-    public ItemFlowParticleData(ItemStack itemStack, boolean doGravity, boolean shrinking) {
+    public ItemFlowParticleData(ItemStack itemStack, double tx, double ty, double tz, int ticks) {
         this.itemStack = itemStack.copy(); //Forge: Fix stack updating after the fact causing particle changes.
-        this.doGravity = doGravity;
-        this.shrinking = shrinking;
+        targetX = tx;
+        targetY = ty;
+        targetZ = tz;
+        ticksPerBlock = ticks;
     }
 
     @Nonnull
@@ -36,14 +40,22 @@ public class ItemFlowParticleData implements ParticleOptions {
     @Override
     public void writeToNetwork(FriendlyByteBuf buffer) {
         buffer.writeItem(this.itemStack);
+        buffer.writeDouble(this.targetX);
+        buffer.writeDouble(this.targetY);
+        buffer.writeDouble(this.targetZ);
+        buffer.writeInt(this.ticksPerBlock);
     }
 
     @Nonnull
     @Override
     public String writeToString() {
-        return String.format(Locale.ROOT, "%s %b %b",
-                this.getType(), this.doGravity, this.shrinking);
+        return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %.2f %s",
+                this.getType(), this.targetX, this.targetY, this.targetZ, this.ticksPerBlock);
     }
+
+    /*public String getParameters() {
+        return Registry.PARTICLE_TYPE.getKey(this.getType()) + " " + (new ItemInput(this.itemStack.getItem().builtInRegistryHolder(), this.itemStack.getTag())).serialize();
+    }*/
 
     @OnlyIn(Dist.CLIENT)
     public ItemStack getItemStack() {
@@ -55,20 +67,25 @@ public class ItemFlowParticleData implements ParticleOptions {
         @Override
         public ItemFlowParticleData fromCommand(ParticleType<ItemFlowParticleData> particleTypeIn, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
+            //ItemParser itemparser = (new ItemParser(reader, false)).parse();
+            //ItemStack itemstack = (new ItemInput(itemparser.getItem(), itemparser.getNbt())).createItemStack(1, false);
             ItemParser.ItemResult itemparser$itemresult = ItemParser.parseForItem(BuiltInRegistries.ITEM.asLookup(), reader);
             ItemStack itemstack = (new ItemInput(itemparser$itemresult.item(), itemparser$itemresult.nbt())).createItemStack(1, false);
 
             reader.expect(' ');
-            boolean doGravity = reader.readBoolean();
+            double tx = reader.readDouble();
             reader.expect(' ');
-            boolean building = reader.readBoolean();
-
-            return new ItemFlowParticleData(itemstack, doGravity, building);
+            double ty = reader.readDouble();
+            reader.expect(' ');
+            double tz = reader.readDouble();
+            reader.expect(' ');
+            int ticks = reader.readInt();
+            return new ItemFlowParticleData(itemstack, tx, ty, tz, ticks);
         }
 
         @Override
         public ItemFlowParticleData fromNetwork(ParticleType<ItemFlowParticleData> particleTypeIn, FriendlyByteBuf buffer) {
-            return new ItemFlowParticleData(buffer.readItem(), buffer.readBoolean(), buffer.readBoolean());
+            return new ItemFlowParticleData(buffer.readItem(), buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readInt());
         }
     };
 }
