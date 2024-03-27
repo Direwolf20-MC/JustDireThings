@@ -49,6 +49,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         this(Registration.BlockBreakerT1BE.get(), pPos, pBlockState);
     }
 
+
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
@@ -85,6 +86,11 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         sendPackets(pBreakerId, blockPos, -1);
     }
 
+    public void removePosFromTracker(BlockPos blockPos, int pBreakerId) {
+        sendClearPacket(blockPos, pBreakerId);
+        blockBreakingTracker.remove(blockPos);
+    }
+
     public void clearTrackerIfNeeded(ItemStack tool, FakePlayer fakePlayer) {
         if (blockBreakingTracker.isEmpty())
             return;
@@ -100,6 +106,10 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         doBlockBreak();
     }
 
+    public boolean canMine() {
+        return true;
+    }
+
     public void doBlockBreak() {
         ItemStack tool = getTool();
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
@@ -113,11 +123,10 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
                     startMining(fakePlayer, blockPos, blockState, tool);
             }
         }
-        if (blockBreakingTracker.isEmpty()) return;
+        if (blockBreakingTracker.isEmpty() || !canMine()) return;
         Map.Entry<BlockPos, BlockBreakingProgress> firstEntry = blockBreakingTracker.entrySet().iterator().next();
         if ((mineBlock(firstEntry.getKey(), tool, fakePlayer))) {
-            sendClearPacket(firstEntry.getKey(), fakePlayer.getId() + firstEntry.getValue().iterator);
-            blockBreakingTracker.remove(firstEntry.getKey());
+            removePosFromTracker(firstEntry.getKey(), fakePlayer.getId() + firstEntry.getValue().iterator);
         }
         //In case I want to go back to breaking more than 1 block at a time
         /*Iterator<Map.Entry<BlockPos, BlockBreakingProgress>> iterator = blockBreakingTracker.entrySet().iterator();

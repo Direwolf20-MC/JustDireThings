@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
-import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -8,7 +7,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,40 +22,11 @@ public class BaseMachineBE extends BlockEntity {
     public static final GameProfile defaultFakePlayerProfile = new GameProfile(defaultFakePlayerUUID, "[JustDiresFakePlayer]");
     public UUID placedByUUID;
 
-    public final ContainerData poweredMachineData = new ContainerData() {
-        @Override
-        public int get(int index) {
-            return switch (index) {
-                case 0 -> getEnergyStored() & 0xFFFF;
-                case 1 -> getEnergyStored() >> 16;
-                default -> throw new IllegalArgumentException("Invalid index: " + index);
-            };
-        }
-
-        @Override
-        public void set(int index, int value) {
-            switch (index) {
-                case 0 -> setEnergyStored((getEnergyStored() & 0xFFFF0000) | (value & 0xFFFF));
-                case 1 -> setEnergyStored((getEnergyStored() & 0xFFFF) | (value << 16));
-                default -> throw new IllegalArgumentException("Invalid index: " + index);
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-    };
-
     public BaseMachineBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
     }
 
     public void tickClient() {
-    }
-
-    public ContainerData getContainerData() {
-        return poweredMachineData;
     }
 
     public void tickServer() {
@@ -92,23 +61,6 @@ public class BaseMachineBE extends BlockEntity {
 
     public ItemStackHandler getMachineHandler() {
         return getData(Registration.MACHINE_HANDLER);
-    }
-
-    public MachineEnergyStorage getEnergyStorage() {
-        if (this instanceof PoweredMachineBE)
-            return getData(Registration.ENERGYSTORAGE_MACHINES);
-        return null;
-    }
-
-    public int getEnergyStored() {
-        if (this instanceof PoweredMachineBE)
-            return getEnergyStorage().getEnergyStored();
-        return -1;
-    }
-
-    public void setEnergyStored(int value) {
-        if (this instanceof PoweredMachineBE)
-            getEnergyStorage().setEnergy(value);
     }
 
     @Override
