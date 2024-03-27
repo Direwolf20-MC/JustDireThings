@@ -13,7 +13,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-import java.util.Set;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
@@ -45,7 +46,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     }
 
     @Override
-    public Set<BlockPos> findBlocksToMine() {
+    public List<BlockPos> findBlocksToMine() {
         AABB area = getAABB(getBlockPos());
         return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
                 .filter(blockPos -> {
@@ -56,7 +57,8 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
                     return true;
                 })
                 .map(BlockPos::immutable)
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparingDouble(x -> x.distSqr(getBlockPos())))
+                .collect(Collectors.toList());
     }
 
     @Override
