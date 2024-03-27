@@ -113,7 +113,14 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
                     startMining(fakePlayer, blockPos, blockState, tool);
             }
         }
-        Iterator<Map.Entry<BlockPos, BlockBreakingProgress>> iterator = blockBreakingTracker.entrySet().iterator();
+        if (blockBreakingTracker.isEmpty()) return;
+        Map.Entry<BlockPos, BlockBreakingProgress> firstEntry = blockBreakingTracker.entrySet().iterator().next();
+        if ((mineBlock(firstEntry.getKey(), tool, fakePlayer))) {
+            sendClearPacket(firstEntry.getKey(), fakePlayer.getId() + firstEntry.getValue().iterator);
+            blockBreakingTracker.remove(firstEntry.getKey());
+        }
+        //In case I want to go back to breaking more than 1 block at a time
+        /*Iterator<Map.Entry<BlockPos, BlockBreakingProgress>> iterator = blockBreakingTracker.entrySet().iterator();
         int i = 0;
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, BlockBreakingProgress> entry = iterator.next();
@@ -123,7 +130,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
             }
             i++;
             if (i == 1) break;
-        }
+        }*/
     }
 
     public List<BlockPos> findBlocksToMine() {
