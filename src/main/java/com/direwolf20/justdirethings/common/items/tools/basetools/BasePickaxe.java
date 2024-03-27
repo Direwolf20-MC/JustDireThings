@@ -100,17 +100,6 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool {
     }
 
     @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return super.getDestroySpeed(stack, state);
-        float defaultSpeed = super.getDestroySpeed(stack, state);
-        if (poweredTool.getAvailableEnergy(stack) < poweredTool.getBlockBreakFECost()) {
-            return defaultSpeed * 0.01f;
-        }
-        return defaultSpeed;
-    }
-
-    @Override
     public EnumSet<Ability> getAbilities() {
         return abilities;
     }

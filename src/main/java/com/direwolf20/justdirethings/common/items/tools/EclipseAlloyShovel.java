@@ -15,6 +15,7 @@ public class EclipseAlloyShovel extends BaseShovel implements PoweredTool {
         registerAbility(Ability.SMELTER);
         registerAbility(Ability.HAMMER, new AbilityParams(3, 7, 2));
         registerAbility(Ability.DROPTELEPORT);
+        registerAbility(Ability.INSTABREAK);
     }
 
     @Override
