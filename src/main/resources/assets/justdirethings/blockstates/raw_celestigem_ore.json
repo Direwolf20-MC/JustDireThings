@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "justdirethings:block/raw_celestigem_ore",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "justdirethings:block/raw_celestigem_ore",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "justdirethings:block/raw_celestigem_ore",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "justdirethings:block/raw_celestigem_ore",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "justdirethings:block/raw_celestigem_ore"
+    },
+    "facing=west": {
+      "model": "justdirethings:block/raw_celestigem_ore",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

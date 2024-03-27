@@ -19,6 +19,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -121,7 +122,7 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     public void setBlockToTarget(GooSpreadRecipe gooSpreadRecipe, Direction direction) {
-        level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput());
+        level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput().setValue(BlockStateProperties.FACING, direction));
         updateSideCounter(direction, -1);
         sidedDurations.put(direction, -1);
         level.playSound(null, getBlockPos(), SoundEvents.SCULK_BLOCK_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
