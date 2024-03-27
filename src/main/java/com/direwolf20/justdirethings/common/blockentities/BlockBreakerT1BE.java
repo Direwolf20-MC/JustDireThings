@@ -175,6 +175,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
         if (!tool.isCorrectToolForDrops(blockState)) return;
         if (!level.mayInteract(fakePlayer, blockPos)) return;
+        setPlayerData(tool, fakePlayer, blockPos);
         blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, fakePlayer, blockState)));
     }
 
@@ -227,13 +228,17 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         return toolDestroySpeed;
     }
 
-    public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
+    public void setPlayerData(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos) {
         fakePlayer.setPos(breakPos.below().relative(direction).getX() + 0.5, breakPos.below().relative(direction).getY(), breakPos.below().relative(direction).getZ() + 0.5);
         float xRot = direction == Direction.DOWN ? -90 : direction == Direction.UP ? 90 : 0;
         fakePlayer.setXRot(xRot);
         fakePlayer.setYRot(direction.toYRot());
         fakePlayer.setYHeadRot(direction.toYRot());
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, tool);
+    }
+
+    public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
+        setPlayerData(tool, fakePlayer, breakPos);
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
         if (NeoForge.EVENT_BUS.post(event).isCanceled()) return false;
         breakBlock(fakePlayer, breakPos, tool, blockState);
