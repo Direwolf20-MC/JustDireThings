@@ -149,4 +149,13 @@ public class BaseSword extends SwordItem implements ToggleableTool {
         return enchantment != Enchantments.MENDING;
     }
 
+    @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.NONE;
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
 }

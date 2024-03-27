@@ -161,4 +161,14 @@ public class BaseHoe extends HoeItem implements ToggleableTool {
     private boolean canAcceptEnchantments(Enchantment enchantment) {
         return enchantment != Enchantments.MENDING;
     }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.NONE;
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
 }
