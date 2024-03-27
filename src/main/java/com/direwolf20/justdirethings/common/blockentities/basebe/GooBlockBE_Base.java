@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.blockentities.gooblocks;
+package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.client.particles.gooexplodeparticle.GooExplodeParticleData;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;

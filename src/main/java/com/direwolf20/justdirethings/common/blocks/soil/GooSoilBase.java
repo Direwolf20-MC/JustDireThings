@@ -132,7 +132,8 @@ public class GooSoilBase extends FarmBlock {
         if (crop.getBlock() instanceof CropBlock cropBlock) {
             if (cropBlock.isMaxAge(crop)) {
                 BlockState placeState = Blocks.AIR.defaultBlockState();
-                drops.addAll(Block.getDrops(crop, pLevel, cropPos, null));
+                BlockEntity blockEntity = pLevel.getBlockEntity(cropPos);
+                drops.addAll(Block.getDrops(crop, pLevel, cropPos, blockEntity));
                 for (ItemStack drop : drops) {
                     if (drop.getItem() instanceof BlockItem blockItem) {
                         placeState = blockItem.getBlock().defaultBlockState();
@@ -154,7 +155,8 @@ public class GooSoilBase extends FarmBlock {
             }
             for (int i = posToCheck.size() - 1; i >= 0; i--) {
                 BlockPos clearPos = posToCheck.get(i);
-                drops.addAll(Block.getDrops(pLevel.getBlockState(clearPos), pLevel, clearPos, null));
+                BlockEntity blockEntity = pLevel.getBlockEntity(clearPos);
+                drops.addAll(Block.getDrops(pLevel.getBlockState(clearPos), pLevel, clearPos, blockEntity));
                 pLevel.destroyBlock(clearPos, false);
             }
         }

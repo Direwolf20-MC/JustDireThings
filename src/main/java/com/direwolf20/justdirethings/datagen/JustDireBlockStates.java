@@ -34,8 +34,25 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.EclipseAlloyBlock.get(), models().cubeAll(Registration.EclipseAlloyBlock_ITEM.getId().getPath(), blockTexture(Registration.EclipseAlloyBlock.get())));
         simpleBlock(Registration.RawEclipseAlloyOre.get(), models().cubeAll(Registration.RawEclipseAlloyOre_ITEM.getId().getPath(), blockTexture(Registration.RawEclipseAlloyOre.get())).renderType("translucent"));
 
+        simpleBlock(Registration.BlockBreakerT2.get(), models().cubeAll(Registration.BlockBreakerT2_ITEM.getId().getPath(), blockTexture(Registration.BlockBreakerT2.get())));
+
         patternBlock();
         soilBlocks();
+        sidedBlocks();
+    }
+
+    private void sidedBlocks() {
+        for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
+            ModelFile model = models().orientableWithBottom(
+                    Objects.requireNonNull(sidedBlock.getId()).getPath(),
+                    modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                    modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                    modLoc("block/" + sidedBlock.getId().getPath() + "_bottom"),
+                    modLoc("block/" + sidedBlock.getId().getPath() + "_top")
+            ).renderType("solid");
+
+            directionalBlock(sidedBlock.get(), model);
+        }
     }
 
     private void soilBlocks() {

@@ -215,7 +215,8 @@ public class ThingFinder {
 
         //Sort every <X> Frames to prevent screendoor effect
         if (sortCounter > 20) {
-            sortAll(renderPos);
+            if (sortState != null)
+                sortAll(renderPos);
             sortCounter = 0;
         } else {
             sortCounter++;

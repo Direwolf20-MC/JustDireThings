@@ -1,9 +1,9 @@
-package com.direwolf20.justdirethings.client.blockentityrenders.gooblocks;
+package com.direwolf20.justdirethings.client.blockentityrenders.baseber;
 
 import com.direwolf20.justdirethings.client.renderers.DireModelBlockRenderer;
 import com.direwolf20.justdirethings.client.renderers.DireVertexConsumer;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
-import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Base;
+import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.vertex.PoseStack;

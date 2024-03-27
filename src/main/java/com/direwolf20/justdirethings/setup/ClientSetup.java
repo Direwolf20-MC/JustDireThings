@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
+import com.direwolf20.justdirethings.client.blockentityrenders.BlockBreakerT2BER;
 import com.direwolf20.justdirethings.client.blockentityrenders.ItemCollectorRenderer;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier1;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier2;
@@ -11,10 +12,7 @@ import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBloc
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
-import com.direwolf20.justdirethings.client.screens.FuelCanisterScreen;
-import com.direwolf20.justdirethings.client.screens.ItemCollectorScreen;
-import com.direwolf20.justdirethings.client.screens.PocketGeneratorScreen;
-import com.direwolf20.justdirethings.client.screens.ToolSettingScreen;
+import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -54,6 +52,8 @@ public class ClientSetup {
         event.register(Registration.PocketGenerator_Container.get(), PocketGeneratorScreen::new);
         event.register(Registration.Tool_Settings_Container.get(), ToolSettingScreen::new);
         event.register(Registration.Item_Collector_Container.get(), ItemCollectorScreen::new);
+        event.register(Registration.BlockBreakerT1_Container.get(), BlockBreakerT1Screen::new);
+        event.register(Registration.BlockBreakerT2_Container.get(), BlockBreakerT2Screen::new);
     }
 
     @SubscribeEvent
@@ -64,5 +64,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier3.get(), GooBlockRender_Tier3::new);
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier4.get(), GooBlockRender_Tier4::new);
         event.registerBlockEntityRenderer(Registration.ItemCollectorBE.get(), ItemCollectorRenderer::new);
+        event.registerBlockEntityRenderer(Registration.BlockBreakerT2BE.get(), BlockBreakerT2BER::new);
     }
 }

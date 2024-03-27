@@ -1,5 +1,7 @@
-// 1.20.4	2024-03-16T17:42:11.5962112	Block States: justdirethings
+// 1.20.4	2024-03-26T15:45:49.9952172	Block States: justdirethings
 e5976480ed9485e0bae43d4edde0c8aecaabe8a5 assets/justdirethings/blockstates/blazegold_block.json
+78195c85307ed5c7bf05017b15553d9aa6a09b7d assets/justdirethings/blockstates/blockbreakert1.json
+95a464dab1435a688905144daea5a6aff761f382 assets/justdirethings/blockstates/blockbreakert2.json
 70d830574c06ef024cae4d4a6e537cc7c8789015 assets/justdirethings/blockstates/celestigem_block.json
 1067eef3294c1a12c668309296b6d7b963c7a0d3 assets/justdirethings/blockstates/eclipsealloy_block.json
 81a237aa7f50c82d19f0cbf52a672edf3d805e23 assets/justdirethings/blockstates/ferricore_block.json
@@ -17,6 +19,8 @@ d96411480ac0d1f6d7a699073a306216959557c5 assets/justdirethings/blockstates/raw_c
 da079f2926891e7f4d587bbcb51ab2a494cce177 assets/justdirethings/blockstates/raw_eclipsealloy_ore.json
 a7d2fa74c5e65b5a5f46b68932e99144d08123ee assets/justdirethings/blockstates/raw_ferricore_ore.json
 9bd3946cfa107459786529b2af21eb125a901fb7 assets/justdirethings/models/block/blazegold_block.json
+9659e3f59756a5bb95fdd0504c1bf43fe30d2724 assets/justdirethings/models/block/blockbreakert1.json
+0fd9ef2502f15e4d686e78559daa84e2082cb2ca assets/justdirethings/models/block/blockbreakert2.json
 20ca8258a095ddfec94171f257bd38baea589dd9 assets/justdirethings/models/block/celestigem_block.json
 9126215e3e4e8e854ce6603efb9b484052c0e142 assets/justdirethings/models/block/eclipsealloy_block.json
 183c8ed95d7386a12307a44d3ff68f4085961ed3 assets/justdirethings/models/block/ferricore_block.json

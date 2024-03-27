@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.blockentities.gooblocks;
 
+import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;

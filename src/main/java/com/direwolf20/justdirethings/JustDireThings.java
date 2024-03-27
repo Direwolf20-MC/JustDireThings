@@ -1,5 +1,7 @@
 package com.direwolf20.justdirethings;
 
+import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
@@ -36,7 +38,6 @@ public class JustDireThings {
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
                 Registration.Pocket_Generator.get(),
                 Registration.Pocket_GeneratorT2.get()
-
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGENORECEIVE),
                 Registration.Pocket_Generator.get(),
@@ -53,6 +54,23 @@ public class JustDireThings {
                 Registration.EclipseAlloyAxe.get(),
                 Registration.EclipseAlloyShovel.get(),
                 Registration.EclipseAlloyHoe.get()
+        );
+        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof BaseMachineBE)
+                        return be.getData(Registration.MACHINE_HANDLER);
+                    return null;
+                },
+                Registration.BlockBreakerT1.get(),
+                Registration.BlockBreakerT2.get()
+        );
+        event.registerBlock(Capabilities.EnergyStorage.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof PoweredMachineBE)
+                        return be.getData(Registration.ENERGYSTORAGE_MACHINES);
+                    return null;
+                },
+                Registration.BlockBreakerT2.get()
         );
     }
 }

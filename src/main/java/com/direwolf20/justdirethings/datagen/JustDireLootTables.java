@@ -9,7 +9,8 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JustDireLootTables extends VanillaBlockLoot {
 
@@ -25,6 +26,8 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.EclipseAlloyBlock.get());
         dropSelf(Registration.GooPatternBlock.get());
         dropSelf(Registration.ItemCollector.get());
+        dropSelf(Registration.BlockBreakerT1.get());
+        dropSelf(Registration.BlockBreakerT2.get());
         dropOther(Registration.GooSoil_Tier1.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier2.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier3.get(), Items.DIRT);
@@ -67,6 +70,9 @@ public class JustDireLootTables extends VanillaBlockLoot {
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return Registration.BLOCKS.getEntries().stream().map(DeferredHolder::get).collect(Collectors.toList());
+        List<Block> knownBlocks = new ArrayList<>();
+        knownBlocks.addAll(Registration.BLOCKS.getEntries().stream().map(DeferredHolder::get).toList());
+        knownBlocks.addAll(Registration.SIDEDBLOCKS.getEntries().stream().map(DeferredHolder::get).toList());
+        return knownBlocks;
     }
 }
