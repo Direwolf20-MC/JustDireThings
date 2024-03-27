@@ -90,20 +90,15 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     public List<BlockPos> findBlocksToMine(FakePlayer fakePlayer) {
         AABB area = getAABB(getBlockPos());
         return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
-                .filter(blockPos -> {
-                    if (blockPos.equals(getBlockPos()))
-                        return false;
-                    if (blockBreakingTracker.containsKey(blockPos))
-                        return false;
-
-                    return isBlockValid(fakePlayer, blockPos);
-                })
+                .filter(blockPos -> isBlockValid(fakePlayer, blockPos))
                 .map(BlockPos::immutable)
                 .sorted(Comparator.comparingDouble(x -> x.distSqr(getBlockPos())))
                 .collect(Collectors.toList());
     }
 
     public boolean isBlockValid(FakePlayer fakePlayer, BlockPos blockPos) {
+        if (!super.isBlockValid(fakePlayer, blockPos))
+            return false; //Do the same checks as normal, then check the filters
         if (filterData.blockItemFilter == 0) { //Block Comparison
             ItemStack blockItemStack = level.getBlockState(blockPos).getCloneItemStack(new BlockHitResult(Vec3.ZERO, Direction.UP, blockPos, false), level, blockPos, fakePlayer);
             return isStackValidFilter(blockItemStack);

@@ -28,9 +28,10 @@ import java.util.*;
 
 public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     //BlockState we're breaking, ticks since we started, lastpacket progress we sent, and an iterator, because each packet needs a unique breaker ID
-    private record BlockBreakingProgress(BlockState blockState, int ticks, int lastSentProgress, int iterator) {
-        public BlockBreakingProgress(BlockState blockState, int ticks, int iterator) {
-            this(blockState, ticks, -1, iterator); // Initialize with -1 to indicate no progress sent yet
+    private record BlockBreakingProgress(BlockState blockState, int ticks, int lastSentProgress, int iterator,
+                                         float destroyProgress) {
+        public BlockBreakingProgress(BlockState blockState, int ticks, int iterator, float destroyProgress) {
+            this(blockState, ticks, -1, iterator, destroyProgress); // Initialize with -1 to indicate no progress sent yet
         }
     }
 
@@ -142,10 +143,22 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         }*/
     }
 
+    public boolean isBlockValid(FakePlayer fakePlayer, BlockPos blockPos) {
+        if (level.getBlockState(blockPos).isAir())
+            return false;
+        if (blockPos.equals(getBlockPos()))
+            return false;
+        if (blockBreakingTracker.containsKey(blockPos))
+            return false;
+        if (level.getBlockState(blockPos).getDestroySpeed(level, blockPos) < 0)
+            return false;
+        return true;
+    }
+
     public List<BlockPos> findBlocksToMine(FakePlayer fakePlayer) {
         List<BlockPos> returnList = new ArrayList<>();
         BlockPos blockPos = getBlockPos().relative(direction);
-        if (!blockBreakingTracker.containsKey(blockPos))
+        if (isBlockValid(fakePlayer, blockPos))
             returnList.add(blockPos);
         return returnList;
     }
@@ -162,7 +175,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
         if (!tool.isCorrectToolForDrops(blockState)) return;
         if (!level.mayInteract(fakePlayer, blockPos)) return;
-        blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash()));
+        blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, fakePlayer, blockState)));
     }
 
     /**
@@ -178,13 +191,13 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         }
         BlockBreakingProgress progress = blockBreakingTracker.compute(blockPos, (pos, oldProgress) -> {
             int updatedTicks = oldProgress == null ? 1 : oldProgress.ticks + 1;
-            return new BlockBreakingProgress(blockState, updatedTicks, oldProgress == null ? -1 : oldProgress.lastSentProgress, oldProgress.iterator);
+            return new BlockBreakingProgress(blockState, updatedTicks, oldProgress == null ? -1 : oldProgress.lastSentProgress, oldProgress.iterator, oldProgress.destroyProgress);
         });
-        float destroyProgress = (getDestroyProgress(blockPos, tool, player, blockState) * progress.ticks);
+        float destroyProgress = progress.destroyProgress * progress.ticks;
         int currentProgress = (int) (destroyProgress * 10.0F);
         if (currentProgress != progress.lastSentProgress && currentProgress < 10) {
             sendPackets(player.getId() + progress.iterator, blockPos, currentProgress);
-            blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, progress.ticks, currentProgress, progress.iterator));
+            blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, progress.ticks, currentProgress, progress.iterator, progress.destroyProgress));
         }
         if (destroyProgress >= 1.0f) {
             tryBreakBlock(tool, player, blockPos, blockState);
