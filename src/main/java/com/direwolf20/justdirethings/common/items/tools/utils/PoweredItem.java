@@ -29,7 +29,7 @@ public interface PoweredItem {
     }
 
     default int getBlockBreakFECost() {
-        return 10; //Todo Config?
+        return 50; //Todo Config?
     }
 
     default int getAvailableEnergy(ItemStack stack) {

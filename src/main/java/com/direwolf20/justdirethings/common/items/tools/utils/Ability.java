@@ -9,21 +9,21 @@ import java.util.Map;
 
 public enum Ability {
     //Tier 1
-    MOBSCANNER(SettingType.TOGGLE, 10, 100), //TODO Configs
-    OREMINER(SettingType.TOGGLE, 1, 10),
-    ORESCANNER(SettingType.TOGGLE, 10, 100),
-    LAWNMOWER(SettingType.TOGGLE, 1, 10),
-    SKYSWEEPER(SettingType.TOGGLE, 1, 10),
-    TREEFELLER(SettingType.TOGGLE, 1, 10),
-    LEAFBREAKER(SettingType.TOGGLE, 1, 10),
+    MOBSCANNER(SettingType.TOGGLE, 10, 500), //TODO Configs
+    OREMINER(SettingType.TOGGLE, 1, 50),
+    ORESCANNER(SettingType.TOGGLE, 10, 500),
+    LAWNMOWER(SettingType.TOGGLE, 1, 50),
+    SKYSWEEPER(SettingType.TOGGLE, 1, 50),
+    TREEFELLER(SettingType.TOGGLE, 1, 50),
+    LEAFBREAKER(SettingType.TOGGLE, 1, 50),
     //Tier 2
-    SMELTER(SettingType.TOGGLE, 1, 10),
-    HAMMER(SettingType.CYCLE, 1, 10),
+    SMELTER(SettingType.TOGGLE, 1, 50),
+    HAMMER(SettingType.CYCLE, 1, 50),
     //Tier 3
-    DROPTELEPORT(SettingType.TOGGLE, 10, 100),
+    DROPTELEPORT(SettingType.TOGGLE, 2, 100),
     //Tier 4
-    OREXRAY(SettingType.TOGGLE, 100, 1000),
-    GLOWING(SettingType.TOGGLE, 100, 1000);
+    OREXRAY(SettingType.TOGGLE, 100, 5000),
+    GLOWING(SettingType.TOGGLE, 100, 5000);
 
     public enum SettingType {
         TOGGLE,
