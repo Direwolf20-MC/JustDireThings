@@ -4,10 +4,10 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BaseShovel;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.AbilityParams;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
 import net.minecraft.world.item.ItemStack;
 
-public class EclipseAlloyShovel extends BaseShovel implements PoweredItem {
+public class EclipseAlloyShovel extends BaseShovel implements PoweredTool {
     public EclipseAlloyShovel() {
         super(GooTier.ECLIPSEALLOY, 1.5F, -3.0F, new Properties());
         registerAbility(Ability.SKYSWEEPER);

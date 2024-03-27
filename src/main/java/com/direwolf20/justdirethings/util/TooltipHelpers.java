@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.util;
 
 import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.ChatFormatting;
@@ -21,7 +21,7 @@ import static com.direwolf20.justdirethings.common.items.PocketGenerator.MAXBURN
 public class TooltipHelpers {
 
     public static void appendFEText(ItemStack stack, List<Component> tooltip) {
-        if (!(stack.getItem() instanceof PoweredItem poweredItem))
+        if (!(stack.getItem() instanceof PoweredTool poweredItem))
             return;
 
         var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);

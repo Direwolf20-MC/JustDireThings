@@ -7,10 +7,10 @@
       "item": "minecraft:coal"
     },
     "f": {
-      "item": "justdirethings:pocket_generator"
+      "item": "justdirethings:pocket_generator_t3"
     },
     "i": {
-      "item": "justdirethings:blazegold_ingot"
+      "item": "justdirethings:eclipsealloy_ingot"
     },
     "r": {
       "item": "minecraft:redstone_block"
@@ -22,6 +22,6 @@
     "iri"
   ],
   "result": {
-    "item": "justdirethings:pocket_generator_t2"
+    "item": "justdirethings:pocket_generator_t4"
   }
 }

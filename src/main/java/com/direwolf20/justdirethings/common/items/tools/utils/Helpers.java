@@ -70,15 +70,15 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
-            stack.hurtAndBreak(poweredItem.getBlockBreakFECost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        if (stack.getItem() instanceof PoweredTool poweredTool) {
+            stack.hurtAndBreak(poweredTool.getBlockBreakFECost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(1, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
-        if (stack.getItem() instanceof PoweredItem) {
+        if (stack.getItem() instanceof PoweredTool) {
             stack.hurtAndBreak(ability.getFeCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -86,7 +86,7 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability, int multiplier) {
-        if (stack.getItem() instanceof PoweredItem) {
+        if (stack.getItem() instanceof PoweredTool) {
             stack.hurtAndBreak(ability.getFeCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -94,17 +94,17 @@ public class Helpers {
     }
 
     public static int testUseTool(ItemStack stack) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
+        if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
-            return energyStorage.getEnergyStored() - poweredItem.getBlockBreakFECost();
+            return energyStorage.getEnergyStored() - poweredTool.getBlockBreakFECost();
         } else {
             return stack.getMaxDamage() - stack.getDamageValue() - 1;
         }
     }
 
     public static int testUseTool(ItemStack stack, Ability ability) {
-        if (stack.getItem() instanceof PoweredItem) {
+        if (stack.getItem() instanceof PoweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getEnergyStored() - ability.getFeCost();
@@ -114,7 +114,7 @@ public class Helpers {
     }
 
     public static int testUseTool(ItemStack stack, Ability ability, int multiplier) {
-        if (stack.getItem() instanceof PoweredItem) {
+        if (stack.getItem() instanceof PoweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getEnergyStored() - (ability.getFeCost() * multiplier);

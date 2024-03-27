@@ -83,10 +83,10 @@ public class BaseSword extends SwordItem implements ToggleableTool {
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> modifiers = super.getAttributeModifiers(slot, stack);
-        if (!(stack.getItem() instanceof PoweredItem poweredItem))
+        if (!(stack.getItem() instanceof PoweredTool poweredTool))
             return modifiers;
 
-        return poweredItem.getPoweredAttributeModifiers(slot, stack, modifiers);
+        return poweredTool.getPoweredAttributeModifiers(slot, stack, modifiers);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class BaseSword extends SwordItem implements ToggleableTool {
 
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
+        if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
             int unbreakingLevel = stack.getEnchantmentLevel(Enchantments.UNBREAKING);
@@ -129,14 +129,14 @@ public class BaseSword extends SwordItem implements ToggleableTool {
 
     @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        if (stack.getItem() instanceof PoweredItem)
+        if (stack.getItem() instanceof PoweredTool)
             return super.isBookEnchantable(stack, book) && canAcceptEnchantments(book);
         return super.isBookEnchantable(stack, book);
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (stack.getItem() instanceof PoweredItem)
+        if (stack.getItem() instanceof PoweredTool)
             return super.canApplyAtEnchantingTable(stack, enchantment) && canAcceptEnchantments(enchantment);
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }

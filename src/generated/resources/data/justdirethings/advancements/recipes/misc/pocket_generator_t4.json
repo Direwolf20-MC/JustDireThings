@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ferricore_ingot": {
+    "has_eclipsealloy_ingot": {
       "conditions": {
         "items": [
           {
             "items": [
-              "justdirethings:ferricore_ingot"
+              "justdirethings:eclipsealloy_ingot"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:pocket_generator"
+        "recipe": "justdirethings:pocket_generator_t4"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_ferricore_ingot"
+      "has_eclipsealloy_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:pocket_generator"
+      "justdirethings:pocket_generator_t4"
     ]
   }
 }

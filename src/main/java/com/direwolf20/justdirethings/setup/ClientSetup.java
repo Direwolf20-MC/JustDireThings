@@ -14,8 +14,10 @@ import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -37,13 +39,27 @@ public class ClientSetup {
         //Item Properties
         event.enqueueWork(() -> {
             for (var tool : Registration.TOOLS.getEntries()) {
-                ItemProperties.register(tool.get(),
-                        new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
-                            return ToggleableTool.getEnabled(stack) ? 1.0f : 0.0f;
-                        });
+                registerEnabledToolTextures(tool.get());
             }
+            registerEnabledToolTextures(Registration.Pocket_Generator.get());
+            registerEnabledToolTextures(Registration.Pocket_GeneratorT2.get());
+            registerEnabledToolTextures(Registration.Pocket_GeneratorT3.get());
+            registerEnabledToolTextures(Registration.Pocket_GeneratorT4.get());
         });
+    }
 
+    public static void registerEnabledToolTextures(Item tool) {
+        if (tool instanceof ToggleableTool) {
+            ItemProperties.register(tool,
+                    new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
+                        return ToggleableTool.getEnabled(stack) ? 1.0f : 0.0f;
+                    });
+        } else {
+            ItemProperties.register(tool,
+                    new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
+                        return NBTHelpers.getEnabled(stack) ? 1.0f : 0.0f;
+                    });
+        }
     }
 
     @SubscribeEvent

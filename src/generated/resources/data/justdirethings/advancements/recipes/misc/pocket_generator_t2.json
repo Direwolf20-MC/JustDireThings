@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_celestigem": {
+    "has_blazegold_ingot": {
       "conditions": {
         "items": [
           {
             "items": [
-              "justdirethings:celestigem"
+              "justdirethings:blazegold_ingot"
             ]
           }
         ]
@@ -23,7 +23,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_celestigem"
+      "has_blazegold_ingot"
     ]
   ],
   "rewards": {

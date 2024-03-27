@@ -4,10 +4,10 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BasePickaxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.AbilityParams;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
 import net.minecraft.world.item.ItemStack;
 
-public class EclipseAlloyPickaxe extends BasePickaxe implements PoweredItem {
+public class EclipseAlloyPickaxe extends BasePickaxe implements PoweredTool {
     public EclipseAlloyPickaxe() {
         super(GooTier.ECLIPSEALLOY, 1, -2.8F, new Properties());
         registerAbility(Ability.OREXRAY);

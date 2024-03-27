@@ -1,4 +1,4 @@
-// 1.20.4	2024-03-24T14:04:09.2243911	Item Models: justdirethings
+// 1.20.4	2024-03-27T12:31:34.5090492	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -59,8 +59,14 @@ d42f004ad7ff6b67416aa3265ce45f6c3ec717f4 assets/justdirethings/models/item/gooso
 e4ec28bbb693fef607a9a59e130c9c741c2c4ec2 assets/justdirethings/models/item/goosoil_tier3.json
 ac932db480bd510a82b5f207cc05152877106e2e assets/justdirethings/models/item/goosoil_tier4.json
 87ad4ff946b952807517ec6ef4b434215dc6fb51 assets/justdirethings/models/item/itemcollector.json
-3f50e98f22d6abc6b3edab6c01b82deec145ec78 assets/justdirethings/models/item/pocket_generator.json
-fc73206a63cc84147edd81de37ee337c0fbe6cab assets/justdirethings/models/item/pocket_generator_t2.json
+66aca56ce4b585aebe915412dea2b9a65ec6fb82 assets/justdirethings/models/item/pocket_generator.json
+86e8b463737ba209a47a1f3544b51525598d38a3 assets/justdirethings/models/item/pocket_generator_active.json
+3bdbebf77392d23e21ccb52b64cf277c78bc8db2 assets/justdirethings/models/item/pocket_generator_t2.json
+18d5db60eaf49987b37fe3180f7d67561e70f98f assets/justdirethings/models/item/pocket_generator_t2_active.json
+e0268aaa76df33f414839052e2309e697417bb16 assets/justdirethings/models/item/pocket_generator_t3.json
+689e32a9eb1a146e0f3cd01b6db78f8769560bde assets/justdirethings/models/item/pocket_generator_t3_active.json
+ba45baf17879af2f3de85c0abf4b1c47fbfada9f assets/justdirethings/models/item/pocket_generator_t4.json
+e6a15d1f02d421b147564072a2d4695037761279 assets/justdirethings/models/item/pocket_generator_t4_active.json
 d8ea68a75b8b49f7765e715d62ad23c2f1939281 assets/justdirethings/models/item/raw_blazegold.json
 0eb4cfb03ddec169426214f46beb6f8781ce9421 assets/justdirethings/models/item/raw_blazegold_ore.json
 25030312eb5c78f39bd20a90f142b38e0610b54f assets/justdirethings/models/item/raw_celestigem_ore.json

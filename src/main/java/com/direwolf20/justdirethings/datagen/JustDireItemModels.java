@@ -37,8 +37,10 @@ public class JustDireItemModels extends ItemModelProvider {
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));
-        singleTexture(Registration.Pocket_Generator.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/pocketgenerator"));
-        singleTexture(Registration.Pocket_GeneratorT2.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/pocketgenerator_t2"));
+        //singleTexture(Registration.Pocket_Generator.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/pocketgenerator"));
+        //singleTexture(Registration.Pocket_GeneratorT2.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/pocketgenerator_t2"));
+        //singleTexture(Registration.Pocket_GeneratorT3.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/pocketgenerator_t3"));
+        //singleTexture(Registration.Pocket_GeneratorT4.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/pocketgenerator_t4"));
         singleTexture(Registration.RawFerricore.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/raw_ferricore"));
         singleTexture(Registration.FerricoreIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ferricore_ingot"));
         singleTexture(Registration.RawBlazegold.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/raw_blazegold"));
@@ -52,26 +54,31 @@ public class JustDireItemModels extends ItemModelProvider {
         //Tool Items
         registerTools();
 
+        //Generators
+        registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
+        registerEnabledTextureItem(Registration.Pocket_GeneratorT2.getId().getPath());
+        registerEnabledTextureItem(Registration.Pocket_GeneratorT3.getId().getPath());
+        registerEnabledTextureItem(Registration.Pocket_GeneratorT4.getId().getPath());
+
     }
 
     public void registerTools() {
         for (var tool : Registration.TOOLS.getEntries()) {
-            //if (!tool.is(Registration.BlazegoldPickaxe.getId()))
-            //    singleTexture(tool.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/" + tool.getId().getPath()));
-            //else {
-            ResourceLocation enabledModelPath = modLoc("item/" + tool.getId().getPath() + "_active"); // Path to your enabled model
-            ResourceLocation defaultModelPath = modLoc("item/" + tool.getId().getPath()); // Path to your default model
-
-            // Start building your item model
-            getBuilder(tool.getId().getPath()) // This should match your item's registry name
-                    .parent(getExistingFile(mcLoc("item/handheld")))
-                    .texture("layer0", defaultModelPath)
-                    .override()
-                    .predicate(new ResourceLocation("justdirethings", "enabled"), 1.0F) // Using custom property
-                    .model(singleTexture(tool.getId().getPath() + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
-                        .end();
-
-            // }
+            registerEnabledTextureItem(tool.getId().getPath());
         }
+    }
+
+    public void registerEnabledTextureItem(String path) {
+        ResourceLocation enabledModelPath = modLoc("item/" + path + "_active"); // Path to your enabled model
+        ResourceLocation defaultModelPath = modLoc("item/" + path); // Path to your default model
+
+        // Start building your item model
+        getBuilder(path) // This should match your item's registry name
+                .parent(getExistingFile(mcLoc("item/handheld")))
+                .texture("layer0", defaultModelPath)
+                .override()
+                .predicate(new ResourceLocation("justdirethings", "enabled"), 1.0F) // Using custom property
+                .model(singleTexture(path + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
+                .end();
     }
 }

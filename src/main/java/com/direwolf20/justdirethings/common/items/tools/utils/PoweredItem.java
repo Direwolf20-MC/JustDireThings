@@ -1,37 +1,10 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
-import java.util.Map;
-
 public interface PoweredItem {
-    default Multimap<Attribute, AttributeModifier> getPoweredAttributeModifiers(EquipmentSlot slot, ItemStack stack, Multimap<Attribute, AttributeModifier> originalModifiers) {
-        Multimap<Attribute, AttributeModifier> modifiers = HashMultimap.create();
-        if (slot == EquipmentSlot.MAINHAND) {
-            if (getAvailableEnergy(stack) >= getBlockBreakFECost()) {
-                return originalModifiers;
-            } else {
-                for (Map.Entry<Attribute, AttributeModifier> entry : originalModifiers.entries()) {
-                    if (!entry.getKey().equals(Attributes.ATTACK_DAMAGE))
-                        modifiers.put(entry.getKey(), entry.getValue());
-                }
-            }
-        }
-        return modifiers;
-    }
-
-    default int getBlockBreakFECost() {
-        return 50; //Todo Config?
-    }
-
     default int getAvailableEnergy(ItemStack stack) {
         var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (energy == null) {

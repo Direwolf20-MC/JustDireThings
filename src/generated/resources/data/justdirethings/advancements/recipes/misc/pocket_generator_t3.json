@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ferricore_ingot": {
+    "has_celestigem": {
       "conditions": {
         "items": [
           {
             "items": [
-              "justdirethings:ferricore_ingot"
+              "justdirethings:celestigem"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:pocket_generator"
+        "recipe": "justdirethings:pocket_generator_t3"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -23,12 +23,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_ferricore_ingot"
+      "has_celestigem"
     ]
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:pocket_generator"
+      "justdirethings:pocket_generator_t3"
     ]
   }
 }

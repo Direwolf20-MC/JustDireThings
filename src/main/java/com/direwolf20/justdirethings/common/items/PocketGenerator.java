@@ -166,11 +166,6 @@ public class PocketGenerator extends Item implements PoweredItem {
     }
 
     @Override
-    public boolean isFoil(ItemStack itemStack) {
-        return NBTHelpers.getBoolean(itemStack, ENABLED);
-    }
-
-    @Override
     public UseAnim getUseAnimation(ItemStack stack) {
         return UseAnim.NONE;
     }

@@ -37,11 +37,15 @@ public class JustDireThings {
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
                 Registration.Pocket_Generator.get(),
-                Registration.Pocket_GeneratorT2.get()
+                Registration.Pocket_GeneratorT2.get(),
+                Registration.Pocket_GeneratorT3.get(),
+                Registration.Pocket_GeneratorT4.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGENORECEIVE),
                 Registration.Pocket_Generator.get(),
-                Registration.Pocket_GeneratorT2.get()
+                Registration.Pocket_GeneratorT2.get(),
+                Registration.Pocket_GeneratorT3.get(),
+                Registration.Pocket_GeneratorT4.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
                 Registration.CelestigemSword.get(),

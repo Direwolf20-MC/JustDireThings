@@ -43,6 +43,18 @@ public class NBTHelpers {
         return value;
     }
 
+    public static boolean getEnabled(ItemStack stack) {
+        return getBoolean(stack, "enabled");
+    }
+
+    public static boolean setEnabled(ItemStack stack, boolean enabled) {
+        return setBoolean(stack, "enabled", enabled);
+    }
+
+    public static boolean toggleEnabled(ItemStack stack) {
+        return setBoolean(stack, "enabled", !getEnabled(stack));
+    }
+
     public static int getIntValue(ItemStack itemStack, String name) {
         return itemStack.getOrCreateTag().getInt(name);
     }

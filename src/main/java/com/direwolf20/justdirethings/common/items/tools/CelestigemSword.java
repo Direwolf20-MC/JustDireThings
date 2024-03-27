@@ -3,10 +3,10 @@ package com.direwolf20.justdirethings.common.items.tools;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseSword;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredItem;
+import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
 import net.minecraft.world.item.ItemStack;
 
-public class CelestigemSword extends BaseSword implements PoweredItem {
+public class CelestigemSword extends BaseSword implements PoweredTool {
     public CelestigemSword() {
         super(GooTier.CELESTIGEM, 3, -2.0F, new Properties());
         registerAbility(Ability.MOBSCANNER);
