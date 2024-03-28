@@ -22,19 +22,20 @@ public class ToggleButtonFactory {
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/redstonelow.png"), Component.translatable("justdirethings.screen.low")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/redstonehigh.png"), Component.translatable("justdirethings.screen.high")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/redstonepulse.png"), Component.translatable("justdirethings.screen.pulse"))
-
     );
 
     public static ToggleButton REDSTONEBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, REDSTONE_TEXTURES, startingValue, onPress);
     }
 
-    private static final ResourceLocation ALLOW_LIST = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png");
-    private static final Component ALLOW_LIST_LOCALIZATION = Component.translatable("justdirethings.screen.allowlist");
-    private static final Component DENY_LIST_LOCALIZATION = Component.translatable("justdirethings.screen.denylist");
+    /** Redstone Button **/
+    private static final List<TextureLocalization> ALLOW_LIST_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/allowlistfalse.png"), Component.translatable("justdirethings.screen.denylist")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png"), Component.translatable("justdirethings.screen.allowlist"))
+    );
 
-    public static GrayscaleButton ALLOWLISTBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
-        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, ALLOW_LIST, ALLOW_LIST_LOCALIZATION, DENY_LIST_LOCALIZATION, startingValue, onPress);
+    public static ToggleButton ALLOWLISTBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, ALLOW_LIST_TEXTURES, startingValue, onPress);
     }
 
     private static final ResourceLocation COMPARE_NBT = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/matchnbttrue.png");
