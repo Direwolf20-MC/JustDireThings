@@ -77,7 +77,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
             if (slot.hasItem()) {
                 ItemStack currentStack = slot.getItem();
                 if (index < MACHINE_SLOTS) { //Machine Slots to Player Inventory
-                    if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS, Inventory.INVENTORY_SIZE + MACHINE_SLOTS, true)) {
+                    if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS + FILTER_SLOTS, MACHINE_SLOTS + FILTER_SLOTS + Inventory.INVENTORY_SIZE, true)) {
                         return ItemStack.EMPTY;
                     }
                 }
