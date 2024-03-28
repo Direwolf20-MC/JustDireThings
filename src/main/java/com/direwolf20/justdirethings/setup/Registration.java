@@ -1,10 +1,7 @@
 package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT1BE;
-import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT2BE;
-import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
-import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
+import com.direwolf20.justdirethings.common.blockentities.*;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
@@ -141,7 +138,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ItemCollectorBE>> ItemCollectorBE = BLOCK_ENTITIES.register("itemcollectorbe", () -> BlockEntityType.Builder.of(ItemCollectorBE::new, ItemCollector.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT1BE>> BlockBreakerT1BE = BLOCK_ENTITIES.register("blockbreakert1", () -> BlockEntityType.Builder.of(BlockBreakerT1BE::new, BlockBreakerT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT2BE>> BlockBreakerT2BE = BLOCK_ENTITIES.register("blockbreakert2", () -> BlockEntityType.Builder.of(BlockBreakerT2BE::new, BlockBreakerT2.get()).build(null));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT2BE>> BlockPlacerT1BE = BLOCK_ENTITIES.register("blockplacert1", () -> BlockEntityType.Builder.of(BlockBreakerT2BE::new, BlockPlacerT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockPlacerT1BE>> BlockPlacerT1BE = BLOCK_ENTITIES.register("blockplacert1", () -> BlockEntityType.Builder.of(BlockPlacerT1BE::new, BlockPlacerT1.get()).build(null));
 
 
     //Items
