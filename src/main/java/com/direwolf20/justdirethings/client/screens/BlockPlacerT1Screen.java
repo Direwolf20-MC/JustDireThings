@@ -3,12 +3,12 @@ package com.direwolf20.justdirethings.client.screens;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
-import com.direwolf20.justdirethings.common.containers.BlockBreakerT1Container;
+import com.direwolf20.justdirethings.common.containers.BlockPlacerT1Container;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class BlockBreakerT1Screen extends BaseMachineScreen<BlockBreakerT1Container> {
-    public BlockBreakerT1Screen(BlockBreakerT1Container container, Inventory inv, Component name) {
+public class BlockPlacerT1Screen extends BaseMachineScreen<BlockPlacerT1Container> {
+    public BlockPlacerT1Screen(BlockPlacerT1Container container, Inventory inv, Component name) {
         super(container, inv, name);
     }
 

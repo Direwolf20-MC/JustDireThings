@@ -28,6 +28,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.ItemCollector.get(), "Item Collector");
         add(Registration.BlockBreakerT1.get(), "Simple Block Breaker");
         add(Registration.BlockBreakerT2.get(), "Advanced Block Breaker");
+        add(Registration.BlockPlacerT1.get(), "Simple Block Placer");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
