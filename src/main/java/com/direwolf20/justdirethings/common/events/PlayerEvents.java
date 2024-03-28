@@ -43,18 +43,19 @@ public class PlayerEvents {
                 Set<BlockPos> breakBlockPositions = new HashSet<>();
                 int radius = getToolValue(stack, Ability.HAMMER.getName());
                 breakBlockPositions.addAll(MiningCollect.collect(player, event.getPosition().get(), getTargetLookDirection(player), level, radius, MiningCollect.SizeMode.AUTO, stack));
-                if (breakBlockPositions.isEmpty()) return; //Avoid potential divide by zero
-                for (BlockPos pos : breakBlockPositions) {
-                    if (pos.equals(originalPos))
-                        continue; //Skip the original pos, we added it above for when we aren't in hammer mode
-                    BlockState blockState = level.getBlockState(pos);
-                    float destroySpeedTarget = blockState.getDestroySpeed(level, pos);
-                    cumulativeDestroy = cumulativeDestroy + destroySpeedTarget;
+                if (!breakBlockPositions.isEmpty()) { //Avoid potential divide by zero
+                    for (BlockPos pos : breakBlockPositions) {
+                        if (pos.equals(originalPos))
+                            continue; //Skip the original pos, we added it above for when we aren't in hammer mode
+                        BlockState blockState = level.getBlockState(pos);
+                        float destroySpeedTarget = blockState.getDestroySpeed(level, pos);
+                        cumulativeDestroy = cumulativeDestroy + destroySpeedTarget;
+                    }
+                    float modifier = ((float) breakBlockPositions.size() / radius) < 1 ? 1 : ((float) breakBlockPositions.size() / radius);
+                    cumulativeDestroy = (cumulativeDestroy / breakBlockPositions.size()) * modifier; //Up to 3 times slower
+                    float relative = originalDestroySpeed / cumulativeDestroy;
+                    targetSpeed = event.getOriginalSpeed() * relative;
                 }
-                float modifier = ((float) breakBlockPositions.size() / radius) < 1 ? 1 : ((float) breakBlockPositions.size() / radius);
-                cumulativeDestroy = (cumulativeDestroy / breakBlockPositions.size()) * modifier; //Up to 3 times slower
-                float relative = originalDestroySpeed / cumulativeDestroy;
-                targetSpeed = event.getOriginalSpeed() * relative;
             }
             int rfCost = getInstantRFCost(cumulativeDestroy);
             if (toggleableTool.canUseAbility(stack, Ability.INSTABREAK) && stack.getItem() instanceof PoweredTool poweredTool && poweredTool.getAvailableEnergy(stack) >= rfCost) {
