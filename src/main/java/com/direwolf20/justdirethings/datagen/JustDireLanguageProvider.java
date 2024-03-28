@@ -113,6 +113,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.OREXRAY.getLocalization(), "X-Ray");
         add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
         add(Ability.GLOWING.getLocalization(), "Monster X-Ray");
+        add(Ability.INSTABREAK.getLocalization(), "Instant Break");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

@@ -80,11 +80,11 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility) {
-        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName()) && (testUseTool(itemStack, toolAbility) > 0);
+        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) > 0);
     }
 
     default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility, int multiplier) {
-        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName()) && (testUseTool(itemStack, toolAbility, multiplier) > 0);
+        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility, multiplier) > 0);
     }
 
     default void openSettings(Player player) {

@@ -6,7 +6,10 @@
     "Name": "minecraft:diamond_block"
   },
   "output": {
-    "Name": "justdirethings:raw_celestigem_ore"
+    "Name": "justdirethings:raw_celestigem_ore",
+    "Properties": {
+      "facing": "north"
+    }
   },
   "tierRequirement": 3
 }

@@ -6,7 +6,10 @@
     "Name": "minecraft:gold_block"
   },
   "output": {
-    "Name": "justdirethings:raw_blazegold_ore"
+    "Name": "justdirethings:raw_blazegold_ore",
+    "Properties": {
+      "facing": "north"
+    }
   },
   "tierRequirement": 2
 }

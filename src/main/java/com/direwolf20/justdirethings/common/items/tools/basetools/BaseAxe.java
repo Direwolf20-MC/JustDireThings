@@ -50,9 +50,11 @@ public class BaseAxe extends AxeItem implements ToggleableTool {
 
     @Override
     public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
-        BlockState blockState = player.level().getBlockState(pos);
-        if (itemstack.getItem() instanceof ToggleableTool toggleableTool && itemstack.isCorrectToolForDrops(blockState)) {
-            toggleableTool.mineBlocksAbility(itemstack, player.level(), pos, player);
+        if (!player.level().isClientSide) {
+            BlockState blockState = player.level().getBlockState(pos);
+            if (itemstack.getItem() instanceof ToggleableTool toggleableTool && itemstack.isCorrectToolForDrops(blockState)) {
+                toggleableTool.mineBlocksAbility(itemstack, player.level(), pos, player);
+            }
         }
         return false;
     }
@@ -96,17 +98,6 @@ public class BaseAxe extends AxeItem implements ToggleableTool {
             return modifiers;
 
         return poweredTool.getPoweredAttributeModifiers(slot, stack, modifiers);
-    }
-
-    @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return super.getDestroySpeed(stack, state);
-        float defaultSpeed = super.getDestroySpeed(stack, state);
-        if (poweredTool.getAvailableEnergy(stack) < poweredTool.getBlockBreakFECost()) {
-            return defaultSpeed * 0.01f;
-        }
-        return defaultSpeed;
     }
 
     @Override

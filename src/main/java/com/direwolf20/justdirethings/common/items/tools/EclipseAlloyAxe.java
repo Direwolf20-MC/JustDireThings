@@ -13,6 +13,7 @@ public class EclipseAlloyAxe extends BaseAxe implements PoweredTool {
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);
         registerAbility(Ability.DROPTELEPORT);
+        registerAbility(Ability.INSTABREAK);
     }
 
     @Override

@@ -6,7 +6,10 @@
     "Name": "minecraft:netherite_block"
   },
   "output": {
-    "Name": "justdirethings:raw_eclipsealloy_ore"
+    "Name": "justdirethings:raw_eclipsealloy_ore",
+    "Properties": {
+      "facing": "north"
+    }
   },
   "tierRequirement": 4
 }

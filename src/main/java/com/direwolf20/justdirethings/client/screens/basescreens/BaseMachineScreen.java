@@ -107,7 +107,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     public void addFilterButtons() {
         addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, topSectionTop + 62, filterData.allowlist, b -> {
             filterData.allowlist = !filterData.allowlist;
-            ((GrayscaleButton) b).toggleActive();
+            ((ToggleButton) b).toggleActive();
             saveSettings();
         }));
 

@@ -20,6 +20,13 @@ public class ToggleButton extends BaseButton {
         setTexturePosition(texturePosition);
     }
 
+    public ToggleButton(int x, int y, int width, int height, List<TextureLocalization> textureLocalizations, boolean texturePosition, OnPress onPress) {
+        super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
+
+        this.textureLocalizations = textureLocalizations;
+        setTexturePosition(texturePosition);
+    }
+
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -40,6 +47,14 @@ public class ToggleButton extends BaseButton {
 
     public int getTexturePosition() {
         return texturePosition;
+    }
+
+    public void toggleActive() {
+        setTexturePosition(getTexturePosition() == 0);
+    }
+
+    public void setTexturePosition(boolean texturePosition) {
+        setTexturePosition(texturePosition ? 1 : 0);
     }
 
     public void setTexturePosition(int texturePosition) {
