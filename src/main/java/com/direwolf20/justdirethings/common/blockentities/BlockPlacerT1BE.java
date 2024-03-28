@@ -11,6 +11,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.common.util.FakePlayer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
@@ -53,5 +57,21 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     @Override
     public void tickServer() {
         super.tickServer();
+    }
+
+    public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {
+        if (!level.mayInteract(fakePlayer, blockPos))
+            return false;
+        if (!level.getBlockState(blockPos).canBeReplaced())
+            return false;
+        return true;
+    }
+
+    public List<BlockPos> findSpotsToPlace(FakePlayer fakePlayer) {
+        List<BlockPos> returnList = new ArrayList<>();
+        BlockPos blockPos = getBlockPos().relative(direction);
+        if (isBlockPosValid(fakePlayer, blockPos))
+            returnList.add(blockPos);
+        return returnList;
     }
 }

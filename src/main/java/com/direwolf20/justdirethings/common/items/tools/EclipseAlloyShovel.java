@@ -38,6 +38,6 @@ public class EclipseAlloyShovel extends BaseShovel implements PoweredTool {
 
     @Override
     public int getMaxEnergy() {
-        return 100000;
+        return 500000;
     }
 }

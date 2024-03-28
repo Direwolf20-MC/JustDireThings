@@ -152,6 +152,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
             return false;
         if (level.getBlockState(blockPos).getDestroySpeed(level, blockPos) < 0)
             return false;
+        if (!level.mayInteract(fakePlayer, blockPos))
+            return false;
         return true;
     }
 
@@ -174,7 +176,6 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
         if (!tool.isCorrectToolForDrops(blockState)) return;
-        if (!level.mayInteract(fakePlayer, blockPos)) return;
         setPlayerData(tool, fakePlayer, blockPos);
         blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, fakePlayer, blockState)));
     }

@@ -35,6 +35,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool.getInstantRFCost;
+
 public class Helpers {
     public static final Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES);
     public static final Predicate<BlockState> fallingBlockCondition = s -> s.getBlock() instanceof FallingBlock;
@@ -44,7 +46,7 @@ public class Helpers {
         level.destroyBlock(pos, true);
     }
 
-    public static List<ItemStack> breakBlocks(Level level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool) {
+    public static List<ItemStack> breakBlocks(Level level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool, boolean instaBreak) {
         List<ItemStack> drops = new ArrayList<>();
         if (pPlayer instanceof Player player) {
             BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
@@ -53,6 +55,7 @@ public class Helpers {
             BlockState state = level.getBlockState(pos);
             BlockEntity blockEntity = level.getBlockEntity(pos);
             //This is how vanilla does it?
+            float destroySpeed = state.getDestroySpeed(level, pos);
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
                 if (level instanceof ServerLevel serverLevel)
@@ -60,8 +63,12 @@ public class Helpers {
                 state.getBlock().destroy(level, pos, state);
                 player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
                 player.causeFoodExhaustion(0.005F);
-                if (damageTool && state.getDestroySpeed(level, pos) != 0.0F)
+                if (damageTool && destroySpeed != 0.0F) {
                     damageTool(pStack, pPlayer);
+                    if (instaBreak) {
+                        damageTool(pStack, pPlayer, getInstantRFCost(destroySpeed));
+                    }
+                }
 
                 return drops;
             }
@@ -74,6 +81,14 @@ public class Helpers {
             stack.hurtAndBreak(poweredTool.getBlockBreakFECost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(1, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+    }
+
+    public static void damageTool(ItemStack stack, LivingEntity player, int amount) {
+        if (stack.getItem() instanceof PoweredTool poweredTool) {
+            stack.hurtAndBreak(amount, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        } else {
+            stack.hurtAndBreak(amount, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
     }
 
@@ -100,6 +115,16 @@ public class Helpers {
             return energyStorage.getEnergyStored() - poweredTool.getBlockBreakFECost();
         } else {
             return stack.getMaxDamage() - stack.getDamageValue() - 1;
+        }
+    }
+
+    public static int testUseTool(ItemStack stack, int cost) {
+        if (stack.getItem() instanceof PoweredTool) {
+            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            if (energyStorage == null) return -1; //Shouldn't Happen!
+            return energyStorage.getEnergyStored() - cost;
+        } else {
+            return stack.getMaxDamage() - stack.getDamageValue() - cost;
         }
     }
 

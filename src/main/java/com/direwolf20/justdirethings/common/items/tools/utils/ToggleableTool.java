@@ -99,13 +99,8 @@ public interface ToggleableTool extends ToggleableItem {
         return true;
     }
 
-    default void mineBlocksAbility(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving) {
-        BlockState pState = pLevel.getBlockState(pPos);
+    default Set<BlockPos> getBreakBlockPositions(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving, BlockState pState) {
         Set<BlockPos> breakBlockPositions = new HashSet<>();
-        List<ItemStack> drops = new ArrayList<>();
-        int totalExp = 0;
-        int fortuneLevel = pEntityLiving.getMainHandItem().getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
-        int silkTouchLevel = pEntityLiving.getMainHandItem().getEnchantmentLevel(Enchantments.SILK_TOUCH);
         if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
             breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
         }
@@ -119,12 +114,40 @@ public interface ToggleableTool extends ToggleableItem {
             breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
         }
         breakBlockPositions.add(pPos);
+        return breakBlockPositions;
+    }
+
+    default boolean canInstaBreak(ItemStack pStack, Level pLevel, Set<BlockPos> breakBlockPositions) {
+        boolean instaBreak = false;
+        if (canUseAbility(pStack, Ability.INSTABREAK)) { //Only Instabreak if we can instabreak ALL blocks in the area!
+            float cumulativeDestroy = 0;
+            for (BlockPos pos : breakBlockPositions) {
+                BlockState blockState = pLevel.getBlockState(pos);
+                float destroySpeedTarget = blockState.getDestroySpeed(pLevel, pos);
+                cumulativeDestroy = cumulativeDestroy + destroySpeedTarget;
+            }
+            int rfCostInstaBreak = getInstantRFCost(cumulativeDestroy);
+            System.out.println(rfCostInstaBreak);
+            if (testUseTool(pStack, rfCostInstaBreak) > 0)
+                instaBreak = true;
+        }
+        return instaBreak;
+    }
+
+    default void mineBlocksAbility(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving) {
+        BlockState pState = pLevel.getBlockState(pPos);
+        List<ItemStack> drops = new ArrayList<>();
+        int totalExp = 0;
+        int fortuneLevel = pEntityLiving.getMainHandItem().getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
+        int silkTouchLevel = pEntityLiving.getMainHandItem().getEnchantmentLevel(Enchantments.SILK_TOUCH);
+        Set<BlockPos> breakBlockPositions = getBreakBlockPositions(pStack, pLevel, pPos, pEntityLiving, pState);
+        boolean instaBreak = canInstaBreak(pStack, pLevel, breakBlockPositions);
         for (BlockPos breakPos : breakBlockPositions) {
             if (testUseTool(pStack) < 0)
                 break;
             int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pLevel.random, pPos, fortuneLevel, silkTouchLevel);
             totalExp = totalExp + exp;
-            Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, true));
+            Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, true, instaBreak));
         }
         if (!pLevel.isClientSide)
             handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, breakBlockPositions, drops, pState, totalExp);
@@ -149,6 +172,10 @@ public interface ToggleableTool extends ToggleableItem {
             Helpers.dropDrops(drops, serverLevel, pPos);
         if (totalExp > 0)
             pState.getBlock().popExperience(serverLevel, pPos, totalExp);
+    }
+
+    static int getInstantRFCost(float cumulativeDestroy) {
+        return Math.max(Ability.INSTABREAK.getFeCost(), Ability.INSTABREAK.getFeCost() * (int) cumulativeDestroy);
     }
 
     default void smelterParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {
@@ -273,7 +300,7 @@ public interface ToggleableTool extends ToggleableItem {
             for (BlockPos breakPos : alsoBreakSet) {
                 if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
                     break;
-                Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, false));
+                Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, false, false));
                 pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                 if (Math.random() < 0.1) //10% chance to damage tool
                     damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
