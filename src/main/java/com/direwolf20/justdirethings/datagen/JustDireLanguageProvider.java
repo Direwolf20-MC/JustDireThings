@@ -110,7 +110,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.LEAFBREAKER.getLocalization(), "Leaf Breaker");
         add(Ability.SMELTER.getLocalization(), "Auto Smelter");
         add(Ability.HAMMER.getLocalization(), "Hammer");
-        add(Ability.HAMMER.getLocalization() + "value", "Hammer: %s");
+        add(Ability.HAMMER.getLocalization() + "_off", "Hammer: Disabled");
+        add(Ability.HAMMER.getLocalization() + "_3", "Hammer: 3x3");
+        add(Ability.HAMMER.getLocalization() + "_5", "Hammer: 5x5");
+        add(Ability.HAMMER.getLocalization() + "_7", "Hammer: 7x7");
         add(Ability.OREXRAY.getLocalization(), "X-Ray");
         add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
         add(Ability.GLOWING.getLocalization(), "Monster X-Ray");

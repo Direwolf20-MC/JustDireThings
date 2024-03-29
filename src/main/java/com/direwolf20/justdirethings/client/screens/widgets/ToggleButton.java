@@ -68,6 +68,10 @@ public class ToggleButton extends BaseButton {
         texturePosition = (texturePosition + 1) % textureLocalizations.size();
     }
 
+    public void nextTexturePosition(int max) {
+        texturePosition = (texturePosition + 1) % Math.min(textureLocalizations.size(), max);
+    }
+
     @Override
     public Component getLocalization() {
         return textureLocalizations.get(texturePosition).localization();

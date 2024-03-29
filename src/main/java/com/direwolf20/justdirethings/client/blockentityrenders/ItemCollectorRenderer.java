@@ -49,7 +49,7 @@ public class ItemCollectorRenderer extends AreaAffectingBER {
         float f;
         switch (direction) {
             case UP:
-                f = 0.22f + 0.5f; //Center of cube up 1/4 block
+                f = 0.22f + 0.25f; //Center of cube up 1/4 block
                 this.renderFace(matrixStack, vertexConsumer, zero, one, f, f + diff, one, one, one, one); //South
                 this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f, zero, zero, zero, zero); //North
                 this.renderFace(matrixStack, vertexConsumer, one, one, f + diff, f, zero, one, one, zero); //East

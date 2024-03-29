@@ -3,11 +3,14 @@ package com.direwolf20.justdirethings.client.screens.standardbuttons;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
+import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ToggleButtonFactory {
     public record TextureLocalization(ResourceLocation texture, Component localization) {
@@ -15,6 +18,10 @@ public class ToggleButtonFactory {
 
     private static final int STANDARD_WIDTH = 16; // Example width
     private static final int STANDARD_HEIGHT = 16; // Example height
+
+    private static final Map<Ability, List<TextureLocalization>> abilityTextureMap = new HashMap<>() {{
+        put(Ability.HAMMER, HAMMER_TEXTURES);
+    }};
 
     /** Redstone Button **/
     private static final List<TextureLocalization> REDSTONE_TEXTURES = List.of(
@@ -45,7 +52,7 @@ public class ToggleButtonFactory {
         return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, COMPARE_NBT, COMPARE_NBT_LOCALIZATION, startingValue, onPress);
     }
 
-    private static final ResourceLocation RENDER_AREA = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/mobscanner.png");
+    private static final ResourceLocation RENDER_AREA = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/area.png");
     private static final Component RENDER_AREA_LOCALIZATION = Component.translatable("justdirethings.screen.renderarea");
 
     public static GrayscaleButton RENDERAREABUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
@@ -89,5 +96,17 @@ public class ToggleButtonFactory {
 
     public static ToggleButton FILTERBLOCKITEMBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, FILTERBLOCKITEM_TEXTURES, startingValue, onPress);
+    }
+
+    /** Hammer Button **/
+    private static final List<TextureLocalization> HAMMER_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/ignore.png"), Component.translatable("justdirethings.ability.hammer_off")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/hammer3.png"), Component.translatable("justdirethings.ability.hammer_3")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/hammer5.png"), Component.translatable("justdirethings.ability.hammer_5")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/hammer7.png"), Component.translatable("justdirethings.ability.hammer_7"))
+    );
+
+    public static ToggleButton ABILITYCYCLEBUTTON(int x, int y, Ability ability, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HAMMER_TEXTURES, startingValue, onPress);
     }
 }
