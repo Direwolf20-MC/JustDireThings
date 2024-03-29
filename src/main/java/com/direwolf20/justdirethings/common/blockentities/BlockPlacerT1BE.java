@@ -7,7 +7,6 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.BlockItem;
@@ -26,35 +25,18 @@ import java.util.List;
 
 public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
-    protected Direction direction = Direction.DOWN; //To avoid nulls
-    protected int placeDirection = 0;
+    protected Direction FACING = Direction.DOWN; //To avoid nulls
+    List<BlockPos> positionsToPlace = new ArrayList<>();
 
     public BlockPlacerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1; //Slot for a pickaxe
         if (pBlockState.getBlock() instanceof BlockPlacerT1) //Only do this for the Tier 1, as its the only one with a facing....
-            direction = getBlockState().getValue(BlockStateProperties.FACING);
+            FACING = getBlockState().getValue(BlockStateProperties.FACING);
     }
 
     public BlockPlacerT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.BlockPlacerT1BE.get(), pPos, pBlockState);
-    }
-
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public int getPlaceDirection() {
-        return placeDirection;
-    }
-
-    public void setPlaceDirection(int placeDirection) {
-        this.placeDirection = placeDirection;
     }
 
     @Override
@@ -74,8 +56,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     @Override
     public void tickServer() {
         super.tickServer();
-        if (isActive())
-            doBlockPlace();
+        doBlockPlace();
     }
 
     public ItemStack getPlaceStack() {
@@ -92,17 +73,23 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
 
     public void doBlockPlace() {
         ItemStack placeStack = getPlaceStack();
-        if (!isStackValid(placeStack)) return;
-        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
-        List<BlockPos> placeList = findSpotsToPlace(fakePlayer);
-        for (BlockPos blockPos : placeList) {
-            setFakePlayerData(placeStack, fakePlayer, blockPos, Direction.values()[placeDirection].getOpposite());
-            placeBlock(placeStack, fakePlayer, blockPos);
+        if (!isStackValid(placeStack)) {
+            if (!positionsToPlace.isEmpty()) //Clear the placement positions if we run out of items to place.
+                positionsToPlace.clear();
+            return;
         }
+        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
+        if (isActive() && positionsToPlace.isEmpty())
+            positionsToPlace = findSpotsToPlace(fakePlayer);
+        if (positionsToPlace.isEmpty())
+            return;
+        BlockPos blockPos = positionsToPlace.remove(0);
+        setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue().getOpposite());
+        placeBlock(placeStack, fakePlayer, blockPos);
     }
 
     public void placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
-        Direction placing = Direction.values()[placeDirection];
+        Direction placing = Direction.values()[direction];
         Vec3 hitVec = Vec3.atCenterOf(blockPos); // Center of the block where we want to place the new block
         BlockHitResult hitResult = new BlockHitResult(hitVec, placing.getOpposite(), blockPos, false);
         UseOnContext useoncontext = new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, hitResult);
@@ -119,21 +106,9 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
 
     public List<BlockPos> findSpotsToPlace(FakePlayer fakePlayer) {
         List<BlockPos> returnList = new ArrayList<>();
-        BlockPos blockPos = getBlockPos().relative(direction);
+        BlockPos blockPos = getBlockPos().relative(FACING);
         if (isBlockPosValid(fakePlayer, blockPos))
             returnList.add(blockPos);
         return returnList;
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putInt("placedirection", placeDirection);
-    }
-
-    @Override
-    public void load(CompoundTag tag) {
-        placeDirection = tag.getInt("placedirection");
-        super.load(tag);
     }
 }

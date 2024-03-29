@@ -36,26 +36,19 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     LinkedHashMap<BlockPos, BlockBreakingProgress> blockBreakingTracker = new LinkedHashMap<>();
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
-    protected Direction direction = Direction.DOWN; //To avoid nulls
+    protected Direction FACING = Direction.DOWN; //To avoid nulls
 
     public BlockBreakerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1; //Slot for a pickaxe
-        if (pBlockState.getBlock() instanceof BlockBreakerT1) //Only do this for the Tier 1, as its the only one with a facing....
-            direction = getBlockState().getValue(BlockStateProperties.FACING);
+        if (pBlockState.getBlock() instanceof BlockBreakerT1) { //Only do this for the Tier 1, as its the only one with a facing....
+            FACING = getBlockState().getValue(BlockStateProperties.FACING);
+            this.direction = FACING.ordinal();
+        }
     }
 
     public BlockBreakerT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.BlockBreakerT1BE.get(), pPos, pBlockState);
-    }
-
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    public Direction getDirection() {
-        return direction;
     }
 
     @Override
@@ -146,7 +139,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public List<BlockPos> findBlocksToMine(FakePlayer fakePlayer) {
         List<BlockPos> returnList = new ArrayList<>();
-        BlockPos blockPos = getBlockPos().relative(direction);
+        BlockPos blockPos = getBlockPos().relative(FACING);
         if (isBlockValid(fakePlayer, blockPos))
             returnList.add(blockPos);
         return returnList;
@@ -163,7 +156,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
         //if (!tool.isCorrectToolForDrops(blockState)) return;
-        setFakePlayerData(tool, fakePlayer, blockPos, direction);
+        setFakePlayerData(tool, fakePlayer, blockPos, FACING);
         blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, fakePlayer, blockState)));
     }
 
@@ -218,7 +211,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
-        setFakePlayerData(tool, fakePlayer, breakPos, direction);
+        setFakePlayerData(tool, fakePlayer, breakPos, FACING);
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
         if (NeoForge.EVENT_BUS.post(event).isCanceled()) return false;
         breakBlock(fakePlayer, breakPos, tool, blockState);

@@ -122,7 +122,10 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     public void setBlockToTarget(GooSpreadRecipe gooSpreadRecipe, Direction direction) {
-        level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput().setValue(BlockStateProperties.FACING, direction));
+        if (gooSpreadRecipe.getOutput().hasProperty(BlockStateProperties.FACING))
+            level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput().setValue(BlockStateProperties.FACING, direction));
+        else
+            level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput());
         updateSideCounter(direction, -1);
         sidedDurations.put(direction, -1);
         level.playSound(null, getBlockPos(), SoundEvents.SCULK_BLOCK_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);

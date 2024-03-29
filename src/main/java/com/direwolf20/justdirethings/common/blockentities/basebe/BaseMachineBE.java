@@ -24,6 +24,7 @@ public class BaseMachineBE extends BlockEntity {
     public static final UUID defaultFakePlayerUUID = UUID.fromString("4191a6f5-37fe-45d9-8ba3-4549be778e54");
     public static final GameProfile defaultFakePlayerProfile = new GameProfile(defaultFakePlayerUUID, "[JustDiresFakePlayer]");
     public UUID placedByUUID;
+    protected int direction = 0;
 
     public BaseMachineBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -35,6 +36,18 @@ public class BaseMachineBE extends BlockEntity {
     public void tickServer() {
         if (this instanceof RedstoneControlledBE redstoneControlledBE)
             redstoneControlledBE.evaluateRedstone();
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public Direction getDirectionValue() {
+        return Direction.values()[direction];
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
     }
 
     protected GameProfile getPlacedByProfile() {
@@ -114,6 +127,7 @@ public class BaseMachineBE extends BlockEntity {
         super.saveAdditional(tag);
         if (placedByUUID != null)
             tag.putUUID("placedBy", placedByUUID);
+        tag.putInt("direction", direction);
         if (this instanceof AreaAffectingBE areaAffectingBE)
             areaAffectingBE.saveAreaSettings(tag);
         if (this instanceof FilterableBE filterableBE)
@@ -124,6 +138,7 @@ public class BaseMachineBE extends BlockEntity {
 
     @Override
     public void load(CompoundTag tag) {
+        direction = tag.getInt("direction");
         if (tag.contains("placedBy"))
             placedByUUID = tag.getUUID("placedBy");
         if (this instanceof AreaAffectingBE areaAffectingBE)
