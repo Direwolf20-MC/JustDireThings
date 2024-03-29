@@ -42,6 +42,10 @@ public class BaseMachineBE extends BlockEntity {
         return direction;
     }
 
+    public Direction getDirectionValue() {
+        return Direction.values()[direction];
+    }
+
     public void setDirection(int direction) {
         this.direction = direction;
     }

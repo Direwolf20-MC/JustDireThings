@@ -26,6 +26,7 @@ import java.util.List;
 public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     protected Direction FACING = Direction.DOWN; //To avoid nulls
+    List<BlockPos> positionsToPlace = new ArrayList<>();
 
     public BlockPlacerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -36,15 +37,6 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
 
     public BlockPlacerT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.BlockPlacerT1BE.get(), pPos, pBlockState);
-    }
-
-
-    public void setFACING(Direction FACING) {
-        this.FACING = FACING;
-    }
-
-    public Direction getFACING() {
-        return FACING;
     }
 
     @Override
@@ -64,8 +56,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     @Override
     public void tickServer() {
         super.tickServer();
-        if (isActive())
-            doBlockPlace();
+        doBlockPlace();
     }
 
     public ItemStack getPlaceStack() {
@@ -82,13 +73,19 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
 
     public void doBlockPlace() {
         ItemStack placeStack = getPlaceStack();
-        if (!isStackValid(placeStack)) return;
-        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
-        List<BlockPos> placeList = findSpotsToPlace(fakePlayer);
-        for (BlockPos blockPos : placeList) {
-            setFakePlayerData(placeStack, fakePlayer, blockPos, Direction.values()[direction].getOpposite());
-            placeBlock(placeStack, fakePlayer, blockPos);
+        if (!isStackValid(placeStack)) {
+            if (!positionsToPlace.isEmpty()) //Clear the placement positions if we run out of items to place.
+                positionsToPlace.clear();
+            return;
         }
+        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
+        if (isActive() && positionsToPlace.isEmpty())
+            positionsToPlace = findSpotsToPlace(fakePlayer);
+        if (positionsToPlace.isEmpty())
+            return;
+        BlockPos blockPos = positionsToPlace.remove(0);
+        setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue().getOpposite());
+        placeBlock(placeStack, fakePlayer, blockPos);
     }
 
     public void placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
