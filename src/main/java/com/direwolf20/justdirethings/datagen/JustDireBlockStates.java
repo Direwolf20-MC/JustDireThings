@@ -1,8 +1,10 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -43,15 +45,45 @@ public class JustDireBlockStates extends BlockStateProvider {
 
     private void sidedBlocks() {
         for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
-            ModelFile model = models().orientableWithBottom(
-                    Objects.requireNonNull(sidedBlock.getId()).getPath(),
-                    modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
-                    modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
-                    modLoc("block/" + sidedBlock.getId().getPath() + "_bottom"),
-                    modLoc("block/" + sidedBlock.getId().getPath() + "_top")
-            ).renderType("solid");
+            if (sidedBlock.equals(Registration.BlockBreakerT1)) {
+                getVariantBuilder(Registration.BlockBreakerT1.get()).forAllStates(s -> {
+                    ModelFile model;
+                    boolean active = s.getValue(BlockBreakerT1.ACTIVE);
+                    Direction dir = s.getValue(BlockStateProperties.FACING);
+                    if (active) { //Active
+                        model = models().orientableWithBottom(
+                                Objects.requireNonNull(sidedBlock.getId()).getPath() + "_active",
+                                modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                                modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                                modLoc("block/" + sidedBlock.getId().getPath() + "_bottom"),
+                                modLoc("block/" + sidedBlock.getId().getPath() + "_top_active")
+                        ).renderType("solid");
+                    } else {
+                        model = models().orientableWithBottom(
+                                Objects.requireNonNull(sidedBlock.getId()).getPath(),
+                                modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                                modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                                modLoc("block/" + sidedBlock.getId().getPath() + "_bottom"),
+                                modLoc("block/" + sidedBlock.getId().getPath() + "_top")
+                        ).renderType("solid");
+                    }
+                    return ConfiguredModel.builder()
+                            .modelFile(model)
+                            .rotationX(dir == Direction.DOWN ? 180 : dir.getAxis().isHorizontal() ? 90 : 0)
+                            .rotationY(dir.getAxis().isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
+                            .build();
+                });
+            } else {
+                ModelFile model = models().orientableWithBottom(
+                        Objects.requireNonNull(sidedBlock.getId()).getPath(),
+                        modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                        modLoc("block/" + sidedBlock.getId().getPath() + "_side"),
+                        modLoc("block/" + sidedBlock.getId().getPath() + "_bottom"),
+                        modLoc("block/" + sidedBlock.getId().getPath() + "_top")
+                ).renderType("solid");
 
-            directionalBlock(sidedBlock.get(), model);
+                directionalBlock(sidedBlock.get(), model);
+            }
         }
     }
 

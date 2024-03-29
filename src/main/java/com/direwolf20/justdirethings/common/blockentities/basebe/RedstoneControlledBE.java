@@ -1,9 +1,11 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
+import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface RedstoneControlledBE {
     RedstoneControlData getRedstoneControlData();
@@ -14,6 +16,10 @@ public interface RedstoneControlledBE {
         getRedstoneControlData().redstoneMode = MiscHelpers.RedstoneMode.values()[redstoneMode];
         if (getBlockEntity() instanceof BaseMachineBE baseMachineBE)
             baseMachineBE.markDirtyClient();
+        BlockState blockState = getBlockEntity().getBlockState();
+        if (blockState.hasProperty(BlockBreakerT1.ACTIVE)) {
+            getBlockEntity().getLevel().setBlockAndUpdate(getBlockEntity().getBlockPos(), blockState.setValue(BlockBreakerT1.ACTIVE, isActiveTestOnly()));
+        }
     }
 
     default void evaluateRedstone() {
@@ -23,7 +29,24 @@ public interface RedstoneControlledBE {
                 getRedstoneControlData().pulsed = true;
             getRedstoneControlData().receivingRedstone = newRedstoneSignal;
             getRedstoneControlData().checkedRedstone = true;
+            BlockState blockState = getBlockEntity().getBlockState();
+            if (blockState.hasProperty(BlockBreakerT1.ACTIVE)) {
+                getBlockEntity().getLevel().setBlockAndUpdate(getBlockEntity().getBlockPos(), blockState.setValue(BlockBreakerT1.ACTIVE, isActiveTestOnly()));
+            }
         }
+    }
+
+    default boolean isActiveTestOnly() {
+        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.IGNORED))
+            return true;
+        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.LOW))
+            return !getRedstoneControlData().receivingRedstone;
+        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.HIGH))
+            return getRedstoneControlData().receivingRedstone;
+        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE) && getRedstoneControlData().pulsed) {
+            return true;
+        }
+        return false;
     }
 
     default boolean isActive() {

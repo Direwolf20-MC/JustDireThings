@@ -128,18 +128,6 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         if ((mineBlock(firstEntry.getKey(), tool, fakePlayer))) {
             removePosFromTracker(firstEntry.getKey(), fakePlayer.getId() + firstEntry.getValue().iterator);
         }
-        //In case I want to go back to breaking more than 1 block at a time
-        /*Iterator<Map.Entry<BlockPos, BlockBreakingProgress>> iterator = blockBreakingTracker.entrySet().iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-            Map.Entry<BlockPos, BlockBreakingProgress> entry = iterator.next();
-            if (mineBlock(entry.getKey(), tool, fakePlayer)) {
-                sendClearPacket(entry.getKey(), fakePlayer.getId() + entry.getValue().iterator);
-                iterator.remove();
-            }
-            i++;
-            if (i == 1) break;
-        }*/
     }
 
     public boolean isBlockValid(FakePlayer fakePlayer, BlockPos blockPos) {

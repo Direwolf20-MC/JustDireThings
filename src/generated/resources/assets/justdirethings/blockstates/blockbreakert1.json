@@ -1,28 +1,54 @@
 {
   "variants": {
-    "facing=down": {
+    "active=false,facing=down": {
       "model": "justdirethings:block/blockbreakert1",
       "x": 180
     },
-    "facing=east": {
+    "active=false,facing=east": {
       "model": "justdirethings:block/blockbreakert1",
       "x": 90,
       "y": 90
     },
-    "facing=north": {
+    "active=false,facing=north": {
       "model": "justdirethings:block/blockbreakert1",
       "x": 90
     },
-    "facing=south": {
+    "active=false,facing=south": {
       "model": "justdirethings:block/blockbreakert1",
       "x": 90,
       "y": 180
     },
-    "facing=up": {
+    "active=false,facing=up": {
       "model": "justdirethings:block/blockbreakert1"
     },
-    "facing=west": {
+    "active=false,facing=west": {
       "model": "justdirethings:block/blockbreakert1",
+      "x": 90,
+      "y": 270
+    },
+    "active=true,facing=down": {
+      "model": "justdirethings:block/blockbreakert1_active",
+      "x": 180
+    },
+    "active=true,facing=east": {
+      "model": "justdirethings:block/blockbreakert1_active",
+      "x": 90,
+      "y": 90
+    },
+    "active=true,facing=north": {
+      "model": "justdirethings:block/blockbreakert1_active",
+      "x": 90
+    },
+    "active=true,facing=south": {
+      "model": "justdirethings:block/blockbreakert1_active",
+      "x": 90,
+      "y": 180
+    },
+    "active=true,facing=up": {
+      "model": "justdirethings:block/blockbreakert1_active"
+    },
+    "active=true,facing=west": {
+      "model": "justdirethings:block/blockbreakert1_active",
       "x": 90,
       "y": 270
     }

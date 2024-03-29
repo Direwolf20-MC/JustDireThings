@@ -17,11 +17,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
 public class BlockBreakerT1 extends BaseMachineBlock {
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
     public BlockBreakerT1() {
         super(Properties.of()
                 .sound(SoundType.METAL)
@@ -53,11 +55,12 @@ public class BlockBreakerT1 extends BaseMachineBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite()).setValue(ACTIVE, true);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
+        builder.add(ACTIVE);
     }
 }
