@@ -49,7 +49,7 @@ public class ItemCollectorRenderer extends AreaAffectingBER {
         float f;
         switch (direction) {
             case UP:
-                f = 0.22f + 0.25f; //Center of cube up 1/4 block
+                f = 0.5f + 0.25f; //Center of cube up 1/4 block
                 this.renderFace(matrixStack, vertexConsumer, zero, one, f, f + diff, one, one, one, one); //South
                 this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f, zero, zero, zero, zero); //North
                 this.renderFace(matrixStack, vertexConsumer, one, one, f + diff, f, zero, one, one, zero); //East
@@ -58,7 +58,7 @@ public class ItemCollectorRenderer extends AreaAffectingBER {
                 this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f + diff, one, one, zero, zero); //Up
                 break;
             case DOWN:
-                f = 0.78f - 0.25f; //Center of cube down 1/4 block
+                f = 0.5f - 0.25f; //Center of cube down 1/4 block
                 this.renderFace(matrixStack, vertexConsumer, zero, one, f, f - diff, one, one, one, one); //South
                 this.renderFace(matrixStack, vertexConsumer, zero, one, f - diff, f, zero, zero, zero, zero); //North
                 this.renderFace(matrixStack, vertexConsumer, one, one, f - diff, f, zero, one, one, zero); //East
@@ -67,7 +67,7 @@ public class ItemCollectorRenderer extends AreaAffectingBER {
                 this.renderFace(matrixStack, vertexConsumer, zero, one, f - diff, f - diff, one, one, zero, zero); //Up
                 break;
             case NORTH:
-                f = 0.78f - 0.25f; //Center of cube up 1/4 block
+                f = 0.5f - 0.25f; //Center of cube up 1/4 block
                 this.renderFace(matrixStack, vertexConsumer, zero, one, zero, one, f, f, f, f); //South
                 this.renderFace(matrixStack, vertexConsumer, zero, one, one, zero, f - diff, f - diff, f - diff, f - diff); //North
                 this.renderFace(matrixStack, vertexConsumer, one, one, one, zero, f - diff, f, f, f - diff); //East
@@ -76,7 +76,7 @@ public class ItemCollectorRenderer extends AreaAffectingBER {
                 this.renderFace(matrixStack, vertexConsumer, zero, one, one, one, f, f, f - diff, f - diff); //Up
                 break;
             case SOUTH:
-                f = 0.22f + 0.25f; //Center of cube down 1/4 block
+                f = 0.5f + 0.25f; //Center of cube down 1/4 block
                 this.renderFace(matrixStack, vertexConsumer, zero, one, zero, one, f, f, f, f); //South
                 this.renderFace(matrixStack, vertexConsumer, zero, one, one, zero, f + diff, f + diff, f + diff, f + diff); //North
                 this.renderFace(matrixStack, vertexConsumer, zero, zero, zero, one, f + diff, f, f, f + diff); //East
@@ -85,7 +85,7 @@ public class ItemCollectorRenderer extends AreaAffectingBER {
                 this.renderFace(matrixStack, vertexConsumer, zero, one, zero, zero, f + diff, f + diff, f, f); //Up
                 break;
             case EAST:
-                f = 0.22f + 0.25f; //Center of cube up 1/4 block
+                f = 0.5f + 0.25f; //Center of cube up 1/4 block
                 this.renderFace(matrixStack, vertexConsumer, f, f + diff, zero, one, one, one, one, one); //South
                 this.renderFace(matrixStack, vertexConsumer, f, f + diff, one, zero, zero, zero, zero, zero); //North
                 this.renderFace(matrixStack, vertexConsumer, f + diff, f + diff, one, zero, zero, one, one, zero); //East
@@ -94,7 +94,7 @@ public class ItemCollectorRenderer extends AreaAffectingBER {
                 this.renderFace(matrixStack, vertexConsumer, f, f + diff, one, one, one, one, zero, zero); //Up
                 break;
             case WEST:
-                f = 0.78f - 0.25f; //Center of cube shifted 1/4 block to the west
+                f = 0.5f - 0.25f; //Center of cube shifted 1/4 block to the west
                 this.renderFace(matrixStack, vertexConsumer, f, f - diff, zero, one, one, one, one, one); //South
                 this.renderFace(matrixStack, vertexConsumer, f, f - diff, one, zero, zero, zero, zero, zero); //North
                 this.renderFace(matrixStack, vertexConsumer, f, f, zero, one, zero, one, one, zero); //East

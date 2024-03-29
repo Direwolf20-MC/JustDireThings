@@ -73,8 +73,9 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     }
 
     public void doParticles(ItemStack itemStack, Vec3 sourcePos) {
+        Direction direction = getBlockState().getValue(BlockStateProperties.FACING);
         BlockPos blockPos = getBlockPos();
-        ItemFlowParticleData data = new ItemFlowParticleData(itemStack, blockPos.getX() + 0.5f, blockPos.getY() + 0.5f, blockPos.getZ() + 0.5f, 5);
+        ItemFlowParticleData data = new ItemFlowParticleData(itemStack, blockPos.getX() + 0.5f - (0.3 * direction.getStepX()), blockPos.getY() + 0.5f - (0.3 * direction.getStepY()), blockPos.getZ() + 0.5f - (0.3 * direction.getStepZ()), 5);
         double d0 = sourcePos.x();
         double d1 = sourcePos.y();
         double d2 = sourcePos.z();
