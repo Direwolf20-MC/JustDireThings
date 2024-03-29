@@ -1,10 +1,13 @@
 package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.BaseButton;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
+import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
+import com.direwolf20.justdirethings.common.items.tools.utils.AbilityParams;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -66,11 +69,18 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             }
             if (toolAbility.getSettingType() == Ability.SettingType.CYCLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
+                AbilityParams abilityParams = ((ToggleableTool) tool.getItem()).getAbilityParams(toolAbility);
+                int possibleValues = ((abilityParams.maxSlider - abilityParams.minSlider) / abilityParams.increment) + 2;
                 int currentValue = ToggleableTool.getToolValue(tool, toolAbility.getName());
-                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, currentValue, (clicked) -> {
+                int buttonPosition = !isActive ? 0 : currentValue / abilityParams.increment;
+                Button button = ToggleButtonFactory.ABILITYCYCLEBUTTON(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), toolAbility, buttonPosition, (clicked) -> {
+                    cycleSetting(toolAbility.getName());
+                    ((ToggleButton) clicked).nextTexturePosition(possibleValues);
+                });
+                /*Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, currentValue, (clicked) -> {
                     cycleSetting(toolAbility.getName());
                     ((GrayscaleButton) clicked).cyleValue(toolAbility, tool);
-                });
+                });*/
                 addRenderableWidget(button);
                 counter++;
             }

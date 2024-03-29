@@ -9,14 +9,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 
-public class BlockBreakerT1Container extends BaseMachineContainer {
+public class BlockPlacerT1Container extends BaseMachineContainer {
 
-    public BlockBreakerT1Container(int windowId, Inventory playerInventory, FriendlyByteBuf extraData) {
+    public BlockPlacerT1Container(int windowId, Inventory playerInventory, FriendlyByteBuf extraData) {
         this(windowId, playerInventory, extraData.readBlockPos());
     }
 
-    public BlockBreakerT1Container(int windowId, Inventory playerInventory, BlockPos blockPos) {
-        super(Registration.BlockBreakerT1_Container.get(), windowId, playerInventory, blockPos);
+    public BlockPlacerT1Container(int windowId, Inventory playerInventory, BlockPos blockPos) {
+        super(Registration.BlockPlacerT1_Container.get(), windowId, playerInventory, blockPos);
         addPlayerSlots(player.getInventory());
     }
 
@@ -28,7 +28,7 @@ public class BlockBreakerT1Container extends BaseMachineContainer {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, Registration.BlockBreakerT1.get());
+        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, Registration.BlockPlacerT1.get());
     }
 
     @Override

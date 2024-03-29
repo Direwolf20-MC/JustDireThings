@@ -30,8 +30,9 @@ public class BlockBreakerT2Screen extends BaseMachineScreen<BlockBreakerT2Contai
     public void init() {
         super.init();
         addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 116, topSectionTop + 62, direction.ordinal(), b -> {
-            direction = Direction.values()[(direction.ordinal() == 5 ? 0 : direction.ordinal() + 1)];
             ((ToggleButton) b).nextTexturePosition();
+            direction = Direction.values()[((ToggleButton) b).getTexturePosition()];
+
             PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction.ordinal()));
         }));
     }

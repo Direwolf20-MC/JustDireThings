@@ -11,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -129,18 +128,6 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         if ((mineBlock(firstEntry.getKey(), tool, fakePlayer))) {
             removePosFromTracker(firstEntry.getKey(), fakePlayer.getId() + firstEntry.getValue().iterator);
         }
-        //In case I want to go back to breaking more than 1 block at a time
-        /*Iterator<Map.Entry<BlockPos, BlockBreakingProgress>> iterator = blockBreakingTracker.entrySet().iterator();
-        int i = 0;
-        while (iterator.hasNext()) {
-            Map.Entry<BlockPos, BlockBreakingProgress> entry = iterator.next();
-            if (mineBlock(entry.getKey(), tool, fakePlayer)) {
-                sendClearPacket(entry.getKey(), fakePlayer.getId() + entry.getValue().iterator);
-                iterator.remove();
-            }
-            i++;
-            if (i == 1) break;
-        }*/
     }
 
     public boolean isBlockValid(FakePlayer fakePlayer, BlockPos blockPos) {
@@ -151,6 +138,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         if (blockBreakingTracker.containsKey(blockPos))
             return false;
         if (level.getBlockState(blockPos).getDestroySpeed(level, blockPos) < 0)
+            return false;
+        if (!level.mayInteract(fakePlayer, blockPos))
             return false;
         return true;
     }
@@ -173,9 +162,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
-        if (!tool.isCorrectToolForDrops(blockState)) return;
-        if (!level.mayInteract(fakePlayer, blockPos)) return;
-        setPlayerData(tool, fakePlayer, blockPos);
+        //if (!tool.isCorrectToolForDrops(blockState)) return;
+        setFakePlayerData(tool, fakePlayer, blockPos, direction);
         blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, fakePlayer, blockState)));
     }
 
@@ -184,7 +172,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
      */
     public boolean mineBlock(BlockPos blockPos, ItemStack tool, FakePlayer player) {
         BlockState blockState = level.getBlockState(blockPos);
-        if (blockState.isAir() || !tool.isCorrectToolForDrops(blockState)) { //If we got here, and the block is air, it means we had a block there before and it has since been removed
+        if (blockState.isAir()) { //If we got here, and the block is air, it means we had a block there before and it has since been removed
             return true;
         }
         if (blockBreakingTracker.containsKey(blockPos) && !level.getBlockState(blockPos).equals(blockBreakingTracker.get(blockPos).blockState)) {
@@ -212,7 +200,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         if (hardness == -1.0F) {
             return -1.0F;
         } else {
-            return getDestroySpeed(blockPos, tool, player, blockState) / hardness / (float) 30; //Always the correct tool for drop!
+            float modifier = tool.isCorrectToolForDrops(blockState) ? 30 : 100;
+            return getDestroySpeed(blockPos, tool, player, blockState) / hardness / modifier; //Always the correct tool for drop!
         }
     }
 
@@ -228,17 +217,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         return toolDestroySpeed;
     }
 
-    public void setPlayerData(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos) {
-        fakePlayer.setPos(breakPos.below().relative(direction).getX() + 0.5, breakPos.below().relative(direction).getY(), breakPos.below().relative(direction).getZ() + 0.5);
-        float xRot = direction == Direction.DOWN ? -90 : direction == Direction.UP ? 90 : 0;
-        fakePlayer.setXRot(xRot);
-        fakePlayer.setYRot(direction.toYRot());
-        fakePlayer.setYHeadRot(direction.toYRot());
-        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, tool);
-    }
-
     public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
-        setPlayerData(tool, fakePlayer, breakPos);
+        setFakePlayerData(tool, fakePlayer, breakPos, direction);
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
         if (NeoForge.EVENT_BUS.post(event).isCanceled()) return false;
         breakBlock(fakePlayer, breakPos, tool, blockState);

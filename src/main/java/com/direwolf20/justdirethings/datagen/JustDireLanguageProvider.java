@@ -28,6 +28,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.ItemCollector.get(), "Item Collector");
         add(Registration.BlockBreakerT1.get(), "Simple Block Breaker");
         add(Registration.BlockBreakerT2.get(), "Advanced Block Breaker");
+        add(Registration.BlockPlacerT1.get(), "Simple Block Placer");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -109,7 +110,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.LEAFBREAKER.getLocalization(), "Leaf Breaker");
         add(Ability.SMELTER.getLocalization(), "Auto Smelter");
         add(Ability.HAMMER.getLocalization(), "Hammer");
-        add(Ability.HAMMER.getLocalization() + "value", "Hammer: %s");
+        add(Ability.HAMMER.getLocalization() + "_off", "Hammer: Disabled");
+        add(Ability.HAMMER.getLocalization() + "_3", "Hammer: 3x3");
+        add(Ability.HAMMER.getLocalization() + "_5", "Hammer: 5x5");
+        add(Ability.HAMMER.getLocalization() + "_7", "Hammer: 7x7");
         add(Ability.OREXRAY.getLocalization(), "X-Ray");
         add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
         add(Ability.GLOWING.getLocalization(), "Monster X-Ray");
@@ -133,6 +137,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.direction-south", "South");
         add("justdirethings.screen.direction-west", "West");
         add("justdirethings.screen.direction-east", "East");
+        add("justdirethings.screen.direction-none", "None");
         add("justdirethings.screen.filter-block", "Filter: Block");
         add("justdirethings.screen.filter-item", "Filter: Item");
 

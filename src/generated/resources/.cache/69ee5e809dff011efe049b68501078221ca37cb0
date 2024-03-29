@@ -1,4 +1,4 @@
-// 1.20.4	2024-03-27T12:31:34.5090492	Item Models: justdirethings
+// 1.20.4	2024-03-28T10:14:51.5464817	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -13,6 +13,7 @@ e2bdff2179e5f63e0864cd6c57682c462e5eef93 assets/justdirethings/models/item/blaze
 d14378694dfd0bacbd13e9b7b948a6887213a2a2 assets/justdirethings/models/item/blazegold_sword_active.json
 92c72fe66ba827d84eb5690b83c61ff455f9b499 assets/justdirethings/models/item/blockbreakert1.json
 7f2c1d8d5031cfb9591fffbc748999ad13b6ac9f assets/justdirethings/models/item/blockbreakert2.json
+b2504b2aa03d3593b5afc6e277c3b67628dead46 assets/justdirethings/models/item/blockplacert1.json
 e63a7b70ea90788c435cde21e559b6d61776bc72 assets/justdirethings/models/item/celestigem.json
 08e13ad0cec9c655cf3ed3ab776cb3a2bdf02648 assets/justdirethings/models/item/celestigem_axe.json
 1182f0d2bd93e5407af4484baac97865ba3b9b44 assets/justdirethings/models/item/celestigem_axe_active.json
