@@ -3,10 +3,13 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,6 +50,15 @@ public class BaseMachineBE extends BlockEntity {
     protected FakePlayer getFakePlayer(ServerLevel level, UUID uuid) {
         GameProfile gameProfile = new GameProfile(uuid, "[JustDiresFakePlayer]");
         return FakePlayerFactory.get(level, gameProfile);
+    }
+
+    public void setFakePlayerData(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos, Direction direction) {
+        fakePlayer.setPos(blockPos.below().relative(direction).getX() + 0.5, blockPos.below().relative(direction).getY(), blockPos.below().relative(direction).getZ() + 0.5);
+        float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
+        fakePlayer.setXRot(xRot);
+        fakePlayer.setYRot(direction.toYRot());
+        fakePlayer.setYHeadRot(direction.toYRot());
+        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, itemStack);
     }
 
     public void setPlacedBy(UUID placedBy) {
