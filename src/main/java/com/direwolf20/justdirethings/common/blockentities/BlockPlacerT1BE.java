@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.blocks.BlockPlacerT1;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,11 +72,26 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         return true;
     }
 
+    public boolean canPlace() {
+        return true;
+    }
+
+    public boolean clearTrackerIfNeeded(ItemStack itemStack) {
+        if (positionsToPlace.isEmpty())
+            return false;
+        if (!isStackValid(itemStack))
+            return true;
+        if (!canPlace())
+            return true;
+        if (!isActive() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
+            return true;
+        return false;
+    }
+
     public void doBlockPlace() {
         ItemStack placeStack = getPlaceStack();
-        if (!isStackValid(placeStack)) {
-            if (!positionsToPlace.isEmpty()) //Clear the placement positions if we run out of items to place.
-                positionsToPlace.clear();
+        if (clearTrackerIfNeeded(placeStack)) {
+            positionsToPlace.clear();
             return;
         }
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);

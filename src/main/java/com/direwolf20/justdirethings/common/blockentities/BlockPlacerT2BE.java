@@ -43,7 +43,7 @@ public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE
 
     @Override
     public int getStandardEnergyCost() {
-        return 100; // Todo Config?
+        return 1000; // Todo Config?
     }
 
     @Override
@@ -59,6 +59,18 @@ public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE
     @Override
     public FilterData getFilterData() {
         return filterData;
+    }
+
+    @Override
+    public boolean canPlace() {
+        return hasEnoughPower(getStandardEnergyCost());
+    }
+
+    @Override
+    public void placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
+        if (extractEnergy(getStandardEnergyCost(), false) < getStandardEnergyCost())
+            return;
+        super.placeBlock(itemStack, fakePlayer, blockPos);
     }
 
     @Override
