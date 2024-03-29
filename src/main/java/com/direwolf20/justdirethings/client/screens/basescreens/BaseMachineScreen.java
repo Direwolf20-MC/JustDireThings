@@ -119,7 +119,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
         if (filterData.blockItemFilter != -1) {
             addRenderableWidget(ToggleButtonFactory.FILTERBLOCKITEMBUTTON(getGuiLeft() + 44, topSectionTop + 62, filterData.blockItemFilter, b -> {
-                ((ToggleButton) b).setTexturePosition(filterData.blockItemFilter);
+                ((ToggleButton) b).nextTexturePosition();
                 filterData.blockItemFilter = ((ToggleButton) b).getTexturePosition();
                 saveSettings();
             }));

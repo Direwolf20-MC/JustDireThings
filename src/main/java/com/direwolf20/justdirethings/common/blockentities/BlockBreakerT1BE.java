@@ -162,7 +162,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
-        if (!tool.isCorrectToolForDrops(blockState)) return;
+        //if (!tool.isCorrectToolForDrops(blockState)) return;
         setFakePlayerData(tool, fakePlayer, blockPos, direction);
         blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, fakePlayer, blockState)));
     }
@@ -172,7 +172,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
      */
     public boolean mineBlock(BlockPos blockPos, ItemStack tool, FakePlayer player) {
         BlockState blockState = level.getBlockState(blockPos);
-        if (blockState.isAir() || !tool.isCorrectToolForDrops(blockState)) { //If we got here, and the block is air, it means we had a block there before and it has since been removed
+        if (blockState.isAir()) { //If we got here, and the block is air, it means we had a block there before and it has since been removed
             return true;
         }
         if (blockBreakingTracker.containsKey(blockPos) && !level.getBlockState(blockPos).equals(blockBreakingTracker.get(blockPos).blockState)) {
@@ -200,7 +200,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         if (hardness == -1.0F) {
             return -1.0F;
         } else {
-            return getDestroySpeed(blockPos, tool, player, blockState) / hardness / (float) 30; //Always the correct tool for drop!
+            float modifier = tool.isCorrectToolForDrops(blockState) ? 30 : 100;
+            return getDestroySpeed(blockPos, tool, player, blockState) / hardness / modifier; //Always the correct tool for drop!
         }
     }
 
