@@ -31,119 +31,71 @@ import java.util.stream.Stream;
 public class ItemCollector extends BaseMachineBlock {
     protected static final VoxelShape[] shapes = new VoxelShape[]{
             Stream.of(
-                    Block.box(6.5, 4.25, 6.5, 9.5, 4.75, 9.5),
-                    Block.box(5, 0, 5, 11, 1, 11),
-                    Block.box(5, -2, 5, 11, -1.5, 11),
-                    Block.box(6.75, 4, 6.75, 9.25, 5, 9.25),
-                    Block.box(7.75, 5, 7.75, 8.25, 7.5, 8.25),
-                    Block.box(7.5, 7.5, 7.5, 8.5, 8.5, 8.5),
-                    Block.box(6.5, 1, 6.5, 9.5, 1.25, 9.5),
-                    Block.box(7.5, 5.25, 7.5, 8.5, 5.5, 8.5),
-                    Block.box(7.25, 5, 7.25, 8.75, 5.25, 8.75),
-                    Block.box(6.75, 1, 9.5, 9.25, 1.25, 10.5),
-                    Block.box(9.5, 1, 6.75, 10.5, 1.25, 9.25),
-                    Block.box(6.75, 1, 5.5, 9.25, 1.25, 6.5),
-                    Block.box(5.5, 1, 6.75, 6.5, 1.25, 9.25),
-                    Block.box(5.25, -1.5, 5.25, 10.75, 0, 10.75),
-                    Block.box(7, 1, 7, 9, 4, 9)
-            ).reduce((v1, v2) -> {
-                return Shapes.join(v1, v2, BooleanOp.OR);
-            }).get(), //DOWN
+                    Block.box(5, 2, 10, 6, 6, 11),
+                    Block.box(4, 0, 4, 12, 1, 12),
+                    Block.box(6, 2, 6, 10, 9, 10),
+                    Block.box(10, 2, 5, 11, 6, 6),
+                    Block.box(3, 1, 3, 13, 2, 13),
+                    Block.box(5, 6, 5, 11, 7, 11),
+                    Block.box(10, 2, 10, 11, 6, 11),
+                    Block.box(5, 2, 5, 6, 6, 6),
+                    Block.box(7, 9, 7, 9, 11, 9)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //DOWN
             Stream.of(
-                    Block.box(6.5, 11.25, 6.5, 9.5, 11.75, 9.5),
-                    Block.box(5, 15, 5, 11, 16, 11),
-                    Block.box(5, 17.5, 5, 11, 18, 11),
-                    Block.box(6.75, 11, 6.75, 9.25, 12, 9.25),
-                    Block.box(7.75, 8.5, 7.75, 8.25, 11, 8.25),
-                    Block.box(7.5, 7.5, 7.5, 8.5, 8.5, 8.5),
-                    Block.box(6.5, 14.75, 6.5, 9.5, 15, 9.5),
-                    Block.box(7.5, 10.5, 7.5, 8.5, 10.75, 8.5),
-                    Block.box(7.25, 10.75, 7.25, 8.75, 11, 8.75),
-                    Block.box(6.75, 14.75, 9.5, 9.25, 15, 10.5),
-                    Block.box(9.5, 14.75, 6.75, 10.5, 15, 9.25),
-                    Block.box(6.75, 14.75, 5.5, 9.25, 15, 6.5),
-                    Block.box(5.5, 14.75, 6.75, 6.5, 15, 9.25),
-                    Block.box(5.25, 16, 5.25, 10.75, 17.5, 10.75),
-                    Block.box(7, 12, 7, 9, 15, 9)
-            ).reduce((v1, v2) -> {
-                return Shapes.join(v1, v2, BooleanOp.OR);
-            }).get(), //UP
+                    Block.box(5, 10, 10, 6, 14, 11),
+                    Block.box(4, 15, 4, 12, 16, 12),
+                    Block.box(6, 7, 6, 10, 14, 10),
+                    Block.box(10, 10, 5, 11, 14, 6),
+                    Block.box(3, 14, 3, 13, 15, 13),
+                    Block.box(5, 9, 5, 11, 10, 11),
+                    Block.box(10, 10, 10, 11, 14, 11),
+                    Block.box(5, 10, 5, 6, 14, 6),
+                    Block.box(7, 5, 7, 9, 7, 9)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //UP
             Stream.of(
-                    Block.box(6.5, 6.5, 4.25, 9.5, 9.5, 4.75),
-                    Block.box(5, 5, 0, 11, 11, 1),
-                    Block.box(5, 5, -2, 11, 11, -1.5),
-                    Block.box(6.75, 6.75, 4, 9.25, 9.25, 5),
-                    Block.box(7.75, 7.75, 5, 8.25, 8.25, 7.5),
-                    Block.box(7.5, 7.5, 7.5, 8.5, 8.5, 8.5),
-                    Block.box(6.5, 6.5, 1, 9.5, 9.5, 1.25),
-                    Block.box(7.5, 7.5, 5.25, 8.5, 8.5, 5.5),
-                    Block.box(7.25, 7.25, 5, 8.75, 8.75, 5.25),
-                    Block.box(6.75, 5.5, 1, 9.25, 6.5, 1.25),
-                    Block.box(9.5, 6.75, 1, 10.5, 9.25, 1.25),
-                    Block.box(6.75, 9.5, 1, 9.25, 10.5, 1.25),
-                    Block.box(5.5, 6.75, 1, 6.5, 9.25, 1.25),
-                    Block.box(5.25, 5.25, -1.5, 10.75, 10.75, 0),
-                    Block.box(7, 7, 1, 9, 9, 4)
-            ).reduce((v1, v2) -> {
-                return Shapes.join(v1, v2, BooleanOp.OR);
-            }).get(), //NORTH
+                    Block.box(5, 5, 2, 6, 6, 6),
+                    Block.box(4, 4, 0, 12, 12, 1),
+                    Block.box(6, 6, 2, 10, 10, 9),
+                    Block.box(10, 10, 2, 11, 11, 6),
+                    Block.box(3, 3, 1, 13, 13, 2),
+                    Block.box(5, 5, 6, 11, 11, 7),
+                    Block.box(10, 5, 2, 11, 6, 6),
+                    Block.box(5, 10, 2, 6, 11, 6),
+                    Block.box(7, 7, 9, 9, 9, 11)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //NORTH
             Stream.of(
-                    Block.box(6.5, 6.5, 11.25, 9.5, 9.5, 11.75),
-                    Block.box(5, 5, 15, 11, 11, 16),
-                    Block.box(5, 5, 17.5, 11, 11, 18),
-                    Block.box(6.75, 6.75, 11, 9.25, 9.25, 12),
-                    Block.box(7.75, 7.75, 8.5, 8.25, 8.25, 11),
-                    Block.box(7.5, 7.5, 7.5, 8.5, 8.5, 8.5),
-                    Block.box(6.5, 6.5, 14.75, 9.5, 9.5, 15),
-                    Block.box(7.5, 7.5, 10.5, 8.5, 8.5, 10.75),
-                    Block.box(7.25, 7.25, 10.75, 8.75, 8.75, 11),
-                    Block.box(6.75, 5.5, 14.75, 9.25, 6.5, 15),
-                    Block.box(9.5, 6.75, 14.75, 10.5, 9.25, 15),
-                    Block.box(6.75, 9.5, 14.75, 9.25, 10.5, 15),
-                    Block.box(5.5, 6.75, 14.75, 6.5, 9.25, 15),
-                    Block.box(5.25, 5.25, 16, 10.75, 10.75, 17.5),
-                    Block.box(7, 7, 12, 9, 9, 15)
-            ).reduce((v1, v2) -> {
-                return Shapes.join(v1, v2, BooleanOp.OR);
-            }).get(), //SOUTH
+                    Block.box(5, 5, 10, 6, 6, 14),
+                    Block.box(4, 4, 15, 12, 12, 16),
+                    Block.box(6, 6, 7, 10, 10, 14),
+                    Block.box(10, 10, 10, 11, 11, 14),
+                    Block.box(3, 3, 14, 13, 13, 15),
+                    Block.box(5, 5, 9, 11, 11, 10),
+                    Block.box(10, 5, 10, 11, 6, 14),
+                    Block.box(5, 10, 10, 6, 11, 14),
+                    Block.box(7, 7, 5, 9, 9, 7)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //SOUTH
             Stream.of(
-                    Block.box(4.25, 6.5, 6.5, 4.75, 9.5, 9.5),
-                    Block.box(0, 5, 5, 1, 11, 11),
-                    Block.box(-2, 5, 5, -1.5, 11, 11),
-                    Block.box(4, 6.75, 6.75, 5, 9.25, 9.25),
-                    Block.box(5, 7.75, 7.75, 7.5, 8.25, 8.25),
-                    Block.box(7.5, 7.5, 7.5, 8.5, 8.5, 8.5),
-                    Block.box(1, 6.5, 6.5, 1.25, 9.5, 9.5),
-                    Block.box(5.25, 7.5, 7.5, 5.5, 8.5, 8.5),
-                    Block.box(5, 7.25, 7.25, 5.25, 8.75, 8.75),
-                    Block.box(1, 5.5, 6.75, 1.25, 6.5, 9.25),
-                    Block.box(1, 6.75, 9.5, 1.25, 9.25, 10.5),
-                    Block.box(1, 9.5, 6.75, 1.25, 10.5, 9.25),
-                    Block.box(1, 6.75, 5.5, 1.25, 9.25, 6.5),
-                    Block.box(-1.5, 5.25, 5.25, 0, 10.75, 10.75),
-                    Block.box(1, 7, 7, 4, 9, 9)
-            ).reduce((v1, v2) -> {
-                return Shapes.join(v1, v2, BooleanOp.OR);
-            }).get(), //WEST
+                    Block.box(2, 5, 5, 6, 6, 6),
+                    Block.box(0, 4, 4, 1, 12, 12),
+                    Block.box(2, 6, 6, 9, 10, 10),
+                    Block.box(2, 10, 10, 6, 11, 11),
+                    Block.box(1, 3, 3, 2, 13, 13),
+                    Block.box(6, 5, 5, 7, 11, 11),
+                    Block.box(2, 5, 10, 6, 6, 11),
+                    Block.box(2, 10, 5, 6, 11, 6),
+                    Block.box(9, 7, 7, 11, 9, 9)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get(), //WEST
             Stream.of(
-                    Block.box(11.25, 6.5, 6.5, 11.75, 9.5, 9.5),
-                    Block.box(15, 5, 5, 16, 11, 11),
-                    Block.box(17.5, 5, 5, 18, 11, 11),
-                    Block.box(11, 6.75, 6.75, 12, 9.25, 9.25),
-                    Block.box(8.5, 7.75, 7.75, 11, 8.25, 8.25),
-                    Block.box(7.5, 7.5, 7.5, 8.5, 8.5, 8.5),
-                    Block.box(14.75, 6.5, 6.5, 15, 9.5, 9.5),
-                    Block.box(10.5, 7.5, 7.5, 10.75, 8.5, 8.5),
-                    Block.box(10.75, 7.25, 7.25, 11, 8.75, 8.75),
-                    Block.box(14.75, 5.5, 6.75, 15, 6.5, 9.25),
-                    Block.box(14.75, 6.75, 9.5, 15, 9.25, 10.5),
-                    Block.box(14.75, 9.5, 6.75, 15, 10.5, 9.25),
-                    Block.box(14.75, 6.75, 5.5, 15, 9.25, 6.5),
-                    Block.box(16, 5.25, 5.25, 17.5, 10.75, 10.75),
-                    Block.box(12, 7, 7, 15, 9, 9)
-            ).reduce((v1, v2) -> {
-                return Shapes.join(v1, v2, BooleanOp.OR);
-            }).get()//EAST
+                    Block.box(10, 5, 5, 14, 6, 6),
+                    Block.box(15, 4, 4, 16, 12, 12),
+                    Block.box(7, 6, 6, 14, 10, 10),
+                    Block.box(10, 10, 10, 14, 11, 11),
+                    Block.box(14, 3, 3, 15, 13, 13),
+                    Block.box(9, 5, 5, 10, 11, 11),
+                    Block.box(10, 5, 10, 14, 6, 11),
+                    Block.box(10, 10, 5, 14, 11, 6),
+                    Block.box(5, 7, 7, 7, 9, 9)
+            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()//EAST
     };
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
