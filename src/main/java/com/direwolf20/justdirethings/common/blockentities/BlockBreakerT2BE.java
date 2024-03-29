@@ -14,7 +14,6 @@ import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -54,12 +53,6 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     }
 
     @Override
-    public void tickServer() {
-        super.tickServer();
-        chargeItemStack(getMachineHandler().getStackInSlot(0));
-    }
-
-    @Override
     public AreaAffectingData getAreaAffectingData() {
         return areaAffectingData;
     }
@@ -72,6 +65,12 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     @Override
     public FilterData getFilterData() {
         return filterData;
+    }
+
+    @Override
+    public void tickServer() {
+        super.tickServer();
+        chargeItemStack(getMachineHandler().getStackInSlot(0));
     }
 
     @Override
@@ -114,18 +113,5 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
             }
         }
         return false;
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        if (direction != null)
-            tag.putInt("direction", direction.ordinal());
-    }
-
-    @Override
-    public void load(CompoundTag tag) {
-        direction = Direction.values()[tag.getInt("direction")];
-        super.load(tag);
     }
 }

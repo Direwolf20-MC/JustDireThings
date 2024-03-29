@@ -48,6 +48,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     protected int topSectionHeight;
     protected int extraWidth;
     protected int extraHeight;
+    protected int direction;
 
     public BaseMachineScreen(T container, Inventory pPlayerInventory, Component pTitle) {
         super(container, pPlayerInventory, pTitle);
@@ -68,6 +69,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         if (baseMachineBE instanceof RedstoneControlledBE redstoneControlledBE) {
             this.redstoneMode = redstoneControlledBE.getRedstoneControlData().redstoneMode;
         }
+        direction = baseMachineBE.getDirection();
     }
 
     public void calculateTopSection() {
