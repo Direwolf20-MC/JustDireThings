@@ -54,7 +54,7 @@ public class BaseMachineBE extends BlockEntity {
 
     public void setFakePlayerData(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos, Direction direction) {
         fakePlayer.setPos(blockPos.below().relative(direction).getX() + 0.5, blockPos.below().relative(direction).getY(), blockPos.below().relative(direction).getZ() + 0.5);
-        float xRot = direction == Direction.DOWN ? -90 : direction == Direction.UP ? 90 : 0;
+        float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
         fakePlayer.setXRot(xRot);
         fakePlayer.setYRot(direction.toYRot());
         fakePlayer.setYHeadRot(direction.toYRot());

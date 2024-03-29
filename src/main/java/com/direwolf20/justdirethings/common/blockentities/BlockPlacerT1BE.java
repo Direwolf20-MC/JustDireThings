@@ -96,28 +96,17 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         List<BlockPos> placeList = findSpotsToPlace(fakePlayer);
         for (BlockPos blockPos : placeList) {
-            setFakePlayerData(placeStack, fakePlayer, blockPos, direction);
+            setFakePlayerData(placeStack, fakePlayer, blockPos, Direction.values()[placeDirection].getOpposite());
             placeBlock(placeStack, fakePlayer, blockPos);
         }
     }
 
     public void placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
-        //if (placeDirection != -1) { //Do it like the players do
         Direction placing = Direction.values()[placeDirection];
         Vec3 hitVec = Vec3.atCenterOf(blockPos); // Center of the block where we want to place the new block
         BlockHitResult hitResult = new BlockHitResult(hitVec, placing.getOpposite(), blockPos, false);
         UseOnContext useoncontext = new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, hitResult);
-        itemStack.useOn(useoncontext); // This is pseudocode; you will need to create a proper use context
-        /*} else { //Do it like MAGIC!
-            BlockSnapshot blockSnapshot = net.neoforged.neoforge.common.util.BlockSnapshot.create(level.dimension(), level, blockPos);
-            BlockState placedAgainst = blockSnapshot.getLevel().getBlockState(blockSnapshot.getPos().below());
-            BlockEvent.EntityPlaceEvent event = new BlockEvent.EntityPlaceEvent(blockSnapshot, placedAgainst, fakePlayer);
-            if (!event.isCanceled() && itemStack.getItem() instanceof BlockItem blockItem) {
-                BlockState placeState = blockItem.getBlock().defaultBlockState();
-                level.setBlockAndUpdate(blockPos, placeState);
-                itemStack.shrink(1);
-            }
-        }*/
+        itemStack.useOn(useoncontext);
     }
 
     public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {

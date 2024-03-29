@@ -127,7 +127,6 @@ public interface ToggleableTool extends ToggleableItem {
                 cumulativeDestroy = cumulativeDestroy + destroySpeedTarget;
             }
             int rfCostInstaBreak = getInstantRFCost(cumulativeDestroy);
-            System.out.println(rfCostInstaBreak);
             if (testUseTool(pStack, rfCostInstaBreak) > 0)
                 instaBreak = true;
         }
