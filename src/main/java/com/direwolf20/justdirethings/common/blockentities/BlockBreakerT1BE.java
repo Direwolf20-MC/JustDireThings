@@ -156,7 +156,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
         //if (!tool.isCorrectToolForDrops(blockState)) return;
-        setFakePlayerData(tool, fakePlayer, blockPos, FACING);
+        setFakePlayerData(tool, fakePlayer, blockPos, getDirectionValue());
         blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, fakePlayer, blockState)));
     }
 
@@ -211,7 +211,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
-        setFakePlayerData(tool, fakePlayer, breakPos, FACING);
+        setFakePlayerData(tool, fakePlayer, breakPos, getDirectionValue());
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
         if (NeoForge.EVENT_BUS.post(event).isCanceled()) return false;
         breakBlock(fakePlayer, breakPos, tool, blockState);
