@@ -67,6 +67,7 @@ public class ClientSetup {
         event.register(Registration.BlockBreakerT2_Container.get(), BlockBreakerT2Screen::new);
         event.register(Registration.BlockPlacerT1_Container.get(), BlockPlacerT1Screen::new);
         event.register(Registration.BlockPlacerT2_Container.get(), BlockPlacerT2Screen::new);
+        event.register(Registration.ClickerT1_Container.get(), ClickerT1Screen::new);
     }
 
     @SubscribeEvent

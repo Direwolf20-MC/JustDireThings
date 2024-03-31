@@ -95,6 +95,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> BlockPlacerT1_ITEM = ITEMS.register("blockplacert1", () -> new BlockItem(BlockPlacerT1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, BlockPlacerT2> BlockPlacerT2 = BLOCKS.register("blockplacert2", BlockPlacerT2::new);
     public static final DeferredHolder<Item, BlockItem> BlockPlacerT2_ITEM = ITEMS.register("blockplacert2", () -> new BlockItem(BlockPlacerT2.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, ClickerT1> ClickerT1 = SIDEDBLOCKS.register("clickert1", ClickerT1::new);
+    public static final DeferredHolder<Item, BlockItem> ClickerT1_ITEM = ITEMS.register("clickert1", () -> new BlockItem(ClickerT1.get(), new Item.Properties()));
 
 
     //Gooblocks
@@ -139,6 +141,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockBreakerT2BE>> BlockBreakerT2BE = BLOCK_ENTITIES.register("blockbreakert2", () -> BlockEntityType.Builder.of(BlockBreakerT2BE::new, BlockBreakerT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockPlacerT1BE>> BlockPlacerT1BE = BLOCK_ENTITIES.register("blockplacert1", () -> BlockEntityType.Builder.of(BlockPlacerT1BE::new, BlockPlacerT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockPlacerT2BE>> BlockPlacerT2BE = BLOCK_ENTITIES.register("blockplacert2", () -> BlockEntityType.Builder.of(BlockPlacerT2BE::new, BlockPlacerT2.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ClickerT1BE>> ClickerT1BE = BLOCK_ENTITIES.register("clickert1", () -> BlockEntityType.Builder.of(ClickerT1BE::new, ClickerT1.get()).build(null));
 
 
     //Items
@@ -196,6 +199,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(BlockPlacerT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<BlockPlacerT2Container>> BlockPlacerT2_Container = CONTAINERS.register("blockplacert2_container",
             () -> IMenuTypeExtension.create(BlockPlacerT2Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<ClickerT1Container>> ClickerT1_Container = CONTAINERS.register("clickert1_container",
+            () -> IMenuTypeExtension.create(ClickerT1Container::new));
 
 
     //Data Attachments

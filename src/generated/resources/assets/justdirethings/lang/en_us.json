@@ -5,6 +5,7 @@
   "block.justdirethings.blockplacert1": "Simple Block Placer",
   "block.justdirethings.blockplacert2": "Advanced Block Placer",
   "block.justdirethings.celestigem_block": "Celestigem Block",
+  "block.justdirethings.clickert1": "Simple Clicker",
   "block.justdirethings.eclipsealloy_block": "Eclipse Alloy Block",
   "block.justdirethings.ferricore_block": "Ferricore Block",
   "block.justdirethings.gooblock_tier1": "Primogel Goo",
@@ -106,7 +107,7 @@
   "justdirethings.screen.no_fuel": "Fuel source empty",
   "justdirethings.screen.pulse": "Pulse",
   "justdirethings.screen.renderarea": "Render Area",
-  "justdirethings.screen.tickspeed": "Tick Speed",
+  "justdirethings.screen.tickspeed": "Speed (Ticks)",
   "justdirethings.shiftmoreinfo": "Hold Shift for details",
   "justdirethings.unbound": " -Not Bound"
 }
