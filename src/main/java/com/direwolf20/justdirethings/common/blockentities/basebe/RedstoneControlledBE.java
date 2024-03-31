@@ -18,7 +18,7 @@ public interface RedstoneControlledBE {
             baseMachineBE.markDirtyClient();
         BlockState blockState = getBlockEntity().getBlockState();
         if (blockState.hasProperty(BlockBreakerT1.ACTIVE)) {
-            getBlockEntity().getLevel().setBlockAndUpdate(getBlockEntity().getBlockPos(), blockState.setValue(BlockBreakerT1.ACTIVE, isActiveTestOnly()));
+            getBlockEntity().getLevel().setBlockAndUpdate(getBlockEntity().getBlockPos(), blockState.setValue(BlockBreakerT1.ACTIVE, isActiveRedstoneTestOnly()));
         }
     }
 
@@ -31,12 +31,12 @@ public interface RedstoneControlledBE {
             getRedstoneControlData().checkedRedstone = true;
             BlockState blockState = getBlockEntity().getBlockState();
             if (blockState.hasProperty(BlockBreakerT1.ACTIVE)) {
-                getBlockEntity().getLevel().setBlockAndUpdate(getBlockEntity().getBlockPos(), blockState.setValue(BlockBreakerT1.ACTIVE, isActiveTestOnly()));
+                getBlockEntity().getLevel().setBlockAndUpdate(getBlockEntity().getBlockPos(), blockState.setValue(BlockBreakerT1.ACTIVE, isActiveRedstoneTestOnly()));
             }
         }
     }
 
-    default boolean isActiveTestOnly() {
+    default boolean isActiveRedstoneTestOnly() {
         if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.IGNORED))
             return true;
         if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.LOW))
@@ -49,7 +49,7 @@ public interface RedstoneControlledBE {
         return false;
     }
 
-    default boolean isActive() {
+    default boolean isActiveRedstone() {
         if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.IGNORED))
             return true;
         if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.LOW))

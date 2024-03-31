@@ -10,6 +10,7 @@ public class Config {
     public static final ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
 
     public static final String CATEGORY_GENERAL = "general";
+    public static ModConfigSpec.IntValue MINIMUM_MACHINE_TICK_SPEED;
 
     public static final String CATEGORY_FUEL_CANISTER = "fuel_canister";
     public static ModConfigSpec.IntValue FUEL_CANISTER_MINIMUM_TICKS_CONSUMED;
@@ -60,7 +61,8 @@ public class Config {
 
     private static void generalConfig() {
         COMMON_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
-
+        MINIMUM_MACHINE_TICK_SPEED = COMMON_BUILDER.comment("The minimum tick speed machines can be set to. Defaults to 1, meaning every tick")
+                .defineInRange("minimum_machine_tick_speed", 1, 1, 100);
         COMMON_BUILDER.pop();
     }
 

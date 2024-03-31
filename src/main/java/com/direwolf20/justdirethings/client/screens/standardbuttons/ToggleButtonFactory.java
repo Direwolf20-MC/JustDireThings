@@ -2,8 +2,10 @@ package com.direwolf20.justdirethings.client.screens.standardbuttons;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
+import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
+import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -108,5 +110,11 @@ public class ToggleButtonFactory {
 
     public static ToggleButton ABILITYCYCLEBUTTON(int x, int y, Ability ability, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HAMMER_TEXTURES, startingValue, onPress);
+    }
+
+    private static Component ticksButtonLocalization = Component.translatable("justdirethings.screen.tickspeed");
+
+    public static NumberButton TICKSPEEDBUTTON(int x, int y, int value, Button.OnPress onPress) {
+        return new NumberButton(x, y, 24, 12, value, Config.MINIMUM_MACHINE_TICK_SPEED.get(), 1200, ticksButtonLocalization, onPress);
     }
 }

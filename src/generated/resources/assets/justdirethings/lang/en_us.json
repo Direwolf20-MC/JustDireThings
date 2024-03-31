@@ -106,6 +106,7 @@
   "justdirethings.screen.no_fuel": "Fuel source empty",
   "justdirethings.screen.pulse": "Pulse",
   "justdirethings.screen.renderarea": "Render Area",
+  "justdirethings.screen.tickspeed": "Tick Speed",
   "justdirethings.shiftmoreinfo": "Hold Shift for details",
   "justdirethings.unbound": " -Not Bound"
 }

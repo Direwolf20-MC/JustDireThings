@@ -83,7 +83,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     }
 
     private void findItemsAndStore() {
-        if (!isActive()) return;
+        if (!isActiveRedstone() || !canRun()) return;
         assert level != null;
         AABB searchArea = getAABB(getBlockPos());
 

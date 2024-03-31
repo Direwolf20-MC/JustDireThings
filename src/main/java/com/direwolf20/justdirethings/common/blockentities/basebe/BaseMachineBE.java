@@ -25,6 +25,8 @@ public class BaseMachineBE extends BlockEntity {
     public static final GameProfile defaultFakePlayerProfile = new GameProfile(defaultFakePlayerUUID, "[JustDiresFakePlayer]");
     public UUID placedByUUID;
     protected int direction = 0;
+    protected int tickSpeed = 20;
+    protected int operationTicks = -1;
 
     public BaseMachineBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -34,8 +36,30 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     public void tickServer() {
+        handleTicks();
         if (this instanceof RedstoneControlledBE redstoneControlledBE)
             redstoneControlledBE.evaluateRedstone();
+    }
+
+    public void handleTicks() {
+        if (operationTicks <= 0)
+            operationTicks = tickSpeed;
+        operationTicks--;
+    }
+
+    public int getTickSpeed() {
+        return tickSpeed;
+    }
+
+    public void setTickSpeed(int newTickSpeed) {
+        this.tickSpeed = newTickSpeed;
+        if (operationTicks > tickSpeed)
+            operationTicks = tickSpeed;
+        markDirtyClient();
+    }
+
+    public boolean canRun() {
+        return operationTicks == 0;
     }
 
     public int getDirection() {
@@ -125,6 +149,7 @@ public class BaseMachineBE extends BlockEntity {
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
+        tag.putInt("tickspeed", tickSpeed);
         if (placedByUUID != null)
             tag.putUUID("placedBy", placedByUUID);
         tag.putInt("direction", direction);
@@ -139,6 +164,8 @@ public class BaseMachineBE extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         direction = tag.getInt("direction");
+        if (tag.contains("tickspeed"))
+            tickSpeed = tag.getInt("tickspeed");
         if (tag.contains("placedBy"))
             placedByUUID = tag.getUUID("placedBy");
         if (this instanceof AreaAffectingBE areaAffectingBE)

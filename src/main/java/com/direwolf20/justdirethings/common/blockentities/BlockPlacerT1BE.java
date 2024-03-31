@@ -83,7 +83,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             return true;
         if (!canPlace())
             return true;
-        if (!isActive() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
+        if (!isActiveRedstone() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
             return true;
         return false;
     }
@@ -95,7 +95,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             return;
         }
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
-        if (isActive() && positionsToPlace.isEmpty())
+        if (isActiveRedstone() && canRun() && positionsToPlace.isEmpty())
             positionsToPlace = findSpotsToPlace(fakePlayer);
         if (positionsToPlace.isEmpty())
             return;

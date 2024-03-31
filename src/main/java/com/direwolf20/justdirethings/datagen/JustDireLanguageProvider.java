@@ -141,6 +141,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.direction-none", "None");
         add("justdirethings.screen.filter-block", "Filter: Block");
         add("justdirethings.screen.filter-item", "Filter: Item");
+        add("justdirethings.screen.tickspeed", "Tick Speed");
 
 
         //Buttons

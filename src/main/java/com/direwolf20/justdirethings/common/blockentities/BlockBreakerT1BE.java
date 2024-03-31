@@ -89,7 +89,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
             return;
         if (tool.isEmpty())
             clearTracker(fakePlayer); //If we were breaking blocks before, and removed the tool, clear the progress
-        if (!isActive() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
+        if (!isActiveRedstone() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
             clearTracker(fakePlayer); //If we are in Pulse Mode, don't clear, but otherwise, do clear on redstone signal turned off
     }
 
@@ -108,7 +108,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         clearTrackerIfNeeded(tool, fakePlayer);
         if (tool.isEmpty()) return;
-        if (isActive() && blockBreakingTracker.isEmpty()) {
+        if (isActiveRedstone() && canRun() && blockBreakingTracker.isEmpty()) {
             List<BlockPos> blocksToMine = findBlocksToMine(fakePlayer);
             for (BlockPos blockPos : blocksToMine) {
                 BlockState blockState = level.getBlockState(blockPos);
