@@ -95,7 +95,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             return;
         }
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
-        if (isActiveRedstone() && canRun() && positionsToPlace.isEmpty())
+        if (isActiveRedstone() && (canRun() || redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE)) && positionsToPlace.isEmpty())
             positionsToPlace = findSpotsToPlace(fakePlayer);
         if (positionsToPlace.isEmpty())
             return;
