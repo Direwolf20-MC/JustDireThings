@@ -152,6 +152,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.target-player", "Target Player");
         add("justdirethings.screen.target-living", "Target All Living");
         add("justdirethings.screen.sneak-click", "Sneak Click");
+        add("justdirethings.screen.showfakeplayer", "Show Fake Player");
 
 
         //Buttons

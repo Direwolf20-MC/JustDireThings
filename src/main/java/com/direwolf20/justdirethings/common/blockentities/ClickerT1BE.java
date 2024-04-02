@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
-import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.blocks.ClickerT1;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.ArrayList;
@@ -38,6 +36,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public int clickType = 0; //RightClick, 1 == Left Click
     public CLICK_TARGET clickTarget = CLICK_TARGET.BLOCK;
     public boolean sneaking = false;
+    public boolean showFakePlayer = false;
 
     public enum CLICK_TARGET {
         BLOCK,
@@ -65,10 +64,11 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         this(Registration.ClickerT1BE.get(), pPos, pBlockState);
     }
 
-    public void setClickerSettings(int clickType, int clickTarget, boolean sneaking) {
+    public void setClickerSettings(int clickType, int clickTarget, boolean sneaking, boolean showFakePlayer) {
         this.clickType = clickType;
         this.clickTarget = CLICK_TARGET.values()[clickTarget];
         this.sneaking = sneaking;
+        this.showFakePlayer = showFakePlayer;
         positionsToClick.clear(); //Clear any clicks we have queue'd up
         entitiesToClick.clear();
         markDirtyClient();
@@ -148,17 +148,11 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public void clickEntity(ItemStack itemStack, UsefulFakePlayer fakePlayer, LivingEntity entity) {
+        fakePlayer.setReach(0.9);
         Direction placing = Direction.values()[direction];
         FakePlayerUtil.setupFakePlayerForUse(fakePlayer, entity.blockPosition(), placing, itemStack.copy(), sneaking);
-        if (level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
-            Vec3 base = new Vec3(fakePlayer.getX(), fakePlayer.getEyeY(), fakePlayer.getZ());
-            Vec3 look = fakePlayer.getLookAngle();
-            Vec3 target = base.add(look.x * 0.9, look.y * 0.9, look.z * 0.9);
-            ItemFlowParticleData data = new ItemFlowParticleData(itemStack, target.x, target.y, target.z, 5);
-            double d0 = base.x();
-            double d1 = base.y();
-            double d2 = base.z();
-            serverLevel.sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
+        if (showFakePlayer && level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
+            fakePlayer.drawParticles(serverLevel, itemStack);
         }
         ItemStack resultStack;
         resultStack = FakePlayerUtil.clickEntityInDirection(fakePlayer, level, entity, placing.getOpposite(), clickType);
@@ -169,21 +163,17 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public void clickBlock(ItemStack itemStack, UsefulFakePlayer fakePlayer, BlockPos blockPos) {
         Direction placing = Direction.values()[direction];
         FakePlayerUtil.setupFakePlayerForUse(fakePlayer, blockPos, placing, itemStack.copy(), sneaking);
-        if (level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
-            Vec3 base = new Vec3(fakePlayer.getX(), fakePlayer.getEyeY(), fakePlayer.getZ());
-            Vec3 look = fakePlayer.getLookAngle();
-            Vec3 target = base.add(look.x * 0.9, look.y * 0.9, look.z * 0.9);
-            ItemFlowParticleData data = new ItemFlowParticleData(itemStack, target.x, target.y, target.z, 5);
-            double d0 = base.x();
-            double d1 = base.y();
-            double d2 = base.z();
-            serverLevel.sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
+        if (showFakePlayer && level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
+            fakePlayer.drawParticles(serverLevel, itemStack);
         }
         ItemStack resultStack = itemStack.copy();
-        if (!level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.BLOCK))
+        if (!level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.BLOCK)) {
+            fakePlayer.setReach(0.9);
             resultStack = FakePlayerUtil.clickBlockInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos), clickType);
-        else if (level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.AIR))
+        } else if (level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.AIR) && clickType == 0) { //Only Right click air
+            fakePlayer.setReach(1);
             resultStack = FakePlayerUtil.rightClickAirInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos));
+        }
         setClickStack(resultStack);
         FakePlayerUtil.cleanupFakePlayerFromUse(fakePlayer, fakePlayer.getMainHandItem());
     }
@@ -232,6 +222,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         tag.putInt("clickType", clickType);
         tag.putInt("clickTarget", clickTarget.ordinal());
         tag.putBoolean("sneaking", sneaking);
+        tag.putBoolean("showFakePlayer", showFakePlayer);
     }
 
     @Override
@@ -239,6 +230,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         this.clickType = tag.getInt("clickType");
         this.clickTarget = CLICK_TARGET.values()[tag.getInt("clickTarget")];
         this.sneaking = tag.getBoolean("sneaking");
+        this.showFakePlayer = tag.getBoolean("showFakePlayer");
         super.load(tag);
     }
 }

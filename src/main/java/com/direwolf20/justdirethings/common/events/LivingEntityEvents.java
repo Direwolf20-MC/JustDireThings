@@ -3,12 +3,14 @@ package com.direwolf20.justdirethings.common.events;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.Helpers;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -16,6 +18,12 @@ import java.util.Iterator;
 
 
 public class LivingEntityEvents {
+
+    @SubscribeEvent
+    public static void blockJoin(EntityJoinLevelEvent e) {
+        if (e.getEntity() instanceof UsefulFakePlayer)
+            e.setCanceled(true);
+    }
 
     @SubscribeEvent
     public static void LivingDropsEvent(LivingDropsEvent event) {

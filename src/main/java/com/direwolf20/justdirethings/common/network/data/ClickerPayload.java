@@ -8,12 +8,13 @@ import net.minecraft.resources.ResourceLocation;
 public record ClickerPayload(
         int clickType,
         int clickTarget,
-        boolean sneaking
+        boolean sneaking,
+        boolean showFakePlayer
 ) implements CustomPacketPayload {
     public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "clicker_packet");
 
     public ClickerPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt(), buffer.readInt(), buffer.readBoolean());
+        this(buffer.readInt(), buffer.readInt(), buffer.readBoolean(), buffer.readBoolean());
     }
 
     @Override
@@ -21,6 +22,7 @@ public record ClickerPayload(
         buffer.writeInt(clickType);
         buffer.writeInt(clickTarget);
         buffer.writeBoolean(sneaking);
+        buffer.writeBoolean(showFakePlayer);
     }
 
     @Override

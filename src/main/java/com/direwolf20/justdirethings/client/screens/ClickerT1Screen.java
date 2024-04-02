@@ -16,6 +16,7 @@ public class ClickerT1Screen extends BaseMachineScreen<ClickerT1Container> {
     public int clickType;
     public int clickTarget;
     public boolean sneaking;
+    public boolean showFakePlayer;
 
     public ClickerT1Screen(ClickerT1Container container, Inventory inv, Component name) {
         super(container, inv, name);
@@ -23,6 +24,7 @@ public class ClickerT1Screen extends BaseMachineScreen<ClickerT1Container> {
             clickType = clicker.clickType;
             clickTarget = clicker.clickTarget.ordinal();
             sneaking = clicker.sneaking;
+            showFakePlayer = clicker.showFakePlayer;
         }
     }
 
@@ -52,6 +54,12 @@ public class ClickerT1Screen extends BaseMachineScreen<ClickerT1Container> {
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
+
+        addRenderableWidget(ToggleButtonFactory.SHOWFAKEPLAYERBUTTON(getGuiLeft() + 2, topSectionTop + 38, showFakePlayer, b -> {
+            showFakePlayer = !showFakePlayer;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
     }
 
     @Override
@@ -72,6 +80,6 @@ public class ClickerT1Screen extends BaseMachineScreen<ClickerT1Container> {
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.SERVER.noArg().send(new ClickerPayload(clickType, clickTarget, sneaking));
+        PacketDistributor.SERVER.noArg().send(new ClickerPayload(clickType, clickTarget, sneaking, showFakePlayer));
     }
 }

@@ -61,10 +61,11 @@ public class FakePlayerUtil {
         player.getInventory().items.set(player.getInventory().selected, ItemStack.EMPTY);
         //if (!player.getInventory().isEmpty()) player.getInventory().dropAll(); //Disabed for now, since I have no plans to give these players anything besides a mainhand
         player.setShiftKeyDown(false);
+        player.setReach(player.getAttributeValue(NeoForgeMod.BLOCK_REACH));
     }
 
     public static ItemStack clickEntityInDirection(UsefulFakePlayer player, Level world, LivingEntity entity, Direction side, int clickType) {
-        HitResult toUse = rayTraceEntity(player, world, 0.9);
+        HitResult toUse = rayTraceEntity(player, world, player.getReach());
         if (toUse == null) return player.getMainHandItem();
 
         if (clickType == 0) { //RightClick
@@ -92,7 +93,7 @@ public class FakePlayerUtil {
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
     public static ItemStack clickBlockInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState, int clickType) {
-        HitResult toUse = rayTraceBlock(player, world, 0.9);
+        HitResult toUse = rayTraceBlock(player, world, player.getReach());
         if (toUse == null) return player.getMainHandItem();
 
         ItemStack itemstack = player.getMainHandItem();
@@ -130,7 +131,7 @@ public class FakePlayerUtil {
     }
 
     public static ItemStack rightClickAirInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
-        HitResult toUse = rayTraceBlock(player, world, 1); //Longer reach so it can connect with adjacent blocks to interact with them
+        HitResult toUse = rayTraceBlock(player, world, player.getReach()); //Longer reach so it can connect with adjacent blocks to interact with them
         if (toUse == null) return player.getMainHandItem();
 
         ItemStack itemstack = player.getMainHandItem();
@@ -144,9 +145,9 @@ public class FakePlayerUtil {
         }
 
 
-        if (toUse.getType() == HitResult.Type.MISS) {
-            InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
-            if (type == InteractionResult.SUCCESS) return player.getMainHandItem();
+        if (toUse.getType() == HitResult.Type.MISS) { //When might I want this to happen?
+            //InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
+            //if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME) return player.getMainHandItem();
         }
 
         if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS))
@@ -167,7 +168,7 @@ public class FakePlayerUtil {
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
     public static ItemStack leftClickInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
-        HitResult toUse = rayTrace(player, world, player.getAttributeValue(NeoForgeMod.BLOCK_REACH));
+        HitResult toUse = rayTrace(player, world, player.getReach());
         if (toUse == null) return player.getMainHandItem();
 
         if (toUse.getType() == HitResult.Type.ENTITY) {
