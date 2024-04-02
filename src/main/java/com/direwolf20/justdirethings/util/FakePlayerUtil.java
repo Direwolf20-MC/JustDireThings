@@ -15,54 +15,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class completely and shamelessly stolen from Shadows from his mod Click Machine :)
+ */
 public class FakePlayerUtil {
-    /**
-     * This class completely and shamelessly stolen from Shadows from his mod Click Machine :)
-     */
-    /*public static class UsefulFakePlayer extends FakePlayer {
-
-        public UsefulFakePlayer(Level world, GameProfile name) {
-            super((ServerLevel) world, name);
-        }
-
-        @Override
-        public float getEyeHeight(Pose pose) {
-            return super.getEyeHeight(pose); // Allows for the position of the player to be the exact source when raytracing.
-        }
-
-        @Override
-        public void initMenu(AbstractContainerMenu p_143400_) {
-        }
-
-        @Override
-        public OptionalInt openMenu(MenuProvider p_9033_) {
-            return OptionalInt.empty();
-        }
-
-        @Override
-        public float getAttackStrengthScale(float adjustTicks) {
-            return 1; // Prevent the attack strength from always being 0.03 due to not ticking.
-        }
-
-        @Override
-        public Entity changeDimension(ServerLevel server, ITeleporter teleporter) {
-            return createPlayer(server, this.getGameProfile());
-        }
-    }
-
-    /**
-     * Creates a new UsefulFakePlayer. Each {@link BaseMachineBE} needs its own.
-     */
-    /*public static UsefulFakePlayer createPlayer(Level world, GameProfile profile) {
-        return new UsefulFakePlayer(world, profile);
-    }*/
-
     /**
      * Sets up for a fake player to be usable to right click things. This player will be put at the center of the using side.
      *
@@ -71,19 +32,8 @@ public class FakePlayerUtil {
      * @param direction The direction to use in.
      * @param toHold    The stack the player will be using. Should probably come from an ItemStackHandler or similar.
      */
-    public static void setupFakePlayerForUse(FakePlayer player, BlockPos pos, Direction direction, ItemStack toHold, boolean sneaking) {
+    public static void setupFakePlayerForUse(UsefulFakePlayer player, BlockPos pos, Direction direction, ItemStack toHold, boolean sneaking) {
         player.getInventory().items.set(player.getInventory().selected, toHold);
-        /*float pitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
-        float yaw = direction == Direction.SOUTH ? 0 : direction == Direction.WEST ? 90 : direction == Direction.NORTH ? 180 : -90;
-        Vec3i sideVec = direction.getNormal();
-        Direction.Axis a = direction.getAxis();
-        Direction.AxisDirection ad = direction.getAxisDirection();
-        double x = a == Direction.Axis.X && ad == Direction.AxisDirection.NEGATIVE ? -.5 : .5 + sideVec.getX() / 1.9D;
-        double y = 0.5 + sideVec.getY() / 1.9D;
-        double z = a == Direction.Axis.Z && ad == Direction.AxisDirection.NEGATIVE ? -.5 : .5 + sideVec.getZ() / 1.9D;
-        player.moveTo(pos.relative(direction).getX() + x, pos.relative(direction).getY() + y - player.getEyeHeight(), pos.relative(direction).getZ() + z, yaw, pitch);*/
-        //float pitch = facingDirection == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
-        //float yaw = direction == Direction.SOUTH ? 0 : direction == Direction.WEST ? 90 : direction == Direction.NORTH ? 180 : -90;
         float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
         player.setXRot(xRot);
         player.setYRot(direction.toYRot());
@@ -105,15 +55,15 @@ public class FakePlayerUtil {
      * @param player   The player.
      * @param oldStack The previous stack, from before use.
      */
-    public static void cleanupFakePlayerFromUse(FakePlayer player, ItemStack oldStack) {
+    public static void cleanupFakePlayerFromUse(UsefulFakePlayer player, ItemStack oldStack) {
         if (!oldStack.isEmpty())
             player.getAttributes().removeAttributeModifiers(oldStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
         player.getInventory().items.set(player.getInventory().selected, ItemStack.EMPTY);
-        if (!player.getInventory().isEmpty()) player.getInventory().dropAll();
+        //if (!player.getInventory().isEmpty()) player.getInventory().dropAll(); //Disabed for now, since I have no plans to give these players anything besides a mainhand
         player.setShiftKeyDown(false);
     }
 
-    public static ItemStack clickEntityInDirection(FakePlayer player, Level world, LivingEntity entity, Direction side, int clickType) {
+    public static ItemStack clickEntityInDirection(UsefulFakePlayer player, Level world, LivingEntity entity, Direction side, int clickType) {
         HitResult toUse = rayTraceEntity(player, world, 0.9);
         if (toUse == null) return player.getMainHandItem();
 
@@ -122,7 +72,7 @@ public class FakePlayerUtil {
                 return player.getMainHandItem();
             else if (processUseEntity(player, world, entity, null, InteractionType.INTERACT))
                 return player.getMainHandItem();
-        } else { //Left Click TODO Fix Attack Damage from Ticker thing
+        } else { //Left Click
             if (processUseEntity(player, world, ((EntityHitResult) toUse).getEntity(), null, InteractionType.ATTACK))
                 return player.getMainHandItem();
         }
@@ -141,7 +91,7 @@ public class FakePlayerUtil {
      * @param clickType   Right or Left click.  0 = right. 1 = left.
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
-    public static ItemStack clickBlockInDirection(FakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState, int clickType) {
+    public static ItemStack clickBlockInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState, int clickType) {
         HitResult toUse = rayTraceBlock(player, world, 0.9);
         if (toUse == null) return player.getMainHandItem();
 
@@ -161,9 +111,6 @@ public class FakePlayerUtil {
         }
 
         if (toUse.getType() == HitResult.Type.MISS) { //Since we check for air before entering the method, there must be a block there, so try clicking it anyway
-            //for (int i = 1; i <= 5; i++) { //This would click blocks on other sides of the target, but i don't think we want that
-            //BlockState state = world.getBlockState(pos.relative(side, i));
-            //if (state != sourceState && !state.isAir()) {
             if (clickType == 0) {
                 player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
                 return player.getMainHandItem();
@@ -171,8 +118,6 @@ public class FakePlayerUtil {
                 player.gameMode.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxBuildHeight(), 0);
                 return player.getMainHandItem();
             }
-            //}
-            // }
         }
 
         if (clickType == 1) return itemstack; //Don't do any of the other stuff below if we are in left click mode
@@ -184,7 +129,7 @@ public class FakePlayerUtil {
         return player.getMainHandItem();
     }
 
-    public static ItemStack rightClickAirInDirection(FakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
+    public static ItemStack rightClickAirInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
         HitResult toUse = rayTraceBlock(player, world, 1); //Longer reach so it can connect with adjacent blocks to interact with them
         if (toUse == null) return player.getMainHandItem();
 
@@ -200,13 +145,8 @@ public class FakePlayerUtil {
 
 
         if (toUse.getType() == HitResult.Type.MISS) {
-            //for (int i = 1; i <= 5; i++) { //This would click blocks on other sides of the target, but i don't think we want that
-            //BlockState state = world.getBlockState(pos.relative(side, i));
-            //if (state != sourceState && !state.isAir()) {
             InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
             if (type == InteractionResult.SUCCESS) return player.getMainHandItem();
-            //}
-            //}
         }
 
         if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS))
@@ -226,7 +166,7 @@ public class FakePlayerUtil {
      * @param sourceState The state of the calling tile entity, so we don't click ourselves.
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
-    public static ItemStack leftClickInDirection(FakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
+    public static ItemStack leftClickInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
         HitResult toUse = rayTrace(player, world, player.getAttributeValue(NeoForgeMod.BLOCK_REACH));
         if (toUse == null) return player.getMainHandItem();
 
@@ -262,7 +202,7 @@ public class FakePlayerUtil {
      * @param world  The world of the calling tile entity.
      * @return A ray trace result that will likely be of type entity, but may be type block, or null.
      */
-    public static HitResult traceEntities(FakePlayer player, Vec3 base, Vec3 target, Level world) {
+    public static HitResult traceEntities(UsefulFakePlayer player, Vec3 base, Vec3 target, Level world) {
         Entity pointedEntity = null;
         HitResult result = null;
         Vec3 vec3d3 = null;
@@ -322,7 +262,7 @@ public class FakePlayerUtil {
      * @param action The type of interaction to perform.
      * @return If the entity was used.
      */
-    public static boolean processUseEntity(FakePlayer player, Level world, Entity entity, @Nullable HitResult result, InteractionType action) {
+    public static boolean processUseEntity(UsefulFakePlayer player, Level world, Entity entity, @Nullable HitResult result, InteractionType action) {
         if (entity != null) {
             if (player.distanceToSqr(entity) < 36) {
                 if (action == InteractionType.INTERACT) {
@@ -345,7 +285,7 @@ public class FakePlayerUtil {
     /**
      * Util to perform a raytrace for what the fake player is looking at.
      */
-    public static HitResult rayTrace(FakePlayer player, Level level, double reachDist) {
+    public static HitResult rayTrace(UsefulFakePlayer player, Level level, double reachDist) {
         Vec3 base = new Vec3(player.getX(), player.getEyeY(), player.getZ());
         Vec3 look = player.getLookAngle();
         Vec3 target = base.add(look.x * reachDist, look.y * reachDist, look.z * reachDist);
@@ -362,7 +302,7 @@ public class FakePlayerUtil {
         return toUse;
     }
 
-    public static HitResult rayTraceBlock(FakePlayer player, Level level, double reachDist) {
+    public static HitResult rayTraceBlock(UsefulFakePlayer player, Level level, double reachDist) {
         Vec3 base = new Vec3(player.getX(), player.getEyeY(), player.getZ());
         Vec3 look = player.getLookAngle();
         Vec3 target = base.add(look.x * reachDist, look.y * reachDist, look.z * reachDist);
@@ -371,7 +311,7 @@ public class FakePlayerUtil {
         return trace;
     }
 
-    public static HitResult rayTraceEntity(FakePlayer player, Level level, double reachDist) {
+    public static HitResult rayTraceEntity(UsefulFakePlayer player, Level level, double reachDist) {
         Vec3 base = new Vec3(player.getX(), player.getEyeY(), player.getZ());
         Vec3 look = player.getLookAngle();
         Vec3 target = base.add(look.x * reachDist, look.y * reachDist, look.z * reachDist);
