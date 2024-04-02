@@ -144,7 +144,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         }
         ItemStack resultStack = itemStack.copy();
         if (!level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.BLOCK))
-            resultStack = FakePlayerUtil.rightClickBlockInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos));
+            resultStack = FakePlayerUtil.clickBlockInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos), clickType);
         else if (level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.AIR))
             resultStack = FakePlayerUtil.rightClickAirInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos));
         setClickStack(resultStack);

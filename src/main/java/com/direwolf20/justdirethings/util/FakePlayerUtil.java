@@ -2,7 +2,6 @@ package com.direwolf20.justdirethings.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -77,7 +76,6 @@ public class FakePlayerUtil {
      */
     public static void setupFakePlayerForUse(FakePlayer player, BlockPos pos, Direction direction, ItemStack toHold, boolean sneaking) {
         player.getInventory().items.set(player.getInventory().selected, toHold);
-        Direction facingDirection = direction.getOpposite(); //If we want to click the 'top' face of a block, we should be facing 'down'
         /*float pitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
         float yaw = direction == Direction.SOUTH ? 0 : direction == Direction.WEST ? 90 : direction == Direction.NORTH ? 180 : -90;
         Vec3i sideVec = direction.getNormal();
@@ -89,13 +87,12 @@ public class FakePlayerUtil {
         player.moveTo(pos.relative(direction).getX() + x, pos.relative(direction).getY() + y - player.getEyeHeight(), pos.relative(direction).getZ() + z, yaw, pitch);*/
         //float pitch = facingDirection == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
         //float yaw = direction == Direction.SOUTH ? 0 : direction == Direction.WEST ? 90 : direction == Direction.NORTH ? 180 : -90;
-        float xRot = facingDirection == Direction.DOWN ? 90 : facingDirection == Direction.UP ? -90 : 0;
+        float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
         player.setXRot(xRot);
-        player.setYRot(facingDirection.toYRot());
-        player.setYHeadRot(facingDirection.toYRot());
-        Vec3i sideVec = facingDirection.getNormal();
-        Direction.Axis a = facingDirection.getAxis();
-        Direction.AxisDirection ad = facingDirection.getAxisDirection();
+        player.setYRot(direction.toYRot());
+        player.setYHeadRot(direction.toYRot());
+        Direction.Axis a = direction.getAxis();
+        Direction.AxisDirection ad = direction.getAxisDirection();
         double x = a == Direction.Axis.X ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double y = a == Direction.Axis.Y ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
@@ -127,9 +124,10 @@ public class FakePlayerUtil {
      * @param pos         The pos of the calling tile entity.
      * @param side        The direction to use in.
      * @param sourceState The state of the calling tile entity, so we don't click ourselves.
+     * @param clickType   Right or Left click.  0 = right. 1 = left.
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
-    public static ItemStack rightClickBlockInDirection(FakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
+    public static ItemStack clickBlockInDirection(FakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState, int clickType) {
         HitResult toUse = rayTraceBlock(player, world, 0.9);
         if (toUse == null) return player.getMainHandItem();
 
@@ -138,33 +136,32 @@ public class FakePlayerUtil {
             BlockPos blockpos = ((BlockHitResult) toUse).getBlockPos();
             BlockState state = world.getBlockState(blockpos);
             if (!state.isAir()) {
-                InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
-                if (type == InteractionResult.SUCCESS) return player.getMainHandItem();
-            }
-        }
-
-
-        if (toUse.getType() == HitResult.Type.MISS) {
-            /*MutableObject<InteractionResult> mutableobject = new MutableObject<>();
-            InteractionResult cancelResult = net.neoforged.neoforge.common.CommonHooks.onItemRightClick(player, InteractionHand.MAIN_HAND);
-            if (cancelResult != null) {
-                mutableobject.setValue(cancelResult);
-                return itemstack;
-            }
-            InteractionResultHolder<ItemStack> interactionresultholder = itemstack.use(world, player, InteractionHand.MAIN_HAND);
-            ItemStack itemstack1 = interactionresultholder.getObject();
-            if (itemstack1 != itemstack) {
-                player.setItemInHand(InteractionHand.MAIN_HAND, itemstack1);
-                return itemstack1;
-            }*/
-            for (int i = 1; i <= 5; i++) { //This somehow hits levers when it would originally miss them
-                BlockState state = world.getBlockState(pos.relative(side, i));
-                if (state != sourceState && !state.isAir()) {
-                    player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
+                if (clickType == 0) {
+                    InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
+                    if (type == InteractionResult.SUCCESS) return player.getMainHandItem();
+                } else {
+                    player.gameMode.handleBlockBreakAction(blockpos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxBuildHeight(), 0);
                     return player.getMainHandItem();
                 }
             }
         }
+
+        if (toUse.getType() == HitResult.Type.MISS) { //Since we check for air before entering the method, there must be a block there, so try clicking it anyway
+            //for (int i = 1; i <= 5; i++) { //This would click blocks on other sides of the target, but i don't think we want that
+            //BlockState state = world.getBlockState(pos.relative(side, i));
+            //if (state != sourceState && !state.isAir()) {
+            if (clickType == 0) {
+                player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
+                return player.getMainHandItem();
+            } else {
+                player.gameMode.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxBuildHeight(), 0);
+                return player.getMainHandItem();
+            }
+            //}
+            // }
+        }
+
+        if (clickType == 1) return itemstack; //Don't do any of the other stuff below if we are in left click mode
 
         if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS))
             CommonHooks.onEmptyClick(player, InteractionHand.MAIN_HAND); //Empty Hand Click i assume?
@@ -189,13 +186,13 @@ public class FakePlayerUtil {
 
 
         if (toUse.getType() == HitResult.Type.MISS) {
-            for (int i = 1; i <= 5; i++) { //This somehow hits levers when it would originally miss them
-                BlockState state = world.getBlockState(pos.relative(side, i));
-                if (state != sourceState && !state.isAir()) {
-                    player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
-                    return player.getMainHandItem();
-                }
-            }
+            //for (int i = 1; i <= 5; i++) { //This would click blocks on other sides of the target, but i don't think we want that
+            //BlockState state = world.getBlockState(pos.relative(side, i));
+            //if (state != sourceState && !state.isAir()) {
+            InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
+            if (type == InteractionResult.SUCCESS) return player.getMainHandItem();
+            //}
+            //}
         }
 
         if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS))
