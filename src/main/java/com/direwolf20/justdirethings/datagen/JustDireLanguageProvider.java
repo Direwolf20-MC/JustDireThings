@@ -146,6 +146,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.click-right", "Right Click");
         add("justdirethings.screen.click-left", "Left Click");
         add("justdirethings.screen.target-block", "Target Blocks");
+        add("justdirethings.screen.target-air", "Target Air");
         add("justdirethings.screen.target-hostile", "Target Hostile");
         add("justdirethings.screen.target-passive", "Target Passive");
         add("justdirethings.screen.target-player", "Target Player");

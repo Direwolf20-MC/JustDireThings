@@ -35,15 +35,15 @@ public class ClickerT1Screen extends BaseMachineScreen<ClickerT1Container> {
             PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction));
         }));
 
-        addRenderableWidget(ToggleButtonFactory.CLICKTYPEBUTTON(getGuiLeft() + 56, topSectionTop + 38, clickType, b -> {
+        addRenderableWidget(ToggleButtonFactory.CLICKTARGETBUTTON(getGuiLeft() + 56, topSectionTop + 38, clickTarget, b -> {
             ((ToggleButton) b).nextTexturePosition();
-            clickType = ((ToggleButton) b).getTexturePosition();
+            clickTarget = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
 
-        addRenderableWidget(ToggleButtonFactory.LEFTRIGHTCLICKBUTTON(getGuiLeft() + 38, topSectionTop + 38, clickTarget, b -> {
+        addRenderableWidget(ToggleButtonFactory.LEFTRIGHTCLICKBUTTON(getGuiLeft() + 38, topSectionTop + 38, clickType, b -> {
             ((ToggleButton) b).nextTexturePosition();
-            clickTarget = ((ToggleButton) b).getTexturePosition();
+            clickType = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
 

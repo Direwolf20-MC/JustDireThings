@@ -1,19 +1,17 @@
 package com.direwolf20.justdirethings.util;
 
-import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -22,18 +20,16 @@ import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.ITeleporter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 public class FakePlayerUtil {
     /**
      * This class completely and shamelessly stolen from Shadows from his mod Click Machine :)
      */
-    public static class UsefulFakePlayer extends FakePlayer {
+    /*public static class UsefulFakePlayer extends FakePlayer {
 
         public UsefulFakePlayer(Level world, GameProfile name) {
             super((ServerLevel) world, name);
@@ -67,9 +63,9 @@ public class FakePlayerUtil {
     /**
      * Creates a new UsefulFakePlayer. Each {@link BaseMachineBE} needs its own.
      */
-    public static UsefulFakePlayer createPlayer(Level world, GameProfile profile) {
+    /*public static UsefulFakePlayer createPlayer(Level world, GameProfile profile) {
         return new UsefulFakePlayer(world, profile);
-    }
+    }*/
 
     /**
      * Sets up for a fake player to be usable to right click things. This player will be put at the center of the using side.
@@ -79,7 +75,7 @@ public class FakePlayerUtil {
      * @param direction The direction to use in.
      * @param toHold    The stack the player will be using. Should probably come from an ItemStackHandler or similar.
      */
-    public static void setupFakePlayerForUse(UsefulFakePlayer player, BlockPos pos, Direction direction, ItemStack toHold, boolean sneaking) {
+    public static void setupFakePlayerForUse(FakePlayer player, BlockPos pos, Direction direction, ItemStack toHold, boolean sneaking) {
         player.getInventory().items.set(player.getInventory().selected, toHold);
         Direction facingDirection = direction.getOpposite(); //If we want to click the 'top' face of a block, we should be facing 'down'
         /*float pitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
@@ -115,7 +111,7 @@ public class FakePlayerUtil {
      * @param player   The player.
      * @param oldStack The previous stack, from before use.
      */
-    public static void cleanupFakePlayerFromUse(UsefulFakePlayer player, ItemStack oldStack) {
+    public static void cleanupFakePlayerFromUse(FakePlayer player, ItemStack oldStack) {
         if (!oldStack.isEmpty())
             player.getAttributes().removeAttributeModifiers(oldStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
         player.getInventory().items.set(player.getInventory().selected, ItemStack.EMPTY);
@@ -133,7 +129,7 @@ public class FakePlayerUtil {
      * @param sourceState The state of the calling tile entity, so we don't click ourselves.
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
-    public static ItemStack rightClickBlockInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
+    public static ItemStack rightClickBlockInDirection(FakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
         HitResult toUse = rayTraceBlock(player, world, 0.9);
         if (toUse == null) return player.getMainHandItem();
 
@@ -177,6 +173,38 @@ public class FakePlayerUtil {
         return player.getMainHandItem();
     }
 
+    public static ItemStack rightClickAirInDirection(FakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
+        HitResult toUse = rayTraceBlock(player, world, 1); //Longer reach so it can connect with adjacent blocks to interact with them
+        if (toUse == null) return player.getMainHandItem();
+
+        ItemStack itemstack = player.getMainHandItem();
+        if (toUse.getType() == HitResult.Type.BLOCK) {
+            BlockPos blockpos = ((BlockHitResult) toUse).getBlockPos();
+            BlockState state = world.getBlockState(blockpos);
+            if (!state.isAir()) {
+                InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
+                if (type == InteractionResult.SUCCESS) return player.getMainHandItem();
+            }
+        }
+
+
+        if (toUse.getType() == HitResult.Type.MISS) {
+            for (int i = 1; i <= 5; i++) { //This somehow hits levers when it would originally miss them
+                BlockState state = world.getBlockState(pos.relative(side, i));
+                if (state != sourceState && !state.isAir()) {
+                    player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
+                    return player.getMainHandItem();
+                }
+            }
+        }
+
+        if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS))
+            CommonHooks.onEmptyClick(player, InteractionHand.MAIN_HAND); //Empty Hand Click i assume?
+        if (!itemstack.isEmpty())
+            player.gameMode.useItem(player, world, itemstack, InteractionHand.MAIN_HAND); //Uses the item by itself
+        return player.getMainHandItem();
+    }
+
     /**
      * Attacks with whatever the player happens to be holding in the given direction.
      *
@@ -187,7 +215,7 @@ public class FakePlayerUtil {
      * @param sourceState The state of the calling tile entity, so we don't click ourselves.
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
-    public static ItemStack leftClickInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
+    public static ItemStack leftClickInDirection(FakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
         HitResult toUse = rayTrace(player, world, player.getAttributeValue(NeoForgeMod.BLOCK_REACH));
         if (toUse == null) return player.getMainHandItem();
 
@@ -223,7 +251,7 @@ public class FakePlayerUtil {
      * @param world  The world of the calling tile entity.
      * @return A ray trace result that will likely be of type entity, but may be type block, or null.
      */
-    public static HitResult traceEntities(UsefulFakePlayer player, Vec3 base, Vec3 target, Level world) {
+    public static HitResult traceEntities(FakePlayer player, Vec3 base, Vec3 target, Level world) {
         Entity pointedEntity = null;
         HitResult result = null;
         Vec3 vec3d3 = null;
@@ -283,7 +311,7 @@ public class FakePlayerUtil {
      * @param action The type of interaction to perform.
      * @return If the entity was used.
      */
-    public static boolean processUseEntity(UsefulFakePlayer player, Level world, Entity entity, @Nullable HitResult result, InteractionType action) {
+    public static boolean processUseEntity(FakePlayer player, Level world, Entity entity, @Nullable HitResult result, InteractionType action) {
         if (entity != null) {
             if (player.distanceToSqr(entity) < 36) {
                 if (action == InteractionType.INTERACT) {
@@ -306,7 +334,7 @@ public class FakePlayerUtil {
     /**
      * Util to perform a raytrace for what the fake player is looking at.
      */
-    public static HitResult rayTrace(UsefulFakePlayer player, Level level, double reachDist) {
+    public static HitResult rayTrace(FakePlayer player, Level level, double reachDist) {
         Vec3 base = new Vec3(player.getX(), player.getEyeY(), player.getZ());
         Vec3 look = player.getLookAngle();
         Vec3 target = base.add(look.x * reachDist, look.y * reachDist, look.z * reachDist);
@@ -323,7 +351,7 @@ public class FakePlayerUtil {
         return toUse;
     }
 
-    public static HitResult rayTraceBlock(UsefulFakePlayer player, Level level, double reachDist) {
+    public static HitResult rayTraceBlock(FakePlayer player, Level level, double reachDist) {
         Vec3 base = new Vec3(player.getX(), player.getEyeY(), player.getZ());
         Vec3 look = player.getLookAngle();
         Vec3 target = base.add(look.x * reachDist, look.y * reachDist, look.z * reachDist);

@@ -128,17 +128,18 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, LEFT_RIGHT_CLICK_TEXTURES, startingValue, onPress);
     }
 
-    /** Click Type Button **/
-    private static final List<TextureLocalization> CLICK_TYPE_TEXTURES = List.of(
+    /** Click Target Button **/
+    private static final List<TextureLocalization> CLICK_TARGET_TEXTURES = List.of(
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-block.png"), Component.translatable("justdirethings.screen.target-block")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-air.png"), Component.translatable("justdirethings.screen.target-air")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/mobscanner.png"), Component.translatable("justdirethings.screen.target-hostile")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob.png"), Component.translatable("justdirethings.screen.target-passive")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/player.png"), Component.translatable("justdirethings.screen.target-player")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/glowing.png"), Component.translatable("justdirethings.screen.target-living"))
     );
 
-    public static ToggleButton CLICKTYPEBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
-        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, CLICK_TYPE_TEXTURES, startingValue, onPress);
+    public static ToggleButton CLICKTARGETBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, CLICK_TARGET_TEXTURES, startingValue, onPress);
     }
 
     /** Sneak Click button **/
