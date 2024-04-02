@@ -131,19 +131,23 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         }
         UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
         if (clickTarget.equals(CLICK_TARGET.BLOCK) || clickTarget.equals(CLICK_TARGET.AIR)) {
-            if (isActiveRedstone() && (canRun() || redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE)) && positionsToClick.isEmpty())
+            if (isActiveRedstone() && canRun() && positionsToClick.isEmpty())
                 positionsToClick = findSpotsToClick(fakePlayer);
             if (positionsToClick.isEmpty())
                 return;
-            BlockPos blockPos = positionsToClick.remove(0);
-            clickBlock(placeStack, fakePlayer, blockPos);
+            if (canRun()) {
+                BlockPos blockPos = positionsToClick.remove(0);
+                clickBlock(placeStack, fakePlayer, blockPos);
+            }
         } else {
-            if (isActiveRedstone() && (canRun() || redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE)) && entitiesToClick.isEmpty())
+            if (isActiveRedstone() && canRun() && entitiesToClick.isEmpty())
                 entitiesToClick = findEntitiesToClick(getAABB());
             if (entitiesToClick.isEmpty())
                 return;
-            LivingEntity entity = entitiesToClick.remove(0);
-            clickEntity(placeStack, fakePlayer, entity);
+            if (canRun()) {
+                LivingEntity entity = entitiesToClick.remove(0);
+                clickEntity(placeStack, fakePlayer, entity);
+            }
         }
     }
 

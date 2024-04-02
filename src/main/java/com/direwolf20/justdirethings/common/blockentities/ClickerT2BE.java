@@ -11,11 +11,18 @@ import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
     public FilterData filterData = new FilterData(false, false, -1);
@@ -59,20 +66,37 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
 
     @Override
     public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {
-        return super.isBlockPosValid(fakePlayer, blockPos);
+        if (!super.isBlockPosValid(fakePlayer, blockPos))
+            return false; //Do the same checks as normal, then check the filters
+        ItemStack blockItemStack = level.getBlockState(blockPos).getCloneItemStack(new BlockHitResult(Vec3.ZERO, getDirectionValue(), blockPos, false), level, blockPos, fakePlayer);
+        return isStackValidFilter(blockItemStack);
     }
 
     @Override
     public List<BlockPos> findSpotsToClick(FakePlayer fakePlayer) {
-        List<BlockPos> returnList = new ArrayList<>();
-        BlockPos blockPos = getBlockPos().above(); //Todo
-        if (isBlockPosValid(fakePlayer, blockPos))
-            returnList.add(blockPos);
-        return returnList;
+        AABB area = getAABB(getBlockPos());
+        return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
+                .filter(blockPos -> isBlockPosValid(fakePlayer, blockPos))
+                .map(BlockPos::immutable)
+                .sorted(Comparator.comparingDouble(x -> x.distSqr(getBlockPos())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public AABB getAABB() {
+        return getAABB(getBlockPos());
     }
 
     @Override
     public boolean isValidEntity(Entity entity) {
-        return super.isValidEntity(entity);
+        if (!super.isValidEntity(entity))
+            return false; //Do the same checks as normal, then check the filters
+        Item eggItem = SpawnEggItem.byId(entity.getType());
+        ItemStack eggItemStack;
+        if (eggItem == null)
+            eggItemStack = ItemStack.EMPTY;
+        else
+            eggItemStack = new ItemStack(eggItem);
+        return isStackValidFilter(eggItemStack);
     }
 }

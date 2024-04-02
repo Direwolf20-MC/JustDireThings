@@ -37,6 +37,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     LinkedHashMap<BlockPos, BlockBreakingProgress> blockBreakingTracker = new LinkedHashMap<>();
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     protected Direction FACING = Direction.DOWN; //To avoid nulls
+    Map.Entry<BlockPos, BlockBreakingProgress> currentBlock;
 
     public BlockBreakerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -108,7 +109,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         clearTrackerIfNeeded(tool, fakePlayer);
         if (tool.isEmpty()) return;
-        if (isActiveRedstone() && (canRun() || redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE)) && blockBreakingTracker.isEmpty()) {
+        if (isActiveRedstone() && canRun() && blockBreakingTracker.isEmpty()) {
             List<BlockPos> blocksToMine = findBlocksToMine(fakePlayer);
             for (BlockPos blockPos : blocksToMine) {
                 BlockState blockState = level.getBlockState(blockPos);
@@ -117,9 +118,11 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
             }
         }
         if (blockBreakingTracker.isEmpty() || !canMine()) return;
-        Map.Entry<BlockPos, BlockBreakingProgress> firstEntry = blockBreakingTracker.entrySet().iterator().next();
-        if ((mineBlock(firstEntry.getKey(), tool, fakePlayer))) {
-            removePosFromTracker(firstEntry.getKey(), fakePlayer.getId() + firstEntry.getValue().iterator);
+        if (currentBlock == null && canRun())
+            currentBlock = blockBreakingTracker.entrySet().iterator().next();
+        if (currentBlock != null && (mineBlock(currentBlock.getKey(), tool, fakePlayer))) {
+            removePosFromTracker(currentBlock.getKey(), fakePlayer.getId() + currentBlock.getValue().iterator);
+            currentBlock = null;
         }
     }
 

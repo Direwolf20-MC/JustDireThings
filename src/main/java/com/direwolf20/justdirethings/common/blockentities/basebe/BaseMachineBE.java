@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
@@ -61,6 +62,8 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     public boolean canRun() {
+        if (this instanceof RedstoneControlledBE redstoneControlledBE)
+            return operationTicks == 0 || redstoneControlledBE.getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE);
         return operationTicks == 0;
     }
 
