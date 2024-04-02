@@ -12,7 +12,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -186,6 +190,10 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {
         if (!level.mayInteract(fakePlayer, blockPos))
             return false;
+        if (level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.BLOCK))
+            return false;
+        if (!level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.AIR))
+            return false;
         return true;
     }
 
@@ -202,9 +210,19 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public List<? extends LivingEntity> findEntitiesToClick(AABB aabb) {
-        List<LivingEntity> returnList = new ArrayList<>(level.getEntitiesOfClass(LivingEntity.class, aabb, entity -> true));
+        List<LivingEntity> returnList = new ArrayList<>(level.getEntitiesOfClass(LivingEntity.class, aabb, this::isValidEntity));
 
         return returnList;
+    }
+
+    public boolean isValidEntity(Entity entity) {
+        if (clickTarget.equals(CLICK_TARGET.HOSTILE) && !(entity instanceof Monster))
+            return false;
+        if (clickTarget.equals(CLICK_TARGET.PASSIVE) && !(entity instanceof Animal))
+            return false;
+        if (clickTarget.equals(CLICK_TARGET.PLAYER) && !(entity instanceof Player))
+            return false;
+        return true;
     }
 
     @Override
