@@ -1,4 +1,4 @@
-// 1.20.4	2024-03-31T11:46:41.3936458	Recipes
+// 1.20.4	2024-04-02T16:34:01.771005	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 2e741e987f248c3c04079fb6a6b0bf4f7bbc0459 data/justdirethings/advancements/recipes/building_blocks/eclipsealloy_ingot_9x9.json
@@ -21,6 +21,7 @@ e19326b46e4f32eb35b94e3df08ab095e24e1eba data/justdirethings/advancements/recipe
 c741d0bdd7f0f97c22dffb3452a40182b6cf3cd6 data/justdirethings/advancements/recipes/misc/celestigem_shovel.json
 ecafcaf5ce9c10b68057f365f26ea5b4a0a78e6b data/justdirethings/advancements/recipes/misc/celestigem_sword.json
 f8701f6c723271f4bb33d5f91d1b45f5728a4526 data/justdirethings/advancements/recipes/misc/clickert1.json
+66d768301f8c4a35ff60f616528c382e3a265c1d data/justdirethings/advancements/recipes/misc/clickert2.json
 22133e3c40a0f6c62e68275518a5cc9ac80eabde data/justdirethings/advancements/recipes/misc/eclipsealloy_axe.json
 cb73a45b3569f52a0c2cab0a169833c8449176f4 data/justdirethings/advancements/recipes/misc/eclipsealloy_block_9x9.json
 761eecdbccc53b324232ac0acf58c53e75730f89 data/justdirethings/advancements/recipes/misc/eclipsealloy_hoe.json
@@ -69,6 +70,7 @@ d3708829ced0591bba32d2abcd6468620680e73a data/justdirethings/recipes/celestigem_
 55a71e000e5b728956730e31e8119056a2f536e7 data/justdirethings/recipes/celestigem_shovel.json
 557def2597c6906bcea3dc12ba81df17b180fa37 data/justdirethings/recipes/celestigem_sword.json
 96f3daa0306bdf14e83a639c769604452c744966 data/justdirethings/recipes/clickert1.json
+dcfe918e1e88402a42512ba5ab4d1e6e66085655 data/justdirethings/recipes/clickert2.json
 c006c83e3a1357846d765d5b295300651cdcac01 data/justdirethings/recipes/eclipsealloy_axe.json
 49f75e941578a004f0af6c405fb0811c1d8b22a8 data/justdirethings/recipes/eclipsealloy_block_9x9.json
 569cdd01a6f82b6eab4eed95bed07f2a90a5087f data/justdirethings/recipes/eclipsealloy_hoe.json

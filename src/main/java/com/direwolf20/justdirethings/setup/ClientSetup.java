@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.blockentityrenders.BlockBreakerT2BER;
 import com.direwolf20.justdirethings.client.blockentityrenders.BlockPlacerT2BER;
+import com.direwolf20.justdirethings.client.blockentityrenders.ClickerT2BER;
 import com.direwolf20.justdirethings.client.blockentityrenders.ItemCollectorRenderer;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier1;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier2;
@@ -68,6 +69,7 @@ public class ClientSetup {
         event.register(Registration.BlockPlacerT1_Container.get(), BlockPlacerT1Screen::new);
         event.register(Registration.BlockPlacerT2_Container.get(), BlockPlacerT2Screen::new);
         event.register(Registration.ClickerT1_Container.get(), ClickerT1Screen::new);
+        event.register(Registration.ClickerT2_Container.get(), ClickerT2Screen::new);
     }
 
     @SubscribeEvent
@@ -80,5 +82,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.ItemCollectorBE.get(), ItemCollectorRenderer::new);
         event.registerBlockEntityRenderer(Registration.BlockBreakerT2BE.get(), BlockBreakerT2BER::new);
         event.registerBlockEntityRenderer(Registration.BlockPlacerT2BE.get(), BlockPlacerT2BER::new);
+        event.registerBlockEntityRenderer(Registration.ClickerT2BE.get(), ClickerT2BER::new);
     }
 }

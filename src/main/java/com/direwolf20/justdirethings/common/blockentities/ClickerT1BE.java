@@ -111,7 +111,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public boolean clearTrackerIfNeeded(ItemStack itemStack) {
-        if (positionsToClick.isEmpty())
+        if (positionsToClick.isEmpty() && entitiesToClick.isEmpty())
             return false;
         if (!isStackValid(itemStack))
             return true;
