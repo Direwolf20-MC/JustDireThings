@@ -5,10 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
@@ -114,6 +111,23 @@ public class FakePlayerUtil {
         player.getInventory().items.set(player.getInventory().selected, ItemStack.EMPTY);
         if (!player.getInventory().isEmpty()) player.getInventory().dropAll();
         player.setShiftKeyDown(false);
+    }
+
+    public static ItemStack clickEntityInDirection(FakePlayer player, Level world, LivingEntity entity, Direction side, int clickType) {
+        HitResult toUse = rayTraceEntity(player, world, 0.9);
+        if (toUse == null) return player.getMainHandItem();
+
+        if (clickType == 0) { //RightClick
+            if (processUseEntity(player, world, entity, toUse, InteractionType.INTERACT_AT))
+                return player.getMainHandItem();
+            else if (processUseEntity(player, world, entity, null, InteractionType.INTERACT))
+                return player.getMainHandItem();
+        } else { //Left Click TODO Fix Attack Damage from Ticker thing
+            if (processUseEntity(player, world, ((EntityHitResult) toUse).getEntity(), null, InteractionType.ATTACK))
+                return player.getMainHandItem();
+        }
+
+        return player.getMainHandItem();
     }
 
     /**
@@ -355,6 +369,15 @@ public class FakePlayerUtil {
         HitResult trace = level.clip(new ClipContext(base, target, ClipContext.Block.OUTLINE, ClipContext.Fluid.SOURCE_ONLY, player));
 
         return trace;
+    }
+
+    public static HitResult rayTraceEntity(FakePlayer player, Level level, double reachDist) {
+        Vec3 base = new Vec3(player.getX(), player.getEyeY(), player.getZ());
+        Vec3 look = player.getLookAngle();
+        Vec3 target = base.add(look.x * reachDist, look.y * reachDist, look.z * reachDist);
+        HitResult traceEntity = traceEntities(player, base, target, level);
+
+        return traceEntity;
     }
 
     public static enum InteractionType {

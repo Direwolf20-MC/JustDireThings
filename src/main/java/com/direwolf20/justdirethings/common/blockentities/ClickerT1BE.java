@@ -12,11 +12,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
@@ -26,7 +28,8 @@ import java.util.List;
 public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     protected Direction FACING = Direction.DOWN; //To avoid nulls
-    List<BlockPos> positionsToClick = new ArrayList<>();
+    protected List<BlockPos> positionsToClick = new ArrayList<>();
+    protected List<? extends LivingEntity> entitiesToClick = new ArrayList<>();
     public int clickType = 0; //RightClick, 1 == Left Click
     public CLICK_TARGET clickTarget = CLICK_TARGET.BLOCK;
     public boolean sneaking = false;
@@ -61,6 +64,8 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         this.clickType = clickType;
         this.clickTarget = CLICK_TARGET.values()[clickTarget];
         this.sneaking = sneaking;
+        positionsToClick.clear(); //Clear any clicks we have queue'd up
+        entitiesToClick.clear();
         markDirtyClient();
     }
 
@@ -116,17 +121,44 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         ItemStack placeStack = getClickStack();
         if (clearTrackerIfNeeded(placeStack)) {
             positionsToClick.clear();
+            entitiesToClick.clear();
             return;
         }
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
-        if (isActiveRedstone() && (canRun() || redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE)) && positionsToClick.isEmpty())
-            positionsToClick = findSpotsToClick(fakePlayer);
-        if (positionsToClick.isEmpty())
-            return;
-        BlockPos blockPos = positionsToClick.remove(0);
-        setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue());
-        if (clickTarget.equals(CLICK_TARGET.BLOCK) || clickTarget.equals(CLICK_TARGET.AIR))
+        if (clickTarget.equals(CLICK_TARGET.BLOCK) || clickTarget.equals(CLICK_TARGET.AIR)) {
+            if (isActiveRedstone() && (canRun() || redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE)) && positionsToClick.isEmpty())
+                positionsToClick = findSpotsToClick(fakePlayer);
+            if (positionsToClick.isEmpty())
+                return;
+            BlockPos blockPos = positionsToClick.remove(0);
             clickBlock(placeStack, fakePlayer, blockPos);
+        } else {
+            if (isActiveRedstone() && (canRun() || redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE)) && entitiesToClick.isEmpty())
+                entitiesToClick = findEntitiesToClick(getAABB());
+            if (entitiesToClick.isEmpty())
+                return;
+            LivingEntity entity = entitiesToClick.remove(0);
+            clickEntity(placeStack, fakePlayer, entity);
+        }
+    }
+
+    public void clickEntity(ItemStack itemStack, FakePlayer fakePlayer, LivingEntity entity) {
+        Direction placing = Direction.values()[direction];
+        FakePlayerUtil.setupFakePlayerForUse(fakePlayer, entity.blockPosition(), placing, itemStack.copy(), sneaking);
+        if (level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
+            Vec3 base = new Vec3(fakePlayer.getX(), fakePlayer.getEyeY(), fakePlayer.getZ());
+            Vec3 look = fakePlayer.getLookAngle();
+            Vec3 target = base.add(look.x * 0.9, look.y * 0.9, look.z * 0.9);
+            ItemFlowParticleData data = new ItemFlowParticleData(itemStack, target.x, target.y, target.z, 5);
+            double d0 = base.x();
+            double d1 = base.y();
+            double d2 = base.z();
+            serverLevel.sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
+        }
+        ItemStack resultStack = itemStack.copy();
+        resultStack = FakePlayerUtil.clickEntityInDirection(fakePlayer, level, entity, placing.getOpposite(), clickType);
+        setClickStack(resultStack);
+        FakePlayerUtil.cleanupFakePlayerFromUse(fakePlayer, getClickStack());
     }
 
     public void clickBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
@@ -162,6 +194,16 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         BlockPos blockPos = getBlockPos().relative(FACING);
         if (isBlockPosValid(fakePlayer, blockPos))
             returnList.add(blockPos);
+        return returnList;
+    }
+
+    public AABB getAABB() {
+        return new AABB(getBlockPos().relative(FACING));
+    }
+
+    public List<? extends LivingEntity> findEntitiesToClick(AABB aabb) {
+        List<LivingEntity> returnList = new ArrayList<>(level.getEntitiesOfClass(LivingEntity.class, aabb, entity -> true));
+
         return returnList;
     }
 
