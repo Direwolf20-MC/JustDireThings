@@ -9,11 +9,19 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,26 +119,59 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
             positions.clear();
             return;
         }
+        if (!canRun()) return;
         if (!canSense()) return;
         if ((sense_target.equals(SENSE_TARGET.BLOCK) || sense_target.equals(SENSE_TARGET.AIR))) {
-            if (canRun() && positions.isEmpty())
+            if (positions.isEmpty())
                 positions = findPositions();
             if (positions.isEmpty())
                 return;
-            if (canRun()) {
-                BlockPos blockPos = positions.remove(0);
-                setRedstone(senseBlock(blockPos), strongSignal);
-            }
-        } else { //Todo Entities
-            /*if (isActiveRedstone() && canRun() && entitiesToClick.isEmpty())
-                entitiesToClick = findEntitiesToClick(getAABB());
-            if (entitiesToClick.isEmpty())
-                return;
-            if (canRun()) {
-                LivingEntity entity = entitiesToClick.remove(0);
-                clickEntity(placeStack, fakePlayer, entity);
-            }*/
+            BlockPos blockPos = positions.remove(0);
+            setRedstone(senseBlock(blockPos), strongSignal);
+
+        } else {
+            List<Entity> entityList = findEntities(getAABB());
+            setRedstone(senseEntity(entityList), strongSignal);
         }
+    }
+
+    public AABB getAABB() {
+        return new AABB(getBlockPos().relative(FACING));
+    }
+
+    public List<Entity> findEntities(AABB aabb) {
+        List<Entity> returnList = new ArrayList<>(level.getEntitiesOfClass(Entity.class, aabb, this::isValidEntity));
+
+        return returnList;
+    }
+
+    public boolean isValidEntity(Entity entity) {
+        if (sense_target.equals(SENSE_TARGET.HOSTILE) && !(entity instanceof Monster))
+            return false;
+        if (((sense_target.equals(SENSE_TARGET.PASSIVE)) || (sense_target.equals(SENSE_TARGET.ADULT)) || (sense_target.equals(SENSE_TARGET.CHILD))) && !(entity instanceof Animal))
+            return false;
+        if (sense_target.equals(SENSE_TARGET.ADULT) && (entity instanceof Animal animal) && (animal.isBaby()))
+            return false;
+        if (sense_target.equals(SENSE_TARGET.CHILD) && (entity instanceof Animal animal) && !(animal.isBaby()))
+            return false;
+        if (sense_target.equals(SENSE_TARGET.PLAYER) && !(entity instanceof Player))
+            return false;
+        if (sense_target.equals(SENSE_TARGET.ITEM) && !(entity instanceof ItemEntity))
+            return false;
+        Item eggItem = SpawnEggItem.byId(entity.getType());
+        ItemStack eggItemStack;
+        if (eggItem == null)
+            eggItemStack = ItemStack.EMPTY;
+        else
+            eggItemStack = new ItemStack(eggItem);
+        return isStackValidFilter(eggItemStack);
+    }
+
+    public boolean senseEntity(List<Entity> entityList) {
+        if (entityList.isEmpty()) //More complex in tier 2?
+            return false;
+
+        return true;
     }
 
     public boolean senseBlock(BlockPos blockPos) {
