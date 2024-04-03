@@ -30,6 +30,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlockBreakerT2.get(), "Advanced Block Breaker");
         add(Registration.BlockPlacerT1.get(), "Simple Block Placer");
         add(Registration.BlockPlacerT2.get(), "Advanced Block Placer");
+        add(Registration.ClickerT1.get(), "Simple Clicker");
+        add(Registration.ClickerT2.get(), "Advanced Clicker");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -142,6 +144,16 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.filter-block", "Filter: Block");
         add("justdirethings.screen.filter-item", "Filter: Item");
         add("justdirethings.screen.tickspeed", "Speed (Ticks)");
+        add("justdirethings.screen.click-right", "Right Click");
+        add("justdirethings.screen.click-left", "Left Click");
+        add("justdirethings.screen.target-block", "Target Blocks");
+        add("justdirethings.screen.target-air", "Target Air");
+        add("justdirethings.screen.target-hostile", "Target Hostile");
+        add("justdirethings.screen.target-passive", "Target Passive");
+        add("justdirethings.screen.target-player", "Target Player");
+        add("justdirethings.screen.target-living", "Target All Living");
+        add("justdirethings.screen.sneak-click", "Sneak Click");
+        add("justdirethings.screen.showfakeplayer", "Show Fake Player");
 
 
         //Buttons

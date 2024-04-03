@@ -68,7 +68,9 @@ public class JustDireThings {
                 Registration.BlockBreakerT1.get(),
                 Registration.BlockBreakerT2.get(),
                 Registration.BlockPlacerT1.get(),
-                Registration.BlockPlacerT2.get()
+                Registration.BlockPlacerT2.get(),
+                Registration.ClickerT1.get(),
+                Registration.ClickerT2.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -77,7 +79,8 @@ public class JustDireThings {
                     return null;
                 },
                 Registration.BlockBreakerT2.get(),
-                Registration.BlockPlacerT2.get()
+                Registration.BlockPlacerT2.get(),
+                Registration.ClickerT2.get()
         );
     }
 }

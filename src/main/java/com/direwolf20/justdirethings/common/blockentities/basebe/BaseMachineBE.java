@@ -1,6 +1,8 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
+import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,6 +29,7 @@ public class BaseMachineBE extends BlockEntity {
     protected int direction = 0;
     protected int tickSpeed = 20;
     protected int operationTicks = -1;
+    protected UsefulFakePlayer usefulFakePlayer;
 
     public BaseMachineBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -59,6 +62,8 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     public boolean canRun() {
+        if (this instanceof RedstoneControlledBE redstoneControlledBE)
+            return operationTicks == 0 || redstoneControlledBE.getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE);
         return operationTicks == 0;
     }
 
@@ -87,6 +92,12 @@ public class BaseMachineBE extends BlockEntity {
     protected FakePlayer getFakePlayer(ServerLevel level, UUID uuid) {
         GameProfile gameProfile = new GameProfile(uuid, "[JustDiresFakePlayer]");
         return FakePlayerFactory.get(level, gameProfile);
+    }
+
+    protected UsefulFakePlayer getUsefulFakePlayer(ServerLevel level) {
+        if (usefulFakePlayer == null)
+            usefulFakePlayer = UsefulFakePlayer.createPlayer(level, getPlacedByProfile());
+        return usefulFakePlayer;
     }
 
     public void setFakePlayerData(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos, Direction direction) {

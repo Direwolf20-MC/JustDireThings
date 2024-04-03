@@ -37,7 +37,7 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, REDSTONE_TEXTURES, startingValue, onPress);
     }
 
-    /** Redstone Button **/
+    /** Allow List Button **/
     private static final List<TextureLocalization> ALLOW_LIST_TEXTURES = List.of(
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/allowlistfalse.png"), Component.translatable("justdirethings.screen.denylist")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png"), Component.translatable("justdirethings.screen.allowlist"))
@@ -116,5 +116,45 @@ public class ToggleButtonFactory {
 
     public static NumberButton TICKSPEEDBUTTON(int x, int y, int value, Button.OnPress onPress) {
         return new NumberButton(x, y, 24, 12, value, Config.MINIMUM_MACHINE_TICK_SPEED.get(), 1200, ticksButtonLocalization, onPress);
+    }
+
+    /** LEFT or RIGHT Click Button **/
+    private static final List<TextureLocalization> LEFT_RIGHT_CLICK_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-right.png"), Component.translatable("justdirethings.screen.click-right")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-left.png"), Component.translatable("justdirethings.screen.click-left"))
+    );
+
+    public static ToggleButton LEFTRIGHTCLICKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, LEFT_RIGHT_CLICK_TEXTURES, startingValue, onPress);
+    }
+
+    /** Click Target Button **/
+    private static final List<TextureLocalization> CLICK_TARGET_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-block.png"), Component.translatable("justdirethings.screen.target-block")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-air.png"), Component.translatable("justdirethings.screen.target-air")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/mobscanner.png"), Component.translatable("justdirethings.screen.target-hostile")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob.png"), Component.translatable("justdirethings.screen.target-passive")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/player.png"), Component.translatable("justdirethings.screen.target-player")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/glowing.png"), Component.translatable("justdirethings.screen.target-living"))
+    );
+
+    public static ToggleButton CLICKTARGETBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, CLICK_TARGET_TEXTURES, startingValue, onPress);
+    }
+
+    /** Sneak Click button **/
+    private static final ResourceLocation SNEAK_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-sneak.png");
+    private static final Component SNEAK_LOCALIZATION = Component.translatable("justdirethings.screen.sneak-click");
+
+    public static GrayscaleButton SNEAKCLICKBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SNEAK_BUTTON, SNEAK_LOCALIZATION, startingValue, onPress);
+    }
+
+    /** Show Fake Player button **/
+    private static final ResourceLocation SHOWFAKEPLAYER_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
+    private static final Component SHOWFAKEPLAYER_LOCALIZATION = Component.translatable("justdirethings.screen.showfakeplayer");
+
+    public static GrayscaleButton SHOWFAKEPLAYERBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SHOWFAKEPLAYER_BUTTON, SHOWFAKEPLAYER_LOCALIZATION, startingValue, onPress);
     }
 }

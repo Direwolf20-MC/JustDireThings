@@ -99,9 +99,11 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             positionsToPlace = findSpotsToPlace(fakePlayer);
         if (positionsToPlace.isEmpty())
             return;
-        BlockPos blockPos = positionsToPlace.remove(0);
-        setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue().getOpposite());
-        placeBlock(placeStack, fakePlayer, blockPos);
+        if (canRun()) {
+            BlockPos blockPos = positionsToPlace.remove(0);
+            setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue().getOpposite());
+            placeBlock(placeStack, fakePlayer, blockPos);
+        }
     }
 
     public void placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
