@@ -174,7 +174,8 @@ public class BaseMachineBE extends BlockEntity {
 
     @Override
     public void load(CompoundTag tag) {
-        direction = tag.getInt("direction");
+        if (tag.contains("direction"))
+            direction = tag.getInt("direction");
         if (tag.contains("tickspeed"))
             tickSpeed = tag.getInt("tickspeed");
         if (tag.contains("placedBy"))
