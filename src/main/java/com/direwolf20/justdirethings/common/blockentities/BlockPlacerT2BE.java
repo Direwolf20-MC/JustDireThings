@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -67,10 +68,13 @@ public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE
     }
 
     @Override
-    public void placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
-        if (extractEnergy(getStandardEnergyCost(), false) < getStandardEnergyCost())
-            return;
-        super.placeBlock(itemStack, fakePlayer, blockPos);
+    public InteractionResult placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
+        if (!hasEnoughPower(getStandardEnergyCost()))
+            return InteractionResult.FAIL;
+        InteractionResult interactionResult = super.placeBlock(itemStack, fakePlayer, blockPos);
+        if (interactionResult.equals(InteractionResult.CONSUME))
+            extractEnergy(getStandardEnergyCost(), false);
+        return interactionResult;
     }
 
     @Override

@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -107,12 +108,12 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         }
     }
 
-    public void placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
+    public InteractionResult placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
         Direction placing = Direction.values()[direction];
         Vec3 hitVec = Vec3.atCenterOf(blockPos); // Center of the block where we want to place the new block
         BlockHitResult hitResult = new BlockHitResult(hitVec, placing.getOpposite(), blockPos, false);
         UseOnContext useoncontext = new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, hitResult);
-        itemStack.useOn(useoncontext);
+        return itemStack.useOn(useoncontext);
     }
 
     public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {
