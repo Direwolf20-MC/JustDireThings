@@ -90,6 +90,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
 
     public void doBlockPlace() {
         ItemStack placeStack = getPlaceStack();
+        if (!isStackValid(placeStack)) return;
         if (clearTrackerIfNeeded(placeStack)) {
             positionsToPlace.clear();
             return;
