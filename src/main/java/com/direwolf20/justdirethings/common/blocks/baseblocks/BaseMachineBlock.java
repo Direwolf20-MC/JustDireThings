@@ -104,13 +104,7 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
             ItemStack itemStack = new ItemStack(Item.byBlock(this));
             CompoundTag compoundTag = new CompoundTag();
             ((BaseMachineBE) blockEntity).saveAdditional(compoundTag);
-            CompoundTag blankTag = new CompoundTag();
-            if (state.getBlock() instanceof EntityBlock entityBlock) {
-                BlockEntity blankBE = entityBlock.newBlockEntity(BlockPos.ZERO, state);
-                if (blankBE != null)
-                    ((BaseMachineBE) blankBE).saveAdditional(blankTag);
-            }
-            if (!compoundTag.isEmpty() && !compoundTag.equals(blankTag)) {
+            if (!compoundTag.isEmpty()) {
                 itemStack.getOrCreateTag().put("JustDiresBEData", compoundTag);
             }
             drops.clear(); // Clear any default drops
