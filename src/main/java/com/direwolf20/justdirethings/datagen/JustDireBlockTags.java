@@ -23,6 +23,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
     }
 
     public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "lawnmowerable"));
+    public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "noautoclick"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -67,6 +68,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.GooSoil_Tier2.get())
                 .add(Registration.GooSoil_Tier3.get())
                 .add(Registration.GooSoil_Tier4.get());
+        tag(NO_AUTO_CLICK);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.blocks.ClickerT1;
+import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.FakePlayerUtil;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -188,6 +189,8 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         if (level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.BLOCK))
             return false;
         if (!level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.AIR))
+            return false;
+        if (level.getBlockState(blockPos).is(JustDireBlockTags.NO_AUTO_CLICK))
             return false;
         return true;
     }
