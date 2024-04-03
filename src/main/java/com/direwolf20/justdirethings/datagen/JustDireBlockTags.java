@@ -51,7 +51,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.BlockPlacerT1.get())
                 .add(Registration.BlockPlacerT2.get())
                 .add(Registration.ClickerT1.get())
-                .add(Registration.ClickerT2.get());
+                .add(Registration.ClickerT2.get())
+                .add(Registration.SensorT1.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)

@@ -70,6 +70,7 @@ public class ClientSetup {
         event.register(Registration.BlockPlacerT2_Container.get(), BlockPlacerT2Screen::new);
         event.register(Registration.ClickerT1_Container.get(), ClickerT1Screen::new);
         event.register(Registration.ClickerT2_Container.get(), ClickerT2Screen::new);
+        event.register(Registration.SensorT1_Container.get(), SensorT1Screen::new);
     }
 
     @SubscribeEvent

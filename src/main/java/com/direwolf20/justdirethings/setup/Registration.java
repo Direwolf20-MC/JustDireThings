@@ -99,6 +99,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> ClickerT1_ITEM = ITEMS.register("clickert1", () -> new BlockItem(ClickerT1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, ClickerT2> ClickerT2 = BLOCKS.register("clickert2", ClickerT2::new);
     public static final DeferredHolder<Item, BlockItem> ClickerT2_ITEM = ITEMS.register("clickert2", () -> new BlockItem(ClickerT2.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, SensorT1> SensorT1 = SIDEDBLOCKS.register("sensort1", SensorT1::new);
+    public static final DeferredHolder<Item, BlockItem> SensorT1_ITEM = ITEMS.register("sensort1", () -> new BlockItem(SensorT1.get(), new Item.Properties()));
 
 
     //Gooblocks
@@ -145,6 +147,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockPlacerT2BE>> BlockPlacerT2BE = BLOCK_ENTITIES.register("blockplacert2", () -> BlockEntityType.Builder.of(BlockPlacerT2BE::new, BlockPlacerT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ClickerT1BE>> ClickerT1BE = BLOCK_ENTITIES.register("clickert1", () -> BlockEntityType.Builder.of(ClickerT1BE::new, ClickerT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ClickerT2BE>> ClickerT2BE = BLOCK_ENTITIES.register("clickert2", () -> BlockEntityType.Builder.of(ClickerT2BE::new, ClickerT2.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SensorT1BE>> SensorT1BE = BLOCK_ENTITIES.register("sensort1be", () -> BlockEntityType.Builder.of(SensorT1BE::new, SensorT1.get()).build(null));
 
 
     //Items
@@ -206,6 +209,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(ClickerT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<ClickerT2Container>> ClickerT2_Container = CONTAINERS.register("clickert2_container",
             () -> IMenuTypeExtension.create(ClickerT2Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<SensorT1Container>> SensorT1_Container = CONTAINERS.register("sensort1_container",
+            () -> IMenuTypeExtension.create(SensorT1Container::new));
 
 
     //Data Attachments
