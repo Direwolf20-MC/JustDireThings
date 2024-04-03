@@ -96,6 +96,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             positionsToPlace.clear();
             return;
         }
+        if (!canPlace()) return;
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         if (isActiveRedstone() && canRun() && positionsToPlace.isEmpty())
             positionsToPlace = findSpotsToPlace(fakePlayer);

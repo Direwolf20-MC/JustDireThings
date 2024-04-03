@@ -24,6 +24,9 @@ import java.util.Optional;
  * This class completely and shamelessly stolen from Shadows from his mod Click Machine :)
  */
 public class FakePlayerUtil {
+    public record FakePlayerResult(InteractionResult interactionResult, ItemStack returnStack) {
+    }
+
     /**
      * Sets up for a fake player to be usable to right click things. This player will be put at the center of the using side.
      *
@@ -64,21 +67,21 @@ public class FakePlayerUtil {
         player.setReach(player.getAttributeValue(NeoForgeMod.BLOCK_REACH));
     }
 
-    public static ItemStack clickEntityInDirection(UsefulFakePlayer player, Level world, LivingEntity entity, Direction side, int clickType) {
+    public static FakePlayerResult clickEntityInDirection(UsefulFakePlayer player, Level world, LivingEntity entity, Direction side, int clickType) {
         HitResult toUse = rayTraceEntity(player, world, player.getReach());
-        if (toUse == null) return player.getMainHandItem();
+        if (toUse == null) return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
 
         if (clickType == 0) { //RightClick
             if (processUseEntity(player, world, entity, toUse, InteractionType.INTERACT_AT))
-                return player.getMainHandItem();
+                return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
             else if (processUseEntity(player, world, entity, null, InteractionType.INTERACT))
-                return player.getMainHandItem();
+                return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
         } else { //Left Click
             if (processUseEntity(player, world, ((EntityHitResult) toUse).getEntity(), null, InteractionType.ATTACK))
-                return player.getMainHandItem();
+                return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
         }
 
-        return player.getMainHandItem();
+        return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
     }
 
     /**
@@ -92,9 +95,11 @@ public class FakePlayerUtil {
      * @param clickType   Right or Left click.  0 = right. 1 = left.
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
-    public static ItemStack clickBlockInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState, int clickType) {
+    public static FakePlayerResult clickBlockInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState, int clickType) {
+        if (clickType == 1)
+            return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem()); //No left clicking blocks, thats what the breakers are for!
         HitResult toUse = rayTraceBlock(player, world, player.getReach());
-        if (toUse == null) return player.getMainHandItem();
+        if (toUse == null) return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
 
         ItemStack itemstack = player.getMainHandItem();
         if (toUse.getType() == HitResult.Type.BLOCK) {
@@ -103,36 +108,36 @@ public class FakePlayerUtil {
             if (!state.isAir()) {
                 if (clickType == 0) {
                     InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
-                    if (type == InteractionResult.SUCCESS) return player.getMainHandItem();
-                } else {
-                    player.gameMode.handleBlockBreakAction(blockpos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxBuildHeight(), 0);
-                    return player.getMainHandItem();
+                    if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME)
+                        return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
                 }
             }
         }
 
         if (toUse.getType() == HitResult.Type.MISS) { //Since we check for air before entering the method, there must be a block there, so try clicking it anyway
             if (clickType == 0) {
-                player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
-                return player.getMainHandItem();
-            } else {
-                player.gameMode.handleBlockBreakAction(pos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxBuildHeight(), 0);
-                return player.getMainHandItem();
+                InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
+                if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME)
+                    return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
             }
         }
 
-        if (clickType == 1) return itemstack; //Don't do any of the other stuff below if we are in left click mode
-
-        if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS))
+        //This is apparently if you click empty space with an empty hand. Why???
+        /*if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS)) {
             CommonHooks.onEmptyClick(player, InteractionHand.MAIN_HAND); //Empty Hand Click i assume?
-        if (!itemstack.isEmpty())
-            player.gameMode.useItem(player, world, itemstack, InteractionHand.MAIN_HAND); //Uses the item by itself
-        return player.getMainHandItem();
+            return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+        }*/
+        if (!itemstack.isEmpty()) {
+            InteractionResult type = player.gameMode.useItem(player, world, itemstack, InteractionHand.MAIN_HAND); //Uses the item by itself
+            if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME)
+                return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+        }
+        return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
     }
 
-    public static ItemStack rightClickAirInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
+    public static FakePlayerResult rightClickAirInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
         HitResult toUse = rayTraceBlock(player, world, player.getReach()); //Longer reach so it can connect with adjacent blocks to interact with them
-        if (toUse == null) return player.getMainHandItem();
+        if (toUse == null) new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
 
         ItemStack itemstack = player.getMainHandItem();
         if (toUse.getType() == HitResult.Type.BLOCK) {
@@ -140,7 +145,8 @@ public class FakePlayerUtil {
             BlockState state = world.getBlockState(blockpos);
             if (!state.isAir()) {
                 InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
-                if (type == InteractionResult.SUCCESS) return player.getMainHandItem();
+                if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME)
+                    return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
             }
         }
 
@@ -150,11 +156,14 @@ public class FakePlayerUtil {
             //if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME) return player.getMainHandItem();
         }
 
-        if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS))
-            CommonHooks.onEmptyClick(player, InteractionHand.MAIN_HAND); //Empty Hand Click i assume?
-        if (!itemstack.isEmpty())
-            player.gameMode.useItem(player, world, itemstack, InteractionHand.MAIN_HAND); //Uses the item by itself
-        return player.getMainHandItem();
+        /*if (itemstack.isEmpty() && (toUse == null || toUse.getType() == HitResult.Type.MISS))
+            CommonHooks.onEmptyClick(player, InteractionHand.MAIN_HAND); //Empty Hand Click i assume?*/
+        if (!itemstack.isEmpty()) {
+            InteractionResult type = player.gameMode.useItem(player, world, itemstack, InteractionHand.MAIN_HAND); //Uses the item by itself
+            if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME)
+                return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+        }
+        return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
     }
 
     /**

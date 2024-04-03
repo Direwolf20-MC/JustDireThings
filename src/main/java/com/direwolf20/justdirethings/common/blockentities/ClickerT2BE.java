@@ -7,10 +7,13 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineC
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
@@ -46,7 +49,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
 
     @Override
     public int getStandardEnergyCost() {
-        return 1000; // Todo Config?
+        return 250; // Todo Config?
     }
 
     @Override
@@ -62,6 +65,33 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
     @Override
     public FilterData getFilterData() {
         return filterData;
+    }
+
+    @Override
+    public void tickServer() {
+        super.tickServer();
+        chargeItemStack(getClickStack());
+    }
+
+    @Override
+    public boolean canClick() {
+        return hasEnoughPower(getStandardEnergyCost());
+    }
+
+    @Override
+    public InteractionResult clickEntity(ItemStack itemStack, UsefulFakePlayer fakePlayer, LivingEntity entity) {
+        InteractionResult interactionResult = super.clickEntity(itemStack, fakePlayer, entity);
+        if (interactionResult.equals(InteractionResult.SUCCESS))
+            extractEnergy(getStandardEnergyCost(), false);
+        return interactionResult;
+    }
+
+    @Override
+    public InteractionResult clickBlock(ItemStack itemStack, UsefulFakePlayer fakePlayer, BlockPos blockPos) {
+        InteractionResult interactionResult = super.clickBlock(itemStack, fakePlayer, blockPos);
+        if (interactionResult.equals(InteractionResult.SUCCESS))
+            extractEnergy(getStandardEnergyCost(), false);
+        return interactionResult;
     }
 
     @Override

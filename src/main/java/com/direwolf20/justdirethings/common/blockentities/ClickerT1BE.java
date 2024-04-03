@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
@@ -130,8 +131,9 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
             entitiesToClick.clear();
             return;
         }
+        if (!canClick()) return;
         UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
-        if (clickTarget.equals(CLICK_TARGET.BLOCK) || clickTarget.equals(CLICK_TARGET.AIR)) {
+        if ((clickTarget.equals(CLICK_TARGET.BLOCK) || clickTarget.equals(CLICK_TARGET.AIR)) && clickType == 0) { //Only right click blocks!
             if (isActiveRedstone() && canRun() && positionsToClick.isEmpty())
                 positionsToClick = findSpotsToClick(fakePlayer);
             if (positionsToClick.isEmpty())
@@ -152,35 +154,37 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         }
     }
 
-    public void clickEntity(ItemStack itemStack, UsefulFakePlayer fakePlayer, LivingEntity entity) {
+    public InteractionResult clickEntity(ItemStack itemStack, UsefulFakePlayer fakePlayer, LivingEntity entity) {
         fakePlayer.setReach(0.9);
         Direction placing = Direction.values()[direction];
         FakePlayerUtil.setupFakePlayerForUse(fakePlayer, entity.blockPosition(), placing, itemStack.copy(), sneaking);
         if (showFakePlayer && level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
             fakePlayer.drawParticles(serverLevel, itemStack);
         }
-        ItemStack resultStack;
-        resultStack = FakePlayerUtil.clickEntityInDirection(fakePlayer, level, entity, placing.getOpposite(), clickType);
-        setClickStack(resultStack);
+        FakePlayerUtil.FakePlayerResult fakePlayerResult;
+        fakePlayerResult = FakePlayerUtil.clickEntityInDirection(fakePlayer, level, entity, placing.getOpposite(), clickType);
+        setClickStack(fakePlayerResult.returnStack());
         FakePlayerUtil.cleanupFakePlayerFromUse(fakePlayer, fakePlayer.getMainHandItem());
+        return fakePlayerResult.interactionResult();
     }
 
-    public void clickBlock(ItemStack itemStack, UsefulFakePlayer fakePlayer, BlockPos blockPos) {
+    public InteractionResult clickBlock(ItemStack itemStack, UsefulFakePlayer fakePlayer, BlockPos blockPos) {
         Direction placing = Direction.values()[direction];
         FakePlayerUtil.setupFakePlayerForUse(fakePlayer, blockPos, placing, itemStack.copy(), sneaking);
         if (showFakePlayer && level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
             fakePlayer.drawParticles(serverLevel, itemStack);
         }
-        ItemStack resultStack = itemStack.copy();
+        FakePlayerUtil.FakePlayerResult fakePlayerResult = new FakePlayerUtil.FakePlayerResult(InteractionResult.FAIL, itemStack);
         if (!level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.BLOCK)) {
             fakePlayer.setReach(0.9);
-            resultStack = FakePlayerUtil.clickBlockInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos), clickType);
-        } else if (level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.AIR) && clickType == 0) { //Only Right click air
+            fakePlayerResult = FakePlayerUtil.clickBlockInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos), clickType);
+        } else if (level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.AIR)) {
             fakePlayer.setReach(1);
-            resultStack = FakePlayerUtil.rightClickAirInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos));
+            fakePlayerResult = FakePlayerUtil.rightClickAirInDirection(fakePlayer, level, blockPos, placing.getOpposite(), level.getBlockState(blockPos));
         }
-        setClickStack(resultStack);
+        setClickStack(fakePlayerResult.returnStack());
         FakePlayerUtil.cleanupFakePlayerFromUse(fakePlayer, fakePlayer.getMainHandItem());
+        return fakePlayerResult.interactionResult();
     }
 
     public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {

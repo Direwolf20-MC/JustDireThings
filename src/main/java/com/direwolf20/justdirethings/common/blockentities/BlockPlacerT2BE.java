@@ -44,7 +44,7 @@ public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE
 
     @Override
     public int getStandardEnergyCost() {
-        return 1000; // Todo Config?
+        return 500; // Todo Config?
     }
 
     @Override
@@ -69,8 +69,6 @@ public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE
 
     @Override
     public InteractionResult placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
-        if (!hasEnoughPower(getStandardEnergyCost()))
-            return InteractionResult.FAIL;
         InteractionResult interactionResult = super.placeBlock(itemStack, fakePlayer, blockPos);
         if (interactionResult.equals(InteractionResult.CONSUME))
             extractEnergy(getStandardEnergyCost(), false);
