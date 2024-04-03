@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
     public FilterData filterData = new FilterData(false, false, 0);
-    public AreaAffectingData areaAffectingData = new AreaAffectingData(0, 0, 0, 0, 1, 0);
+    public AreaAffectingData areaAffectingData = new AreaAffectingData();
     public final PoweredMachineContainerData poweredMachineData;
 
     public BlockBreakerT2BE(BlockPos pPos, BlockState pBlockState) {
@@ -65,6 +65,11 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     @Override
     public FilterData getFilterData() {
         return filterData;
+    }
+
+    @Override
+    public FilterData getDefaultFilterData() {
+        return new FilterData(false, false, 0);
     }
 
     @Override

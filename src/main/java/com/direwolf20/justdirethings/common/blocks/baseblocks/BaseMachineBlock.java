@@ -100,7 +100,7 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
         List<ItemStack> drops = super.getDrops(state, builder); // Get default drops
         BlockEntity blockEntity = builder.getParameter(LootContextParams.BLOCK_ENTITY);
 
-        if (blockEntity instanceof BaseMachineBE) {
+        if (blockEntity instanceof BaseMachineBE baseMachineBE && !baseMachineBE.isDefaultSettings()) {
             ItemStack itemStack = new ItemStack(Item.byBlock(this));
             CompoundTag compoundTag = new CompoundTag();
             ((BaseMachineBE) blockEntity).saveAdditional(compoundTag);

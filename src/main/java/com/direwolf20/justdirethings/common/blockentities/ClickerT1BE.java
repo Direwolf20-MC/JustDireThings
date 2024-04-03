@@ -228,6 +228,21 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     @Override
+    public boolean isDefaultSettings() {
+        if (!super.isDefaultSettings())
+            return false;
+        if (clickType != 0)
+            return false;
+        if (!clickTarget.equals(CLICK_TARGET.BLOCK))
+            return false;
+        if (sneaking)
+            return false;
+        if (showFakePlayer)
+            return false;
+        return true;
+    }
+
+    @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.putInt("clickType", clickType);

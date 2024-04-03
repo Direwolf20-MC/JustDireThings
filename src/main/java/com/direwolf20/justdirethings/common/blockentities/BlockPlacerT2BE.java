@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
-    public FilterData filterData = new FilterData(false, false, -1);
-    public AreaAffectingData areaAffectingData = new AreaAffectingData(0, 0, 0, 0, 1, 0);
+    public FilterData filterData = new FilterData();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData();
     public final PoweredMachineContainerData poweredMachineData;
 
     public BlockPlacerT2BE(BlockPos pPos, BlockState pBlockState) {

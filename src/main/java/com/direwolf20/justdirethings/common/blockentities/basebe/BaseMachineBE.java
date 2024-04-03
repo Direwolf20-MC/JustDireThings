@@ -1,8 +1,12 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
+import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
+import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
+import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
+import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -155,6 +159,41 @@ public class BaseMachineBE extends BlockEntity {
         super.setChanged();
         if (this instanceof FilterableBE filterableBE)
             filterableBE.getFilterData().filterCache.clear();
+    }
+
+    public AreaAffectingData getDefaultAreaData() {
+        return new AreaAffectingData();
+    }
+
+    public FilterData getDefaultFilterData() {
+        return new FilterData();
+    }
+
+    public RedstoneControlData getDefaultRedstoneData() {
+        return new RedstoneControlData();
+    }
+
+    public boolean isDefaultSettings() {
+        if (tickSpeed != 20)
+            return false;
+        if (direction != 0)
+            return false;
+        if (this instanceof AreaAffectingBE areaAffectingBE && !areaAffectingBE.getAreaAffectingData().equals(getDefaultAreaData()))
+            return false;
+        if (this instanceof FilterableBE filterableBE && !filterableBE.getFilterData().equals(getDefaultFilterData()))
+            return false;
+        if (this instanceof FilterableBE filterableBE) {
+            FilterBasicHandler filteredItems = filterableBE.getFilterHandler();
+            for (int i = 0; i < filteredItems.getSlots(); i++) {
+                if (!filteredItems.getStackInSlot(i).isEmpty())
+                    return false;
+            }
+        }
+        if (this instanceof PoweredMachineBE poweredMachineBE && poweredMachineBE.getEnergyStored() > 0)
+            return false;
+        if (this instanceof RedstoneControlledBE redstoneControlledBE && !redstoneControlledBE.getRedstoneControlData().equals(getDefaultRedstoneData()))
+            return false;
+        return true;
     }
 
     @Override
