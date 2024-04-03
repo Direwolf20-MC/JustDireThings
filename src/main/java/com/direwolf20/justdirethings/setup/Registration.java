@@ -223,7 +223,14 @@ public class Registration {
                 return new ItemStackHandler(1);
             }).build());
     public static final Supplier<AttachmentType<FilterBasicHandler>> HANDLER_BASIC_FILTER = ATTACHMENT_TYPES.register(
-            "handler_item_collector", () -> AttachmentType.serializable(() -> new FilterBasicHandler(9)).build()); //Todo how to generalize these
+            "handler_item_collector", () -> AttachmentType.serializable(() -> new FilterBasicHandler(9)).build());
+    public static final Supplier<AttachmentType<FilterBasicHandler>> HANDLER_BASIC_FILTER_ANYSIZE = ATTACHMENT_TYPES.register(
+            "anysize_filter_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof BaseMachineBE baseMachineBE)
+                    return new FilterBasicHandler(baseMachineBE.ANYSIZE_FILTER_SLOTS);
+                return new FilterBasicHandler(0);
+            }).build());
+
     public static final Supplier<AttachmentType<EnergyStorage>> ENERGYSTORAGE = ATTACHMENT_TYPES.register(
             "energystorage", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof ItemStack itemStack) {

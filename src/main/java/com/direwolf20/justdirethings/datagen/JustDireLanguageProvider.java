@@ -151,10 +151,15 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.target-air", "Target Air");
         add("justdirethings.screen.target-hostile", "Target Hostile");
         add("justdirethings.screen.target-passive", "Target Passive");
+        add("justdirethings.screen.target-adult", "Target Adult");
+        add("justdirethings.screen.target-child", "Target Child");
         add("justdirethings.screen.target-player", "Target Player");
         add("justdirethings.screen.target-living", "Target All Living");
+        add("justdirethings.screen.target-item", "Target Items");
         add("justdirethings.screen.sneak-click", "Sneak Click");
         add("justdirethings.screen.showfakeplayer", "Show Fake Player");
+        add("justdirethings.screen.redstone-weak", "Weak Signal");
+        add("justdirethings.screen.redstone-strong", "Strong Signal");
 
 
         //Buttons

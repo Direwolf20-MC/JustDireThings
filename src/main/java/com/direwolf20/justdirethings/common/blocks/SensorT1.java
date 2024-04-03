@@ -4,12 +4,14 @@ import com.direwolf20.justdirethings.common.blockentities.SensorT1BE;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.containers.SensorT1Container;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -59,5 +61,29 @@ public class SensorT1 extends BaseMachineBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
+    }
+
+    @Override
+    public boolean isSignalSource(BlockState pState) {
+        return true;
+    }
+
+    @Override
+    public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+        if (side.equals(blockState.getValue(BlockStateProperties.FACING))) return 0; //Don't emit on facing side
+        BlockEntity blockEntity = blockAccess.getBlockEntity(pos);
+        if (blockEntity instanceof SensorT1BE sensorT1BE) {
+            return sensorT1BE.emitRedstone ? 15 : 0; // Emit full power if true, no power if false
+        }
+        return 0;
+    }
+
+    @Override
+    public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+        BlockEntity blockEntity = blockAccess.getBlockEntity(pos);
+        if (blockEntity instanceof SensorT1BE sensorT1BE && sensorT1BE.strongSignal) {
+            return getSignal(blockState, blockAccess, pos, side);
+        }
+        return 0;
     }
 }
