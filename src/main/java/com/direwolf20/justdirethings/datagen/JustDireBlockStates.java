@@ -38,6 +38,7 @@ public class JustDireBlockStates extends BlockStateProvider {
 
         simpleBlock(Registration.BlockBreakerT2.get(), models().cubeAll(Registration.BlockBreakerT2_ITEM.getId().getPath(), blockTexture(Registration.BlockBreakerT2.get())));
         simpleBlock(Registration.BlockPlacerT2.get(), models().cubeAll(Registration.BlockPlacerT2_ITEM.getId().getPath(), blockTexture(Registration.BlockPlacerT2.get())));
+        simpleBlock(Registration.ClickerT2.get(), models().cubeAll(Registration.ClickerT2_ITEM.getId().getPath(), blockTexture(Registration.ClickerT2.get())));
 
         patternBlock();
         soilBlocks();

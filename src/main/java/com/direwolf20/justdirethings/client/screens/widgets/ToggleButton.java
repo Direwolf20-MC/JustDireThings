@@ -31,8 +31,8 @@ public class ToggleButton extends BaseButton {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        RenderSystem.setShaderTexture(0, textureLocalizations.get(texturePosition).texture());
-        guiGraphics.blit(textureLocalizations.get(texturePosition).texture(), this.getX(), this.getY(), 0, 0, width, height, width, height);
+        RenderSystem.setShaderTexture(0, textureLocalizations.get(getTexturePosition()).texture());
+        guiGraphics.blit(textureLocalizations.get(getTexturePosition()).texture(), this.getX(), this.getY(), 0, 0, width, height, width, height);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ToggleButton extends BaseButton {
     }
 
     public int getTexturePosition() {
-        return texturePosition;
+        return texturePosition >= textureLocalizations.size() ? 0 : texturePosition;
     }
 
     public void toggleActive() {
@@ -65,15 +65,15 @@ public class ToggleButton extends BaseButton {
     }
 
     public void nextTexturePosition() {
-        texturePosition = (texturePosition + 1) % textureLocalizations.size();
+        texturePosition = (getTexturePosition() + 1) % textureLocalizations.size();
     }
 
     public void nextTexturePosition(int max) {
-        texturePosition = (texturePosition + 1) % Math.min(textureLocalizations.size(), max);
+        texturePosition = (getTexturePosition() + 1) % Math.min(textureLocalizations.size(), max);
     }
 
     @Override
     public Component getLocalization() {
-        return textureLocalizations.get(texturePosition).localization();
+        return textureLocalizations.get(getTexturePosition()).localization();
     }
 }

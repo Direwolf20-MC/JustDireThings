@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -22,8 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
-    public FilterData filterData = new FilterData(false, false, -1);
-    public AreaAffectingData areaAffectingData = new AreaAffectingData(0, 0, 0, 0, 1, 0);
+    public FilterData filterData = new FilterData();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData();
     public final PoweredMachineContainerData poweredMachineData;
 
     public BlockPlacerT2BE(BlockPos pPos, BlockState pBlockState) {
@@ -43,7 +44,7 @@ public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE
 
     @Override
     public int getStandardEnergyCost() {
-        return 100; // Todo Config?
+        return 500; // Todo Config?
     }
 
     @Override
@@ -59,6 +60,19 @@ public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE
     @Override
     public FilterData getFilterData() {
         return filterData;
+    }
+
+    @Override
+    public boolean canPlace() {
+        return hasEnoughPower(getStandardEnergyCost());
+    }
+
+    @Override
+    public InteractionResult placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
+        InteractionResult interactionResult = super.placeBlock(itemStack, fakePlayer, blockPos);
+        if (interactionResult.equals(InteractionResult.CONSUME))
+            extractEnergy(getStandardEnergyCost(), false);
+        return interactionResult;
     }
 
     @Override

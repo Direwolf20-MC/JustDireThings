@@ -4,20 +4,21 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtons;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
+import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
-import com.direwolf20.justdirethings.common.network.data.AreaAffectingPayload;
-import com.direwolf20.justdirethings.common.network.data.FilterSettingPayload;
-import com.direwolf20.justdirethings.common.network.data.GhostSlotPayload;
-import com.direwolf20.justdirethings.common.network.data.RedstoneSettingPayload;
+import com.direwolf20.justdirethings.common.network.data.*;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -49,6 +50,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     protected int extraWidth;
     protected int extraHeight;
     protected int direction;
+    protected int tickSpeed;
 
     public BaseMachineScreen(T container, Inventory pPlayerInventory, Component pTitle) {
         super(container, pPlayerInventory, pTitle);
@@ -70,6 +72,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             this.redstoneMode = redstoneControlledBE.getRedstoneControlData().redstoneMode;
         }
         direction = baseMachineBE.getDirection();
+        tickSpeed = baseMachineBE.getTickSpeed();
     }
 
     public void calculateTopSection() {
@@ -96,6 +99,14 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             addRedstoneButtons();
         if (baseMachineBE instanceof FilterableBE)
             addFilterButtons();
+        addTickSpeedButton();
+    }
+
+    public void addTickSpeedButton() {
+        addRenderableWidget(ToggleButtonFactory.TICKSPEEDBUTTON(getGuiLeft() + 144, topSectionTop + 40, tickSpeed, b -> {
+            tickSpeed = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
+            PacketDistributor.SERVER.noArg().send(new TickSpeedPayload(tickSpeed));
+        }));
     }
 
     public void addRedstoneButtons() {
@@ -168,6 +179,17 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         valueButtonsList.forEach(valueButtons -> valueButtons.widgetList.forEach(this::addRenderableWidget));
     }
 
+    public int adjustNumberButton(int value, int change, int min, int max) {
+        if (Screen.hasShiftDown()) change *= 10;
+        if (Screen.hasControlDown()) change *= 64;
+        if (change < 0) {
+            value = (Math.max(value + change, min));
+        } else {
+            value = (Math.min(value + change, max));
+        }
+        return value;
+    }
+
     @Override
     protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
         if (MiscTools.inBounds(topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight, mouseX, mouseY))
@@ -234,15 +256,25 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     @Override
     public boolean mouseClicked(double x, double y, int btn) {
         if (baseMachineBE instanceof FilterableBE filterableBE) {
-            if (hoveredSlot == null || !(hoveredSlot instanceof FilterBasicSlot))
-                return super.mouseClicked(x, y, btn);
-
-            // By splitting the stack we can get air easily :) perfect removal basically
-            ItemStack stack = this.menu.getCarried();// getMinecraft().player.inventoryMenu.getCarried();
-            stack = stack.copy().split(hoveredSlot.getMaxStackSize()); // Limit to slot limit
-            hoveredSlot.set(stack); // Temporarily update the client for continuity purposes
-            PacketDistributor.SERVER.noArg().send(new GhostSlotPayload(hoveredSlot.index, stack, stack.getCount(), -1));
-            return true;
+            if (hoveredSlot != null && (hoveredSlot instanceof FilterBasicSlot)) {
+                // By splitting the stack we can get air easily :) perfect removal basically
+                ItemStack stack = this.menu.getCarried();// getMinecraft().player.inventoryMenu.getCarried();
+                stack = stack.copy().split(hoveredSlot.getMaxStackSize()); // Limit to slot limit
+                hoveredSlot.set(stack); // Temporarily update the client for continuity purposes
+                PacketDistributor.SERVER.noArg().send(new GhostSlotPayload(hoveredSlot.index, stack, stack.getCount(), -1));
+                return true;
+            }
+        }
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof NumberButton numberButton && MiscTools.inBounds(numberButton.getX(), numberButton.getY(), numberButton.getWidth(), numberButton.getHeight(), x, y)) {
+                if (btn == 0)
+                    numberButton.setValue(adjustNumberButton(numberButton.getValue(), 1, numberButton.min, numberButton.max));
+                else if (btn == 1)
+                    numberButton.setValue(adjustNumberButton(numberButton.getValue(), -1, numberButton.min, numberButton.max));
+                numberButton.onPress();
+                numberButton.playDownSound(Minecraft.getInstance().getSoundManager());
+                return true;
+            }
         }
         return super.mouseClicked(x, y, btn);
     }

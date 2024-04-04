@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
 public class JustDireRecipes extends RecipeProvider {
-
 
     public JustDireRecipes(PackOutput output) {
         super(output);
@@ -120,6 +120,29 @@ public class JustDireRecipes extends RecipeProvider {
                 .pattern("dod")
                 .pattern("frf")
                 .define('o', Registration.BlockPlacerT1_ITEM.get())
+                .define('f', Registration.Celestigem.get())
+                .define('d', Items.ENDER_EYE)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.ClickerT1.get())
+                .pattern("fdf")
+                .pattern("lol")
+                .pattern("frf")
+                .define('o', Items.DISPENSER)
+                .define('f', Registration.FerricoreIngot.get())
+                .define('d', Items.ENDER_EYE)
+                .define('l', Items.LAPIS_LAZULI)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.ClickerT2.get())
+                .pattern("fdf")
+                .pattern("dod")
+                .pattern("frf")
+                .define('o', Registration.ClickerT1_ITEM.get())
                 .define('f', Registration.Celestigem.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
@@ -405,5 +428,24 @@ public class JustDireRecipes extends RecipeProvider {
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Celestigem.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CelestigemBlock.get(), Registration.Celestigem.getId().toString() + "_9x9", "justdirethings", Registration.CelestigemBlock.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.EclipseAlloyIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.EclipseAlloyBlock.get(), Registration.EclipseAlloyIngot.getId().toString() + "_9x9", "justdirethings", Registration.EclipseAlloyBlock.getId().toString() + "_9x9", "justdirethings");
 
+        //NBT Clear
+        for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
+            if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
+                ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, sidedBlock.get())
+                        .requires(sidedBlock.get())
+                        .group("justdirethings")
+                        .unlockedBy("has_" + sidedBlock.getId().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(sidedBlock.get()))
+                        .save(consumer, sidedBlock.getId() + "_nbtclear");
+            }
+        }
+        for (var sidedBlock : Registration.BLOCKS.getEntries()) {
+            if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
+                ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, sidedBlock.get())
+                        .requires(sidedBlock.get())
+                        .group("justdirethings")
+                        .unlockedBy("has_" + sidedBlock.getId().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(sidedBlock.get()))
+                        .save(consumer, sidedBlock.getId() + "_nbtclear");
+            }
+        }
     }
 }

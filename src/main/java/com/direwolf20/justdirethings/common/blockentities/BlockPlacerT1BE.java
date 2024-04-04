@@ -4,11 +4,13 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.blocks.BlockPlacerT1;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -71,29 +73,48 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         return true;
     }
 
+    public boolean canPlace() {
+        return true;
+    }
+
+    public boolean clearTrackerIfNeeded(ItemStack itemStack) {
+        if (positionsToPlace.isEmpty())
+            return false;
+        if (!isStackValid(itemStack))
+            return true;
+        if (!canPlace())
+            return true;
+        if (!isActiveRedstone() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
+            return true;
+        return false;
+    }
+
     public void doBlockPlace() {
         ItemStack placeStack = getPlaceStack();
-        if (!isStackValid(placeStack)) {
-            if (!positionsToPlace.isEmpty()) //Clear the placement positions if we run out of items to place.
-                positionsToPlace.clear();
+        if (!isStackValid(placeStack)) return;
+        if (clearTrackerIfNeeded(placeStack)) {
+            positionsToPlace.clear();
             return;
         }
+        if (!canPlace()) return;
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
-        if (isActive() && positionsToPlace.isEmpty())
+        if (isActiveRedstone() && canRun() && positionsToPlace.isEmpty())
             positionsToPlace = findSpotsToPlace(fakePlayer);
         if (positionsToPlace.isEmpty())
             return;
-        BlockPos blockPos = positionsToPlace.remove(0);
-        setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue().getOpposite());
-        placeBlock(placeStack, fakePlayer, blockPos);
+        if (canRun()) {
+            BlockPos blockPos = positionsToPlace.remove(0);
+            setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue().getOpposite());
+            placeBlock(placeStack, fakePlayer, blockPos);
+        }
     }
 
-    public void placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
+    public InteractionResult placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
         Direction placing = Direction.values()[direction];
         Vec3 hitVec = Vec3.atCenterOf(blockPos); // Center of the block where we want to place the new block
         BlockHitResult hitResult = new BlockHitResult(hitVec, placing.getOpposite(), blockPos, false);
         UseOnContext useoncontext = new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, hitResult);
-        itemStack.useOn(useoncontext);
+        return itemStack.useOn(useoncontext);
     }
 
     public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {

@@ -4,9 +4,11 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -16,8 +18,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public abstract class BaseMachineBlock extends Block implements EntityBlock {
     public BaseMachineBlock(Properties properties) {
@@ -30,6 +36,12 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
         if (!world.isClientSide && entity instanceof Player player) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof BaseMachineBE baseMachineBE) {
+                CompoundTag tag = stack.getTag();
+                if (tag != null) {
+                    CompoundTag compound = stack.getTag().getCompound("JustDiresBEData");
+                    if (!compound.isEmpty())
+                        blockEntity.load(compound);
+                }
                 baseMachineBE.setPlacedBy(player.getUUID());
             }
         }
@@ -81,5 +93,24 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
             }
         }
         super.onRemove(state, worldIn, pos, newState, isMoving);
+    }
+
+    @Override
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
+        List<ItemStack> drops = super.getDrops(state, builder); // Get default drops
+        BlockEntity blockEntity = builder.getParameter(LootContextParams.BLOCK_ENTITY);
+
+        if (blockEntity instanceof BaseMachineBE baseMachineBE && !baseMachineBE.isDefaultSettings()) {
+            ItemStack itemStack = new ItemStack(Item.byBlock(this));
+            CompoundTag compoundTag = new CompoundTag();
+            ((BaseMachineBE) blockEntity).saveAdditional(compoundTag);
+            if (!compoundTag.isEmpty()) {
+                itemStack.getOrCreateTag().put("JustDiresBEData", compoundTag);
+            }
+            drops.clear(); // Clear any default drops
+            drops.add(itemStack); // Add your custom item stack with NBT data
+        }
+
+        return drops;
     }
 }

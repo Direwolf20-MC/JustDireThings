@@ -36,6 +36,8 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.BlockPlacerT1_ITEM.getId().getPath(), modLoc("block/blockplacert1"));
         withExistingParent(Registration.BlockBreakerT2_ITEM.getId().getPath(), modLoc("block/blockbreakert2"));
         withExistingParent(Registration.BlockPlacerT2_ITEM.getId().getPath(), modLoc("block/blockplacert2"));
+        withExistingParent(Registration.ClickerT1_ITEM.getId().getPath(), modLoc("block/clickert1"));
+        withExistingParent(Registration.ClickerT2_ITEM.getId().getPath(), modLoc("block/clickert2"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));

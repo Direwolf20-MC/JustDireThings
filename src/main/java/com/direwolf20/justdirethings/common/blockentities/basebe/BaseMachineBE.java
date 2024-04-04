@@ -1,6 +1,12 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
+import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
+import com.direwolf20.justdirethings.util.UsefulFakePlayer;
+import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
+import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
+import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +31,9 @@ public class BaseMachineBE extends BlockEntity {
     public static final GameProfile defaultFakePlayerProfile = new GameProfile(defaultFakePlayerUUID, "[JustDiresFakePlayer]");
     public UUID placedByUUID;
     protected int direction = 0;
+    protected int tickSpeed = 20;
+    protected int operationTicks = -1;
+    protected UsefulFakePlayer usefulFakePlayer;
 
     public BaseMachineBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -34,8 +43,32 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     public void tickServer() {
+        handleTicks();
         if (this instanceof RedstoneControlledBE redstoneControlledBE)
             redstoneControlledBE.evaluateRedstone();
+    }
+
+    public void handleTicks() {
+        if (operationTicks <= 0)
+            operationTicks = tickSpeed;
+        operationTicks--;
+    }
+
+    public int getTickSpeed() {
+        return tickSpeed;
+    }
+
+    public void setTickSpeed(int newTickSpeed) {
+        this.tickSpeed = newTickSpeed;
+        if (operationTicks > tickSpeed)
+            operationTicks = tickSpeed;
+        markDirtyClient();
+    }
+
+    public boolean canRun() {
+        if (this instanceof RedstoneControlledBE redstoneControlledBE)
+            return operationTicks == 0 || redstoneControlledBE.getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE);
+        return operationTicks == 0;
     }
 
     public int getDirection() {
@@ -63,6 +96,12 @@ public class BaseMachineBE extends BlockEntity {
     protected FakePlayer getFakePlayer(ServerLevel level, UUID uuid) {
         GameProfile gameProfile = new GameProfile(uuid, "[JustDiresFakePlayer]");
         return FakePlayerFactory.get(level, gameProfile);
+    }
+
+    protected UsefulFakePlayer getUsefulFakePlayer(ServerLevel level) {
+        if (usefulFakePlayer == null)
+            usefulFakePlayer = UsefulFakePlayer.createPlayer(level, getPlacedByProfile());
+        return usefulFakePlayer;
     }
 
     public void setFakePlayerData(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos, Direction direction) {
@@ -122,9 +161,45 @@ public class BaseMachineBE extends BlockEntity {
             filterableBE.getFilterData().filterCache.clear();
     }
 
+    public AreaAffectingData getDefaultAreaData() {
+        return new AreaAffectingData();
+    }
+
+    public FilterData getDefaultFilterData() {
+        return new FilterData();
+    }
+
+    public RedstoneControlData getDefaultRedstoneData() {
+        return new RedstoneControlData();
+    }
+
+    public boolean isDefaultSettings() {
+        if (tickSpeed != 20)
+            return false;
+        if (direction != 0)
+            return false;
+        if (this instanceof AreaAffectingBE areaAffectingBE && !areaAffectingBE.getAreaAffectingData().equals(getDefaultAreaData()))
+            return false;
+        if (this instanceof FilterableBE filterableBE && !filterableBE.getFilterData().equals(getDefaultFilterData()))
+            return false;
+        if (this instanceof FilterableBE filterableBE) {
+            FilterBasicHandler filteredItems = filterableBE.getFilterHandler();
+            for (int i = 0; i < filteredItems.getSlots(); i++) {
+                if (!filteredItems.getStackInSlot(i).isEmpty())
+                    return false;
+            }
+        }
+        if (this instanceof PoweredMachineBE poweredMachineBE && poweredMachineBE.getEnergyStored() > 0)
+            return false;
+        if (this instanceof RedstoneControlledBE redstoneControlledBE && !redstoneControlledBE.getRedstoneControlData().equals(getDefaultRedstoneData()))
+            return false;
+        return true;
+    }
+
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
+        tag.putInt("tickspeed", tickSpeed);
         if (placedByUUID != null)
             tag.putUUID("placedBy", placedByUUID);
         tag.putInt("direction", direction);
@@ -138,7 +213,10 @@ public class BaseMachineBE extends BlockEntity {
 
     @Override
     public void load(CompoundTag tag) {
-        direction = tag.getInt("direction");
+        if (tag.contains("direction"))
+            direction = tag.getInt("direction");
+        if (tag.contains("tickspeed"))
+            tickSpeed = tag.getInt("tickspeed");
         if (tag.contains("placedBy"))
             placedByUUID = tag.getUUID("placedBy");
         if (this instanceof AreaAffectingBE areaAffectingBE)

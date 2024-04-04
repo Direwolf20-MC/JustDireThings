@@ -23,6 +23,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
     }
 
     public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "lawnmowerable"));
+    public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "noautoclick"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -48,7 +49,9 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.BlockBreakerT1.get())
                 .add(Registration.BlockBreakerT2.get())
                 .add(Registration.BlockPlacerT1.get())
-                .add(Registration.BlockPlacerT2.get());
+                .add(Registration.BlockPlacerT2.get())
+                .add(Registration.ClickerT1.get())
+                .add(Registration.ClickerT2.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
@@ -65,6 +68,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.GooSoil_Tier2.get())
                 .add(Registration.GooSoil_Tier3.get())
                 .add(Registration.GooSoil_Tier4.get());
+        tag(NO_AUTO_CLICK);
     }
 
     @Override
