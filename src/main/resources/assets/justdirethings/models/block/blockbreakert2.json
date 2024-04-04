@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "render_type": "minecraft:solid",
+  "textures": {
+	"bottom": "justdirethings:block/blockbreakert2_bottom",
+	"front": "justdirethings:block/blockbreakert2_side",
+	"side": "justdirethings:block/blockbreakert2_side",
+	"top": "justdirethings:block/blockbreakert2_top"
+  }
+}
