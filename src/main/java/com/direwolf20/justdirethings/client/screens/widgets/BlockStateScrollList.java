@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.client.screens.widgets;
 
-import com.direwolf20.justdirethings.client.screens.basescreens.BaseScreen;
+import com.direwolf20.justdirethings.client.screens.SensorT1Screen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,18 +15,20 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class DireScollList extends ObjectSelectionList<DireScollList.BlockStateEntry> {
+public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollList.BlockStateEntry> {
     private static String stripControlCodes(String value) {
         return net.minecraft.util.StringUtil.stripColor(value);
     }
 
     private final int listWidth;
     private ItemStack stateStack = ItemStack.EMPTY;
-    private BaseScreen parent;
+    private SensorT1Screen parent;
 
-    public DireScollList(BaseScreen parent, int left, int listWidth, int top, int bottom) {
+    public BlockStateScrollList(SensorT1Screen parent, int left, int listWidth, int top, int bottom) {
         super(Minecraft.getInstance(), listWidth, bottom - top, top, parent.getFontRenderer().lineHeight * 2 + 8);
         this.parent = parent;
         this.listWidth = listWidth;
@@ -60,7 +62,13 @@ public class DireScollList extends ObjectSelectionList<DireScollList.BlockStateE
             BlockState defaultState = block.defaultBlockState();
             for (Property<?> property : defaultState.getProperties()) {
                 List<Comparable<?>> values = new ArrayList<>(property.getPossibleValues());
-                addEntry(new BlockStateEntry(property, defaultState.getValue(property), parent, values, true));
+                Comparable<?> setValue = parent.getValue(property);
+                boolean isAny = false;
+                if (setValue == null) {
+                    setValue = defaultState.getValue(property);
+                    isAny = true;
+                }
+                addEntry(new BlockStateEntry(property, setValue, defaultState.getValue(property), parent, values, isAny));
             }
         }
     }
@@ -76,15 +84,18 @@ public class DireScollList extends ObjectSelectionList<DireScollList.BlockStateE
     }
 
     public class BlockStateEntry extends ObjectSelectionList.Entry<BlockStateEntry> {
-        private final Property property;
-        private final BaseScreen parent;
-        private Comparable currentValue;
+        private final Property<?> property;
+        private final SensorT1Screen parent;
+        private Comparable<?> currentValue;
         private final List<Comparable<?>> possibleValues;
+        private final int anyIndex;
         private boolean isAny;
+        private Map<Property<?>, Comparable<?>> assignedValues = new HashMap<>();
 
-        BlockStateEntry(Property property, Comparable currentValue, BaseScreen parent, List<Comparable<?>> possibleValues, boolean isAny) {
+        BlockStateEntry(Property<?> property, Comparable<?> currentValue, Comparable<?> defaultValue, SensorT1Screen parent, List<Comparable<?>> possibleValues, boolean isAny) {
             this.property = property;
             this.currentValue = currentValue;
+            this.anyIndex = possibleValues.indexOf(defaultValue);
             this.parent = parent;
             this.possibleValues = possibleValues;
             this.isAny = isAny;
@@ -106,18 +117,19 @@ public class DireScollList extends ObjectSelectionList<DireScollList.BlockStateE
 
         @Override
         public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-            //parent.setSelected(this);
-            DireScollList.this.setSelected(this);
+            BlockStateScrollList.this.setSelected(this);
             int currentIndex = possibleValues.indexOf(this.currentValue);
             int nextIndex;
-            if (currentIndex == 0 && isAny) {
-                nextIndex = 0;
+            if (currentIndex == anyIndex && isAny) {
+                nextIndex = anyIndex;
                 isAny = false;
             } else {
                 nextIndex = (currentIndex + 1) % possibleValues.size();
-                if (nextIndex == 0) isAny = true;
+                if (nextIndex == anyIndex) isAny = true;
             }
             currentValue = possibleValues.get(nextIndex);
+            parent.setPropertyValue(property, currentValue, isAny);
+
             return false;
         }
     }
