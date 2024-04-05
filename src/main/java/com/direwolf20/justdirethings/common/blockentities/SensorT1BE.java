@@ -164,6 +164,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         this.sense_target = SENSE_TARGET.values()[senseTarget];
         setRedstone(emitRedstone, strongSignal); //Gonna wanna update the neighbors if strongSignal changed
         positions.clear(); //Clear any clicks we have queue'd up
+        blockStateFilterCache.clear();
         markDirtyClient();
     }
 
