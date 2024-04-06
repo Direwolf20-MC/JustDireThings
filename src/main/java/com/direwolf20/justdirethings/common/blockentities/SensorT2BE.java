@@ -77,12 +77,8 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
 
     @Override
     public boolean canSense() {
-        return hasEnoughPower(getEnergyCost());
-    }
-
-    @Override
-    public boolean checkCount(int found) {
-        return found >= senseAmount; //Tier 2 is more complex
+        int cost = getEnergyCost();
+        return extractEnergy(cost, false) >= cost; //Really extract because if we pass this we'll be scanning!
     }
 
     public List<Entity> findEntities(AABB aabb) {

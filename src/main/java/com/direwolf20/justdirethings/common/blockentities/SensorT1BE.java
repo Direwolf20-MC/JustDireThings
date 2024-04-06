@@ -39,7 +39,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     public boolean strongSignal = false;
     public Map<Integer, Map<Property<?>, Comparable<?>>> blockStateProperties = new HashMap<>();
     public final Map<BlockState, Boolean> blockStateFilterCache = new Object2BooleanOpenHashMap<>();
-    public int senseAmount = 1;
+    public int senseAmount = 0;
+    public int equality = 0; //greaterthan, lessthan, equals
 
     public enum SENSE_TARGET {
         BLOCK,
@@ -161,10 +162,11 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         return this;
     }
 
-    public void setSensorSettings(int senseTarget, boolean strongSignal, int senseAmount) {
+    public void setSensorSettings(int senseTarget, boolean strongSignal, int senseAmount, int equality) {
         this.sense_target = SENSE_TARGET.values()[senseTarget];
         setRedstone(emitRedstone, strongSignal); //Gonna wanna update the neighbors if strongSignal changed
         this.senseAmount = senseAmount;
+        this.equality = equality;
         positions.clear(); //Clear any clicks we have queue'd up
         blockStateFilterCache.clear();
         markDirtyClient();
@@ -196,7 +198,13 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     public boolean checkCount(int found) {
-        return found >= senseAmount; //Tier 2 is more complex
+        if (equality == 0) // Greater Than
+            return found > senseAmount;
+        if (equality == 1) //Less Than
+            return found < senseAmount;
+        if (equality == 2) //Equals
+            return found == senseAmount;
+        return found > senseAmount; //Fallback
     }
 
     public void sense() {
@@ -316,7 +324,9 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
             return false;
         if (!blockStateProperties.isEmpty())
             return false;
-        if (senseAmount != 1)
+        if (senseAmount != 0)
+            return false;
+        if (equality != 0)
             return false;
         return true;
     }
@@ -328,6 +338,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         tag.putBoolean("strongSignal", strongSignal);
         tag.put("blockStateProps", saveBlockStateProperties());
         tag.putInt("senseAmount", senseAmount);
+        tag.putInt("equality", equality);
     }
 
     @Override
@@ -335,6 +346,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         this.sense_target = SENSE_TARGET.values()[tag.getInt("senseTarget")];
         this.strongSignal = tag.getBoolean("strongSignal");
         this.senseAmount = tag.getInt("senseAmount");
+        this.equality = tag.getInt("equality");
         super.load(tag);
         loadBlockStateProperties(tag.getCompound("blockStateProps")); //Do this after the filter data comes in, so we know the itemstack in the filter
     }

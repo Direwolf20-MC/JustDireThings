@@ -86,7 +86,7 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.SERVER.noArg().send(new SensorPayload(senseTarget, strongSignal, 1));
+        PacketDistributor.SERVER.noArg().send(new SensorPayload(senseTarget, strongSignal, 0, 0));
     }
 
     public Comparable<?> getValue(Property<?> property) {

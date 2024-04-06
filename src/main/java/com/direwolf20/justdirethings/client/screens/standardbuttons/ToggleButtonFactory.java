@@ -184,4 +184,15 @@ public class ToggleButtonFactory {
     public static ToggleButton STRONGWEAKREDSTONEBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, STRONG_WEAK_REDSTONE_TEXTURES, startingValue, onPress);
     }
+
+    /** Equality **/
+    private static final List<TextureLocalization> EQUALITY_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/greaterthan.png"), Component.translatable("justdirethings.screen.greaterthan")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/lessthan.png"), Component.translatable("justdirethings.screen.lessthan")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/equals.png"), Component.translatable("justdirethings.screen.equals"))
+    );
+
+    public static ToggleButton EQUALSBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, EQUALITY_TEXTURES, startingValue, onPress);
+    }
 }

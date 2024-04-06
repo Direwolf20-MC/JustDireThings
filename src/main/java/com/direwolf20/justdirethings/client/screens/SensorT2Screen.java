@@ -9,12 +9,15 @@ import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.SensorT1BE;
 import com.direwolf20.justdirethings.common.blockentities.SensorT2BE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.containers.SensorT2Container;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import com.direwolf20.justdirethings.common.network.data.BlockStateFilterPayload;
 import com.direwolf20.justdirethings.common.network.data.SensorPayload;
+import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -23,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,14 +40,18 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
     public Map<Integer, Map<Property<?>, Comparable<?>>> blockStateProperties = new HashMap<>();
     public Map<Integer, ItemStack> itemStackCache = new HashMap<>();
     public int senseAmount;
+    public int equality;
+    public SensorT2BE sensorT2BE;
 
     public SensorT2Screen(SensorT2Container container, Inventory inv, Component name) {
         super(container, inv, name);
         if (baseMachineBE instanceof SensorT2BE sensor) {
+            this.sensorT2BE = sensor;
             senseTarget = sensor.sense_target.ordinal();
             strongSignal = sensor.strongSignal;
             blockStateProperties = sensor.blockStateProperties;
             this.senseAmount = sensor.senseAmount;
+            this.equality = sensor.equality;
             populateItemStackCache();
         }
     }
@@ -71,8 +79,14 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
             saveSettings();
         }));
 
-        addRenderableWidget(new NumberButton(getGuiLeft() + 122, topSectionTop + 64, 24, 12, senseAmount, 1, 100, Component.translatable("justdirethings.screen.senseamount"), b -> {
+        addRenderableWidget(new NumberButton(getGuiLeft() + 122, topSectionTop + 64, 24, 12, senseAmount, 0, 100, Component.translatable("justdirethings.screen.senseamount"), b -> {
             senseAmount = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
+            saveSettings();
+        }));
+
+        addRenderableWidget(ToggleButtonFactory.EQUALSBUTTON(getGuiLeft() + 104, topSectionTop + 62, equality, b -> {
+            ((ToggleButton) b).nextTexturePosition();
+            equality = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
 
@@ -95,7 +109,7 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.SERVER.noArg().send(new SensorPayload(senseTarget, strongSignal, senseAmount));
+        PacketDistributor.SERVER.noArg().send(new SensorPayload(senseTarget, strongSignal, senseAmount, equality));
     }
 
     public Comparable<?> getValue(Property<?> property) {
@@ -165,6 +179,24 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
         stateItemStack = container.filterHandler.getStackInSlot(blockStateSlot);
         scrollPanel.setStateStack(stateItemStack);
         scrollPanel.refreshList();
+    }
+
+    @Override
+    public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
+            if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
+                if (hasShiftDown())
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.energy", MagicHelpers.formatted(this.container.getEnergy()), MagicHelpers.formatted(poweredMachineBE.getMaxEnergy())),
+                            Component.translatable("justdirethings.screen.energycost", MagicHelpers.withSuffix(sensorT2BE.getEnergyCost()))
+                    )), pX, pY);
+                else
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(this.container.getEnergy()), MagicHelpers.withSuffix(poweredMachineBE.getMaxEnergy())),
+                            Component.translatable("justdirethings.screen.energycost", MagicHelpers.withSuffix(sensorT2BE.getEnergyCost()))
+                    )), pX, pY);
+            }
+        }
     }
 
     @Override

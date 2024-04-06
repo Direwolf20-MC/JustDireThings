@@ -126,6 +126,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
+        add("justdirethings.screen.energycost", "Energy Cost: %s");
         add("justdirethings.screen.no_fuel", "Fuel source empty");
         add("justdirethings.screen.burn_time", "Burn time left: %ss");
         add("justdirethings.screen.ignored", "Ignored");
@@ -162,6 +163,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.redstone-weak", "Weak Signal");
         add("justdirethings.screen.redstone-strong", "Strong Signal");
         add("justdirethings.screen.senseamount", "Sense Amount");
+        add("justdirethings.screen.greaterthan", "Greater Than");
+        add("justdirethings.screen.lessthan", "Less Than");
+        add("justdirethings.screen.equals", "Equals");
 
 
         //Buttons

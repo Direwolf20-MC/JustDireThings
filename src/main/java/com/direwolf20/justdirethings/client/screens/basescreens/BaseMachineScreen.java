@@ -230,9 +230,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         }
     }
 
-    @Override
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
-        super.renderTooltip(pGuiGraphics, pX, pY);
+    public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
             if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
                 if (hasShiftDown())
@@ -245,6 +243,12 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
                     )), pX, pY);
             }
         }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        super.renderTooltip(pGuiGraphics, pX, pY);
+        powerBarTooltip(pGuiGraphics, pX, pY);
     }
 
     @Override
