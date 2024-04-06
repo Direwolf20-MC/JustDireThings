@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-03T12:11:26.5034057	Recipes
+// 1.20.4	2024-04-05T22:06:01.3706864	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 2e741e987f248c3c04079fb6a6b0bf4f7bbc0459 data/justdirethings/advancements/recipes/building_blocks/eclipsealloy_ingot_9x9.json
@@ -59,6 +59,8 @@ b1efeb6a5dbcc25e2699bfcffdc9e7f4b28e95f6 data/justdirethings/advancements/recipe
 2e7f18748d1dfb5082ff77aa180c979e16a032e5 data/justdirethings/advancements/recipes/misc/raw_ferricore_ore-goospread.json
 0b1a305b451742be9689e58dec48720a3e3f392d data/justdirethings/advancements/recipes/misc/sensort1.json
 9e29e3c749b749f8afc14c971546cb54090985d1 data/justdirethings/advancements/recipes/misc/sensort1_nbtclear.json
+72a20cc141a424606a0633acd9663433b3ff5fa1 data/justdirethings/advancements/recipes/misc/sensort2.json
+e961ce26aeb80e34341b2c29c45ebc08821d8ee5 data/justdirethings/advancements/recipes/misc/sensort2_nbtclear.json
 e351d674ffb58c5186f85512476905228d5d22a7 data/justdirethings/recipes/blazegold_axe.json
 65c9338e15965cd0721ba91f51d216bbad04bbdf data/justdirethings/recipes/blazegold_block_9x9.json
 6e380e9cced247a6974ea6e61573fb58a09c817f data/justdirethings/recipes/blazegold_hoe.json
@@ -119,3 +121,5 @@ e3effee87b63e519caadd8334e4267e33b2b3c62 data/justdirethings/recipes/raw_eclipse
 c50f9c62a4e5f46acebdf1fc064031c61004f6f1 data/justdirethings/recipes/raw_ferricore_ore-goospread.json
 df464567f1a564aa3e840f3139217601b7ecd277 data/justdirethings/recipes/sensort1.json
 d34fbf0079cee91fe6f354fde2beef8858a41685 data/justdirethings/recipes/sensort1_nbtclear.json
+6a1b90562af6d74f730c14e51a0020edcf52c688 data/justdirethings/recipes/sensort2.json
+901769c6f249f99683d7fa92f93e8491d7f33ebb data/justdirethings/recipes/sensort2_nbtclear.json

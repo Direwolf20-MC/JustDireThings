@@ -7,18 +7,20 @@ import net.minecraft.resources.ResourceLocation;
 
 public record SensorPayload(
         int senseTarget,
-        boolean strongSignal
+        boolean strongSignal,
+        int senseCount
 ) implements CustomPacketPayload {
     public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "sensor_packet");
 
     public SensorPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt(), buffer.readBoolean());
+        this(buffer.readInt(), buffer.readBoolean(), buffer.readInt());
     }
 
     @Override
     public void write(FriendlyByteBuf buffer) {
         buffer.writeInt(senseTarget);
         buffer.writeBoolean(strongSignal);
+        buffer.writeInt(senseCount);
     }
 
     @Override

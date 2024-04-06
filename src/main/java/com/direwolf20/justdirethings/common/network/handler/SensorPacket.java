@@ -25,7 +25,7 @@ public class SensorPacket {
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof SensorT1BE sensor) {
-                sensor.setSensorSettings(payload.senseTarget(), payload.strongSignal());
+                sensor.setSensorSettings(payload.senseTarget(), payload.strongSignal(), payload.senseCount());
             }
         });
     }

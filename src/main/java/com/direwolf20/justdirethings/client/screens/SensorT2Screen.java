@@ -4,10 +4,12 @@ import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScree
 import com.direwolf20.justdirethings.client.screens.basescreens.SensorScreenInterface;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.BlockStateScrollList;
+import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.SensorT1BE;
+import com.direwolf20.justdirethings.common.blockentities.SensorT2BE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
-import com.direwolf20.justdirethings.common.containers.SensorT1Container;
+import com.direwolf20.justdirethings.common.containers.SensorT2Container;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import com.direwolf20.justdirethings.common.network.data.BlockStateFilterPayload;
 import com.direwolf20.justdirethings.common.network.data.SensorPayload;
@@ -24,7 +26,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> implements SensorScreenInterface {
+public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> implements SensorScreenInterface {
     public int senseTarget;
     public boolean strongSignal;
     public boolean showBlockStates;
@@ -33,20 +35,22 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
     public ItemStack stateItemStack = ItemStack.EMPTY;
     public Map<Integer, Map<Property<?>, Comparable<?>>> blockStateProperties = new HashMap<>();
     public Map<Integer, ItemStack> itemStackCache = new HashMap<>();
+    public int senseAmount;
 
-    public SensorT1Screen(SensorT1Container container, Inventory inv, Component name) {
+    public SensorT2Screen(SensorT2Container container, Inventory inv, Component name) {
         super(container, inv, name);
-        if (baseMachineBE instanceof SensorT1BE sensor) {
+        if (baseMachineBE instanceof SensorT2BE sensor) {
             senseTarget = sensor.sense_target.ordinal();
             strongSignal = sensor.strongSignal;
             blockStateProperties = sensor.blockStateProperties;
+            this.senseAmount = sensor.senseAmount;
             populateItemStackCache();
         }
     }
 
     @Override
     public void addFilterButtons() {
-        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 38, topSectionTop + 38, filterData.allowlist, b -> {
+        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, topSectionTop + 62, filterData.allowlist, b -> {
             filterData.allowlist = !filterData.allowlist;
             ((ToggleButton) b).toggleActive();
             saveSettings();
@@ -56,14 +60,19 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.SENSORTARGETBUTTON(getGuiLeft() + 56, topSectionTop + 38, senseTarget, b -> {
+        addRenderableWidget(ToggleButtonFactory.SENSORTARGETBUTTON(getGuiLeft() + 26, topSectionTop + 62, senseTarget, b -> {
             ((ToggleButton) b).nextTexturePosition();
             senseTarget = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.STRONGWEAKREDSTONEBUTTON(getGuiLeft() + 20, topSectionTop + 38, strongSignal ? 1 : 0, b -> {
+        addRenderableWidget(ToggleButtonFactory.STRONGWEAKREDSTONEBUTTON(getGuiLeft() + 44, topSectionTop + 62, strongSignal ? 1 : 0, b -> {
             ((ToggleButton) b).nextTexturePosition();
             strongSignal = ((ToggleButton) b).getTexturePosition() == 1;
+            saveSettings();
+        }));
+
+        addRenderableWidget(new NumberButton(getGuiLeft() + 122, topSectionTop + 64, 24, 12, senseAmount, 1, 100, Component.translatable("justdirethings.screen.senseamount"), b -> {
+            senseAmount = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
             saveSettings();
         }));
 
@@ -72,7 +81,7 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
 
     @Override
     public void setTopSection() {
-        extraWidth = 0;
+        extraWidth = 60;
         extraHeight = 0;
     }
 
@@ -86,7 +95,7 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.SERVER.noArg().send(new SensorPayload(senseTarget, strongSignal, 1));
+        PacketDistributor.SERVER.noArg().send(new SensorPayload(senseTarget, strongSignal, senseAmount));
     }
 
     public Comparable<?> getValue(Property<?> property) {

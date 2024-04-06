@@ -39,6 +39,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     public boolean strongSignal = false;
     public Map<Integer, Map<Property<?>, Comparable<?>>> blockStateProperties = new HashMap<>();
     public final Map<BlockState, Boolean> blockStateFilterCache = new Object2BooleanOpenHashMap<>();
+    public int senseAmount = 1;
 
     public enum SENSE_TARGET {
         BLOCK,
@@ -63,6 +64,10 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         ANYSIZE_FILTER_SLOTS = 1;
         if (pBlockState.getBlock() instanceof SensorT1) //Only do this for the Tier 1, as its the only one with a facing....
             FACING = getBlockState().getValue(BlockStateProperties.FACING);
+    }
+
+    public SensorT1BE(BlockPos pPos, BlockState pBlockState) {
+        this(Registration.SensorT1BE.get(), pPos, pBlockState);
     }
 
     public void addBlockStateProperty(int slot, Map<Property<?>, Comparable<?>> properties) {
@@ -141,10 +146,6 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         });
     }
 
-    public SensorT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.SensorT1BE.get(), pPos, pBlockState);
-    }
-
     @Override
     public FilterBasicHandler getFilterHandler() {
         return getData(Registration.HANDLER_BASIC_FILTER_ANYSIZE);
@@ -160,9 +161,10 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         return this;
     }
 
-    public void setSensorSettings(int senseTarget, boolean strongSignal) {
+    public void setSensorSettings(int senseTarget, boolean strongSignal, int senseAmount) {
         this.sense_target = SENSE_TARGET.values()[senseTarget];
         setRedstone(emitRedstone, strongSignal); //Gonna wanna update the neighbors if strongSignal changed
+        this.senseAmount = senseAmount;
         positions.clear(); //Clear any clicks we have queue'd up
         blockStateFilterCache.clear();
         markDirtyClient();
@@ -182,10 +184,6 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         return true;
     }
 
-    public boolean clearTrackerIfNeeded() {
-        return false;
-    }
-
     public void setRedstone(boolean emit, boolean strong) {
         if (emit != emitRedstone || strong != strongSignal) {
             emitRedstone = emit;
@@ -197,11 +195,11 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         }
     }
 
+    public boolean checkCount(int found) {
+        return found >= senseAmount; //Tier 2 is more complex
+    }
+
     public void sense() {
-        if (clearTrackerIfNeeded()) {
-            positions.clear();
-            return;
-        }
         if (!canRun()) return;
         if (!canSense()) return;
         if ((sense_target.equals(SENSE_TARGET.BLOCK) || sense_target.equals(SENSE_TARGET.AIR))) {
@@ -209,9 +207,14 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
                 positions = findPositions();
             if (positions.isEmpty())
                 return;
-            BlockPos blockPos = positions.remove(0);
-            setRedstone(senseBlock(blockPos), strongSignal);
-
+            Iterator<BlockPos> iterator = positions.iterator();
+            int foundMatchingBlocks = 0;
+            while (iterator.hasNext()) {
+                if (senseBlock(iterator.next()))
+                    foundMatchingBlocks++;
+                iterator.remove();
+            }
+            setRedstone(checkCount(foundMatchingBlocks), strongSignal);
         } else {
             List<Entity> entityList = findEntities(getAABB());
             setRedstone(senseEntity(entityList), strongSignal);
@@ -251,10 +254,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     public boolean senseEntity(List<Entity> entityList) {
-        if (entityList.isEmpty()) //More complex in tier 2?
-            return false;
-
-        return true;
+        int entityAmount = entityList.size();
+        return checkCount(entityAmount);
     }
 
     public boolean senseBlock(BlockPos blockPos) {
@@ -286,21 +287,6 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
                     returnValue = false; // Mismatch found in denylist mode, set return to false and exit
                     break outerLoop;
                 }
-                /*if (comparable.equals(prop.getValue())) {
-                    if (allowList) {
-                        returnValue = true;
-                    } else {
-                        returnValue = false;
-                        break outerLoop;
-                    }
-                } else {
-                    if (!allowList) {
-                        returnValue = true;
-                    } else {
-                        returnValue = false;
-                        break outerLoop;
-                    }
-                }*/
             }
         }
 
@@ -330,6 +316,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
             return false;
         if (!blockStateProperties.isEmpty())
             return false;
+        if (senseAmount != 1)
+            return false;
         return true;
     }
 
@@ -339,12 +327,14 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         tag.putInt("senseTarget", sense_target.ordinal());
         tag.putBoolean("strongSignal", strongSignal);
         tag.put("blockStateProps", saveBlockStateProperties());
+        tag.putInt("senseAmount", senseAmount);
     }
 
     @Override
     public void load(CompoundTag tag) {
         this.sense_target = SENSE_TARGET.values()[tag.getInt("senseTarget")];
         this.strongSignal = tag.getBoolean("strongSignal");
+        this.senseAmount = tag.getInt("senseAmount");
         super.load(tag);
         loadBlockStateProperties(tag.getCompound("blockStateProps")); //Do this after the filter data comes in, so we know the itemstack in the filter
     }

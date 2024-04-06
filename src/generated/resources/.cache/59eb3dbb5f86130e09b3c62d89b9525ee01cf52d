@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-03T12:11:26.5029049	Loot Tables
+// 1.20.4	2024-04-05T22:06:01.3701863	Loot Tables
 16a0ab61513717ab1cb8c1df9718722a643d9728 data/justdirethings/loot_tables/blocks/blazegold_block.json
 b2953e2dcd4960e7f275bb42e4ad626219213fe1 data/justdirethings/loot_tables/blocks/blockbreakert1.json
 bb65fdba3c1b14526a629aacb462661b5853008b data/justdirethings/loot_tables/blocks/blockbreakert2.json
@@ -24,3 +24,4 @@ ef34320ffe3a06c2453936f1b1e64b1d0a15236a data/justdirethings/loot_tables/blocks/
 e6e31b3bfee4a6caa533f61014fd5dae5fc5938e data/justdirethings/loot_tables/blocks/raw_eclipsealloy_ore.json
 9a3a9b5226f317f041d8b874ca09fd6b8925b2ef data/justdirethings/loot_tables/blocks/raw_ferricore_ore.json
 3a3a3d719e9882ab9e60546e7127c411939186ee data/justdirethings/loot_tables/blocks/sensort1.json
+5bf2a1543e7b0f4e1ea79595445be65298b21af7 data/justdirethings/loot_tables/blocks/sensort2.json

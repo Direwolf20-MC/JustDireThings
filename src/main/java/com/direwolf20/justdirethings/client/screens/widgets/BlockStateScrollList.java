@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.client.screens.widgets;
 
-import com.direwolf20.justdirethings.client.screens.SensorT1Screen;
+import com.direwolf20.justdirethings.client.screens.basescreens.SensorScreenInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,9 +26,9 @@ public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollLi
 
     private final int listWidth;
     private ItemStack stateStack = ItemStack.EMPTY;
-    private SensorT1Screen parent;
+    private SensorScreenInterface parent;
 
-    public BlockStateScrollList(SensorT1Screen parent, int left, int listWidth, int top, int bottom) {
+    public BlockStateScrollList(SensorScreenInterface parent, int left, int listWidth, int top, int bottom) {
         super(Minecraft.getInstance(), listWidth, bottom - top, top, parent.getFontRenderer().lineHeight * 2 + 8);
         this.parent = parent;
         this.listWidth = listWidth;
@@ -85,14 +85,14 @@ public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollLi
 
     public class BlockStateEntry extends ObjectSelectionList.Entry<BlockStateEntry> {
         private final Property<?> property;
-        private final SensorT1Screen parent;
+        private final SensorScreenInterface parent;
         private Comparable<?> currentValue;
         private final List<Comparable<?>> possibleValues;
         private final int anyIndex;
         private boolean isAny;
         private Map<Property<?>, Comparable<?>> assignedValues = new HashMap<>();
 
-        BlockStateEntry(Property<?> property, Comparable<?> currentValue, Comparable<?> defaultValue, SensorT1Screen parent, List<Comparable<?>> possibleValues, boolean isAny) {
+        BlockStateEntry(Property<?> property, Comparable<?> currentValue, Comparable<?> defaultValue, SensorScreenInterface parent, List<Comparable<?>> possibleValues, boolean isAny) {
             this.property = property;
             this.currentValue = currentValue;
             this.anyIndex = possibleValues.indexOf(defaultValue);

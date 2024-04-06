@@ -33,6 +33,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.ClickerT1.get(), "Simple Clicker");
         add(Registration.ClickerT2.get(), "Advanced Clicker");
         add(Registration.SensorT1.get(), "Simple Sensor");
+        add(Registration.SensorT2.get(), "Advanced Sensor");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -160,6 +161,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.showfakeplayer", "Show Fake Player");
         add("justdirethings.screen.redstone-weak", "Weak Signal");
         add("justdirethings.screen.redstone-strong", "Strong Signal");
+        add("justdirethings.screen.senseamount", "Sense Amount");
 
 
         //Buttons
