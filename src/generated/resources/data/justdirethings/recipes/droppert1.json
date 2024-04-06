@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "d": {
+      "item": "minecraft:redstone"
+    },
+    "f": {
+      "item": "justdirethings:ferricore_ingot"
+    },
+    "l": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "o": {
+      "item": "minecraft:dropper"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "fdf",
+    "lol",
+    "frf"
+  ],
+  "result": {
+    "item": "justdirethings:droppert1"
+  }
+}

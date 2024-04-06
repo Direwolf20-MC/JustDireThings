@@ -72,7 +72,8 @@ public class JustDireThings {
                 Registration.BlockPlacerT1.get(),
                 Registration.BlockPlacerT2.get(),
                 Registration.ClickerT1.get(),
-                Registration.ClickerT2.get()
+                Registration.ClickerT2.get(),
+                Registration.DropperT1.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {

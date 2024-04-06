@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "justdirethings:block/droppert1",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "justdirethings:block/droppert1",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "justdirethings:block/droppert1",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "justdirethings:block/droppert1",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "justdirethings:block/droppert1"
+    },
+    "facing=west": {
+      "model": "justdirethings:block/droppert1",
+      "x": 90,
+      "y": 270
+    }
+  }
+}
