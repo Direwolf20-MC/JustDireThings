@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-05T22:06:01.3656824	Item Models: justdirethings
+// 1.20.4	2024-04-06T15:04:38.6004593	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -21,6 +21,8 @@ e63a7b70ea90788c435cde21e559b6d61776bc72 assets/justdirethings/models/item/celes
 7399544d2d8ff0d30eb2803cca96e0aceec8b8d5 assets/justdirethings/models/item/celestigem_block.json
 f26b5fe70333fda829b7e139fd1404a2116a70f3 assets/justdirethings/models/item/celestigem_hoe.json
 56c82ab5abb57f5f130c72059bd50cd378a1df2d assets/justdirethings/models/item/celestigem_hoe_active.json
+93f1f6cadb563b65a430c55623600a34a89e513e assets/justdirethings/models/item/celestigem_paxel.json
+dd58edd5b5d58719e49974bb1f500fcd0df4ee9e assets/justdirethings/models/item/celestigem_paxel_active.json
 103f40ef465172753963a9a7c3b57ffce1775f55 assets/justdirethings/models/item/celestigem_pickaxe.json
 12517e562676b3c21dbdd78d3f9a3e64b790ca43 assets/justdirethings/models/item/celestigem_pickaxe_active.json
 620fd02bfa560a90a98d8fd7c122f7a3a53433a9 assets/justdirethings/models/item/celestigem_shovel.json
@@ -35,6 +37,8 @@ c6cec87182f9b816f7cdfb07a09755855080ec62 assets/justdirethings/models/item/celes
 a3c55093b3e6d4b25d2c4918719102a8023c62fe assets/justdirethings/models/item/eclipsealloy_hoe.json
 693beac111ba45504f30c363c0945a17e2b83de1 assets/justdirethings/models/item/eclipsealloy_hoe_active.json
 87a11d44532f6fb57b7080b2bde1271cf8489fda assets/justdirethings/models/item/eclipsealloy_ingot.json
+29a52836d0d7886ee7d8ca4b44e21d836e005afd assets/justdirethings/models/item/eclipsealloy_paxel.json
+d81f6d4e1cd628eca03c9d156932d825096110b7 assets/justdirethings/models/item/eclipsealloy_paxel_active.json
 7e9261949570b44e78b2973ae1cc369e1aa12d57 assets/justdirethings/models/item/eclipsealloy_pickaxe.json
 dd083ccedb44e42ae02e383ec4602d0f0398d623 assets/justdirethings/models/item/eclipsealloy_pickaxe_active.json
 c4a19596d7b842647612b649aab31ae366343e7a assets/justdirethings/models/item/eclipsealloy_shovel.json

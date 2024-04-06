@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "a": {
+      "item": "justdirethings:eclipsealloy_axe"
+    },
+    "h": {
+      "item": "justdirethings:eclipsealloy_shovel"
+    },
+    "p": {
+      "item": "justdirethings:eclipsealloy_pickaxe"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "ahp",
+    " s ",
+    " s "
+  ],
+  "result": {
+    "item": "justdirethings:eclipsealloy_paxel"
+  }
+}

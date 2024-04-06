@@ -38,17 +38,23 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.FerricorePickaxe.get())
                 .add(Registration.BlazegoldPickaxe.get())
                 .add(Registration.CelestigemPickaxe.get())
-                .add(Registration.EclipseAlloyPickaxe.get());
+                .add(Registration.EclipseAlloyPickaxe.get())
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
         tag(ItemTags.SHOVELS)
                 .add(Registration.FerricoreShovel.get())
                 .add(Registration.BlazegoldShovel.get())
                 .add(Registration.CelestigemShovel.get())
-                .add(Registration.EclipseAlloyShovel.get());
+                .add(Registration.EclipseAlloyShovel.get())
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
         tag(ItemTags.AXES)
                 .add(Registration.FerricoreAxe.get())
                 .add(Registration.BlazegoldAxe.get())
                 .add(Registration.CelestigemAxe.get())
-                .add(Registration.EclipseAlloyAxe.get());
+                .add(Registration.EclipseAlloyAxe.get())
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
         tag(ItemTags.HOES)
                 .add(Registration.FerricoreHoe.get())
                 .add(Registration.BlazegoldHoe.get())

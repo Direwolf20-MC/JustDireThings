@@ -1,11 +1,11 @@
-// 1.20.4	2024-03-17T12:48:02.2754104	JustDireThings Item Tags
+// 1.20.4	2024-04-06T15:04:38.5989588	JustDireThings Item Tags
 c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/forge/tags/items/gems.json
 55719b9c6f0430ad38bf081d697aa5406cc27cfb data/forge/tags/items/ingots.json
 9171911801c408201b64d8d6b0f5818f194267e9 data/forge/tags/items/raw_materials.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/items/auto_smelt_deny.json
 efe9e0caf089100a228c46379f3aa70d7f602ddc data/justdirethings/tags/items/deny_fuel_canister.json
-bd31c563dda4bf302f3b5ceaf98fcd270a2c8926 data/minecraft/tags/items/axes.json
+1c8b03c523f967d55db17d349712035ad95cb1cd data/minecraft/tags/items/axes.json
 47fae366c69d039360fc6e9510a43c3eb9532569 data/minecraft/tags/items/hoes.json
-8c568f457ff341b601f86b57a5fa0992ef4fff98 data/minecraft/tags/items/pickaxes.json
-ffd48726634a2aab4038155e0b2ed84fd548d251 data/minecraft/tags/items/shovels.json
+37c1e694624af60a6cd59abf99cd9ad69c0d16ca data/minecraft/tags/items/pickaxes.json
+534723cf32e6166395352e63214b0d96600a5e05 data/minecraft/tags/items/shovels.json
 04fbe0f3bb768fcafe301a250653460b1e531741 data/minecraft/tags/items/swords.json
