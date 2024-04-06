@@ -32,9 +32,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends BaseScreen<T> {
-    private final ResourceLocation JUSTSLOT = new ResourceLocation(JustDireThings.MODID, "textures/gui/justslot.png");
-    private final ResourceLocation POWERBAR = new ResourceLocation(JustDireThings.MODID, "textures/gui/powerbar.png");
-    private final ResourceLocation SOCIALBACKGROUND = new ResourceLocation(JustDireThings.MODID, "background");
+    protected final ResourceLocation JUSTSLOT = new ResourceLocation(JustDireThings.MODID, "textures/gui/justslot.png");
+    protected final ResourceLocation POWERBAR = new ResourceLocation(JustDireThings.MODID, "textures/gui/powerbar.png");
+    protected final ResourceLocation SOCIALBACKGROUND = new ResourceLocation(JustDireThings.MODID, "background");
     protected BaseMachineContainer container;
     protected BaseMachineBE baseMachineBE;
     protected int xRadius = 3, yRadius = 3, zRadius = 3;
@@ -230,9 +230,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         }
     }
 
-    @Override
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
-        super.renderTooltip(pGuiGraphics, pX, pY);
+    public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
             if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
                 if (hasShiftDown())
@@ -245,6 +243,12 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
                     )), pX, pY);
             }
         }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        super.renderTooltip(pGuiGraphics, pX, pY);
+        powerBarTooltip(pGuiGraphics, pX, pY);
     }
 
     @Override

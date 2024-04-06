@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "justdirethings:block/clickert2_bottom",
+    "side": "justdirethings:block/clickert2_side",
+    "top": "justdirethings:block/clickert2_top"
+  }
+}

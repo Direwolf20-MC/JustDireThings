@@ -27,6 +27,7 @@ import java.util.UUID;
 
 public class BaseMachineBE extends BlockEntity {
     public int MACHINE_SLOTS = 0;
+    public int ANYSIZE_FILTER_SLOTS = 0;
     public static final UUID defaultFakePlayerUUID = UUID.fromString("4191a6f5-37fe-45d9-8ba3-4549be778e54");
     public static final GameProfile defaultFakePlayerProfile = new GameProfile(defaultFakePlayerUUID, "[JustDiresFakePlayer]");
     public UUID placedByUUID;

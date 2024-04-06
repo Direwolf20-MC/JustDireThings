@@ -45,6 +45,8 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         AIR,
         HOSTILE,
         PASSIVE,
+        ADULT,
+        CHILD,
         PLAYER,
         LIVING;
 
@@ -220,7 +222,11 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public boolean isValidEntity(Entity entity) {
         if (clickTarget.equals(CLICK_TARGET.HOSTILE) && !(entity instanceof Monster))
             return false;
-        if (clickTarget.equals(CLICK_TARGET.PASSIVE) && !(entity instanceof Animal))
+        if (((clickTarget.equals(CLICK_TARGET.PASSIVE)) || (clickTarget.equals(CLICK_TARGET.ADULT)) || (clickTarget.equals(CLICK_TARGET.CHILD))) && !(entity instanceof Animal))
+            return false;
+        if (clickTarget.equals(CLICK_TARGET.ADULT) && (entity instanceof Animal animal) && (animal.isBaby()))
+            return false;
+        if (clickTarget.equals(CLICK_TARGET.CHILD) && (entity instanceof Animal animal) && !(animal.isBaby()))
             return false;
         if (clickTarget.equals(CLICK_TARGET.PLAYER) && !(entity instanceof Player))
             return false;

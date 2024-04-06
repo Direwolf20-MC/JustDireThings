@@ -32,6 +32,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlockPlacerT2.get(), "Advanced Block Placer");
         add(Registration.ClickerT1.get(), "Simple Clicker");
         add(Registration.ClickerT2.get(), "Advanced Clicker");
+        add(Registration.SensorT1.get(), "Simple Sensor");
+        add(Registration.SensorT2.get(), "Advanced Sensor");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -124,6 +126,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
+        add("justdirethings.screen.energycost", "Energy Cost: %s");
         add("justdirethings.screen.no_fuel", "Fuel source empty");
         add("justdirethings.screen.burn_time", "Burn time left: %ss");
         add("justdirethings.screen.ignored", "Ignored");
@@ -150,10 +153,19 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.target-air", "Target Air");
         add("justdirethings.screen.target-hostile", "Target Hostile");
         add("justdirethings.screen.target-passive", "Target Passive");
+        add("justdirethings.screen.target-adult", "Target Adult");
+        add("justdirethings.screen.target-child", "Target Child");
         add("justdirethings.screen.target-player", "Target Player");
         add("justdirethings.screen.target-living", "Target All Living");
+        add("justdirethings.screen.target-item", "Target Items");
         add("justdirethings.screen.sneak-click", "Sneak Click");
         add("justdirethings.screen.showfakeplayer", "Show Fake Player");
+        add("justdirethings.screen.redstone-weak", "Weak Signal");
+        add("justdirethings.screen.redstone-strong", "Strong Signal");
+        add("justdirethings.screen.senseamount", "Sense Amount");
+        add("justdirethings.screen.greaterthan", "Greater Than");
+        add("justdirethings.screen.lessthan", "Less Than");
+        add("justdirethings.screen.equals", "Equals");
 
 
         //Buttons

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "d": {
+      "item": "minecraft:ender_eye"
+    },
+    "f": {
+      "item": "justdirethings:celestigem"
+    },
+    "o": {
+      "item": "justdirethings:sensort1"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "fdf",
+    "dod",
+    "frf"
+  ],
+  "result": {
+    "item": "justdirethings:sensort2"
+  }
+}

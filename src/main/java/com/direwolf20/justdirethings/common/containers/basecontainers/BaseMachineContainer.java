@@ -43,12 +43,17 @@ public abstract class BaseMachineContainer extends BaseContainer {
         if (blockEntity instanceof FilterableBE filterableBE) {
             filterHandler = filterableBE.getFilterHandler();
             FILTER_SLOTS = filterHandler.getSlots();
-            addFilterSlots(filterHandler, 0, 8, 54, FILTER_SLOTS, 18);
+            addFilterSlots();
         }
         if (blockEntity instanceof PoweredMachineBE poweredMachineBE) {
             data = poweredMachineBE.getContainerData();
             addDataSlots(data);
         }
+    }
+
+    //Override this if you want the slot layout to be different...
+    public void addFilterSlots() {
+        addFilterSlots(filterHandler, 0, 8, 54, FILTER_SLOTS, 18);
     }
 
     //Override this if you want the slot layout to be different...

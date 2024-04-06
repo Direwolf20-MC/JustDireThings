@@ -36,13 +36,38 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.EclipseAlloyBlock.get(), models().cubeAll(Registration.EclipseAlloyBlock_ITEM.getId().getPath(), blockTexture(Registration.EclipseAlloyBlock.get())));
         //simpleBlock(Registration.RawEclipseAlloyOre.get(), models().cubeAll(Registration.RawEclipseAlloyOre_ITEM.getId().getPath(), blockTexture(Registration.RawEclipseAlloyOre.get())).renderType("translucent"));
 
-        simpleBlock(Registration.BlockBreakerT2.get(), models().cubeAll(Registration.BlockBreakerT2_ITEM.getId().getPath(), blockTexture(Registration.BlockBreakerT2.get())));
-        simpleBlock(Registration.BlockPlacerT2.get(), models().cubeAll(Registration.BlockPlacerT2_ITEM.getId().getPath(), blockTexture(Registration.BlockPlacerT2.get())));
-        simpleBlock(Registration.ClickerT2.get(), models().cubeAll(Registration.ClickerT2_ITEM.getId().getPath(), blockTexture(Registration.ClickerT2.get())));
+
+        //simpleBlock(Registration.BlockPlacerT2.get(), models().cubeAll(Registration.BlockPlacerT2_ITEM.getId().getPath(), blockTexture(Registration.BlockPlacerT2.get())));
+        //simpleBlock(Registration.ClickerT2.get(), models().cubeAll(Registration.ClickerT2_ITEM.getId().getPath(), blockTexture(Registration.ClickerT2.get())));
+        //simpleBlock(Registration.SensorT2.get(), models().cubeAll(Registration.SensorT2_ITEM.getId().getPath(), blockTexture(Registration.SensorT2.get())));
 
         patternBlock();
         soilBlocks();
         sidedBlocks();
+        sidedNonRotating();
+    }
+
+    private void sidedNonRotating() {
+        simpleBlock(Registration.BlockBreakerT2.get(), models().cubeBottomTop(
+                Registration.BlockBreakerT2.getId().getPath(),
+                modLoc("block/" + Registration.BlockBreakerT2.getId().getPath() + "_side"),
+                modLoc("block/" + Registration.BlockBreakerT2.getId().getPath() + "_bottom"),
+                modLoc("block/" + Registration.BlockBreakerT2.getId().getPath() + "_top")));
+        simpleBlock(Registration.BlockPlacerT2.get(), models().cubeBottomTop(
+                Registration.BlockPlacerT2.getId().getPath(),
+                modLoc("block/" + Registration.BlockPlacerT2.getId().getPath() + "_side"),
+                modLoc("block/" + Registration.BlockPlacerT2.getId().getPath() + "_bottom"),
+                modLoc("block/" + Registration.BlockPlacerT2.getId().getPath() + "_top")));
+        simpleBlock(Registration.ClickerT2.get(), models().cubeBottomTop(
+                Registration.ClickerT2.getId().getPath(),
+                modLoc("block/" + Registration.ClickerT2.getId().getPath() + "_side"),
+                modLoc("block/" + Registration.ClickerT2.getId().getPath() + "_bottom"),
+                modLoc("block/" + Registration.ClickerT2.getId().getPath() + "_top")));
+        simpleBlock(Registration.SensorT2.get(), models().cubeBottomTop(
+                Registration.SensorT2.getId().getPath(),
+                modLoc("block/" + Registration.SensorT2.getId().getPath() + "_side"),
+                modLoc("block/" + Registration.SensorT2.getId().getPath() + "_bottom"),
+                modLoc("block/" + Registration.SensorT2.getId().getPath() + "_top")));
     }
 
     private void sidedBlocks() {
