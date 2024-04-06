@@ -75,6 +75,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.EclipseAlloyHoe.get(), "Eclipse Alloy Hoe");
         add(Registration.CelestigemPaxel.get(), "Celestigem Paxel");
         add(Registration.EclipseAlloyPaxel.get(), "Eclipse Alloy Paxel");
+        add(Registration.FerricoreWrench.get(), "Ferricore Wrench");
 
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");

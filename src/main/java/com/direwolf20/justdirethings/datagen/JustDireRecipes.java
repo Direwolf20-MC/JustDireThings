@@ -174,6 +174,14 @@ public class JustDireRecipes extends RecipeProvider {
                 .save(consumer);
 
         //Items
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreWrench.get())
+                .pattern(" i ")
+                .pattern(" ii")
+                .pattern("i  ")
+                .define('i', Registration.FerricoreIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Fuel_Canister.get())
                 .pattern(" i ")
                 .pattern("ici")
