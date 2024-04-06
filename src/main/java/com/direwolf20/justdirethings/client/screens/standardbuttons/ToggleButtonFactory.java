@@ -134,6 +134,8 @@ public class ToggleButtonFactory {
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-air.png"), Component.translatable("justdirethings.screen.target-air")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/mobscanner.png"), Component.translatable("justdirethings.screen.target-hostile")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob.png"), Component.translatable("justdirethings.screen.target-passive")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob-adult.png"), Component.translatable("justdirethings.screen.target-adult")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob-child.png"), Component.translatable("justdirethings.screen.target-child")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/player.png"), Component.translatable("justdirethings.screen.target-player")),
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/glowing.png"), Component.translatable("justdirethings.screen.target-living"))
     );
@@ -156,5 +158,43 @@ public class ToggleButtonFactory {
 
     public static GrayscaleButton SHOWFAKEPLAYERBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
         return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SHOWFAKEPLAYER_BUTTON, SHOWFAKEPLAYER_LOCALIZATION, startingValue, onPress);
+    }
+
+    /** Sensor Target Button **/
+    private static final List<TextureLocalization> SENSOR_TARGET_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-block.png"), Component.translatable("justdirethings.screen.target-block")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-air.png"), Component.translatable("justdirethings.screen.target-air")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/mobscanner.png"), Component.translatable("justdirethings.screen.target-hostile")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob.png"), Component.translatable("justdirethings.screen.target-passive")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob-adult.png"), Component.translatable("justdirethings.screen.target-adult")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob-child.png"), Component.translatable("justdirethings.screen.target-child")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/player.png"), Component.translatable("justdirethings.screen.target-player")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/glowing.png"), Component.translatable("justdirethings.screen.target-living")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/item.png"), Component.translatable("justdirethings.screen.target-item"))
+    );
+
+    public static ToggleButton SENSORTARGETBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SENSOR_TARGET_TEXTURES, startingValue, onPress);
+    }
+
+    /** Strong or Weak Redstone **/
+    private static final List<TextureLocalization> STRONG_WEAK_REDSTONE_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/redstonelow.png"), Component.translatable("justdirethings.screen.redstone-weak")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/redstonehigh.png"), Component.translatable("justdirethings.screen.redstone-strong"))
+    );
+
+    public static ToggleButton STRONGWEAKREDSTONEBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, STRONG_WEAK_REDSTONE_TEXTURES, startingValue, onPress);
+    }
+
+    /** Equality **/
+    private static final List<TextureLocalization> EQUALITY_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/greaterthan.png"), Component.translatable("justdirethings.screen.greaterthan")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/lessthan.png"), Component.translatable("justdirethings.screen.lessthan")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/equals.png"), Component.translatable("justdirethings.screen.equals"))
+    );
+
+    public static ToggleButton EQUALSBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, EQUALITY_TEXTURES, startingValue, onPress);
     }
 }

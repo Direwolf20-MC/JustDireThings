@@ -70,6 +70,8 @@ public class ClientSetup {
         event.register(Registration.BlockPlacerT2_Container.get(), BlockPlacerT2Screen::new);
         event.register(Registration.ClickerT1_Container.get(), ClickerT1Screen::new);
         event.register(Registration.ClickerT2_Container.get(), ClickerT2Screen::new);
+        event.register(Registration.SensorT1_Container.get(), SensorT1Screen::new);
+        event.register(Registration.SensorT2_Container.get(), SensorT2Screen::new);
     }
 
     @SubscribeEvent
@@ -83,5 +85,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.BlockBreakerT2BE.get(), BlockBreakerT2BER::new);
         event.registerBlockEntityRenderer(Registration.BlockPlacerT2BE.get(), BlockPlacerT2BER::new);
         event.registerBlockEntityRenderer(Registration.ClickerT2BE.get(), ClickerT2BER::new);
+        event.registerBlockEntityRenderer(Registration.SensorT2BE.get(), ClickerT2BER::new);
     }
 }
