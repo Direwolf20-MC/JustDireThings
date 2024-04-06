@@ -2,19 +2,22 @@ package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
+import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.DropperT1BE;
 import com.direwolf20.justdirethings.common.containers.DropperT1Container;
 import com.direwolf20.justdirethings.common.network.data.DirectionSettingPayload;
+import com.direwolf20.justdirethings.common.network.data.DropperSettingPayload;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
+    protected int dropCount;
     public DropperT1Screen(DropperT1Container container, Inventory inv, Component name) {
         super(container, inv, name);
         if (baseMachineBE instanceof DropperT1BE dropper) {
-
+            this.dropCount = dropper.dropCount;
         }
     }
 
@@ -25,6 +28,11 @@ public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
             ((ToggleButton) b).nextTexturePosition();
             direction = ((ToggleButton) b).getTexturePosition();
             PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction));
+        }));
+
+        addRenderableWidget(new NumberButton(getGuiLeft() + 50, topSectionTop + 41, 24, 12, dropCount, 1, 64, Component.translatable("justdirethings.screen.dropcount"), b -> {
+            dropCount = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
+            saveSettings();
         }));
     }
 
@@ -46,5 +54,6 @@ public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
     @Override
     public void saveSettings() {
         super.saveSettings();
+        PacketDistributor.SERVER.noArg().send(new DropperSettingPayload(dropCount));
     }
 }

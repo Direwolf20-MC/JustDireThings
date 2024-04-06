@@ -169,6 +169,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.greaterthan", "Greater Than");
         add("justdirethings.screen.lessthan", "Less Than");
         add("justdirethings.screen.equals", "Equals");
+        add("justdirethings.screen.dropcount", "Drop Amount");
 
 
         //Buttons

@@ -107,6 +107,7 @@
   "justdirethings.screen.direction-south": "South",
   "justdirethings.screen.direction-up": "Up",
   "justdirethings.screen.direction-west": "West",
+  "justdirethings.screen.dropcount": "Drop Amount",
   "justdirethings.screen.energy": "Energy: %s/%s FE",
   "justdirethings.screen.energycost": "Energy Cost: %s",
   "justdirethings.screen.equals": "Equals",

@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     protected Direction FACING = Direction.DOWN; //To avoid nulls
+    public int dropCount = 1;
 
     public DropperT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -30,6 +31,11 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
 
     public DropperT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.DropperT1BE.get(), pPos, pBlockState);
+    }
+
+    public void setDropperSettings(int dropCount) {
+        this.dropCount = dropCount;
+        markDirtyClient();
     }
 
     @Override
@@ -80,8 +86,7 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
         BlockPos dropPos = getDropPos();
         if (dropPos == null) return; //Happens if the position is invalid - like not air...
 
-        spawnItem(level, dropStack.split(1), 0.3, Direction.values()[this.direction], new Vec3(dropPos.getX() + 0.5, dropPos.getY() + 0.5, dropPos.getZ() + 0.5));
-
+        spawnItem(level, dropStack.split(dropCount), 0.3, Direction.values()[this.direction], new Vec3(dropPos.getX() + 0.5, dropPos.getY() + 0.5, dropPos.getZ() + 0.5));
     }
 
     public static void spawnItem(Level level, ItemStack stack, double speed, Direction direction, Vec3 position) {
@@ -115,16 +120,20 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public boolean isDefaultSettings() {
         if (!super.isDefaultSettings())
             return false;
+        if (dropCount != 1)
+            return false;
         return true;
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
+        tag.putInt("dropCount", dropCount);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        this.dropCount = tag.getInt("dropCount");
     }
 }
