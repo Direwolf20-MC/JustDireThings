@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
-import com.direwolf20.justdirethings.common.containers.slots.PocketGeneratorSlot;
+import com.direwolf20.justdirethings.common.containers.slots.FuelSlot;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,7 +39,7 @@ public class PocketGeneratorContainer extends BaseContainer {
 
     protected int addGeneratorSlots(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
-            addSlot(new PocketGeneratorSlot(handler, index, x, y));
+            addSlot(new FuelSlot(handler, index, x, y));
             x += dx;
             index++;
         }

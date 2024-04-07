@@ -28,6 +28,10 @@ public interface PoweredMachineBE {
         return getEnergyStorage().extractEnergy(power, true) >= power;
     }
 
+    default int insertEnergy(int power, boolean simulate) {
+        return getEnergyStorage().receiveEnergy(power, simulate);
+    }
+
     default int extractEnergy(int power, boolean simulate) {
         return getEnergyStorage().extractEnergy(power, simulate);
     }

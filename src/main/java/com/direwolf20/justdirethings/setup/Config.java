@@ -12,6 +12,12 @@ public class Config {
     public static final String CATEGORY_GENERAL = "general";
     public static ModConfigSpec.IntValue MINIMUM_MACHINE_TICK_SPEED;
 
+    public static final String CATEGORY_GENERATOR_T1 = "generator_t1";
+    public static ModConfigSpec.DoubleValue GENERATOR_T1_FE_PER_FUEL_TICK;
+    public static ModConfigSpec.IntValue GENERATOR_T1_BURN_SPEED_MULTIPLIER;
+    public static ModConfigSpec.IntValue GENERATOR_T1_MAX_FE;
+    public static ModConfigSpec.IntValue GENERATOR_T1_FE_PER_TICK;
+
     public static final String CATEGORY_FUEL_CANISTER = "fuel_canister";
     public static ModConfigSpec.IntValue FUEL_CANISTER_MINIMUM_TICKS_CONSUMED;
     public static ModConfigSpec.IntValue FUEL_CANISTER_MAXIMUM_FUEL;
@@ -48,6 +54,7 @@ public class Config {
 
     private static void registerCommonConfigs() {
         generalConfig();
+        generatorT1Config();
         fuelCanisterConfig();
         pocketGeneratorConfig();
 
@@ -63,6 +70,19 @@ public class Config {
         COMMON_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         MINIMUM_MACHINE_TICK_SPEED = COMMON_BUILDER.comment("The minimum tick speed machines can be set to. Defaults to 1, meaning every tick")
                 .defineInRange("minimum_machine_tick_speed", 1, 1, 100);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void generatorT1Config() {
+        COMMON_BUILDER.comment("Generator T1").push(CATEGORY_GENERATOR_T1);
+        GENERATOR_T1_FE_PER_FUEL_TICK = COMMON_BUILDER.comment("The amount of Forge Energy created per burn tick of fuel. Coal has 1600 burn ticks. Sticks have 100 burn ticks.")
+                .defineInRange("generator_t1_fe_per_fuel_tick", 15.0, 1, Integer.MAX_VALUE);
+        GENERATOR_T1_BURN_SPEED_MULTIPLIER = COMMON_BUILDER.comment("The multiplier for the burn speed, making the generator run faster. Coal is 1600 ticks to burn, if you set this to 10, it will burn in 160 ticks")
+                .defineInRange("generator_t1_burn_speed_multiplier", 3, 1, 1000);
+        GENERATOR_T1_MAX_FE = COMMON_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
+                .defineInRange("generator_t1_max_fe", 100000, 1, Integer.MAX_VALUE);
+        GENERATOR_T1_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator outputs")
+                .defineInRange("generator_t1_fe_per_tick", 1000, 1, Integer.MAX_VALUE);
         COMMON_BUILDER.pop();
     }
 
