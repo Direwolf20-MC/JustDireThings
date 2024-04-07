@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.blocks.DropperT1;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,10 +18,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     protected Direction FACING = Direction.DOWN; //To avoid nulls
     public int dropCount = 1;
+    public List<Integer> slotsToDropList = new ArrayList<>();
 
     public DropperT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -58,20 +63,24 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
         doDrop();
     }
 
-    public ItemStack getDropStack() {
+    public boolean clearTrackerIfNeeded() {
+        if (slotsToDropList.isEmpty())
+            return false;
+        if (!canDrop())
+            return true;
+        if (!isActiveRedstone() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
+            return true;
+        return false;
+    }
+
+    public void populateDropSlots() {
         for (int slot = 0; slot < getMachineHandler().getSlots(); slot++) {
             ItemStack itemStack = getMachineHandler().getStackInSlot(slot);
-            if (!itemStack.isEmpty()) return itemStack;
+            if (!itemStack.isEmpty()) {
+                slotsToDropList.add(slot);
+                return;
+            }
         }
-        return ItemStack.EMPTY;
-    }
-
-    public void setDropStack(ItemStack stack) {
-        getMachineHandler().setStackInSlot(0, stack);
-    }
-
-    public boolean isStackValid(ItemStack itemStack) {
-        return true;
     }
 
     public boolean canDrop() {
@@ -79,17 +88,28 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public void doDrop() {
-        if (!(isActiveRedstone() && canRun())) return;
+        if (clearTrackerIfNeeded()) {
+            slotsToDropList.clear();
+            return;
+        }
         if (!canDrop()) return;
-        ItemStack dropStack = getDropStack();
-        if (dropStack.isEmpty()) return;
-        BlockPos dropPos = getDropPos();
-        if (dropPos == null) return; //Happens if the position is invalid - like not air...
-
-        spawnItem(level, dropStack.split(dropCount), 0.3, Direction.values()[this.direction], new Vec3(dropPos.getX() + 0.5, dropPos.getY() + 0.5, dropPos.getZ() + 0.5));
+        if (isActiveRedstone() && canRun() && slotsToDropList.isEmpty())
+            populateDropSlots();
+        if (slotsToDropList.isEmpty())
+            return;
+        if (operationTicks == 0) { //Use this check, because we want to ensure we drop once every <Ticks>
+            ItemStack dropStack = getMachineHandler().getStackInSlot(slotsToDropList.remove(0));
+            if (dropStack.isEmpty()) { //If this occurs, something changed, so clear the remaining list of things to drop
+                slotsToDropList.clear();
+                return;
+            }
+            BlockPos dropPos = getDropPos();
+            if (dropPos == null) return; //Happens if the position is invalid - like not air...
+            spawnItem(level, dropStack.split(dropCount), 0.3, Direction.values()[this.direction], new Vec3(dropPos.getX() + 0.5, dropPos.getY() + 0.5, dropPos.getZ() + 0.5));
+        }
     }
 
-    public static void spawnItem(Level level, ItemStack stack, double speed, Direction direction, Vec3 position) {
+    public void spawnItem(Level level, ItemStack stack, double speed, Direction direction, Vec3 position) {
         double d0 = position.x();
         double d1 = position.y();
         double d2 = position.z();

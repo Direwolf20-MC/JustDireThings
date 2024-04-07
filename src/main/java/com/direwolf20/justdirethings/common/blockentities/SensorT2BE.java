@@ -57,16 +57,6 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
         return 2; // Todo Config?
     }
 
-    @Override
-    public void tickClient() {
-    }
-
-    @Override
-    public void tickServer() {
-        super.tickServer();
-        sense();
-    }
-
     public int getEnergyCost() {
         AABB aabb = getAABB(getBlockPos());
         int width = (int) Math.abs(Math.floor(aabb.maxX) - Math.floor(aabb.minX));

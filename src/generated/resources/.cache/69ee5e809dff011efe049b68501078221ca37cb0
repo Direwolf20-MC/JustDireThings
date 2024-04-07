@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-06T16:37:50.2831273	Item Models: justdirethings
+// 1.20.4	2024-04-06T22:22:33.1050599	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -32,6 +32,7 @@ c6cec87182f9b816f7cdfb07a09755855080ec62 assets/justdirethings/models/item/celes
 24e00f9c3ca952c03eef6cc245b611a3f4f126be assets/justdirethings/models/item/clickert1.json
 75ceb606c976ed61986e2d53cab03c62967a0092 assets/justdirethings/models/item/clickert2.json
 6e4f9ab9661918a2929f8590a81163cdcab44776 assets/justdirethings/models/item/droppert1.json
+7324ad4408c1cdc86ab42b9a861b2fbe398af95e assets/justdirethings/models/item/droppert2.json
 0f3bebdd73e3116714ecca62f020989d2fd3f840 assets/justdirethings/models/item/eclipsealloy_axe.json
 9d5ce9bbe89dca0a295e07308f954ad082be5a98 assets/justdirethings/models/item/eclipsealloy_axe_active.json
 6c0bfb078b7072cf9289d3ec44baefedd16f6858 assets/justdirethings/models/item/eclipsealloy_block.json

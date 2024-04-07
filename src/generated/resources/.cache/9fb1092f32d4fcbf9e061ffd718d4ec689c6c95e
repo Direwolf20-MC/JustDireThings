@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-06T16:37:50.2901333	Recipes
+// 1.20.4	2024-04-06T22:22:33.1105645	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 2e741e987f248c3c04079fb6a6b0bf4f7bbc0459 data/justdirethings/advancements/recipes/building_blocks/eclipsealloy_ingot_9x9.json
@@ -31,6 +31,8 @@ c07da97e87bf3032802defed966e040b16ae4f0b data/justdirethings/advancements/recipe
 22a495dcb466a89b897e52865fa8bb65bf405b68 data/justdirethings/advancements/recipes/misc/clickert2_nbtclear.json
 e4a7cc15bcf0dbd573a9263e0d6e1cd25699f970 data/justdirethings/advancements/recipes/misc/droppert1.json
 e46bb1ae97757c4648f1897d7efa2144f37a6660 data/justdirethings/advancements/recipes/misc/droppert1_nbtclear.json
+34a177028a16c86b62e6ac8a4e21a15611a896d9 data/justdirethings/advancements/recipes/misc/droppert2.json
+ea23ed242208d59e572a22272295109b12a073ab data/justdirethings/advancements/recipes/misc/droppert2_nbtclear.json
 22133e3c40a0f6c62e68275518a5cc9ac80eabde data/justdirethings/advancements/recipes/misc/eclipsealloy_axe.json
 cb73a45b3569f52a0c2cab0a169833c8449176f4 data/justdirethings/advancements/recipes/misc/eclipsealloy_block_9x9.json
 761eecdbccc53b324232ac0acf58c53e75730f89 data/justdirethings/advancements/recipes/misc/eclipsealloy_hoe.json
@@ -96,6 +98,8 @@ dcfe918e1e88402a42512ba5ab4d1e6e66085655 data/justdirethings/recipes/clickert2.j
 f332ce098b1aed3928bf2503b5f03dcb6b5ce0df data/justdirethings/recipes/clickert2_nbtclear.json
 6a5c580566822eee972f4f27f8062972be97570e data/justdirethings/recipes/droppert1.json
 7ac86f721929a93ff8f28ceb9d0a8ff02408d579 data/justdirethings/recipes/droppert1_nbtclear.json
+19c4165c9c96744f9aed85c8b662acda90a5e2b6 data/justdirethings/recipes/droppert2.json
+dc4a5f8c80e8ae2ab77926081250d5c15a72c89f data/justdirethings/recipes/droppert2_nbtclear.json
 c006c83e3a1357846d765d5b295300651cdcac01 data/justdirethings/recipes/eclipsealloy_axe.json
 49f75e941578a004f0af6c405fb0811c1d8b22a8 data/justdirethings/recipes/eclipsealloy_block_9x9.json
 569cdd01a6f82b6eab4eed95bed07f2a90a5087f data/justdirethings/recipes/eclipsealloy_hoe.json

@@ -84,7 +84,8 @@ public class JustDireThings {
                 Registration.BlockBreakerT2.get(),
                 Registration.BlockPlacerT2.get(),
                 Registration.ClickerT2.get(),
-                Registration.SensorT2.get()
+                Registration.SensorT2.get(),
+                Registration.DropperT2.get()
         );
     }
 }

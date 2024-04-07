@@ -35,6 +35,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.SensorT1.get());
         dropSelf(Registration.SensorT2.get());
         dropSelf(Registration.DropperT1.get());
+        dropSelf(Registration.DropperT2.get());
         dropOther(Registration.GooSoil_Tier1.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier2.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier3.get(), Items.DIRT);

@@ -68,6 +68,11 @@ public class JustDireBlockStates extends BlockStateProvider {
                 modLoc("block/" + Registration.SensorT2.getId().getPath() + "_side"),
                 modLoc("block/" + Registration.SensorT2.getId().getPath() + "_bottom"),
                 modLoc("block/" + Registration.SensorT2.getId().getPath() + "_top")));
+        simpleBlock(Registration.DropperT2.get(), models().cubeBottomTop(
+                Registration.DropperT2.getId().getPath(),
+                modLoc("block/" + Registration.DropperT2.getId().getPath() + "_side"),
+                modLoc("block/" + Registration.DropperT2.getId().getPath() + "_bottom"),
+                modLoc("block/" + Registration.DropperT2.getId().getPath() + "_top")));
     }
 
     private void sidedBlocks() {

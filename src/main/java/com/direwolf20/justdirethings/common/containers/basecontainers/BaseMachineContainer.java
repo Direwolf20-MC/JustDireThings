@@ -59,7 +59,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
     //Override this if you want the slot layout to be different...
     public void addMachineSlots() {
         machineHandler = baseMachineBE.getMachineHandler();
-        addSlotRange(machineHandler, 0, 80, 35, 1, 18);
+        addSlotRange(machineHandler, 0, 80, 35, MACHINE_SLOTS, 18);
     }
 
     public int getEnergy() {
