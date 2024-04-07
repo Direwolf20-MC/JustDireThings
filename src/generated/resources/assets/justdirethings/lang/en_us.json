@@ -113,6 +113,7 @@
   "justdirethings.screen.energy": "Energy: %s/%s FE",
   "justdirethings.screen.energycost": "Energy Cost: %s",
   "justdirethings.screen.equals": "Equals",
+  "justdirethings.screen.fepertick": "FE/T: %s",
   "justdirethings.screen.filter-block": "Filter: Block",
   "justdirethings.screen.filter-item": "Filter: Item",
   "justdirethings.screen.greaterthan": "Greater Than",

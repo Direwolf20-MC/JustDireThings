@@ -178,7 +178,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         return Config.POCKET_GENERATOR_FE_PER_TICK.get();
     }
 
-    public double getFePerFuelTick() {
+    public int getFePerFuelTick() {
         return Config.POCKET_GENERATOR_FE_PER_FUEL_TICK.get();
     }
 
