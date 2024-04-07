@@ -117,15 +117,18 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
     }
 
     public IEnergyStorage getHandler(Direction direction) {
-        BlockPos targetPos = getBlockPos().relative(direction);
-        if (energyHandlers.get(direction) == null)
-            energyHandlers.put(direction, BlockCapabilityCache.create(
+        var tempStorage = energyHandlers.get(direction);
+        if (tempStorage == null) {
+            BlockPos targetPos = getBlockPos().relative(direction);
+            tempStorage = BlockCapabilityCache.create(
                     Capabilities.EnergyStorage.BLOCK, // capability to cache
                     (ServerLevel) level, // level
                     targetPos, // target position
                     direction.getOpposite() // context (The side of the block we're trying to pull/push from?)
-            ));
-        return energyHandlers.get(direction).getCapability();
+            );
+            energyHandlers.put(direction, tempStorage);
+        }
+        return tempStorage.getCapability();
     }
 
     public void providePowerAdjacent() {
@@ -204,6 +207,19 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
 
     public int getBurnSpeedMultiplier() {
         return Config.GENERATOR_T1_BURN_SPEED_MULTIPLIER.get();
+    }
+
+    @Override
+    public boolean isDefaultSettings() {
+        if (!super.isDefaultSettings())
+            return false;
+        if (burnRemaining != 0)
+            return false;
+        if (maxBurn != 0)
+            return false;
+        if (feRemaining != 0)
+            return false;
+        return true;
     }
 
     @Override
