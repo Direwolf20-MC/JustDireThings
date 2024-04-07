@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-06T22:22:33.1105645	Recipes
+// 1.20.4	2024-04-07T14:03:23.85227	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 2e741e987f248c3c04079fb6a6b0bf4f7bbc0459 data/justdirethings/advancements/recipes/building_blocks/eclipsealloy_ingot_9x9.json
@@ -50,6 +50,8 @@ a25b22c982243bf2375c1e1afb6d259421d7cadd data/justdirethings/advancements/recipe
 cae57364bb04aa744075197a34a861f418649328 data/justdirethings/advancements/recipes/misc/ferricore_sword.json
 e1f26e85ea29f06fa99d712b2be6a0aeb334658d data/justdirethings/advancements/recipes/misc/ferricore_wrench.json
 e81d82034bec749e70aedd7481fee704f16d4449 data/justdirethings/advancements/recipes/misc/fuel_canister.json
+8fb2e4b1d04a6cd994dffd89ca741a3a45630008 data/justdirethings/advancements/recipes/misc/generatort1.json
+25522420eec7acbc9649463945bbc3c0a84ab9bc data/justdirethings/advancements/recipes/misc/generatort1_nbtclear.json
 40cce3bcf79345790efed77343905f6e29a3e0aa data/justdirethings/advancements/recipes/misc/gooblock_tier1.json
 29a442bf474e5acc9502eed2d6d31bfb0748df24 data/justdirethings/advancements/recipes/misc/gooblock_tier2.json
 a55bc88d5aeddd676589402dfcbecdd8aae1f6a7 data/justdirethings/advancements/recipes/misc/gooblock_tier3.json
@@ -119,6 +121,8 @@ f76f61ef06edd8372831620ce4168c11859cd25c data/justdirethings/recipes/ferricore_s
 826791f277ee19d42b4b2297b3c06b2e0fc277d2 data/justdirethings/recipes/ferricore_sword.json
 16578b5c146369b8dd7085e319b3f8c521b802b0 data/justdirethings/recipes/ferricore_wrench.json
 83c94cc5f212724ab33145a0d7d525bcdddb5111 data/justdirethings/recipes/fuel_canister.json
+930be886508fe8fc145f9f1b3b999db3a88cdd7b data/justdirethings/recipes/generatort1.json
+7d18fed94af42dc9eb3f6d0c9b3fadbb73c414f8 data/justdirethings/recipes/generatort1_nbtclear.json
 291d1d5894c21e8f05454c13674e98e249af83c1 data/justdirethings/recipes/gooblock_tier1.json
 e5917a0e540128bfbb34b7c27c9bbefcb791b043 data/justdirethings/recipes/gooblock_tier2.json
 bf1de03eb5942cb062164314552b2272f780b991 data/justdirethings/recipes/gooblock_tier3.json

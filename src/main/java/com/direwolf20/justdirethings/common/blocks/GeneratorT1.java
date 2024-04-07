@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.blocks;
 
-import com.direwolf20.justdirethings.common.blockentities.DropperT2BE;
+import com.direwolf20.justdirethings.common.blockentities.GeneratorT1BE;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
-import com.direwolf20.justdirethings.common.containers.DropperT2Container;
+import com.direwolf20.justdirethings.common.containers.GeneratorT1Container;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -17,8 +17,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
-public class DropperT2 extends BaseMachineBlock {
-    public DropperT2() {
+public class GeneratorT1 extends BaseMachineBlock {
+    public GeneratorT1() {
         super(Properties.of()
                 .sound(SoundType.METAL)
                 .strength(2.0f)
@@ -28,7 +28,7 @@ public class DropperT2 extends BaseMachineBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new DropperT2BE(pos, state);
+        return new GeneratorT1BE(pos, state);
     }
 
     @Override
@@ -37,11 +37,11 @@ public class DropperT2 extends BaseMachineBlock {
             return InteractionResult.SUCCESS;
 
         BlockEntity te = level.getBlockEntity(blockPos);
-        if (!(te instanceof DropperT2BE))
+        if (!(te instanceof GeneratorT1BE))
             return InteractionResult.FAIL;
 
         player.openMenu(new SimpleMenuProvider(
-                (windowId, playerInventory, playerEntity) -> new DropperT2Container(windowId, playerInventory, blockPos), Component.translatable("")), (buf -> {
+                (windowId, playerInventory, playerEntity) -> new GeneratorT1Container(windowId, playerInventory, blockPos), Component.translatable("")), (buf -> {
             buf.writeBlockPos(blockPos);
         }));
         return InteractionResult.SUCCESS;

@@ -36,6 +36,7 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.EclipseAlloyBlock.get(), models().cubeAll(Registration.EclipseAlloyBlock_ITEM.getId().getPath(), blockTexture(Registration.EclipseAlloyBlock.get())));
         //simpleBlock(Registration.RawEclipseAlloyOre.get(), models().cubeAll(Registration.RawEclipseAlloyOre_ITEM.getId().getPath(), blockTexture(Registration.RawEclipseAlloyOre.get())).renderType("translucent"));
 
+        simpleBlock(Registration.GeneratorT1.get(), models().cubeAll(Registration.GeneratorT1.getId().getPath(), blockTexture(Registration.GeneratorT1.get())));
 
         //simpleBlock(Registration.BlockPlacerT2.get(), models().cubeAll(Registration.BlockPlacerT2_ITEM.getId().getPath(), blockTexture(Registration.BlockPlacerT2.get())));
         //simpleBlock(Registration.ClickerT2.get(), models().cubeAll(Registration.ClickerT2_ITEM.getId().getPath(), blockTexture(Registration.ClickerT2.get())));

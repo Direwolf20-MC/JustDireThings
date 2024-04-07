@@ -1,7 +1,7 @@
-// 1.20.4	2024-04-06T22:22:33.1030584	JustDireThings Tags
+// 1.20.4	2024-04-07T14:03:23.8447635	JustDireThings Tags
 82c72c3a9660a4dcf836d04e2ee8acd9bdd5aefd data/forge/tags/blocks/ores.json
 2d8e1cc89c55f97e9aa87799af87ddd8a74b2e34 data/justdirethings/tags/blocks/lawnmowerable.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/blocks/noautoclick.json
 704d4386b02b3ad86131bd6cf1e36461baa4169f data/minecraft/tags/blocks/bamboo_plantable_on.json
-55ce4bcdd3512685bcf29ed4cdf0d1c5bf2eeafc data/minecraft/tags/blocks/mineable/pickaxe.json
+fa6507816e5c3f3523a0eeb30e78ba7567e4d5ef data/minecraft/tags/blocks/mineable/pickaxe.json
 8882a0a52d428036a957d24fb046777a8795e588 data/minecraft/tags/blocks/mineable/shovel.json

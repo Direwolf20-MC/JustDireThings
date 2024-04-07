@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "c": {
+      "item": "minecraft:coal"
+    },
+    "f": {
+      "item": "minecraft:blast_furnace"
+    },
+    "i": {
+      "item": "justdirethings:ferricore_ingot"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "iri",
+    "cfc",
+    "iri"
+  ],
+  "result": {
+    "item": "justdirethings:generatort1"
+  }
+}

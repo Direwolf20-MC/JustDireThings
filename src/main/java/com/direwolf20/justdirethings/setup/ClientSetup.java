@@ -71,6 +71,7 @@ public class ClientSetup {
         event.register(Registration.SensorT2_Container.get(), SensorT2Screen::new);
         event.register(Registration.DropperT1_Container.get(), DropperT1Screen::new);
         event.register(Registration.DropperT2_Container.get(), DropperT2Screen::new);
+        event.register(Registration.GeneratorT1_Container.get(), GeneratorT1Screen::new);
     }
 
     @SubscribeEvent
