@@ -274,6 +274,15 @@ public class Registration {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-PoweredMachine.");
                 }
             }).build());
+    public static final Supplier<AttachmentType<EnergyStorageNoReceive>> ENERGYSTORAGE_GENERATORS = ATTACHMENT_TYPES.register(
+            "energystorage_generators", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof PoweredMachineBE feMachineBE) {
+                    int capacity = feMachineBE.getMaxEnergy(); //Default
+                    return new EnergyStorageNoReceive(capacity);
+                } else {
+                    throw new IllegalStateException("Cannot attach energy handler item to a non-PoweredMachine.");
+                }
+            }).build());
     public static final Supplier<AttachmentType<EnergyStorageNoReceive>> ENERGYSTORAGENORECEIVE = ATTACHMENT_TYPES.register(
             "energystoragenoreceive", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof ItemStack itemStack) {

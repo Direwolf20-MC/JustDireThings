@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -88,7 +89,7 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(Registration.ENERGYSTORAGE_GENERATORS);
     }
 
     @Override
@@ -107,6 +108,14 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
         providePowerAdjacent();
     }
 
+    @Override
+    public int insertEnergy(int power, boolean simulate) {
+        MachineEnergyStorage energyStorage = getEnergyStorage();
+        if (energyStorage instanceof EnergyStorageNoReceive energyStorageNoReceive)
+            return energyStorageNoReceive.forceReceiveEnergy(power, simulate);
+        return 0;
+    }
+
     public IEnergyStorage getHandler(Direction direction) {
         BlockPos targetPos = getBlockPos().relative(direction);
         if (energyHandlers.get(direction) == null)
@@ -120,6 +129,7 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
     }
 
     public void providePowerAdjacent() {
+        if (getEnergyStorage().getEnergyStored() <= 0) return; //Don't bother if we're empty!
         for (Direction direction : Direction.values()) {
             IEnergyStorage iEnergyStorage = getHandler(direction);
             if (iEnergyStorage == null) continue;
