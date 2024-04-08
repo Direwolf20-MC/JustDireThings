@@ -14,4 +14,20 @@ public class EnergyTransmitterScreen extends BaseMachineScreen<EnergyTransmitter
     public void init() {
         super.init();
     }
+
+    @Override
+    public void addRedstoneButtons() {
+        super.addRedstoneButtons();
+    }
+
+    @Override
+    public void setTopSection() {
+        extraWidth = 60;
+        extraHeight = 0;
+    }
+
+    @Override
+    public void addTickSpeedButton() {
+        //No-Op
+    }
 }

@@ -1,11 +1,9 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
-import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
-import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
-import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineContainerData;
-import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,12 +22,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneControlledBE, PoweredMachineBE {
+public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneControlledBE, PoweredMachineBE, AreaAffectingBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     public final PoweredMachineContainerData poweredMachineData;
     private final Map<BlockPos, BlockCapabilityCache<IEnergyStorage, Direction>> energyHandlers = new HashMap<>();
     private List<BlockPos> blocksToCharge = new ArrayList<>();
     private List<BlockPos> transmittersToBalance = new ArrayList<>();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData();
 
     public EnergyTransmitterBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -39,6 +38,11 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
 
     public EnergyTransmitterBE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.EnergyTransmitterBE.get(), pPos, pBlockState);
+    }
+
+    @Override
+    public AreaAffectingData getAreaAffectingData() {
+        return areaAffectingData;
     }
 
     @Override
