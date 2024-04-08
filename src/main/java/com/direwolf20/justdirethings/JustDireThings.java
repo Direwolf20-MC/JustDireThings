@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.ModSetup;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.Direction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
@@ -74,7 +75,9 @@ public class JustDireThings {
                 Registration.ClickerT1.get(),
                 Registration.ClickerT2.get(),
                 Registration.DropperT1.get(),
-                Registration.DropperT2.get()
+                Registration.DropperT2.get(),
+                Registration.GeneratorT1.get(),
+                Registration.EnergyTransmitter.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -95,6 +98,14 @@ public class JustDireThings {
                     return null;
                 },
                 Registration.GeneratorT1.get()
+        );
+        event.registerBlock(Capabilities.EnergyStorage.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof PoweredMachineBE && side != null && side.equals(Direction.DOWN))
+                        return be.getData(Registration.ENERGYSTORAGE_MACHINES);
+                    return null;
+                },
+                Registration.EnergyTransmitter.get()
         );
     }
 }
