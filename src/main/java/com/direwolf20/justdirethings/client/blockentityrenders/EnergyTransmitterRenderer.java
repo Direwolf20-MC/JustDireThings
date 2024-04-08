@@ -2,18 +2,26 @@ package com.direwolf20.justdirethings.client.blockentityrenders;
 
 import com.direwolf20.justdirethings.client.blockentityrenders.baseber.AreaAffectingBER;
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
+import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.joml.Matrix4f;
 
 public class EnergyTransmitterRenderer extends AreaAffectingBER {
+    public static final ItemStack itemStack = new ItemStack(Registration.Celestigem.get());
     public EnergyTransmitterRenderer(BlockEntityRendererProvider.Context context) {
 
     }
@@ -21,10 +29,26 @@ public class EnergyTransmitterRenderer extends AreaAffectingBER {
     @Override
     public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
         super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
-        long gameTime = blockentity.getLevel().getGameTime();
-        Matrix4f matrix4f = matrixStackIn.last().pose();
+
         if (blockentity instanceof EnergyTransmitterBE energyTransmitterBE)
-            this.renderCube(energyTransmitterBE, matrix4f, bufferIn.getBuffer(this.renderType()), gameTime, partialTicks);
+            this.renderItemStack(energyTransmitterBE, matrixStackIn, bufferIn, combinedOverlayIn);
+    }
+
+    private void renderItemStack(EnergyTransmitterBE blockEntity, PoseStack poseStack, MultiBufferSource bufferIn, int combinedOverlayIn) {
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        Direction direction = blockEntity.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
+        long millis = System.currentTimeMillis();
+
+        poseStack.pushPose();
+        poseStack.translate(0.5f + (direction.getStepX() * 0.3f), 0.5f + (direction.getStepY() * 0.3f), 0.5f + (direction.getStepZ() * 0.3f));
+        poseStack.mulPose(Axis.XP.rotationDegrees(direction.getStepZ() * -90));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(direction.getStepX() * 90));
+        poseStack.mulPose(Axis.XP.rotationDegrees(direction.getStepY() == 1 ? 0 : 180));
+        float angle = ((millis / 15) % 360);
+        poseStack.mulPose(Axis.YP.rotationDegrees(angle));
+        poseStack.scale(.15f, .15f, .15f);
+        itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, LightTexture.FULL_BRIGHT, combinedOverlayIn, poseStack, bufferIn, Minecraft.getInstance().level, 0);
+        poseStack.popPose();
     }
 
     private void renderCube(EnergyTransmitterBE blockEntity, Matrix4f matrixStack, VertexConsumer vertexConsumer, long gameTime, float partialTicks) {
