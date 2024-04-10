@@ -97,7 +97,7 @@ public class Config {
         FUEL_CANISTER_MINIMUM_TICKS_CONSUMED = COMMON_BUILDER.comment("The amount of ticks 'consumed' per operation in the furnace. Lower is more efficient fuel use.")
                 .defineInRange("fuel_canister_minimum_ticks_consumed", 50, 1, Integer.MAX_VALUE);
         FUEL_CANISTER_MAXIMUM_FUEL = COMMON_BUILDER.comment("The maximum amount of fuel (in ticks) permitted in the fuel canister.")
-                .defineInRange("fuel_canister_maximum_fuel", 2000000, 100, Integer.MAX_VALUE);
+                .defineInRange("fuel_canister_maximum_fuel", 10000000, 100, Integer.MAX_VALUE);
         COMMON_BUILDER.pop();
     }
 

@@ -29,6 +29,9 @@ public class DataGenerators {
         generator.addProvider(event.includeServer(), blockTags);
         JustDireItemTags itemTags = new JustDireItemTags(packOutput, lookupProvider, blockTags, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), itemTags);
+        JustDireDataMaps dataMaps = new JustDireDataMaps(packOutput, lookupProvider);
+        generator.addProvider(event.includeServer(), dataMaps);
+
 
         generator.addProvider(event.includeClient(), new JustDireBlockStates(packOutput, event.getExistingFileHelper()));
         generator.addProvider(event.includeClient(), new JustDireItemModels(packOutput, event.getExistingFileHelper()));
