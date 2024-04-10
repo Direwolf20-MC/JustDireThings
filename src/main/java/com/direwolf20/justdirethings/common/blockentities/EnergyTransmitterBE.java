@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
+import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.blocks.EnergyTransmitter;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
@@ -17,10 +18,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -102,6 +107,26 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         }
     }
 
+    public void doParticles(BlockPos sourcePos, BlockPos targetPos) {
+        Direction sourceFacing = level.getBlockState(sourcePos).getValue(BlockStateProperties.FACING);
+        Vec3 sourceVec = new Vec3(sourcePos.getX() + 0.5f - (0.3 * sourceFacing.getStepX()), sourcePos.getY() + 0.5f - (0.3 * sourceFacing.getStepY()), sourcePos.getZ() + 0.5f - (0.3 * sourceFacing.getStepZ()));
+        BlockState targetState = level.getBlockState(targetPos);
+        Vec3 targetVec = new Vec3(0, 0, 0);
+        if (targetState.getBlock() instanceof EnergyTransmitter) {
+            Direction targetFacing = targetState.getValue(BlockStateProperties.FACING);
+            targetVec = new Vec3(targetPos.getX() + 0.5f - (0.3 * targetFacing.getStepX()), targetPos.getY() + 0.5f - (0.3 * targetFacing.getStepY()), targetPos.getZ() + 0.5f - (0.3 * targetFacing.getStepZ()));
+        } else {
+            VoxelShape voxelShape = targetState.getShape(level, targetPos); //Todo maybe use this?
+            targetVec = new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5);
+        }
+
+        ItemFlowParticleData data = new ItemFlowParticleData(new ItemStack(Items.YELLOW_CONCRETE), targetVec.x, targetVec.y, targetVec.z, 3);
+        double d0 = sourceVec.x();
+        double d1 = sourceVec.y();
+        double d2 = sourceVec.z();
+        ((ServerLevel) level).sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
+    }
+
     public void drainFromSlot() {
         if (getEnergyStorage().getEnergyStored() >= getMaxEnergy()) return; //Don't do anything if already full...
         ItemStack itemStack = getMachineHandler().getStackInSlot(0);
@@ -142,21 +167,32 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         for (BlockPos blockPos : blocksToCharge) {
             IEnergyStorage iEnergyStorage = getHandler(blockPos);
             if (iEnergyStorage == null) continue;
-            transmitPowerWithLoss(getEnergyStorage(), iEnergyStorage, fePerTick(), blockPos);
+            int sentAmt = transmitPowerWithLoss(getEnergyStorage(), iEnergyStorage, fePerTick(), blockPos);
+            if (sentAmt > 0)
+                doParticles(getBlockPos(), blockPos);
         }
         for (BlockPos blockPos : transmittersToBalance) {
             IEnergyStorage iEnergyStorage = getHandler(blockPos);
             if (iEnergyStorage == null) continue;
-            int targetAmount = ((this.getEnergyStored() + iEnergyStorage.getEnergyStored()) / 2);
-            int amtToSend = Math.min(fePerTick(), targetAmount - iEnergyStorage.getEnergyStored());
-            if (amtToSend == 0) continue;
-            if (amtToSend > 0) {
-                //System.out.println(getBlockPos() + " sending: " + amtToSend);
-                transmitPower(getEnergyStorage(), iEnergyStorage, amtToSend);
+            int myEnergy = getEnergyStored();
+            int targetEnergy = iEnergyStorage.getEnergyStored();
+            if (myEnergy == targetEnergy) continue;
+
+            int targetAmount = ((myEnergy + targetEnergy) / 2);
+            if (myEnergy > targetEnergy) {
+                int amtToSend = Math.min(fePerTick(), targetAmount - targetEnergy);
+                if (amtToSend == 0) continue; //Can happen due to integer division
+                // System.out.println(getBlockPos() + " sending: " + amtToSend);
+                int sentAmt = transmitPower(getEnergyStorage(), iEnergyStorage, amtToSend);
+                if (sentAmt > 0)
+                    doParticles(getBlockPos(), blockPos);
             } else {
-                amtToSend = Math.abs(amtToSend);
+                int amtToSend = Math.min(fePerTick(), targetAmount - myEnergy);
+                if (amtToSend == 0) continue; //Can happen due to integer division
                 //System.out.println(getBlockPos() + " receiving: " + amtToSend);
-                transmitPower(iEnergyStorage, getEnergyStorage(), amtToSend);
+                int sentAmt = transmitPower(iEnergyStorage, getEnergyStorage(), amtToSend);
+                if (sentAmt > 0)
+                    doParticles(blockPos, getBlockPos());
             }
         }
     }
@@ -164,21 +200,21 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     public int calculateLoss(int amtToSend, BlockPos remotePosition) {
         double energyLoss = (Config.ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK.get() * Math.abs(getBlockPos().distManhattan(remotePosition))) / 100;
         //System.out.println("Distance: " + Math.abs(getBlockPos().distManhattan(remotePosition)) + ".  Energy Loss: " + energyLoss + ". Send vs receive: " + amtToSend + " : " + (amtToSend - (int) (Math.ceil(amtToSend * energyLoss))));
-        return amtToSend - (int) (Math.ceil(amtToSend * energyLoss));
+        return amtToSend - (int) (Math.floor(amtToSend * energyLoss));
     }
 
-    public void transmitPowerWithLoss(IEnergyStorage sender, IEnergyStorage receiver, int amtToSend, BlockPos remotePosition) {
+    public int transmitPowerWithLoss(IEnergyStorage sender, IEnergyStorage receiver, int amtToSend, BlockPos remotePosition) {
         int amtFit = receiver.receiveEnergy(amtToSend, true);
-        if (amtFit <= 0) return;
+        if (amtFit <= 0) return 0;
         int extractAmt = sender.extractEnergy(amtFit, false);
-        receiver.receiveEnergy(calculateLoss(extractAmt, remotePosition), false);
+        return receiver.receiveEnergy(calculateLoss(extractAmt, remotePosition), false);
     }
 
-    public void transmitPower(IEnergyStorage sender, IEnergyStorage receiver, int amtToSend) {
+    public int transmitPower(IEnergyStorage sender, IEnergyStorage receiver, int amtToSend) {
         int amtFit = receiver.receiveEnergy(amtToSend, true);
-        if (amtFit <= 0) return;
+        if (amtFit <= 0) return 0;
         int extractAmt = sender.extractEnergy(amtFit, false);
-        receiver.receiveEnergy(extractAmt, false);
+        return receiver.receiveEnergy(extractAmt, false);
     }
 
     public void getBlocksToCharge() {
