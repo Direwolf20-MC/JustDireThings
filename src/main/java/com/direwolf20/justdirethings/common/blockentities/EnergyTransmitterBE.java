@@ -40,6 +40,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     private List<BlockPos> transmittersToBalance = new ArrayList<>();
     public AreaAffectingData areaAffectingData = new AreaAffectingData();
     public FilterData filterData = new FilterData();
+    public boolean showParticles = true;
 
     public EnergyTransmitterBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -50,6 +51,11 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
 
     public EnergyTransmitterBE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.EnergyTransmitterBE.get(), pPos, pBlockState);
+    }
+
+    public void setEnergyTransmitterSettings(boolean showParticles) {
+        this.showParticles = showParticles;
+        markDirtyClient();
     }
 
     @Override
@@ -108,6 +114,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     }
 
     public void doParticles(BlockPos sourcePos, BlockPos targetPos) {
+        if (!showParticles) return;
         Direction sourceFacing = level.getBlockState(sourcePos).getValue(BlockStateProperties.FACING);
         Vec3 sourceVec = new Vec3(sourcePos.getX() + 0.5f - (0.3 * sourceFacing.getStepX()), sourcePos.getY() + 0.5f - (0.3 * sourceFacing.getStepY()), sourcePos.getZ() + 0.5f - (0.3 * sourceFacing.getStepZ()));
         BlockState targetState = level.getBlockState(targetPos);
@@ -171,35 +178,35 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
             if (sentAmt > 0)
                 doParticles(getBlockPos(), blockPos);
         }
-        int networkEnergy = getEnergyStored();
+        /*int networkEnergy = getEnergyStored();
         for (BlockPos blockPos : transmittersToBalance) {
             IEnergyStorage iEnergyStorage = getHandler(blockPos);
             if (iEnergyStorage == null) continue;
             networkEnergy = networkEnergy + iEnergyStorage.getEnergyStored();
         }
-        int balanceEnergy = networkEnergy / (transmittersToBalance.size() + 1);
+        int balanceEnergy = networkEnergy / (transmittersToBalance.size() + 1);*/
         for (BlockPos blockPos : transmittersToBalance) {
             IEnergyStorage iEnergyStorage = getHandler(blockPos);
             if (iEnergyStorage == null) continue;
             int myEnergy = getEnergyStored();
             int targetEnergy = iEnergyStorage.getEnergyStored();
             if (myEnergy == targetEnergy) continue;
-            if (myEnergy == getMaxEnergy() && (iEnergyStorage.getMaxEnergyStored() - targetEnergy <= 5)) {
+            if (myEnergy == getMaxEnergy() && (iEnergyStorage.getMaxEnergyStored() - targetEnergy <= 2)) {
                 int sentAmt = iEnergyStorage.receiveEnergy(iEnergyStorage.getMaxEnergyStored() - targetEnergy, false); //FREE ENERGY!
                 if (sentAmt > 0)
                     doParticles(getBlockPos(), blockPos);
                 continue;
             }
-            //int targetAmount = ((myEnergy + targetEnergy) / 2);
+            int targetAmount = ((myEnergy + targetEnergy) / 2);
             if (myEnergy > targetEnergy) {
-                int amtToSend = Math.min(fePerTick(), balanceEnergy - targetEnergy);
+                int amtToSend = Math.min(fePerTick(), targetAmount - targetEnergy);
                 if (amtToSend <= 0) continue; //Can happen due to integer division
                 // System.out.println(getBlockPos() + " sending: " + amtToSend);
                 int sentAmt = transmitPower(getEnergyStorage(), iEnergyStorage, amtToSend);
                 if (sentAmt > 0)
                     doParticles(getBlockPos(), blockPos);
             } else {
-                int amtToSend = Math.min(fePerTick(), balanceEnergy - myEnergy);
+                int amtToSend = Math.min(fePerTick(), targetAmount - myEnergy);
                 if (amtToSend <= 0) continue; //Can happen due to integer division
                 //System.out.println(getBlockPos() + " receiving: " + amtToSend);
                 int sentAmt = transmitPower(iEnergyStorage, getEnergyStorage(), amtToSend);
@@ -276,16 +283,21 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     public boolean isDefaultSettings() {
         if (!super.isDefaultSettings())
             return false;
+        if (!showParticles)
+            return false;
         return true;
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
+        tag.putBoolean("showParticles", showParticles);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        if (tag.contains("showParticles"))
+            showParticles = tag.getBoolean("showParticles");
     }
 }

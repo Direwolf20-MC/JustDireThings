@@ -127,7 +127,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.HAMMER.getLocalization() + "_7", "Hammer: 7x7");
         add(Ability.OREXRAY.getLocalization(), "X-Ray");
         add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
-        add(Ability.GLOWING.getLocalization(), "Monster X-Ray");
+        add(Ability.GLOWING.getLocalization(), "Mob X-Ray");
         add(Ability.INSTABREAK.getLocalization(), "Instant Break");
 
         //GUI
@@ -174,6 +174,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.lessthan", "Less Than");
         add("justdirethings.screen.equals", "Equals");
         add("justdirethings.screen.dropcount", "Drop Amount");
+        add("justdirethings.screen.showparticles", "Show Particles");
 
 
         //Buttons

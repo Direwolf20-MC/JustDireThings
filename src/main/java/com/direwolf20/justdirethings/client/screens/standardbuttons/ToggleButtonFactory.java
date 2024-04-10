@@ -197,4 +197,12 @@ public class ToggleButtonFactory {
     public static ToggleButton EQUALSBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, EQUALITY_TEXTURES, startingValue, onPress);
     }
+
+    /** Sneak Click button **/
+    private static final ResourceLocation SHOW_PARTICLES_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
+    private static final Component SHOW_PARTICLES_LOCALIZATION = Component.translatable("justdirethings.screen.showparticles");
+
+    public static GrayscaleButton SHOWPARTICLESBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SHOW_PARTICLES_BUTTON, SHOW_PARTICLES_LOCALIZATION, startingValue, onPress);
+    }
 }

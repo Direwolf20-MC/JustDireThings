@@ -16,6 +16,7 @@ public class PacketHandler {
         registrar.play(BlockStateFilterPayload.ID, BlockStateFilterPayload::new, handler -> handler.server(BlockStateFilterPacket.get()::handle));
         registrar.play(ClickerPayload.ID, ClickerPayload::new, handler -> handler.server(ClickerPacket.get()::handle));
         registrar.play(DropperSettingPayload.ID, DropperSettingPayload::new, handler -> handler.server(DropperSettingPacket.get()::handle));
+        registrar.play(EnergyTransmitterSettingPayload.ID, EnergyTransmitterSettingPayload::new, handler -> handler.server(EnergyTransmitterPacket.get()::handle));
         registrar.play(FilterSettingPayload.ID, FilterSettingPayload::new, handler -> handler.server(FilterSettingPacket.get()::handle));
         registrar.play(DirectionSettingPayload.ID, DirectionSettingPayload::new, handler -> handler.server(DirectionSettingPacket.get()::handle));
         registrar.play(RedstoneSettingPayload.ID, RedstoneSettingPayload::new, handler -> handler.server(RedstoneSettingPacket.get()::handle));
