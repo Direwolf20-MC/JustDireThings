@@ -17,14 +17,14 @@ public class JustDireDataMaps extends DataMapProvider {
     @Override
     protected void gather() {
         builder(NeoForgeDataMaps.FURNACE_FUELS)
-                .add(Registration.Coal_T1.getId(), new FurnaceFuel(6400), false)
-                .add(Registration.CoalBlock_T1.getId(), new FurnaceFuel(64000), false)
-                .add(Registration.Coal_T2.getId(), new FurnaceFuel(25600), false)
-                .add(Registration.CoalBlock_T2.getId(), new FurnaceFuel(256000), false)
-                .add(Registration.Coal_T3.getId(), new FurnaceFuel(102400), false)
-                .add(Registration.CoalBlock_T3.getId(), new FurnaceFuel(1024000), false)
-                .add(Registration.Coal_T4.getId(), new FurnaceFuel(409600), false)
-                .add(Registration.CoalBlock_T4.getId(), new FurnaceFuel(4096000), false);
+                .add(Registration.Coal_T1.getId(), new FurnaceFuel(4800), false)
+                .add(Registration.CoalBlock_T1.getId(), new FurnaceFuel(48000), false)
+                .add(Registration.Coal_T2.getId(), new FurnaceFuel(14400), false)
+                .add(Registration.CoalBlock_T2.getId(), new FurnaceFuel(144000), false)
+                .add(Registration.Coal_T3.getId(), new FurnaceFuel(43200), false)
+                .add(Registration.CoalBlock_T3.getId(), new FurnaceFuel(432000), false)
+                .add(Registration.Coal_T4.getId(), new FurnaceFuel(129600), false)
+                .add(Registration.CoalBlock_T4.getId(), new FurnaceFuel(1296000), false);
         ;
     }
 
