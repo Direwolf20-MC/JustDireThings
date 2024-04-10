@@ -57,7 +57,15 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.DropperT1.get())
                 .add(Registration.DropperT2.get())
                 .add(Registration.GeneratorT1.get())
-                .add(Registration.EnergyTransmitter.get());
+                .add(Registration.EnergyTransmitter.get())
+                .add(Registration.RawCoal_T1.get())
+                .add(Registration.RawCoal_T2.get())
+                .add(Registration.RawCoal_T3.get())
+                .add(Registration.RawCoal_T4.get())
+                .add(Registration.CoalBlock_T1.get())
+                .add(Registration.CoalBlock_T2.get())
+                .add(Registration.CoalBlock_T3.get())
+                .add(Registration.CoalBlock_T4.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
