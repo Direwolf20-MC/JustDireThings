@@ -120,11 +120,11 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
             targetVec = new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5);
         }
 
-        ItemFlowParticleData data = new ItemFlowParticleData(new ItemStack(Items.YELLOW_CONCRETE), targetVec.x, targetVec.y, targetVec.z, 3);
+        ItemFlowParticleData data = new ItemFlowParticleData(new ItemStack(Items.YELLOW_CONCRETE), targetVec.x, targetVec.y, targetVec.z, 2);
         double d0 = sourceVec.x();
         double d1 = sourceVec.y();
         double d2 = sourceVec.z();
-        ((ServerLevel) level).sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
+        ((ServerLevel) level).sendParticles(data, d0, d1, d2, 1, 0, 0, 0, 0);
     }
 
     public void drainFromSlot() {
