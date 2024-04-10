@@ -1,12 +1,12 @@
 package com.direwolf20.justdirethings.common.blocks.resources;
 
-import net.minecraft.world.level.block.Block;
-
-public class CoalBlock_T2 extends Block {
+public class CoalBlock_T2 extends CoalBlock_T1 {
     public CoalBlock_T2() {
-        super(Properties.of()
-                .requiresCorrectToolForDrops()
-                .strength(5.0F, 6.0F)
-        );
+        super();
+    }
+
+    @Override
+    public int getBurnSpeedMultiplier() {
+        return 4;
     }
 }

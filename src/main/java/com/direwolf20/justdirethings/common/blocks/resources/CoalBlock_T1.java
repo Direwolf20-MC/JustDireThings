@@ -9,4 +9,8 @@ public class CoalBlock_T1 extends Block {
                 .strength(5.0F, 6.0F)
         );
     }
+
+    public int getBurnSpeedMultiplier() {
+        return 2;
+    }
 }

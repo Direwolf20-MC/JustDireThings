@@ -111,6 +111,7 @@
   "justdirethings.presshotkey": "<Press %s>",
   "justdirethings.screen.allowlist": "Allow List",
   "justdirethings.screen.burn_time": "Burn time left: %ss",
+  "justdirethings.screen.burnspeedmultiplier": "Burn Speed Multiplier: %s",
   "justdirethings.screen.click-left": "Left Click",
   "justdirethings.screen.click-right": "Right Click",
   "justdirethings.screen.comparenbt": "Compare NBT",

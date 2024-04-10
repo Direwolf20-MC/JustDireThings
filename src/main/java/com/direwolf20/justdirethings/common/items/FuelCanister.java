@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.items;
 
+import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
@@ -14,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -121,7 +123,11 @@ public class FuelCanister extends Item {
         int fuelPerPiece = CommonHooks.getBurnTime(fuelStack, RecipeType.SMELTING);
         if (fuelPerPiece == 0) return;
         double currentBurnSpeedMultiplier = getBurnSpeed(stack);
-        int fuelMultiplier = (fuelStack.getItem() instanceof Coal_T1 direCoal) ? direCoal.getBurnSpeedMultiplier() : 1;
+        int fuelMultiplier = 1;
+        if (fuelStack.getItem() instanceof Coal_T1 direCoal)
+            fuelMultiplier = direCoal.getBurnSpeedMultiplier();
+        else if (fuelStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CoalBlock_T1 coalBlock)
+            fuelMultiplier = coalBlock.getBurnSpeedMultiplier();
         int totalNewFuel = 0;
         while ((currentFuel + totalNewFuel) + fuelPerPiece <= Config.FUEL_CANISTER_MAXIMUM_FUEL.get() && !fuelStack.isEmpty()) {
             totalNewFuel += fuelPerPiece;
