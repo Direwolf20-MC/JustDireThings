@@ -181,14 +181,14 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
             int targetAmount = ((myEnergy + targetEnergy) / 2);
             if (myEnergy > targetEnergy) {
                 int amtToSend = Math.min(fePerTick(), targetAmount - targetEnergy);
-                if (amtToSend == 0) continue; //Can happen due to integer division
+                if (amtToSend < 25) continue; //Can happen due to integer division
                 // System.out.println(getBlockPos() + " sending: " + amtToSend);
                 int sentAmt = transmitPower(getEnergyStorage(), iEnergyStorage, amtToSend);
                 if (sentAmt > 0)
                     doParticles(getBlockPos(), blockPos);
             } else {
                 int amtToSend = Math.min(fePerTick(), targetAmount - myEnergy);
-                if (amtToSend == 0) continue; //Can happen due to integer division
+                if (amtToSend < 25) continue; //Can happen due to integer division
                 //System.out.println(getBlockPos() + " receiving: " + amtToSend);
                 int sentAmt = transmitPower(iEnergyStorage, getEnergyStorage(), amtToSend);
                 if (sentAmt > 0)
