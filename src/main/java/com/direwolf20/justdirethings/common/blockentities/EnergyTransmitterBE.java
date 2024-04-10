@@ -135,7 +135,6 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     }
 
     public void drainFromSlot() {
-        if (getEnergyStorage().getEnergyStored() >= getMaxEnergy()) return; //Don't do anything if already full...
         ItemStack itemStack = getMachineHandler().getStackInSlot(0);
         if (itemStack.isEmpty()) return;
         IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
@@ -143,6 +142,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         if (itemStack.getItem() instanceof PocketGenerator pocketGenerator) {
             pocketGenerator.tryBurn((EnergyStorageNoReceive) energyStorage, itemStack);
         }
+        if (getEnergyStorage().getEnergyStored() >= getMaxEnergy()) return; //Don't do anything if already full...
         transmitPower(energyStorage, getEnergyStorage(), fePerTick());
     }
 
@@ -178,21 +178,15 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
             if (sentAmt > 0)
                 doParticles(getBlockPos(), blockPos);
         }
-        /*int networkEnergy = getEnergyStored();
-        for (BlockPos blockPos : transmittersToBalance) {
-            IEnergyStorage iEnergyStorage = getHandler(blockPos);
-            if (iEnergyStorage == null) continue;
-            networkEnergy = networkEnergy + iEnergyStorage.getEnergyStored();
-        }
-        int balanceEnergy = networkEnergy / (transmittersToBalance.size() + 1);*/
         for (BlockPos blockPos : transmittersToBalance) {
             IEnergyStorage iEnergyStorage = getHandler(blockPos);
             if (iEnergyStorage == null) continue;
             int myEnergy = getEnergyStored();
             int targetEnergy = iEnergyStorage.getEnergyStored();
             if (myEnergy == targetEnergy) continue;
-            if (myEnergy == getMaxEnergy() && (iEnergyStorage.getMaxEnergyStored() - targetEnergy <= 2)) {
-                int sentAmt = iEnergyStorage.receiveEnergy(iEnergyStorage.getMaxEnergyStored() - targetEnergy, false); //FREE ENERGY!
+            if (myEnergy == getMaxEnergy() && (iEnergyStorage.getMaxEnergyStored() - targetEnergy == 1)) {
+                int sentAmt = iEnergyStorage.receiveEnergy(1, false); //FREE ENERGY!
+                //System.out.println(getBlockPos() + " sending FREE ENERGY to: " + blockPos + ": Sent amount is: " + sentAmt);
                 if (sentAmt > 0)
                     doParticles(getBlockPos(), blockPos);
                 continue;
