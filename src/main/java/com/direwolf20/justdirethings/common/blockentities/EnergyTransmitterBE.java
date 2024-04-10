@@ -171,24 +171,36 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
             if (sentAmt > 0)
                 doParticles(getBlockPos(), blockPos);
         }
+        int networkEnergy = getEnergyStored();
+        for (BlockPos blockPos : transmittersToBalance) {
+            IEnergyStorage iEnergyStorage = getHandler(blockPos);
+            if (iEnergyStorage == null) continue;
+            networkEnergy = networkEnergy + iEnergyStorage.getEnergyStored();
+        }
+        int balanceEnergy = networkEnergy / (transmittersToBalance.size() + 1);
         for (BlockPos blockPos : transmittersToBalance) {
             IEnergyStorage iEnergyStorage = getHandler(blockPos);
             if (iEnergyStorage == null) continue;
             int myEnergy = getEnergyStored();
             int targetEnergy = iEnergyStorage.getEnergyStored();
             if (myEnergy == targetEnergy) continue;
-
-            int targetAmount = ((myEnergy + targetEnergy) / 2);
+            if (myEnergy == getMaxEnergy() && (iEnergyStorage.getMaxEnergyStored() - targetEnergy <= 5)) {
+                int sentAmt = iEnergyStorage.receiveEnergy(iEnergyStorage.getMaxEnergyStored() - targetEnergy, false); //FREE ENERGY!
+                if (sentAmt > 0)
+                    doParticles(getBlockPos(), blockPos);
+                continue;
+            }
+            //int targetAmount = ((myEnergy + targetEnergy) / 2);
             if (myEnergy > targetEnergy) {
-                int amtToSend = Math.min(fePerTick(), targetAmount - targetEnergy);
-                if (amtToSend < 25) continue; //Can happen due to integer division
+                int amtToSend = Math.min(fePerTick(), balanceEnergy - targetEnergy);
+                if (amtToSend <= 0) continue; //Can happen due to integer division
                 // System.out.println(getBlockPos() + " sending: " + amtToSend);
                 int sentAmt = transmitPower(getEnergyStorage(), iEnergyStorage, amtToSend);
                 if (sentAmt > 0)
                     doParticles(getBlockPos(), blockPos);
             } else {
-                int amtToSend = Math.min(fePerTick(), targetAmount - myEnergy);
-                if (amtToSend < 25) continue; //Can happen due to integer division
+                int amtToSend = Math.min(fePerTick(), balanceEnergy - myEnergy);
+                if (amtToSend <= 0) continue; //Can happen due to integer division
                 //System.out.println(getBlockPos() + " receiving: " + amtToSend);
                 int sentAmt = transmitPower(iEnergyStorage, getEnergyStorage(), amtToSend);
                 if (sentAmt > 0)
