@@ -22,6 +22,11 @@ public class Config {
     public static ModConfigSpec.IntValue FUEL_CANISTER_MINIMUM_TICKS_CONSUMED;
     public static ModConfigSpec.IntValue FUEL_CANISTER_MAXIMUM_FUEL;
 
+    public static final String ENERGY_TRANSMITTER_T1 = "energy_transmitter_t1";
+    public static ModConfigSpec.DoubleValue ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK;
+    public static ModConfigSpec.IntValue ENERGY_TRANSMITTER_T1_MAX_RF;
+    public static ModConfigSpec.IntValue ENERGY_TRANSMITTER_T1_RF_PER_TICK;
+
     public static final String CATEGORY_POCKET_GENERATOR = "pocket_generator";
     public static ModConfigSpec.IntValue POCKET_GENERATOR_FE_PER_FUEL_TICK;
     public static ModConfigSpec.IntValue POCKET_GENERATOR_BURN_SPEED_MULTIPLIER;
@@ -55,6 +60,7 @@ public class Config {
     private static void registerCommonConfigs() {
         generalConfig();
         generatorT1Config();
+        energyTransmitter();
         fuelCanisterConfig();
         pocketGeneratorConfig();
 
@@ -92,6 +98,17 @@ public class Config {
                 .defineInRange("fuel_canister_minimum_ticks_consumed", 50, 1, Integer.MAX_VALUE);
         FUEL_CANISTER_MAXIMUM_FUEL = COMMON_BUILDER.comment("The maximum amount of fuel (in ticks) permitted in the fuel canister.")
                 .defineInRange("fuel_canister_maximum_fuel", 2000000, 100, Integer.MAX_VALUE);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void energyTransmitter() {
+        COMMON_BUILDER.comment("Energy Transmitter T1").push(ENERGY_TRANSMITTER_T1);
+        ENERGY_TRANSMITTER_T1_MAX_RF = COMMON_BUILDER.comment("The maximum energy storage")
+                .defineInRange("energy_transmitter_t1_max_rf", 1000000, 1, Integer.MAX_VALUE);
+        ENERGY_TRANSMITTER_T1_RF_PER_TICK = COMMON_BUILDER.comment("The maximum RF transmitted per tick to machines and other transmitters")
+                .defineInRange("energy_transmitter_t1_rf_per_tick", 1000, 1, Integer.MAX_VALUE);
+        ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK = COMMON_BUILDER.comment("The energy loss per block distance in percent")
+                .defineInRange("energy_transmitter_t1_loss_per_block", 1.0, 0, 100);
         COMMON_BUILDER.pop();
     }
 
