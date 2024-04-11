@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "justdirethings",
+  "ingredients": [
+    {
+      "item": "justdirethings:blockswappert1"
+    }
+  ],
+  "result": {
+    "item": "justdirethings:blockswappert1"
+  }
+}

@@ -46,6 +46,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropOther(Registration.GooSoil_Tier2.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier3.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier4.get(), Items.DIRT);
+        dropSelf(Registration.BlockSwapperT1.get());
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(

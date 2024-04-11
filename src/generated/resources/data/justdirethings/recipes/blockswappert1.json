@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "d": {
+      "item": "minecraft:ender_eye"
+    },
+    "f": {
+      "item": "justdirethings:blazegold_ingot"
+    },
+    "l": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "o": {
+      "item": "minecraft:observer"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "fdf",
+    "lol",
+    "frf"
+  ],
+  "result": {
+    "item": "justdirethings:blockswappert1"
+  }
+}
