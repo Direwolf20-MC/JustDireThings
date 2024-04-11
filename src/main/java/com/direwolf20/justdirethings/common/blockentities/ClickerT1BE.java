@@ -135,7 +135,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         }
         if (!canClick()) return;
         UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
-        if ((clickTarget.equals(CLICK_TARGET.BLOCK) || clickTarget.equals(CLICK_TARGET.AIR)) && clickType == 0) { //Only right click blocks!
+        if ((clickTarget.equals(CLICK_TARGET.BLOCK) || clickTarget.equals(CLICK_TARGET.AIR))) {
             if (isActiveRedstone() && canRun() && positionsToClick.isEmpty())
                 positionsToClick = findSpotsToClick(fakePlayer);
             if (positionsToClick.isEmpty())

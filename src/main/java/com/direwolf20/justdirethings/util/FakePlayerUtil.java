@@ -96,8 +96,6 @@ public class FakePlayerUtil {
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
     public static FakePlayerResult clickBlockInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState, int clickType) {
-        if (clickType == 1)
-            return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem()); //No left clicking blocks, thats what the breakers are for!
         HitResult toUse = rayTraceBlock(player, world, player.getReach());
         if (toUse == null) return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
 
@@ -110,6 +108,9 @@ public class FakePlayerUtil {
                     InteractionResult type = player.gameMode.useItemOn(player, world, itemstack, InteractionHand.MAIN_HAND, (BlockHitResult) toUse);
                     if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME)
                         return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+                } else {
+                    player.gameMode.handleBlockBreakAction(blockpos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxBuildHeight(), 0);
+                    return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
                 }
             }
         }
