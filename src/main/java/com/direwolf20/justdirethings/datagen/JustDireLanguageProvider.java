@@ -120,6 +120,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.boundto", "Bound to: %s:%s");
         add("justdirethings.unbound", " -Not Bound");
         add("justdirethings.bindfailed", "Binding Failed");
+        add("justdirethings.bindremoved", "Binding Removed");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");

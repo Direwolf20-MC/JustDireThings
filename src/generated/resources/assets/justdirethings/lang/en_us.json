@@ -95,6 +95,7 @@
   "justdirethings.ability.smelter": "Auto Smelter",
   "justdirethings.ability.treefeller": "Tree Feller",
   "justdirethings.bindfailed": "Binding Failed",
+  "justdirethings.bindremoved": "Binding Removed",
   "justdirethings.boundto": "Bound to: %s:%s",
   "justdirethings.disabled": "Disabled",
   "justdirethings.enabled": "Enabled",

@@ -24,6 +24,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
 
     public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "lawnmowerable"));
     public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "noautoclick"));
+    public static final TagKey<Block> SWAPPERDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "swapper_deny"));
     public static final TagKey<Block> NO_MOVE = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
 
 
@@ -86,6 +87,14 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.GooSoil_Tier3.get())
                 .add(Registration.GooSoil_Tier4.get());
         tag(NO_AUTO_CLICK);
+        tag(SWAPPERDENY)
+                .add(Blocks.PISTON_HEAD)
+                .add(Blocks.BEDROCK)
+                .add(Blocks.END_PORTAL_FRAME)
+                .add(Blocks.CANDLE_CAKE)
+                .addTag(BlockTags.BEDS)
+                .addTag(BlockTags.PORTALS)
+                .addTag(BlockTags.DOORS);
     }
 
     @Override

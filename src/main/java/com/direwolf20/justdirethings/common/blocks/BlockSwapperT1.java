@@ -3,12 +3,14 @@ package com.direwolf20.justdirethings.common.blocks;
 import com.direwolf20.justdirethings.common.blockentities.BlockSwapperT1BE;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.containers.BlockSwapperT1Container;
+import com.direwolf20.justdirethings.common.items.FerricoreWrench;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -39,6 +41,9 @@ public class BlockSwapperT1 extends BaseMachineBlock {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide)
             return InteractionResult.SUCCESS;
+
+        ItemStack playerHolding = player.getItemInHand(hand);
+        if (playerHolding.getItem() instanceof FerricoreWrench) return InteractionResult.PASS;
 
         BlockEntity te = level.getBlockEntity(blockPos);
         if (!(te instanceof BlockSwapperT1BE))
