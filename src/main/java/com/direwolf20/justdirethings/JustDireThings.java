@@ -8,7 +8,7 @@ import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.ModSetup;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
@@ -101,8 +101,9 @@ public class JustDireThings {
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
-                    if (be instanceof PoweredMachineBE && side != null && side.equals(Direction.DOWN))
+                    if (be instanceof PoweredMachineBE && side != null && side.equals(state.getValue(BlockStateProperties.FACING))) {
                         return be.getData(Registration.ENERGYSTORAGE_MACHINES);
+                    }
                     return null;
                 },
                 Registration.EnergyTransmitter.get()
