@@ -9,8 +9,22 @@ plugins {
 version = mod_version
 group = mod_group_id
 
+// All jar files from this folder will be added automatically as runtime mod dependencies
+def extraModsDir = "extra-mods"
+def extraAPIDir = "extra-api"
+
 repositories {
     mavenLocal()
+
+    flatDir {
+        name "extra-mods"
+        dir file(extraModsDir)
+    }
+
+    flatDir {
+        name "extra-api"
+        dir file(extraAPIDir)
+    }
 
     maven { //Patchouli && JEI
         url 'https://maven.blamejared.com'
@@ -129,6 +143,26 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+
+    // Locally sourced extra mods for runtime (i.e. testing)
+    for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
+        def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
+        def versionSep = basename.lastIndexOf('-')
+        assert versionSep != -1
+        def artifactId = basename.substring(0, versionSep)
+        def version = basename.substring(versionSep + 1)
+        runtimeOnly "extra-mods:$artifactId:$version"
+    }
+
+    // Locally sourced extra mods for compiling (i.e. API)
+    for (extraModJar in fileTree(dir: extraAPIDir, include: '*.jar')) {
+        def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
+        def versionSep = basename.lastIndexOf('-')
+        assert versionSep != -1
+        def artifactId = basename.substring(0, versionSep)
+        def version = basename.substring(versionSep + 1)
+        compileOnly "extra-api:$artifactId:$version"
+    }
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
