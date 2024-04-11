@@ -273,10 +273,12 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         if (placedThat) {
             if (!thisNBT.isEmpty()) {
                 BlockEntity newBE = partnerLevel.getBlockEntity(remoteSwapPos);
-                try {
-                    newBE.load(thisNBT);
-                } catch (Exception e) {
-                    System.out.println("Failed to restore tile data for block at: " + remoteSwapPos + " with NBT: " + thisNBT + ". Consider adding it to the blacklist");
+                if (newBE != null) {
+                    try {
+                        newBE.load(thisNBT);
+                    } catch (Exception e) {
+                        System.out.println("Failed to restore tile data for block at: " + remoteSwapPos + " with NBT: " + thisNBT + ". Consider adding it to the blacklist");
+                    }
                 }
             }
         }
@@ -288,10 +290,12 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         if (placedThis) {
             if (!thatNBT.isEmpty()) {
                 BlockEntity newBE = level.getBlockEntity(blockPos);
-                try {
-                    newBE.load(thatNBT);
-                } catch (Exception e) {
-                    System.out.println("Failed to restore tile data for block at: " + blockPos + " with NBT: " + thatNBT + ". Consider adding it to the blacklist");
+                if (newBE != null) {
+                    try {
+                        newBE.load(thatNBT);
+                    } catch (Exception e) {
+                        System.out.println("Failed to restore tile data for block at: " + blockPos + " with NBT: " + thatNBT + ". Consider adding it to the blacklist");
+                    }
                 }
             }
         }
