@@ -57,6 +57,13 @@ public class UsefulFakePlayer extends FakePlayer {
     }
 
     /**
+     * Used by Dire to simulate using an item
+     */
+    public void fakeupdateUsingItem(ItemStack itemStack) {
+        this.updateUsingItem(itemStack);
+    }
+
+    /**
      * Used by Dire to check the reach of his fake players
      */
     public double getReach() {

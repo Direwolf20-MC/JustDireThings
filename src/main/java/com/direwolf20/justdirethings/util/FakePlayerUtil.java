@@ -67,9 +67,28 @@ public class FakePlayerUtil {
         player.setReach(player.getAttributeValue(NeoForgeMod.BLOCK_REACH));
     }
 
-    public static FakePlayerResult clickEntityInDirection(UsefulFakePlayer player, Level world, LivingEntity entity, Direction side, int clickType) {
+    public static FakePlayerResult clickEntityInDirection(UsefulFakePlayer player, Level world, LivingEntity entity, int clickType, int maxHold) {
         HitResult toUse = rayTraceEntity(player, world, player.getReach());
         if (toUse == null) return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
+
+        if (clickType == 2) {
+            ItemStack itemstack = player.getMainHandItem();
+            if (itemstack.isEmpty()) {
+                player.stopUsingItem();
+                return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
+            }
+            if (!player.isUsingItem()) {
+                player.startUsingItem(InteractionHand.MAIN_HAND);
+            }
+            player.fakeupdateUsingItem(itemstack);
+            int holdingFor = player.getTicksUsingItem();
+            System.out.println("Holding For: " + holdingFor);
+            if (holdingFor >= maxHold) {
+                player.releaseUsingItem();
+                return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+            }
+            return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+        }
 
         if (clickType == 0) { //RightClick
             if (processUseEntity(player, world, entity, toUse, InteractionType.INTERACT_AT))
@@ -87,19 +106,33 @@ public class FakePlayerUtil {
     /**
      * Uses whatever the player happens to be holding in the given direction.
      *
-     * @param player      The player.
-     * @param world       The world of the calling tile entity. It may be a bad idea to use {FakePlayer#getEntityWorld()}.
-     * @param pos         The pos of the calling tile entity.
-     * @param side        The direction to use in.
-     * @param sourceState The state of the calling tile entity, so we don't click ourselves.
-     * @param clickType   Right or Left click.  0 = right. 1 = left.
+     * @param player    The player.
+     * @param world     The world of the calling tile entity. It may be a bad idea to use {FakePlayer#getEntityWorld()}.
+     * @param clickType Right or Left click.  0 = right. 1 = left.
      * @return The remainder of whatever the player was holding. This should be set back into the tile's stack handler or similar.
      */
-    public static FakePlayerResult clickBlockInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState, int clickType) {
+    public static FakePlayerResult clickBlockInDirection(UsefulFakePlayer player, Level world, int clickType, int maxHold) {
         HitResult toUse = rayTraceBlock(player, world, player.getReach());
         if (toUse == null) return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
 
         ItemStack itemstack = player.getMainHandItem();
+        if (clickType == 2) {
+            if (itemstack.isEmpty()) {
+                player.stopUsingItem();
+                return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
+            }
+            if (!player.isUsingItem()) {
+                player.startUsingItem(InteractionHand.MAIN_HAND);
+            }
+            player.fakeupdateUsingItem(itemstack);
+            int holdingFor = player.getTicksUsingItem();
+            System.out.println("Holding For: " + holdingFor);
+            if (holdingFor >= maxHold) {
+                player.releaseUsingItem();
+                return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+            }
+            return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+        }
         if (toUse.getType() == HitResult.Type.BLOCK) {
             BlockPos blockpos = ((BlockHitResult) toUse).getBlockPos();
             BlockState state = world.getBlockState(blockpos);
@@ -136,11 +169,28 @@ public class FakePlayerUtil {
         return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
     }
 
-    public static FakePlayerResult rightClickAirInDirection(UsefulFakePlayer player, Level world, BlockPos pos, Direction side, BlockState sourceState) {
+    public static FakePlayerResult rightClickAirInDirection(UsefulFakePlayer player, Level world, int clickType, int maxHold) {
         HitResult toUse = rayTraceBlock(player, world, player.getReach()); //Longer reach so it can connect with adjacent blocks to interact with them
         if (toUse == null) new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
 
         ItemStack itemstack = player.getMainHandItem();
+        if (clickType == 2) {
+            if (itemstack.isEmpty()) {
+                player.stopUsingItem();
+                return new FakePlayerResult(InteractionResult.FAIL, player.getMainHandItem());
+            }
+            if (!player.isUsingItem()) {
+                player.startUsingItem(InteractionHand.MAIN_HAND);
+            }
+            player.fakeupdateUsingItem(itemstack);
+            int holdingFor = player.getTicksUsingItem();
+            //System.out.println("Holding For: " + holdingFor);
+            if (holdingFor >= maxHold) {
+                player.releaseUsingItem();
+                return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+            }
+            return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
+        }
         if (toUse.getType() == HitResult.Type.BLOCK) {
             BlockPos blockpos = ((BlockHitResult) toUse).getBlockPos();
             BlockState state = world.getBlockState(blockpos);

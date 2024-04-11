@@ -118,10 +118,15 @@ public class ToggleButtonFactory {
         return new NumberButton(x, y, 24, 12, value, Config.MINIMUM_MACHINE_TICK_SPEED.get(), 1200, ticksButtonLocalization, onPress);
     }
 
+    public static NumberButton TICKSPEEDBUTTON(int x, int y, int value, int min, Button.OnPress onPress) {
+        return new NumberButton(x, y, 24, 12, value, min, 1200, ticksButtonLocalization, onPress);
+    }
+
     /** LEFT or RIGHT Click Button **/
     private static final List<TextureLocalization> LEFT_RIGHT_CLICK_TEXTURES = List.of(
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-right.png"), Component.translatable("justdirethings.screen.click-right")),
-            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-left.png"), Component.translatable("justdirethings.screen.click-left"))
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-left.png"), Component.translatable("justdirethings.screen.click-left")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-hold.png"), Component.translatable("justdirethings.screen.click-hold"))
     );
 
     public static ToggleButton LEFTRIGHTCLICKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
