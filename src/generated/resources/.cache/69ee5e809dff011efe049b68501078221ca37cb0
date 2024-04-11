@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-07T19:56:03.0090401	Item Models: justdirethings
+// 1.20.4	2024-04-10T12:03:23.174443	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -31,6 +31,14 @@ dd58edd5b5d58719e49974bb1f500fcd0df4ee9e assets/justdirethings/models/item/celes
 c6cec87182f9b816f7cdfb07a09755855080ec62 assets/justdirethings/models/item/celestigem_sword_active.json
 24e00f9c3ca952c03eef6cc245b611a3f4f126be assets/justdirethings/models/item/clickert1.json
 75ceb606c976ed61986e2d53cab03c62967a0092 assets/justdirethings/models/item/clickert2.json
+d98fc00e03a87b0f97f4b76c7aacfbf24278eed2 assets/justdirethings/models/item/coalblock_t1.json
+b993335d6b7a46cbcbbe600582e29d85523673cf assets/justdirethings/models/item/coalblock_t2.json
+9fafdf0618379d2182bb7dc691012c53963cc3e6 assets/justdirethings/models/item/coalblock_t3.json
+d731070f66c27b55c51320fe205d4dab11b219d0 assets/justdirethings/models/item/coalblock_t4.json
+da76f391e2a78908370e9bd67d554b378c24491e assets/justdirethings/models/item/coal_t1.json
+763312d987f5056b8507afa27efa09ac2cb43357 assets/justdirethings/models/item/coal_t2.json
+a8f839bf2e7ac061daefec33a999b043ff781f33 assets/justdirethings/models/item/coal_t3.json
+ddc9a2368cf965507cc30322016beb73c1006001 assets/justdirethings/models/item/coal_t4.json
 6e4f9ab9661918a2929f8590a81163cdcab44776 assets/justdirethings/models/item/droppert1.json
 7324ad4408c1cdc86ab42b9a861b2fbe398af95e assets/justdirethings/models/item/droppert2.json
 0f3bebdd73e3116714ecca62f020989d2fd3f840 assets/justdirethings/models/item/eclipsealloy_axe.json
@@ -83,6 +91,10 @@ e6a15d1f02d421b147564072a2d4695037761279 assets/justdirethings/models/item/pocke
 d8ea68a75b8b49f7765e715d62ad23c2f1939281 assets/justdirethings/models/item/raw_blazegold.json
 0eb4cfb03ddec169426214f46beb6f8781ce9421 assets/justdirethings/models/item/raw_blazegold_ore.json
 25030312eb5c78f39bd20a90f142b38e0610b54f assets/justdirethings/models/item/raw_celestigem_ore.json
+be78c6a1dfd4eee3fdedc6c64a28f4c54e9df958 assets/justdirethings/models/item/raw_coal_t1_ore.json
+2a13fb251cb3b7e8117e812010e34d32da84c788 assets/justdirethings/models/item/raw_coal_t2_ore.json
+8e59e8b34f411f264282babf44f86ef8641509a4 assets/justdirethings/models/item/raw_coal_t3_ore.json
+48137dee85f555ea57af4c9823b113f0fb22ee2f assets/justdirethings/models/item/raw_coal_t4_ore.json
 491f017ad310026655d3e5d5452f7a0adc52b627 assets/justdirethings/models/item/raw_eclipsealloy.json
 26b00731003a037136f08f583e753cd8f5e32580 assets/justdirethings/models/item/raw_eclipsealloy_ore.json
 dd859b0b386ad41b819dc6e7d46a8979373ef257 assets/justdirethings/models/item/raw_ferricore.json

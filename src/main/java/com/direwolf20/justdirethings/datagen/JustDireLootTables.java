@@ -24,6 +24,10 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.BlazeGoldBlock.get());
         dropSelf(Registration.CelestigemBlock.get());
         dropSelf(Registration.EclipseAlloyBlock.get());
+        dropSelf(Registration.CoalBlock_T1.get());
+        dropSelf(Registration.CoalBlock_T2.get());
+        dropSelf(Registration.CoalBlock_T3.get());
+        dropSelf(Registration.CoalBlock_T4.get());
         dropSelf(Registration.GooPatternBlock.get());
         dropSelf(Registration.ItemCollector.get());
         dropSelf(Registration.BlockBreakerT1.get());
@@ -73,6 +77,38 @@ public class JustDireLootTables extends VanillaBlockLoot {
                 this.applyExplosionDecay(
                         Registration.RawEclipseAlloyOre.get(),
                         LootItem.lootTableItem(Registration.RawEclipseAlloy.get())
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
+                )
+        ));
+        add(Registration.RawCoal_T1.get(), createSilkTouchDispatchTable(
+                Registration.RawCoal_T1.get(),
+                this.applyExplosionDecay(
+                        Registration.RawCoal_T1.get(),
+                        LootItem.lootTableItem(Registration.Coal_T1.get())
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
+                )
+        ));
+        add(Registration.RawCoal_T2.get(), createSilkTouchDispatchTable(
+                Registration.RawCoal_T2.get(),
+                this.applyExplosionDecay(
+                        Registration.RawCoal_T2.get(),
+                        LootItem.lootTableItem(Registration.Coal_T2.get())
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
+                )
+        ));
+        add(Registration.RawCoal_T3.get(), createSilkTouchDispatchTable(
+                Registration.RawCoal_T3.get(),
+                this.applyExplosionDecay(
+                        Registration.RawCoal_T3.get(),
+                        LootItem.lootTableItem(Registration.Coal_T3.get())
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
+                )
+        ));
+        add(Registration.RawCoal_T4.get(), createSilkTouchDispatchTable(
+                Registration.RawCoal_T4.get(),
+                this.applyExplosionDecay(
+                        Registration.RawCoal_T4.get(),
+                        LootItem.lootTableItem(Registration.Coal_T4.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));

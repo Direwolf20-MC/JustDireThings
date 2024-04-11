@@ -48,6 +48,14 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CelestigemBlock.get(), "Celestigem Block");
         add(Registration.RawEclipseAlloyOre.get(), "Raw Eclipse Alloy Ore");
         add(Registration.EclipseAlloyBlock.get(), "Eclipse Alloy Block");
+        add(Registration.RawCoal_T1.get(), "Raw Primal Coal");
+        add(Registration.CoalBlock_T1.get(), "Primal Coal Block");
+        add(Registration.RawCoal_T2.get(), "Raw Blaze Ember");
+        add(Registration.CoalBlock_T2.get(), "Blaze Ember Block");
+        add(Registration.RawCoal_T3.get(), "Raw Voidflame Coal");
+        add(Registration.CoalBlock_T3.get(), "Voidflame Coal Block");
+        add(Registration.RawCoal_T4.get(), "Raw Eclipse Ember");
+        add(Registration.CoalBlock_T4.get(), "Eclipse Ember Block");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
@@ -89,6 +97,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Celestigem.get(), "Celestigem");
         add(Registration.EclipseAlloyIngot.get(), "Eclipse Alloy Ingot");
         add(Registration.RawEclipseAlloy.get(), "Raw Eclipse Alloy");
+        add(Registration.Coal_T1.get(), "Primal Coal");
+        add(Registration.Coal_T2.get(), "Blaze Ember");
+        add(Registration.Coal_T3.get(), "Voidflame Coal");
+        add(Registration.Coal_T4.get(), "Eclipse Ember");
+
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
@@ -175,6 +188,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.equals", "Equals");
         add("justdirethings.screen.dropcount", "Drop Amount");
         add("justdirethings.screen.showparticles", "Show Particles");
+        add("justdirethings.screen.burnspeedmultiplier", "Burn Speed Multiplier: %s");
 
 
         //Buttons
