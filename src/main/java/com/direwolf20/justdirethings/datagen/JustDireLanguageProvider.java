@@ -119,9 +119,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.boundto", "Bound to: %s:%s");
+        add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");
         add("justdirethings.bindfailed", "Binding Failed");
         add("justdirethings.bindremoved", "Binding Removed");
+        add("justdirethings.unbound-screen", "Not Bound");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
