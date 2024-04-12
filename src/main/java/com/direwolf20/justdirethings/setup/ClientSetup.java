@@ -74,6 +74,7 @@ public class ClientSetup {
         event.register(Registration.GeneratorT1_Container.get(), GeneratorT1Screen::new);
         event.register(Registration.EnergyTransmitter_Container.get(), EnergyTransmitterScreen::new);
         event.register(Registration.BlockSwapperT1_Container.get(), BlockSwapperT1Screen::new);
+        event.register(Registration.BlockSwapperT2_Container.get(), BlockSwapperT2Screen::new);
     }
 
     @SubscribeEvent
@@ -90,5 +91,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.SensorT2BE.get(), SensorT2BER::new);
         event.registerBlockEntityRenderer(Registration.DropperT2BE.get(), DropperT2BER::new);
         event.registerBlockEntityRenderer(Registration.EnergyTransmitterBE.get(), EnergyTransmitterRenderer::new);
+        event.registerBlockEntityRenderer(Registration.BlockSwapperT2BE.get(), BlockSwapperT2BER::new);
     }
 }

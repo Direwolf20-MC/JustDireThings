@@ -1,10 +1,11 @@
-// 1.20.4	2024-04-11T09:19:41.806646	Loot Tables
+// 1.20.4	2024-04-11T21:27:39.8475209	Loot Tables
 16a0ab61513717ab1cb8c1df9718722a643d9728 data/justdirethings/loot_tables/blocks/blazegold_block.json
 b2953e2dcd4960e7f275bb42e4ad626219213fe1 data/justdirethings/loot_tables/blocks/blockbreakert1.json
 bb65fdba3c1b14526a629aacb462661b5853008b data/justdirethings/loot_tables/blocks/blockbreakert2.json
 a35afbe42ae811005ae497833e517381b061c259 data/justdirethings/loot_tables/blocks/blockplacert1.json
 50b8a914687f5fc9743d32929a101a64a20bb54f data/justdirethings/loot_tables/blocks/blockplacert2.json
 928b3ad9133a8fd73160e4a0e5a317d275980c99 data/justdirethings/loot_tables/blocks/blockswappert1.json
+660d853390c3009ee76cebcff5473805ecd7f615 data/justdirethings/loot_tables/blocks/blockswappert2.json
 db5eebe1105a78a3cc495f52f15653d62ef252fb data/justdirethings/loot_tables/blocks/celestigem_block.json
 0cc43a700e7d2727caf3262edaefc5b3040d203a data/justdirethings/loot_tables/blocks/clickert1.json
 fec23f4b1f7e4927f0f9152615f2a24b62967a61 data/justdirethings/loot_tables/blocks/clickert2.json
