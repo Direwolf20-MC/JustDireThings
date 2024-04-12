@@ -60,7 +60,10 @@ public class FerricoreWrench extends Item {
         if (level.getBlockEntity(blockPos) instanceof BlockSwapperT1BE blockSwapperT1BE) {
             GlobalPos boundPos = getBoundTo(itemStack);
             if (boundPos == null) {
-                setBoundTo(itemStack, GlobalPos.of(level.dimension(), blockPos));
+                GlobalPos newBind = GlobalPos.of(level.dimension(), blockPos);
+                setBoundTo(itemStack, newBind);
+                player.displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(newBind.dimension().location().getPath()), "[" + newBind.pos().toShortString() + "]"), true);
+                player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
             } else {
                 boolean bound = blockSwapperT1BE.handleConnection(boundPos);
                 if (bound) {
