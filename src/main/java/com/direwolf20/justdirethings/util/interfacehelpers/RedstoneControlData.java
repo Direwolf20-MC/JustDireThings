@@ -14,6 +14,10 @@ public class RedstoneControlData {
 
     }
 
+    public RedstoneControlData(MiscHelpers.RedstoneMode redstoneMode) {
+        this.redstoneMode = redstoneMode;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(receivingRedstone, pulsed, redstoneMode);

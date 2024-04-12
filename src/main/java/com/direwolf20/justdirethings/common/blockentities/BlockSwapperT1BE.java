@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControl
 import com.direwolf20.justdirethings.common.blocks.BlockSwapperT1;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
@@ -15,19 +16,27 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
 public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlledBE {
-    public RedstoneControlData redstoneControlData = new RedstoneControlData();
+    public RedstoneControlData redstoneControlData = getDefaultRedstoneData();
     protected Direction FACING = Direction.DOWN; //To avoid nulls
     List<BlockPos> positions = new ArrayList<>();
     public GlobalPos boundTo;
@@ -35,6 +44,32 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     public boolean doesPartnerExist;
     public List<BlockPos> thisValidationList = new ArrayList<>();
     public List<BlockPos> thatValidationList = new ArrayList<>();
+    public boolean swapBlocks = true;
+    public SWAP_ENTITY_TYPE swap_entity_type = SWAP_ENTITY_TYPE.NONE;
+    public List<Entity> entities = new ArrayList<>();
+
+    public enum SWAP_ENTITY_TYPE {
+        NONE,
+        HOSTILE,
+        PASSIVE,
+        ADULT,
+        CHILD,
+        PLAYER,
+        LIVING,
+        ITEM,
+        ALL;
+
+        public SWAP_ENTITY_TYPE next() {
+            SWAP_ENTITY_TYPE[] values = values();
+            int nextOrdinal = (this.ordinal() + 1) % values.length;
+            return values[nextOrdinal];
+        }
+    }
+
+    @Override
+    public RedstoneControlData getDefaultRedstoneData() {
+        return new RedstoneControlData(MiscHelpers.RedstoneMode.PULSE);
+    }
 
     public BlockSwapperT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -67,6 +102,12 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
 
     public BlockSwapperT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.BlockSwapperT1BE.get(), pPos, pBlockState);
+    }
+
+    public void setSwapperSettings(boolean swapBlocks, int swap_entity_type) {
+        this.swapBlocks = swapBlocks;
+        this.swap_entity_type = SWAP_ENTITY_TYPE.values()[swap_entity_type];
+        markDirtyClient();
     }
 
     public boolean isPartnerNodeConnected(GlobalPos globalPos) {
@@ -222,8 +263,11 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         ServerLevel partnerLevel = getPartnerLevel();
         if (partnerLevel == null) return;
 
-        positions = findSpotsToSwap();
-        if (positions.isEmpty())
+        if (swapBlocks)
+            positions = findSpotsToSwap();
+        if (!swap_entity_type.equals(SWAP_ENTITY_TYPE.NONE))
+            entities = findEntitiesToSwap(getAABB());
+        if (positions.isEmpty() && entities.isEmpty())
             return;
         for (BlockPos blockPos : positions) {
             swapBlock(blockPos, remoteSwapper, partnerLevel);
@@ -232,17 +276,53 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             validateBlock((ServerLevel) level, thisPos);
         }
         for (BlockPos thatPos : thatValidationList) {
-            validateBlock(getPartnerLevel(), thatPos);
+            validateBlock(partnerLevel, thatPos);
         }
-        int totalSwapped = thisValidationList.size() + thatValidationList.size();
+        for (Entity entity : entities) {
+            swapEntity(entity, remoteSwapper, partnerLevel);
+        }
+
+        int totalSwapped = thisValidationList.size() + thatValidationList.size() + entities.size();
         postSwap(totalSwapped);
         if (totalSwapped > 0) {
             level.playSound(null, getBlockPos(), SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.33F, 1.0F);
-            getPartnerLevel().playSound(null, getPartnerBE().getBlockPos(), SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.33F, 1.0F);
+            partnerLevel.playSound(null, remoteSwapper.getBlockPos(), SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.33F, 1.0F);
         }
         positions.clear();
+        entities.clear();
         thisValidationList.clear();
         thatValidationList.clear();
+    }
+
+    public void swapEntity(Entity entity, BlockSwapperT1BE remoteSwapper, ServerLevel partnerLevel) {
+        Vec3 remotePosition = remoteSwapper.getWorldPos(getRelativePos(entity.position()));
+        entity.teleportTo(partnerLevel, remotePosition.x, remotePosition.y, remotePosition.z, new HashSet<>(), entity.getYRot(), entity.getXRot());
+    }
+
+    public AABB getAABB() {
+        return new AABB(getBlockPos().relative(FACING));
+    }
+
+    public List<Entity> findEntitiesToSwap(AABB aabb) {
+        List<Entity> returnList = new ArrayList<>(level.getEntitiesOfClass(Entity.class, aabb, this::isValidEntity));
+
+        return returnList;
+    }
+
+    public boolean isValidEntity(Entity entity) {
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.HOSTILE) && !(entity instanceof Monster))
+            return false;
+        if (((swap_entity_type.equals(SWAP_ENTITY_TYPE.PASSIVE)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.ADULT)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.CHILD))) && !(entity instanceof Animal))
+            return false;
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.ADULT) && (entity instanceof Animal animal) && (animal.isBaby()))
+            return false;
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.CHILD) && (entity instanceof Animal animal) && !(animal.isBaby()))
+            return false;
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.PLAYER) && !(entity instanceof Player))
+            return false;
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.ITEM) && !(entity instanceof ItemEntity))
+            return false;
+        return true;
     }
 
     public void swapBlock(BlockPos blockPos, BlockSwapperT1BE remoteSwapper, ServerLevel partnerLevel) {
@@ -362,11 +442,23 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         return worldPos.subtract(getStartingPoint());
     }
 
+    public Vec3 getWorldPos(Vec3 relativePos) {
+        return new Vec3(getStartingPoint().getX() + relativePos.x, getStartingPoint().getY() + relativePos.y, getStartingPoint().getZ() + relativePos.z);
+    }
+
+    public Vec3 getRelativePos(Vec3 worldPos) {
+        return new Vec3(worldPos.x - getStartingPoint().getX(), worldPos.y - getStartingPoint().getY(), worldPos.z - getStartingPoint().getZ());
+    }
+
     @Override
     public boolean isDefaultSettings() {
         if (!super.isDefaultSettings())
             return false;
         if (boundTo != null)
+            return false;
+        if (!swapBlocks)
+            return false;
+        if (!swap_entity_type.equals(SWAP_ENTITY_TYPE.NONE))
             return false;
         return true;
     }
@@ -376,6 +468,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         super.saveAdditional(tag);
         if (boundTo != null)
             tag.put("boundTo", NBTHelpers.globalPosToNBT(boundTo));
+        tag.putBoolean("swapBlocks", swapBlocks);
+        tag.putInt("swap_entity_type", swap_entity_type.ordinal());
     }
 
     @Override
@@ -390,5 +484,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         } else {
             this.boundTo = null;
         }
+        if (tag.contains("swapBlocks"))
+            swapBlocks = tag.getBoolean("swapBlocks");
+        swap_entity_type = SWAP_ENTITY_TYPE.values()[tag.getInt("swap_entity_type")];
     }
 }

@@ -173,6 +173,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.click-right", "Right Click");
         add("justdirethings.screen.click-left", "Left Click");
         add("justdirethings.screen.target-block", "Target Blocks");
+        add("justdirethings.screen.target-noblock", "Ignore Blocks");
         add("justdirethings.screen.target-air", "Target Air");
         add("justdirethings.screen.target-hostile", "Target Hostile");
         add("justdirethings.screen.target-passive", "Target Passive");
@@ -181,6 +182,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.target-player", "Target Player");
         add("justdirethings.screen.target-living", "Target All Living");
         add("justdirethings.screen.target-item", "Target Items");
+        add("justdirethings.screen.entity-none", "No Entities");
+        add("justdirethings.screen.entity-all", "All Entities");
         add("justdirethings.screen.sneak-click", "Sneak Click");
         add("justdirethings.screen.showfakeplayer", "Show Fake Player");
         add("justdirethings.screen.redstone-weak", "Weak Signal");

@@ -9,10 +9,14 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Comparator;
 import java.util.List;
@@ -125,6 +129,18 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
         return false;
     }
 
+    public boolean isInBothAreas(Vec3 vec3) {
+        BlockEntity partnerBE = getPartnerBE();
+        if (!level.equals(partnerBE.getLevel()))
+            return false; //If my level is different than my partners we are not overlapping of course!
+        if (partnerBE instanceof BlockSwapperT2BE partnerSwapper) {
+            AABB thisAABB = getAABB(getBlockPos());
+            AABB thatAABB = partnerSwapper.getAABB(partnerSwapper.getBlockPos());
+            return (thisAABB.contains(vec3.x(), vec3.y(), vec3.z()) && thatAABB.contains(vec3.x(), vec3.y(), vec3.z()));
+        }
+        return false;
+    }
+
     @Override
     public boolean isBlockPosValid(ServerLevel serverLevel, BlockPos blockPos) {
         if (!super.isBlockPosValid(serverLevel, blockPos))
@@ -138,6 +154,11 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
     }
 
     @Override
+    public AABB getAABB() {
+        return getAABB(getBlockPos());
+    }
+
+    @Override
     public List<BlockPos> findSpotsToSwap() {
         AABB area = getAABB(getBlockPos());
         return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
@@ -145,5 +166,20 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
                 .map(BlockPos::immutable)
                 .sorted(Comparator.comparingDouble(x -> x.distSqr(getBlockPos())))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isValidEntity(Entity entity) {
+        if (!super.isValidEntity(entity))
+            return false;
+        if (isInBothAreas(entity.position()))
+            return false;
+        Item eggItem = SpawnEggItem.byId(entity.getType());
+        ItemStack eggItemStack;
+        if (eggItem == null)
+            eggItemStack = ItemStack.EMPTY;
+        else
+            eggItemStack = new ItemStack(eggItem);
+        return isStackValidFilter(eggItemStack);
     }
 }
