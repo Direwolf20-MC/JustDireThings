@@ -217,6 +217,29 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlockSwapperT1.get())
+                .pattern("fdf")
+                .pattern("lol")
+                .pattern("frf")
+                .define('o', Items.OBSERVER)
+                .define('f', Registration.BlazegoldIngot.get())
+                .define('d', Items.ENDER_EYE)
+                .define('l', Items.LAPIS_LAZULI)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlockSwapperT2.get())
+                .pattern("fdf")
+                .pattern("dod")
+                .pattern("frf")
+                .define('o', Registration.BlockSwapperT1_ITEM.get())
+                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('d', Items.ENDER_EYE)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
 
         //Items
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreWrench.get())

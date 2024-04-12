@@ -21,6 +21,7 @@ public class PacketHandler {
         registrar.play(DirectionSettingPayload.ID, DirectionSettingPayload::new, handler -> handler.server(DirectionSettingPacket.get()::handle));
         registrar.play(RedstoneSettingPayload.ID, RedstoneSettingPayload::new, handler -> handler.server(RedstoneSettingPacket.get()::handle));
         registrar.play(SensorPayload.ID, SensorPayload::new, handler -> handler.server(SensorPacket.get()::handle));
+        registrar.play(SwapperPayload.ID, SwapperPayload::new, handler -> handler.server(SwapperPacket.get()::handle));
         registrar.play(TickSpeedPayload.ID, TickSpeedPayload::new, handler -> handler.server(TickSpeedPacket.get()::handle));
         registrar.play(ToggleToolSlotPayload.ID, ToggleToolSlotPayload::new, handler -> handler.server(ToggleToolSlotPacket.get()::handle));
         registrar.play(GhostSlotPayload.ID, GhostSlotPayload::new, handler -> handler.server(GhostSlotPacket.get()::handle));

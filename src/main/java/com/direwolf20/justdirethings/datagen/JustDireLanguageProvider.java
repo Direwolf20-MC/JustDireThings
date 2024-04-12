@@ -38,6 +38,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.DropperT2.get(), "Advanced Dropper");
         add(Registration.GeneratorT1.get(), "Simple Fuel Generator");
         add(Registration.EnergyTransmitter.get(), "Energy Transmitter");
+        add(Registration.BlockSwapperT1.get(), "Simple Block Swapper");
+        add(Registration.BlockSwapperT2.get(), "Advanced Block Swapper");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -117,8 +119,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.boundto", "Bound to: %s:%s");
+        add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");
         add("justdirethings.bindfailed", "Binding Failed");
+        add("justdirethings.bindremoved", "Binding Removed");
+        add("justdirethings.unbound-screen", "Not Bound");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -170,6 +175,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.click-right", "Right Click");
         add("justdirethings.screen.click-left", "Left Click");
         add("justdirethings.screen.target-block", "Target Blocks");
+        add("justdirethings.screen.target-noblock", "Ignore Blocks");
         add("justdirethings.screen.target-air", "Target Air");
         add("justdirethings.screen.target-hostile", "Target Hostile");
         add("justdirethings.screen.target-passive", "Target Passive");
@@ -178,6 +184,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.target-player", "Target Player");
         add("justdirethings.screen.target-living", "Target All Living");
         add("justdirethings.screen.target-item", "Target Items");
+        add("justdirethings.screen.entity-none", "No Entities");
+        add("justdirethings.screen.entity-all", "All Entities");
         add("justdirethings.screen.sneak-click", "Sneak Click");
         add("justdirethings.screen.showfakeplayer", "Show Fake Player");
         add("justdirethings.screen.redstone-weak", "Weak Signal");

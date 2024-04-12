@@ -111,6 +111,10 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> GeneratorT1_ITEM = ITEMS.register("generatort1", () -> new BlockItem(GeneratorT1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, EnergyTransmitter> EnergyTransmitter = BLOCKS.register("energytransmitter", EnergyTransmitter::new);
     public static final DeferredHolder<Item, BlockItem> EnergyTransmitter_ITEM = ITEMS.register("energytransmitter", () -> new BlockItem(EnergyTransmitter.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, BlockSwapperT1> BlockSwapperT1 = SIDEDBLOCKS.register("blockswappert1", BlockSwapperT1::new);
+    public static final DeferredHolder<Item, BlockItem> BlockSwapperT1_ITEM = ITEMS.register("blockswappert1", () -> new BlockItem(BlockSwapperT1.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, BlockSwapperT2> BlockSwapperT2 = BLOCKS.register("blockswappert2", BlockSwapperT2::new);
+    public static final DeferredHolder<Item, BlockItem> BlockSwapperT2_ITEM = ITEMS.register("blockswappert2", () -> new BlockItem(BlockSwapperT2.get(), new Item.Properties()));
 
 
     //Gooblocks
@@ -179,6 +183,8 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DropperT2BE>> DropperT2BE = BLOCK_ENTITIES.register("droppert2", () -> BlockEntityType.Builder.of(DropperT2BE::new, DropperT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeneratorT1BE>> GeneratorT1BE = BLOCK_ENTITIES.register("generatort1", () -> BlockEntityType.Builder.of(GeneratorT1BE::new, GeneratorT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyTransmitterBE>> EnergyTransmitterBE = BLOCK_ENTITIES.register("energytransmitter", () -> BlockEntityType.Builder.of(EnergyTransmitterBE::new, EnergyTransmitter.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockSwapperT1BE>> BlockSwapperT1BE = BLOCK_ENTITIES.register("blockswappert1", () -> BlockEntityType.Builder.of(BlockSwapperT1BE::new, BlockSwapperT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockSwapperT2BE>> BlockSwapperT2BE = BLOCK_ENTITIES.register("blockswappert2", () -> BlockEntityType.Builder.of(BlockSwapperT2BE::new, BlockSwapperT2.get()).build(null));
 
 
     //Items
@@ -259,6 +265,10 @@ public class Registration {
             () -> IMenuTypeExtension.create(GeneratorT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<EnergyTransmitterContainer>> EnergyTransmitter_Container = CONTAINERS.register("energytransmitter_container",
             () -> IMenuTypeExtension.create(EnergyTransmitterContainer::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<BlockSwapperT1Container>> BlockSwapperT1_Container = CONTAINERS.register("blockswappert1_container",
+            () -> IMenuTypeExtension.create(BlockSwapperT1Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<BlockSwapperT2Container>> BlockSwapperT2_Container = CONTAINERS.register("blockswappert2_container",
+            () -> IMenuTypeExtension.create(BlockSwapperT2Container::new));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(

@@ -52,4 +52,9 @@ public class CelestigemPaxel extends BasePickaxe implements PoweredTool {
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
         return (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_AXE)) && net.neoforged.neoforge.common.TierSortingRegistry.isCorrectTierForDrops(getTier(), state);
     }
+
+    @Override
+    public float getDestroySpeed(ItemStack pStack, BlockState state) {
+        return (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_AXE)) ? this.speed : 1.0F;
+    }
 }
