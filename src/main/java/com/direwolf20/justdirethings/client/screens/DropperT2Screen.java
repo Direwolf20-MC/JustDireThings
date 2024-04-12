@@ -89,7 +89,9 @@ public class DropperT2Screen extends BaseMachineScreen<DropperT2Container> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        //super.renderLabels(guiGraphics, mouseX, mouseY);
+        Component title = baseMachineBE.getBlockState().getBlock().getName();
+        int titleX = topSectionLeft - getGuiLeft() + 20 + ((topSectionWidth - 40) / 2) - this.font.width(title) / 2;
+        guiGraphics.drawString(this.font, title, titleX, topSectionTop - getGuiTop() - 14, 4210752, false);
         if (baseMachineBE instanceof AreaAffectingBE) {
             int areaWidth = 158; //The width of the area buttons is 157, including labels
             int xStart = topSectionLeft + (topSectionWidth / 2) - (areaWidth / 2) - getGuiLeft();
