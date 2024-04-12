@@ -5,7 +5,6 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControl
 import com.direwolf20.justdirethings.common.blocks.BlockSwapperT1;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
-import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
@@ -94,10 +93,20 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         return blockSwapperT1BE;
     }
 
+    public GlobalPos getGlobalPos() {
+        return GlobalPos.of(level.dimension(), getBlockPos());
+    }
+
+    public boolean isValidPartner(BlockEntity blockEntity) {
+        return blockEntity.getClass() == this.getClass();
+    }
+
     public boolean handleConnection(GlobalPos globalPos) {
         if (level == null) return false;
+        if (globalPos.equals(getGlobalPos())) return false;
         ServerLevel partnerLevel = level.getServer().getLevel(globalPos.dimension());
         BlockEntity partnerBE = partnerLevel.getBlockEntity(globalPos.pos());
+        if (!isValidPartner(partnerBE)) return false;
         if (!(partnerBE instanceof BlockSwapperT1BE blockSwapperT1BE)) return false;
         if (isPartnerNodeConnected(globalPos)) { //If these nodes are already connected, disconnect them
             removePartnerConnection();
@@ -126,7 +135,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             be.removePartnerConnection();
         }
         setBoundTo(connectingPos); // Add that to this one
-        be.setBoundTo(GlobalPos.of(level.dimension(), getBlockPos())); // Add this to that one
+        be.setBoundTo(getGlobalPos()); // Add this to that one
     }
 
     /**
@@ -199,28 +208,25 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         return true;
     }
 
-    public boolean clearTrackerIfNeeded() {
-        if (positions.isEmpty())
-            return false;
-        if (!canSwap())
-            return true;
-        if (!isActiveRedstone() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
-            return true;
-        return false;
+    public void postSwap(int numBlocks) {
+        //No-Op in Tier 1
     }
 
     public void doSwap() {
-        if (clearTrackerIfNeeded()) {
-            positions.clear();
-            return;
-        }
+        if (!(isActiveRedstone() && canRun())) return;
         if (!canSwap()) return;
-        if (isActiveRedstone() && canRun() && positions.isEmpty())
-            positions = findSpotsToSwap();
+        if (level == null) return;
+
+        BlockSwapperT1BE remoteSwapper = getPartnerBE();
+        if (remoteSwapper == null) return;
+        ServerLevel partnerLevel = getPartnerLevel();
+        if (partnerLevel == null) return;
+
+        positions = findSpotsToSwap();
         if (positions.isEmpty())
             return;
         for (BlockPos blockPos : positions) {
-            swapBlock(blockPos);
+            swapBlock(blockPos, remoteSwapper, partnerLevel);
         }
         for (BlockPos thisPos : thisValidationList) {
             validateBlock((ServerLevel) level, thisPos);
@@ -228,19 +234,18 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         for (BlockPos thatPos : thatValidationList) {
             validateBlock(getPartnerLevel(), thatPos);
         }
-
+        int totalSwapped = thisValidationList.size() + thatValidationList.size();
+        postSwap(totalSwapped);
+        if (totalSwapped > 0) {
+            level.playSound(null, getBlockPos(), SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.33F, 1.0F);
+            getPartnerLevel().playSound(null, getPartnerBE().getBlockPos(), SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.33F, 1.0F);
+        }
         positions.clear();
         thisValidationList.clear();
         thatValidationList.clear();
     }
 
-    public void swapBlock(BlockPos blockPos) {
-        if (level == null) return;
-        BlockSwapperT1BE remoteSwapper = getPartnerBE();
-        if (remoteSwapper == null) return;
-        ServerLevel partnerLevel = getPartnerLevel();
-        if (partnerLevel == null) return;
-
+    public void swapBlock(BlockPos blockPos, BlockSwapperT1BE remoteSwapper, ServerLevel partnerLevel) {
         BlockPos remoteSwapPos = remoteSwapper.getWorldPos(getRelativePos(blockPos));
 
         if (!isBlockPosValid(partnerLevel, remoteSwapPos)) return;
@@ -303,9 +308,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             thisValidationList.add(blockPos);
 
         teleportParticles((ServerLevel) level, blockPos);
-        level.playSound(null, blockPos, SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.33F, 1.0F);
         teleportParticles(partnerLevel, remoteSwapPos);
-        partnerLevel.playSound(null, remoteSwapPos, SoundEvents.SHULKER_TELEPORT, SoundSource.BLOCKS, 0.33F, 1.0F);
     }
 
     public void validateBlock(ServerLevel level, BlockPos blockPos) {
@@ -331,6 +334,9 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
 
     public boolean isBlockPosValid(ServerLevel serverLevel, BlockPos blockPos) {
         if (serverLevel.getBlockState(blockPos).is(JustDireBlockTags.NO_MOVE) || serverLevel.getBlockState(blockPos).is(JustDireBlockTags.SWAPPERDENY))
+            return false;
+        GlobalPos targetGlobalPos = GlobalPos.of(serverLevel.dimension(), blockPos);
+        if (targetGlobalPos.equals(getGlobalPos()) || targetGlobalPos.equals(boundTo))
             return false;
         return true;
     }
