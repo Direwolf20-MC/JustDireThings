@@ -1,16 +1,23 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
+import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,9 +27,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
@@ -408,5 +417,75 @@ public class Helpers {
                     });
         }
         return foundBlocks;
+    }
+
+
+    public static boolean doLavaRepair(ItemStack stack, ItemEntity entity) {
+        CompoundTag tag = stack.getOrCreateTag();
+        if (isInLava(entity)) {
+            tag.putInt("floatingTicks", 0);
+            tag.put("lavaBlockLoc", NbtUtils.writeBlockPos(entity.blockPosition()));
+            entity.setPickUpDelay(85);
+            entity.setOnGround(true);
+        }
+        if (!validateLava(stack, entity)) {
+            tag.remove("floatingTicks");
+            tag.remove("lavaBlockLoc");
+            entity.setOnGround(false);
+        }
+        if (tag.contains("floatingTicks")) {
+            if (entity.position().y - getLavaPos(stack).getY() < 3)
+                entity.setDeltaMovement(new Vec3(0, 0.05, 0)); // Slower floating effect
+            else
+                entity.setDeltaMovement(new Vec3(0, 0.005, 0)); // Slower floating effect
+            entity.move(MoverType.SELF, entity.getDeltaMovement());
+            tag.putInt("floatingTicks", tag.getInt("floatingTicks") + 1);
+            entity.setOnGround(true);
+            if (tag.getInt("floatingTicks") >= 80) {
+                turnLavaIntoObsidian(stack, entity);
+                repairItem(stack);
+                tag.remove("floatingTicks"); // Reset the counter
+                tag.remove("lavaBlockLoc");
+                entity.setOnGround(false);
+            }
+            if (!entity.level().isClientSide && tag.getInt("floatingTicks") < 40)
+                doParticles(stack, entity);
+        }
+        return false; // Return false to allow normal item update processing
+    }
+
+    private static BlockPos getLavaPos(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        return NbtUtils.readBlockPos(tag.getCompound("lavaBlockLoc"));
+    }
+
+    private static void doParticles(ItemStack itemStack, ItemEntity entity) {
+        Random random = new Random();
+        BlockPos pos = getLavaPos(itemStack);
+        ItemFlowParticleData data = new ItemFlowParticleData(new ItemStack(Registration.GooBlock_Tier2.get()), entity.getX(), entity.getY() + 0.75, entity.getZ(), 3);
+        for (int i = 0; i < 5; i++) {
+            double d0 = (double) pos.getX() + random.nextDouble();
+            double d1 = (double) pos.getY() + 0.95;
+            double d2 = (double) pos.getZ() + random.nextDouble();
+            ((ServerLevel) entity.level()).sendParticles(data, d0, d1, d2, 1, 0, 0, 0, 0);
+        }
+    }
+
+    private static boolean isInLava(ItemEntity entity) {
+        return entity.level().getBlockState(entity.blockPosition()).is(Blocks.LAVA);
+    }
+
+    private static void repairItem(ItemStack stack) {
+        stack.setDamageValue(0);
+    }
+
+    private static boolean validateLava(ItemStack stack, ItemEntity entity) {
+        return entity.level().getBlockState(getLavaPos(stack)).is(Blocks.LAVA);
+    }
+
+    private static void turnLavaIntoObsidian(ItemStack stack, ItemEntity entity) {
+        BlockPos lavaPos = getLavaPos(stack);
+        entity.level().setBlock(lavaPos, Blocks.OBSIDIAN.defaultBlockState(), 3); // Remove the lava block
+        entity.level().playSound(null, lavaPos, SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 1F, 1.0F);
     }
 }

@@ -90,6 +90,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
         tag(NO_AUTO_CLICK);
         tag(SWAPPERDENY)
                 .add(Blocks.PISTON_HEAD)
+                .add(Blocks.MOVING_PISTON)
                 .add(Blocks.BEDROCK)
                 .add(Blocks.END_PORTAL_FRAME)
                 .add(Blocks.CANDLE_CAKE)
