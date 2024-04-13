@@ -248,6 +248,8 @@ public interface ToggleableTool extends ToggleableItem {
             scanFor(level, player, itemStack, Ability.OREXRAY);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.LAWNMOWER))
             lawnmower(level, player, itemStack);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.CAUTERIZEWOUNDS))
+            cauterizeWounds(level, player, itemStack);
     }
 
     default void useOnAbility(UseOnContext pContext) {
@@ -306,6 +308,29 @@ public interface ToggleableTool extends ToggleableItem {
             if (!pLevel.isClientSide)
                 handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, alsoBreakSet, drops, pState, 0);
             return true;
+        }
+        return false;
+    }
+
+    default boolean cauterizeWounds(Level level, Player player, ItemStack itemStack) {
+        if (player.getHealth() >= player.getMaxHealth()) return false;
+        if (!level.isClientSide) {
+            if (player.getCooldowns().isOnCooldown(itemStack.getItem())) {
+                return false;
+            } else {
+                player.heal(10f);
+                player.getCooldowns().addCooldown(itemStack.getItem(), 200);
+                player.playNotifySound(SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
+                Random random = new Random();
+                Vec3 pos = player.getEyePosition();
+                for (int i = 0; i < 10; i++) {
+                    double d0 = pos.x() + random.nextDouble();
+                    double d1 = pos.y() + random.nextDouble();
+                    double d2 = pos.z() + random.nextDouble();
+                    ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+                }
+                return true;
+            }
         }
         return false;
     }

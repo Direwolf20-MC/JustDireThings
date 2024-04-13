@@ -10,6 +10,7 @@ public class EclipseAlloySword extends BaseSword implements PoweredTool {
     public EclipseAlloySword() {
         super(GooTier.ECLIPSEALLOY, 3, -2.0F, new Properties());
         registerAbility(Ability.GLOWING);
+        registerAbility(Ability.CAUTERIZEWOUNDS);
         registerAbility(Ability.DROPTELEPORT);
     }
 

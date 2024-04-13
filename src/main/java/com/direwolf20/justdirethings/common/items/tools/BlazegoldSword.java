@@ -12,6 +12,7 @@ public class BlazegoldSword extends BaseSword {
         super(GooTier.BLAZEGOLD, 3, -2.0F, new Properties().fireResistant());
         registerAbility(Ability.MOBSCANNER);
         registerAbility(Ability.LAVAREPAIR);
+        registerAbility(Ability.CAUTERIZEWOUNDS);
     }
 
     @Override

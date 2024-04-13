@@ -10,6 +10,7 @@ public class CelestigemSword extends BaseSword implements PoweredTool {
     public CelestigemSword() {
         super(GooTier.CELESTIGEM, 3, -2.0F, new Properties());
         registerAbility(Ability.MOBSCANNER);
+        registerAbility(Ability.CAUTERIZEWOUNDS);
         registerAbility(Ability.DROPTELEPORT);
     }
 
