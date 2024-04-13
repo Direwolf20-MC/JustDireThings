@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.PartEntity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -310,6 +311,12 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean isValidEntity(Entity entity) {
+        if (entity.isMultipartEntity())
+            return false;
+        if (entity instanceof PartEntity<?>)
+            return false;
+        if (!entity.canChangeDimensions())
+            return false;
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.HOSTILE) && !(entity instanceof Monster))
             return false;
         if (((swap_entity_type.equals(SWAP_ENTITY_TYPE.PASSIVE)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.ADULT)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.CHILD))) && !(entity instanceof Animal))
