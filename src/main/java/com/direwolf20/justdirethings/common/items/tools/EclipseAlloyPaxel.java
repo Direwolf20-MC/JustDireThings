@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class EclipseAlloyPaxel extends BasePickaxe implements PoweredTool {
     public EclipseAlloyPaxel() {
-        super(GooTier.ECLIPSEALLOY, 1, -2.8F, new Properties());
+        super(GooTier.ECLIPSEALLOY, 1, -2.8F, new Properties().fireResistant());
         registerAbility(Ability.OREXRAY);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SKYSWEEPER);

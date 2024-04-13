@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class CelestigemPaxel extends BasePickaxe implements PoweredTool {
     public CelestigemPaxel() {
-        super(GooTier.CELESTIGEM, 1, -2.8F, new Properties());
+        super(GooTier.CELESTIGEM, 1, -2.8F, new Properties().fireResistant());
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SKYSWEEPER);
