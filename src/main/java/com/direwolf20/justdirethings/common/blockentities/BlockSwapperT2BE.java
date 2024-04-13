@@ -130,10 +130,9 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
     }
 
     public boolean isInBothAreas(Vec3 vec3) {
-        BlockEntity partnerBE = getPartnerBE();
-        if (!level.equals(partnerBE.getLevel()))
+        if (!isSameLevel())
             return false; //If my level is different than my partners we are not overlapping of course!
-        if (partnerBE instanceof BlockSwapperT2BE partnerSwapper) {
+        if (getPartnerBE() instanceof BlockSwapperT2BE partnerSwapper) {
             AABB thisAABB = getAABB(getBlockPos());
             AABB thatAABB = partnerSwapper.getAABB(partnerSwapper.getBlockPos());
             return (thisAABB.contains(vec3.x(), vec3.y(), vec3.z()) && thatAABB.contains(vec3.x(), vec3.y(), vec3.z()));

@@ -310,12 +310,17 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         return returnList;
     }
 
+    public boolean isSameLevel() {
+        return level.equals(getPartnerBE().getLevel());
+    }
+
+
     public boolean isValidEntity(Entity entity) {
         if (entity.isMultipartEntity())
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (!entity.canChangeDimensions())
+        if (!entity.canChangeDimensions() && !isSameLevel())
             return false;
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.HOSTILE) && !(entity instanceof Monster))
             return false;
