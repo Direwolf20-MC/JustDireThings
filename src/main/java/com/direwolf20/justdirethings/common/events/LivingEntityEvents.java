@@ -1,17 +1,25 @@
 package com.direwolf20.justdirethings.common.events;
 
+import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
 import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.Helpers;
 import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.Iterator;
@@ -54,6 +62,44 @@ public class LivingEntityEvents {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerDeath(LivingDeathEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            // Check player's inventory for the totem
+            ItemStack totemStack = findTotem(player);
+            if (!totemStack.isEmpty()) {
+                CompoundTag deathData = new CompoundTag();
+                deathData.put("direDeathData", NBTHelpers.globalPosToNBT(GlobalPos.of(player.level().dimension(), player.blockPosition())));
+                player.setData(Registration.DEATH_DATA, deathData);
+                totemStack.shrink(1);
+            }
+        }
+    }
+
+    private static ItemStack findTotem(ServerPlayer player) {
+        for (ItemStack itemStack : player.getInventory().items) {
+            if (itemStack.getItem() == Registration.TotemOfDeathRecall.get() && TotemOfDeathRecall.getBoundTo(itemStack) == null) {
+                return itemStack;
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        ServerPlayer oldPlayer = (ServerPlayer) event.getOriginal();
+        if (oldPlayer.level().isClientSide || !event.isWasDeath()) return;
+        ServerPlayer newPlayer = (ServerPlayer) event.getEntity();
+        CompoundTag deathData = oldPlayer.getData(Registration.DEATH_DATA);
+
+        if (deathData.contains("direDeathData")) {
+            GlobalPos boundTo = NBTHelpers.nbtToGlobalPos(deathData.getCompound("direDeathData"));
+            ItemStack totemStack = new ItemStack(Registration.TotemOfDeathRecall.get());
+            TotemOfDeathRecall.setBoundTo(totemStack, boundTo);
+            newPlayer.getInventory().add(totemStack);
         }
     }
 }
