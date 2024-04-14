@@ -22,12 +22,6 @@ public class PlayerHandler extends ItemStackHandler {
         }
     }
 
-    /*public PlayerHandler() {
-        super(0);
-        player = null;
-        inventoryType = InventoryType.Inventory;
-    }*/
-
     public PlayerHandler(Player player, InventoryType inventoryType) {
         super(inventoryType.equals(InventoryType.Inventory) ? player.getInventory().items : inventoryType.equals(InventoryType.Armor) ? player.getInventory().armor : player.getInventory().offhand);
         this.player = player;

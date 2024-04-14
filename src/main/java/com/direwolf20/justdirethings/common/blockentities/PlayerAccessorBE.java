@@ -49,7 +49,6 @@ public class PlayerAccessorBE extends BaseMachineBE {
         this.playerHandlers.clear();
         this.serverPlayer = null;
         if (level != null) {
-            //level.invalidateCapabilities(getBlockPos());
             updateServerPlayer(); //Since we cleared out the old player, check to see if they still exist, like a dimension change or something
         }
         markDirtyClient();
@@ -135,11 +134,10 @@ public class PlayerAccessorBE extends BaseMachineBE {
     @Override
     public void markDirtyClient() {
         System.out.println("Marking Dirty Client!");
-        super.markDirtyClient();
         if (level != null) {
             level.invalidateCapabilities(getBlockPos());
-            level.updateNeighborsAt(getBlockPos(), getBlockState().getBlock());
         }
+        super.markDirtyClient();
     }
 
     @Override

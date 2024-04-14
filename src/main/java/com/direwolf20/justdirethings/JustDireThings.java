@@ -15,6 +15,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -82,8 +83,13 @@ public class JustDireThings {
         );
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {
-                    if (be instanceof PlayerAccessorBE playerAccessorBE)
-                        return playerAccessorBE.getPlayerHandler(side);
+                    if (be instanceof PlayerAccessorBE playerAccessorBE) {
+                        if (be.getLevel().isClientSide) {
+                            return new ItemStackHandler(1);
+                        } else {
+                            return playerAccessorBE.getPlayerHandler(side);
+                        }
+                    }
                     return null;
                 },
                 Registration.PlayerAccessor.get()
