@@ -45,7 +45,7 @@ public class PlayerAccessorBE extends BaseMachineBE {
     }
 
     public void clearCache() {
-        System.out.println("Clearing Cache!");
+        //System.out.println("Clearing Cache!");
         this.playerHandlers.clear();
         this.serverPlayer = null;
         if (level != null) {
@@ -76,7 +76,7 @@ public class PlayerAccessorBE extends BaseMachineBE {
      * Find the player on the server, if the one we have cached is either null or removed.
      */
     public void updateServerPlayer() {
-        System.out.println("Updating Player");
+        //System.out.println("Updating Player");
         checkedPlayer = true;
         if (this.placedByUUID == null) {
             serverPlayer = null;
@@ -133,7 +133,7 @@ public class PlayerAccessorBE extends BaseMachineBE {
 
     @Override
     public void markDirtyClient() {
-        System.out.println("Marking Dirty Client!");
+        //System.out.println("Marking Dirty Client!");
         if (level != null) {
             level.invalidateCapabilities(getBlockPos());
         }
