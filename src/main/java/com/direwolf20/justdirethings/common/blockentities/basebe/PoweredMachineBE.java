@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -10,7 +11,7 @@ public interface PoweredMachineBE {
         return 100000;
     }
 
-    PoweredMachineContainerData getContainerData();
+    ContainerData getContainerData();
 
     MachineEnergyStorage getEnergyStorage();
 
@@ -26,6 +27,10 @@ public interface PoweredMachineBE {
 
     default boolean hasEnoughPower(int power) {
         return getEnergyStorage().extractEnergy(power, true) >= power;
+    }
+
+    default int insertEnergy(int power, boolean simulate) {
+        return getEnergyStorage().receiveEnergy(power, simulate);
     }
 
     default int extractEnergy(int power, boolean simulate) {

@@ -8,8 +8,8 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class PocketGeneratorSlot extends SlotItemHandler {
-    public PocketGeneratorSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+public class FuelSlot extends SlotItemHandler {
+    public FuelSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
     }
 

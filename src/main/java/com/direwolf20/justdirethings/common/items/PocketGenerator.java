@@ -83,7 +83,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         return (int) (getFePerFuelTick() * getBurnSpeedMultiplier());
     }
 
-    private void tryBurn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
+    public void tryBurn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
         boolean canInsertEnergy = energyStorage.forceReceiveEnergy(fePerTick(), true) > 0;
         if (NBTHelpers.getIntValue(itemStack, COUNTER) > 0 && canInsertEnergy) {
             burn(energyStorage, itemStack);
@@ -178,7 +178,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         return Config.POCKET_GENERATOR_FE_PER_TICK.get();
     }
 
-    public double getFePerFuelTick() {
+    public int getFePerFuelTick() {
         return Config.POCKET_GENERATOR_FE_PER_FUEL_TICK.get();
     }
 

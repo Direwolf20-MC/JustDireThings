@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_droppert1": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "justdirethings:droppert1"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:droppert1_nbtclear"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_droppert1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:droppert1_nbtclear"
+    ]
+  }
+}

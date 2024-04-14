@@ -21,6 +21,13 @@ public class JustDireItemTags extends ItemTagsProvider {
         super(packOutput, lookupProvider, blockTags.contentsGetter(), JustDireThings.MODID, helper);
     }
 
+    public static final TagKey<Item> WRENCHES = forgeTag("wrenches");
+    public static final TagKey<Item> TOOLS_WRENCH = forgeTag("tools/wrench");
+
+    private static TagKey<Item> forgeTag(String name) {
+        return ItemTags.create(new ResourceLocation("forge", name));
+    }
+
     public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "deny_fuel_canister"));
     public static final TagKey<Item> AUTO_SMELT_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "auto_smelt_deny"));
 
@@ -38,17 +45,23 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.FerricorePickaxe.get())
                 .add(Registration.BlazegoldPickaxe.get())
                 .add(Registration.CelestigemPickaxe.get())
-                .add(Registration.EclipseAlloyPickaxe.get());
+                .add(Registration.EclipseAlloyPickaxe.get())
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
         tag(ItemTags.SHOVELS)
                 .add(Registration.FerricoreShovel.get())
                 .add(Registration.BlazegoldShovel.get())
                 .add(Registration.CelestigemShovel.get())
-                .add(Registration.EclipseAlloyShovel.get());
+                .add(Registration.EclipseAlloyShovel.get())
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
         tag(ItemTags.AXES)
                 .add(Registration.FerricoreAxe.get())
                 .add(Registration.BlazegoldAxe.get())
                 .add(Registration.CelestigemAxe.get())
-                .add(Registration.EclipseAlloyAxe.get());
+                .add(Registration.EclipseAlloyAxe.get())
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
         tag(ItemTags.HOES)
                 .add(Registration.FerricoreHoe.get())
                 .add(Registration.BlazegoldHoe.get())
@@ -64,6 +77,10 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.RawEclipseAlloy.get());
         tag(Tags.Items.GEMS)
                 .add(Registration.Celestigem.get());
+        tag(WRENCHES)
+                .add(Registration.FerricoreWrench.get());
+        tag(TOOLS_WRENCH)
+                .add(Registration.FerricoreWrench.get());
     }
 
     @Override

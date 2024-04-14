@@ -16,7 +16,7 @@ public class PocketGeneratorT2 extends PocketGenerator {
         return Config.POCKET_GENERATOR_T2_FE_PER_TICK.get();
     }
 
-    public double getFePerFuelTick() {
+    public int getFePerFuelTick() {
         return Config.POCKET_GENERATOR_T2_FE_PER_FUEL_TICK.get();
     }
 

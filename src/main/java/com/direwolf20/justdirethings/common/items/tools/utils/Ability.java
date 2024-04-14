@@ -19,6 +19,8 @@ public enum Ability {
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50),
     HAMMER(SettingType.CYCLE, 1, 50),
+    LAVAREPAIR(SettingType.TOGGLE, 0, 0),
+    CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500),
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100),
     //Tier 4

@@ -10,7 +10,6 @@ import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
@@ -249,6 +248,8 @@ public interface ToggleableTool extends ToggleableItem {
             scanFor(level, player, itemStack, Ability.OREXRAY);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.LAWNMOWER))
             lawnmower(level, player, itemStack);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.CAUTERIZEWOUNDS))
+            cauterizeWounds(level, player, itemStack);
     }
 
     default void useOnAbility(UseOnContext pContext) {
@@ -311,6 +312,29 @@ public interface ToggleableTool extends ToggleableItem {
         return false;
     }
 
+    default boolean cauterizeWounds(Level level, Player player, ItemStack itemStack) {
+        if (player.getHealth() >= player.getMaxHealth()) return false;
+        if (!level.isClientSide) {
+            if (player.getCooldowns().isOnCooldown(itemStack.getItem())) {
+                return false;
+            } else {
+                player.heal(10f);
+                player.getCooldowns().addCooldown(itemStack.getItem(), 200);
+                player.playNotifySound(SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
+                Random random = new Random();
+                Vec3 pos = player.getEyePosition();
+                for (int i = 0; i < 10; i++) {
+                    double d0 = pos.x() + random.nextDouble();
+                    double d1 = pos.y() + random.nextDouble();
+                    double d2 = pos.z() + random.nextDouble();
+                    ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     default boolean lawnmower(Level level, Player player, ItemStack itemStack) {
         if (!level.isClientSide && canUseAbility(itemStack, Ability.LAWNMOWER)) {
             List<TagKey<Block>> tags = new ArrayList<>();
@@ -342,7 +366,7 @@ public interface ToggleableTool extends ToggleableItem {
         IItemHandler handler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK, pPos, pContext.getClickedFace());
         if (handler == null) return false;
         setBoundInventory(pStack, new NBTHelpers.BoundInventory(GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace()));
-        pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", I18n.get(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
+        pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
         player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
         return true;
     }

@@ -118,10 +118,15 @@ public class ToggleButtonFactory {
         return new NumberButton(x, y, 24, 12, value, Config.MINIMUM_MACHINE_TICK_SPEED.get(), 1200, ticksButtonLocalization, onPress);
     }
 
+    public static NumberButton TICKSPEEDBUTTON(int x, int y, int value, int min, Button.OnPress onPress) {
+        return new NumberButton(x, y, 24, 12, value, min, 1200, ticksButtonLocalization, onPress);
+    }
+
     /** LEFT or RIGHT Click Button **/
     private static final List<TextureLocalization> LEFT_RIGHT_CLICK_TEXTURES = List.of(
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-right.png"), Component.translatable("justdirethings.screen.click-right")),
-            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-left.png"), Component.translatable("justdirethings.screen.click-left"))
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-left.png"), Component.translatable("justdirethings.screen.click-left")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-hold.png"), Component.translatable("justdirethings.screen.click-hold"))
     );
 
     public static ToggleButton LEFTRIGHTCLICKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
@@ -197,4 +202,40 @@ public class ToggleButtonFactory {
     public static ToggleButton EQUALSBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, EQUALITY_TEXTURES, startingValue, onPress);
     }
+
+    /** Show Particles button **/
+    private static final ResourceLocation SHOW_PARTICLES_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
+    private static final Component SHOW_PARTICLES_LOCALIZATION = Component.translatable("justdirethings.screen.showparticles");
+
+    public static GrayscaleButton SHOWPARTICLESBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SHOW_PARTICLES_BUTTON, SHOW_PARTICLES_LOCALIZATION, startingValue, onPress);
+    }
+
+    /** Swapper Target Button **/
+    private static final List<TextureLocalization> SWAPPER_ENTITY_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/entity-none.png"), Component.translatable("justdirethings.screen.entity-none")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/mobscanner.png"), Component.translatable("justdirethings.screen.target-hostile")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob.png"), Component.translatable("justdirethings.screen.target-passive")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob-adult.png"), Component.translatable("justdirethings.screen.target-adult")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/passivemob-child.png"), Component.translatable("justdirethings.screen.target-child")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/player.png"), Component.translatable("justdirethings.screen.target-player")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/glowing.png"), Component.translatable("justdirethings.screen.target-living")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/item.png"), Component.translatable("justdirethings.screen.target-item")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/entity-all.png"), Component.translatable("justdirethings.screen.entity-all"))
+    );
+
+    public static ToggleButton SWAPPERENTITYBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SWAPPER_ENTITY_TEXTURES, startingValue, onPress);
+    }
+
+    /** Swapper Block Button **/
+    private static final List<TextureLocalization> SWAPPER_BLOCK_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-block.png"), Component.translatable("justdirethings.screen.target-block")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/filter-air.png"), Component.translatable("justdirethings.screen.target-noblock"))
+    );
+
+    public static ToggleButton SWAPPERBLOCKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SWAPPER_BLOCK_TEXTURES, startingValue, onPress);
+    }
+
 }

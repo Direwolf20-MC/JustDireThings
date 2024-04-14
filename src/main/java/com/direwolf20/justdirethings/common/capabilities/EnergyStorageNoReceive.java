@@ -1,8 +1,6 @@
 package com.direwolf20.justdirethings.common.capabilities;
 
-import net.neoforged.neoforge.energy.EnergyStorage;
-
-public class EnergyStorageNoReceive extends EnergyStorage {
+public class EnergyStorageNoReceive extends MachineEnergyStorage {
 
     public EnergyStorageNoReceive(int capacity) {
         super(capacity);

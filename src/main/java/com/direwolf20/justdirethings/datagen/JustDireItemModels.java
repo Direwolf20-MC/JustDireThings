@@ -40,6 +40,20 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.ClickerT2_ITEM.getId().getPath(), modLoc("block/clickert2"));
         withExistingParent(Registration.SensorT1_ITEM.getId().getPath(), modLoc("block/sensort1"));
         withExistingParent(Registration.SensorT2_ITEM.getId().getPath(), modLoc("block/sensort2"));
+        withExistingParent(Registration.DropperT1_ITEM.getId().getPath(), modLoc("block/droppert1"));
+        withExistingParent(Registration.DropperT2_ITEM.getId().getPath(), modLoc("block/droppert2"));
+        withExistingParent(Registration.GeneratorT1_ITEM.getId().getPath(), modLoc("block/generatort1"));
+        withExistingParent(Registration.EnergyTransmitter_ITEM.getId().getPath(), modLoc("block/energytransmitter"));
+        withExistingParent(Registration.RawCoal_T1_ITEM.getId().getPath(), modLoc("block/raw_coal_t1_ore"));
+        withExistingParent(Registration.RawCoal_T2_ITEM.getId().getPath(), modLoc("block/raw_coal_t2_ore"));
+        withExistingParent(Registration.RawCoal_T3_ITEM.getId().getPath(), modLoc("block/raw_coal_t3_ore"));
+        withExistingParent(Registration.RawCoal_T4_ITEM.getId().getPath(), modLoc("block/raw_coal_t4_ore"));
+        withExistingParent(Registration.CoalBlock_T1_ITEM.getId().getPath(), modLoc("block/coalblock_t1"));
+        withExistingParent(Registration.CoalBlock_T2_ITEM.getId().getPath(), modLoc("block/coalblock_t2"));
+        withExistingParent(Registration.CoalBlock_T3_ITEM.getId().getPath(), modLoc("block/coalblock_t3"));
+        withExistingParent(Registration.CoalBlock_T4_ITEM.getId().getPath(), modLoc("block/coalblock_t4"));
+        withExistingParent(Registration.BlockSwapperT1_ITEM.getId().getPath(), modLoc("block/blockswappert1"));
+        withExistingParent(Registration.BlockSwapperT2_ITEM.getId().getPath(), modLoc("block/blockswappert2"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));
@@ -56,6 +70,13 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.BlazegoldIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/blazegold_ingot"));
         singleTexture(Registration.RawEclipseAlloy.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/raw_eclipsealloy"));
         singleTexture(Registration.EclipseAlloyIngot.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/eclipsealloy_ingot"));
+        singleTexture(Registration.Coal_T1.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/coal_t1"));
+        singleTexture(Registration.Coal_T2.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/coal_t2"));
+        singleTexture(Registration.Coal_T3.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/coal_t3"));
+        singleTexture(Registration.Coal_T4.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/coal_t4"));
+
+        singleTexture(Registration.FerricoreWrench.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ferricore_wrench"));
+        singleTexture(Registration.TotemOfDeathRecall.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/totem_of_death_recall"));
 
         //Tool Items
         registerTools();

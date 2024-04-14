@@ -71,7 +71,7 @@ public class SensorT1 extends BaseMachineBlock {
 
     @Override
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @javax.annotation.Nullable Direction direction) {
-        if (direction.equals(state.getValue(BlockStateProperties.FACING).getOpposite()))
+        if (direction == (state.getValue(BlockStateProperties.FACING).getOpposite()))
             return false; //Don't emit on facing side
         return true;
     }
@@ -83,7 +83,7 @@ public class SensorT1 extends BaseMachineBlock {
 
     @Override
     public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-        if (side.equals(blockState.getValue(BlockStateProperties.FACING).getOpposite()))
+        if (side == (blockState.getValue(BlockStateProperties.FACING).getOpposite()))
             return 0; //Don't emit on facing side
         BlockEntity blockEntity = blockAccess.getBlockEntity(pos);
         if (blockEntity instanceof SensorT1BE sensorT1BE) {
@@ -94,7 +94,7 @@ public class SensorT1 extends BaseMachineBlock {
 
     @Override
     public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-        if (side.equals(blockState.getValue(BlockStateProperties.FACING).getOpposite()))
+        if (side == (blockState.getValue(BlockStateProperties.FACING).getOpposite()))
             return 0; //Don't emit on facing side
         BlockEntity blockEntity = blockAccess.getBlockEntity(pos);
         if (blockEntity instanceof SensorT1BE sensorT1BE && sensorT1BE.strongSignal) {

@@ -34,6 +34,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.ClickerT2.get(), "Advanced Clicker");
         add(Registration.SensorT1.get(), "Simple Sensor");
         add(Registration.SensorT2.get(), "Advanced Sensor");
+        add(Registration.DropperT1.get(), "Simple Dropper");
+        add(Registration.DropperT2.get(), "Advanced Dropper");
+        add(Registration.GeneratorT1.get(), "Simple Fuel Generator");
+        add(Registration.EnergyTransmitter.get(), "Energy Transmitter");
+        add(Registration.BlockSwapperT1.get(), "Simple Swapper");
+        add(Registration.BlockSwapperT2.get(), "Advanced Swapper");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -44,6 +50,14 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CelestigemBlock.get(), "Celestigem Block");
         add(Registration.RawEclipseAlloyOre.get(), "Raw Eclipse Alloy Ore");
         add(Registration.EclipseAlloyBlock.get(), "Eclipse Alloy Block");
+        add(Registration.RawCoal_T1.get(), "Raw Primal Coal");
+        add(Registration.CoalBlock_T1.get(), "Primal Coal Block");
+        add(Registration.RawCoal_T2.get(), "Raw Blaze Ember");
+        add(Registration.CoalBlock_T2.get(), "Blaze Ember Block");
+        add(Registration.RawCoal_T3.get(), "Raw Voidflame Coal");
+        add(Registration.CoalBlock_T3.get(), "Voidflame Coal Block");
+        add(Registration.RawCoal_T4.get(), "Raw Eclipse Ember");
+        add(Registration.CoalBlock_T4.get(), "Eclipse Ember Block");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
@@ -51,6 +65,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Pocket_GeneratorT2.get(), "Blazing Pocket Generator");
         add(Registration.Pocket_GeneratorT3.get(), "Celestial Pocket Generator");
         add(Registration.Pocket_GeneratorT4.get(), "Eclipse Pocket Generator");
+        add(Registration.TotemOfDeathRecall.get(), "Totem of Death Recall");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -73,7 +88,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.EclipseAlloyShovel.get(), "Eclipse Alloy Shovel");
         add(Registration.EclipseAlloyAxe.get(), "Eclipse Alloy Axe");
         add(Registration.EclipseAlloyHoe.get(), "Eclipse Alloy Hoe");
-
+        add(Registration.CelestigemPaxel.get(), "Celestigem Paxel");
+        add(Registration.EclipseAlloyPaxel.get(), "Eclipse Alloy Paxel");
+        add(Registration.FerricoreWrench.get(), "Ferricore Wrench");
 
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");
@@ -83,6 +100,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Celestigem.get(), "Celestigem");
         add(Registration.EclipseAlloyIngot.get(), "Eclipse Alloy Ingot");
         add(Registration.RawEclipseAlloy.get(), "Raw Eclipse Alloy");
+        add(Registration.Coal_T1.get(), "Primal Coal");
+        add(Registration.Coal_T2.get(), "Blaze Ember");
+        add(Registration.Coal_T3.get(), "Voidflame Coal");
+        add(Registration.Coal_T4.get(), "Eclipse Ember");
+
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
@@ -98,8 +120,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.boundto", "Bound to: %s:%s");
+        add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");
         add("justdirethings.bindfailed", "Binding Failed");
+        add("justdirethings.bindremoved", "Binding Removed");
+        add("justdirethings.unbound-screen", "Not Bound");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -114,6 +139,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.TREEFELLER.getLocalization(), "Tree Feller");
         add(Ability.LEAFBREAKER.getLocalization(), "Leaf Breaker");
         add(Ability.SMELTER.getLocalization(), "Auto Smelter");
+        add(Ability.LAVAREPAIR.getLocalization(), "Lava Repair");
+        add(Ability.CAUTERIZEWOUNDS.getLocalization(), "Cauterize Wounds");
         add(Ability.HAMMER.getLocalization(), "Hammer");
         add(Ability.HAMMER.getLocalization() + "_off", "Hammer: Disabled");
         add(Ability.HAMMER.getLocalization() + "_3", "Hammer: 3x3");
@@ -121,12 +148,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.HAMMER.getLocalization() + "_7", "Hammer: 7x7");
         add(Ability.OREXRAY.getLocalization(), "X-Ray");
         add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
-        add(Ability.GLOWING.getLocalization(), "Monster X-Ray");
+        add(Ability.GLOWING.getLocalization(), "Mob X-Ray");
         add(Ability.INSTABREAK.getLocalization(), "Instant Break");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
         add("justdirethings.screen.energycost", "Energy Cost: %s");
+        add("justdirethings.screen.fepertick", "FE/T: %s");
         add("justdirethings.screen.no_fuel", "Fuel source empty");
         add("justdirethings.screen.burn_time", "Burn time left: %ss");
         add("justdirethings.screen.ignored", "Ignored");
@@ -150,6 +178,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.click-right", "Right Click");
         add("justdirethings.screen.click-left", "Left Click");
         add("justdirethings.screen.target-block", "Target Blocks");
+        add("justdirethings.screen.target-noblock", "Ignore Blocks");
         add("justdirethings.screen.target-air", "Target Air");
         add("justdirethings.screen.target-hostile", "Target Hostile");
         add("justdirethings.screen.target-passive", "Target Passive");
@@ -158,6 +187,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.target-player", "Target Player");
         add("justdirethings.screen.target-living", "Target All Living");
         add("justdirethings.screen.target-item", "Target Items");
+        add("justdirethings.screen.entity-none", "No Entities");
+        add("justdirethings.screen.entity-all", "All Entities");
         add("justdirethings.screen.sneak-click", "Sneak Click");
         add("justdirethings.screen.showfakeplayer", "Show Fake Player");
         add("justdirethings.screen.redstone-weak", "Weak Signal");
@@ -166,7 +197,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.greaterthan", "Greater Than");
         add("justdirethings.screen.lessthan", "Less Than");
         add("justdirethings.screen.equals", "Equals");
-
+        add("justdirethings.screen.dropcount", "Drop Amount");
+        add("justdirethings.screen.showparticles", "Show Particles");
+        add("justdirethings.screen.burnspeedmultiplier", "Burn Speed Multiplier: %s");
+        add("justdirethings.screen.click-hold", "Hold Click");
+        add("justdirethings.screen.click-hold-for", "Hold Click For (ticks)");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

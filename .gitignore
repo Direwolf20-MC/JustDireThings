@@ -22,5 +22,7 @@ eclipse
 run
 runs
 run-data
+extra-mods
+extra-api
 
 repo

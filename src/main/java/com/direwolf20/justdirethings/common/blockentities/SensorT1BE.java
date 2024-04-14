@@ -84,6 +84,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         return blockStateProperties.getOrDefault(slot, new HashMap<>());
     }
 
+    @SuppressWarnings("unchecked")
+    // Suppress the unchecked cast warning -- This is done this way in vanilla all over the place, so I guess its safe?
     private static <T extends Comparable<T>> String getName(Property<T> pProperty, Comparable<?> pValue) {
         return pProperty.getName((T) pValue);
     }

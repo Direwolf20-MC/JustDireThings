@@ -80,6 +80,17 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EnergyTransmitter.get())
+                .pattern(" d ")
+                .pattern("heh")
+                .pattern("fff")
+                .define('e', Items.ENDER_PEARL)
+                .define('f', Registration.BlazegoldIngot.get())
+                .define('d', Registration.Celestigem.get())
+                .define('h', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlockBreakerT1.get())
                 .pattern("fdf")
                 .pattern("lol")
@@ -172,8 +183,84 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.DropperT1.get())
+                .pattern("fdf")
+                .pattern("lol")
+                .pattern("frf")
+                .define('o', Items.DROPPER)
+                .define('f', Registration.FerricoreIngot.get())
+                .define('d', Items.REDSTONE)
+                .define('l', Items.LAPIS_LAZULI)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.DropperT2.get())
+                .pattern("fdf")
+                .pattern("dod")
+                .pattern("frf")
+                .define('o', Registration.DropperT1_ITEM.get())
+                .define('f', Registration.Celestigem.get())
+                .define('d', Items.ENDER_EYE)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.GeneratorT1.get())
+                .pattern("iri")
+                .pattern("cfc")
+                .pattern("iri")
+                .define('i', Registration.FerricoreIngot.get())
+                .define('c', Items.COAL)
+                .define('r', Items.REDSTONE)
+                .define('f', Items.BLAST_FURNACE)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlockSwapperT1.get())
+                .pattern("fdf")
+                .pattern("lol")
+                .pattern("frf")
+                .define('o', Items.OBSERVER)
+                .define('f', Registration.BlazegoldIngot.get())
+                .define('d', Items.ENDER_EYE)
+                .define('l', Items.LAPIS_LAZULI)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlockSwapperT2.get())
+                .pattern("fdf")
+                .pattern("dod")
+                .pattern("frf")
+                .define('o', Registration.BlockSwapperT1_ITEM.get())
+                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('d', Items.ENDER_EYE)
+                .define('r', Items.REDSTONE)
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
 
         //Items
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreWrench.get())
+                .pattern(" i ")
+                .pattern(" ii")
+                .pattern("i  ")
+                .define('i', Registration.FerricoreIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.TotemOfDeathRecall.get())
+                .pattern("bdb")
+                .pattern("lel")
+                .pattern("bdb")
+                .define('b', Registration.BlazegoldIngot.get())
+                .define('e', Items.ENDER_PEARL)
+                .define('d', Items.DIAMOND)
+                .define('l', Items.LAPIS_LAZULI)
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Fuel_Canister.get())
                 .pattern(" i ")
                 .pattern("ici")
@@ -242,6 +329,24 @@ public class JustDireRecipes extends RecipeProvider {
                 .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
                 .save(consumer);
         GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_netherite_block"), Blocks.NETHERITE_BLOCK.defaultBlockState(), Registration.RawEclipseAlloyOre.get().defaultBlockState(), 4, 4800)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
+                .save(consumer);
+
+        //GooSpread Coal
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "coal_block_t1"), Blocks.COAL_BLOCK.defaultBlockState(), Registration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
+                .save(consumer);
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "coal_block_t2"), Registration.CoalBlock_T1.get().defaultBlockState(), Registration.RawCoal_T2.get().defaultBlockState(), 2, 2400)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
+                .save(consumer);
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "coal_block_t3"), Registration.CoalBlock_T2.get().defaultBlockState(), Registration.RawCoal_T3.get().defaultBlockState(), 3, 4800)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
+                .save(consumer);
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "coal_block_t4"), Registration.CoalBlock_T3.get().defaultBlockState(), Registration.RawCoal_T4.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
                 .save(consumer);
@@ -398,6 +503,17 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemPaxel.get())
+                .pattern("ahp")
+                .pattern(" s ")
+                .pattern(" s ")
+                .define('a', Registration.CelestigemAxe.get())
+                .define('h', Registration.CelestigemShovel.get())
+                .define('p', Registration.CelestigemPickaxe.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloySword.get())
                 .pattern(" f ")
@@ -444,12 +560,27 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyPaxel.get())
+                .pattern("ahp")
+                .pattern(" s ")
+                .pattern(" s ")
+                .define('a', Registration.EclipseAlloyAxe.get())
+                .define('h', Registration.EclipseAlloyShovel.get())
+                .define('p', Registration.EclipseAlloyPickaxe.get())
+                .define('s', Items.STICK)
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
 
         //Resource Conversions
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(), Registration.FerricoreIngot.getId().toString() + "_9x9", "justdirethings", Registration.FerricoreBlock.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.BlazegoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.BlazeGoldBlock.get(), Registration.BlazegoldIngot.getId().toString() + "_9x9", "justdirethings", Registration.BlazeGoldBlock.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Celestigem.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CelestigemBlock.get(), Registration.Celestigem.getId().toString() + "_9x9", "justdirethings", Registration.CelestigemBlock.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.EclipseAlloyIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.EclipseAlloyBlock.get(), Registration.EclipseAlloyIngot.getId().toString() + "_9x9", "justdirethings", Registration.EclipseAlloyBlock.getId().toString() + "_9x9", "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T1.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T1.get(), Registration.Coal_T1.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T1.getId().toString() + "_9x9", "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T2.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T2.get(), Registration.Coal_T2.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T2.getId().toString() + "_9x9", "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T3.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T3.get(), Registration.Coal_T3.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T3.getId().toString() + "_9x9", "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T4.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T4.get(), Registration.Coal_T4.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T4.getId().toString() + "_9x9", "justdirethings");
 
         //NBT Clear
         for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {

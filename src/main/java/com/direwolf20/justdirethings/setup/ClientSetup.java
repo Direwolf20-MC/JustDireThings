@@ -3,10 +3,7 @@ package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
-import com.direwolf20.justdirethings.client.blockentityrenders.BlockBreakerT2BER;
-import com.direwolf20.justdirethings.client.blockentityrenders.BlockPlacerT2BER;
-import com.direwolf20.justdirethings.client.blockentityrenders.ClickerT2BER;
-import com.direwolf20.justdirethings.client.blockentityrenders.ItemCollectorRenderer;
+import com.direwolf20.justdirethings.client.blockentityrenders.*;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier1;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier2;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier3;
@@ -72,6 +69,12 @@ public class ClientSetup {
         event.register(Registration.ClickerT2_Container.get(), ClickerT2Screen::new);
         event.register(Registration.SensorT1_Container.get(), SensorT1Screen::new);
         event.register(Registration.SensorT2_Container.get(), SensorT2Screen::new);
+        event.register(Registration.DropperT1_Container.get(), DropperT1Screen::new);
+        event.register(Registration.DropperT2_Container.get(), DropperT2Screen::new);
+        event.register(Registration.GeneratorT1_Container.get(), GeneratorT1Screen::new);
+        event.register(Registration.EnergyTransmitter_Container.get(), EnergyTransmitterScreen::new);
+        event.register(Registration.BlockSwapperT1_Container.get(), BlockSwapperT1Screen::new);
+        event.register(Registration.BlockSwapperT2_Container.get(), BlockSwapperT2Screen::new);
     }
 
     @SubscribeEvent
@@ -85,6 +88,9 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.BlockBreakerT2BE.get(), BlockBreakerT2BER::new);
         event.registerBlockEntityRenderer(Registration.BlockPlacerT2BE.get(), BlockPlacerT2BER::new);
         event.registerBlockEntityRenderer(Registration.ClickerT2BE.get(), ClickerT2BER::new);
-        event.registerBlockEntityRenderer(Registration.SensorT2BE.get(), ClickerT2BER::new);
+        event.registerBlockEntityRenderer(Registration.SensorT2BE.get(), SensorT2BER::new);
+        event.registerBlockEntityRenderer(Registration.DropperT2BE.get(), DropperT2BER::new);
+        event.registerBlockEntityRenderer(Registration.EnergyTransmitterBE.get(), EnergyTransmitterRenderer::new);
+        event.registerBlockEntityRenderer(Registration.BlockSwapperT2BE.get(), BlockSwapperT2BER::new);
     }
 }

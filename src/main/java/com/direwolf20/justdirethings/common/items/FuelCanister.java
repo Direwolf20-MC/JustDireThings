@@ -1,6 +1,8 @@
 package com.direwolf20.justdirethings.common.items;
 
+import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
+import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import net.minecraft.ChatFormatting;
@@ -13,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -86,6 +89,21 @@ public class FuelCanister extends Item {
         tag.putInt("FuelLevel", fuelLevel);
     }
 
+    public static double getBurnSpeed(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        return tag != null && tag.contains("BurnSpeed") ? tag.getDouble("BurnSpeed") : 1.0;
+    }
+
+    public static int getBurnSpeedMultiplier(ItemStack stack) {
+        double burnSpeed = getBurnSpeed(stack);
+        return (int) Math.round(burnSpeed);
+    }
+
+    public static void setBurnSpeed(ItemStack stack, double burnSpeed) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putDouble("BurnSpeed", burnSpeed);
+    }
+
     public static void decrementFuel(ItemStack stack) {
         int currentFuel = getFuelLevel(stack);
         if (currentFuel >= Config.FUEL_CANISTER_MINIMUM_TICKS_CONSUMED.get()) //Should always be true but lets be sure!
@@ -93,22 +111,35 @@ public class FuelCanister extends Item {
         setFuelLevel(stack, currentFuel);
     }
 
-    public static void incrementFuel(ItemStack stack, int amt) {
-        int currentFuel = getFuelLevel(stack);
-        if (currentFuel < Config.FUEL_CANISTER_MAXIMUM_FUEL.get())
-            currentFuel = currentFuel + amt;
-        setFuelLevel(stack, currentFuel);
+    public static double calculateBurnSpeed(int currentFuelLevel, double currentBurnSpeedMultiplier, int newFuelLevel, double newFuelMultiplier) {
+        double totalFuel = currentFuelLevel + newFuelLevel;
+        // Calculate the weighted average of the multipliers based on the fuel levels.
+        double newBurnSpeedMultiplier = ((currentFuelLevel * currentBurnSpeedMultiplier) + (newFuelLevel * newFuelMultiplier)) / totalFuel;
+        return newBurnSpeedMultiplier;
     }
 
     public static void incrementFuel(ItemStack stack, ItemStack fuelStack) {
         int currentFuel = getFuelLevel(stack);
         int fuelPerPiece = CommonHooks.getBurnTime(fuelStack, RecipeType.SMELTING);
         if (fuelPerPiece == 0) return;
-        while (currentFuel + fuelPerPiece <= Config.FUEL_CANISTER_MAXIMUM_FUEL.get() && !fuelStack.isEmpty()) {
-            currentFuel = currentFuel + fuelPerPiece;
-            fuelStack.shrink(1);
+        double currentBurnSpeedMultiplier = getBurnSpeed(stack);
+        int fuelMultiplier = 1;
+        if (fuelStack.getItem() instanceof Coal_T1 direCoal)
+            fuelMultiplier = direCoal.getBurnSpeedMultiplier();
+        else if (fuelStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CoalBlock_T1 coalBlock)
+            fuelMultiplier = coalBlock.getBurnSpeedMultiplier();
+        int totalNewFuel = 0;
+        while ((currentFuel + totalNewFuel) + fuelPerPiece <= Config.FUEL_CANISTER_MAXIMUM_FUEL.get() && !fuelStack.isEmpty()) {
+            totalNewFuel += fuelPerPiece;
+            fuelStack.shrink(1); // Consume one unit of the fuel stack.
         }
-        setFuelLevel(stack, currentFuel);
+
+        if (totalNewFuel > 0) {
+            currentBurnSpeedMultiplier = calculateBurnSpeed(currentFuel, currentBurnSpeedMultiplier, totalNewFuel, fuelMultiplier);
+        }
+
+        setFuelLevel(stack, currentFuel + totalNewFuel);
+        setBurnSpeed(stack, currentBurnSpeedMultiplier);
     }
 
 }
