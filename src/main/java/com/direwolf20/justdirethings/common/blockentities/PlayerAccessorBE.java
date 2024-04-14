@@ -131,7 +131,7 @@ public class PlayerAccessorBE extends BaseMachineBE {
 
     @Override
     public void markDirtyClient() {
-        System.out.println("Marking Dirty Client!");
+        //System.out.println("Marking Dirty Client!");
         if (level != null) {
             level.invalidateCapabilities(getBlockPos());
         }
