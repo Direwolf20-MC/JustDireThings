@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-13T13:24:53.2918328	Recipes
+// 1.20.4	2024-04-13T23:02:23.90256	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 9979895187547204ad77447846cd17a797fdd027 data/justdirethings/advancements/recipes/building_blocks/coal_t1_9x9.json
@@ -72,6 +72,7 @@ a55bc88d5aeddd676589402dfcbecdd8aae1f6a7 data/justdirethings/advancements/recipe
 f2201aad87fe2a7e500b60ec4b764876cfa3a183 data/justdirethings/advancements/recipes/misc/gooblock_tier4.json
 b1efeb6a5dbcc25e2699bfcffdc9e7f4b28e95f6 data/justdirethings/advancements/recipes/misc/itemcollector.json
 6ddae271757a78914bda39cef0178ef3de9f75d5 data/justdirethings/advancements/recipes/misc/itemcollector_nbtclear.json
+ee935a24ac0f3016fb0cfdaeb7bb0ab2b1d1f0e0 data/justdirethings/advancements/recipes/misc/playeraccessor.json
 71fb49d92fba3e25ac519567aaf9fa62d5d4c935 data/justdirethings/advancements/recipes/misc/pocket_generator.json
 7448c5a22bda070e5719b419b9bf4962d9eb4514 data/justdirethings/advancements/recipes/misc/pocket_generator_t2.json
 9c0780ef52345c3e67b863ba136adc12ab6f6f02 data/justdirethings/advancements/recipes/misc/pocket_generator_t3.json
@@ -162,6 +163,7 @@ bf1de03eb5942cb062164314552b2272f780b991 data/justdirethings/recipes/gooblock_ti
 21eb4b955ae6240c19471a4f660fcdca91ff0c51 data/justdirethings/recipes/gooblock_tier4.json
 9481eec83dfa2d11a9ecb70c3111a879f2a674b9 data/justdirethings/recipes/itemcollector.json
 88fdfdc8b6cac0b0b3eb86ba67c266616bec45e9 data/justdirethings/recipes/itemcollector_nbtclear.json
+92f0f45bdcdcfbaddee1e605764caf95b7001ddd data/justdirethings/recipes/playeraccessor.json
 c5d49397578e44089f27177b9643bdc442d38bf8 data/justdirethings/recipes/pocket_generator.json
 12ede64ada337f67b3ddf46570f2e0de030a6635 data/justdirethings/recipes/pocket_generator_t2.json
 a17e857bd13897cce65c942809c320f00614b843 data/justdirethings/recipes/pocket_generator_t3.json

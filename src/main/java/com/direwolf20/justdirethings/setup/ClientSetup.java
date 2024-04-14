@@ -75,6 +75,7 @@ public class ClientSetup {
         event.register(Registration.EnergyTransmitter_Container.get(), EnergyTransmitterScreen::new);
         event.register(Registration.BlockSwapperT1_Container.get(), BlockSwapperT1Screen::new);
         event.register(Registration.BlockSwapperT2_Container.get(), BlockSwapperT2Screen::new);
+        event.register(Registration.PlayerAccessor_Container.get(), PlayerAccessorScreen::new);
     }
 
     @SubscribeEvent

@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings;
 
+import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
@@ -78,6 +79,14 @@ public class JustDireThings {
                 Registration.DropperT2.get(),
                 Registration.GeneratorT1.get(),
                 Registration.EnergyTransmitter.get()
+        );
+        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof PlayerAccessorBE playerAccessorBE)
+                        return playerAccessorBE.getPlayerHandler(side);
+                    return null;
+                },
+                Registration.PlayerAccessor.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
