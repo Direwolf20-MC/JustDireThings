@@ -318,7 +318,7 @@ public interface ToggleableTool extends ToggleableItem {
             if (player.getCooldowns().isOnCooldown(itemStack.getItem())) {
                 return false;
             } else {
-                player.heal(10f);
+                player.heal(6f);
                 player.getCooldowns().addCooldown(itemStack.getItem(), 200);
                 player.playNotifySound(SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
                 Random random = new Random();
