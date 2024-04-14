@@ -365,15 +365,15 @@ public class JustDireRecipes extends RecipeProvider {
 
         //Smelting
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC,
-                        Registration.FerricoreIngot.get(), 1.0f, 400)
+                        Registration.FerricoreIngot.get(), 1.0f, 200)
                 .unlockedBy("has_ferricore_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawFerricore.get()).build()))
                 .save(consumer, new ResourceLocation(JustDireThings.MODID, "ferricore_ingot_smelted"));
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawBlazegold.get()), RecipeCategory.MISC,
-                        Registration.BlazegoldIngot.get(), 1.0f, 400)
+                        Registration.BlazegoldIngot.get(), 1.0f, 200)
                 .unlockedBy("has_blazegold_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawBlazegold.get()).build()))
                 .save(consumer, new ResourceLocation(JustDireThings.MODID, "blazegold_ingot_smelted"));
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawEclipseAlloy.get()), RecipeCategory.MISC,
-                        Registration.EclipseAlloyIngot.get(), 1.0f, 400)
+                        Registration.EclipseAlloyIngot.get(), 1.0f, 200)
                 .unlockedBy("has_eclipsealloy_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawEclipseAlloy.get()).build()))
                 .save(consumer, new ResourceLocation(JustDireThings.MODID, "eclipsealloy_ingot_smelted"));
 
