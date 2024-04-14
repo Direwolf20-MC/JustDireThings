@@ -4,8 +4,6 @@ import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -21,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashSet;
 import java.util.List;
@@ -53,11 +52,12 @@ public class TotemOfDeathRecall extends Item {
                 if (!world.isClientSide) {
                     CompoundTag tag = stack.getTag();
                     if (tag != null) {
-                        GlobalPos globalPos = getBoundTo(stack);
-                        BlockPos blockPos = globalPos.pos();
+                        NBTHelpers.GlobalVec3 globalPos = getBoundTo(stack);
+                        if (globalPos == null) return;
+                        Vec3 position = globalPos.position();
                         ServerLevel targetLevel = world.getServer().getLevel(globalPos.dimension());
                         if (targetLevel != null) {
-                            player.teleportTo(targetLevel, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new HashSet<>(), player.getYRot(), player.getXRot());
+                            player.teleportTo(targetLevel, position.x(), position.y(), position.z(), new HashSet<>(), player.getYRot(), player.getXRot());
                             stack.shrink(1);
                             world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
                         }
@@ -76,14 +76,14 @@ public class TotemOfDeathRecall extends Item {
         return getBoundTo(pStack) != null;
     }
 
-    public static GlobalPos getBoundTo(ItemStack stack) {
+    public static NBTHelpers.GlobalVec3 getBoundTo(ItemStack stack) {
         CompoundTag tag = stack.getTag();
-        return tag != null && tag.contains("boundTo") ? NBTHelpers.nbtToGlobalPos(tag.getCompound("boundTo")) : null;
+        return tag != null && tag.contains("boundTo") ? NBTHelpers.nbtToGlobalVec3(tag.getCompound("boundTo")) : null;
     }
 
-    public static void setBoundTo(ItemStack stack, GlobalPos globalPos) {
+    public static void setBoundTo(ItemStack stack, NBTHelpers.GlobalVec3 globalPos) {
         CompoundTag tag = stack.getOrCreateTag();
-        tag.put("boundTo", NBTHelpers.globalPosToNBT(globalPos));
+        tag.put("boundTo", NBTHelpers.globalVec3ToNBT(globalPos));
     }
 
     @Override
@@ -93,10 +93,10 @@ public class TotemOfDeathRecall extends Item {
         if (level == null || mc.player == null) {
             return;
         }
-        GlobalPos boundPos = getBoundTo(stack);
+        NBTHelpers.GlobalVec3 boundPos = getBoundTo(stack);
         ChatFormatting chatFormatting = ChatFormatting.DARK_PURPLE;
         if (boundPos != null) {
-            tooltip.add(Component.translatable("justdirethings.boundto", I18n.get(boundPos.dimension().location().getPath()), boundPos.pos().toShortString()).withStyle(chatFormatting));
+            tooltip.add(Component.translatable("justdirethings.boundto", I18n.get(boundPos.dimension().location().getPath()), boundPos.toVec3ShortString()).withStyle(chatFormatting));
         }
     }
 }

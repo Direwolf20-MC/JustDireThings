@@ -7,7 +7,6 @@ import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
-import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -72,7 +71,7 @@ public class LivingEntityEvents {
             ItemStack totemStack = findTotem(player);
             if (!totemStack.isEmpty()) {
                 CompoundTag deathData = new CompoundTag();
-                deathData.put("direDeathData", NBTHelpers.globalPosToNBT(GlobalPos.of(player.level().dimension(), player.blockPosition())));
+                deathData.put("direDeathData", NBTHelpers.globalVec3ToNBT(player.level().dimension(), player.position()));
                 player.setData(Registration.DEATH_DATA, deathData);
                 totemStack.shrink(1);
             }
@@ -96,7 +95,8 @@ public class LivingEntityEvents {
         CompoundTag deathData = oldPlayer.getData(Registration.DEATH_DATA);
 
         if (deathData.contains("direDeathData")) {
-            GlobalPos boundTo = NBTHelpers.nbtToGlobalPos(deathData.getCompound("direDeathData"));
+            //GlobalPos boundTo = NBTHelpers.nbtToGlobalPos(deathData.getCompound("direDeathData"));
+            NBTHelpers.GlobalVec3 boundTo = NBTHelpers.nbtToGlobalVec3(deathData.getCompound("direDeathData"));
             ItemStack totemStack = new ItemStack(Registration.TotemOfDeathRecall.get());
             TotemOfDeathRecall.setBoundTo(totemStack, boundTo);
             newPlayer.getInventory().add(totemStack);
