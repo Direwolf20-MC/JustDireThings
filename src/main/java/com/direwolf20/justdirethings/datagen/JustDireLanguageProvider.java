@@ -203,6 +203,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.burnspeedmultiplier", "Burn Speed Multiplier: %s");
         add("justdirethings.screen.click-hold", "Hold Click");
         add("justdirethings.screen.click-hold-for", "Hold Click For (ticks)");
+        add("justdirethings.screen.inv-normal", "Inventory Slots");
+        add("justdirethings.screen.inv-armor", "Armor Slots");
+        add("justdirethings.screen.inv-offhand", "Offhand Slots");
+
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

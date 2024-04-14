@@ -8,14 +8,16 @@ import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ToggleButtonFactory {
-    public record TextureLocalization(ResourceLocation texture, Component localization) {
+    public record TextureLocalization(ResourceLocation texture, MutableComponent localization) {
     }
 
     private static final int STANDARD_WIDTH = 16; // Example width
@@ -236,6 +238,21 @@ public class ToggleButtonFactory {
 
     public static ToggleButton SWAPPERBLOCKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SWAPPER_BLOCK_TEXTURES, startingValue, onPress);
+    }
+
+    /** Inventory Connection Button **/
+    private static final List<TextureLocalization> INVENTORY_CONNECTION_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/inv-normal.png"), Component.translatable("justdirethings.screen.inv-normal")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/inv-armor.png"), Component.translatable("justdirethings.screen.inv-armor")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/inv-offhand.png"), Component.translatable("justdirethings.screen.inv-offhand"))
+    );
+
+    public static ToggleButton INVENTORYCONNECTIONBUTTON(int x, int y, MutableComponent component, int startingValue, Button.OnPress onPress) {
+        List<TextureLocalization> textureLocalizations = new ArrayList<>();
+        for (TextureLocalization textureLocalization : INVENTORY_CONNECTION_TEXTURES) {
+            textureLocalizations.add(new TextureLocalization(textureLocalization.texture, Component.literal("").append(component).append(Component.literal(": ")).append(textureLocalization.localization)));
+        }
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, textureLocalizations, startingValue, onPress);
     }
 
 }
