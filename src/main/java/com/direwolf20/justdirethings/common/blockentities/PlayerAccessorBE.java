@@ -45,7 +45,6 @@ public class PlayerAccessorBE extends BaseMachineBE {
     }
 
     public void clearCache() {
-        //System.out.println("Clearing Cache!");
         this.playerHandlers.clear();
         this.serverPlayer = null;
         if (level != null) {
@@ -83,11 +82,10 @@ public class PlayerAccessorBE extends BaseMachineBE {
             return;
         }
         if (serverPlayer == null || serverPlayer.isRemoved()) {
-            if (level == null || level.getServer() == null)
-                serverPlayer = null;
-            else
-                serverPlayer = level.getServer().getPlayerList().getPlayer(this.placedByUUID);
-            markDirtyClient();
+            boolean wasNull = serverPlayer == null;
+            serverPlayer = level.getServer().getPlayerList().getPlayer(this.placedByUUID);
+            if ((wasNull && serverPlayer != null) || (!wasNull && serverPlayer == null))
+                markDirtyClient();
         }
     }
 
@@ -133,7 +131,7 @@ public class PlayerAccessorBE extends BaseMachineBE {
 
     @Override
     public void markDirtyClient() {
-        //System.out.println("Marking Dirty Client!");
+        System.out.println("Marking Dirty Client!");
         if (level != null) {
             level.invalidateCapabilities(getBlockPos());
         }
