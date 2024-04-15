@@ -2,14 +2,12 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.common.blocks.BlockSwapperT1;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +36,6 @@ import java.util.Random;
 
 public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = getDefaultRedstoneData();
-    protected Direction FACING = Direction.DOWN; //To avoid nulls
     List<BlockPos> positions = new ArrayList<>();
     public GlobalPos boundTo;
     public final ContainerData swapperData;
@@ -74,8 +71,6 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
 
     public BlockSwapperT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
-        if (pBlockState.getBlock() instanceof BlockSwapperT1) //Only do this for the Tier 1, as its the only one with a facing....
-            FACING = getBlockState().getValue(BlockStateProperties.FACING);
         swapperData = new ContainerData() {
             @Override
             public int get(int index) {
@@ -301,7 +296,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public AABB getAABB() {
-        return new AABB(getBlockPos().relative(FACING));
+        return new AABB(getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING)));
     }
 
     public List<Entity> findEntitiesToSwap(AABB aabb) {
@@ -434,12 +429,12 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public BlockPos getStartingPoint() {
-        return getBlockPos().relative(FACING); //Tier 2 would use Offset
+        return getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING)); //Tier 2 would use Offset
     }
 
     public List<BlockPos> findSpotsToSwap() {
         List<BlockPos> returnList = new ArrayList<>();
-        BlockPos blockPos = getBlockPos().relative(FACING);
+        BlockPos blockPos = getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING));
         if (isBlockPosValid((ServerLevel) level, blockPos))
             returnList.add(blockPos);
         return returnList;

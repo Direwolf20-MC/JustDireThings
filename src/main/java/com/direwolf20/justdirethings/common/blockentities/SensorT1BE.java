@@ -2,7 +2,6 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
-import com.direwolf20.justdirethings.common.blocks.SensorT1;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
@@ -31,7 +30,6 @@ import net.minecraft.world.phys.AABB;
 import java.util.*;
 
 public class SensorT1BE extends BaseMachineBE implements FilterableBE {
-    protected Direction FACING = Direction.DOWN; //To avoid nulls
     public FilterData filterData = new FilterData();
     protected List<BlockPos> positions = new ArrayList<>();
     public SENSE_TARGET sense_target = SENSE_TARGET.BLOCK;
@@ -63,8 +61,6 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     public SensorT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         ANYSIZE_FILTER_SLOTS = 1;
-        if (pBlockState.getBlock() instanceof SensorT1) //Only do this for the Tier 1, as its the only one with a facing....
-            FACING = getBlockState().getValue(BlockStateProperties.FACING);
     }
 
     public SensorT1BE(BlockPos pPos, BlockState pBlockState) {
@@ -232,7 +228,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     public AABB getAABB() {
-        return new AABB(getBlockPos().relative(FACING));
+        return new AABB(getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING)));
     }
 
     public List<Entity> findEntities(AABB aabb) {
@@ -310,7 +306,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
 
     public List<BlockPos> findPositions() {
         List<BlockPos> returnList = new ArrayList<>();
-        BlockPos blockPos = getBlockPos().relative(FACING);
+        BlockPos blockPos = getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING));
         if (isBlockPosValid(blockPos))
             returnList.add(blockPos);
         return returnList;
