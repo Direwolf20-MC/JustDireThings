@@ -64,11 +64,14 @@ public class TooltipHelpers {
                 if (ability.equals(Ability.DROPTELEPORT)) {
                     chatFormatting = ChatFormatting.DARK_PURPLE;
                     String dimString;
-                    if (boundInventory == null)
+                    if (boundInventory == null) {
                         dimString = I18n.get("justdirethings.unbound");
-                    else
+                        tooltip.add(Component.literal(dimString).withStyle(chatFormatting));
+                    } else {
                         dimString = " -" + I18n.get(boundInventory.globalPos().dimension().location().getPath()) + ": [" + boundInventory.globalPos().pos().toShortString() + "]";
-                    tooltip.add(Component.literal(dimString).withStyle(chatFormatting));
+                        tooltip.add(Component.literal(dimString).withStyle(chatFormatting));
+                        tooltip.add(Component.literal("").append(Component.translatable("justdirethings.boundside")).append(Component.translatable("justdirethings.screen.direction-" + boundInventory.direction().getName())).withStyle(chatFormatting));
+                    }
                 }
             }
         }
