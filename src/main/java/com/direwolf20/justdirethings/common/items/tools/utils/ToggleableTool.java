@@ -47,12 +47,6 @@ import java.util.*;
 import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
 
 public interface ToggleableTool extends ToggleableItem {
-    GooTier gooTier();
-
-    default int getGooTier() {
-        return gooTier().getGooTier();
-    }
-
     EnumSet<Ability> getAbilities();
 
     Map<Ability, AbilityParams> getAbilityParamsMap();
