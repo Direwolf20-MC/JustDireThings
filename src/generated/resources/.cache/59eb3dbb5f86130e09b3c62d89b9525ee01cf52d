@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-13T23:02:23.9015585	Loot Tables
+// 1.20.4	2024-04-15T19:30:19.2604825	Loot Tables
 16a0ab61513717ab1cb8c1df9718722a643d9728 data/justdirethings/loot_tables/blocks/blazegold_block.json
 b2953e2dcd4960e7f275bb42e4ad626219213fe1 data/justdirethings/loot_tables/blocks/blockbreakert1.json
 bb65fdba3c1b14526a629aacb462661b5853008b data/justdirethings/loot_tables/blocks/blockbreakert2.json
@@ -19,10 +19,10 @@ d6bade76be1cda5393e15c24c1fbe30e95f88d76 data/justdirethings/loot_tables/blocks/
 ae552784cf952a0f440297360735d3a06f2219ad data/justdirethings/loot_tables/blocks/energytransmitter.json
 1374ed53b2d6c1462b64a99f3ca1b290388d36c5 data/justdirethings/loot_tables/blocks/ferricore_block.json
 0ee44af0f9d422b15c50546f154fe66f8f29296f data/justdirethings/loot_tables/blocks/generatort1.json
-9d62cc762313305bbe032473310bafd15bcdb8bd data/justdirethings/loot_tables/blocks/gooblock_tier1.json
-7e92782ed4881463b836c32c2504d92fee72cbfb data/justdirethings/loot_tables/blocks/gooblock_tier2.json
-b0bd5b41aca2dd335e798c0d03ba9d189e0a535b data/justdirethings/loot_tables/blocks/gooblock_tier3.json
-fdc0310bc2558f2b38b405f291fb25f17a7f95d0 data/justdirethings/loot_tables/blocks/gooblock_tier4.json
+cb874e4af1de6fc9b3dd644c0b99362ef3396925 data/justdirethings/loot_tables/blocks/gooblock_tier1.json
+c1fe89192b5f0a424af4b3a7b044229b29be7459 data/justdirethings/loot_tables/blocks/gooblock_tier2.json
+e5109ae53201a7ff0d12f080cd7ab1dd62de3901 data/justdirethings/loot_tables/blocks/gooblock_tier3.json
+9beed08134af64d54a2a7f9655af8c0e776929f2 data/justdirethings/loot_tables/blocks/gooblock_tier4.json
 fcef2a947be7443c277f0bc8a7ac5379f2084822 data/justdirethings/loot_tables/blocks/goopatternblock.json
 ec24d4e64ad8c73bb13ad3153e02193c0c4e286d data/justdirethings/loot_tables/blocks/goosoil_tier1.json
 dbc0b95e979a373cff9226804660f79e55dead0b data/justdirethings/loot_tables/blocks/goosoil_tier2.json
