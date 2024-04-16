@@ -77,6 +77,10 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
         return returnList;
     }
 
+    public AABB getAABB() {
+        return getAABB(getBlockPos());
+    }
+
     public List<BlockPos> findPositions() {
         AABB area = getAABB(getBlockPos());
         return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
