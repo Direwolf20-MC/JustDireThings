@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -150,9 +151,13 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         return blockPos.getX() + blockPos.getY() + blockPos.getZ(); //For now this is probably good enough, will add more randomness if needed
     }
 
+    public Direction getFacing() {
+        return getBlockState().getValue(BlockStateProperties.FACING);
+    }
+
     public void startMining(FakePlayer fakePlayer, BlockPos blockPos, BlockState blockState, ItemStack tool) {
         //if (!tool.isCorrectToolForDrops(blockState)) return;
-        setFakePlayerData(tool, fakePlayer, blockPos, getBlockState().getValue(BlockStateProperties.FACING));
+        setFakePlayerData(tool, fakePlayer, blockPos, getFacing());
         blockBreakingTracker.put(blockPos, new BlockBreakingProgress(blockState, 0, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, fakePlayer, blockState)));
     }
 
@@ -207,7 +212,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
-        setFakePlayerData(tool, fakePlayer, breakPos, getBlockState().getValue(BlockStateProperties.FACING));
+        setFakePlayerData(tool, fakePlayer, breakPos, getFacing());
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
         if (NeoForge.EVENT_BUS.post(event).isCanceled()) return false;
         breakBlock(fakePlayer, breakPos, tool, blockState);

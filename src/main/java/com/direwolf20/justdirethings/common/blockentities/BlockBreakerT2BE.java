@@ -90,6 +90,10 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
         return super.tryBreakBlock(tool, fakePlayer, breakPos, blockState);
     }
 
+    public Direction getFacing() {
+        return getDirectionValue();
+    }
+
     @Override
     public List<BlockPos> findBlocksToMine(FakePlayer fakePlayer) {
         AABB area = getAABB(getBlockPos());
