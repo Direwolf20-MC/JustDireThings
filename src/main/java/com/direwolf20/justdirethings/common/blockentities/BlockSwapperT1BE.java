@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
@@ -357,11 +358,11 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         }
 
         //Remove existing blocks and BE's
-        level.removeBlockEntity(blockPos); //Calling this prevents chests from dropping their contents, so only do it if we don't care about the drops (Like cut)
-        partnerLevel.removeBlockEntity(remoteSwapPos); //Calling this prevents chests from dropping their contents, so only do it if we don't care about the drops (Like cut)
+        level.removeBlockEntity(blockPos); //Calling this prevents chests from dropping their contents
+        partnerLevel.removeBlockEntity(remoteSwapPos); //Calling this prevents chests from dropping their contents
 
         //BlockState adjustedthisBlock = Block.updateFromNeighbourShapes(thisBlock, partnerLevel, remoteSwapPos); //Ensure double chests are placed as single chests if only 1 chest available in copy/paste, for example, or fixes fences
-        boolean placedThat = partnerLevel.setBlock(remoteSwapPos, thisBlock, 67); //64 + 3
+        boolean placedThat = partnerLevel.setBlock(remoteSwapPos, thisBlock, 51); //16 + 32 + 3 -- Validate blocks after this methods done
         if (placedThat) {
             if (!thisNBT.isEmpty()) {
                 BlockEntity newBE = partnerLevel.getBlockEntity(remoteSwapPos);
@@ -374,11 +375,11 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 }
             }
         }
-        if (!thisBlock.isAir())
-            thatValidationList.add(remoteSwapPos);
+        //if (!thisBlock.isAir())
+        thatValidationList.add(remoteSwapPos);
 
         //BlockState adjustedthatBlock = Block.updateFromNeighbourShapes(thatBlock, level, blockPos); //Ensure double chests are placed as single chests if only 1 chest available in copy/paste, for example, or fixes fences
-        boolean placedThis = level.setBlock(blockPos, thatBlock, 67); //64 + 3
+        boolean placedThis = level.setBlock(blockPos, thatBlock, 51); //16 + 32 + 3 -- Validate blocks after this methods done
         if (placedThis) {
             if (!thatNBT.isEmpty()) {
                 BlockEntity newBE = level.getBlockEntity(blockPos);
@@ -391,8 +392,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 }
             }
         }
-        if (!thatBlock.isAir())
-            thisValidationList.add(blockPos);
+        //if (!thatBlock.isAir())
+        thisValidationList.add(blockPos);
 
         teleportParticles((ServerLevel) level, blockPos);
         teleportParticles(partnerLevel, remoteSwapPos);
@@ -405,8 +406,12 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             return;
         }
         BlockState adjustedBlockState = Block.updateFromNeighbourShapes(blockState, level, blockPos); //Ensure double chests are placed as single chests if only 1 chest available in copy/paste, for example, or fixes fences
-        if (!adjustedBlockState.equals(blockState))
+        if (!adjustedBlockState.equals(blockState)) //SetBlockAndUpdate does the markAndNotify (below)
             level.setBlockAndUpdate(blockPos, adjustedBlockState);
+        else { //Do this to ensure buttons/torches pop off if we swapped air into a spot
+            LevelChunk levelchunk = level.getChunkAt(blockPos);
+            level.markAndNotifyBlock(blockPos, levelchunk, blockState, blockState, 3, 512);
+        }
     }
 
     public static void teleportParticles(ServerLevel level, BlockPos pos) {
