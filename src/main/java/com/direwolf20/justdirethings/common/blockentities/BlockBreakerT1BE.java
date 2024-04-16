@@ -245,6 +245,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     @Override
     public boolean isDefaultSettings() {
+        if (!super.isDefaultSettings())
+            return false;
         if (tickSpeed != 20)
             return false;
         if (!getRedstoneControlData().equals(getDefaultRedstoneData()))
