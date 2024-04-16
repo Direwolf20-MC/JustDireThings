@@ -334,13 +334,30 @@ public interface ToggleableTool extends ToggleableItem {
             List<TagKey<Block>> tags = new ArrayList<>();
             tags.add(JustDireBlockTags.LAWNMOWERABLE);
             Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?
+            List<ItemStack> drops = new ArrayList<>();
             for (BlockPos breakPos : breakBlocks) {
                 if (testUseTool(itemStack, Ability.LAWNMOWER) < 0)
                     break;
-                breakBlocks((ServerLevel) level, breakPos);
+                BlockState state = level.getBlockState(breakPos);
+                BlockEntity blockEntity = level.getBlockEntity(breakPos);
+                if (level instanceof ServerLevel serverLevel) {
+                    boolean removed = level.destroyBlock(breakPos, false);
+                    if (removed)
+                        drops.addAll(Block.getDrops(state, serverLevel, breakPos, blockEntity, player, itemStack)); //This isn't perfect, but should be 'good enough' for lawnmowerables
+                    /*Set<BlockPos> sendPositions = new HashSet<>();
+                    sendPositions.add(breakPos);
+                    handleDrops(itemStack, serverLevel, breakPos, player, sendPositions, drops, state, 0);
+                    drops.clear();*/
+
+                }
                 if (Math.random() < 0.1) //10% chance to damage tool
                     damageTool(itemStack, player, Ability.LAWNMOWER);
             }
+            if (!breakBlocks.isEmpty()) {
+                BlockPos firstPos = breakBlocks.iterator().next();
+                handleDrops(itemStack, (ServerLevel) level, firstPos, player, breakBlocks, drops, level.getBlockState(firstPos), 0);
+            }
+
             return true;
         }
         return false;
