@@ -163,7 +163,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public InteractionResult clickEntity(ItemStack itemStack, UsefulFakePlayer fakePlayer, LivingEntity entity) {
         fakePlayer.setReach(0.9);
         Direction placing = Direction.values()[direction];
-        FakePlayerUtil.setupFakePlayerForUse(fakePlayer, entity.blockPosition(), placing, itemStack, sneaking);
+        FakePlayerUtil.setupFakePlayerForUse(fakePlayer, entity.blockPosition(), placing, entity.position(), itemStack, sneaking);
         if (showFakePlayer && level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
             fakePlayer.drawParticles(serverLevel, itemStack);
         }

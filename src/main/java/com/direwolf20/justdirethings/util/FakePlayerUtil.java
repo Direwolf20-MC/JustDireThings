@@ -27,6 +27,32 @@ public class FakePlayerUtil {
     public record FakePlayerResult(InteractionResult interactionResult, ItemStack returnStack) {
     }
 
+
+    /**
+     * Sets up for a fake player to be usable to right click things. This player will be put at the center of the using side.
+     *
+     * @param player    The player.
+     * @param pos       The position of the using tile entity.
+     * @param direction The direction to use in.
+     * @param toHold    The stack the player will be using. Should probably come from an ItemStackHandler or similar.
+     */
+    public static void setupFakePlayerForUse(UsefulFakePlayer player, Vec3 pos, Direction direction, ItemStack toHold, boolean sneaking) {
+        player.getInventory().items.set(player.getInventory().selected, toHold);
+        float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
+        player.setXRot(xRot);
+        player.setYRot(direction.toYRot());
+        player.setYHeadRot(direction.toYRot());
+        Direction.Axis a = direction.getAxis();
+        Direction.AxisDirection ad = direction.getAxisDirection();
+        double x = a == Direction.Axis.X ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
+        double y = a == Direction.Axis.Y ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
+        double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
+        player.setPos(pos.x() + x, pos.y() + y - player.getEyeHeight(), pos.z() + z);
+        if (!toHold.isEmpty())
+            player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
+        player.setShiftKeyDown(sneaking);
+    }
+
     /**
      * Sets up for a fake player to be usable to right click things. This player will be put at the center of the using side.
      *
@@ -50,6 +76,41 @@ public class FakePlayerUtil {
         if (!toHold.isEmpty())
             player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
         player.setShiftKeyDown(sneaking);
+    }
+
+    /**
+     * Sets up for a fake player to be usable to right click things. This player will be put at the center of the using side.
+     *
+     * @param player    The player.
+     * @param pos       The position of the using tile entity.
+     * @param direction The direction to use in.
+     * @param toHold    The stack the player will be using. Should probably come from an ItemStackHandler or similar.
+     */
+    public static void setupFakePlayerForUse(UsefulFakePlayer player, BlockPos pos, Direction direction, Vec3 entityPosition, ItemStack toHold, boolean sneaking) {
+        player.getInventory().items.set(player.getInventory().selected, toHold);
+        float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
+        player.setXRot(xRot);
+        player.setYRot(direction.toYRot());
+        player.setYHeadRot(direction.toYRot());
+        Direction.Axis a = direction.getAxis();
+        Direction.AxisDirection ad = direction.getAxisDirection();
+        double x = a == Direction.Axis.X ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
+        double y = a == Direction.Axis.Y ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
+        double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
+        player.setPos(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
+        if (!toHold.isEmpty())
+            player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
+        player.setShiftKeyDown(sneaking);
+
+        // Calculate the rotation angles to look at the target position
+        Vec3 playerEyePos = new Vec3(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+        Vec3 toEntity = entityPosition.subtract(playerEyePos).normalize();
+        float yaw = (float) Math.toDegrees(Math.atan2(toEntity.z, toEntity.x)) - 90.0F;
+        float pitch = (float) Math.toDegrees(-Math.atan2(toEntity.y, Math.sqrt(toEntity.x * toEntity.x + toEntity.z * toEntity.z)));
+
+        player.setYRot(yaw);
+        player.setYHeadRot(yaw);  // Set both the body and head rotation to the calculated yaw
+        player.setXRot(pitch);
     }
 
     /**
