@@ -344,11 +344,6 @@ public interface ToggleableTool extends ToggleableItem {
                     boolean removed = level.destroyBlock(breakPos, false);
                     if (removed)
                         drops.addAll(Block.getDrops(state, serverLevel, breakPos, blockEntity, player, itemStack)); //This isn't perfect, but should be 'good enough' for lawnmowerables
-                    /*Set<BlockPos> sendPositions = new HashSet<>();
-                    sendPositions.add(breakPos);
-                    handleDrops(itemStack, serverLevel, breakPos, player, sendPositions, drops, state, 0);
-                    drops.clear();*/
-
                 }
                 if (Math.random() < 0.1) //10% chance to damage tool
                     damageTool(itemStack, player, Ability.LAWNMOWER);
