@@ -22,8 +22,11 @@ public class NBTHelpers {
     public record BoundInventory(GlobalPos globalPos, Direction direction) {
         public static BoundInventory fromNBT(CompoundTag tag) {
             BoundInventory boundInventory = null;
-            if (tag.contains("boundinventory") && tag.contains("boundinventory_side"))
-                boundInventory = new BoundInventory(NBTHelpers.nbtToGlobalPos(tag.getCompound("boundinventory")), Direction.values()[tag.getInt("boundinventory_side")]);
+            if (tag.contains("boundinventory") && tag.contains("boundinventory_side")) {
+                GlobalPos globalPos = NBTHelpers.nbtToGlobalPos(tag.getCompound("boundinventory"));
+                if (globalPos == null) return null;
+                boundInventory = new BoundInventory(globalPos, Direction.values()[tag.getInt("boundinventory_side")]);
+            }
             return boundInventory;
         }
 
