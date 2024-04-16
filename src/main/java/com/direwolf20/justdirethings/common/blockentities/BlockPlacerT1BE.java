@@ -3,7 +3,9 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.FakePlayerUtil;
 import com.direwolf20.justdirethings.util.MiscHelpers;
+import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -93,22 +95,25 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             return;
         }
         if (!canPlace()) return;
-        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
+        UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
         if (isActiveRedstone() && canRun() && positionsToPlace.isEmpty())
             positionsToPlace = findSpotsToPlace(fakePlayer);
         if (positionsToPlace.isEmpty())
             return;
         if (canRun()) {
             BlockPos blockPos = positionsToPlace.remove(0);
-            setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue().getOpposite());
+            Direction placing = getDirectionValue();
+            FakePlayerUtil.setupFakePlayerForUse(fakePlayer, blockPos, placing, placeStack, false);
+            //setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue());
             placeBlock(placeStack, fakePlayer, blockPos);
+            FakePlayerUtil.cleanupFakePlayerFromUse(fakePlayer, fakePlayer.getMainHandItem());
         }
     }
 
     public InteractionResult placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
-        Direction placing = Direction.values()[direction];
+        Direction placing = getDirectionValue();
         Vec3 hitVec = Vec3.atCenterOf(blockPos); // Center of the block where we want to place the new block
-        BlockHitResult hitResult = new BlockHitResult(hitVec, placing.getOpposite(), blockPos, false);
+        BlockHitResult hitResult = new BlockHitResult(hitVec, placing, blockPos, false);
         UseOnContext useoncontext = new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, hitResult);
         return itemStack.useOn(useoncontext);
     }
