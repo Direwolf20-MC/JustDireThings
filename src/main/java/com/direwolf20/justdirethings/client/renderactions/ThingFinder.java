@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -87,19 +88,19 @@ public class ThingFinder {
         }
     }
 
-    public static void discover(Player player, Ability toolAbility) {
+    public static void discover(Player player, Ability toolAbility, ItemStack itemStack) {
         if (toolAbility.equals(Ability.MOBSCANNER))
             discoverMobs(player, true);
         else if (toolAbility.equals(Ability.ORESCANNER) || toolAbility.equals(Ability.OREXRAY))
-            discoverOres(player, toolAbility);
+            discoverOres(player, toolAbility, itemStack);
     }
 
-    private static void discoverOres(Player player, Ability toolAbility) {
+    private static void discoverOres(Player player, Ability toolAbility, ItemStack itemStack) {
         oreBlocksList.clear();
         BlockPos playerPos = player.getOnPos();
         int radius = 10; //TODO 50 seems to be ok perf wise but ridiculous
         oreBlocksList = BlockPos.betweenClosedStream(playerPos.offset(-radius, -radius, -radius), playerPos.offset(radius, radius, radius))
-                .filter(blockPos -> player.level().getBlockState(blockPos).getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)))
+                .filter(blockPos -> isValidBlock(blockPos, player, itemStack))
                 .map(BlockPos::immutable)
                 .collect(Collectors.toList());
         if (toolAbility.equals(Ability.OREXRAY)) {
@@ -108,6 +109,16 @@ public class ThingFinder {
         } else if (toolAbility.equals(Ability.ORESCANNER)) {
             blockParticlesStartTime = System.currentTimeMillis();
         }
+    }
+
+    private static boolean isValidBlock(BlockPos blockPos, Player player, ItemStack itemStack) {
+        BlockState blockState = player.level().getBlockState(blockPos);
+        if (!blockState.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)))
+            return false;
+        if (itemStack.getItem() instanceof TieredItem tieredItem) {
+            return net.neoforged.neoforge.common.TierSortingRegistry.isCorrectTierForDrops(tieredItem.getTier(), blockState);
+        }
+        return true;
     }
 
     private static void discoverMobs(Player player, boolean startTimer) {

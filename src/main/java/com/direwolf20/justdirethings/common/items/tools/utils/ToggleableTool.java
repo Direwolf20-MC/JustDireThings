@@ -271,7 +271,7 @@ public interface ToggleableTool extends ToggleableItem {
 
     default boolean scanFor(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
         if (level.isClientSide) {
-            ThingFinder.discover(player, toolAbility);
+            ThingFinder.discover(player, toolAbility, itemStack);
             if (toolAbility.equals(Ability.OREXRAY))
                 player.playNotifySound(SoundEvents.SCULK_CLICKING, SoundSource.PLAYERS, 1.0F, 1.0F);
             else
