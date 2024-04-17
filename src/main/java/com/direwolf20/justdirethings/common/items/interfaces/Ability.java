@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +21,7 @@ public enum Ability {
     HAMMER(SettingType.CYCLE, 1, 50),
     LAVAREPAIR(SettingType.TOGGLE, 0, 0),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500),
+    AIRBURST(SettingType.TOGGLE, 1, 500),
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100),
     //Tier 4

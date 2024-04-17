@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.setup.ModSetup;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
@@ -67,6 +67,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Pocket_GeneratorT3.get(), "Celestial Pocket Generator");
         add(Registration.Pocket_GeneratorT4.get(), "Eclipse Pocket Generator");
         add(Registration.TotemOfDeathRecall.get(), "Totem of Death Recall");
+        add(Registration.BlazejetWand.get(), "Blazejet Wand");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -152,6 +153,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
         add(Ability.GLOWING.getLocalization(), "Mob X-Ray");
         add(Ability.INSTABREAK.getLocalization(), "Instant Break");
+        add(Ability.AIRBURST.getLocalization(), "Air Burst");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

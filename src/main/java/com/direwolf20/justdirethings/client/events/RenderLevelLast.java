@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.client.events;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

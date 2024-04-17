@@ -1,10 +1,9 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -44,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
+import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 
 public interface ToggleableTool extends ToggleableItem {
     EnumSet<Ability> getAbilities();
@@ -73,11 +72,11 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility) {
-        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) > 0);
+        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0);
     }
 
     default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility, int multiplier) {
-        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility, multiplier) > 0);
+        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility, multiplier) >= 0);
     }
 
     default void openSettings(Player player) {
@@ -244,6 +243,8 @@ public interface ToggleableTool extends ToggleableItem {
             lawnmower(level, player, itemStack);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.CAUTERIZEWOUNDS))
             cauterizeWounds(level, player, itemStack);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.AIRBURST))
+            airBurst(level, player, itemStack);
     }
 
     default void useOnAbility(UseOnContext pContext) {
@@ -306,6 +307,25 @@ public interface ToggleableTool extends ToggleableItem {
         return false;
     }
 
+    default boolean airBurst(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) {
+            // Get the player's looking direction as a vector
+            Vec3 lookDirection = player.getViewVector(1.0F);
+            // Define the strength of the burst, adjust this value to change how strong the burst should be
+            double burstStrength = 2.5;
+            Vec3 currentMovement = player.getDeltaMovement();
+            // Set the player's motion based on the look direction and burst strength
+            player.setDeltaMovement(currentMovement.add(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength));
+            //player.move(MoverType.SELF, player.getDeltaMovement());
+            // Optionally, you could add some effects or sounds here
+            return true;
+        } else {
+            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            damageTool(itemStack, player, Ability.AIRBURST);
+            return true;
+        }
+    }
+
     default boolean cauterizeWounds(Level level, Player player, ItemStack itemStack) {
         if (player.getHealth() >= player.getMaxHealth()) return false;
         if (!level.isClientSide) {
@@ -323,6 +343,7 @@ public interface ToggleableTool extends ToggleableItem {
                     double d2 = pos.z() + random.nextDouble();
                     ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
                 }
+                damageTool(itemStack, player, Ability.CAUTERIZEWOUNDS);
                 return true;
             }
         }
