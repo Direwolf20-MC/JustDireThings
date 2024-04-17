@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.items.interfaces;
 
+import com.direwolf20.justdirethings.client.OurSounds;
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
@@ -317,10 +318,11 @@ public interface ToggleableTool extends ToggleableItem {
             player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
             player.hurtMarked = true; //This tells the server to move the client
             // Optionally, you could add some effects or sounds here
-            player.playNotifySound(SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            //player.playNotifySound(SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.PLAYERS, 1.0F, 1.0F);
             damageTool(itemStack, player, Ability.AIRBURST);
             return true;
         } else {
+            OurSounds.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH);
             return true;
         }
     }

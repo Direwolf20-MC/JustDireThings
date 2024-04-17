@@ -7,7 +7,7 @@ public class BlazejetWand extends BaseToggleableTool {
     public BlazejetWand() {
         super(new Properties()
                 .fireResistant()
-                .defaultDurability(100));
+                .defaultDurability(200));
         registerAbility(Ability.LAVAREPAIR);
         registerAbility(Ability.AIRBURST);
     }
