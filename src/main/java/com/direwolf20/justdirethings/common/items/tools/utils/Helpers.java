@@ -25,6 +25,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -199,7 +200,6 @@ public class Helpers {
         return returnStack;
     }
 
-
     public static List<ItemStack> smeltDrops(ServerLevel level, List<ItemStack> drops, ItemStack tool, LivingEntity entityLiving, boolean[] didISmelt) {
         List<ItemStack> returnList = new ArrayList<>();
         RegistryAccess registryAccess = level.registryAccess();
@@ -229,6 +229,29 @@ public class Helpers {
             }
         }
         return returnList;
+    }
+
+    public static void smokeDrop(ServerLevel level, ItemEntity drop, ItemStack tool, LivingEntity entityLiving, boolean[] didISmoke) {
+        RegistryAccess registryAccess = level.registryAccess();
+        RecipeManager recipeManager = level.getRecipeManager();
+        didISmoke[0] = false;
+        
+        // Check if there's a smoking recipe for the drop
+        Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SimpleContainer(drop.getItem()), level);
+
+        if (smokingRecipe.isPresent() && !drop.getItem().is(JustDireItemTags.AUTO_SMOKE_DENY)) {
+            // Get the result of the smoking recipe
+            ItemStack smokedResults = smokingRecipe.get().value().getResultItem(registryAccess);
+
+            if (!smokedResults.isEmpty() && (testUseTool(tool, Ability.SMOKER, drop.getItem().getCount()) >= 0)) {
+            	didISmoke[0] = true;
+            	smokedResults.setCount(drop.getItem().getCount()); // Assume all items in the stack are smoked
+                // If the smoking result is valid, replace the original drop with the smoked result
+                drop.setItem(smokedResults.copy());
+                if (!tool.isEmpty())
+                    damageTool(tool, entityLiving, Ability.SMOKER, drop.getItem().getCount());
+            }
+        }
     }
 
     public static void dropDrops(List<ItemStack> drops, ServerLevel level, BlockPos dropAtPos) {

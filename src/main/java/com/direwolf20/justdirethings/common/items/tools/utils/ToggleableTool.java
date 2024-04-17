@@ -189,6 +189,17 @@ public interface ToggleableTool extends ToggleableItem {
         }
     }
 
+    default void smokerParticles(ServerLevel level, BlockPos itemPos, int stackSize) {
+        Random random = new Random();
+        int iterations = stackSize < 10 ? 1 : 5;
+        for (int i = 0; i < iterations; i++) {
+            double d0 = (double) itemPos.getX() + random.nextDouble();
+            double d1 = (double) itemPos.getY() + random.nextDouble();
+            double d2 = (double) itemPos.getZ() + random.nextDouble();
+            level.sendParticles(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+        }
+    }
+
     static void teleportParticles(ServerLevel level, Vec3 pos) {
         Random random = new Random();
         for (int i = 0; i < 5; i++) {

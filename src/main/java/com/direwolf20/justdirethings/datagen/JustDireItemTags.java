@@ -30,10 +30,12 @@ public class JustDireItemTags extends ItemTagsProvider {
 
     public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "deny_fuel_canister"));
     public static final TagKey<Item> AUTO_SMELT_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "auto_smelt_deny"));
+    public static final TagKey<Item> AUTO_SMOKE_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "auto_smoke_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(AUTO_SMELT_DENY);
+        tag(AUTO_SMOKE_DENY);
         tag(FUEL_CANISTER_DENY)
                 .add(Items.LAVA_BUCKET);
         tag(ItemTags.SWORDS)
