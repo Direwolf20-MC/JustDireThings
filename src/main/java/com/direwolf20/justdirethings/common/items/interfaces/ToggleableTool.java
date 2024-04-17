@@ -308,20 +308,19 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default boolean airBurst(Level level, Player player, ItemStack itemStack) {
-        if (level.isClientSide) {
+        if (!level.isClientSide) {
             // Get the player's looking direction as a vector
             Vec3 lookDirection = player.getViewVector(1.0F);
             // Define the strength of the burst, adjust this value to change how strong the burst should be
-            double burstStrength = 2.5;
-            Vec3 currentMovement = player.getDeltaMovement();
+            double burstStrength = 3.5;
             // Set the player's motion based on the look direction and burst strength
-            player.setDeltaMovement(currentMovement.add(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength));
-            //player.move(MoverType.SELF, player.getDeltaMovement());
+            player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
+            player.hurtMarked = true; //This tells the server to move the client
             // Optionally, you could add some effects or sounds here
+            player.playNotifySound(SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            damageTool(itemStack, player, Ability.AIRBURST);
             return true;
         } else {
-            level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.PLAYERS, 1.0F, 1.0F);
-            damageTool(itemStack, player, Ability.AIRBURST);
             return true;
         }
     }
