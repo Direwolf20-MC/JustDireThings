@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.client.screens.basescreens;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtons;
+import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtonsDouble;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
@@ -38,12 +39,13 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     protected final ResourceLocation SOCIALBACKGROUND = new ResourceLocation(JustDireThings.MODID, "background");
     protected BaseMachineContainer container;
     protected BaseMachineBE baseMachineBE;
-    protected int xRadius = 3, yRadius = 3, zRadius = 3;
+    protected double xRadius = 3, yRadius = 3, zRadius = 3;
     protected int xOffset = 0, yOffset = 0, zOffset = 0;
     protected boolean renderArea = false;
     protected FilterData filterData;
     protected MiscHelpers.RedstoneMode redstoneMode;
     protected List<ValueButtons> valueButtonsList = new ArrayList<>();
+    protected List<ValueButtonsDouble> valueButtonsDoubleList = new ArrayList<>();
     protected int topSectionLeft;
     protected int topSectionTop;
     protected int topSectionWidth;
@@ -149,17 +151,17 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             saveSettings();
         }));
 
-        valueButtonsList.add(new ValueButtons(getGuiLeft() + 25, topSectionTop + 12, xRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+        valueButtonsDoubleList.add(new ValueButtonsDouble(getGuiLeft() + 25, topSectionTop + 12, xRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
             xRadius = value;
             saveSettings();
         }));
 
-        valueButtonsList.add(new ValueButtons(getGuiLeft() + 75, topSectionTop + 12, yRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+        valueButtonsDoubleList.add(new ValueButtonsDouble(getGuiLeft() + 75, topSectionTop + 12, yRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
             yRadius = value;
             saveSettings();
         }));
 
-        valueButtonsList.add(new ValueButtons(getGuiLeft() + 125, topSectionTop + 12, zRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+        valueButtonsDoubleList.add(new ValueButtonsDouble(getGuiLeft() + 125, topSectionTop + 12, zRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
             zRadius = value;
             saveSettings();
         }));
@@ -180,6 +182,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         }));
 
         valueButtonsList.forEach(valueButtons -> valueButtons.widgetList.forEach(this::addRenderableWidget));
+        valueButtonsDoubleList.forEach(valueButtons -> valueButtons.widgetList.forEach(this::addRenderableWidget));
     }
 
     public int adjustNumberButton(int value, int change, int min, int max) {

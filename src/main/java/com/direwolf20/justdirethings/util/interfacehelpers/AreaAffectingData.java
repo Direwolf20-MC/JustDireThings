@@ -5,7 +5,7 @@ import net.minecraft.world.phys.AABB;
 import java.util.Objects;
 
 public class AreaAffectingData {
-    public int xRadius = 0, yRadius = 0, zRadius = 0;
+    public double xRadius = 0, yRadius = 0, zRadius = 0;
     public int xOffset = 0, yOffset = 1, zOffset = 0;
     public boolean renderArea = false;
     public AABB area;
@@ -14,7 +14,7 @@ public class AreaAffectingData {
 
     }
 
-    public AreaAffectingData(int xRadius, int yRadius, int zRadius, int xOffset, int yOffset, int zOffset) {
+    public AreaAffectingData(double xRadius, double yRadius, double zRadius, int xOffset, int yOffset, int zOffset) {
         this.xRadius = xRadius;
         this.yRadius = yRadius;
         this.zRadius = zRadius;
