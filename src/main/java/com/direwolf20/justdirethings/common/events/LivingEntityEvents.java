@@ -24,8 +24,6 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.Iterator;
 
-import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getToggleableTool;
-
 
 public class LivingEntityEvents {
 
@@ -38,10 +36,20 @@ public class LivingEntityEvents {
     @SubscribeEvent
     public static void LivingFallDamage(LivingFallEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            ItemStack toggleableTool = getToggleableTool(player);
-            if (toggleableTool.isEmpty()) return;
-            if (((ToggleableTool) toggleableTool.getItem()).hasAbility(Ability.AIRBURST))
-                event.setDistance(0.0f);
+            ItemStack toggleableTool = player.getMainHandItem();
+            if (!toggleableTool.isEmpty()) {
+                if (((ToggleableTool) toggleableTool.getItem()).hasAbility(Ability.AIRBURST)) {
+                    event.setDistance(0.0f);
+                    return;
+                }
+            }
+            toggleableTool = player.getOffhandItem();
+            if (!toggleableTool.isEmpty()) {
+                if (((ToggleableTool) toggleableTool.getItem()).hasAbility(Ability.AIRBURST)) {
+                    event.setDistance(0.0f);
+                    return;
+                }
+            }
         }
     }
 
