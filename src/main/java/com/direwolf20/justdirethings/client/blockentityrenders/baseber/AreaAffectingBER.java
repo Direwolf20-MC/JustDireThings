@@ -21,6 +21,10 @@ public class AreaAffectingBER implements BlockEntityRenderer<BlockEntity> {
             if (areaAffectingBE.getAreaAffectingData().renderArea) {
                 RenderHelpers.renderLines(matrixStackIn, areaAffectingBE.getAABB(BlockPos.ZERO), Color.GREEN, bufferIn);
                 RenderHelpers.renderBoxSolid(matrix4f, bufferIn, areaAffectingBE.getAABB(BlockPos.ZERO), 1, 0, 0, 0.125f);
+                if (areaAffectingBE.getAreaAffectingData().xRadius > 0 || areaAffectingBE.getAreaAffectingData().yRadius > 0 || areaAffectingBE.getAreaAffectingData().zRadius > 0) {
+                    RenderHelpers.renderLines(matrixStackIn, areaAffectingBE.getAABBOffsetOnly(BlockPos.ZERO), Color.WHITE, bufferIn);
+                    RenderHelpers.renderBoxSolid(matrix4f, bufferIn, areaAffectingBE.getAABBOffsetOnly(BlockPos.ZERO), 0, 0, 1, 0.125f);
+                }
             }
         }
     }

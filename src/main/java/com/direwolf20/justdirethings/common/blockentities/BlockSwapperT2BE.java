@@ -71,7 +71,7 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
         return blockEntity.getClass() == this.getClass();
     }
 
-    public void setAreaOnly(int x, int y, int z) {
+    public void setAreaOnly(double x, double y, double z) {
         getAreaAffectingData().xRadius = Math.max(0, Math.min(x, maxRadius));
         getAreaAffectingData().yRadius = Math.max(0, Math.min(y, maxRadius));
         getAreaAffectingData().zRadius = Math.max(0, Math.min(z, maxRadius));
@@ -94,7 +94,7 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
     }
 
     @Override
-    public void setAreaSettings(int x, int y, int z, int xo, int yo, int zo, boolean renderArea) {
+    public void setAreaSettings(double x, double y, double z, int xo, int yo, int zo, boolean renderArea) {
         AreaAffectingBE.super.setAreaSettings(x, y, z, xo, yo, zo, renderArea);
         updatePartnerArea();
     }
