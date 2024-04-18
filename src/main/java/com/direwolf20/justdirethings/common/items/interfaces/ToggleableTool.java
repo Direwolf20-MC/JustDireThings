@@ -324,13 +324,14 @@ public interface ToggleableTool extends ToggleableItem {
             // Get the player's looking direction as a vector
             Vec3 lookDirection = player.getViewVector(1.0F);
             // Define the strength of the burst, adjust this value to change how strong the burst should be
-            double burstStrength = 2.5;
+            int multiplier = ToggleableTool.getToolValue(itemStack, Ability.AIRBURST.getName());
+            double addedStrength = (double) multiplier / 2;
+            double burstStrength = 1.5 + addedStrength;
             // Set the player's motion based on the look direction and burst strength
             player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
             player.hurtMarked = true; //This tells the server to move the client
             // Optionally, you could add some effects or sounds here
-            //player.playNotifySound(SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.PLAYERS, 1.0F, 1.0F);
-            damageTool(itemStack, player, Ability.AIRBURST);
+            damageTool(itemStack, player, Ability.AIRBURST, multiplier);
             return true;
         } else {
             OurSounds.playSound(SoundEvents.FIRECHARGE_USE, 0.5f, 0.125f);
@@ -544,6 +545,6 @@ public interface ToggleableTool extends ToggleableItem {
         int max = abilityParams.maxSlider;
         if (stack.getOrCreateTag().contains(valueName + "_value"))
             return Math.max(min, Math.min(max, stack.getOrCreateTag().getInt(valueName + "_value")));
-        return max; //By default, new tools have their max ability enabled, like hammer on celestigem starts out with 5.
+        return abilityParams.defaultValue;
     }
 }

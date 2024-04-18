@@ -210,6 +210,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.inv-normal", "Inventory Slots");
         add("justdirethings.screen.inv-armor", "Armor Slots");
         add("justdirethings.screen.inv-offhand", "Offhand Slots");
+        add("justdirethings.screen.rightclicksettings", "Right Click for Settings");
 
 
         //Buttons

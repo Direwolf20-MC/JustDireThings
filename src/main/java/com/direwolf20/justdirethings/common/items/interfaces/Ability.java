@@ -22,7 +22,7 @@ public enum Ability {
     HAMMER(SettingType.CYCLE, 1, 50),
     LAVAREPAIR(SettingType.TOGGLE, 0, 0),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500),
-    AIRBURST(SettingType.TOGGLE, 1, 500),
+    AIRBURST(SettingType.SLIDER, 1, 500),
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100),
     //Tier 4

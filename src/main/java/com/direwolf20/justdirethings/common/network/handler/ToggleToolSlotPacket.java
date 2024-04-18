@@ -29,6 +29,8 @@ public class ToggleToolSlotPacket {
                     ToggleableTool.toggleSetting(stack, payload.settingName());
                 else if (payload.type() == 1) //Cycle
                     ToggleableTool.cycleSetting(stack, payload.settingName());
+                else if (payload.type() == 2) //Slider
+                    ToggleableTool.setToolValue(stack, payload.settingName(), payload.value());
             }
         });
     }
