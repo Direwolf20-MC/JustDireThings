@@ -16,19 +16,19 @@ import com.direwolf20.justdirethings.common.network.data.BlockStateFilterPayload
 import com.direwolf20.justdirethings.common.network.data.SensorPayload;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> implements SensorScreenInterface {
     public int senseTarget;
@@ -191,6 +191,25 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
                             Component.translatable("justdirethings.screen.energycost", MagicHelpers.withSuffix(sensorT2BE.getEnergyCost()))
                     )), pX, pY);
             }
+        }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        if (hoveredSlot != null && (hoveredSlot instanceof FilterBasicSlot)) {
+            if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+                List<Component> components = new ArrayList<>();
+                ItemStack itemstack = this.hoveredSlot.getItem();
+                components.add(Component.translatable("justdirethings.screen.rightclicksettings").withStyle(ChatFormatting.RED));
+                components.addAll(this.getTooltipFromContainerItem(itemstack));
+                pGuiGraphics.renderTooltip(this.font, components, itemstack.getTooltipImage(), itemstack, pX, pY);
+            } else {
+                List<FormattedText> components = new ArrayList<>();
+                components.add(Component.translatable("justdirethings.screen.rightclicksettings").withStyle(ChatFormatting.RED));
+                pGuiGraphics.renderTooltip(this.font, Language.getInstance().getVisualOrder(components), pX, pY);
+            }
+        } else {
+            super.renderTooltip(pGuiGraphics, pX, pY);
         }
     }
 

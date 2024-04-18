@@ -12,16 +12,21 @@ import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import com.direwolf20.justdirethings.common.network.data.BlockStateFilterPayload;
 import com.direwolf20.justdirethings.common.network.data.SensorPayload;
 import com.direwolf20.justdirethings.util.MiscTools;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> implements SensorScreenInterface {
@@ -152,6 +157,25 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
         stateItemStack = container.filterHandler.getStackInSlot(blockStateSlot);
         scrollPanel.setStateStack(stateItemStack);
         scrollPanel.refreshList();
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        if (hoveredSlot != null && (hoveredSlot instanceof FilterBasicSlot)) {
+            if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+                List<Component> components = new ArrayList<>();
+                ItemStack itemstack = this.hoveredSlot.getItem();
+                components.add(Component.translatable("justdirethings.screen.rightclicksettings").withStyle(ChatFormatting.RED));
+                components.addAll(this.getTooltipFromContainerItem(itemstack));
+                pGuiGraphics.renderTooltip(this.font, components, itemstack.getTooltipImage(), itemstack, pX, pY);
+            } else {
+                List<FormattedText> components = new ArrayList<>();
+                components.add(Component.translatable("justdirethings.screen.rightclicksettings").withStyle(ChatFormatting.RED));
+                pGuiGraphics.renderTooltip(this.font, Language.getInstance().getVisualOrder(components), pX, pY);
+            }
+        } else {
+            super.renderTooltip(pGuiGraphics, pX, pY);
+        }
     }
 
     @Override
