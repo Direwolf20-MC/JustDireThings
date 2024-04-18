@@ -12,6 +12,7 @@ public class CelestigemSword extends BaseSword implements PoweredTool {
         registerAbility(Ability.MOBSCANNER);
         registerAbility(Ability.CAUTERIZEWOUNDS);
         registerAbility(Ability.DROPTELEPORT);
+        registerAbility(Ability.SMOKER);
     }
 
     @Override
