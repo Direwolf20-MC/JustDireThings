@@ -30,6 +30,10 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
         super(properties);
     }
 
+    public static boolean never(BlockState p_50806_, BlockGetter p_50807_, BlockPos p_50808_) {
+        return false;
+    }
+
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);

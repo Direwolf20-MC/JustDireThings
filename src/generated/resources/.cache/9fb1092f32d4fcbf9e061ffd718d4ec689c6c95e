@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-14T19:22:16.4443458	Recipes
+// 1.20.4	2024-04-17T11:29:34.7201328	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 9979895187547204ad77447846cd17a797fdd027 data/justdirethings/advancements/recipes/building_blocks/coal_t1_9x9.json
@@ -14,6 +14,7 @@ e3abdeaa9e20ee13e877c54808b611a26ac08286 data/justdirethings/advancements/recipe
 5588eec1b317d4a08110aac7b4cc07e939ae1966 data/justdirethings/advancements/recipes/misc/blazegold_pickaxe.json
 38ffc91a72936662b783c5df60f2c58a146979fd data/justdirethings/advancements/recipes/misc/blazegold_shovel.json
 e4aec9b6a5d4ec4be107ab01e9cdeff40b2800c1 data/justdirethings/advancements/recipes/misc/blazegold_sword.json
+dde3805be5b3d25c8616e824396e8a747c886e0b data/justdirethings/advancements/recipes/misc/blazejet_wand.json
 c9072d3e327c87eb1b7a1994100c1123c8b51b7f data/justdirethings/advancements/recipes/misc/blockbreakert1.json
 5896ef8f9426baa365be03f46c9b5a138167c366 data/justdirethings/advancements/recipes/misc/blockbreakert1_nbtclear.json
 38c99ea5ab0a049ebff085bc5c21ea78af940737 data/justdirethings/advancements/recipes/misc/blockbreakert2.json
@@ -99,6 +100,7 @@ eed92f0037f508a5351ea93d271b7125de5a36c8 data/justdirethings/recipes/blazegold_i
 e76b9021c128274a60be6b03da3ad0767c0a6724 data/justdirethings/recipes/blazegold_pickaxe.json
 a2238ab5cd51016a56fbeca6012e73535047f341 data/justdirethings/recipes/blazegold_shovel.json
 8aa4fdaa349c3f4459c0940815763f27d1a1b2a4 data/justdirethings/recipes/blazegold_sword.json
+4e9eb790238b5044f4f2750a67f8512ce24391d1 data/justdirethings/recipes/blazejet_wand.json
 ce8fdfacde7ab0fb3997e90fb284e97675861f8a data/justdirethings/recipes/blockbreakert1.json
 acfbe4f7250d53c3e841c86ed5eb6bc24c377030 data/justdirethings/recipes/blockbreakert1_nbtclear.json
 d7a172ce2e09ca27b1117a6730db4afd2a403d56 data/justdirethings/recipes/blockbreakert2.json

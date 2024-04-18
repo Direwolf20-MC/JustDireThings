@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
-import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;

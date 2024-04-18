@@ -106,6 +106,7 @@ public class EnergyTransmitter extends BaseMachineBlock {
                 .strength(2.0f)
                 .noOcclusion()
                 .forceSolidOn()
+                .isRedstoneConductor(BaseMachineBlock::never)
         );
     }
 

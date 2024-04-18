@@ -25,7 +25,7 @@ public class SensorT2 extends BaseMachineBlock {
         super(Properties.of()
                 .sound(SoundType.METAL)
                 .strength(2.0f)
-                .isRedstoneConductor(SensorT2::never)
+                .isRedstoneConductor(BaseMachineBlock::never)
         );
     }
 
@@ -33,10 +33,6 @@ public class SensorT2 extends BaseMachineBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new SensorT2BE(pos, state);
-    }
-
-    private static boolean never(BlockState p_50806_, BlockGetter p_50807_, BlockPos p_50808_) {
-        return false;
     }
 
     @Override

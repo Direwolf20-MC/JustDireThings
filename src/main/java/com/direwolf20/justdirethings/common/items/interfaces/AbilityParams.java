@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
 public class AbilityParams {
     public final int minSlider, maxSlider, increment;

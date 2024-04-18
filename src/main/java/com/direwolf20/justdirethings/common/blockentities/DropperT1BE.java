@@ -2,7 +2,6 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.common.blocks.DropperT1;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -23,15 +22,12 @@ import java.util.List;
 
 public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
-    protected Direction FACING = Direction.DOWN; //To avoid nulls
     public int dropCount = 1;
     public List<Integer> slotsToDropList = new ArrayList<>();
 
     public DropperT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1; //Slot for dropping
-        if (pBlockState.getBlock() instanceof DropperT1) //Only do this for the Tier 1, as its the only one with a facing....
-            FACING = getBlockState().getValue(BlockStateProperties.FACING);
     }
 
     public DropperT1BE(BlockPos pPos, BlockState pBlockState) {
@@ -130,7 +126,7 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public BlockPos getDropPos() {
-        BlockPos blockPos = getBlockPos().relative(FACING);
+        BlockPos blockPos = getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING));
         if (isBlockPosValid(blockPos))
             return blockPos;
         return null;

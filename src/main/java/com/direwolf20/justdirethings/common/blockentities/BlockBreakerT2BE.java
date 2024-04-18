@@ -6,9 +6,9 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineContainerData;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
-import com.direwolf20.justdirethings.common.items.tools.utils.Helpers;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
@@ -88,6 +88,10 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
         if (extractEnergy(getStandardEnergyCost(), false) < getStandardEnergyCost())
             return false;
         return super.tryBreakBlock(tool, fakePlayer, breakPos, blockState);
+    }
+
+    public Direction getFacing() {
+        return getDirectionValue();
     }
 
     @Override

@@ -1,29 +1,23 @@
-package com.direwolf20.justdirethings.common.items.tools.basetools;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
-import com.direwolf20.justdirethings.common.items.interfaces.Ability;
-import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
-import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
-import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
@@ -35,12 +29,22 @@ import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
-public class BaseShovel extends ShovelItem implements ToggleableTool {
+public abstract class BaseToggleableTool extends Item implements ToggleableTool {
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 
-    public BaseShovel(Tier pTier, float pAttackDamageModifier, float pAttackSpeedModifier, Item.Properties pProperties) {
-        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    public BaseToggleableTool(Properties pProperties) {
+        super(pProperties);
+    }
+
+    @Override
+    public EnumSet<Ability> getAbilities() {
+        return abilities;
+    }
+
+    @Override
+    public Map<Ability, AbilityParams> getAbilityParamsMap() {
+        return abilityParams;
     }
 
     @Override
@@ -52,24 +56,11 @@ public class BaseShovel extends ShovelItem implements ToggleableTool {
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
-        if (!player.level().isClientSide) {
-            BlockState blockState = player.level().getBlockState(pos);
-            if (itemstack.getItem() instanceof ToggleableTool toggleableTool && itemstack.isCorrectToolForDrops(blockState)) {
-                toggleableTool.mineBlocksAbility(itemstack, player.level(), pos, player);
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-        return true; //We handle damage in the BlockEvent.BreakEvent
-    }
-
-    @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        return hurtEnemyAbility(pStack, pTarget, pAttacker);
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide && player.isShiftKeyDown())
+            openSettings(player);
+        useAbility(level, player, hand);
+        return super.use(level, player, hand);
     }
 
     @Override
@@ -91,37 +82,6 @@ public class BaseShovel extends ShovelItem implements ToggleableTool {
         }
     }
 
-    /**
-     * Reduces the attack damage of a tool when unpowered
-     */
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> modifiers = super.getAttributeModifiers(slot, stack);
-        if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return modifiers;
-
-        return poweredTool.getPoweredAttributeModifiers(slot, stack, modifiers);
-    }
-
-    @Override
-    public EnumSet<Ability> getAbilities() {
-        return abilities;
-    }
-
-    @Override
-    public Map<Ability, AbilityParams> getAbilityParamsMap() {
-        return abilityParams;
-    }
-
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (!level.isClientSide && player.isShiftKeyDown())
-            openSettings(player);
-        useAbility(level, player, hand);
-        return super.use(level, player, hand);
-    }
-
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
@@ -133,7 +93,7 @@ public class BaseShovel extends ShovelItem implements ToggleableTool {
             energyStorage.extractEnergy(finalEnergyCost, false);
             return 0;
         }
-        return amount;
+        return super.damageItem(stack, amount, entity, onBroken);
     }
 
     @Override
@@ -160,11 +120,19 @@ public class BaseShovel extends ShovelItem implements ToggleableTool {
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.NONE;
+        return super.getUseAnimation(stack);
     }
 
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
     }
+
+    @Override
+    public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
+        if (canUseAbility(stack, Ability.LAVAREPAIR))
+            return Helpers.doLavaRepair(stack, entity);
+        return false;
+    }
+
 }
