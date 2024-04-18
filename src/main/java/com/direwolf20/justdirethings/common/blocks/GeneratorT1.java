@@ -9,15 +9,28 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.stream.Stream;
 
 public class GeneratorT1 extends BaseMachineBlock {
+    static final VoxelShape SHAPE = Stream.of(
+            Block.box(2, 11, 2, 14, 14, 14),
+            Block.box(0, 0, 0, 16, 11, 16),
+            Block.box(0, 14, 0, 16, 16, 16)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
     public GeneratorT1() {
         super(Properties.of()
                 .sound(SoundType.METAL)
@@ -46,5 +59,10 @@ public class GeneratorT1 extends BaseMachineBlock {
             buf.writeBlockPos(blockPos);
         }));
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 }
