@@ -22,8 +22,11 @@ public class NBTHelpers {
     public record BoundInventory(GlobalPos globalPos, Direction direction) {
         public static BoundInventory fromNBT(CompoundTag tag) {
             BoundInventory boundInventory = null;
-            if (tag.contains("boundinventory") && tag.contains("boundinventory_side"))
-                boundInventory = new BoundInventory(NBTHelpers.nbtToGlobalPos(tag.getCompound("boundinventory")), Direction.values()[tag.getInt("boundinventory_side")]);
+            if (tag.contains("boundinventory") && tag.contains("boundinventory_side")) {
+                GlobalPos globalPos = NBTHelpers.nbtToGlobalPos(tag.getCompound("boundinventory"));
+                if (globalPos == null) return null;
+                boundInventory = new BoundInventory(globalPos, Direction.values()[tag.getInt("boundinventory_side")]);
+            }
             return boundInventory;
         }
 
@@ -67,7 +70,13 @@ public class NBTHelpers {
     }
 
     public static GlobalPos nbtToGlobalPos(CompoundTag tag) {
-        ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("dimension")));
+        ResourceKey<Level> levelKey;
+        if (tag.contains("dimension")) //TODO Fixes a direDerp - remove in 1.21+
+            levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("dimension")));
+        else if (tag.contains("level"))
+            levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("level")));
+        else
+            return null;
         BlockPos blockPos = NbtUtils.readBlockPos(tag.getCompound("blockpos"));
         return GlobalPos.of(levelKey, blockPos);
     }
@@ -91,6 +100,7 @@ public class NBTHelpers {
     }
 
     public static GlobalVec3 nbtToGlobalVec3(CompoundTag tag) {
+        if (!tag.contains("dimension")) return null;
         ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("dimension")));
         double x = tag.getDouble("vec3x");
         double y = tag.getDouble("vec3y");

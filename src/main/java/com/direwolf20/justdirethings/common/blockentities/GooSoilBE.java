@@ -29,7 +29,7 @@ public class GooSoilBE extends BlockEntity {
         if (boundInventory == null) return null;
         if (attachedInventory == null) {
             ServerLevel boundLevel = serverLevel.getServer().getLevel(boundInventory.globalPos().dimension());
-            assert boundLevel != null;
+            if (boundLevel == null) return null;
             attachedInventory = BlockCapabilityCache.create(
                     Capabilities.ItemHandler.BLOCK, // capability to cache
                     boundLevel, // level

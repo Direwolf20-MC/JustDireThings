@@ -8,10 +8,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum GooTier implements Tier {
-    FERRICORE(2, 500, 7.0F, 2.5F, 15, () -> Ingredient.of(Registration.FerricoreIngot.get()), 1),
-    BLAZEGOLD(3, 1440, 12.0F, 3.0F, 22, () -> Ingredient.of(Registration.BlazegoldIngot.get()), 2),
-    CELESTIGEM(4, 1561, 10.0F, 4.0F, 18, () -> Ingredient.of(Registration.Celestigem.get()), 3),
-    ECLIPSEALLOY(5, 2561, 16.0F, 5.0F, 25, () -> Ingredient.of(Registration.EclipseAlloyIngot.get()), 4);
+    FERRICORE(2, 500, 7.0F, 2.5F, 15, () -> Ingredient.of(Registration.FerricoreIngot.get())),
+    BLAZEGOLD(3, 1440, 12.0F, 3.0F, 22, () -> Ingredient.of(Registration.BlazegoldIngot.get())),
+    CELESTIGEM(4, 1561, 10.0F, 4.0F, 18, () -> Ingredient.of(Registration.Celestigem.get())),
+    ECLIPSEALLOY(5, 2561, 16.0F, 5.0F, 25, () -> Ingredient.of(Registration.EclipseAlloyIngot.get()));
 
     private final int level;
     private final int uses;
@@ -20,20 +20,13 @@ public enum GooTier implements Tier {
     private final int enchantmentValue;
     private final LazyLoadedValue<Ingredient> repairIngredient;
 
-    private final int gooTier;
-
-    private GooTier(int pLevel, int pUses, float pSpeed, float pDamage, int pEnchantmentValue, Supplier<Ingredient> pRepairIngredient, int gooTier) {
+    GooTier(int pLevel, int pUses, float pSpeed, float pDamage, int pEnchantmentValue, Supplier<Ingredient> pRepairIngredient) {
         this.level = pLevel;
         this.uses = pUses;
         this.speed = pSpeed;
         this.damage = pDamage;
         this.enchantmentValue = pEnchantmentValue;
         this.repairIngredient = new LazyLoadedValue<>(pRepairIngredient);
-        this.gooTier = gooTier;
-    }
-
-    public int getGooTier() {
-        return gooTier;
     }
 
     @Override

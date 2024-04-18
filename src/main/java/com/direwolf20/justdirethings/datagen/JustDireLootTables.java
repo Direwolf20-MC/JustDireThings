@@ -16,10 +16,10 @@ public class JustDireLootTables extends VanillaBlockLoot {
 
     @Override
     protected void generate() {
-        dropWhenSilkTouch(Registration.GooBlock_Tier1.get());
-        dropWhenSilkTouch(Registration.GooBlock_Tier2.get());
-        dropWhenSilkTouch(Registration.GooBlock_Tier3.get());
-        dropWhenSilkTouch(Registration.GooBlock_Tier4.get());
+        dropSelf(Registration.GooBlock_Tier1.get());
+        dropSelf(Registration.GooBlock_Tier2.get());
+        dropSelf(Registration.GooBlock_Tier3.get());
+        dropSelf(Registration.GooBlock_Tier4.get());
         dropSelf(Registration.FerricoreBlock.get());
         dropSelf(Registration.BlazeGoldBlock.get());
         dropSelf(Registration.CelestigemBlock.get());

@@ -22,6 +22,7 @@ public class PlayerAccessor extends BaseMachineBlock {
         super(Properties.of()
                 .sound(SoundType.METAL)
                 .strength(2.0f)
+                .isRedstoneConductor(BaseMachineBlock::never)
         );
     }
 

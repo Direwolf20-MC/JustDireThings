@@ -106,6 +106,7 @@ public class ItemCollector extends BaseMachineBlock {
                 .strength(2.0f)
                 .noOcclusion()
                 .forceSolidOn()
+                .isRedstoneConductor(BaseMachineBlock::never)
         );
     }
 

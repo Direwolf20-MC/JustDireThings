@@ -79,7 +79,7 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
             saveSettings();
         }));
 
-        addRenderableWidget(new NumberButton(getGuiLeft() + 122, topSectionTop + 64, 24, 12, senseAmount, 0, 100, Component.translatable("justdirethings.screen.senseamount"), b -> {
+        addRenderableWidget(new NumberButton(getGuiLeft() + 122, topSectionTop + 64, 24, 12, senseAmount, 0, 9999, Component.translatable("justdirethings.screen.senseamount"), b -> {
             senseAmount = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
             saveSettings();
         }));

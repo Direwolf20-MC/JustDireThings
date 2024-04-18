@@ -1,9 +1,9 @@
 package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
-import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
-import com.direwolf20.justdirethings.common.items.tools.utils.Helpers;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
@@ -18,10 +18,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.Iterator;
+
+import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getToggleableTool;
 
 
 public class LivingEntityEvents {
@@ -30,6 +33,16 @@ public class LivingEntityEvents {
     public static void blockJoin(EntityJoinLevelEvent e) {
         if (e.getEntity() instanceof UsefulFakePlayer)
             e.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void LivingFallDamage(LivingFallEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ItemStack toggleableTool = getToggleableTool(player);
+            if (toggleableTool.isEmpty()) return;
+            if (((ToggleableTool) toggleableTool.getItem()).hasAbility(Ability.AIRBURST))
+                event.setDistance(0.0f);
+        }
     }
 
     @SubscribeEvent

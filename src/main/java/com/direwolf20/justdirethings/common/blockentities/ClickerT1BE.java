@@ -2,7 +2,6 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.common.blocks.ClickerT1;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.FakePlayerUtil;
@@ -32,7 +31,6 @@ import java.util.List;
 
 public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
-    protected Direction FACING = Direction.DOWN; //To avoid nulls
     protected List<BlockPos> positionsToClick = new ArrayList<>();
     protected List<? extends LivingEntity> entitiesToClick = new ArrayList<>();
     public int clickType = 0; //RightClick, 1 == Left Click
@@ -61,8 +59,6 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public ClickerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1; //Slot for tool
-        if (pBlockState.getBlock() instanceof ClickerT1) //Only do this for the Tier 1, as its the only one with a facing....
-            FACING = getBlockState().getValue(BlockStateProperties.FACING);
     }
 
     public ClickerT1BE(BlockPos pPos, BlockState pBlockState) {
@@ -167,7 +163,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public InteractionResult clickEntity(ItemStack itemStack, UsefulFakePlayer fakePlayer, LivingEntity entity) {
         fakePlayer.setReach(0.9);
         Direction placing = Direction.values()[direction];
-        FakePlayerUtil.setupFakePlayerForUse(fakePlayer, entity.blockPosition(), placing, itemStack, sneaking);
+        FakePlayerUtil.setupFakePlayerForUse(fakePlayer, entity.blockPosition(), placing, entity.position(), itemStack, sneaking);
         if (showFakePlayer && level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
             fakePlayer.drawParticles(serverLevel, itemStack);
         }
@@ -211,14 +207,14 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
 
     public List<BlockPos> findSpotsToClick(FakePlayer fakePlayer) {
         List<BlockPos> returnList = new ArrayList<>();
-        BlockPos blockPos = getBlockPos().relative(FACING);
+        BlockPos blockPos = getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING));
         if (isBlockPosValid(fakePlayer, blockPos))
             returnList.add(blockPos);
         return returnList;
     }
 
     public AABB getAABB() {
-        return new AABB(getBlockPos().relative(FACING));
+        return new AABB(getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING)));
     }
 
     public List<? extends LivingEntity> findEntitiesToClick(AABB aabb) {

@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireItemTags;
@@ -45,7 +45,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool.getInstantRFCost;
+import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getInstantRFCost;
 
 public class Helpers {
     public static final Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES);

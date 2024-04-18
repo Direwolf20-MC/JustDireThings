@@ -1,10 +1,10 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
+import com.direwolf20.justdirethings.client.OurSounds;
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -44,15 +44,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
+import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 
 public interface ToggleableTool extends ToggleableItem {
-    GooTier gooTier();
-
-    default int getGooTier() {
-        return gooTier().getGooTier();
-    }
-
     EnumSet<Ability> getAbilities();
 
     Map<Ability, AbilityParams> getAbilityParamsMap();
@@ -79,11 +73,11 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility) {
-        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) > 0);
+        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0);
     }
 
     default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility, int multiplier) {
-        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility, multiplier) > 0);
+        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility, multiplier) >= 0);
     }
 
     default void openSettings(Player player) {
@@ -261,6 +255,8 @@ public interface ToggleableTool extends ToggleableItem {
             lawnmower(level, player, itemStack);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.CAUTERIZEWOUNDS))
             cauterizeWounds(level, player, itemStack);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.AIRBURST))
+            airBurst(level, player, itemStack);
     }
 
     default void useOnAbility(UseOnContext pContext) {
@@ -288,7 +284,7 @@ public interface ToggleableTool extends ToggleableItem {
 
     default boolean scanFor(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
         if (level.isClientSide) {
-            ThingFinder.discover(player, toolAbility);
+            ThingFinder.discover(player, toolAbility, itemStack);
             if (toolAbility.equals(Ability.OREXRAY))
                 player.playNotifySound(SoundEvents.SCULK_CLICKING, SoundSource.PLAYERS, 1.0F, 1.0F);
             else
@@ -323,6 +319,25 @@ public interface ToggleableTool extends ToggleableItem {
         return false;
     }
 
+    default boolean airBurst(Level level, Player player, ItemStack itemStack) {
+        if (!level.isClientSide) {
+            // Get the player's looking direction as a vector
+            Vec3 lookDirection = player.getViewVector(1.0F);
+            // Define the strength of the burst, adjust this value to change how strong the burst should be
+            double burstStrength = 2.5;
+            // Set the player's motion based on the look direction and burst strength
+            player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
+            player.hurtMarked = true; //This tells the server to move the client
+            // Optionally, you could add some effects or sounds here
+            //player.playNotifySound(SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            damageTool(itemStack, player, Ability.AIRBURST);
+            return true;
+        } else {
+            OurSounds.playSound(SoundEvents.FIRECHARGE_USE, 0.5f, 0.125f);
+            return true;
+        }
+    }
+
     default boolean cauterizeWounds(Level level, Player player, ItemStack itemStack) {
         if (player.getHealth() >= player.getMaxHealth()) return false;
         if (!level.isClientSide) {
@@ -340,6 +355,7 @@ public interface ToggleableTool extends ToggleableItem {
                     double d2 = pos.z() + random.nextDouble();
                     ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
                 }
+                damageTool(itemStack, player, Ability.CAUTERIZEWOUNDS);
                 return true;
             }
         }
@@ -351,13 +367,25 @@ public interface ToggleableTool extends ToggleableItem {
             List<TagKey<Block>> tags = new ArrayList<>();
             tags.add(JustDireBlockTags.LAWNMOWERABLE);
             Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?
+            List<ItemStack> drops = new ArrayList<>();
             for (BlockPos breakPos : breakBlocks) {
                 if (testUseTool(itemStack, Ability.LAWNMOWER) < 0)
                     break;
-                breakBlocks((ServerLevel) level, breakPos);
+                BlockState state = level.getBlockState(breakPos);
+                BlockEntity blockEntity = level.getBlockEntity(breakPos);
+                if (level instanceof ServerLevel serverLevel) {
+                    boolean removed = level.destroyBlock(breakPos, false);
+                    if (removed)
+                        drops.addAll(Block.getDrops(state, serverLevel, breakPos, blockEntity, player, itemStack)); //This isn't perfect, but should be 'good enough' for lawnmowerables
+                }
                 if (Math.random() < 0.1) //10% chance to damage tool
                     damageTool(itemStack, player, Ability.LAWNMOWER);
             }
+            if (!breakBlocks.isEmpty()) {
+                BlockPos firstPos = breakBlocks.iterator().next();
+                handleDrops(itemStack, (ServerLevel) level, firstPos, player, breakBlocks, drops, level.getBlockState(firstPos), 0);
+            }
+
             return true;
         }
         return false;
