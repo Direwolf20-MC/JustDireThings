@@ -100,13 +100,19 @@ public interface ToggleableTool extends ToggleableItem {
         if (canUseAbility(pStack, Ability.TREEFELLER) && logCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
             breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
         }
-        if (canUseAbility(pStack, Ability.SKYSWEEPER) && fallingBlockCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, Direction.UP, 64, 2)); //Todo: Balance and Config?
-        }
         if (canUseAbility(pStack, Ability.HAMMER)) {
             breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
         }
         breakBlockPositions.add(pPos);
+        if (canUseAbility(pStack, Ability.SKYSWEEPER) && pStack.isCorrectToolForDrops(pState)) {
+            Set<BlockPos> newPos = new HashSet<>();
+            for (BlockPos blockPos : breakBlockPositions) {
+                BlockState blockState = pLevel.getBlockState(blockPos);
+                if (fallingBlockCondition.test(blockState))
+                    newPos.addAll(findLikeBlocks(pLevel, blockState, blockPos, Direction.UP, 64, 2)); //Todo: Balance and Config?
+            }
+            breakBlockPositions.addAll(newPos);
+        }
         return breakBlockPositions;
     }
 
