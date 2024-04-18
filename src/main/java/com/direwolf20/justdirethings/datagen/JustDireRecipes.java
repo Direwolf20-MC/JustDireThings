@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
-import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipeBuilder;
+import com.direwolf20.justdirethings.datagen.recipes.AbilityConvertRecipeBuilder;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -595,8 +595,8 @@ public class JustDireRecipes extends RecipeProvider {
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
 
-        // Ability Recipes
-        AbilityRecipeBuilder.register(Items.ROTTEN_FLESH, Items.LEATHER, Ability.SMOKER)
+        // Ability Convert Recipes
+        AbilityConvertRecipeBuilder.register(Items.ROTTEN_FLESH, Items.LEATHER, Ability.SMOKER)
 		        .unlockedBy("has_rotten_flesh", InventoryChangeTrigger.TriggerInstance.hasItems(Items.ROTTEN_FLESH))
 		        .save(consumer);
         

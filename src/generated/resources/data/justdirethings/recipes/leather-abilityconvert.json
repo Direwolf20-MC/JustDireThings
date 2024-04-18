@@ -1,5 +1,5 @@
 {
-  "type": "justdirethings:ability",
+  "type": "justdirethings:abilityconvert",
   "abilityRequirement": "smoker",
   "input": {
     "Count": 1,

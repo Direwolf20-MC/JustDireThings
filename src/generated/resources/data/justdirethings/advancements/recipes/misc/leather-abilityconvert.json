@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:leather-abilityrecipe"
+        "recipe": "justdirethings:leather-abilityconvert"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:leather-abilityrecipe"
+      "justdirethings:leather-abilityconvert"
     ]
   }
 }

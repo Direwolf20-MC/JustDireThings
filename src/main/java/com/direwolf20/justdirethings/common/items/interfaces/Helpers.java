@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireItemTags;
-import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.AbilityConvertRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -232,12 +232,12 @@ public class Helpers {
         return returnList;
     }
 
-    public static Optional<RecipeHolder<AbilityRecipe>> getAbilityRecipe(Ability ability, ItemStack inputItem, ServerLevel level) {
+    public static Optional<RecipeHolder<AbilityConvertRecipe>> getAbilityConvertRecipe(Ability ability, ItemStack inputItem, ServerLevel level) {
         RecipeManager recipeManager = level.getRecipeManager();
-        List<RecipeHolder<AbilityRecipe>> abilityRecipes = recipeManager.getAllRecipesFor(Registration.ABILITY_RECIPE_TYPE.get());
+        List<RecipeHolder<AbilityConvertRecipe>> abilityConvertRecipes = recipeManager.getAllRecipesFor(Registration.ABILITY_CONVERT_RECIPE_TYPE.get());
         
-        if (!abilityRecipes.isEmpty()) {
-            for (RecipeHolder<AbilityRecipe> recipe : abilityRecipes) {
+        if (!abilityConvertRecipes.isEmpty()) {
+            for (RecipeHolder<AbilityConvertRecipe> recipe : abilityConvertRecipes) {
                 if (recipe.value().getAbilityRequirement() == ability && recipe.value().getInput().getItem() == inputItem.getItem()) {
                     return Optional.of(recipe);
                 }
@@ -256,10 +256,10 @@ public class Helpers {
         	ItemStack smokedResults = ItemStack.EMPTY;
         	
         	// Check for ability recipes first
-        	Optional<RecipeHolder<AbilityRecipe>> abilityRecipe = getAbilityRecipe(Ability.SMOKER, drop.getItem(), level);
+        	Optional<RecipeHolder<AbilityConvertRecipe>> abilityConvertRecipe = getAbilityConvertRecipe(Ability.SMOKER, drop.getItem(), level);
 
-        	if (abilityRecipe.isPresent()) {
-        		smokedResults = abilityRecipe.get().value().getOutput();
+        	if (abilityConvertRecipe.isPresent()) {
+        		smokedResults = abilityConvertRecipe.get().value().getOutput();
         	} else {
         		// Fallback to checking smoker recipes
         		Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SimpleContainer(drop.getItem()), level);

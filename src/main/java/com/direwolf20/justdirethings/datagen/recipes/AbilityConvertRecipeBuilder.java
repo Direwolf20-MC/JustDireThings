@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public class AbilityRecipeBuilder implements RecipeBuilder {
+public class AbilityConvertRecipeBuilder implements RecipeBuilder {
     @Nullable
     private String group;
 
@@ -34,25 +34,25 @@ public class AbilityRecipeBuilder implements RecipeBuilder {
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public AbilityRecipeBuilder(Item input, Item output, String abilityRequirement) {
+    public AbilityConvertRecipeBuilder(Item input, Item output, String abilityRequirement) {
         this.input = input;
         this.output = output;
         this.abilityRequirement = abilityRequirement;
     }
 
-    public static AbilityRecipeBuilder register(Item input, Item output, Ability ability) {
-        return new AbilityRecipeBuilder(input, output, ability.getName());
+    public static AbilityConvertRecipeBuilder register(Item input, Item output, Ability ability) {
+        return new AbilityConvertRecipeBuilder(input, output, ability.getName());
     }
 
-    public AbilityRecipeBuilder requires(TagKey<Item> pTag) {
+    public AbilityConvertRecipeBuilder requires(TagKey<Item> pTag) {
         return this.requires(Ingredient.of(pTag));
     }
 
-    public AbilityRecipeBuilder requires(ItemLike pItem) {
+    public AbilityConvertRecipeBuilder requires(ItemLike pItem) {
         return this.requires(pItem, 1);
     }
 
-    public AbilityRecipeBuilder requires(ItemLike pItem, int pQuantity) {
+    public AbilityConvertRecipeBuilder requires(ItemLike pItem, int pQuantity) {
         for (int i = 0; i < pQuantity; ++i) {
             this.requires(Ingredient.of(pItem));
         }
@@ -60,11 +60,11 @@ public class AbilityRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public AbilityRecipeBuilder requires(Ingredient pIngredient) {
+    public AbilityConvertRecipeBuilder requires(Ingredient pIngredient) {
         return this.requires(pIngredient, 1);
     }
 
-    public AbilityRecipeBuilder requires(Ingredient pIngredient, int pQuantity) {
+    public AbilityConvertRecipeBuilder requires(Ingredient pIngredient, int pQuantity) {
         for (int i = 0; i < pQuantity; ++i) {
             this.ingredients.add(pIngredient);
         }
@@ -72,12 +72,12 @@ public class AbilityRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public AbilityRecipeBuilder unlockedBy(String pName, Criterion<?> pCriterion) {
+    public AbilityConvertRecipeBuilder unlockedBy(String pName, Criterion<?> pCriterion) {
         this.criteria.put(pName, pCriterion);
         return this;
     }
 
-    public AbilityRecipeBuilder group(@Nullable String pGroupName) {
+    public AbilityConvertRecipeBuilder group(@Nullable String pGroupName) {
         this.group = pGroupName;
         return this;
     }
@@ -88,7 +88,7 @@ public class AbilityRecipeBuilder implements RecipeBuilder {
     }
 
     public void save(RecipeOutput pRecipeOutput) {
-        this.save(pRecipeOutput, new ResourceLocation(JustDireThings.MODID, BuiltInRegistries.ITEM.getKey(this.output).getPath() + "-abilityrecipe"));
+        this.save(pRecipeOutput, new ResourceLocation(JustDireThings.MODID, BuiltInRegistries.ITEM.getKey(this.output).getPath() + "-abilityconvert"));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class AbilityRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(pId))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement$builder::addCriterion);
-        AbilityRecipe shapelessrecipe = new AbilityRecipe(
+        AbilityConvertRecipe shapelessrecipe = new AbilityConvertRecipe(
                 this.input.getDefaultInstance(),
                 this.output.getDefaultInstance(),
                 this.abilityRequirement
