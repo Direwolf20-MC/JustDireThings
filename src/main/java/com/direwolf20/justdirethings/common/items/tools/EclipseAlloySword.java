@@ -12,6 +12,7 @@ public class EclipseAlloySword extends BaseSword implements PoweredTool {
         registerAbility(Ability.GLOWING);
         registerAbility(Ability.CAUTERIZEWOUNDS);
         registerAbility(Ability.DROPTELEPORT);
+        registerAbility(Ability.SMOKER);
     }
 
     @Override

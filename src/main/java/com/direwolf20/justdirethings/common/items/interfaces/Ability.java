@@ -18,6 +18,7 @@ public enum Ability {
     LEAFBREAKER(SettingType.TOGGLE, 1, 50),
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50),
+    SMOKER(SettingType.TOGGLE, 1, 50),
     HAMMER(SettingType.CYCLE, 1, 50),
     LAVAREPAIR(SettingType.TOGGLE, 0, 0),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500),

@@ -13,6 +13,7 @@ public class BlazegoldSword extends BaseSword {
         registerAbility(Ability.MOBSCANNER);
         registerAbility(Ability.LAVAREPAIR);
         registerAbility(Ability.CAUTERIZEWOUNDS);
+        registerAbility(Ability.SMOKER);
     }
 
     @Override
