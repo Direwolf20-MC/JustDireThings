@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -231,26 +232,45 @@ public class Helpers {
         return returnList;
     }
 
+    public static Optional<RecipeHolder<AbilityRecipe>> getAbilityRecipe(ServerLevel level, Ability ability, ItemStack inputItem) {
+        RecipeManager recipeManager = level.getRecipeManager();
+        List<RecipeHolder<AbilityRecipe>> abilityRecipes = recipeManager.getAllRecipesFor(Registration.ABILITY_RECIPE_TYPE.get());
+        
+        if (!abilityRecipes.isEmpty()) {
+            for (RecipeHolder<AbilityRecipe> recipe : abilityRecipes) {
+                if (recipe.value().getAbilityRequirement() == ability && recipe.value().getInput().getItem() == inputItem.getItem()) {
+                    return Optional.of(recipe);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+    
     public static void smokeDrop(ServerLevel level, ItemEntity drop, ItemStack tool, LivingEntity entityLiving, boolean[] didISmoke) {
         RegistryAccess registryAccess = level.registryAccess();
         RecipeManager recipeManager = level.getRecipeManager();
         didISmoke[0] = false;
         
-        // Check if there's a smoking recipe for the drop
+        Optional<RecipeHolder<AbilityRecipe>> abilityRecipe = getAbilityRecipe(level, Ability.SMOKER, drop.getItem());
         Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SimpleContainer(drop.getItem()), level);
-
-        if (smokingRecipe.isPresent() && !drop.getItem().is(JustDireItemTags.AUTO_SMOKE_DENY)) {
-            // Get the result of the smoking recipe
-            ItemStack smokedResults = smokingRecipe.get().value().getResultItem(registryAccess);
-
-            if (!smokedResults.isEmpty() && (testUseTool(tool, Ability.SMOKER, drop.getItem().getCount()) >= 0)) {
-            	didISmoke[0] = true;
-            	smokedResults.setCount(drop.getItem().getCount()); // Assume all items in the stack are smoked
-                // If the smoking result is valid, replace the original drop with the smoked result
-                drop.setItem(smokedResults.copy());
-                if (!tool.isEmpty())
-                    damageTool(tool, entityLiving, Ability.SMOKER, drop.getItem().getCount());
-            }
+        
+        if (abilityRecipe.isPresent() || smokingRecipe.isPresent() && !drop.getItem().is(JustDireItemTags.AUTO_SMOKE_DENY)) {
+           ItemStack smokedResults = ItemStack.EMPTY;
+           
+           if (abilityRecipe.isPresent()) {
+        	   smokedResults = abilityRecipe.get().value().getOutput();
+           } else {
+        	   smokedResults = smokingRecipe.get().value().getResultItem(registryAccess);
+           }
+           
+           if (!smokedResults.isEmpty() && (testUseTool(tool, Ability.SMOKER, drop.getItem().getCount()) >= 0)) {
+               didISmoke[0] = true;
+               smokedResults.setCount(drop.getItem().getCount()); // Assume all items in the stack are smoked
+               // If the smoking result is valid, replace the original drop with the smoked result
+               drop.setItem(smokedResults.copy());
+               if (!tool.isEmpty())
+                   damageTool(tool, entityLiving, Ability.SMOKER, drop.getItem().getCount());
+           }
         }
     }
 

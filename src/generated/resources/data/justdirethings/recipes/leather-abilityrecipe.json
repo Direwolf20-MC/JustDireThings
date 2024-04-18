@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "abilityRequirement": "smoker",
+  "input": {
+    "Count": 1,
+    "id": "minecraft:rotten_flesh"
+  },
+  "output": {
+    "Count": 1,
+    "id": "minecraft:leather"
+  }
+}
