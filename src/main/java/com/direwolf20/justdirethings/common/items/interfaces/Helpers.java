@@ -232,7 +232,7 @@ public class Helpers {
         return returnList;
     }
 
-    public static Optional<RecipeHolder<AbilityRecipe>> getAbilityRecipe(ServerLevel level, Ability ability, ItemStack inputItem) {
+    public static Optional<RecipeHolder<AbilityRecipe>> getAbilityRecipe(Ability ability, ItemStack inputItem, ServerLevel level) {
         RecipeManager recipeManager = level.getRecipeManager();
         List<RecipeHolder<AbilityRecipe>> abilityRecipes = recipeManager.getAllRecipesFor(Registration.ABILITY_RECIPE_TYPE.get());
         
@@ -251,26 +251,32 @@ public class Helpers {
         RecipeManager recipeManager = level.getRecipeManager();
         didISmoke[0] = false;
         
-        Optional<RecipeHolder<AbilityRecipe>> abilityRecipe = getAbilityRecipe(level, Ability.SMOKER, drop.getItem());
-        Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SimpleContainer(drop.getItem()), level);
-        
-        if (abilityRecipe.isPresent() || smokingRecipe.isPresent() && !drop.getItem().is(JustDireItemTags.AUTO_SMOKE_DENY)) {
-           ItemStack smokedResults = ItemStack.EMPTY;
-           
-           if (abilityRecipe.isPresent()) {
-        	   smokedResults = abilityRecipe.get().value().getOutput();
-           } else {
-        	   smokedResults = smokingRecipe.get().value().getResultItem(registryAccess);
-           }
-           
-           if (!smokedResults.isEmpty() && (testUseTool(tool, Ability.SMOKER, drop.getItem().getCount()) >= 0)) {
-               didISmoke[0] = true;
-               smokedResults.setCount(drop.getItem().getCount()); // Assume all items in the stack are smoked
-               // If the smoking result is valid, replace the original drop with the smoked result
-               drop.setItem(smokedResults.copy());
-               if (!tool.isEmpty())
-                   damageTool(tool, entityLiving, Ability.SMOKER, drop.getItem().getCount());
-           }
+        // Check if item is allowed first to improve performance
+        if (!drop.getItem().is(JustDireItemTags.AUTO_SMOKE_DENY)) {
+        	ItemStack smokedResults = ItemStack.EMPTY;
+        	
+        	// Check for ability recipes first
+        	Optional<RecipeHolder<AbilityRecipe>> abilityRecipe = getAbilityRecipe(Ability.SMOKER, drop.getItem(), level);
+
+        	if (abilityRecipe.isPresent()) {
+        		smokedResults = abilityRecipe.get().value().getOutput();
+        	} else {
+        		// Fallback to checking smoker recipes
+        		Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SimpleContainer(drop.getItem()), level);
+
+        		if (smokingRecipe.isPresent()) {        			
+        			smokedResults = smokingRecipe.get().value().getResultItem(registryAccess);
+        		}
+        	}
+
+        	if (!smokedResults.isEmpty() && (testUseTool(tool, Ability.SMOKER, drop.getItem().getCount()) >= 0)) {
+        		didISmoke[0] = true;
+        		smokedResults.setCount(drop.getItem().getCount()); // Assume all items in the stack are smoked
+        		// If the smoking result is valid, replace the original drop with the smoked result
+        		drop.setItem(smokedResults.copy());
+        		if (!tool.isEmpty())
+        			damageTool(tool, entityLiving, Ability.SMOKER, drop.getItem().getCount());
+        	}
         }
     }
 
