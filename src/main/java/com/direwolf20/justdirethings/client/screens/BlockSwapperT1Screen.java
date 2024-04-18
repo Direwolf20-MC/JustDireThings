@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.BlockSwapperT1BE;
 import com.direwolf20.justdirethings.common.containers.BlockSwapperT1Container;
 import com.direwolf20.justdirethings.common.network.data.SwapperPayload;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -45,12 +46,10 @@ public class BlockSwapperT1Screen extends BaseMachineScreen<BlockSwapperT1Contai
     public void init() {
         super.init();
         addRenderableWidget(ToggleButtonFactory.SWAPPERENTITYBUTTON(getGuiLeft() + 106, topSectionTop + 38, swap_entity_type, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             swap_entity_type = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
         addRenderableWidget(ToggleButtonFactory.SWAPPERBLOCKBUTTON(getGuiLeft() + 88, topSectionTop + 38, swapBlocks ? 0 : 1, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             swapBlocks = ((ToggleButton) b).getTexturePosition() == 0;
             saveSettings();
         }));
@@ -80,8 +79,7 @@ public class BlockSwapperT1Screen extends BaseMachineScreen<BlockSwapperT1Contai
     @Override
     public void addRedstoneButtons() {
         addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 124, topSectionTop + 38, redstoneMode.ordinal(), b -> {
-            redstoneMode = redstoneMode.next();
-            ((ToggleButton) b).nextTexturePosition();
+            redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
             saveSettings();
         }));
     }

@@ -45,12 +45,10 @@ public class BlockSwapperT2Screen extends BaseMachineScreen<BlockSwapperT2Contai
     public void init() {
         super.init();
         addRenderableWidget(ToggleButtonFactory.SWAPPERENTITYBUTTON(getGuiLeft() + 26, topSectionTop + 44, swap_entity_type, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             swap_entity_type = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
         addRenderableWidget(ToggleButtonFactory.SWAPPERBLOCKBUTTON(getGuiLeft() + 8, topSectionTop + 44, swapBlocks ? 0 : 1, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             swapBlocks = ((ToggleButton) b).getTexturePosition() == 0;
             saveSettings();
         }));

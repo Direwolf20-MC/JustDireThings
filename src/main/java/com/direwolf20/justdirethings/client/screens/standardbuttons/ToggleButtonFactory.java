@@ -110,8 +110,8 @@ public class ToggleButtonFactory {
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/hammer7.png"), Component.translatable("justdirethings.ability.hammer_7"))
     );
 
-    public static ToggleButton ABILITYCYCLEBUTTON(int x, int y, Ability ability, int startingValue, Button.OnPress onPress) {
-        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HAMMER_TEXTURES, startingValue, onPress);
+    public static ToggleButton ABILITYCYCLEBUTTON(int x, int y, Ability ability, int startingValue, int maxValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HAMMER_TEXTURES, startingValue, maxValue, onPress);
     }
 
     private static Component ticksButtonLocalization = Component.translatable("justdirethings.screen.tickspeed");

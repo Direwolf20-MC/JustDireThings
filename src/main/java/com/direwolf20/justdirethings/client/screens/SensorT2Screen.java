@@ -60,7 +60,6 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
     public void addFilterButtons() {
         addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, topSectionTop + 62, filterData.allowlist, b -> {
             filterData.allowlist = !filterData.allowlist;
-            ((ToggleButton) b).toggleActive();
             saveSettings();
         }));
     }
@@ -69,12 +68,10 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
     public void init() {
         super.init();
         addRenderableWidget(ToggleButtonFactory.SENSORTARGETBUTTON(getGuiLeft() + 26, topSectionTop + 62, senseTarget, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             senseTarget = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
         addRenderableWidget(ToggleButtonFactory.STRONGWEAKREDSTONEBUTTON(getGuiLeft() + 44, topSectionTop + 62, strongSignal ? 1 : 0, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             strongSignal = ((ToggleButton) b).getTexturePosition() == 1;
             saveSettings();
         }));
@@ -85,7 +82,6 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
         }));
 
         addRenderableWidget(ToggleButtonFactory.EQUALSBUTTON(getGuiLeft() + 104, topSectionTop + 62, equality, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             equality = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
@@ -120,7 +116,6 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
     }
 
     public void setPropertyValue(Property<?> property, Comparable<?> comparable, boolean isAny) {
-        //if (!blockStateProperties.containsKey(blockStateSlot)) return;
         Map<Property<?>, Comparable<?>> props = blockStateProperties.getOrDefault(blockStateSlot, new HashMap<>());
         if (isAny) {
             props.remove(property);

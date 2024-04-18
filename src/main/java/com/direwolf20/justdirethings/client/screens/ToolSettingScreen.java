@@ -4,7 +4,6 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.BaseButton;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
-import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
@@ -73,14 +72,9 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 int possibleValues = ((abilityParams.maxSlider - abilityParams.minSlider) / abilityParams.increment) + 2;
                 int currentValue = ToggleableTool.getToolValue(tool, toolAbility.getName());
                 int buttonPosition = !isActive ? 0 : currentValue / abilityParams.increment;
-                Button button = ToggleButtonFactory.ABILITYCYCLEBUTTON(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), toolAbility, buttonPosition, (clicked) -> {
+                Button button = ToggleButtonFactory.ABILITYCYCLEBUTTON(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), toolAbility, buttonPosition, possibleValues, (clicked) -> {
                     cycleSetting(toolAbility.getName());
-                    ((ToggleButton) clicked).nextTexturePosition(possibleValues);
                 });
-                /*Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, currentValue, (clicked) -> {
-                    cycleSetting(toolAbility.getName());
-                    ((GrayscaleButton) clicked).cyleValue(toolAbility, tool);
-                });*/
                 addRenderableWidget(button);
                 counter++;
             }

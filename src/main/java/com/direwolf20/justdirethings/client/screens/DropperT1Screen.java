@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.common.blockentities.DropperT1BE;
 import com.direwolf20.justdirethings.common.containers.DropperT1Container;
 import com.direwolf20.justdirethings.common.network.data.DirectionSettingPayload;
 import com.direwolf20.justdirethings.common.network.data.DropperSettingPayload;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -25,7 +26,6 @@ public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
     public void init() {
         super.init();
         addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 122, topSectionTop + 38, direction, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             direction = ((ToggleButton) b).getTexturePosition();
             PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction));
         }));
@@ -45,8 +45,7 @@ public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
     @Override
     public void addRedstoneButtons() {
         addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
-            redstoneMode = redstoneMode.next();
-            ((ToggleButton) b).nextTexturePosition();
+            redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
             saveSettings();
         }));
     }

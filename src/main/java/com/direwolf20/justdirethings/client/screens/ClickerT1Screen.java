@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.common.containers.ClickerT1Container;
 import com.direwolf20.justdirethings.common.network.data.ClickerPayload;
 import com.direwolf20.justdirethings.common.network.data.DirectionSettingPayload;
 import com.direwolf20.justdirethings.common.network.data.TickSpeedPayload;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -19,7 +20,6 @@ public class ClickerT1Screen extends BaseMachineScreen<ClickerT1Container> {
     public int clickTarget;
     public boolean sneaking;
     public boolean showFakePlayer;
-    public boolean holdRightClick;
     public int maxHoldTicks;
     public NumberButton maxHoldTicksButton;
     public NumberButton tickSpeedButton;
@@ -65,19 +65,16 @@ public class ClickerT1Screen extends BaseMachineScreen<ClickerT1Container> {
     public void init() {
         super.init();
         addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 122, topSectionTop + 38, direction, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             direction = ((ToggleButton) b).getTexturePosition();
             PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction));
         }));
 
         addRenderableWidget(ToggleButtonFactory.CLICKTARGETBUTTON(getGuiLeft() + 56, topSectionTop + 38, clickTarget, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             clickTarget = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
 
         addRenderableWidget(ToggleButtonFactory.LEFTRIGHTCLICKBUTTON(getGuiLeft() + 38, topSectionTop + 38, clickType, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             clickType = ((ToggleButton) b).getTexturePosition();
             if (clickType == 2) {
                 tickSpeed = Math.max(tickSpeed, maxHoldTicks + 1);
@@ -122,8 +119,7 @@ public class ClickerT1Screen extends BaseMachineScreen<ClickerT1Container> {
     @Override
     public void addRedstoneButtons() {
         addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
-            redstoneMode = redstoneMode.next();
-            ((ToggleButton) b).nextTexturePosition();
+            redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
             saveSettings();
         }));
     }
