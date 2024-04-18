@@ -313,7 +313,7 @@ public interface ToggleableTool extends ToggleableItem {
             // Get the player's looking direction as a vector
             Vec3 lookDirection = player.getViewVector(1.0F);
             // Define the strength of the burst, adjust this value to change how strong the burst should be
-            double burstStrength = 3.5;
+            double burstStrength = 2.5;
             // Set the player's motion based on the look direction and burst strength
             player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
             player.hurtMarked = true; //This tells the server to move the client
@@ -322,7 +322,7 @@ public interface ToggleableTool extends ToggleableItem {
             damageTool(itemStack, player, Ability.AIRBURST);
             return true;
         } else {
-            OurSounds.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH);
+            OurSounds.playSound(SoundEvents.FIRECHARGE_USE, 0.5f, 0.125f);
             return true;
         }
     }
