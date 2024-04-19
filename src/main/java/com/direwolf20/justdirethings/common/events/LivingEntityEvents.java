@@ -36,18 +36,17 @@ public class LivingEntityEvents {
     @SubscribeEvent
     public static void LivingFallDamage(LivingFallEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            ItemStack toggleableTool = player.getMainHandItem();
-            if (!toggleableTool.isEmpty()) {
-                if (((ToggleableTool) toggleableTool.getItem()).hasAbility(Ability.AIRBURST)) {
+            ItemStack heldItem = player.getMainHandItem();
+            if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.hasAbility(Ability.AIRBURST)) {
                     event.setDistance(0.0f);
                     return;
                 }
             }
-            toggleableTool = player.getOffhandItem();
-            if (!toggleableTool.isEmpty()) {
-                if (((ToggleableTool) toggleableTool.getItem()).hasAbility(Ability.AIRBURST)) {
+            heldItem = player.getOffhandItem();
+            if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.hasAbility(Ability.AIRBURST)) {
                     event.setDistance(0.0f);
-                    return;
                 }
             }
         }

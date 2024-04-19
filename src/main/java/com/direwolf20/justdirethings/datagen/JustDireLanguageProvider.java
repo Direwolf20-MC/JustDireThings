@@ -68,6 +68,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Pocket_GeneratorT4.get(), "Eclipse Pocket Generator");
         add(Registration.TotemOfDeathRecall.get(), "Totem of Death Recall");
         add(Registration.BlazejetWand.get(), "Blazejet Wand");
+        add(Registration.VoidshiftWand.get(), "Voidshift Wand");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -155,6 +156,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.GLOWING.getLocalization(), "Mob X-Ray");
         add(Ability.INSTABREAK.getLocalization(), "Instant Break");
         add(Ability.AIRBURST.getLocalization(), "Air Burst");
+        add(Ability.VOIDSHIFT.getLocalization(), "Void Shift");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

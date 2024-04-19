@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": {
+      "item": "justdirethings:blazejet_wand"
+    },
+    "c": {
+      "item": "justdirethings:celestigem"
+    },
+    "i": {
+      "item": "justdirethings:ferricore_ingot"
+    }
+  },
+  "pattern": [
+    "  c",
+    " b ",
+    "i  "
+  ],
+  "result": {
+    "item": "justdirethings:voidshift_wand"
+  }
+}

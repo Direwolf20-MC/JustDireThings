@@ -84,7 +84,7 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
 
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-        if (stack.getItem() instanceof PoweredTool poweredTool) {
+        if (stack.getItem() instanceof PoweredItem) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
             int unbreakingLevel = stack.getEnchantmentLevel(Enchantments.UNBREAKING);
@@ -98,14 +98,14 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
 
     @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        if (stack.getItem() instanceof PoweredTool)
+        if (stack.getItem() instanceof PoweredItem)
             return super.isBookEnchantable(stack, book) && canAcceptEnchantments(book);
         return super.isBookEnchantable(stack, book);
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (stack.getItem() instanceof PoweredTool)
+        if (stack.getItem() instanceof PoweredItem)
             return super.canApplyAtEnchantingTable(stack, enchantment) && canAcceptEnchantments(enchantment);
         return super.canApplyAtEnchantingTable(stack, enchantment);
     }
@@ -133,6 +133,33 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
         if (canUseAbility(stack, Ability.LAVAREPAIR))
             return Helpers.doLavaRepair(stack, entity);
         return false;
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        if (stack.getItem() instanceof PoweredItem poweredItem) {
+            return poweredItem.isPowerBarVisible(stack);
+        }
+        return super.isBarVisible(stack);
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        if (stack.getItem() instanceof PoweredItem poweredItem) {
+            return poweredItem.getPowerBarWidth(stack);
+        }
+        return super.getBarWidth(stack);
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        if (stack.getItem() instanceof PoweredItem poweredItem) {
+            int color = poweredItem.getPowerBarColor(stack);
+            if (color == -1)
+                return super.getBarColor(stack);
+            return color;
+        }
+        return super.getBarColor(stack);
     }
 
 }

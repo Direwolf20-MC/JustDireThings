@@ -20,6 +20,7 @@ import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.*;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
@@ -219,6 +220,7 @@ public class Registration {
     public static final DeferredHolder<Item, FerricoreWrench> FerricoreWrench = ITEMS.register("ferricore_wrench", FerricoreWrench::new);
     public static final DeferredHolder<Item, TotemOfDeathRecall> TotemOfDeathRecall = ITEMS.register("totem_of_death_recall", TotemOfDeathRecall::new);
     public static final DeferredHolder<Item, BlazejetWand> BlazejetWand = ITEMS.register("blazejet_wand", BlazejetWand::new);
+    public static final DeferredHolder<Item, VoidshiftWand> VoidshiftWand = ITEMS.register("voidshift_wand", VoidshiftWand::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);
@@ -306,8 +308,8 @@ public class Registration {
             "energystorage", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof ItemStack itemStack) {
                     int capacity = 1000000; //Default
-                    if (itemStack.getItem() instanceof PoweredTool poweredTool) {
-                        capacity = poweredTool.getMaxEnergy();
+                    if (itemStack.getItem() instanceof PoweredItem poweredItem) {
+                        capacity = poweredItem.getMaxEnergy();
                     }
                     return new EnergyStorage(capacity);
                 } else {

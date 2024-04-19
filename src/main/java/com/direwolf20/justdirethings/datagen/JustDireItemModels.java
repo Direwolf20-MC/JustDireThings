@@ -79,6 +79,7 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.FerricoreWrench.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ferricore_wrench"));
         singleTexture(Registration.TotemOfDeathRecall.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/totem_of_death_recall"));
         singleTexture(Registration.BlazejetWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/blazejet_wand"));
+        singleTexture(Registration.VoidshiftWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/voidshift_wand"));
 
         //Tool Items
         registerTools();

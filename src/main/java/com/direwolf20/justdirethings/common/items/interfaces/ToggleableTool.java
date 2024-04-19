@@ -37,7 +37,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -263,6 +267,8 @@ public interface ToggleableTool extends ToggleableItem {
             cauterizeWounds(level, player, itemStack);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.AIRBURST))
             airBurst(level, player, itemStack);
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.VOIDSHIFT))
+            voidShift(level, player, itemStack);
     }
 
     default void useOnAbility(UseOnContext pContext) {
@@ -325,6 +331,53 @@ public interface ToggleableTool extends ToggleableItem {
         return false;
     }
 
+    default boolean voidShift(Level level, Player player, ItemStack itemStack) {
+        Vec3 shiftPosition = getShiftPosition(level, player, itemStack);
+        //System.out.println(shiftPosition);
+        if (!shiftPosition.equals(Vec3.ZERO)) {
+            if (player.isPassenger()) {
+                player.dismountTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
+            } else {
+                player.teleportTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
+            }
+            player.resetFallDistance();
+            level.playSound(null, BlockPos.containing(shiftPosition), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1F, 1.0F);
+            //OurSounds.playSound(SoundEvents.FIRECHARGE_USE, 0.5f, 0.125f);
+        }
+        return false;
+    }
+
+    default Vec3 getShiftPosition(Level level, Player player, ItemStack itemStack) {
+        Vec3 returnVec;
+        BlockHitResult result = (BlockHitResult) player.pick(20, 0f, false);
+        if (result.getType().equals(HitResult.Type.MISS)) {
+            returnVec = getShapeAdjustedPosition(level, player, result, result.getDirection().getOpposite()); //If we miss hitting a block, go 1 further to match the distance specified
+        } else {
+            returnVec = getShapeAdjustedPosition(level, player, result); //If we miss hitting a block, go 1 further to match the distance specified
+        }
+        return returnVec;
+    }
+
+    default Vec3 getShapeAdjustedPosition(Level level, Player player, BlockHitResult result) {
+        BlockPos landingPos = result.getBlockPos().below().relative(result.getDirection());
+        BlockState blockState = level.getBlockState(landingPos);
+        VoxelShape voxelShape = blockState.getCollisionShape(level, landingPos, CollisionContext.of(player));
+        if (voxelShape.isEmpty())
+            return Vec3.atBottomCenterOf(landingPos);
+        else
+            return Vec3.atBottomCenterOf(landingPos).add(0, voxelShape.max(Direction.Axis.Y), 0);
+    }
+
+    default Vec3 getShapeAdjustedPosition(Level level, Player player, BlockHitResult result, Direction dir) {
+        BlockPos landingPos = result.getBlockPos().below().relative(result.getDirection()).relative(dir);
+        BlockState blockState = level.getBlockState(landingPos);
+        VoxelShape voxelShape = blockState.getCollisionShape(level, landingPos, CollisionContext.of(player));
+        if (voxelShape.isEmpty())
+            return Vec3.atBottomCenterOf(landingPos);
+        else
+            return Vec3.atBottomCenterOf(landingPos).add(0, voxelShape.max(Direction.Axis.Y), 0);
+    }
+
     default boolean airBurst(Level level, Player player, ItemStack itemStack) {
         if (!level.isClientSide) {
             // Get the player's looking direction as a vector
@@ -336,6 +389,7 @@ public interface ToggleableTool extends ToggleableItem {
             // Set the player's motion based on the look direction and burst strength
             player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
             player.hurtMarked = true; //This tells the server to move the client
+            player.resetFallDistance();
             // Optionally, you could add some effects or sounds here
             damageTool(itemStack, player, Ability.AIRBURST, multiplier);
             return true;
