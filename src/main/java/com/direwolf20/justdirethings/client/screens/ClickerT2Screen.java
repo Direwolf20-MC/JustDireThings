@@ -36,15 +36,16 @@ public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
 
     public void showHoldClicksButton() {
         if (clickType == 2)
-            addRenderableWidget(maxHoldTicksButton);
+            widgetsToAdd.add(maxHoldTicksButton);
         else
-            removeWidget(maxHoldTicksButton);
+            widgetsToRemove.add(maxHoldTicksButton);
+        renderablesChanged = true;
     }
 
     @Override
     public void addTickSpeedButton() {
         if (tickSpeedButton != null && renderables.contains(tickSpeedButton))
-            removeWidget(tickSpeedButton);
+            widgetsToRemove.add(tickSpeedButton);
         if (clickType == 2) {
             tickSpeedButton = ToggleButtonFactory.TICKSPEEDBUTTON(getGuiLeft() + 144, topSectionTop + 40, tickSpeed, maxHoldTicks + 1, b -> {
                 tickSpeed = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
@@ -56,8 +57,8 @@ public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
                 PacketDistributor.SERVER.noArg().send(new TickSpeedPayload(tickSpeed));
             });
         }
-
-        addRenderableWidget(tickSpeedButton);
+        widgetsToAdd.add(tickSpeedButton);
+        renderablesChanged = true;
     }
 
     @Override

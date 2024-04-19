@@ -19,6 +19,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
@@ -54,6 +55,9 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     protected int extraHeight;
     protected int direction;
     protected int tickSpeed;
+    protected List<AbstractWidget> widgetsToRemove = new ArrayList<>();
+    protected List<AbstractWidget> widgetsToAdd = new ArrayList<>();
+    protected boolean renderablesChanged = false;
 
     public BaseMachineScreen(T container, Inventory pPlayerInventory, Component pTitle) {
         super(container, pPlayerInventory, pTitle);
@@ -241,6 +245,8 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
                 guiGraphics.blit(POWERBAR, topSectionLeft + 5 + 1, topSectionTop + 5 + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
             }
         }
+        if (renderablesChanged)
+            updateRenderables();
     }
 
     public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
@@ -300,6 +306,22 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             }
         }
         return super.mouseClicked(x, y, btn);
+    }
+
+    public void updateRenderables() {
+        if (!widgetsToRemove.isEmpty()) {
+            for (AbstractWidget abstractWidget : widgetsToRemove) {
+                removeWidget(abstractWidget);
+            }
+            widgetsToRemove.clear();
+        }
+        if (!widgetsToAdd.isEmpty()) {
+            for (AbstractWidget abstractWidget : widgetsToAdd) {
+                addRenderableWidget(abstractWidget);
+            }
+            widgetsToAdd.clear();
+        }
+        renderablesChanged = false;
     }
 
     public void saveSettings() {
