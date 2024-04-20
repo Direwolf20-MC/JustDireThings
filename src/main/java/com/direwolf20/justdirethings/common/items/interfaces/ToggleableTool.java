@@ -336,7 +336,6 @@ public interface ToggleableTool extends ToggleableItem {
         //System.out.println(shiftPosition);
         if (!shiftPosition.equals(Vec3.ZERO)) {
             int distanceTraveled = (int) player.position().distanceTo(shiftPosition);
-            System.out.println(distanceTraveled);
             if (player.isPassenger()) {
                 player.dismountTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
             } else {
