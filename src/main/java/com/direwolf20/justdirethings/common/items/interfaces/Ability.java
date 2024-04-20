@@ -25,7 +25,7 @@ public enum Ability {
     AIRBURST(SettingType.SLIDER, 1, 500),
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100),
-    VOIDSHIFT(SettingType.TOGGLE, 1, 50), //FE Per block traveled
+    VOIDSHIFT(SettingType.SLIDER, 1, 50), //FE Per block traveled
     //Tier 4
     OREXRAY(SettingType.TOGGLE, 100, 5000),
     GLOWING(SettingType.TOGGLE, 100, 5000),
