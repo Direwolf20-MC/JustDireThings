@@ -387,6 +387,8 @@ public interface ToggleableTool extends ToggleableItem {
         if (blockState.is(Registration.EclipseGateBlock.get())) return false;
         if (blockState.isAir()) return false;
         if (blockState.getDestroySpeed(serverLevel, blockPos) < 0) return false;
+        if (blockState.is(JustDireBlockTags.ECLISEGATEDENY)) return false;
+        if (blockState.is(JustDireBlockTags.NO_MOVE)) return false;
         return true;
     }
 
