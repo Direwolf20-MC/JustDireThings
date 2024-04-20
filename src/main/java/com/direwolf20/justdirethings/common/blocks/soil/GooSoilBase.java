@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.blocks.soil;
 
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
-import com.direwolf20.justdirethings.common.items.tools.utils.Helpers;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

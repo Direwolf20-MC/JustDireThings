@@ -1,11 +1,13 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
+import com.direwolf20.justdirethings.client.OurSounds;
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
+import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -37,22 +39,21 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static com.direwolf20.justdirethings.common.items.tools.utils.Helpers.*;
+import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 
 public interface ToggleableTool extends ToggleableItem {
-    GooTier gooTier();
-
-    default int getGooTier() {
-        return gooTier().getGooTier();
-    }
-
     EnumSet<Ability> getAbilities();
 
     Map<Ability, AbilityParams> getAbilityParamsMap();
@@ -78,12 +79,12 @@ public interface ToggleableTool extends ToggleableItem {
         return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName());
     }
 
-    default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility) {
-        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) > 0);
+    default boolean canUseAbilityAndDurability(ItemStack itemStack, Ability toolAbility) {
+        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0);
     }
 
-    default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility, int multiplier) {
-        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility, multiplier) > 0);
+    default boolean canUseAbilityAndDurability(ItemStack itemStack, Ability toolAbility, int multiplier) {
+        return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility, multiplier) >= 0);
     }
 
     default void openSettings(Player player) {
@@ -106,13 +107,19 @@ public interface ToggleableTool extends ToggleableItem {
         if (canUseAbility(pStack, Ability.TREEFELLER) && logCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
             breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
         }
-        if (canUseAbility(pStack, Ability.SKYSWEEPER) && fallingBlockCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, Direction.UP, 64, 2)); //Todo: Balance and Config?
-        }
         if (canUseAbility(pStack, Ability.HAMMER)) {
             breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
         }
         breakBlockPositions.add(pPos);
+        if (canUseAbility(pStack, Ability.SKYSWEEPER) && pStack.isCorrectToolForDrops(pState)) {
+            Set<BlockPos> newPos = new HashSet<>();
+            for (BlockPos blockPos : breakBlockPositions) {
+                BlockState blockState = pLevel.getBlockState(blockPos);
+                if (fallingBlockCondition.test(blockState))
+                    newPos.addAll(findLikeBlocks(pLevel, blockState, blockPos, Direction.UP, 64, 2)); //Todo: Balance and Config?
+            }
+            breakBlockPositions.addAll(newPos);
+        }
         return breakBlockPositions;
     }
 
@@ -189,6 +196,17 @@ public interface ToggleableTool extends ToggleableItem {
         }
     }
 
+    default void smokerParticles(ServerLevel level, BlockPos itemPos, int stackSize) {
+        Random random = new Random();
+        int iterations = stackSize < 10 ? 1 : 5;
+        for (int i = 0; i < iterations; i++) {
+            double d0 = (double) itemPos.getX() + random.nextDouble();
+            double d1 = (double) itemPos.getY() + random.nextDouble();
+            double d2 = (double) itemPos.getZ() + random.nextDouble();
+            level.sendParticles(ParticleTypes.LARGE_SMOKE, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+        }
+    }
+
     static void teleportParticles(ServerLevel level, Vec3 pos) {
         Random random = new Random();
         for (int i = 0; i < 5; i++) {
@@ -238,25 +256,31 @@ public interface ToggleableTool extends ToggleableItem {
     default void useAbility(Level level, Player player, InteractionHand hand) {
         if (player.isShiftKeyDown()) return;
         ItemStack itemStack = player.getItemInHand(hand);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.MOBSCANNER))
+        if (canUseAbilityAndDurability(itemStack, Ability.MOBSCANNER))
             scanFor(level, player, itemStack, Ability.MOBSCANNER);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.GLOWING))
+        if (canUseAbilityAndDurability(itemStack, Ability.GLOWING))
             glowing(level, player, itemStack, Ability.GLOWING);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.ORESCANNER))
+        if (canUseAbilityAndDurability(itemStack, Ability.ORESCANNER))
             scanFor(level, player, itemStack, Ability.ORESCANNER);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.OREXRAY))
+        if (canUseAbilityAndDurability(itemStack, Ability.OREXRAY))
             scanFor(level, player, itemStack, Ability.OREXRAY);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.LAWNMOWER))
+        if (canUseAbilityAndDurability(itemStack, Ability.LAWNMOWER))
             lawnmower(level, player, itemStack);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.CAUTERIZEWOUNDS))
+        if (canUseAbilityAndDurability(itemStack, Ability.CAUTERIZEWOUNDS))
             cauterizeWounds(level, player, itemStack);
+        if (canUseAbilityAndDurability(itemStack, Ability.VOIDSHIFT, ToggleableTool.getToolValue(itemStack, Ability.VOIDSHIFT.getName())))
+            voidShift(level, player, itemStack);
+        if (canUseAbilityAndDurability(itemStack, Ability.AIRBURST, ToggleableTool.getToolValue(itemStack, Ability.AIRBURST.getName())))
+            airBurst(level, player, itemStack);
     }
 
     default void useOnAbility(UseOnContext pContext) {
         if (pContext.getPlayer().isShiftKeyDown()) return;
         ItemStack itemStack = pContext.getItemInHand();
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.LEAFBREAKER))
+        if (canUseAbilityAndDurability(itemStack, Ability.LEAFBREAKER))
             leafbreaker(pContext);
+        if (canUseAbilityAndDurability(itemStack, Ability.ECLIPSEGATE))
+            eclipseGate(pContext);
     }
 
     default void glowing(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
@@ -277,7 +301,7 @@ public interface ToggleableTool extends ToggleableItem {
 
     default boolean scanFor(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
         if (level.isClientSide) {
-            ThingFinder.discover(player, toolAbility);
+            ThingFinder.discover(player, toolAbility, itemStack);
             if (toolAbility.equals(Ability.OREXRAY))
                 player.playNotifySound(SoundEvents.SCULK_CLICKING, SoundSource.PLAYERS, 1.0F, 1.0F);
             else
@@ -312,13 +336,139 @@ public interface ToggleableTool extends ToggleableItem {
         return false;
     }
 
+    default boolean eclipseGate(UseOnContext pContext) {
+        Level level = pContext.getLevel();
+        if (level.isClientSide) return false;
+        Set<BlockPos> posList = getEclipseGateBlocks(pContext);
+        for (BlockPos blockPos : posList) {
+            BlockState blockState = level.getBlockState(blockPos);
+            boolean placed = level.setBlockAndUpdate(blockPos, Registration.EclipseGateBlock.get().defaultBlockState());
+            if (!placed) continue;
+            level.sendBlockUpdated(blockPos, blockState, Registration.EclipseGateBlock.get().defaultBlockState(), 3);
+            BlockEntity be = level.getBlockEntity(blockPos);
+            if (be instanceof EclipseGateBE eclipseGateBE) {
+                eclipseGateBE.setSourceBlock(blockState);
+            }
+        }
+        if (!posList.isEmpty()) {
+            level.playSound(null, pContext.getClickedPos(), SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1F, 1.0F);
+            teleportParticles((ServerLevel) level, posList);
+            damageTool(pContext.getItemInHand(), pContext.getPlayer(), Ability.ECLIPSEGATE, posList.size());
+            return true;
+        }
+        return false;
+    }
+
+    default Set<BlockPos> getEclipseGateBlocks(UseOnContext pContext) {
+        BlockPos clickedPos = pContext.getClickedPos();
+        Direction direction = pContext.getClickedFace().getOpposite();
+        BlockPos startPos = clickedPos.offset(
+                direction.getAxis() == Direction.Axis.X ? 0 : -1,
+                direction.getAxis() == Direction.Axis.Y ? 0 : -1,
+                direction.getAxis() == Direction.Axis.Z ? 0 : -1
+        );
+
+        BlockPos endPos = clickedPos.relative(direction, 15).offset(
+                direction.getAxis() == Direction.Axis.X ? 0 : 1,
+                direction.getAxis() == Direction.Axis.Y ? 0 : 1,
+                direction.getAxis() == Direction.Axis.Z ? 0 : 1
+        );
+        Set<BlockPos> posSet = BlockPos.betweenClosedStream(startPos, endPos)
+                .filter(blockPos -> isValidGateBlock((ServerLevel) pContext.getLevel(), blockPos, pContext.getPlayer()))
+                .map(BlockPos::immutable)
+                .collect(Collectors.toSet());
+
+        return posSet;
+    }
+
+    default boolean isValidGateBlock(ServerLevel serverLevel, BlockPos blockPos, Player player) {
+        if (serverLevel.getBlockEntity(blockPos) != null) return false;
+        BlockState blockState = serverLevel.getBlockState(blockPos);
+        if (blockState.is(Registration.EclipseGateBlock.get())) return false;
+        if (blockState.isAir()) return false;
+        if (blockState.getDestroySpeed(serverLevel, blockPos) < 0) return false;
+        return true;
+    }
+
+    default boolean voidShift(Level level, Player player, ItemStack itemStack) {
+        Vec3 shiftPosition = getShiftPosition(level, player, itemStack);
+        //System.out.println(shiftPosition);
+        if (!shiftPosition.equals(Vec3.ZERO)) {
+            int distanceTraveled = (int) player.position().distanceTo(shiftPosition);
+            if (player.isPassenger()) {
+                player.dismountTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
+            } else {
+                player.teleportTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
+            }
+            player.resetFallDistance();
+            //level.playSound(null, BlockPos.containing(shiftPosition), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1F, 1.0F);
+            damageTool(itemStack, player, Ability.VOIDSHIFT, distanceTraveled);
+            if (level.isClientSide)
+                OurSounds.playSound(SoundEvents.PLAYER_TELEPORT, 1f, 0.5f);
+        }
+        return false;
+    }
+
+    default Vec3 getShiftPosition(Level level, Player player, ItemStack itemStack) {
+        Vec3 returnVec;
+        int distance = ToggleableTool.getToolValue(itemStack, Ability.VOIDSHIFT.getName());
+        BlockHitResult result = (BlockHitResult) player.pick(distance, 0f, false);
+        if (result.getType().equals(HitResult.Type.MISS)) {
+            returnVec = getShapeAdjustedPosition(level, player, result, result.getDirection().getOpposite()); //If we miss hitting a block, go 1 further to match the distance specified
+        } else {
+            returnVec = getShapeAdjustedPosition(level, player, result); //If we miss hitting a block, go 1 further to match the distance specified
+        }
+        return returnVec;
+    }
+
+    default Vec3 getShapeAdjustedPosition(Level level, Player player, BlockHitResult result) {
+        BlockPos landingPos = result.getBlockPos().below().relative(result.getDirection());
+        BlockState blockState = level.getBlockState(landingPos);
+        VoxelShape voxelShape = blockState.getCollisionShape(level, landingPos, CollisionContext.of(player));
+        if (voxelShape.isEmpty())
+            return Vec3.atBottomCenterOf(landingPos);
+        else
+            return Vec3.atBottomCenterOf(landingPos).add(0, voxelShape.max(Direction.Axis.Y), 0);
+    }
+
+    default Vec3 getShapeAdjustedPosition(Level level, Player player, BlockHitResult result, Direction dir) {
+        BlockPos landingPos = result.getBlockPos().below().relative(result.getDirection()).relative(dir);
+        BlockState blockState = level.getBlockState(landingPos);
+        VoxelShape voxelShape = blockState.getCollisionShape(level, landingPos, CollisionContext.of(player));
+        if (voxelShape.isEmpty())
+            return Vec3.atBottomCenterOf(landingPos);
+        else
+            return Vec3.atBottomCenterOf(landingPos).add(0, voxelShape.max(Direction.Axis.Y), 0);
+    }
+
+    default boolean airBurst(Level level, Player player, ItemStack itemStack) {
+        if (!level.isClientSide) {
+            // Get the player's looking direction as a vector
+            Vec3 lookDirection = player.getViewVector(1.0F);
+            // Define the strength of the burst, adjust this value to change how strong the burst should be
+            int multiplier = ToggleableTool.getToolValue(itemStack, Ability.AIRBURST.getName());
+            double addedStrength = (double) multiplier / 2;
+            double burstStrength = 1.5 + addedStrength;
+            // Set the player's motion based on the look direction and burst strength
+            player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
+            player.hurtMarked = true; //This tells the server to move the client
+            player.resetFallDistance();
+            // Optionally, you could add some effects or sounds here
+            damageTool(itemStack, player, Ability.AIRBURST, multiplier);
+            return true;
+        } else {
+            OurSounds.playSound(SoundEvents.FIRECHARGE_USE, 0.5f, 0.125f);
+            return true;
+        }
+    }
+
     default boolean cauterizeWounds(Level level, Player player, ItemStack itemStack) {
         if (player.getHealth() >= player.getMaxHealth()) return false;
         if (!level.isClientSide) {
             if (player.getCooldowns().isOnCooldown(itemStack.getItem())) {
                 return false;
             } else {
-                player.heal(10f);
+                player.heal(6f);
                 player.getCooldowns().addCooldown(itemStack.getItem(), 200);
                 player.playNotifySound(SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
                 Random random = new Random();
@@ -329,6 +479,7 @@ public interface ToggleableTool extends ToggleableItem {
                     double d2 = pos.z() + random.nextDouble();
                     ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
                 }
+                damageTool(itemStack, player, Ability.CAUTERIZEWOUNDS);
                 return true;
             }
         }
@@ -340,13 +491,25 @@ public interface ToggleableTool extends ToggleableItem {
             List<TagKey<Block>> tags = new ArrayList<>();
             tags.add(JustDireBlockTags.LAWNMOWERABLE);
             Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?
+            List<ItemStack> drops = new ArrayList<>();
             for (BlockPos breakPos : breakBlocks) {
                 if (testUseTool(itemStack, Ability.LAWNMOWER) < 0)
                     break;
-                breakBlocks((ServerLevel) level, breakPos);
+                BlockState state = level.getBlockState(breakPos);
+                BlockEntity blockEntity = level.getBlockEntity(breakPos);
+                if (level instanceof ServerLevel serverLevel) {
+                    boolean removed = level.destroyBlock(breakPos, false);
+                    if (removed)
+                        drops.addAll(Block.getDrops(state, serverLevel, breakPos, blockEntity, player, itemStack)); //This isn't perfect, but should be 'good enough' for lawnmowerables
+                }
                 if (Math.random() < 0.1) //10% chance to damage tool
                     damageTool(itemStack, player, Ability.LAWNMOWER);
             }
+            if (!breakBlocks.isEmpty()) {
+                BlockPos firstPos = breakBlocks.iterator().next();
+                handleDrops(itemStack, (ServerLevel) level, firstPos, player, breakBlocks, drops, level.getBlockState(firstPos), 0);
+            }
+
             return true;
         }
         return false;
@@ -505,6 +668,6 @@ public interface ToggleableTool extends ToggleableItem {
         int max = abilityParams.maxSlider;
         if (stack.getOrCreateTag().contains(valueName + "_value"))
             return Math.max(min, Math.min(max, stack.getOrCreateTag().getInt(valueName + "_value")));
-        return max; //By default, new tools have their max ability enabled, like hammer on celestigem starts out with 5.
+        return abilityParams.defaultValue;
     }
 }

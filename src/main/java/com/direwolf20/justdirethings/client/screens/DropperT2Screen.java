@@ -64,7 +64,6 @@ public class DropperT2Screen extends BaseMachineScreen<DropperT2Container> {
     public void init() {
         super.init();
         addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 122, topSectionTop + 38, direction, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             direction = ((ToggleButton) b).getTexturePosition();
             PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction));
         }));

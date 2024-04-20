@@ -8,12 +8,13 @@ import net.minecraft.resources.ResourceLocation;
 public record ToggleToolSlotPayload(
         String settingName,
         int slot,
-        int type
+        int type,
+        int value
 ) implements CustomPacketPayload {
     public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "toggle_tool_slot_setting");
 
     public ToggleToolSlotPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readUtf(), buffer.readInt(), buffer.readInt());
+        this(buffer.readUtf(), buffer.readInt(), buffer.readInt(), buffer.readInt());
     }
 
     @Override
@@ -21,6 +22,7 @@ public record ToggleToolSlotPayload(
         buffer.writeUtf(settingName);
         buffer.writeInt(slot);
         buffer.writeInt(type);
+        buffer.writeInt(value);
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.common.containers.GeneratorT1Container;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.util.MagicHelpers;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -53,8 +54,7 @@ public class GeneratorT1Screen extends BaseMachineScreen<GeneratorT1Container> {
     @Override
     public void addRedstoneButtons() {
         addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
-            redstoneMode = redstoneMode.next();
-            ((ToggleButton) b).nextTexturePosition();
+            redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
             saveSettings();
         }));
     }

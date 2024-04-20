@@ -240,6 +240,18 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.PlayerAccessor.get())
+                .pattern("fdf")
+                .pattern("lol")
+                .pattern("frf")
+                .define('o', Items.DISPENSER)
+                .define('f', Registration.BlazegoldIngot.get())
+                .define('d', Items.ENDER_EYE)
+                .define('l', Items.ENDER_PEARL)
+                .define('r', Items.LAPIS_LAZULI)
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
 
         //Items
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreWrench.get())
@@ -314,6 +326,35 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazejetWand.get())
+                .pattern("  b")
+                .pattern(" i ")
+                .pattern("i  ")
+                .define('i', Registration.FerricoreIngot.get())
+                .define('b', Registration.BlazegoldIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.VoidshiftWand.get())
+                .pattern("  c")
+                .pattern(" w ")
+                .pattern("b  ")
+                .define('b', Registration.BlazegoldIngot.get())
+                .define('w', Registration.BlazejetWand.get())
+                .define('c', Registration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipsegateWand.get())
+                .pattern("  e")
+                .pattern(" w ")
+                .pattern("c  ")
+                .define('e', Registration.EclipseAlloyIngot.get())
+                .define('w', Registration.VoidshiftWand.get())
+                .define('c', Registration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
@@ -353,15 +394,15 @@ public class JustDireRecipes extends RecipeProvider {
 
         //Smelting
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC,
-                        Registration.FerricoreIngot.get(), 1.0f, 400)
+                        Registration.FerricoreIngot.get(), 1.0f, 200)
                 .unlockedBy("has_ferricore_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawFerricore.get()).build()))
                 .save(consumer, new ResourceLocation(JustDireThings.MODID, "ferricore_ingot_smelted"));
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawBlazegold.get()), RecipeCategory.MISC,
-                        Registration.BlazegoldIngot.get(), 1.0f, 400)
+                        Registration.BlazegoldIngot.get(), 1.0f, 200)
                 .unlockedBy("has_blazegold_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawBlazegold.get()).build()))
                 .save(consumer, new ResourceLocation(JustDireThings.MODID, "blazegold_ingot_smelted"));
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawEclipseAlloy.get()), RecipeCategory.MISC,
-                        Registration.EclipseAlloyIngot.get(), 1.0f, 400)
+                        Registration.EclipseAlloyIngot.get(), 1.0f, 200)
                 .unlockedBy("has_eclipsealloy_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawEclipseAlloy.get()).build()))
                 .save(consumer, new ResourceLocation(JustDireThings.MODID, "eclipsealloy_ingot_smelted"));
 

@@ -2,14 +2,12 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.common.blocks.BlockSwapperT1;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
@@ -38,7 +37,6 @@ import java.util.Random;
 
 public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = getDefaultRedstoneData();
-    protected Direction FACING = Direction.DOWN; //To avoid nulls
     List<BlockPos> positions = new ArrayList<>();
     public GlobalPos boundTo;
     public final ContainerData swapperData;
@@ -74,8 +72,6 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
 
     public BlockSwapperT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
-        if (pBlockState.getBlock() instanceof BlockSwapperT1) //Only do this for the Tier 1, as its the only one with a facing....
-            FACING = getBlockState().getValue(BlockStateProperties.FACING);
         swapperData = new ContainerData() {
             @Override
             public int get(int index) {
@@ -301,7 +297,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public AABB getAABB() {
-        return new AABB(getBlockPos().relative(FACING));
+        return new AABB(getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING)));
     }
 
     public List<Entity> findEntitiesToSwap(AABB aabb) {
@@ -362,11 +358,11 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         }
 
         //Remove existing blocks and BE's
-        level.removeBlockEntity(blockPos); //Calling this prevents chests from dropping their contents, so only do it if we don't care about the drops (Like cut)
-        partnerLevel.removeBlockEntity(remoteSwapPos); //Calling this prevents chests from dropping their contents, so only do it if we don't care about the drops (Like cut)
+        level.removeBlockEntity(blockPos); //Calling this prevents chests from dropping their contents
+        partnerLevel.removeBlockEntity(remoteSwapPos); //Calling this prevents chests from dropping their contents
 
         //BlockState adjustedthisBlock = Block.updateFromNeighbourShapes(thisBlock, partnerLevel, remoteSwapPos); //Ensure double chests are placed as single chests if only 1 chest available in copy/paste, for example, or fixes fences
-        boolean placedThat = partnerLevel.setBlock(remoteSwapPos, thisBlock, 67); //64 + 3
+        boolean placedThat = partnerLevel.setBlock(remoteSwapPos, thisBlock, 51); //16 + 32 + 3 -- Validate blocks after this methods done
         if (placedThat) {
             if (!thisNBT.isEmpty()) {
                 BlockEntity newBE = partnerLevel.getBlockEntity(remoteSwapPos);
@@ -379,11 +375,11 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 }
             }
         }
-        if (!thisBlock.isAir())
-            thatValidationList.add(remoteSwapPos);
+        //if (!thisBlock.isAir())
+        thatValidationList.add(remoteSwapPos);
 
         //BlockState adjustedthatBlock = Block.updateFromNeighbourShapes(thatBlock, level, blockPos); //Ensure double chests are placed as single chests if only 1 chest available in copy/paste, for example, or fixes fences
-        boolean placedThis = level.setBlock(blockPos, thatBlock, 67); //64 + 3
+        boolean placedThis = level.setBlock(blockPos, thatBlock, 51); //16 + 32 + 3 -- Validate blocks after this methods done
         if (placedThis) {
             if (!thatNBT.isEmpty()) {
                 BlockEntity newBE = level.getBlockEntity(blockPos);
@@ -396,8 +392,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 }
             }
         }
-        if (!thatBlock.isAir())
-            thisValidationList.add(blockPos);
+        //if (!thatBlock.isAir())
+        thisValidationList.add(blockPos);
 
         teleportParticles((ServerLevel) level, blockPos);
         teleportParticles(partnerLevel, remoteSwapPos);
@@ -410,8 +406,12 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             return;
         }
         BlockState adjustedBlockState = Block.updateFromNeighbourShapes(blockState, level, blockPos); //Ensure double chests are placed as single chests if only 1 chest available in copy/paste, for example, or fixes fences
-        if (!adjustedBlockState.equals(blockState))
+        if (!adjustedBlockState.equals(blockState)) //SetBlockAndUpdate does the markAndNotify (below)
             level.setBlockAndUpdate(blockPos, adjustedBlockState);
+        else { //Do this to ensure buttons/torches pop off if we swapped air into a spot
+            LevelChunk levelchunk = level.getChunkAt(blockPos);
+            level.markAndNotifyBlock(blockPos, levelchunk, blockState, blockState, 3, 512);
+        }
     }
 
     public static void teleportParticles(ServerLevel level, BlockPos pos) {
@@ -434,12 +434,12 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public BlockPos getStartingPoint() {
-        return getBlockPos().relative(FACING); //Tier 2 would use Offset
+        return getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING)); //Tier 2 would use Offset
     }
 
     public List<BlockPos> findSpotsToSwap() {
         List<BlockPos> returnList = new ArrayList<>();
-        BlockPos blockPos = getBlockPos().relative(FACING);
+        BlockPos blockPos = getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING));
         if (isBlockPosValid((ServerLevel) level, blockPos))
             returnList.add(blockPos);
         return returnList;

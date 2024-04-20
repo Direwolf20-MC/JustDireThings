@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.client.screens.basescreens;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtons;
+import com.direwolf20.justdirethings.client.screens.standardbuttons.ValueButtonsDouble;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
@@ -18,6 +19,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.locale.Language;
@@ -38,12 +40,13 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     protected final ResourceLocation SOCIALBACKGROUND = new ResourceLocation(JustDireThings.MODID, "background");
     protected BaseMachineContainer container;
     protected BaseMachineBE baseMachineBE;
-    protected int xRadius = 3, yRadius = 3, zRadius = 3;
+    protected double xRadius = 3, yRadius = 3, zRadius = 3;
     protected int xOffset = 0, yOffset = 0, zOffset = 0;
     protected boolean renderArea = false;
     protected FilterData filterData;
     protected MiscHelpers.RedstoneMode redstoneMode;
     protected List<ValueButtons> valueButtonsList = new ArrayList<>();
+    protected List<ValueButtonsDouble> valueButtonsDoubleList = new ArrayList<>();
     protected int topSectionLeft;
     protected int topSectionTop;
     protected int topSectionWidth;
@@ -52,6 +55,9 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     protected int extraHeight;
     protected int direction;
     protected int tickSpeed;
+    protected List<AbstractWidget> widgetsToRemove = new ArrayList<>();
+    protected List<AbstractWidget> widgetsToAdd = new ArrayList<>();
+    protected boolean renderablesChanged = false;
 
     public BaseMachineScreen(T container, Inventory pPlayerInventory, Component pTitle) {
         super(container, pPlayerInventory, pTitle);
@@ -72,8 +78,10 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         if (baseMachineBE instanceof RedstoneControlledBE redstoneControlledBE) {
             this.redstoneMode = redstoneControlledBE.getRedstoneControlData().redstoneMode;
         }
-        direction = baseMachineBE.getDirection();
-        tickSpeed = baseMachineBE.getTickSpeed();
+        if (baseMachineBE instanceof BaseMachineBE) {
+            direction = baseMachineBE.getDirection();
+            tickSpeed = baseMachineBE.getTickSpeed();
+        }
     }
 
     public void calculateTopSection() {
@@ -112,8 +120,8 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
     public void addRedstoneButtons() {
         addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 134, topSectionTop + 62, redstoneMode.ordinal(), b -> {
-            redstoneMode = redstoneMode.next();
-            ((ToggleButton) b).nextTexturePosition();
+            redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
+            //((ToggleButton) b).nextTexturePosition();
             saveSettings();
         }));
     }
@@ -121,7 +129,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     public void addFilterButtons() {
         addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 8, topSectionTop + 62, filterData.allowlist, b -> {
             filterData.allowlist = !filterData.allowlist;
-            ((ToggleButton) b).toggleActive();
+            //((ToggleButton) b).toggleActive();
             saveSettings();
         }));
 
@@ -133,7 +141,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
         if (filterData.blockItemFilter != -1) {
             addRenderableWidget(ToggleButtonFactory.FILTERBLOCKITEMBUTTON(getGuiLeft() + 44, topSectionTop + 62, filterData.blockItemFilter, b -> {
-                ((ToggleButton) b).nextTexturePosition();
+                //((ToggleButton) b).nextTexturePosition();
                 filterData.blockItemFilter = ((ToggleButton) b).getTexturePosition();
                 saveSettings();
             }));
@@ -147,17 +155,17 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             saveSettings();
         }));
 
-        valueButtonsList.add(new ValueButtons(getGuiLeft() + 25, topSectionTop + 12, xRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+        valueButtonsDoubleList.add(new ValueButtonsDouble(getGuiLeft() + 25, topSectionTop + 12, xRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
             xRadius = value;
             saveSettings();
         }));
 
-        valueButtonsList.add(new ValueButtons(getGuiLeft() + 75, topSectionTop + 12, yRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+        valueButtonsDoubleList.add(new ValueButtonsDouble(getGuiLeft() + 75, topSectionTop + 12, yRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
             yRadius = value;
             saveSettings();
         }));
 
-        valueButtonsList.add(new ValueButtons(getGuiLeft() + 125, topSectionTop + 12, zRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
+        valueButtonsDoubleList.add(new ValueButtonsDouble(getGuiLeft() + 125, topSectionTop + 12, zRadius, 0, ItemCollectorBE.maxRadius, font, (button, value) -> {
             zRadius = value;
             saveSettings();
         }));
@@ -178,6 +186,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         }));
 
         valueButtonsList.forEach(valueButtons -> valueButtons.widgetList.forEach(this::addRenderableWidget));
+        valueButtonsDoubleList.forEach(valueButtons -> valueButtons.widgetList.forEach(this::addRenderableWidget));
     }
 
     public int adjustNumberButton(int value, int change, int min, int max) {
@@ -200,9 +209,11 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        Component title = baseMachineBE.getBlockState().getBlock().getName();
-        int titleX = topSectionLeft - getGuiLeft() + 20 + ((topSectionWidth - 40) / 2) - this.font.width(title) / 2;
-        guiGraphics.drawString(this.font, title, titleX, topSectionTop - getGuiTop() - 14, 4210752, false);
+        if (baseMachineBE != null) {
+            Component title = baseMachineBE.getBlockState().getBlock().getName();
+            int titleX = topSectionLeft - getGuiLeft() + 20 + ((topSectionWidth - 40) / 2) - this.font.width(title) / 2;
+            guiGraphics.drawString(this.font, title, titleX, topSectionTop - getGuiTop() - 14, 4210752, false);
+        }
         if (baseMachineBE instanceof AreaAffectingBE) {
             int areaWidth = 158; //The width of the area buttons is 157, including labels
             int xStart = topSectionLeft + (topSectionWidth / 2) - (areaWidth / 2) - getGuiLeft();
@@ -234,6 +245,8 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
                 guiGraphics.blit(POWERBAR, topSectionLeft + 5 + 1, topSectionTop + 5 + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
             }
         }
+        if (renderablesChanged)
+            updateRenderables();
     }
 
     public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
@@ -285,8 +298,30 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
                 numberButton.playDownSound(Minecraft.getInstance().getSoundManager());
                 return true;
             }
+            if (renderable instanceof ToggleButton toggleButton && MiscTools.inBounds(toggleButton.getX(), toggleButton.getY(), toggleButton.getWidth(), toggleButton.getHeight(), x, y)) {
+                if (btn == 1) {
+                    toggleButton.onClick(x, y, btn);
+                    toggleButton.playDownSound(Minecraft.getInstance().getSoundManager());
+                }
+            }
         }
         return super.mouseClicked(x, y, btn);
+    }
+
+    public void updateRenderables() {
+        if (!widgetsToRemove.isEmpty()) {
+            for (AbstractWidget abstractWidget : widgetsToRemove) {
+                removeWidget(abstractWidget);
+            }
+            widgetsToRemove.clear();
+        }
+        if (!widgetsToAdd.isEmpty()) {
+            for (AbstractWidget abstractWidget : widgetsToAdd) {
+                addRenderableWidget(abstractWidget);
+            }
+            widgetsToAdd.clear();
+        }
+        renderablesChanged = false;
     }
 
     public void saveSettings() {

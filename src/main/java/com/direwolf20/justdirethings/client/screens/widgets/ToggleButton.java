@@ -12,12 +12,21 @@ import java.util.List;
 public class ToggleButton extends BaseButton {
     private List<TextureLocalization> textureLocalizations;
     private int texturePosition;
+    private int maxValue = -1;
 
     public ToggleButton(int x, int y, int width, int height, List<TextureLocalization> textureLocalizations, int texturePosition, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
 
         this.textureLocalizations = textureLocalizations;
         setTexturePosition(texturePosition);
+    }
+
+    public ToggleButton(int x, int y, int width, int height, List<TextureLocalization> textureLocalizations, int texturePosition, int maxValue, OnPress onPress) {
+        super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
+
+        this.textureLocalizations = textureLocalizations;
+        setTexturePosition(texturePosition);
+        this.maxValue = maxValue;
     }
 
     public ToggleButton(int x, int y, int width, int height, List<TextureLocalization> textureLocalizations, boolean texturePosition, OnPress onPress) {
@@ -49,12 +58,17 @@ public class ToggleButton extends BaseButton {
         return texturePosition >= textureLocalizations.size() ? 0 : texturePosition;
     }
 
-    public void toggleActive() {
-        setTexturePosition(getTexturePosition() == 0);
-    }
-
     public void setTexturePosition(boolean texturePosition) {
         setTexturePosition(texturePosition ? 1 : 0);
+    }
+
+    @Override
+    public void onClick(double mouseX, double mouseY, int button) {
+        if (button == 1)
+            previousTexturePosition();
+        else
+            nextTexturePosition();
+        onPress();
     }
 
     public void setTexturePosition(int texturePosition) {
@@ -65,15 +79,24 @@ public class ToggleButton extends BaseButton {
     }
 
     public void nextTexturePosition() {
-        texturePosition = (getTexturePosition() + 1) % textureLocalizations.size();
-    }
-
-    public void nextTexturePosition(int max) {
-        texturePosition = (getTexturePosition() + 1) % Math.min(textureLocalizations.size(), max);
+        if (maxValue == -1)
+            texturePosition = (getTexturePosition() + 1) % textureLocalizations.size();
+        else
+            texturePosition = (getTexturePosition() + 1) % Math.min(textureLocalizations.size(), maxValue);
     }
 
     @Override
     public Component getLocalization() {
         return textureLocalizations.get(getTexturePosition()).localization();
+    }
+
+    public void previousTexturePosition() {
+        if (maxValue == -1) {
+            int size = textureLocalizations.size();
+            texturePosition = (getTexturePosition() - 1 + size) % size;
+        } else {
+            int limit = Math.min(textureLocalizations.size(), maxValue); // Determine the effective limit
+            texturePosition = (getTexturePosition() - 1 + limit) % limit;
+        }
     }
 }

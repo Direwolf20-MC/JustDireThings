@@ -25,6 +25,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "lawnmowerable"));
     public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "noautoclick"));
     public static final TagKey<Block> SWAPPERDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "swapper_deny"));
+    public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "eclipsegate_deny"));
     public static final TagKey<Block> NO_MOVE = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
 
 
@@ -70,13 +71,16 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.CoalBlock_T3.get())
                 .add(Registration.CoalBlock_T4.get())
                 .add(Registration.BlockSwapperT1.get())
-                .add(Registration.BlockSwapperT2.get());
+                .add(Registration.BlockSwapperT2.get())
+                .add(Registration.PlayerAccessor.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
                 .add(Blocks.SHORT_GRASS)
                 .add(Blocks.DEAD_BUSH)
-                .add(Blocks.SWEET_BERRY_BUSH);
+                .add(Blocks.SWEET_BERRY_BUSH)
+                .add(Blocks.FERN)
+                .add(Blocks.LARGE_FERN);
         tag(Tags.Blocks.ORES)
                 .add(Registration.RawFerricoreOre.get())
                 .add(Registration.RawBlazegoldOre.get())
@@ -97,6 +101,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .addTag(BlockTags.BEDS)
                 .addTag(BlockTags.PORTALS)
                 .addTag(BlockTags.DOORS);
+        tag(ECLISEGATEDENY)
+                .addTag(BlockTags.PORTALS);
     }
 
     @Override

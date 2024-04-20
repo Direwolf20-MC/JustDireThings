@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.events;
 
-import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,8 +13,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.Set;
 
-import static com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool.getInstantRFCost;
-import static com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool.getToolValue;
+import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getInstantRFCost;
+import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getToolValue;
 
 public class PlayerEvents {
     @SubscribeEvent

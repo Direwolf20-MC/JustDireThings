@@ -36,15 +36,16 @@ public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
 
     public void showHoldClicksButton() {
         if (clickType == 2)
-            addRenderableWidget(maxHoldTicksButton);
+            widgetsToAdd.add(maxHoldTicksButton);
         else
-            removeWidget(maxHoldTicksButton);
+            widgetsToRemove.add(maxHoldTicksButton);
+        renderablesChanged = true;
     }
 
     @Override
     public void addTickSpeedButton() {
         if (tickSpeedButton != null && renderables.contains(tickSpeedButton))
-            removeWidget(tickSpeedButton);
+            widgetsToRemove.add(tickSpeedButton);
         if (clickType == 2) {
             tickSpeedButton = ToggleButtonFactory.TICKSPEEDBUTTON(getGuiLeft() + 144, topSectionTop + 40, tickSpeed, maxHoldTicks + 1, b -> {
                 tickSpeed = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
@@ -56,27 +57,24 @@ public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
                 PacketDistributor.SERVER.noArg().send(new TickSpeedPayload(tickSpeed));
             });
         }
-
-        addRenderableWidget(tickSpeedButton);
+        widgetsToAdd.add(tickSpeedButton);
+        renderablesChanged = true;
     }
 
     @Override
     public void init() {
         super.init();
         addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 116, topSectionTop + 62, direction, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             direction = ((ToggleButton) b).getTexturePosition();
             PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction));
         }));
 
         addRenderableWidget(ToggleButtonFactory.CLICKTARGETBUTTON(getGuiLeft() + 44, topSectionTop + 62, clickTarget, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             clickTarget = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
 
         addRenderableWidget(ToggleButtonFactory.LEFTRIGHTCLICKBUTTON(getGuiLeft() + 44, topSectionTop + 44, clickType, b -> {
-            ((ToggleButton) b).nextTexturePosition();
             clickType = ((ToggleButton) b).getTexturePosition();
             if (clickType == 2) {
                 tickSpeed = Math.max(tickSpeed, maxHoldTicks + 1);

@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.resources.ResourceLocation;
@@ -18,15 +18,19 @@ public enum Ability {
     LEAFBREAKER(SettingType.TOGGLE, 1, 50),
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50),
+    SMOKER(SettingType.TOGGLE, 1, 50),
     HAMMER(SettingType.CYCLE, 1, 50),
     LAVAREPAIR(SettingType.TOGGLE, 0, 0),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500),
+    AIRBURST(SettingType.SLIDER, 1, 500),
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100),
+    VOIDSHIFT(SettingType.SLIDER, 1, 50), //FE Per block traveled
     //Tier 4
     OREXRAY(SettingType.TOGGLE, 100, 5000),
     GLOWING(SettingType.TOGGLE, 100, 5000),
-    INSTABREAK(SettingType.TOGGLE, 2, 250);
+    INSTABREAK(SettingType.TOGGLE, 2, 250),
+    ECLIPSEGATE(SettingType.TOGGLE, 1, 250); //FE Per block Removed
 
     public enum SettingType {
         TOGGLE,

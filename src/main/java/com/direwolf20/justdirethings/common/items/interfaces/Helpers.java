@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.items.tools.utils;
+package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireItemTags;
@@ -21,10 +21,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -44,7 +41,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool.getInstantRFCost;
+import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getInstantRFCost;
 
 public class Helpers {
     public static final Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES);
@@ -94,7 +91,7 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, int amount) {
-        if (stack.getItem() instanceof PoweredTool poweredTool) {
+        if (stack.getItem() instanceof PoweredItem poweredTool) {
             stack.hurtAndBreak(amount, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(amount, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -102,7 +99,7 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
-        if (stack.getItem() instanceof PoweredTool) {
+        if (stack.getItem() instanceof PoweredItem) {
             stack.hurtAndBreak(ability.getFeCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -110,7 +107,7 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability, int multiplier) {
-        if (stack.getItem() instanceof PoweredTool) {
+        if (stack.getItem() instanceof PoweredItem) {
             stack.hurtAndBreak(ability.getFeCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         } else {
             stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
@@ -128,7 +125,7 @@ public class Helpers {
     }
 
     public static int testUseTool(ItemStack stack, int cost) {
-        if (stack.getItem() instanceof PoweredTool) {
+        if (stack.getItem() instanceof PoweredItem) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getEnergyStored() - cost;
@@ -138,7 +135,7 @@ public class Helpers {
     }
 
     public static int testUseTool(ItemStack stack, Ability ability) {
-        if (stack.getItem() instanceof PoweredTool) {
+        if (stack.getItem() instanceof PoweredItem) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getEnergyStored() - ability.getFeCost();
@@ -148,7 +145,7 @@ public class Helpers {
     }
 
     public static int testUseTool(ItemStack stack, Ability ability, int multiplier) {
-        if (stack.getItem() instanceof PoweredTool) {
+        if (stack.getItem() instanceof PoweredItem) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getEnergyStored() - (ability.getFeCost() * multiplier);
@@ -199,7 +196,6 @@ public class Helpers {
         return returnStack;
     }
 
-
     public static List<ItemStack> smeltDrops(ServerLevel level, List<ItemStack> drops, ItemStack tool, LivingEntity entityLiving, boolean[] didISmelt) {
         List<ItemStack> returnList = new ArrayList<>();
         RegistryAccess registryAccess = level.registryAccess();
@@ -229,6 +225,29 @@ public class Helpers {
             }
         }
         return returnList;
+    }
+
+    public static void smokeDrop(ServerLevel level, ItemEntity drop, ItemStack tool, LivingEntity entityLiving, boolean[] didISmoke) {
+        RegistryAccess registryAccess = level.registryAccess();
+        RecipeManager recipeManager = level.getRecipeManager();
+        didISmoke[0] = false;
+        
+        // Check if there's a smoking recipe for the drop
+        Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SimpleContainer(drop.getItem()), level);
+
+        if (smokingRecipe.isPresent() && !drop.getItem().is(JustDireItemTags.AUTO_SMOKE_DENY)) {
+            // Get the result of the smoking recipe
+            ItemStack smokedResults = smokingRecipe.get().value().getResultItem(registryAccess);
+
+            if (!smokedResults.isEmpty() && (testUseTool(tool, Ability.SMOKER, drop.getItem().getCount()) >= 0)) {
+            	didISmoke[0] = true;
+            	smokedResults.setCount(drop.getItem().getCount()); // Assume all items in the stack are smoked
+                // If the smoking result is valid, replace the original drop with the smoked result
+                drop.setItem(smokedResults.copy());
+                if (!tool.isEmpty())
+                    damageTool(tool, entityLiving, Ability.SMOKER, drop.getItem().getCount());
+            }
+        }
     }
 
     public static void dropDrops(List<ItemStack> drops, ServerLevel level, BlockPos dropAtPos) {

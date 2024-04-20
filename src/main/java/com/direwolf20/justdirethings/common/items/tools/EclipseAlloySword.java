@@ -1,9 +1,9 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseSword;
-import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.common.items.tools.utils.PoweredTool;
 import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloySword extends BaseSword implements PoweredTool {
@@ -12,6 +12,7 @@ public class EclipseAlloySword extends BaseSword implements PoweredTool {
         registerAbility(Ability.GLOWING);
         registerAbility(Ability.CAUTERIZEWOUNDS);
         registerAbility(Ability.DROPTELEPORT);
+        registerAbility(Ability.SMOKER);
     }
 
     @Override

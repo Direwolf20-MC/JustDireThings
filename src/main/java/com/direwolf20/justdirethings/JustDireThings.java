@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings;
 
+import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
@@ -14,6 +15,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -60,7 +62,9 @@ public class JustDireThings {
                 Registration.EclipseAlloyShovel.get(),
                 Registration.EclipseAlloyHoe.get(),
                 Registration.CelestigemPaxel.get(),
-                Registration.EclipseAlloyPaxel.get()
+                Registration.EclipseAlloyPaxel.get(),
+                Registration.VoidshiftWand.get(),
+                Registration.EclipsegateWand.get()
         );
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -78,6 +82,19 @@ public class JustDireThings {
                 Registration.DropperT2.get(),
                 Registration.GeneratorT1.get(),
                 Registration.EnergyTransmitter.get()
+        );
+        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof PlayerAccessorBE playerAccessorBE) {
+                        if (be.getLevel().isClientSide) {
+                            return new ItemStackHandler(1);
+                        } else {
+                            return playerAccessorBE.getPlayerHandler(side);
+                        }
+                    }
+                    return null;
+                },
+                Registration.PlayerAccessor.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {

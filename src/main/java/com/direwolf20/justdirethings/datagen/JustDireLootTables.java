@@ -16,10 +16,10 @@ public class JustDireLootTables extends VanillaBlockLoot {
 
     @Override
     protected void generate() {
-        dropWhenSilkTouch(Registration.GooBlock_Tier1.get());
-        dropWhenSilkTouch(Registration.GooBlock_Tier2.get());
-        dropWhenSilkTouch(Registration.GooBlock_Tier3.get());
-        dropWhenSilkTouch(Registration.GooBlock_Tier4.get());
+        dropSelf(Registration.GooBlock_Tier1.get());
+        dropSelf(Registration.GooBlock_Tier2.get());
+        dropSelf(Registration.GooBlock_Tier3.get());
+        dropSelf(Registration.GooBlock_Tier4.get());
         dropSelf(Registration.FerricoreBlock.get());
         dropSelf(Registration.BlazeGoldBlock.get());
         dropSelf(Registration.CelestigemBlock.get());
@@ -42,12 +42,14 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.DropperT2.get());
         dropSelf(Registration.GeneratorT1.get());
         dropSelf(Registration.EnergyTransmitter.get());
+        dropSelf(Registration.PlayerAccessor.get());
         dropOther(Registration.GooSoil_Tier1.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier2.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier3.get(), Items.DIRT);
         dropOther(Registration.GooSoil_Tier4.get(), Items.DIRT);
         dropSelf(Registration.BlockSwapperT1.get());
         dropSelf(Registration.BlockSwapperT2.get());
+        add(Registration.EclipseGateBlock.get(), noDrop());
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(

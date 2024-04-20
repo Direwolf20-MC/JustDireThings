@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.setup.ModSetup;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
@@ -40,6 +40,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.EnergyTransmitter.get(), "Energy Transmitter");
         add(Registration.BlockSwapperT1.get(), "Simple Swapper");
         add(Registration.BlockSwapperT2.get(), "Advanced Swapper");
+        add(Registration.PlayerAccessor.get(), "Player Accessor");
+        add(Registration.EclipseGateBlock.get(), "Eclipse Gate");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -66,6 +68,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Pocket_GeneratorT3.get(), "Celestial Pocket Generator");
         add(Registration.Pocket_GeneratorT4.get(), "Eclipse Pocket Generator");
         add(Registration.TotemOfDeathRecall.get(), "Totem of Death Recall");
+        add(Registration.BlazejetWand.get(), "Blazejet Wand");
+        add(Registration.VoidshiftWand.get(), "Voidshift Wand");
+        add(Registration.EclipsegateWand.get(), "Eclipsegate Wand");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -125,6 +130,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.bindfailed", "Binding Failed");
         add("justdirethings.bindremoved", "Binding Removed");
         add("justdirethings.unbound-screen", "Not Bound");
+        add("justdirethings.boundside", " -Bound Side: ");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -139,6 +145,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.TREEFELLER.getLocalization(), "Tree Feller");
         add(Ability.LEAFBREAKER.getLocalization(), "Leaf Breaker");
         add(Ability.SMELTER.getLocalization(), "Auto Smelter");
+        add(Ability.SMOKER.getLocalization(), "Auto Smoker");
         add(Ability.LAVAREPAIR.getLocalization(), "Lava Repair");
         add(Ability.CAUTERIZEWOUNDS.getLocalization(), "Cauterize Wounds");
         add(Ability.HAMMER.getLocalization(), "Hammer");
@@ -150,6 +157,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.DROPTELEPORT.getLocalization(), "Drops Teleporter");
         add(Ability.GLOWING.getLocalization(), "Mob X-Ray");
         add(Ability.INSTABREAK.getLocalization(), "Instant Break");
+        add(Ability.AIRBURST.getLocalization(), "Air Burst");
+        add(Ability.VOIDSHIFT.getLocalization(), "Void Shift");
+        add(Ability.ECLIPSEGATE.getLocalization(), "Eclipse Gate");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
@@ -202,6 +212,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.burnspeedmultiplier", "Burn Speed Multiplier: %s");
         add("justdirethings.screen.click-hold", "Hold Click");
         add("justdirethings.screen.click-hold-for", "Hold Click For (ticks)");
+        add("justdirethings.screen.inv-normal", "Inventory Slots");
+        add("justdirethings.screen.inv-armor", "Armor Slots");
+        add("justdirethings.screen.inv-offhand", "Offhand Slots");
+        add("justdirethings.screen.rightclicksettings", "Right Click for Settings");
+
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

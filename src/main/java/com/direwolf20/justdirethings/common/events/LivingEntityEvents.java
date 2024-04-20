@@ -1,9 +1,9 @@
 package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
-import com.direwolf20.justdirethings.common.items.tools.utils.Ability;
-import com.direwolf20.justdirethings.common.items.tools.utils.Helpers;
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
@@ -18,6 +18,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -33,31 +34,65 @@ public class LivingEntityEvents {
     }
 
     @SubscribeEvent
+    public static void LivingFallDamage(LivingFallEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ItemStack heldItem = player.getMainHandItem();
+            if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.hasAbility(Ability.AIRBURST)) {
+                    event.setDistance(0.0f);
+                    return;
+                }
+            }
+            heldItem = player.getOffhandItem();
+            if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.hasAbility(Ability.AIRBURST)) {
+                    event.setDistance(0.0f);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void LivingDropsEvent(LivingDropsEvent event) {
         DamageSource source = event.getSource();
         if (source.getEntity() instanceof Player player) {
             ItemStack mainHand = player.getMainHandItem();
-            if (mainHand.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbility(mainHand, Ability.DROPTELEPORT)) {
-                IItemHandler handler = ToggleableTool.getBoundHandler((ServerLevel) player.level(), mainHand);
-                if (handler != null) {
+            if (mainHand.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.canUseAbility(mainHand, Ability.SMOKER)) {
                     Iterator<ItemEntity> iterator = event.getDrops().iterator();
+                    
                     while (iterator.hasNext()) {
                         ItemEntity itemEntity = iterator.next();
-                        ItemStack stack = itemEntity.getItem();
-
-                        ItemStack leftover = Helpers.teleportDrop(stack, handler, mainHand, player);
-
-                        if (leftover.isEmpty()) {
-                            // If the stack is now empty, remove the ItemEntity from the collection
-                            iterator.remove(); // Optionally remove from your collection if it's being directly manipulated
-                        } else {
-                            // Otherwise, update the ItemEntity with the modified stack
-                            itemEntity.setItem(leftover);
+                        boolean[] dropSmoked = new boolean[1];
+                        Helpers.smokeDrop((ServerLevel) player.level(), itemEntity, mainHand, event.getEntity(), dropSmoked);
+                        
+                        if (dropSmoked[0]) {
+                            toggleableTool.smokerParticles((ServerLevel) player.level(), itemEntity.blockPosition(), itemEntity.getItem().getCount());
                         }
                     }
-                    if (event.getDrops().isEmpty()) { //Only spawn particles if we teleported everything - not perfect but better than exhaustive testing
-                        ToggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
-                        event.setCanceled(true);
+                }
+                if (toggleableTool.canUseAbility(mainHand, Ability.DROPTELEPORT)) {
+                    IItemHandler handler = ToggleableTool.getBoundHandler((ServerLevel) player.level(), mainHand);
+                    if (handler != null) {
+                        Iterator<ItemEntity> iterator = event.getDrops().iterator();
+                        while (iterator.hasNext()) {
+                            ItemEntity itemEntity = iterator.next();
+                            ItemStack stack = itemEntity.getItem();
+    
+                            ItemStack leftover = Helpers.teleportDrop(stack, handler, mainHand, player);
+    
+                            if (leftover.isEmpty()) {
+                                // If the stack is now empty, remove the ItemEntity from the collection
+                                iterator.remove(); // Optionally remove from your collection if it's being directly manipulated
+                            } else {
+                                // Otherwise, update the ItemEntity with the modified stack
+                                itemEntity.setItem(leftover);
+                            }
+                        }
+                        if (event.getDrops().isEmpty()) { //Only spawn particles if we teleported everything - not perfect but better than exhaustive testing
+                            ToggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
+                            event.setCanceled(true);
+                        }
                     }
                 }
             }

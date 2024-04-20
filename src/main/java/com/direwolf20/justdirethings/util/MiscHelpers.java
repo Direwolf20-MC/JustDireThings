@@ -29,7 +29,7 @@ public class MiscHelpers {
     }
 
     public static IItemHandler getAttachedInventory(Level level, BlockPos blockPos, Direction side) {
-        assert level != null;
+        if (level == null) return null;
         BlockEntity be = level.getBlockEntity(blockPos);
         // if we have a TE and its an item handler, try extracting from that
         if (be != null) {

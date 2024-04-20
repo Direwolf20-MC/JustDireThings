@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.network.handler;
 
-import com.direwolf20.justdirethings.common.items.tools.utils.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +29,8 @@ public class ToggleToolSlotPacket {
                     ToggleableTool.toggleSetting(stack, payload.settingName());
                 else if (payload.type() == 1) //Cycle
                     ToggleableTool.cycleSetting(stack, payload.settingName());
+                else if (payload.type() == 2) //Slider
+                    ToggleableTool.setToolValue(stack, payload.settingName(), payload.value());
             }
         });
     }
