@@ -15,6 +15,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -112,7 +113,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         addRenderableWidget(slider);
     }*/
 
-    protected void collectSlidersToRemove(List<Renderable> widgetsToRemove) {
+    protected void collectSlidersToRemove(List<AbstractWidget> widgetsToRemove) {
         for (ExtendedSlider slider : sliders.values()) {
             widgetsToRemove.add(slider);
         }
@@ -217,7 +218,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             return true;
         }
         if (btn == 1) {
-            List<Renderable> widgetsToRemove = new ArrayList<>();
+            List<AbstractWidget> widgetsToRemove = new ArrayList<>();
             ExtendedSlider extendedSliderToAdd = null;
             for (Renderable renderable : new ArrayList<>(renderables)) {  // Create a copy of renderables to iterate over
                 if (renderable instanceof GrayscaleButton grayscaleButton && sliders.containsKey(grayscaleButton) && MiscTools.inBounds(grayscaleButton.getX(), grayscaleButton.getY(), grayscaleButton.getWidth(), grayscaleButton.getHeight(), x, y)) {
@@ -229,7 +230,9 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 }
             }
 
-            renderables.removeAll(widgetsToRemove);
+            for (AbstractWidget abstractWidget : widgetsToRemove) {
+                removeWidget(abstractWidget);
+            }
             if (extendedSliderToAdd != null)
                 addRenderableWidget(extendedSliderToAdd);
             if (widgetsToRemove.size() > 0 || extendedSliderToAdd != null)
