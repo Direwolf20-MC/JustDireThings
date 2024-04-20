@@ -265,9 +265,9 @@ public interface ToggleableTool extends ToggleableItem {
             lawnmower(level, player, itemStack);
         if (canUseAbilityAndDurabiltiy(itemStack, Ability.CAUTERIZEWOUNDS))
             cauterizeWounds(level, player, itemStack);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.AIRBURST))
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.AIRBURST, ToggleableTool.getToolValue(itemStack, Ability.AIRBURST.getName())))
             airBurst(level, player, itemStack);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.VOIDSHIFT))
+        if (canUseAbilityAndDurabiltiy(itemStack, Ability.VOIDSHIFT, ToggleableTool.getToolValue(itemStack, Ability.VOIDSHIFT.getName())))
             voidShift(level, player, itemStack);
     }
 
@@ -335,6 +335,8 @@ public interface ToggleableTool extends ToggleableItem {
         Vec3 shiftPosition = getShiftPosition(level, player, itemStack);
         //System.out.println(shiftPosition);
         if (!shiftPosition.equals(Vec3.ZERO)) {
+            int distanceTraveled = (int) player.position().distanceTo(shiftPosition);
+            System.out.println(distanceTraveled);
             if (player.isPassenger()) {
                 player.dismountTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
             } else {
@@ -342,14 +344,15 @@ public interface ToggleableTool extends ToggleableItem {
             }
             player.resetFallDistance();
             level.playSound(null, BlockPos.containing(shiftPosition), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1F, 1.0F);
-            //OurSounds.playSound(SoundEvents.FIRECHARGE_USE, 0.5f, 0.125f);
+            damageTool(itemStack, player, Ability.VOIDSHIFT, distanceTraveled);
         }
         return false;
     }
 
     default Vec3 getShiftPosition(Level level, Player player, ItemStack itemStack) {
         Vec3 returnVec;
-        BlockHitResult result = (BlockHitResult) player.pick(20, 0f, false);
+        int distance = ToggleableTool.getToolValue(itemStack, Ability.VOIDSHIFT.getName());
+        BlockHitResult result = (BlockHitResult) player.pick(distance, 0f, false);
         if (result.getType().equals(HitResult.Type.MISS)) {
             returnVec = getShapeAdjustedPosition(level, player, result, result.getDirection().getOpposite()); //If we miss hitting a block, go 1 further to match the distance specified
         } else {
