@@ -41,6 +41,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlockSwapperT1.get(), "Simple Swapper");
         add(Registration.BlockSwapperT2.get(), "Advanced Swapper");
         add(Registration.PlayerAccessor.get(), "Player Accessor");
+        add(Registration.EclipseGateBlock.get(), "Eclipse Gate");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -69,6 +70,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TotemOfDeathRecall.get(), "Totem of Death Recall");
         add(Registration.BlazejetWand.get(), "Blazejet Wand");
         add(Registration.VoidshiftWand.get(), "Voidshift Wand");
+        add(Registration.EclipsegateWand.get(), "Eclipsegate Wand");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -157,6 +159,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.INSTABREAK.getLocalization(), "Instant Break");
         add(Ability.AIRBURST.getLocalization(), "Air Burst");
         add(Ability.VOIDSHIFT.getLocalization(), "Void Shift");
+        add(Ability.ECLIPSEGATE.getLocalization(), "Eclipse Gate");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

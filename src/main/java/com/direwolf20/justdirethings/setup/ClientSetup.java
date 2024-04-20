@@ -93,5 +93,6 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.DropperT2BE.get(), DropperT2BER::new);
         event.registerBlockEntityRenderer(Registration.EnergyTransmitterBE.get(), EnergyTransmitterRenderer::new);
         event.registerBlockEntityRenderer(Registration.BlockSwapperT2BE.get(), BlockSwapperT2BER::new);
+        event.registerBlockEntityRenderer(Registration.EclipseGateBE.get(), EclipseGateRenderer::new);
     }
 }

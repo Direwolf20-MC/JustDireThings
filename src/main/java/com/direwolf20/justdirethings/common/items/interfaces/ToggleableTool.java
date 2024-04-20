@@ -2,10 +2,12 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.OurSounds;
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
+import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -47,6 +49,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 
@@ -76,11 +79,11 @@ public interface ToggleableTool extends ToggleableItem {
         return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName());
     }
 
-    default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility) {
+    default boolean canUseAbilityAndDurability(ItemStack itemStack, Ability toolAbility) {
         return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility) >= 0);
     }
 
-    default boolean canUseAbilityAndDurabiltiy(ItemStack itemStack, Ability toolAbility, int multiplier) {
+    default boolean canUseAbilityAndDurability(ItemStack itemStack, Ability toolAbility, int multiplier) {
         return canUseAbility(itemStack, toolAbility) && (testUseTool(itemStack, toolAbility, multiplier) >= 0);
     }
 
@@ -253,29 +256,31 @@ public interface ToggleableTool extends ToggleableItem {
     default void useAbility(Level level, Player player, InteractionHand hand) {
         if (player.isShiftKeyDown()) return;
         ItemStack itemStack = player.getItemInHand(hand);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.MOBSCANNER))
+        if (canUseAbilityAndDurability(itemStack, Ability.MOBSCANNER))
             scanFor(level, player, itemStack, Ability.MOBSCANNER);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.GLOWING))
+        if (canUseAbilityAndDurability(itemStack, Ability.GLOWING))
             glowing(level, player, itemStack, Ability.GLOWING);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.ORESCANNER))
+        if (canUseAbilityAndDurability(itemStack, Ability.ORESCANNER))
             scanFor(level, player, itemStack, Ability.ORESCANNER);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.OREXRAY))
+        if (canUseAbilityAndDurability(itemStack, Ability.OREXRAY))
             scanFor(level, player, itemStack, Ability.OREXRAY);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.LAWNMOWER))
+        if (canUseAbilityAndDurability(itemStack, Ability.LAWNMOWER))
             lawnmower(level, player, itemStack);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.CAUTERIZEWOUNDS))
+        if (canUseAbilityAndDurability(itemStack, Ability.CAUTERIZEWOUNDS))
             cauterizeWounds(level, player, itemStack);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.AIRBURST, ToggleableTool.getToolValue(itemStack, Ability.AIRBURST.getName())))
-            airBurst(level, player, itemStack);
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.VOIDSHIFT, ToggleableTool.getToolValue(itemStack, Ability.VOIDSHIFT.getName())))
+        if (canUseAbilityAndDurability(itemStack, Ability.VOIDSHIFT, ToggleableTool.getToolValue(itemStack, Ability.VOIDSHIFT.getName())))
             voidShift(level, player, itemStack);
+        if (canUseAbilityAndDurability(itemStack, Ability.AIRBURST, ToggleableTool.getToolValue(itemStack, Ability.AIRBURST.getName())))
+            airBurst(level, player, itemStack);
     }
 
     default void useOnAbility(UseOnContext pContext) {
         if (pContext.getPlayer().isShiftKeyDown()) return;
         ItemStack itemStack = pContext.getItemInHand();
-        if (canUseAbilityAndDurabiltiy(itemStack, Ability.LEAFBREAKER))
+        if (canUseAbilityAndDurability(itemStack, Ability.LEAFBREAKER))
             leafbreaker(pContext);
+        if (canUseAbilityAndDurability(itemStack, Ability.ECLIPSEGATE))
+            eclipseGate(pContext);
     }
 
     default void glowing(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
@@ -331,6 +336,60 @@ public interface ToggleableTool extends ToggleableItem {
         return false;
     }
 
+    default boolean eclipseGate(UseOnContext pContext) {
+        Level level = pContext.getLevel();
+        if (level.isClientSide) return false;
+        Set<BlockPos> posList = getEclipseGateBlocks(pContext);
+        for (BlockPos blockPos : posList) {
+            BlockState blockState = level.getBlockState(blockPos);
+            boolean placed = level.setBlockAndUpdate(blockPos, Registration.EclipseGateBlock.get().defaultBlockState());
+            if (!placed) continue;
+            level.sendBlockUpdated(blockPos, blockState, Registration.EclipseGateBlock.get().defaultBlockState(), 3);
+            BlockEntity be = level.getBlockEntity(blockPos);
+            if (be instanceof EclipseGateBE eclipseGateBE) {
+                eclipseGateBE.setSourceBlock(blockState);
+            }
+        }
+        if (!posList.isEmpty()) {
+            level.playSound(null, pContext.getClickedPos(), SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1F, 1.0F);
+            teleportParticles((ServerLevel) level, posList);
+            damageTool(pContext.getItemInHand(), pContext.getPlayer(), Ability.ECLIPSEGATE, posList.size());
+            return true;
+        }
+        return false;
+    }
+
+    default Set<BlockPos> getEclipseGateBlocks(UseOnContext pContext) {
+        BlockPos clickedPos = pContext.getClickedPos();
+        Direction direction = pContext.getClickedFace().getOpposite();
+        BlockPos startPos = clickedPos.offset(
+                direction.getAxis() == Direction.Axis.X ? 0 : -1,
+                direction.getAxis() == Direction.Axis.Y ? 0 : -1,
+                direction.getAxis() == Direction.Axis.Z ? 0 : -1
+        );
+
+        BlockPos endPos = clickedPos.relative(direction, 15).offset(
+                direction.getAxis() == Direction.Axis.X ? 0 : 1,
+                direction.getAxis() == Direction.Axis.Y ? 0 : 1,
+                direction.getAxis() == Direction.Axis.Z ? 0 : 1
+        );
+        Set<BlockPos> posSet = BlockPos.betweenClosedStream(startPos, endPos)
+                .filter(blockPos -> isValidGateBlock((ServerLevel) pContext.getLevel(), blockPos, pContext.getPlayer()))
+                .map(BlockPos::immutable)
+                .collect(Collectors.toSet());
+
+        return posSet;
+    }
+
+    default boolean isValidGateBlock(ServerLevel serverLevel, BlockPos blockPos, Player player) {
+        if (serverLevel.getBlockEntity(blockPos) != null) return false;
+        BlockState blockState = serverLevel.getBlockState(blockPos);
+        if (blockState.is(Registration.EclipseGateBlock.get())) return false;
+        if (blockState.isAir()) return false;
+        if (blockState.getDestroySpeed(serverLevel, blockPos) < 0) return false;
+        return true;
+    }
+
     default boolean voidShift(Level level, Player player, ItemStack itemStack) {
         Vec3 shiftPosition = getShiftPosition(level, player, itemStack);
         //System.out.println(shiftPosition);
@@ -342,8 +401,10 @@ public interface ToggleableTool extends ToggleableItem {
                 player.teleportTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
             }
             player.resetFallDistance();
-            level.playSound(null, BlockPos.containing(shiftPosition), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1F, 1.0F);
+            //level.playSound(null, BlockPos.containing(shiftPosition), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1F, 1.0F);
             damageTool(itemStack, player, Ability.VOIDSHIFT, distanceTraveled);
+            if (level.isClientSide)
+                OurSounds.playSound(SoundEvents.PLAYER_TELEPORT, 1f, 0.5f);
         }
         return false;
     }

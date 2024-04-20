@@ -29,7 +29,8 @@ public enum Ability {
     //Tier 4
     OREXRAY(SettingType.TOGGLE, 100, 5000),
     GLOWING(SettingType.TOGGLE, 100, 5000),
-    INSTABREAK(SettingType.TOGGLE, 2, 250);
+    INSTABREAK(SettingType.TOGGLE, 2, 250),
+    ECLIPSEGATE(SettingType.TOGGLE, 1, 250); //FE Per block Removed
 
     public enum SettingType {
         TOGGLE,

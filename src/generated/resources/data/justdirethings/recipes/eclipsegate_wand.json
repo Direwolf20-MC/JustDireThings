@@ -3,22 +3,22 @@
   "category": "misc",
   "group": "justdirethings",
   "key": {
-    "b": {
-      "item": "justdirethings:blazegold_ingot"
-    },
     "c": {
       "item": "justdirethings:celestigem"
     },
+    "e": {
+      "item": "justdirethings:eclipsealloy_ingot"
+    },
     "w": {
-      "item": "justdirethings:blazejet_wand"
+      "item": "justdirethings:voidshift_wand"
     }
   },
   "pattern": [
-    "  c",
+    "  e",
     " w ",
-    "b  "
+    "c  "
   ],
   "result": {
-    "item": "justdirethings:voidshift_wand"
+    "item": "justdirethings:eclipsegate_wand"
   }
 }

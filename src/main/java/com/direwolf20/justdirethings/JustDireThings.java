@@ -63,7 +63,8 @@ public class JustDireThings {
                 Registration.EclipseAlloyHoe.get(),
                 Registration.CelestigemPaxel.get(),
                 Registration.EclipseAlloyPaxel.get(),
-                Registration.VoidshiftWand.get()
+                Registration.VoidshiftWand.get(),
+                Registration.EclipsegateWand.get()
         );
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {

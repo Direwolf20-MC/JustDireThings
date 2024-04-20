@@ -337,13 +337,23 @@ public class JustDireRecipes extends RecipeProvider {
                 .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.VoidshiftWand.get())
                 .pattern("  c")
-                .pattern(" b ")
-                .pattern("i  ")
-                .define('i', Registration.FerricoreIngot.get())
-                .define('b', Registration.BlazejetWand.get())
+                .pattern(" w ")
+                .pattern("b  ")
+                .define('b', Registration.BlazegoldIngot.get())
+                .define('w', Registration.BlazejetWand.get())
                 .define('c', Registration.Celestigem.get())
                 .group("justdirethings")
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipsegateWand.get())
+                .pattern("  e")
+                .pattern(" w ")
+                .pattern("c  ")
+                .define('e', Registration.EclipseAlloyIngot.get())
+                .define('w', Registration.VoidshiftWand.get())
+                .define('c', Registration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
 
         //GooSpread Recipes
