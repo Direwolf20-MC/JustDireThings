@@ -2,7 +2,6 @@ package com.direwolf20.justdirethings.common.network.handler;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolLeftRightClickPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,12 +25,12 @@ public class ToggleToolLeftRightClickPacket {
             Player player = senderOptional.get();
 
 
-            ItemStack toggleableItem = ToggleableItem.getToggleableItem(player);
-            if (toggleableItem.getItem() instanceof LeftClickableTool) {
+            ItemStack stack = player.getInventory().getItem(payload.slot());
+            if (stack.getItem() instanceof LeftClickableTool) {
                 if (payload.button() == 1) //Left Click
-                    LeftClickableTool.addToLeftClickList(toggleableItem, Ability.valueOf(payload.abilityName().toUpperCase(Locale.ROOT)));
+                    LeftClickableTool.addToLeftClickList(stack, Ability.valueOf(payload.abilityName().toUpperCase(Locale.ROOT)));
                 else //Anything else, which should always be zero...
-                    LeftClickableTool.removeFromLeftClickList(toggleableItem, Ability.valueOf(payload.abilityName().toUpperCase(Locale.ROOT)));
+                    LeftClickableTool.removeFromLeftClickList(stack, Ability.valueOf(payload.abilityName().toUpperCase(Locale.ROOT)));
             }
 
         });

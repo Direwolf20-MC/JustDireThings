@@ -111,7 +111,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             if (button != null && tool.getItem() instanceof LeftClickableTool) {
                 int currentValue = LeftClickableTool.getLeftClickList(tool).contains(toolAbility) ? 1 : 0;
                 ToggleButton toggleButton = ToggleButtonFactory.LEFTRIGHTONLYCLICKBUTTON(buttonsStartX + 145, buttonsStartY - 18, currentValue, (clicked) -> {
-                    PacketDistributor.SERVER.noArg().send(new ToggleToolLeftRightClickPayload(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition()));
+                    PacketDistributor.SERVER.noArg().send(new ToggleToolLeftRightClickPayload(toolSlot, toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition()));
                 });
                 leftRightClickButtons.put(button, toggleButton);
             }
