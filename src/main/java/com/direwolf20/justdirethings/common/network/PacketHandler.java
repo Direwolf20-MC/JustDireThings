@@ -24,6 +24,7 @@ public class PacketHandler {
         registrar.play(SensorPayload.ID, SensorPayload::new, handler -> handler.server(SensorPacket.get()::handle));
         registrar.play(SwapperPayload.ID, SwapperPayload::new, handler -> handler.server(SwapperPacket.get()::handle));
         registrar.play(TickSpeedPayload.ID, TickSpeedPayload::new, handler -> handler.server(TickSpeedPacket.get()::handle));
+        registrar.play(ToggleToolLeftRightClickPayload.ID, ToggleToolLeftRightClickPayload::new, handler -> handler.server(ToggleToolLeftRightClickPacket.get()::handle));
         registrar.play(ToggleToolPayload.ID, ToggleToolPayload::new, handler -> handler.server(ToggleToolPacket.get()::handle));
         registrar.play(ToggleToolSlotPayload.ID, ToggleToolSlotPayload::new, handler -> handler.server(ToggleToolSlotPacket.get()::handle));
 

@@ -9,6 +9,7 @@ import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBloc
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier3;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier4;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
+import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.*;
@@ -33,6 +34,7 @@ public class ClientSetup {
         NeoForge.EVENT_BUS.register(RenderLevelLast.class);
         NeoForge.EVENT_BUS.register(EventKeyInput.class);
         NeoForge.EVENT_BUS.register(RenderHighlight.class);
+        NeoForge.EVENT_BUS.register(PlayerEvents.class);
 
         //Item Properties
         event.enqueueWork(() -> {

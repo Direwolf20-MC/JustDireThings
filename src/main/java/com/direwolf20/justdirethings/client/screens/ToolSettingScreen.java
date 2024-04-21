@@ -4,10 +4,13 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.BaseButton;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
+import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
+import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.common.network.data.ToggleToolLeftRightClickPayload;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
 import com.direwolf20.justdirethings.util.MiscTools;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -44,6 +47,8 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     int toolSlot;
     protected final Map<Button, ExtendedSlider> sliders = new HashMap<>();
     protected ExtendedSlider shownSlider;
+    protected final Map<Button, ToggleButton> leftRightClickButtons = new HashMap<>();
+    protected ToggleButton shownLeftRightClickButton;
 
     public ToolSettingScreen(ToolSettingContainer container, Inventory inv, Component name) {
         super(container, inv, name);
@@ -64,30 +69,29 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         clearWidgets();
         int counter = 0;
         for (Ability toolAbility : abilities) {
+            Button button = null;
             if (toolAbility.getSettingType() == Ability.SettingType.TOGGLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
-                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, (clicked) -> {
+                button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, (clicked) -> {
                     toggleSetting(toolAbility.getName());
                     ((GrayscaleButton) clicked).toggleActive();
                 });
                 addRenderableWidget(button);
                 counter++;
-            }
-            if (toolAbility.getSettingType() == Ability.SettingType.CYCLE) {
+            } else if (toolAbility.getSettingType() == Ability.SettingType.CYCLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
                 AbilityParams abilityParams = ((ToggleableTool) tool.getItem()).getAbilityParams(toolAbility);
                 int possibleValues = ((abilityParams.maxSlider - abilityParams.minSlider) / abilityParams.increment) + 2;
                 int currentValue = ToggleableTool.getToolValue(tool, toolAbility.getName());
                 int buttonPosition = !isActive ? 0 : currentValue / abilityParams.increment;
-                Button button = ToggleButtonFactory.ABILITYCYCLEBUTTON(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), toolAbility, buttonPosition, possibleValues, (clicked) -> {
+                button = ToggleButtonFactory.ABILITYCYCLEBUTTON(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), toolAbility, buttonPosition, possibleValues, (clicked) -> {
                     cycleSetting(toolAbility.getName());
                 });
                 addRenderableWidget(button);
                 counter++;
-            }
-            if (toolAbility.getSettingType() == Ability.SettingType.SLIDER) {
+            } else if (toolAbility.getSettingType() == Ability.SettingType.SLIDER) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());
-                Button button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, (clicked) -> {
+                button = new GrayscaleButton(buttonsStartX + ((counter / 2) * 18), buttonsStartY + ((counter % 2) * 18), 16, 16, toolAbility.getIconLocation(), Component.translatable(toolAbility.getLocalization()), isActive, (clicked) -> {
                     toggleSetting(toolAbility.getName());
                     ((GrayscaleButton) clicked).toggleActive();
                 });
@@ -104,6 +108,13 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 sliders.put(button, slider);
                 counter++;
             }
+            if (button != null && tool.getItem() instanceof LeftClickableTool) {
+                int currentValue = LeftClickableTool.getLeftClickList(tool).contains(toolAbility) ? 1 : 0;
+                ToggleButton toggleButton = ToggleButtonFactory.LEFTRIGHTONLYCLICKBUTTON(buttonsStartX + 145, buttonsStartY - 18, currentValue, (clicked) -> {
+                    PacketDistributor.SERVER.noArg().send(new ToggleToolLeftRightClickPayload(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition()));
+                });
+                leftRightClickButtons.put(button, toggleButton);
+            }
         }
     }
 
@@ -113,10 +124,12 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         addRenderableWidget(slider);
     }*/
 
-    protected void collectSlidersToRemove(List<AbstractWidget> widgetsToRemove) {
-        for (ExtendedSlider slider : sliders.values()) {
-            widgetsToRemove.add(slider);
-        }
+    protected void collectSlidersToRemove(Set<AbstractWidget> widgetsToRemove) {
+        widgetsToRemove.addAll(sliders.values());
+    }
+
+    protected void collectButtonsToRemove(Set<AbstractWidget> widgetsToRemove) {
+        widgetsToRemove.addAll(leftRightClickButtons.values());
     }
 
     public void toggleSetting(String settingName) {
@@ -151,7 +164,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         super.renderTooltip(pGuiGraphics, pX, pY);
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof BaseButton button && !button.getLocalization(pX, pY).equals(Component.empty())) {
-                if (sliders.containsKey(button))
+                if (sliders.containsKey(button) || leftRightClickButtons.containsKey(button))
                     pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(button.getLocalization(), Component.translatable("justdirethings.screen.rightclicksettings"))), pX, pY);
                 else
                     pGuiGraphics.renderTooltip(font, button.getLocalization(), pX, pY);
@@ -218,15 +231,29 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             return true;
         }
         if (btn == 1) {
-            List<AbstractWidget> widgetsToRemove = new ArrayList<>();
+            Set<AbstractWidget> widgetsToRemove = new HashSet<>();
             ExtendedSlider extendedSliderToAdd = null;
+            ToggleButton toggleButtonToAdd = null;
             for (Renderable renderable : new ArrayList<>(renderables)) {  // Create a copy of renderables to iterate over
-                if (renderable instanceof GrayscaleButton grayscaleButton && sliders.containsKey(grayscaleButton) && MiscTools.inBounds(grayscaleButton.getX(), grayscaleButton.getY(), grayscaleButton.getWidth(), grayscaleButton.getHeight(), x, y)) {
+                if (renderable instanceof Button button && (sliders.containsKey(button) || leftRightClickButtons.containsKey(button)) && MiscTools.inBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight(), x, y)) { //If right click on any button, clear the optional buttons first.
                     collectSlidersToRemove(widgetsToRemove);
-                    if (shownSlider == null || !shownSlider.equals(sliders.get(grayscaleButton)))
-                        extendedSliderToAdd = sliders.get(grayscaleButton);
-                    shownSlider = extendedSliderToAdd;
-                    grayscaleButton.playDownSound(Minecraft.getInstance().getSoundManager());
+                    collectButtonsToRemove(widgetsToRemove);
+                    if (sliders.containsKey(button)) {
+                        if (shownSlider == null || !shownSlider.equals(sliders.get(button)))
+                            extendedSliderToAdd = sliders.get(button);
+                        shownSlider = extendedSliderToAdd;
+                        button.playDownSound(Minecraft.getInstance().getSoundManager());
+                    } else {
+                        shownSlider = null;
+                    }
+                    if (leftRightClickButtons.containsKey(button)) {
+                        if (shownLeftRightClickButton == null || !shownLeftRightClickButton.equals(leftRightClickButtons.get(button)))
+                            toggleButtonToAdd = leftRightClickButtons.get(button);
+                        shownLeftRightClickButton = toggleButtonToAdd;
+                        button.playDownSound(Minecraft.getInstance().getSoundManager());
+                    } else {
+                        shownLeftRightClickButton = null;
+                    }
                 }
             }
 
@@ -235,7 +262,9 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             }
             if (extendedSliderToAdd != null)
                 addRenderableWidget(extendedSliderToAdd);
-            if (widgetsToRemove.size() > 0 || extendedSliderToAdd != null)
+            if (toggleButtonToAdd != null)
+                addRenderableWidget(toggleButtonToAdd);
+            if (widgetsToRemove.size() > 0 || extendedSliderToAdd != null || toggleButtonToAdd != null)
                 return true;
         }
         return super.mouseClicked(x, y, btn);

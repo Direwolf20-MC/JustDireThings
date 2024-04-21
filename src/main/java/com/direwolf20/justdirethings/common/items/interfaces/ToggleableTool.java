@@ -253,6 +253,14 @@ public interface ToggleableTool extends ToggleableItem {
         }
     }
 
+    default void useAbility(Level level, Player player, InteractionHand hand, int clickType) {
+
+    }
+
+    default void useOnAbility(UseOnContext pContext, int clickType) {
+
+    }
+
     default void useAbility(Level level, Player player, InteractionHand hand) {
         if (player.isShiftKeyDown()) return;
         ItemStack itemStack = player.getItemInHand(hand);
