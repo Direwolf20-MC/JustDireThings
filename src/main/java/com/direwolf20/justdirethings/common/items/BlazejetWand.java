@@ -3,8 +3,9 @@ package com.direwolf20.justdirethings.common.items;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.BaseToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
 
-public class BlazejetWand extends BaseToggleableTool {
+public class BlazejetWand extends BaseToggleableTool implements LeftClickableTool {
     public BlazejetWand() {
         super(new Properties()
                 .fireResistant()
