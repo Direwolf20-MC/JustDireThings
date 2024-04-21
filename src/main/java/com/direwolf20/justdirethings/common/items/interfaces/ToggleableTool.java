@@ -225,6 +225,21 @@ public interface ToggleableTool extends ToggleableItem {
         }
     }
 
+    default boolean useAbility(Level level, Player player, ItemStack itemStack, int keyCode, boolean isMouse) {
+        boolean anyRan = false;
+        Set<Ability> customBindAbilities = new HashSet<>();
+        if (itemStack.getItem() instanceof LeftClickableTool)
+            customBindAbilities.addAll(LeftClickableTool.getCustomBindingList(itemStack, new LeftClickableTool.Binding(keyCode, isMouse)));
+        for (Ability ability : getActiveAbilities(itemStack, Ability.UseType.USE)) {
+            if (customBindAbilities.contains(ability)) {
+                if (ability.action != null) {
+                    ability.action.execute(level, player, itemStack);
+                }
+            }
+        }
+        return anyRan;
+    }
+
     default boolean useAbility(Level level, Player player, InteractionHand hand, boolean rightClick) {
         if (player.isShiftKeyDown()) return false;
         ItemStack itemStack = player.getItemInHand(hand);
@@ -236,6 +251,23 @@ public interface ToggleableTool extends ToggleableItem {
             if ((rightClick && !leftClickAbilities.contains(ability)) || (!rightClick && leftClickAbilities.contains(ability))) {
                 if (ability.action != null) {
                     ability.action.execute(level, player, itemStack);
+                }
+            }
+        }
+        return anyRan;
+    }
+
+    default boolean useOnAbility(UseOnContext pContext, ItemStack itemStack, int keyCode, boolean isMouse) {
+        if (pContext.getPlayer().isShiftKeyDown()) return false;
+        boolean anyRan = false;
+        Set<Ability> customBindAbilities = new HashSet<>();
+        if (itemStack.getItem() instanceof LeftClickableTool)
+            customBindAbilities.addAll(LeftClickableTool.getCustomBindingList(itemStack, new LeftClickableTool.Binding(keyCode, isMouse)));
+        for (Ability ability : getActiveAbilities(itemStack, Ability.UseType.USE_ON)) {
+            if (customBindAbilities.contains(ability)) {
+                if (ability.useOnAction != null) {
+                    if (ability.useOnAction.execute(pContext))
+                        anyRan = true;
                 }
             }
         }

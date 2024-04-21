@@ -130,6 +130,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.bindfailed", "Binding Failed");
         add("justdirethings.bindremoved", "Binding Removed");
         add("justdirethings.unbound-screen", "Not Bound");
+        add("justdirethings.bound-key", "Bound to: %s");
+        add("justdirethings.bound-mouse", "Mouse Button: %s");
         add("justdirethings.boundside", " -Bound Side: ");
 
         //Keys
@@ -187,6 +189,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.tickspeed", "Speed (Ticks)");
         add("justdirethings.screen.click-right", "Right Click");
         add("justdirethings.screen.click-left", "Left Click");
+        add("justdirethings.screen.click-custom", "Custom Binding");
+        add("justdirethings.screen.setbinding", "Set Binding");
         add("justdirethings.screen.target-block", "Target Blocks");
         add("justdirethings.screen.target-noblock", "Ignore Blocks");
         add("justdirethings.screen.target-air", "Target Air");

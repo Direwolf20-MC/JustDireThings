@@ -27,12 +27,19 @@ public class ToggleToolLeftRightClickPacket {
 
             ItemStack stack = player.getInventory().getItem(payload.slot());
             if (stack.getItem() instanceof LeftClickableTool) {
-                if (payload.button() == 1) //Left Click
-                    LeftClickableTool.addToLeftClickList(stack, Ability.valueOf(payload.abilityName().toUpperCase(Locale.ROOT)));
-                else //Anything else, which should always be zero...
-                    LeftClickableTool.removeFromLeftClickList(stack, Ability.valueOf(payload.abilityName().toUpperCase(Locale.ROOT)));
+                Ability ability = Ability.valueOf(payload.abilityName().toUpperCase(Locale.ROOT));
+                LeftClickableTool.setBindingMode(stack, ability, payload.button());
+                if (payload.button() == 0) //Right Click
+                    LeftClickableTool.removeFromLeftClickList(stack, ability);
+                else if (payload.button() == 1) //Left Click
+                    LeftClickableTool.addToLeftClickList(stack, ability);
+                else if (payload.button() == 2) { //Custom Keybind
+                    if (payload.keyCode() == -1)
+                        LeftClickableTool.removeFromCustomBindingList(stack, ability);
+                    else
+                        LeftClickableTool.addToCustomBindingList(stack, ability, new LeftClickableTool.Binding(payload.keyCode(), payload.isMouse()));
+                }
             }
-
         });
     }
 }

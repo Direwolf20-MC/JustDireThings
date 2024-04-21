@@ -32,6 +32,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.gui.widget.ExtendedSlider;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
@@ -49,6 +50,13 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected ExtendedSlider shownSlider;
     protected final Map<Button, ToggleButton> leftRightClickButtons = new HashMap<>();
     protected ToggleButton shownLeftRightClickButton;
+    protected boolean bindingEnabled = false;
+    protected final Map<Button, GrayscaleButton> bindingButtons = new HashMap<>();
+    protected GrayscaleButton shownBindingButton;
+    protected Map<ToggleButton, LeftClickableTool.Binding> bindingMap = new HashMap<>();
+    protected Set<AbstractWidget> widgetsToRemove = new HashSet<>();
+    protected Set<AbstractWidget> widgetsToAdd = new HashSet<>();
+    protected boolean renderablesChanged = false;
 
     public ToolSettingScreen(ToolSettingContainer container, Inventory inv, Component name) {
         super(container, inv, name);
@@ -109,27 +117,41 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 counter++;
             }
             if (button != null && tool.getItem() instanceof LeftClickableTool) {
-                int currentValue = LeftClickableTool.getLeftClickList(tool).contains(toolAbility) ? 1 : 0;
+                int currentValue = LeftClickableTool.getBindingMode(tool, toolAbility);
                 ToggleButton toggleButton = ToggleButtonFactory.LEFTRIGHTONLYCLICKBUTTON(buttonsStartX + 145, buttonsStartY - 18, currentValue, (clicked) -> {
-                    PacketDistributor.SERVER.noArg().send(new ToggleToolLeftRightClickPayload(toolSlot, toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition()));
+                    LeftClickableTool.Binding binding = bindingMap.get(((ToggleButton) clicked));
+                    if (binding == null)
+                        sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), -1, false);
+                    else
+                        sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), binding.keyCode, binding.isMouse);
+                    if (((ToggleButton) clicked).getTexturePosition() == 2) {
+                        if (!renderables.contains(shownBindingButton))
+                            widgetsToAdd.add(shownBindingButton);
+                    } else {
+                        widgetsToRemove.add(shownBindingButton);
+                    }
+                    renderablesChanged = true;
                 });
                 leftRightClickButtons.put(button, toggleButton);
+
+                GrayscaleButton bindingButton = ToggleButtonFactory.KEYBIND_BUTTON(buttonsStartX + 145, buttonsStartY, false, (clicked) -> {
+                    bindingEnabled = true;
+                    ((GrayscaleButton) clicked).toggleActive();
+                });
+                bindingMap.put(toggleButton, LeftClickableTool.getAbilityBinding(tool, toolAbility));
+                this.bindingButtons.put(button, bindingButton);
             }
         }
     }
 
-    /*public void showSlider(Button button) {
-        clearSliders();
-        ExtendedSlider slider = sliders.get(button);
-        addRenderableWidget(slider);
-    }*/
-
-    protected void collectSlidersToRemove(Set<AbstractWidget> widgetsToRemove) {
-        widgetsToRemove.addAll(sliders.values());
+    protected void sendBinding(String abilityName, int buttonType, int keyCode, boolean isMouse) {
+        PacketDistributor.SERVER.noArg().send(new ToggleToolLeftRightClickPayload(toolSlot, abilityName, buttonType, keyCode, isMouse));
     }
 
-    protected void collectButtonsToRemove(Set<AbstractWidget> widgetsToRemove) {
+    protected void collectButtonsToRemove() {
+        widgetsToRemove.addAll(sliders.values());
         widgetsToRemove.addAll(leftRightClickButtons.values());
+        widgetsToRemove.addAll(bindingButtons.values());
     }
 
     public void toggleSetting(String settingName) {
@@ -163,7 +185,19 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         super.renderTooltip(pGuiGraphics, pX, pY);
         for (Renderable renderable : this.renderables) {
-            if (renderable instanceof BaseButton button && !button.getLocalization(pX, pY).equals(Component.empty())) {
+            if (renderable instanceof ToggleButton button && leftRightClickButtons.containsValue(button) && button.getTexturePosition() == 2 && !button.getLocalization(pX, pY).equals(Component.empty())) { //2 is custom
+                if (bindingMap.get(button) == null) {
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(button.getLocalization(), Component.translatable("justdirethings.unbound-screen"))), pX, pY);
+                } else {
+                    LeftClickableTool.Binding binding = bindingMap.get(button);
+                    if (binding.isMouse) {
+                        pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(button.getLocalization(), Component.translatable("justdirethings.bound-mouse", binding.keyCode))), pX, pY);
+                    } else {
+                        String bindingName = InputConstants.getKey(binding.keyCode, 0).getDisplayName().getString();
+                        pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(button.getLocalization(), Component.translatable("justdirethings.bound-key", bindingName))), pX, pY);
+                    }
+                }
+            } else if (renderable instanceof BaseButton button && !button.getLocalization(pX, pY).equals(Component.empty())) {
                 if (sliders.containsKey(button) || leftRightClickButtons.containsKey(button))
                     pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(button.getLocalization(), Component.translatable("justdirethings.screen.rightclicksettings"))), pX, pY);
                 else
@@ -197,6 +231,8 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(GUI, relX, relY, 0, 0, this.imageWidth, this.imageHeight);
+        if (renderablesChanged)
+            updateRenderables();
     }
 
     @Override
@@ -210,19 +246,41 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        InputConstants.Key mouseKey = InputConstants.getKey(p_keyPressed_1_, p_keyPressed_2_);
-        if (p_keyPressed_1_ == 256 || minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        if (this.bindingEnabled && shownLeftRightClickButton != null && shownBindingButton != null) {
+            if (pKeyCode == GLFW.GLFW_KEY_ESCAPE) {
+                bindingMap.put(shownLeftRightClickButton, null);
+                shownLeftRightClickButton.onPress(); //This fires the packet to the server
+                shownBindingButton.toggleActive();
+                this.bindingEnabled = false;
+                return true;
+            } else {
+                bindingMap.put(shownLeftRightClickButton, new LeftClickableTool.Binding(pKeyCode, false));
+                shownLeftRightClickButton.onPress(); //This fires the packet to the server
+                shownBindingButton.toggleActive();
+                this.bindingEnabled = false;
+                return true;
+            }
+        }
+        InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
+        if (pKeyCode == 256 || minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
             onClose();
 
             return true;
         }
 
-        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 
     @Override
     public boolean mouseClicked(double x, double y, int btn) {
+        if (btn != 0 && btn != 1 && this.bindingEnabled && shownLeftRightClickButton != null && shownBindingButton != null) {
+            bindingMap.put(shownLeftRightClickButton, new LeftClickableTool.Binding(btn, true));
+            shownLeftRightClickButton.onPress();
+            shownBindingButton.toggleActive();
+            this.bindingEnabled = false;
+            return true;
+        }
         if (hoveredSlot != null && hoveredSlot.getItem().getItem() instanceof ToggleableTool toggleableTool) {
             tool = hoveredSlot.getItem();
             toolSlot = hoveredSlot.getSlotIndex();
@@ -231,17 +289,18 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             return true;
         }
         if (btn == 1) {
-            Set<AbstractWidget> widgetsToRemove = new HashSet<>();
             ExtendedSlider extendedSliderToAdd = null;
             ToggleButton toggleButtonToAdd = null;
+            GrayscaleButton bindingButtonToAdd = null;
             for (Renderable renderable : new ArrayList<>(renderables)) {  // Create a copy of renderables to iterate over
-                if (renderable instanceof Button button && (sliders.containsKey(button) || leftRightClickButtons.containsKey(button)) && MiscTools.inBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight(), x, y)) { //If right click on any button, clear the optional buttons first.
-                    collectSlidersToRemove(widgetsToRemove);
-                    collectButtonsToRemove(widgetsToRemove);
+                if (renderable instanceof Button button && (sliders.containsKey(button) || leftRightClickButtons.containsKey(button) || bindingButtons.containsKey(button)) && MiscTools.inBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight(), x, y)) { //If right click on any button, clear the optional buttons first.
+                    collectButtonsToRemove();
                     if (sliders.containsKey(button)) {
                         if (shownSlider == null || !shownSlider.equals(sliders.get(button)))
                             extendedSliderToAdd = sliders.get(button);
                         shownSlider = extendedSliderToAdd;
+                        if (extendedSliderToAdd != null)
+                            widgetsToAdd.add(extendedSliderToAdd);
                         button.playDownSound(Minecraft.getInstance().getSoundManager());
                     } else {
                         shownSlider = null;
@@ -250,28 +309,60 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                         if (shownLeftRightClickButton == null || !shownLeftRightClickButton.equals(leftRightClickButtons.get(button)))
                             toggleButtonToAdd = leftRightClickButtons.get(button);
                         shownLeftRightClickButton = toggleButtonToAdd;
+                        if (toggleButtonToAdd != null)
+                            widgetsToAdd.add(toggleButtonToAdd);
                         button.playDownSound(Minecraft.getInstance().getSoundManager());
                     } else {
                         shownLeftRightClickButton = null;
                     }
+                    if (bindingButtons.containsKey(button) && toggleButtonToAdd != null) {
+                        if (shownBindingButton == null || !shownBindingButton.equals(bindingButtons.get(button)))
+                            bindingButtonToAdd = bindingButtons.get(button);
+                        shownBindingButton = bindingButtonToAdd;
+                        if (bindingButtonToAdd != null && toggleButtonToAdd.getTexturePosition() == 2)
+                            widgetsToAdd.add(bindingButtonToAdd);
+                        button.playDownSound(Minecraft.getInstance().getSoundManager());
+                    } else {
+                        shownBindingButton = null;
+                    }
                 }
             }
 
-            for (AbstractWidget abstractWidget : widgetsToRemove) {
+            /*for (AbstractWidget abstractWidget : widgetsToRemove) {
                 removeWidget(abstractWidget);
             }
             if (extendedSliderToAdd != null)
                 addRenderableWidget(extendedSliderToAdd);
             if (toggleButtonToAdd != null)
                 addRenderableWidget(toggleButtonToAdd);
-            if (widgetsToRemove.size() > 0 || extendedSliderToAdd != null || toggleButtonToAdd != null)
+            if (bindingButtonToAdd != null)
+                addRenderableWidget(bindingButtonToAdd);*/
+            if (widgetsToRemove.size() > 0 || extendedSliderToAdd != null || toggleButtonToAdd != null || bindingButtonToAdd != null) {
+                renderablesChanged = true;
                 return true;
+            }
         }
         return super.mouseClicked(x, y, btn);
     }
 
-    public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
-        return super.mouseReleased(p_mouseReleased_1_, p_mouseReleased_3_, p_mouseReleased_5_);
+    public void updateRenderables() {
+        if (!widgetsToRemove.isEmpty()) {
+            for (AbstractWidget abstractWidget : widgetsToRemove) {
+                removeWidget(abstractWidget);
+            }
+            widgetsToRemove.clear();
+        }
+        if (!widgetsToAdd.isEmpty()) {
+            for (AbstractWidget abstractWidget : widgetsToAdd) {
+                addRenderableWidget(abstractWidget);
+            }
+            widgetsToAdd.clear();
+        }
+        renderablesChanged = false;
+    }
+
+    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+        return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 
     @Override
