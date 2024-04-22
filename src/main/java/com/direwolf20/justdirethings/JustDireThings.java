@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings;
 
+import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
@@ -119,8 +120,8 @@ public class JustDireThings {
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
-                    if (be instanceof PoweredMachineBE && side != null && side.equals(state.getValue(BlockStateProperties.FACING))) {
-                        return be.getData(Registration.ENERGYSTORAGE_MACHINES);
+                    if (be instanceof EnergyTransmitterBE && side != null && side.equals(state.getValue(BlockStateProperties.FACING))) {
+                        return be.getData(Registration.ENERGYSTORAGE_TRANSMITTERS);
                     }
                     return null;
                 },

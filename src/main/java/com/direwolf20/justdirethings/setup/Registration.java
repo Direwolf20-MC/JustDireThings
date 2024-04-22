@@ -17,6 +17,7 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
+import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.*;
@@ -326,6 +327,15 @@ public class Registration {
                     return new MachineEnergyStorage(capacity);
                 } else {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-PoweredMachine.");
+                }
+            }).build());
+    public static final Supplier<AttachmentType<TransmitterEnergyStorage>> ENERGYSTORAGE_TRANSMITTERS = ATTACHMENT_TYPES.register(
+            "energystorage_transmitters", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof EnergyTransmitterBE energyTransmitterBE) {
+                    int capacity = energyTransmitterBE.getMaxEnergy(); //Default
+                    return new TransmitterEnergyStorage(capacity, energyTransmitterBE);
+                } else {
+                    throw new IllegalStateException("Cannot attach energy handler item to a non-EnergyTransmitter.");
                 }
             }).build());
     public static final Supplier<AttachmentType<EnergyStorageNoReceive>> ENERGYSTORAGE_GENERATORS = ATTACHMENT_TYPES.register(
