@@ -48,7 +48,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1;
         poweredMachineData = new PoweredMachineContainerData(this);
-        tickSpeed = 100; //We use this to check how often to rescan the area
+        tickSpeed = 50; //We use this to check how often to rescan the area
     }
 
     public EnergyTransmitterBE(BlockPos pPos, BlockState pBlockState) {
@@ -109,6 +109,9 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     public void tickClient() {
     }
 
+    /**
+     * Get an UPDATED and ACTIVE list of transmitters that are currently available (The cache'd cap still exists) via getTransmitterEnergyHandler
+     */
     public Map<BlockPos, TransmitterEnergyStorage> getTransmitterEnergyStorages() {
         return transmitters.stream()
                 .map(pos -> new AbstractMap.SimpleEntry<>(pos, getTransmitterEnergyHandler(pos)))
@@ -116,6 +119,10 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+
+    /**
+     * Balance the energy across the entire network of transmitters that THIS transmitter can see/access. Other transmitters will handle balancing amongst their own network
+     */
     public void balanceEnergy() {
         if (transmitters.isEmpty() || transmitters.size() == 1) return;
         Map<BlockPos, TransmitterEnergyStorage> transmitterEnergyStorages = getTransmitterEnergyStorages();
@@ -145,6 +152,9 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         }
     }
 
+    /**
+     * Checks to see if the rest of the network is balanced, within a reasonable margin of error (1 if theres a remainder value)
+     */
     private boolean isAlreadyBalanced(Map<BlockPos, TransmitterEnergyStorage> transmitterEnergyStorages, int averageEnergy, int remainder) {
         int minEnergy = averageEnergy;
         int maxEnergy = averageEnergy + (remainder > 0 ? 1 : 0);
@@ -155,12 +165,28 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         });
     }
 
+    /**
+     * Get total energy stored across this transmitters entire network
+     */
     public int getTotalEnergyStored() {
         return getTransmitterEnergyStorages().values().stream()
                 .mapToInt(TransmitterEnergyStorage::getRealEnergyStored) // Convert each storage to an int representing its stored energy
                 .sum();
     }
 
+    /**
+     * Get total energy possible to store across this transmitters entire network
+     */
+    public int getTotalMaxEnergyStored() {
+        return getTransmitterEnergyStorages().values().stream()
+                .mapToInt(TransmitterEnergyStorage::getRealMaxEnergyStored) // Convert each storage to an int representing its stored energy
+                .sum();
+    }
+
+
+    /**
+     * Add Energy to the network - called by TransmitterEnergyStorage.receiveEnergy
+     */
     public int distributeEnergy(int energy) {
         int energyInserted = 0;
         for (TransmitterEnergyStorage transmitterEnergyStorage : getTransmitterEnergyStorages().values()) {
@@ -173,6 +199,9 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         return energyInserted;
     }
 
+    /**
+     * Extract Energy from the network - called by TransmitterEnergyStorage.extractEnergy
+     */
     public int extractEnergy(int energy) {
         int energyExtracted = 0;
         for (TransmitterEnergyStorage transmitterEnergyStorage : getTransmitterEnergyStorages().values()) {
@@ -183,12 +212,6 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         }
         //balanceEnergy();
         return energyExtracted;
-    }
-
-    public int getTotalMaxEnergyStored() {
-        return getTransmitterEnergyStorages().values().stream()
-                .mapToInt(TransmitterEnergyStorage::getRealMaxEnergyStored) // Convert each storage to an int representing its stored energy
-                .sum();
     }
 
     @Override
@@ -223,6 +246,9 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         ((ServerLevel) level).sendParticles(data, d0, d1, d2, 1, 0, 0, 0, 0);
     }
 
+    /**
+     * Allows filling the capacitor from another battery like device, or the Pocket Generator
+     */
     public void drainFromSlot() {
         ItemStack itemStack = getMachineHandler().getStackInSlot(0);
         if (itemStack.isEmpty()) return;
@@ -318,6 +344,9 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         return receiver.receiveEnergy(extractAmt, false);
     }
 
+    /**
+     * Discover nearby blocks that need charging - runs once every 2.5 seconds
+     */
     public void getBlocksToCharge() {
         transmitters.clear();
         blocksToCharge.clear();
