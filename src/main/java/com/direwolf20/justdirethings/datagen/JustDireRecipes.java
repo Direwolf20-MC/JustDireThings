@@ -51,8 +51,8 @@ public class JustDireRecipes extends RecipeProvider {
                 .pattern("brb")
                 .define('g', Registration.GooBlock_Tier2_ITEM.get())
                 .define('b', Items.ENDER_PEARL)
-                .define('r', Items.CHORUS_FRUIT)
-                .define('w', Items.SHULKER_SHELL)
+                .define('r', Items.END_STONE)
+                .define('w', Items.DRAGON_BREATH)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);

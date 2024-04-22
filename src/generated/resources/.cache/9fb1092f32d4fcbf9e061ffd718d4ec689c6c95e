@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-20T12:23:58.7013302	Recipes
+// 1.20.4	2024-04-22T14:35:10.0996896	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 9979895187547204ad77447846cd17a797fdd027 data/justdirethings/advancements/recipes/building_blocks/coal_t1_9x9.json
@@ -165,7 +165,7 @@ f76f61ef06edd8372831620ce4168c11859cd25c data/justdirethings/recipes/ferricore_s
 7d18fed94af42dc9eb3f6d0c9b3fadbb73c414f8 data/justdirethings/recipes/generatort1_nbtclear.json
 291d1d5894c21e8f05454c13674e98e249af83c1 data/justdirethings/recipes/gooblock_tier1.json
 e5917a0e540128bfbb34b7c27c9bbefcb791b043 data/justdirethings/recipes/gooblock_tier2.json
-bf1de03eb5942cb062164314552b2272f780b991 data/justdirethings/recipes/gooblock_tier3.json
+3bf3404a4cd6cd2880d547f5032ea6d441834431 data/justdirethings/recipes/gooblock_tier3.json
 21eb4b955ae6240c19471a4f660fcdca91ff0c51 data/justdirethings/recipes/gooblock_tier4.json
 9481eec83dfa2d11a9ecb70c3111a879f2a674b9 data/justdirethings/recipes/itemcollector.json
 88fdfdc8b6cac0b0b3eb86ba67c266616bec45e9 data/justdirethings/recipes/itemcollector_nbtclear.json
