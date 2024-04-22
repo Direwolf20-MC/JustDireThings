@@ -1,9 +1,6 @@
 package com.direwolf20.justdirethings.common.items.tools.basetools;
 
-import com.direwolf20.justdirethings.common.items.interfaces.Ability;
-import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
-import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -35,7 +32,7 @@ import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
-public class BaseSword extends SwordItem implements ToggleableTool {
+public class BaseSword extends SwordItem implements ToggleableTool, LeftClickableTool {
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 

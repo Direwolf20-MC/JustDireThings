@@ -116,7 +116,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 sliders.put(button, slider);
                 counter++;
             }
-            if (button != null && tool.getItem() instanceof LeftClickableTool) {
+            if (button != null && tool.getItem() instanceof LeftClickableTool && toolAbility.isBindable()) {
                 int currentValue = LeftClickableTool.getBindingMode(tool, toolAbility);
                 ToggleButton toggleButton = ToggleButtonFactory.LEFTRIGHTONLYCLICKBUTTON(buttonsStartX + 145, buttonsStartY - 18, currentValue, (clicked) -> {
                     LeftClickableTool.Binding binding = bindingMap.get(((ToggleButton) clicked));

@@ -66,6 +66,7 @@ public enum Ability {
     final ResourceLocation iconLocation;
     final int durabilityCost;
     final int feCost;
+    final boolean bindable;
     UseType useType;
     // Dynamic parameter map
     private static final Map<Ability, AbilityParams> dynamicParams = new EnumMap<>(Ability.class);
@@ -73,23 +74,28 @@ public enum Ability {
     public UseOnAbilityAction useOnAction;  // Additional functional interface for use-on action
 
 
-    Ability(SettingType settingType, int durabilityCost, int feCost) {
+    Ability(SettingType settingType, int durabilityCost, int feCost, boolean bindable) {
         this.name = this.name().toLowerCase(Locale.ROOT);
         this.settingType = settingType;
         this.localization = "justdirethings.ability." + name;
         this.iconLocation = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/" + name + ".png");
         this.durabilityCost = durabilityCost;
         this.feCost = feCost;
+        this.bindable = bindable;
+    }
+
+    Ability(SettingType settingType, int durabilityCost, int feCost) {
+        this(settingType, durabilityCost, feCost, false);
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, AbilityAction action) {
-        this(settingType, durabilityCost, feCost);
+        this(settingType, durabilityCost, feCost, true);
         this.action = action;
         this.useType = useType;
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, UseOnAbilityAction useOnAction) {
-        this(settingType, durabilityCost, feCost);
+        this(settingType, durabilityCost, feCost, true);
         this.useOnAction = useOnAction;
         this.useType = useType;
     }
@@ -121,6 +127,12 @@ public enum Ability {
     public int getFeCost() {
         return feCost;
     }
+
+
+    public boolean isBindable() {
+        return bindable;
+    }
+
 
     @FunctionalInterface
     public interface AbilityAction {

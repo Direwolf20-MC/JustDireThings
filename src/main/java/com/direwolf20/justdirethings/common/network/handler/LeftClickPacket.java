@@ -9,31 +9,20 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+
+import static com.direwolf20.justdirethings.util.MiscTools.getHitResult;
 
 public class LeftClickPacket {
     public static final LeftClickPacket INSTANCE = new LeftClickPacket();
 
     public static LeftClickPacket get() {
         return INSTANCE;
-    }
-
-    //Thanks Soaryn!
-    @NotNull
-    static BlockHitResult getHitResult(Player player) {
-        var playerLook = new Vec3(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
-        var lookVec = player.getViewVector(1.0F);
-        var reach = player.getBlockReach();
-        var endLook = playerLook.add(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
-        BlockHitResult hitResult = player.level().clip(new ClipContext(playerLook, endLook, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
-        return hitResult;
     }
 
     public void handle(final LeftClickPayload payload, final PlayPayloadContext context) {
