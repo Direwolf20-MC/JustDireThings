@@ -14,16 +14,16 @@ import java.util.Map;
 public enum Ability {
     //Tier 1
     MOBSCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, //TODO Configs
-            AbilityMethods::scanForMobScanner),
+            AbilityMethods::scanForMobScanner, false),
     OREMINER(SettingType.TOGGLE, 1, 50),
     ORESCANNER(SettingType.TOGGLE, 10, 500, UseType.USE,
-            AbilityMethods::scanForOreScanner),
+            AbilityMethods::scanForOreScanner, false),
     LAWNMOWER(SettingType.TOGGLE, 1, 50, UseType.USE,
-            AbilityMethods::lawnmower),
+            AbilityMethods::lawnmower, false),
     SKYSWEEPER(SettingType.TOGGLE, 1, 50),
     TREEFELLER(SettingType.TOGGLE, 1, 50),
     LEAFBREAKER(SettingType.TOGGLE, 1, 50, UseType.USE_ON,
-            AbilityMethods::leafbreaker),
+            AbilityMethods::leafbreaker, false),
 
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50),
@@ -31,23 +31,23 @@ public enum Ability {
     HAMMER(SettingType.CYCLE, 1, 50),
     LAVAREPAIR(SettingType.TOGGLE, 0, 0),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500, UseType.USE,
-            AbilityMethods::cauterizeWounds),
+            AbilityMethods::cauterizeWounds, false),
     AIRBURST(SettingType.SLIDER, 1, 250, UseType.USE,
-            AbilityMethods::airBurst),
+            AbilityMethods::airBurst, false),
 
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100),
     VOIDSHIFT(SettingType.SLIDER, 1, 50, UseType.USE,
-            AbilityMethods::voidShift), //FE Per block traveled
+            AbilityMethods::voidShift, true), //FE Per block traveled
 
     //Tier 4
     OREXRAY(SettingType.TOGGLE, 100, 5000, UseType.USE,
-            AbilityMethods::scanForOreXRAY),
+            AbilityMethods::scanForOreXRAY, false),
     GLOWING(SettingType.TOGGLE, 100, 5000, UseType.USE,
-            AbilityMethods::glowing),
+            AbilityMethods::glowing, false),
     INSTABREAK(SettingType.TOGGLE, 2, 250),
     ECLIPSEGATE(SettingType.TOGGLE, 1, 250, UseType.USE_ON,
-            AbilityMethods::eclipseGate); //FE Per block Removed
+            AbilityMethods::eclipseGate, false); //FE Per block Removed
 
     public enum SettingType {
         TOGGLE,
@@ -67,6 +67,7 @@ public enum Ability {
     final int durabilityCost;
     final int feCost;
     final boolean bindable;
+    final boolean renderButton;
     UseType useType;
     // Dynamic parameter map
     private static final Map<Ability, AbilityParams> dynamicParams = new EnumMap<>(Ability.class);
@@ -74,7 +75,7 @@ public enum Ability {
     public UseOnAbilityAction useOnAction;  // Additional functional interface for use-on action
 
 
-    Ability(SettingType settingType, int durabilityCost, int feCost, boolean bindable) {
+    Ability(SettingType settingType, int durabilityCost, int feCost, boolean bindable, boolean renderButton) {
         this.name = this.name().toLowerCase(Locale.ROOT);
         this.settingType = settingType;
         this.localization = "justdirethings.ability." + name;
@@ -82,20 +83,21 @@ public enum Ability {
         this.durabilityCost = durabilityCost;
         this.feCost = feCost;
         this.bindable = bindable;
+        this.renderButton = renderButton;
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost) {
-        this(settingType, durabilityCost, feCost, false);
+        this(settingType, durabilityCost, feCost, false, false);
     }
 
-    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, AbilityAction action) {
-        this(settingType, durabilityCost, feCost, true);
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, AbilityAction action, boolean renderButton) {
+        this(settingType, durabilityCost, feCost, true, renderButton);
         this.action = action;
         this.useType = useType;
     }
 
-    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, UseOnAbilityAction useOnAction) {
-        this(settingType, durabilityCost, feCost, true);
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, UseOnAbilityAction useOnAction, boolean renderButton) {
+        this(settingType, durabilityCost, feCost, true, renderButton);
         this.useOnAction = useOnAction;
         this.useType = useType;
     }
@@ -128,11 +130,13 @@ public enum Ability {
         return feCost;
     }
 
-
     public boolean isBindable() {
         return bindable;
     }
 
+    public boolean hasRenderButton() {
+        return renderButton;
+    }
 
     @FunctionalInterface
     public interface AbilityAction {

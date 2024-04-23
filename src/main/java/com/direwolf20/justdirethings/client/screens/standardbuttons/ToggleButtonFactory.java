@@ -266,11 +266,19 @@ public class ToggleButtonFactory {
     }
 
     /** Bind Hotkey button **/
-    private static final ResourceLocation BIND_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
+    private static final ResourceLocation BIND_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-hold.png");
     private static final Component BIND_LOCALIZATION = Component.translatable("justdirethings.screen.setbinding");
 
     public static GrayscaleButton KEYBIND_BUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
         return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, BIND_BUTTON, BIND_LOCALIZATION, startingValue, onPress);
+    }
+
+    /** Hide Render button **/
+    private static final ResourceLocation HIDE_RENDER_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
+    private static final Component HIDE_RENDER_LOCALIZATION = Component.translatable("justdirethings.screen.showrender");
+
+    public static GrayscaleButton HIDE_RENDER_ABILITY_BUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HIDE_RENDER_BUTTON, HIDE_RENDER_LOCALIZATION, startingValue, onPress);
     }
 
 }
