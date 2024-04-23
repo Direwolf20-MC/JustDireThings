@@ -224,9 +224,6 @@ public class Registration {
         ITEMS.addAlias(new ResourceLocation(MODID, "pocket_generator_t4"), new ResourceLocation(MODID, "pocket_generator"));
     }
 
-    //public static final DeferredHolder<Item, PocketGeneratorT2> Pocket_GeneratorT2 = ITEMS.register("pocket_generator_t2", PocketGeneratorT2::new);
-    //public static final DeferredHolder<Item, PocketGeneratorT3> Pocket_GeneratorT3 = ITEMS.register("pocket_generator_t3", PocketGeneratorT3::new);
-    //public static final DeferredHolder<Item, PocketGeneratorT4> Pocket_GeneratorT4 = ITEMS.register("pocket_generator_t4", PocketGeneratorT4::new);
     public static final DeferredHolder<Item, FerricoreWrench> FerricoreWrench = ITEMS.register("ferricore_wrench", FerricoreWrench::new);
     public static final DeferredHolder<Item, TotemOfDeathRecall> TotemOfDeathRecall = ITEMS.register("totem_of_death_recall", TotemOfDeathRecall::new);
     public static final DeferredHolder<Item, BlazejetWand> BlazejetWand = ITEMS.register("blazejet_wand", BlazejetWand::new);
