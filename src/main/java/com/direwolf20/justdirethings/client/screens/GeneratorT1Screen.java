@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -105,19 +106,22 @@ public class GeneratorT1Screen extends BaseMachineScreen<GeneratorT1Container> {
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
             ItemStack fuelStack = this.hoveredSlot.getItem();
-            int fuelBurnMultiplier = 1;
-            if (fuelStack.getItem() instanceof Coal_T1 direCoal) {
-                fuelBurnMultiplier = direCoal.getBurnSpeedMultiplier();
-            } else if (fuelStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CoalBlock_T1 coalBlock) {
-                fuelBurnMultiplier = coalBlock.getBurnSpeedMultiplier();
-            } else if (fuelStack.getItem() instanceof FuelCanister fuelCanister) {
-                fuelBurnMultiplier = FuelCanister.getBurnSpeedMultiplier(fuelStack);
+            int burnTime = fuelStack.getBurnTime(RecipeType.SMELTING);
+            if (burnTime > 0) {
+                int fuelBurnMultiplier = 1;
+                if (fuelStack.getItem() instanceof Coal_T1 direCoal) {
+                    fuelBurnMultiplier = direCoal.getBurnSpeedMultiplier();
+                } else if (fuelStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CoalBlock_T1 coalBlock) {
+                    fuelBurnMultiplier = coalBlock.getBurnSpeedMultiplier();
+                } else if (fuelStack.getItem() instanceof FuelCanister) {
+                    fuelBurnMultiplier = FuelCanister.getBurnSpeedMultiplier(fuelStack);
+                }
+                List<Component> tooltip = this.getTooltipFromContainerItem(fuelStack);
+                tooltip.add(Component.translatable("justdirethings.screen.burnspeedmultiplier", fuelBurnMultiplier).withStyle(ChatFormatting.RED));
+                pGuiGraphics.renderTooltip(this.font, tooltip, fuelStack.getTooltipImage(), fuelStack, pX, pY);
+                return;
             }
-            List<Component> tooltip = this.getTooltipFromContainerItem(fuelStack);
-            tooltip.add(Component.translatable("justdirethings.screen.burnspeedmultiplier", fuelBurnMultiplier).withStyle(ChatFormatting.RED));
-            pGuiGraphics.renderTooltip(this.font, tooltip, fuelStack.getTooltipImage(), fuelStack, pX, pY);
-        } else {
-            super.renderTooltip(pGuiGraphics, pX, pY);
         }
+        super.renderTooltip(pGuiGraphics, pX, pY);
     }
 }

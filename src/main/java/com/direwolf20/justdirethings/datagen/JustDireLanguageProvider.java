@@ -64,9 +64,6 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
-        add(Registration.Pocket_GeneratorT2.get(), "Blazing Pocket Generator");
-        add(Registration.Pocket_GeneratorT3.get(), "Celestial Pocket Generator");
-        add(Registration.Pocket_GeneratorT4.get(), "Eclipse Pocket Generator");
         add(Registration.TotemOfDeathRecall.get(), "Totem of Death Recall");
         add(Registration.BlazejetWand.get(), "Blazejet Wand");
         add(Registration.VoidshiftWand.get(), "Voidshift Wand");

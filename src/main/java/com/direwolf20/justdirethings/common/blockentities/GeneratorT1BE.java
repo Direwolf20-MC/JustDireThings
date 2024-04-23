@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.HashMap;
@@ -159,7 +158,7 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
         if (fuelStack.isEmpty())
             return; //Stop if we have no fuel! The slot only accepts burnables, so this should be a good enough check
         int oldMultiplier = this.fuelBurnMultiplier;
-        int burnTime = CommonHooks.getBurnTime(fuelStack, RecipeType.SMELTING);
+        int burnTime = fuelStack.getBurnTime(RecipeType.SMELTING);
         if (burnTime <= 0) return; //Should be impossible, but lets be sure!
         if (fuelStack.getItem() instanceof Coal_T1 direCoal) {
             this.fuelBurnMultiplier = direCoal.getBurnSpeedMultiplier();

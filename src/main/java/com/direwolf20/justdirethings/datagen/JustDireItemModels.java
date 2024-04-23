@@ -87,10 +87,6 @@ public class JustDireItemModels extends ItemModelProvider {
 
         //Generators
         registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
-        registerEnabledTextureItem(Registration.Pocket_GeneratorT2.getId().getPath());
-        registerEnabledTextureItem(Registration.Pocket_GeneratorT3.getId().getPath());
-        registerEnabledTextureItem(Registration.Pocket_GeneratorT4.getId().getPath());
-
     }
 
     public void registerTools() {

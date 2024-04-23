@@ -1,12 +1,16 @@
 package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
+import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
+import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.locale.Language;
@@ -15,11 +19,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGeneratorContainer> {
     private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/pocketgenerator.png");
@@ -41,17 +48,42 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         this.renderTooltip(guiGraphics, mouseX, mouseY);
         if (mouseX > (leftPos + 7) && mouseX < (leftPos + 7) + 18 && mouseY > (topPos + 7) && mouseY < (topPos + 7) + 73) {
             int counter = NBTHelpers.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
+            int feBurnPerTick = 0;
+            if (pocketGenerator.getItem() instanceof PocketGenerator pocketGeneratorItem) {
+                feBurnPerTick = pocketGeneratorItem.getFePerFuelTick() * pocketGeneratorItem.getBurnSpeedMultiplier(pocketGenerator);
+            }
             guiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
                     Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(energyStorage.getEnergyStored()), MagicHelpers.withSuffix(energyStorage.getMaxEnergyStored())),
                     counter <= 0 ?
                             Component.translatable("justdirethings.screen.no_fuel") :
-                            Component.translatable("justdirethings.screen.burn_time", MagicHelpers.ticksInSeconds(counter))
+                            Component.translatable("justdirethings.screen.burn_time", MagicHelpers.ticksInSeconds(counter)),
+                    counter > 0 ?
+                            Component.translatable("justdirethings.screen.fepertick", MagicHelpers.formatted(feBurnPerTick)) :
+                            Component.translatable("justdirethings.screen.fepertick", MagicHelpers.formatted(0))
             )), mouseX, mouseY);
         }
     }
 
     @Override
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+            ItemStack fuelStack = this.hoveredSlot.getItem();
+            int burnTime = fuelStack.getBurnTime(RecipeType.SMELTING);
+            if (burnTime > 0) {
+                int fuelBurnMultiplier = 1;
+                if (fuelStack.getItem() instanceof Coal_T1 direCoal) {
+                    fuelBurnMultiplier = direCoal.getBurnSpeedMultiplier();
+                } else if (fuelStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CoalBlock_T1 coalBlock) {
+                    fuelBurnMultiplier = coalBlock.getBurnSpeedMultiplier();
+                } else if (fuelStack.getItem() instanceof FuelCanister) {
+                    fuelBurnMultiplier = FuelCanister.getBurnSpeedMultiplier(fuelStack);
+                }
+                List<Component> tooltip = this.getTooltipFromContainerItem(fuelStack);
+                tooltip.add(Component.translatable("justdirethings.screen.burnspeedmultiplier", fuelBurnMultiplier).withStyle(ChatFormatting.RED));
+                pGuiGraphics.renderTooltip(this.font, tooltip, fuelStack.getTooltipImage(), fuelStack, pX, pY);
+                return;
+            }
+        }
         super.renderTooltip(pGuiGraphics, pX, pY);
     }
 

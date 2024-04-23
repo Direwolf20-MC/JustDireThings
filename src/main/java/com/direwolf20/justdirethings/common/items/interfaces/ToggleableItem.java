@@ -3,12 +3,12 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-import static com.direwolf20.justdirethings.util.NBTHelpers.getBoolean;
+import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getSetting;
 import static com.direwolf20.justdirethings.util.NBTHelpers.setBoolean;
 
 public interface ToggleableItem {
     default boolean getEnabled(ItemStack stack) {
-        return getBoolean(stack, "enabled");
+        return getSetting(stack, "enabled");
     }
 
     default boolean setEnabled(ItemStack stack, boolean enabled) {
