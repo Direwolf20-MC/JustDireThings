@@ -82,7 +82,6 @@ public class PlayerEvents {
         float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) (i + 1);
         int j = (int) (f * 10.0F);
         for (BlockPos blockPos : breakBlockPositions) {
-            System.out.println(generatePosHash(blockPos));
             if (blockPos.equals(pPos)) continue; //Let the vanilla mechanics handle the block we're hitting
             if (level.isClientSide)
                 level.destroyBlockProgress(player.getId() + generatePosHash(blockPos), blockPos, j);
