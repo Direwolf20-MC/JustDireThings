@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -25,7 +24,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = JustDireThings.MODID)
 public class PlayerEvents {
     private static BlockPos destroyPos = BlockPos.ZERO;
     private static int gameTicksMining = 0;
@@ -62,7 +61,7 @@ public class PlayerEvents {
                 destroyPos = blockPos;
             }
         }
-        if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.ABORT) { //Server Only
+        if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.STOP || event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.ABORT) { //Server Only
             cancelBreaks(level, blockState, blockPos, player, toggleableTool, itemStack);
         }
         if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.CLIENT_HOLD) { //Client Only

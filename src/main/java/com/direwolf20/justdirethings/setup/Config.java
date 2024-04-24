@@ -102,13 +102,13 @@ public class Config {
     private static void pocketGeneratorConfig() {
         COMMON_BUILDER.comment("Pocket Generator").push(CATEGORY_POCKET_GENERATOR);
         POCKET_GENERATOR_FE_PER_FUEL_TICK = COMMON_BUILDER.comment("The amount of Forge Energy created per burn tick of fuel. Coal has 1600 burn ticks. Sticks have 100 burn ticks.")
-                .defineInRange("pocket_generator_fe_per_fuel_tick", 15, 1, Integer.MAX_VALUE);
+                .defineInRange("pocket_gen_fe_per_fuel_tick", 15, 1, Integer.MAX_VALUE);
         POCKET_GENERATOR_BURN_SPEED_MULTIPLIER = COMMON_BUILDER.comment("The multiplier for the burn speed, making the generator run faster. Coal is 1600 ticks to burn, if you set this to 10, it will burn in 160 ticks")
-                .defineInRange("pocket_generator_burn_speed_multiplier", 4, 1, 1000);
+                .defineInRange("pocket_gen_burn_speed_multiplier", 4, 1, 1000);
         POCKET_GENERATOR_MAX_FE = COMMON_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
-                .defineInRange("pocket_generator_max_fe", 1000000, 1, Integer.MAX_VALUE);
+                .defineInRange("pocket_gen_max_fe", 1000000, 1, Integer.MAX_VALUE);
         POCKET_GENERATOR_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator charges other items at")
-                .defineInRange("pocket_generator_fe_per_tick", 5000, 1, Integer.MAX_VALUE);
+                .defineInRange("pocket_gen_fe_per_tick", 5000, 1, Integer.MAX_VALUE);
         COMMON_BUILDER.pop();
     }
 }

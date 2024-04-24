@@ -55,6 +55,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level world, @NotNull Entity entity, int itemSlot, boolean isSelected) {
+        if (world.isClientSide) return;
         if (entity instanceof Player player && itemStack.getItem() instanceof ToggleableItem toggleableItem && toggleableItem.getEnabled(itemStack)) {
             IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
