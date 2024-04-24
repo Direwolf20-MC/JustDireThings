@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-23T14:21:09.931355	Recipes
+// 1.20.4	2024-04-24T10:51:30.3033917	Recipes
 e41f89c9d12c3dd4b857ff9a0b504d4747c745e5 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 ebbae61754540f8117798e667e63d6e6b2305a22 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 9979895187547204ad77447846cd17a797fdd027 data/justdirethings/advancements/recipes/building_blocks/coal_t1_9x9.json
@@ -42,6 +42,7 @@ c7c498c037e767f71afb0a73f88953060fafdfa0 data/justdirethings/advancements/recipe
 5a38ab9c6324cb4d0d255cc575eb0ae7144edda7 data/justdirethings/advancements/recipes/misc/coalblock_t2_9x9.json
 034cd6b8655d56491c61d805061f2b6ace2e1692 data/justdirethings/advancements/recipes/misc/coalblock_t3_9x9.json
 54ba1af5bc9cef0c335d638b75ebbc8642960674 data/justdirethings/advancements/recipes/misc/coalblock_t4_9x9.json
+505882594dd8d61f49925be387af5612330da2f4 data/justdirethings/advancements/recipes/misc/creaturecatcher.json
 e4a7cc15bcf0dbd573a9263e0d6e1cd25699f970 data/justdirethings/advancements/recipes/misc/droppert1.json
 e46bb1ae97757c4648f1897d7efa2144f37a6660 data/justdirethings/advancements/recipes/misc/droppert1_nbtclear.json
 34a177028a16c86b62e6ac8a4e21a15611a896d9 data/justdirethings/advancements/recipes/misc/droppert2.json
@@ -132,6 +133,7 @@ e890b451020b083a90fc79f62170b1058fccd3de data/justdirethings/recipes/coal_t1_9x9
 f4543f496df020ff227313ee5c580a5d1153f0a7 data/justdirethings/recipes/coal_t2_9x9.json
 373b93177143261ac52ac13d44eb97f50aab3b01 data/justdirethings/recipes/coal_t3_9x9.json
 07c2fc03352bfb1c686dce03f67ee045f6a4b4a6 data/justdirethings/recipes/coal_t4_9x9.json
+370814c99ad569fd81fb63eea4a944b14d4d8710 data/justdirethings/recipes/creaturecatcher.json
 6a5c580566822eee972f4f27f8062972be97570e data/justdirethings/recipes/droppert1.json
 7ac86f721929a93ff8f28ceb9d0a8ff02408d579 data/justdirethings/recipes/droppert1_nbtclear.json
 19c4165c9c96744f9aed85c8b662acda90a5e2b6 data/justdirethings/recipes/droppert2.json
