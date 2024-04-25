@@ -74,7 +74,7 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
                 fraction = (pEntity.getAnimationTicks() - interpolatedShrinkingTime) / (float) pEntity.getAnimationTicks();
                 originalPosition = new Vector3f(entityPosition);
             }
-            System.out.println(currentShrinkingTime + ":" + fraction);
+
             Vector3f interpolatedPosition = originalPosition.lerp(entityPosition, fraction);
 
             pPoseStack.translate(interpolatedPosition.x() - pEntity.getX(), interpolatedPosition.y() - pEntity.getY(), interpolatedPosition.z() - pEntity.getZ());
