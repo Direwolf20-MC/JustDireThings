@@ -61,24 +61,27 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
             // Calculate the interpolated position
             Vector3f entityPosition = new Vector3f((float) pEntity.getX(), (float) pEntity.getY() + (float) (pEntity.getBoundingBox().getYsize() / 2), (float) pEntity.getZ());
             Vector3f originalPosition;
-            float fraction;
+            float shrinkage; // Shrink Factor ranging from 0.0 being full-size, to 1.0 being shrunken to nothing
             int currentShrinkingTime = pEntity.renderTick;
             int lastShrinkingTime = pEntity.renderTick == 0 ? 0 : pEntity.renderTick - 1;
 
             float interpolatedShrinkingTime = Mth.lerp(pPartialTicks, lastShrinkingTime, currentShrinkingTime);
 
-            if (capturing) { //Capturing
-                fraction = interpolatedShrinkingTime / (float) pEntity.getAnimationTicks();
+            if (capturing) { // Capturing
+                shrinkage = interpolatedShrinkingTime / (float) pEntity.getAnimationTicks();
                 originalPosition = new Vector3f(pEntity.getMobPosition());
-            } else { //Releasing
-                fraction = (float) (pEntity.getAnimationTicks() - interpolatedShrinkingTime) / (float) pEntity.getAnimationTicks();
+            } else { // Releasing
+                shrinkage = (pEntity.getAnimationTicks() - interpolatedShrinkingTime) / (float) pEntity.getAnimationTicks();
                 originalPosition = new Vector3f(entityPosition);
             }
-            Vector3f interpolatedPosition = originalPosition.lerp(entityPosition, fraction);
+            // Flattens the shrinkage rate when near 0
+            shrinkage = shrinkage * shrinkage;
+
+            Vector3f interpolatedPosition = originalPosition.lerp(entityPosition, shrinkage);
 
             pPoseStack.translate(interpolatedPosition.x() - pEntity.getX(), interpolatedPosition.y() - pEntity.getY(), interpolatedPosition.z() - pEntity.getZ());
 
-            float scale = 1.0f - fraction;
+            float scale = 1.0f - shrinkage;
             pPoseStack.scale(scale, scale, scale);
 
             EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();

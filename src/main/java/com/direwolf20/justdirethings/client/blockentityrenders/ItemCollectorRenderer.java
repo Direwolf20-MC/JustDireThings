@@ -33,18 +33,11 @@ public class ItemCollectorRenderer extends AreaAffectingBER {
         float zeroSmall = 0.46875f;
         float oneBig = 0.5625f;
         float zeroBig = 0.4375f;
-        int ticks = 80;
-        float f1 = (float) Math.floorMod(gameTime, ticks) + partialTicks;
-        float lerp = f1 / ticks;
-        float zero;
-        float one;
-        if (f1 < ticks / 2f) {
-            zero = Mth.lerp(lerp, zeroSmall, zeroBig);
-            one = Mth.lerp(lerp, oneSmall, oneBig);
-        } else {
-            zero = Mth.lerp(lerp, zeroBig, zeroSmall);
-            one = Mth.lerp(lerp, oneBig, oneSmall);
-        }
+        int animationDuration = 80;
+        float animationTick = Math.floorMod(gameTime, animationDuration) + partialTicks;
+        float lerp = Mth.cos(animationTick / animationDuration * Mth.TWO_PI) * 0.25f + 0.25f;
+        float zero = Mth.lerp(lerp, zeroSmall, zeroBig);
+        float one = Mth.lerp(lerp, oneSmall, oneBig);
         float diff = one - zero;
         float f;
         switch (direction) {
