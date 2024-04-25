@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.common.items.CreatureCatcher;
+import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.PartEntity;
 import org.joml.Vector3f;
 
 public class CreatureCatcherEntity extends ThrowableItemProjectile {
@@ -126,7 +128,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         ItemStack itemStack = getItem();
         if (level().isClientSide || CreatureCatcher.hasEntity(itemStack)) return;
         Entity entity = pResult.getEntity();
-        if (entity instanceof Mob mob) {
+        if (entity instanceof Mob mob && canCapture(mob)) {
             this.entityData.set(HAS_HIT, true);
             this.entityData.set(CAPTURING, true);
             this.entityData.set(ENTITY_POSITION, new Vector3f((float) mob.position().x, (float) mob.position().y, (float) mob.position().z));
@@ -184,7 +186,6 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
     }
 
     protected ItemStack createItemStack(Mob entity) {
-        if (!entity.canChangeDimensions() || !entity.isAlive() || !canCapture(entity)) return ItemStack.EMPTY;
         CompoundTag tag = new CompoundTag();
         tag.putString("entityType", EntityType.getKey(entity.getType()).toString());
         CompoundTag entityData = new CompoundTag();
@@ -214,8 +215,15 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         return (Mob) entity;
     }
 
-    protected boolean canCapture(Mob entity) {
-        //Todo wither/dragons/tags?
+    protected boolean canCapture(Entity entity) {
+        if (!entity.isAlive())
+            return false;
+        if (entity.isMultipartEntity())
+            return false;
+        if (entity instanceof PartEntity<?>)
+            return false;
+        if (entity.getType().is(JustDireEntityTags.CREATURE_CATCHER_DENY))
+            return false;
         return true;
     }
 
