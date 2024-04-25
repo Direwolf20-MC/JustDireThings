@@ -49,9 +49,9 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
             Mob mob;
             boolean capturing = pEntity.isCapturing();
             if (!capturing)
-                mob = pEntity.getEntityFromItemStack(pEntity.getItem());
+                mob = pEntity.getEntityFromItemStack(pEntity.getItem(), pEntity.level());
             else
-                mob = pEntity.getEntityFromItemStack(returnStack);
+                mob = pEntity.getEntityFromItemStack(returnStack, pEntity.level());
             if (mob == null) return;
             mob.yBodyRot = pEntity.getBodyRot();
             mob.yBodyRotO = pEntity.getBodyRot();
@@ -62,7 +62,7 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
             Vector3f entityPosition = new Vector3f((float) pEntity.getX(), (float) pEntity.getY() + (float) (pEntity.getBoundingBox().getYsize() / 2), (float) pEntity.getZ());
             Vector3f originalPosition;
             float fraction;
-            int currentShrinkingTime = pEntity.renderTick;
+            int currentShrinkingTime = Math.min(pEntity.renderTick, pEntity.getAnimationTicks());
             int lastShrinkingTime = pEntity.renderTick == 0 ? 0 : pEntity.renderTick - 1;
 
             float interpolatedShrinkingTime = Mth.lerp(pPartialTicks, lastShrinkingTime, currentShrinkingTime);
@@ -71,9 +71,10 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
                 fraction = interpolatedShrinkingTime / (float) pEntity.getAnimationTicks();
                 originalPosition = new Vector3f(pEntity.getMobPosition());
             } else { //Releasing
-                fraction = (float) (pEntity.getAnimationTicks() - interpolatedShrinkingTime) / (float) pEntity.getAnimationTicks();
+                fraction = (pEntity.getAnimationTicks() - interpolatedShrinkingTime) / (float) pEntity.getAnimationTicks();
                 originalPosition = new Vector3f(entityPosition);
             }
+            System.out.println(currentShrinkingTime + ":" + fraction);
             Vector3f interpolatedPosition = originalPosition.lerp(entityPosition, fraction);
 
             pPoseStack.translate(interpolatedPosition.x() - pEntity.getX(), interpolatedPosition.y() - pEntity.getY(), interpolatedPosition.z() - pEntity.getZ());

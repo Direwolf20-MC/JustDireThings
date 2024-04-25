@@ -131,6 +131,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.bound-key", "Bound to: %s");
         add("justdirethings.bound-mouse", "Mouse Button: %s");
         add("justdirethings.boundside", " -Bound Side: ");
+        add("justdirethings.creature", "Creature: ");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");

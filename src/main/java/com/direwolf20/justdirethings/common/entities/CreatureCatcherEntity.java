@@ -105,7 +105,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
                 }
             }
             incrementShrinkTime();
-            if (shrinkingTime() >= getAnimationTicks()) {
+            if (shrinkingTime() > getAnimationTicks() + 1) {
                 if (isCapturing()) { //Capturing
                     this.level().addFreshEntity(createItemEntity(getReturnStack()));
                     this.remove(RemovalReason.DISCARDED);
@@ -196,19 +196,19 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
     }
 
     protected void releaseEntity(ItemStack itemStack) {
-        Entity entity = getEntityFromItemStack(itemStack);
+        Entity entity = getEntityFromItemStack(itemStack, this.level());
         Vec3 location = getPosition(0);
         entity.moveTo(location);
         itemStack.setTag(new CompoundTag());
         level().addFreshEntity(entity);
     }
 
-    public Mob getEntityFromItemStack(ItemStack itemStack) {
+    public static Mob getEntityFromItemStack(ItemStack itemStack, Level level) {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (tag.isEmpty() || !tag.contains("entityType")) return null;
         EntityType<?> type = EntityType.byString(tag.getString("entityType")).orElse(null);
         if (type == null) return null;
-        Entity entity = type.create(this.level());
+        Entity entity = type.create(level);
         if (!(entity instanceof Mob)) return null;
         entity.load(tag.getCompound("entityData"));
         return (Mob) entity;

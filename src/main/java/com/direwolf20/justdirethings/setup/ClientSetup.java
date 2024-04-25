@@ -26,6 +26,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -65,6 +66,11 @@ public class ClientSetup {
                             return toggleableItem.getEnabled(stack) ? 1.0f : 0.0f;
                     });
         }
+    }
+
+    @SubscribeEvent
+    public static void mrl(ModelEvent.RegisterAdditional e) {
+        e.register(new ResourceLocation(JustDireThings.MODID, "item/creaturecatcher_base"));
     }
 
     @SubscribeEvent

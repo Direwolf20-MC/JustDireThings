@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "justdirethings:item/creaturecatcher"
-  }
+  "parent": "minecraft:builtin/entity"
 }

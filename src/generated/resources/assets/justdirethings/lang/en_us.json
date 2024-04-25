@@ -112,6 +112,7 @@
   "justdirethings.boundside": " -Bound Side: ",
   "justdirethings.boundto": "Bound to: %s:%s",
   "justdirethings.boundto-missing": "Bound to (MISSING BLOCK): %s:%s",
+  "justdirethings.creature": "Creature: ",
   "justdirethings.disabled": "Disabled",
   "justdirethings.enabled": "Enabled",
   "justdirethings.festored": "Forge Energy: %s / %s",
