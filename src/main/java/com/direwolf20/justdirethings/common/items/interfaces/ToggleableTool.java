@@ -77,6 +77,18 @@ public interface ToggleableTool extends ToggleableItem {
         return abilityList;
     }
 
+    /**
+     * Used for toggling on and off via hotkey
+     */
+    default List<Ability> getAllPassiveAbilities() {
+        List<Ability> abilityList = new ArrayList<>();
+        for (Ability ability : Ability.values()) {
+            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK) && hasAbility(ability))
+                abilityList.add(ability);
+        }
+        return abilityList;
+    }
+
     default boolean canUseAbility(ItemStack itemStack, Ability toolAbility) {
         return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName());
     }
@@ -243,6 +255,13 @@ public interface ToggleableTool extends ToggleableItem {
             if (customBindAbilities.contains(ability)) {
                 if (ability.action != null) {
                     ability.action.execute(level, player, itemStack);
+                }
+            }
+        }
+        if (!level.isClientSide) {
+            for (Ability ability : getAllPassiveAbilities()) {
+                if (customBindAbilities.contains(ability)) {
+                    ToggleableTool.toggleSetting(itemStack, ability.getName());
                 }
             }
         }

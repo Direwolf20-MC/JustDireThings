@@ -59,6 +59,19 @@ public class EventKeyInput {
                     activateAbilities(itemStack, event.getKey(), toggleableTool, player, i, false);
                 }
             }
+            for (int i = mc.player.getInventory().items.size(); i < mc.player.getInventory().items.size() + mc.player.getInventory().armor.size(); i++) {
+                ItemStack itemStack = mc.player.getInventory().getItem(i);
+                if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.getItem() instanceof LeftClickableTool) {
+                    activateAbilities(itemStack, event.getKey(), toggleableTool, player, i, false);
+                }
+            }
+            for (int i = mc.player.getInventory().items.size() + mc.player.getInventory().armor.size(); i < mc.player.getInventory().items.size() + mc.player.getInventory().armor.size() + mc.player.getInventory().offhand.size(); i++) {
+                ItemStack itemStack = mc.player.getInventory().getItem(i);
+                if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.getItem() instanceof LeftClickableTool) {
+                    activateAbilities(itemStack, event.getKey(), toggleableTool, player, i, false);
+                }
+            }
+
         }
     }
 
