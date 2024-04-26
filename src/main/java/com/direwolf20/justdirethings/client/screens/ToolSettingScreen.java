@@ -118,14 +118,16 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 addRenderableWidget(button);
                 AbilityParams abilityParams = ((ToggleableTool) tool.getItem()).getAbilityParams(toolAbility);
                 int currentValue = ToggleableTool.getToolValue(tool, toolAbility.getName());
-                ExtendedSlider slider = new ExtendedSlider(buttonsStartX + 20, buttonsStartY - 18, 100, 15, Component.translatable(toolAbility.getLocalization()).append(": "), Component.empty(), abilityParams.minSlider, abilityParams.maxSlider, currentValue, true) {
-                    @Override
-                    protected void applyValue() {
-                        setSetting(toolAbility.getName(), this.getValueInt());
-                        super.applyValue();
-                    }
-                };
-                sliders.put(button, slider);
+                if (abilityParams.minSlider != abilityParams.maxSlider) {
+                    ExtendedSlider slider = new ExtendedSlider(buttonsStartX + 20, buttonsStartY - 18, 100, 15, Component.translatable(toolAbility.getLocalization()).append(": "), Component.empty(), abilityParams.minSlider, abilityParams.maxSlider, currentValue, true) {
+                        @Override
+                        protected void applyValue() {
+                            setSetting(toolAbility.getName(), this.getValueInt());
+                            super.applyValue();
+                        }
+                    };
+                    sliders.put(button, slider);
+                }
                 counter++;
             }
             if (button != null && tool.getItem() instanceof LeftClickableTool && toolAbility.isBindable()) {
