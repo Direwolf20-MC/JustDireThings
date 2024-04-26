@@ -261,8 +261,16 @@ public class ToggleButtonFactory {
             new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-sneak.png"), Component.translatable("justdirethings.screen.click-custom"))
     );
 
-    public static ToggleButton LEFTRIGHTONLYCLICKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+    public static ToggleButton LEFTRIGHTCUSTOMCLICKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, LEFT_RIGHT_ONLY_CLICK_TEXTURES, startingValue, onPress);
+    }
+
+    private static final List<TextureLocalization> CUSTOM_ONLY_CLICK_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-sneak.png"), Component.translatable("justdirethings.screen.click-custom"))
+    );
+
+    public static ToggleButton CUSTOMCLICKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, CUSTOM_ONLY_CLICK_TEXTURES, startingValue, onPress);
     }
 
     /** Bind Hotkey button **/

@@ -335,4 +335,13 @@ public class AbilityMethods {
                 pState.getBlock().popExperience(serverLevel, pPos, totalExp);
         }
     }
+
+    public static boolean runSpeed(Level level, Player player, ItemStack itemStack) {
+        if ((player.onGround() || player.getAbilities().flying) && player.zza > 0F && !player.isInWaterOrBubble()) {
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.RUNSPEED.getName()) / 10;
+            player.moveRelative(speed, new Vec3(0, 0, 1));
+        }
+        return false;
+    }
+
 }

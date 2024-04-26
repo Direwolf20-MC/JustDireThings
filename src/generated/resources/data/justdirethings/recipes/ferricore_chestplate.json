@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "f": {
+      "item": "justdirethings:ferricore_ingot"
+    }
+  },
+  "pattern": [
+    "f f",
+    "fff",
+    "fff"
+  ],
+  "result": {
+    "item": "justdirethings:ferricore_chestplate"
+  }
+}

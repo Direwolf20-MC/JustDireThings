@@ -1,16 +1,17 @@
 package com.direwolf20.justdirethings.common.items.armors.basearmors;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
@@ -20,17 +21,18 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class BaseLeggings extends ArmorItem implements ToggleableTool, LeftClickableTool {
-    public static final UUID WALKSPEEDUUID = UUID.fromString("dac96a09-4758-419d-aa1b-83a27d266484");
-    public static final UUID RUNSPEEDUUID = UUID.fromString("5863a2c2-bbc4-4baa-8e0f-15e2640e7f2f");
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 
@@ -68,15 +70,16 @@ public class BaseLeggings extends ArmorItem implements ToggleableTool, LeftClick
     }
 
     @Override
+    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int itemSlot, boolean isSelected) {
+        super.inventoryTick(itemStack, level, entity, itemSlot, isSelected);
+        if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.LEGS.getIndex() && !getPassiveTickAbilities(itemStack).isEmpty() && entity instanceof Player player) {
+            armorTick(level, player, itemStack);
+        }
+    }
+
+    @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> modifiers = super.getAttributeModifiers(slot, stack);
-        if (slot == EquipmentSlot.LEGS) {
-            Multimap<Attribute, AttributeModifier> modifiers2 = ArrayListMultimap.create(modifiers);
-            modifiers2.put(NeoForgeMod.STEP_HEIGHT.value(), new AttributeModifier(WALKSPEEDUUID, "JustDireStepAssist", 1.0, AttributeModifier.Operation.ADDITION));
-
-            modifiers2.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(RUNSPEEDUUID, "JustDireSpeed", 3f, AttributeModifier.Operation.MULTIPLY_TOTAL));
-            return modifiers2;
-        }
         if (!(stack.getItem() instanceof PoweredTool poweredTool))
             return modifiers;
 
@@ -118,9 +121,4 @@ public class BaseLeggings extends ArmorItem implements ToggleableTool, LeftClick
     private boolean canAcceptEnchantments(Enchantment enchantment) {
         return enchantment != Enchantments.MENDING;
     }
-
-    public float getAdjustedFOV(ItemStack itemStack) {
-        return 0.2f * 5f;
-    }
-
 }

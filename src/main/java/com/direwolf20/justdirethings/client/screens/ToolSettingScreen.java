@@ -51,6 +51,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected final Map<Button, ToggleButton> leftRightClickButtons = new HashMap<>();
     protected final Map<Button, GrayscaleButton> bindingButtons = new HashMap<>();
     protected final Map<Button, GrayscaleButton> hideRenderButtons = new HashMap<>();
+    protected final Map<Button, Ability> buttonToAbilityMap = new HashMap<>();
     protected Map<ToggleButton, LeftClickableTool.Binding> bindingMap = new HashMap<>();
     protected boolean bindingEnabled = false;
     protected Set<AbstractWidget> widgetsToRemove = new HashSet<>();
@@ -117,21 +118,37 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             }
             if (button != null && tool.getItem() instanceof LeftClickableTool && toolAbility.isBindable()) {
                 int currentValue = LeftClickableTool.getBindingMode(tool, toolAbility);
-                ToggleButton toggleButton = ToggleButtonFactory.LEFTRIGHTONLYCLICKBUTTON(buttonsStartX + 125, buttonsStartY - 18, currentValue, (clicked) -> {
-                    LeftClickableTool.Binding binding = bindingMap.get(((ToggleButton) clicked));
-                    if (binding == null)
-                        sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), -1, false);
-                    else
-                        sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), binding.keyCode, binding.isMouse);
-                    if (((ToggleButton) clicked).getTexturePosition() == 2) {
+                ToggleButton toggleButton;
+                if (toolAbility.getBindingType() == Ability.BindingType.LEFT_AND_CUSTOM) {
+                    toggleButton = ToggleButtonFactory.LEFTRIGHTCUSTOMCLICKBUTTON(buttonsStartX + 125, buttonsStartY - 18, currentValue, (clicked) -> {
+                        LeftClickableTool.Binding binding = bindingMap.get(((ToggleButton) clicked));
+                        if (binding == null)
+                            sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), -1, false);
+                        else
+                            sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), binding.keyCode, binding.isMouse);
+                        if (((ToggleButton) clicked).getTexturePosition() == 2) {
+                            if (!renderables.contains(bindingButtons.get(shownAbilityButton)))
+                                widgetsToAdd.add(bindingButtons.get(shownAbilityButton));
+                        } else {
+                            widgetsToRemove.add(bindingButtons.get(shownAbilityButton));
+                        }
+                        renderablesChanged = true;
+                    });
+                    leftRightClickButtons.put(button, toggleButton);
+                } else {
+                    toggleButton = ToggleButtonFactory.CUSTOMCLICKBUTTON(buttonsStartX + 125, buttonsStartY - 18, 0, (clicked) -> {
+                        LeftClickableTool.Binding binding = bindingMap.get(((ToggleButton) clicked));
+                        if (binding == null)
+                            sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), -1, false);
+                        else
+                            sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), binding.keyCode, binding.isMouse);
                         if (!renderables.contains(bindingButtons.get(shownAbilityButton)))
                             widgetsToAdd.add(bindingButtons.get(shownAbilityButton));
-                    } else {
-                        widgetsToRemove.add(bindingButtons.get(shownAbilityButton));
-                    }
-                    renderablesChanged = true;
-                });
-                leftRightClickButtons.put(button, toggleButton);
+
+                        renderablesChanged = true;
+                    });
+                    leftRightClickButtons.put(button, toggleButton);
+                }
 
                 GrayscaleButton bindingButton = ToggleButtonFactory.KEYBIND_BUTTON(buttonsStartX + 143, buttonsStartY - 18, false, (clicked) -> {
                     bindingEnabled = true;
@@ -148,6 +165,8 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 });
                 this.hideRenderButtons.put(button, hideRenderButton);
             }
+            if (button != null)
+                buttonToAbilityMap.put(button, toolAbility);
         }
     }
 
@@ -310,7 +329,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                     if (leftRightClickButtons.containsKey(shownAbilityButton)) {
                         widgetsToAdd.add(leftRightClickButtons.get(shownAbilityButton));
                     }
-                    if (bindingButtons.containsKey(shownAbilityButton) && leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 2) {
+                    if (bindingButtons.containsKey(shownAbilityButton) && (leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 2 || (leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 0 && buttonToAbilityMap.get(shownAbilityButton).getBindingType() == Ability.BindingType.CUSTOM_ONLY))) {
                         widgetsToAdd.add(bindingButtons.get(shownAbilityButton));
                     }
                     if (hideRenderButtons.containsKey(shownAbilityButton)) {

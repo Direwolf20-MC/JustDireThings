@@ -68,6 +68,15 @@ public interface ToggleableTool extends ToggleableItem {
         return abilityList;
     }
 
+    default List<Ability> getPassiveTickAbilities(ItemStack itemStack) {
+        List<Ability> abilityList = new ArrayList<>();
+        for (Ability ability : Ability.values()) {
+            if (ability.useType == Ability.UseType.PASSIVE_TICK && canUseAbility(itemStack, ability))
+                abilityList.add(ability);
+        }
+        return abilityList;
+    }
+
     default boolean canUseAbility(ItemStack itemStack, Ability toolAbility) {
         return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName());
     }
@@ -253,6 +262,15 @@ public interface ToggleableTool extends ToggleableItem {
                     ability.action.execute(level, player, itemStack);
                 }
             }
+        }
+        return anyRan;
+    }
+
+    default boolean armorTick(Level level, Player player, ItemStack itemStack) {
+        boolean anyRan = false;
+        for (Ability ability : getPassiveTickAbilities(itemStack)) {
+            if (ability.action.execute(level, player, itemStack))
+                anyRan = true;
         }
         return anyRan;
     }
