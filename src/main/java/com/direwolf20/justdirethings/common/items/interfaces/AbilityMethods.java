@@ -337,11 +337,32 @@ public class AbilityMethods {
     }
 
     public static boolean runSpeed(Level level, Player player, ItemStack itemStack) {
-        if ((player.onGround() || player.getAbilities().flying) && player.zza > 0F && !player.isInWaterOrBubble()) {
+        if (player.isSprinting() && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
             float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.RUNSPEED.getName()) / 10;
+            if (!player.onGround())
+                speed = speed / 4;
             player.moveRelative(speed, new Vec3(0, 0, 1));
         }
         return false;
     }
+
+    public static boolean walkSpeed(Level level, Player player, ItemStack itemStack) {
+        if (!player.isSprinting() && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.WALKSPEED.getName()) / 10;
+            if (!player.onGround())
+                speed = speed / 4;
+            player.moveRelative(speed, new Vec3(0, 0, 1));
+        }
+        return false;
+    }
+
+    public static boolean jumpBoost(Level level, Player player, ItemStack itemStack) {
+        if (!player.isInWaterOrBubble() && !player.isFallFlying()) {
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.JUMPBOOST.getName()) / 10;
+            player.moveRelative(speed, new Vec3(0, 1, 0));
+        }
+        return false;
+    }
+
 
 }

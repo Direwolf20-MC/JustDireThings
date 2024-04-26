@@ -71,7 +71,6 @@ public class BaseLeggings extends ArmorItem implements ToggleableTool, LeftClick
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        super.inventoryTick(itemStack, level, entity, itemSlot, isSelected);
         if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.LEGS.getIndex() && !getPassiveTickAbilities(itemStack).isEmpty() && entity instanceof Player player) {
             armorTick(level, player, itemStack);
         }

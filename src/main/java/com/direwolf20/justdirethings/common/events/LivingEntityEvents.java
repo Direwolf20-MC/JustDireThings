@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +19,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -26,6 +28,15 @@ import java.util.Iterator;
 
 
 public class LivingEntityEvents {
+
+    @SubscribeEvent
+    public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
+        if (e.getEntity() instanceof Player player) {
+            ItemStack boots = player.getItemBySlot(EquipmentSlot.FEET);
+            if (boots.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(boots, Ability.JUMPBOOST))
+                Ability.JUMPBOOST.action.execute(player.level(), player, boots);
+        }
+    }
 
     @SubscribeEvent
     public static void blockJoin(EntityJoinLevelEvent e) {
@@ -47,6 +58,15 @@ public class LivingEntityEvents {
             if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
                 if (toggleableTool.hasAbility(Ability.AIRBURST)) {
                     event.setDistance(0.0f);
+                    return;
+                }
+            }
+            heldItem = player.getItemBySlot(EquipmentSlot.FEET);
+            if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.canUseAbilityAndDurability(heldItem, Ability.JUMPBOOST)) {
+                    int jumpBoost = ToggleableTool.getToolValue(heldItem, Ability.JUMPBOOST.getName());
+                    event.setDistance(event.getDistance() - jumpBoost);
+                    return;
                 }
             }
         }
