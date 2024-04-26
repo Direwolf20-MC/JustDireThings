@@ -1,15 +1,18 @@
 package com.direwolf20.justdirethings.client.events;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseLeggings;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.network.data.LeftClickPayload;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -19,6 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -28,6 +32,24 @@ import java.util.Set;
 public class PlayerEvents {
     private static BlockPos destroyPos = BlockPos.ZERO;
     private static int gameTicksMining = 0;
+
+    @SubscribeEvent
+    public static void FixFOV(ComputeFovModifierEvent event) {
+        Player player = event.getPlayer();
+        //ItemStack legs = player.getItemBySlot(EquipmentSlot.LEGS);
+        float currentFOV = event.getFovModifier();
+        float removalFOV = 0;
+        if (player.getAttributes().hasModifier(Attributes.MOVEMENT_SPEED, BaseLeggings.RUNSPEEDUUID)) {
+            double baseValue = player.getAttributeBaseValue(Attributes.MOVEMENT_SPEED);
+            double currentValue = player.getAttributeValue(Attributes.MOVEMENT_SPEED);
+            double diff = currentValue - baseValue;
+            removalFOV = ((float) diff * 5) * Minecraft.getInstance().options.fovEffectScale().get().floatValue();
+            if (player.isSprinting())
+                removalFOV -= 0.15;
+            event.setNewFovModifier(currentFOV - removalFOV);
+        }
+        //System.out.println(currentFOV + ":" + removalFOV);
+    }
 
     @SubscribeEvent
     public static void LeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {

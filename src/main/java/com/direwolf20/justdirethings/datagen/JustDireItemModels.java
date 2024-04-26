@@ -90,6 +90,7 @@ public class JustDireItemModels extends ItemModelProvider {
 
         //Tool Items
         registerTools();
+        registerArmors();
 
         //Generators
         registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
@@ -98,6 +99,12 @@ public class JustDireItemModels extends ItemModelProvider {
     public void registerTools() {
         for (var tool : Registration.TOOLS.getEntries()) {
             registerEnabledTextureItem(tool.getId().getPath());
+        }
+    }
+
+    public void registerArmors() {
+        for (var armor : Registration.ARMORS.getEntries()) {
+            singleTexture(armor.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/" + armor.getId().getPath()));
         }
     }
 
