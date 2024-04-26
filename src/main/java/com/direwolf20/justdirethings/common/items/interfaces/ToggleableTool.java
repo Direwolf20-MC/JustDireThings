@@ -261,7 +261,11 @@ public interface ToggleableTool extends ToggleableItem {
         if (!level.isClientSide) {
             for (Ability ability : getAllPassiveAbilities()) {
                 if (customBindAbilities.contains(ability)) {
-                    ToggleableTool.toggleSetting(itemStack, ability.getName());
+                    if (ability.settingType == Ability.SettingType.CYCLE)
+                        ToggleableTool.cycleSetting(itemStack, ability.getName());
+                    else
+                        ToggleableTool.toggleSetting(itemStack, ability.getName());
+
                 }
             }
         }

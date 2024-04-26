@@ -15,30 +15,30 @@ public enum Ability {
     //Tier 1
     MOBSCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM, //TODO Configs
             AbilityMethods::scanForMobScanner, false),
-    OREMINER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE),
+    OREMINER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     ORESCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::scanForOreScanner, false),
     LAWNMOWER(SettingType.TOGGLE, 1, 50, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::lawnmower, false),
-    SKYSWEEPER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE),
-    TREEFELLER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE),
+    SKYSWEEPER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+    TREEFELLER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     LEAFBREAKER(SettingType.TOGGLE, 1, 50, UseType.USE_ON, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::leafbreaker, false),
     RUNSPEED(SettingType.SLIDER, 1, 5, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
             AbilityMethods::runSpeed, false),
 
     //Tier 2
-    SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE),
-    SMOKER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE),
-    HAMMER(SettingType.CYCLE, 1, 50, UseType.PASSIVE),
-    LAVAREPAIR(SettingType.TOGGLE, 0, 0, UseType.PASSIVE),
+    SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+    SMOKER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+    HAMMER(SettingType.CYCLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+    LAVAREPAIR(SettingType.TOGGLE, 0, 0, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::cauterizeWounds, false),
     AIRBURST(SettingType.SLIDER, 1, 250, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::airBurst, false),
 
     //Tier 3
-    DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE),
+    DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     VOIDSHIFT(SettingType.SLIDER, 1, 50, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::voidShift, true), //FE Per block traveled
 
@@ -47,7 +47,7 @@ public enum Ability {
             AbilityMethods::scanForOreXRAY, false),
     GLOWING(SettingType.TOGGLE, 100, 5000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::glowing, false),
-    INSTABREAK(SettingType.TOGGLE, 2, 250, UseType.PASSIVE),
+    INSTABREAK(SettingType.TOGGLE, 2, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     ECLIPSEGATE(SettingType.TOGGLE, 1, 250, UseType.USE_ON, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::eclipseGate, false); //FE Per block Removed
 
@@ -97,8 +97,8 @@ public enum Ability {
         this.useType = useType;
     }
 
-    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType) {
-        this(settingType, durabilityCost, feCost, useType, BindingType.NONE, false);
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, false);
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton) {
