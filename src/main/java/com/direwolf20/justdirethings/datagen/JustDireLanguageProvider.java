@@ -173,6 +173,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.STEPHEIGHT.getLocalization(), "Step Assist");
         add(Ability.JUMPBOOST.getLocalization(), "Jump Boost");
         add(Ability.MINDFOG.getLocalization(), "Mind Fog");
+        add(Ability.INVULNERABILITY.getLocalization(), "Invulnerability");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

@@ -32,6 +32,8 @@ public enum Ability {
     JUMPBOOST(SettingType.SLIDER, 1, 5, UseType.PASSIVE, BindingType.CUSTOM_ONLY,
             AbilityMethods::jumpBoost, false),
     MINDFOG(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+    INVULNERABILITY(SettingType.SLIDER, 100, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
+            AbilityMethods::invulnerability, false),
 
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
@@ -66,6 +68,7 @@ public enum Ability {
     public enum UseType {
         USE,
         USE_ON,
+        USE_COOLDOWN,
         PASSIVE,
         PASSIVE_TICK
     }

@@ -12,6 +12,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -59,10 +61,19 @@ public interface ToggleableTool extends ToggleableItem {
         return getAbilities().contains(ability);
     }
 
-    default List<Ability> getActiveAbilities(ItemStack itemStack, Ability.UseType useType) {
+    default List<Ability> getUseOnAbilities(ItemStack itemStack) {
         List<Ability> abilityList = new ArrayList<>();
-        for (Ability ability : Ability.values()) {
-            if (ability.useType == useType && canUseAbility(itemStack, ability))
+        for (Ability ability : getAbilities()) {
+            if (ability.useType == Ability.UseType.USE_ON && canUseAbility(itemStack, ability))
+                abilityList.add(ability);
+        }
+        return abilityList;
+    }
+
+    default List<Ability> getActiveAbilities(ItemStack itemStack) {
+        List<Ability> abilityList = new ArrayList<>();
+        for (Ability ability : getAbilities()) {
+            if ((ability.useType == Ability.UseType.USE || ability.useType == Ability.UseType.USE_COOLDOWN) && canUseAbility(itemStack, ability))
                 abilityList.add(ability);
         }
         return abilityList;
@@ -70,8 +81,17 @@ public interface ToggleableTool extends ToggleableItem {
 
     default List<Ability> getPassiveTickAbilities(ItemStack itemStack) {
         List<Ability> abilityList = new ArrayList<>();
-        for (Ability ability : Ability.values()) {
+        for (Ability ability : getAbilities()) {
             if (ability.useType == Ability.UseType.PASSIVE_TICK && canUseAbility(itemStack, ability))
+                abilityList.add(ability);
+        }
+        return abilityList;
+    }
+
+    default List<Ability> getCooldownAbilities() {
+        List<Ability> abilityList = new ArrayList<>();
+        for (Ability ability : getAbilities()) {
+            if (ability.useType == Ability.UseType.USE_COOLDOWN)
                 abilityList.add(ability);
         }
         return abilityList;
@@ -82,8 +102,8 @@ public interface ToggleableTool extends ToggleableItem {
      */
     default List<Ability> getAllPassiveAbilities() {
         List<Ability> abilityList = new ArrayList<>();
-        for (Ability ability : Ability.values()) {
-            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK) && hasAbility(ability))
+        for (Ability ability : getAbilities()) {
+            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK))
                 abilityList.add(ability);
         }
         return abilityList;
@@ -246,12 +266,84 @@ public interface ToggleableTool extends ToggleableItem {
         }
     }
 
+    static int getAnyCooldown(ItemStack itemStack, Ability ability) {
+        CompoundTag tag = itemStack.getOrCreateTag();
+        if (!tag.contains("cooldowns")) return -1;
+        ListTag cooldowns = tag.getList("cooldowns", Tag.TAG_COMPOUND);
+        for (int i = 0; i < cooldowns.size(); i++) {
+            if (cooldowns.getCompound(i).getString("ability").equals(ability.getName()))
+                return cooldowns.getCompound(i).getInt("cooldown");
+        }
+        return -1;
+    }
+
+    static int getCooldown(ItemStack itemStack, Ability ability, boolean active) {
+        CompoundTag tag = itemStack.getOrCreateTag();
+        if (!tag.contains("cooldowns")) return -1;
+        ListTag cooldowns = tag.getList("cooldowns", Tag.TAG_COMPOUND);
+        for (int i = 0; i < cooldowns.size(); i++) {
+            CompoundTag abilityTag = cooldowns.getCompound(i);
+            if (abilityTag.getString("ability").equals(ability.getName()) && abilityTag.getBoolean("active") == active) {
+                return abilityTag.getInt("cooldown");
+            }
+        }
+        return -1;
+    }
+
+    static void tickCooldowns(ItemStack itemStack) {
+        CompoundTag tag = itemStack.getOrCreateTag();
+        if (!tag.contains("cooldowns")) return;
+        Set<Integer> cooldownsToRemove = new HashSet<>();
+        ListTag cooldowns = tag.getList("cooldowns", Tag.TAG_COMPOUND);
+        for (int i = 0; i < cooldowns.size(); i++) {
+            CompoundTag compoundTag = cooldowns.getCompound(i);
+            int cooldown = compoundTag.getInt("cooldown");
+            boolean active = compoundTag.getBoolean("active");
+            cooldown = cooldown - 1;
+            if (cooldown == 0) {
+                if (!active)
+                    cooldownsToRemove.add(i);
+                else {
+                    Ability ability = Ability.valueOf(compoundTag.getString("ability").toUpperCase(Locale.ROOT));
+                    if (itemStack.getItem() instanceof ToggleableTool toggleableTool) {
+                        AbilityParams abilityParams = toggleableTool.getAbilityParams(ability);
+                        compoundTag.putInt("cooldown", abilityParams.cooldown);
+                        compoundTag.putBoolean("active", false);
+                    }
+                }
+            } else
+                compoundTag.putInt("cooldown", cooldown);
+        }
+        for (Integer value : cooldownsToRemove) {
+            cooldowns.remove(value.intValue());
+        }
+        if (cooldowns.size() == 0)
+            tag.remove("cooldowns");
+        else
+            tag.put("cooldowns", cooldowns);
+    }
+
+    static void addCooldown(ItemStack itemStack, Ability ability, int cooldown, boolean active) {
+        CompoundTag tag = itemStack.getOrCreateTag();
+        ListTag cooldowns;
+        if (tag.contains("cooldowns"))
+            cooldowns = tag.getList("cooldowns", Tag.TAG_COMPOUND);
+        else
+            cooldowns = new ListTag();
+        CompoundTag newTag = new CompoundTag();
+        newTag.putString("ability", ability.getName());
+        newTag.putInt("cooldown", cooldown);
+        newTag.putBoolean("active", active);
+        cooldowns.add(newTag);
+        tag.put("cooldowns", cooldowns);
+    }
+
     default boolean useAbility(Level level, Player player, ItemStack itemStack, int keyCode, boolean isMouse) {
         boolean anyRan = false;
         Set<Ability> customBindAbilities = new HashSet<>();
         if (itemStack.getItem() instanceof LeftClickableTool)
             customBindAbilities.addAll(LeftClickableTool.getCustomBindingList(itemStack, new LeftClickableTool.Binding(keyCode, isMouse)));
-        for (Ability ability : getActiveAbilities(itemStack, Ability.UseType.USE)) {
+        for (Ability ability : getActiveAbilities(itemStack)) {
             if (customBindAbilities.contains(ability)) {
                 if (ability.action != null) {
                     ability.action.execute(level, player, itemStack);
@@ -279,7 +371,7 @@ public interface ToggleableTool extends ToggleableItem {
         Set<Ability> leftClickAbilities = new HashSet<>();
         if (itemStack.getItem() instanceof LeftClickableTool)
             leftClickAbilities.addAll(LeftClickableTool.getLeftClickList(itemStack));
-        for (Ability ability : getActiveAbilities(itemStack, Ability.UseType.USE)) {
+        for (Ability ability : getActiveAbilities(itemStack)) {
             if ((rightClick && !leftClickAbilities.contains(ability)) || (!rightClick && leftClickAbilities.contains(ability))) {
                 if (ability.action != null) {
                     ability.action.execute(level, player, itemStack);
@@ -295,6 +387,7 @@ public interface ToggleableTool extends ToggleableItem {
             if (ability.action.execute(level, player, itemStack))
                 anyRan = true;
         }
+        tickCooldowns(itemStack);
         return anyRan;
     }
 
@@ -304,7 +397,7 @@ public interface ToggleableTool extends ToggleableItem {
         Set<Ability> customBindAbilities = new HashSet<>();
         if (itemStack.getItem() instanceof LeftClickableTool)
             customBindAbilities.addAll(LeftClickableTool.getCustomBindingList(itemStack, new LeftClickableTool.Binding(keyCode, isMouse)));
-        for (Ability ability : getActiveAbilities(itemStack, Ability.UseType.USE_ON)) {
+        for (Ability ability : getUseOnAbilities(itemStack)) {
             if (customBindAbilities.contains(ability)) {
                 if (ability.useOnAction != null) {
                     if (ability.useOnAction.execute(pContext))
@@ -322,7 +415,7 @@ public interface ToggleableTool extends ToggleableItem {
         Set<Ability> leftClickAbilities = new HashSet<>();
         if (itemStack.getItem() instanceof LeftClickableTool)
             leftClickAbilities.addAll(LeftClickableTool.getLeftClickList(itemStack));
-        for (Ability ability : getActiveAbilities(itemStack, Ability.UseType.USE_ON)) {
+        for (Ability ability : getUseOnAbilities(itemStack)) {
             if ((rightClick && !leftClickAbilities.contains(ability)) || (!rightClick && leftClickAbilities.contains(ability))) {
                 if (ability.useOnAction != null) {
                     if (ability.useOnAction.execute(pContext))

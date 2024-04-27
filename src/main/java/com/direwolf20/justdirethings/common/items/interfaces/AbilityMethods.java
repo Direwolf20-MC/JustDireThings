@@ -364,5 +364,14 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean invulnerability(Level level, Player player, ItemStack itemStack) {
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.INVULNERABILITY);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool) {
+            AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.INVULNERABILITY);
+            ToggleableTool.addCooldown(itemStack, Ability.INVULNERABILITY, abilityParams.activeCooldown, true);
+        }
+        return false;
+    }
 
 }

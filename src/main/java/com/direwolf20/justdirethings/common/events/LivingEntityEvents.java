@@ -10,6 +10,8 @@ import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,6 +29,20 @@ import java.util.Iterator;
 
 
 public class LivingEntityEvents {
+
+    @SubscribeEvent
+    public static void blockDamage(LivingDamageEvent e) {
+        LivingEntity target = e.getEntity();
+        if (target instanceof Player player) {
+            ItemStack chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
+            if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
+                int activeCooldown = ToggleableTool.getCooldown(chestplate, Ability.INVULNERABILITY, true);
+                if (activeCooldown == -1) return;
+                player.playNotifySound(SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                e.setCanceled(true);
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void changeTargets(LivingChangeTargetEvent e) {
