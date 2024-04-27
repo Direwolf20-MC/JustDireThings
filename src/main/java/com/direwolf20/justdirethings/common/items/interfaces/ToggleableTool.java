@@ -290,7 +290,7 @@ public interface ToggleableTool extends ToggleableItem {
         return -1;
     }
 
-    static void tickCooldowns(ItemStack itemStack) {
+    static void tickCooldowns(ItemStack itemStack, Player player) {
         CompoundTag tag = itemStack.getOrCreateTag();
         if (!tag.contains("cooldowns")) return;
         Set<Integer> cooldownsToRemove = new HashSet<>();
@@ -309,6 +309,7 @@ public interface ToggleableTool extends ToggleableItem {
                         AbilityParams abilityParams = toggleableTool.getAbilityParams(ability);
                         compoundTag.putInt("cooldown", abilityParams.cooldown);
                         compoundTag.putBoolean("active", false);
+                        player.playNotifySound(SoundEvents.CONDUIT_DEACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
                     }
                 }
             } else
@@ -316,6 +317,7 @@ public interface ToggleableTool extends ToggleableItem {
         }
         for (Integer value : cooldownsToRemove) {
             cooldowns.remove(value.intValue());
+            player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
         }
         if (cooldowns.size() == 0)
             tag.remove("cooldowns");
@@ -387,7 +389,7 @@ public interface ToggleableTool extends ToggleableItem {
             if (ability.action.execute(level, player, itemStack))
                 anyRan = true;
         }
-        tickCooldowns(itemStack);
+        tickCooldowns(itemStack, player);
         return anyRan;
     }
 

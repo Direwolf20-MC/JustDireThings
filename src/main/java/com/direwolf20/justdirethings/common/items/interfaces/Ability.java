@@ -32,7 +32,7 @@ public enum Ability {
     JUMPBOOST(SettingType.SLIDER, 1, 5, UseType.PASSIVE, BindingType.CUSTOM_ONLY,
             AbilityMethods::jumpBoost, false),
     MINDFOG(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
-    INVULNERABILITY(SettingType.SLIDER, 100, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
+    INVULNERABILITY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::invulnerability, false),
 
     //Tier 2

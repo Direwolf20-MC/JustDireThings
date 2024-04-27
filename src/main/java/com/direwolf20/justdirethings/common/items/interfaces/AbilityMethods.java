@@ -367,9 +367,11 @@ public class AbilityMethods {
     public static boolean invulnerability(Level level, Player player, ItemStack itemStack) {
         int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.INVULNERABILITY);
         if (currentCooldown != -1) return false;
-        if (itemStack.getItem() instanceof ToggleableTool toggleableTool) {
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.INVULNERABILITY)) {
             AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.INVULNERABILITY);
             ToggleableTool.addCooldown(itemStack, Ability.INVULNERABILITY, abilityParams.activeCooldown, true);
+            player.playNotifySound(SoundEvents.CONDUIT_ACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            Helpers.damageTool(itemStack, player, Ability.INVULNERABILITY);
         }
         return false;
     }
