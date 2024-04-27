@@ -12,15 +12,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
-import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -28,6 +27,21 @@ import java.util.Iterator;
 
 
 public class LivingEntityEvents {
+
+    @SubscribeEvent
+    public static void changeTargets(LivingChangeTargetEvent e) {
+        LivingEntity source = e.getEntity();
+        LivingEntity target = e.getOriginalTarget();
+        if (target instanceof Player player) {
+            ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
+            if (helmet.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(helmet, Ability.MINDFOG)) {
+                double distance = source.position().distanceTo(target.position());
+                double defaultRange = source.getAttributes().hasAttribute(Attributes.FOLLOW_RANGE) ? source.getAttribute(Attributes.FOLLOW_RANGE).getValue() : 16;
+                if (distance > (defaultRange / 2))
+                    e.setCanceled(true);
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {

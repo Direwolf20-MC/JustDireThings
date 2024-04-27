@@ -1,7 +1,6 @@
 package com.direwolf20.justdirethings.common.items.armors.basearmors;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -78,15 +77,14 @@ public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickabl
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> modifiers = super.getAttributeModifiers(slot, stack);
-        Multimap<Attribute, AttributeModifier> modifiers2 = ArrayListMultimap.create(modifiers);
         if (slot == EquipmentSlot.FEET) {
             if (canUseAbility(stack, Ability.STEPHEIGHT))
-                modifiers2.put(NeoForgeMod.STEP_HEIGHT.value(), stepHeight);
+                modifiers = Helpers.addAttributeToModifiers(modifiers, NeoForgeMod.STEP_HEIGHT.value(), stepHeight);
         }
         if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return modifiers2;
+            return modifiers;
 
-        return poweredTool.getPoweredAttributeModifiers(slot, stack, modifiers2);
+        return poweredTool.getPoweredAttributeModifiers(slot, stack, modifiers);
     }
 
     @Override

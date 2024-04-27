@@ -265,7 +265,7 @@ public interface ToggleableTool extends ToggleableItem {
                         ToggleableTool.cycleSetting(itemStack, ability.getName());
                     else
                         ToggleableTool.toggleSetting(itemStack, ability.getName());
-
+                    player.displayClientMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization()), ToggleableTool.getSetting(itemStack, ability.getName()) ? Component.translatable("justdirethings.enabled") : Component.translatable("justdirethings.disabled")), true);
                 }
             }
         }

@@ -138,6 +138,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.bound-mouse", "Mouse Button: %s");
         add("justdirethings.boundside", " -Bound Side: ");
         add("justdirethings.creature", "Creature: ");
+        add("justdirethings.ability", "Ability: %s - %s");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -171,6 +172,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.WALKSPEED.getLocalization(), "Walk Speed");
         add(Ability.STEPHEIGHT.getLocalization(), "Step Assist");
         add(Ability.JUMPBOOST.getLocalization(), "Jump Boost");
+        add(Ability.MINDFOG.getLocalization(), "Mind Fog");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
