@@ -347,7 +347,7 @@ public class AbilityMethods {
     }
 
     public static boolean walkSpeed(Level level, Player player, ItemStack itemStack) {
-        if (!player.isSprinting() && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
+        if (!player.isSprinting() && player.fallDistance <= 0 && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
             float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.WALKSPEED.getName()) / 10;
             if (!player.onGround())
                 speed = speed / 4;
@@ -358,7 +358,7 @@ public class AbilityMethods {
 
     public static boolean jumpBoost(Level level, Player player, ItemStack itemStack) {
         if (!player.isInWaterOrBubble() && !player.isFallFlying()) {
-            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.JUMPBOOST.getName()) / 10;
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.JUMPBOOST.getName()) / 7.5f;
             player.moveRelative(speed, new Vec3(0, 1, 0));
         }
         return false;

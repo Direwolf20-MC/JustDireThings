@@ -10,6 +10,6 @@ public class FerricoreBoots extends BaseBoots {
     public FerricoreBoots() {
         super(ArmorTiers.FERRICORE, new Item.Properties());
         registerAbility(Ability.STEPHEIGHT);
-        registerAbility(Ability.JUMPBOOST, new AbilityParams(1, 3, 1));
+        registerAbility(Ability.JUMPBOOST, new AbilityParams(1, 1, 1, 1));
     }
 }

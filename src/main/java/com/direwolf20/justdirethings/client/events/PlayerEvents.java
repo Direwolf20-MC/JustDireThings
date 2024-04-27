@@ -29,24 +29,6 @@ public class PlayerEvents {
     private static BlockPos destroyPos = BlockPos.ZERO;
     private static int gameTicksMining = 0;
 
-    /*@SubscribeEvent
-    public static void FixFOV(ComputeFovModifierEvent event) {
-        Player player = event.getPlayer();
-        //ItemStack legs = player.getItemBySlot(EquipmentSlot.LEGS);
-        float currentFOV = event.getFovModifier();
-        float removalFOV = 0;
-        if (player.getAttributes().hasModifier(Attributes.MOVEMENT_SPEED, BaseLeggings.RUNSPEEDUUID)) {
-            double baseValue = player.getAttributeBaseValue(Attributes.MOVEMENT_SPEED);
-            double currentValue = player.getAttributeValue(Attributes.MOVEMENT_SPEED);
-            double diff = currentValue - baseValue;
-            removalFOV = ((float) diff * 5) * Minecraft.getInstance().options.fovEffectScale().get().floatValue();
-            if (player.isSprinting())
-                removalFOV -= 0.15;
-            event.setNewFovModifier(currentFOV - removalFOV);
-        }
-        //System.out.println(currentFOV + ":" + removalFOV);
-    }*/
-
     @SubscribeEvent
     public static void LeftClickEmpty(PlayerInteractEvent.LeftClickEmpty event) {
         ItemStack itemStack = event.getItemStack();
