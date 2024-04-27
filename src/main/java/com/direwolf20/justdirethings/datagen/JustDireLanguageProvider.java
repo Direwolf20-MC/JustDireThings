@@ -64,13 +64,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
         add(Registration.Pocket_Generator.get(), "Pocket Generator");
-        add(Registration.Pocket_GeneratorT2.get(), "Blazing Pocket Generator");
-        add(Registration.Pocket_GeneratorT3.get(), "Celestial Pocket Generator");
-        add(Registration.Pocket_GeneratorT4.get(), "Eclipse Pocket Generator");
         add(Registration.TotemOfDeathRecall.get(), "Totem of Death Recall");
         add(Registration.BlazejetWand.get(), "Blazejet Wand");
         add(Registration.VoidshiftWand.get(), "Voidshift Wand");
         add(Registration.EclipsegateWand.get(), "Eclipsegate Wand");
+        add(Registration.CreatureCatcher.get(), "Creature Catcher");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -130,7 +128,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.bindfailed", "Binding Failed");
         add("justdirethings.bindremoved", "Binding Removed");
         add("justdirethings.unbound-screen", "Not Bound");
+        add("justdirethings.bound-key", "Bound to: %s");
+        add("justdirethings.bound-mouse", "Mouse Button: %s");
         add("justdirethings.boundside", " -Bound Side: ");
+        add("justdirethings.creature", "Creature: ");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -187,6 +188,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.tickspeed", "Speed (Ticks)");
         add("justdirethings.screen.click-right", "Right Click");
         add("justdirethings.screen.click-left", "Left Click");
+        add("justdirethings.screen.click-custom", "Custom Binding");
+        add("justdirethings.screen.setbinding", "Set Binding");
         add("justdirethings.screen.target-block", "Target Blocks");
         add("justdirethings.screen.target-noblock", "Ignore Blocks");
         add("justdirethings.screen.target-air", "Target Air");
@@ -209,6 +212,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.equals", "Equals");
         add("justdirethings.screen.dropcount", "Drop Amount");
         add("justdirethings.screen.showparticles", "Show Particles");
+        add("justdirethings.screen.showrender", "Show Render");
         add("justdirethings.screen.burnspeedmultiplier", "Burn Speed Multiplier: %s");
         add("justdirethings.screen.click-hold", "Hold Click");
         add("justdirethings.screen.click-hold-for", "Hold Click For (ticks)");

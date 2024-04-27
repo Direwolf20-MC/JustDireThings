@@ -8,11 +8,15 @@ import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBloc
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier2;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier3;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier4;
+import com.direwolf20.justdirethings.client.entityrenders.CreatureCatcherEntityRender;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
+import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.screens.*;
+import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
+import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -20,9 +24,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 @Mod.EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -33,6 +40,7 @@ public class ClientSetup {
         NeoForge.EVENT_BUS.register(RenderLevelLast.class);
         NeoForge.EVENT_BUS.register(EventKeyInput.class);
         NeoForge.EVENT_BUS.register(RenderHighlight.class);
+        NeoForge.EVENT_BUS.register(PlayerEvents.class);
 
         //Item Properties
         event.enqueueWork(() -> {
@@ -40,9 +48,6 @@ public class ClientSetup {
                 registerEnabledToolTextures(tool.get());
             }
             registerEnabledToolTextures(Registration.Pocket_Generator.get());
-            registerEnabledToolTextures(Registration.Pocket_GeneratorT2.get());
-            registerEnabledToolTextures(Registration.Pocket_GeneratorT3.get());
-            registerEnabledToolTextures(Registration.Pocket_GeneratorT4.get());
         });
     }
 
@@ -50,9 +55,22 @@ public class ClientSetup {
         if (tool instanceof ToggleableItem toggleableItem) {
             ItemProperties.register(tool,
                     new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
-                        return toggleableItem.getEnabled(stack) ? 1.0f : 0.0f;
+                        if (stack.getItem() instanceof PocketGenerator) {
+                            if (!toggleableItem.getEnabled(stack)) return 0.0f;
+                            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+                            if (energyStorage == null) return 0.0f;
+                            if (energyStorage.getEnergyStored() > 0) return 1.0f;
+                            if (!(NBTHelpers.getIntValue(stack, PocketGenerator.COUNTER) > 0)) return 0.0f;
+                            return 1.0f;
+                        } else
+                            return toggleableItem.getEnabled(stack) ? 1.0f : 0.0f;
                     });
         }
+    }
+
+    @SubscribeEvent
+    public static void mrl(ModelEvent.RegisterAdditional e) {
+        e.register(new ResourceLocation(JustDireThings.MODID, "item/creaturecatcher_base"));
     }
 
     @SubscribeEvent
@@ -94,5 +112,8 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.EnergyTransmitterBE.get(), EnergyTransmitterRenderer::new);
         event.registerBlockEntityRenderer(Registration.BlockSwapperT2BE.get(), BlockSwapperT2BER::new);
         event.registerBlockEntityRenderer(Registration.EclipseGateBE.get(), EclipseGateRenderer::new);
+
+        //Entities
+        event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);
     }
 }

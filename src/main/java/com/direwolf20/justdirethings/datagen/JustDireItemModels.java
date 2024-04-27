@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class JustDireItemModels extends ItemModelProvider {
@@ -81,16 +82,17 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.BlazejetWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/blazejet_wand"));
         singleTexture(Registration.VoidshiftWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/voidshift_wand"));
         singleTexture(Registration.EclipsegateWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/eclipsegate_wand"));
+        singleTexture(Registration.CreatureCatcher.getId().getPath() + "_base", mcLoc("item/generated"), "layer0", modLoc("item/creaturecatcher"));
+        getBuilder(Registration.CreatureCatcher.getId().getPath())
+                .parent(new ModelFile.UncheckedModelFile("builtin/entity"));
+        //.texture("layer0", modLoc("item/creaturecatcher"));
+        //withExistingParent(Registration.CreatureCatcher.getId().getPath(), mcLoc("builtin/entity"));
 
         //Tool Items
         registerTools();
 
         //Generators
         registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
-        registerEnabledTextureItem(Registration.Pocket_GeneratorT2.getId().getPath());
-        registerEnabledTextureItem(Registration.Pocket_GeneratorT3.getId().getPath());
-        registerEnabledTextureItem(Registration.Pocket_GeneratorT4.getId().getPath());
-
     }
 
     public void registerTools() {

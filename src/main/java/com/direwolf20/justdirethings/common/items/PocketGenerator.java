@@ -1,9 +1,11 @@
 package com.direwolf20.justdirethings.common.items;
 
+import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
+import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -15,14 +17,10 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -32,9 +30,9 @@ import java.util.List;
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class PocketGenerator extends Item implements PoweredItem, ToggleableItem {
-    public static final String ENABLED = "enabled";
     public static final String COUNTER = "counter";
     public static final String MAXBURN = "maxburn";
+    public static final String FUELMULTIPLIER = "fuelmultiplier";
 
     public PocketGenerator() {
         super(new Properties()
@@ -57,7 +55,8 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level world, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        if (entity instanceof Player player && NBTHelpers.getBoolean(itemStack, ENABLED)) {
+        if (world.isClientSide) return;
+        if (entity instanceof Player player && itemStack.getItem() instanceof ToggleableItem toggleableItem && toggleableItem.getEnabled(itemStack)) {
             IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
             if (energyStorage instanceof EnergyStorageNoReceive energyStorageNoReceive) {
@@ -79,12 +78,12 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         }
     }
 
-    private int fePerTick() {
-        return (int) (getFePerFuelTick() * getBurnSpeedMultiplier());
+    private int fePerTick(ItemStack itemStack) {
+        return (getFePerFuelTick() * getBurnSpeedMultiplier(itemStack));
     }
 
     public void tryBurn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
-        boolean canInsertEnergy = energyStorage.forceReceiveEnergy(fePerTick(), true) > 0;
+        boolean canInsertEnergy = energyStorage.forceReceiveEnergy(fePerTick(itemStack), true) > 0;
         if (NBTHelpers.getIntValue(itemStack, COUNTER) > 0 && canInsertEnergy) {
             burn(energyStorage, itemStack);
         } else if (canInsertEnergy) {
@@ -95,7 +94,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
 
 
     private void burn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
-        energyStorage.forceReceiveEnergy(fePerTick(), false);
+        energyStorage.forceReceiveEnergy(fePerTick(itemStack), false);
         int counter = NBTHelpers.getIntValue(itemStack, COUNTER);
         counter--;
         NBTHelpers.setIntValue(itemStack, COUNTER, counter);
@@ -109,15 +108,24 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         ItemStackHandler handler = itemStack.getData(Registration.HANDLER);
         ItemStack fuelStack = handler.getStackInSlot(0);
 
-        int burnTime = CommonHooks.getBurnTime(fuelStack, RecipeType.SMELTING);
+        int burnTime = fuelStack.getBurnTime(RecipeType.SMELTING);
         if (burnTime > 0) {
+            if (fuelStack.getItem() instanceof Coal_T1 direCoal) {
+                setFuelMultiplier(itemStack, direCoal.getBurnSpeedMultiplier());
+            } else if (fuelStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CoalBlock_T1 coalBlock) {
+                setFuelMultiplier(itemStack, coalBlock.getBurnSpeedMultiplier());
+            } else if (fuelStack.getItem() instanceof FuelCanister) {
+                setFuelMultiplier(itemStack, FuelCanister.getBurnSpeedMultiplier(fuelStack));
+            } else {
+                setFuelMultiplier(itemStack, 1);
+            }
             if (fuelStack.hasCraftingRemainingItem())
                 handler.setStackInSlot(0, fuelStack.getCraftingRemainingItem());
             else
                 fuelStack.shrink(1);
 
 
-            int counter = (int) (Math.floor(burnTime) / getBurnSpeedMultiplier());
+            int counter = (int) (Math.floor(burnTime) / getBurnSpeedMultiplier(itemStack));
             int maxBurn = counter;
             NBTHelpers.setIntValue(itemStack, COUNTER, counter);
             NBTHelpers.setIntValue(itemStack, MAXBURN, maxBurn);
@@ -169,6 +177,16 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         return false;
     }
 
+    public void setFuelMultiplier(ItemStack itemStack, int amount) {
+        NBTHelpers.setIntValue(itemStack, FUELMULTIPLIER, amount);
+    }
+
+    public int getFuelMultiplier(ItemStack itemStack) {
+        if (itemStack.getOrCreateTag().contains(FUELMULTIPLIER))
+            return itemStack.getOrCreateTag().getInt(FUELMULTIPLIER);
+        return 1;
+    }
+
     @Override
     public int getMaxEnergy() {
         return Config.POCKET_GENERATOR_MAX_FE.get();
@@ -182,7 +200,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         return Config.POCKET_GENERATOR_FE_PER_FUEL_TICK.get();
     }
 
-    public int getBurnSpeedMultiplier() {
-        return Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get();
+    public int getBurnSpeedMultiplier(ItemStack itemStack) {
+        return Config.POCKET_GENERATOR_BURN_SPEED_MULTIPLIER.get() * getFuelMultiplier(itemStack);
     }
 }

@@ -7,6 +7,11 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -14,6 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MiscTools {
+    //Thanks Soaryn!
+    @NotNull
+    public static BlockHitResult getHitResult(Player player) {
+        var playerLook = new Vec3(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
+        var lookVec = player.getViewVector(1.0F);
+        var reach = player.getBlockReach();
+        var endLook = playerLook.add(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
+        BlockHitResult hitResult = player.level().clip(new ClipContext(playerLook, endLook, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+        return hitResult;
+    }
+
     public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
         return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
     }

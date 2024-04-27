@@ -1,6 +1,8 @@
 package com.direwolf20.justdirethings.client.events;
 
+import com.direwolf20.justdirethings.client.renderactions.MiscRenders;
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
@@ -21,10 +23,15 @@ public class RenderLevelLast {
         ItemStack heldItemMain = player.getMainHandItem();
         ItemStack heldItemOff = player.getOffhandItem();
 
-        if (heldItemMain.getItem() instanceof ToggleableTool) {
+        if (heldItemMain.getItem() instanceof ToggleableTool toggleableTool) {
             ThingFinder.render(evt, player, heldItemMain);
-        } else if (heldItemOff.getItem() instanceof ToggleableTool) {
+            if (toggleableTool.canUseAbilityAndDurability(heldItemMain, Ability.VOIDSHIFT) && ToggleableTool.getSetting(heldItemMain, Ability.VOIDSHIFT.getName() + "_render"))
+                MiscRenders.renderTransparentPlayer(evt, player, heldItemMain);
+        }
+        if (heldItemOff.getItem() instanceof ToggleableTool toggleableTool) {
             ThingFinder.render(evt, player, heldItemOff);
+            if (toggleableTool.canUseAbilityAndDurability(heldItemOff, Ability.VOIDSHIFT) && ToggleableTool.getSetting(heldItemOff, Ability.VOIDSHIFT.getName() + "_render"))
+                MiscRenders.renderTransparentPlayer(evt, player, heldItemOff);
         }
     }
 }

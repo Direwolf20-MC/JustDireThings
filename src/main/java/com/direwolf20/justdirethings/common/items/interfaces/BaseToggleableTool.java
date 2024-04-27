@@ -51,7 +51,8 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
     public InteractionResult useOn(UseOnContext pContext) {
         if (bindDrops(pContext))
             return InteractionResult.SUCCESS;
-        useOnAbility(pContext);
+        if (useOnAbility(pContext))
+            return InteractionResult.SUCCESS;
         return super.useOn(pContext);
     }
 

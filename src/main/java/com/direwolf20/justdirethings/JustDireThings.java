@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings;
 
+import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
@@ -39,16 +40,10 @@ public class JustDireThings {
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
-                Registration.Pocket_Generator.get(),
-                Registration.Pocket_GeneratorT2.get(),
-                Registration.Pocket_GeneratorT3.get(),
-                Registration.Pocket_GeneratorT4.get()
+                Registration.Pocket_Generator.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGENORECEIVE),
-                Registration.Pocket_Generator.get(),
-                Registration.Pocket_GeneratorT2.get(),
-                Registration.Pocket_GeneratorT3.get(),
-                Registration.Pocket_GeneratorT4.get()
+                Registration.Pocket_Generator.get()
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
                 Registration.CelestigemSword.get(),
@@ -119,8 +114,8 @@ public class JustDireThings {
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
-                    if (be instanceof PoweredMachineBE && side != null && side.equals(state.getValue(BlockStateProperties.FACING))) {
-                        return be.getData(Registration.ENERGYSTORAGE_MACHINES);
+                    if (be instanceof EnergyTransmitterBE && side != null && side.equals(state.getValue(BlockStateProperties.FACING))) {
+                        return be.getData(Registration.ENERGYSTORAGE_TRANSMITTERS);
                     }
                     return null;
                 },

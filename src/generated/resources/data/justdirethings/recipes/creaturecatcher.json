@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": {
+      "item": "justdirethings:blazegold_ingot"
+    },
+    "e": {
+      "item": "minecraft:ender_pearl"
+    }
+  },
+  "pattern": [
+    " b ",
+    "beb",
+    " b "
+  ],
+  "result": {
+    "item": "justdirethings:creaturecatcher"
+  }
+}

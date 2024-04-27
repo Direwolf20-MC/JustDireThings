@@ -67,7 +67,7 @@ public class LivingEntityEvents {
                         Helpers.smokeDrop((ServerLevel) player.level(), itemEntity, mainHand, event.getEntity(), dropSmoked);
                         
                         if (dropSmoked[0]) {
-                            toggleableTool.smokerParticles((ServerLevel) player.level(), itemEntity.blockPosition(), itemEntity.getItem().getCount());
+                            ToggleableTool.smokerParticles((ServerLevel) player.level(), itemEntity.blockPosition(), itemEntity.getItem().getCount());
                         }
                     }
                 }

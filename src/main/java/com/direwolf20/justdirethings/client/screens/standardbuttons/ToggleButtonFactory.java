@@ -255,4 +255,30 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, textureLocalizations, startingValue, onPress);
     }
 
+    private static final List<TextureLocalization> LEFT_RIGHT_ONLY_CLICK_TEXTURES = List.of(
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-right.png"), Component.translatable("justdirethings.screen.click-right")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-left.png"), Component.translatable("justdirethings.screen.click-left")),
+            new TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-sneak.png"), Component.translatable("justdirethings.screen.click-custom"))
+    );
+
+    public static ToggleButton LEFTRIGHTONLYCLICKBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, LEFT_RIGHT_ONLY_CLICK_TEXTURES, startingValue, onPress);
+    }
+
+    /** Bind Hotkey button **/
+    private static final ResourceLocation BIND_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/click-hold.png");
+    private static final Component BIND_LOCALIZATION = Component.translatable("justdirethings.screen.setbinding");
+
+    public static GrayscaleButton KEYBIND_BUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, BIND_BUTTON, BIND_LOCALIZATION, startingValue, onPress);
+    }
+
+    /** Hide Render button **/
+    private static final ResourceLocation HIDE_RENDER_BUTTON = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
+    private static final Component HIDE_RENDER_LOCALIZATION = Component.translatable("justdirethings.screen.showrender");
+
+    public static GrayscaleButton HIDE_RENDER_ABILITY_BUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HIDE_RENDER_BUTTON, HIDE_RENDER_LOCALIZATION, startingValue, onPress);
+    }
+
 }
