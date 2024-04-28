@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.client.entityrenders;
 
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
+import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -33,21 +34,35 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
             pPoseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
             float multiplier = (10f * pEntity.shrinkingTime() % 360);
             pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F + multiplier));
-            this.itemRenderer
-                    .renderStatic(
-                            pEntity.getItem(),
-                            ItemDisplayContext.GROUND,
-                            pPackedLight,
-                            OverlayTexture.NO_OVERLAY,
-                            pPoseStack,
-                            pBuffer,
-                            pEntity.level(),
-                            pEntity.getId()
-                    );
+            boolean capturing = pEntity.isCapturing();
+            if (!capturing && pEntity.renderTick > 0) {
+                this.itemRenderer
+                        .renderStatic(
+                                new ItemStack(Registration.CreatureCatcher.get()),
+                                ItemDisplayContext.GROUND,
+                                pPackedLight,
+                                OverlayTexture.NO_OVERLAY,
+                                pPoseStack,
+                                pBuffer,
+                                pEntity.level(),
+                                pEntity.getId()
+                        );
+            } else {
+                this.itemRenderer
+                        .renderStatic(
+                                pEntity.getItem(),
+                                ItemDisplayContext.GROUND,
+                                pPackedLight,
+                                OverlayTexture.NO_OVERLAY,
+                                pPoseStack,
+                                pBuffer,
+                                pEntity.level(),
+                                pEntity.getId()
+                        );
+            }
             pPoseStack.popPose();
             ItemStack returnStack = pEntity.getReturnStack();
             Mob mob;
-            boolean capturing = pEntity.isCapturing();
             if (!capturing)
                 mob = pEntity.getEntityFromItemStack(pEntity.getItem(), pEntity.level());
             else
