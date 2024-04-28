@@ -335,4 +335,45 @@ public class AbilityMethods {
                 pState.getBlock().popExperience(serverLevel, pPos, totalExp);
         }
     }
+
+    public static boolean runSpeed(Level level, Player player, ItemStack itemStack) {
+        if (player.isSprinting() && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.RUNSPEED.getName()) / 10;
+            if (!player.onGround())
+                speed = speed / 4;
+            player.moveRelative(speed, new Vec3(0, 0, 1));
+        }
+        return false;
+    }
+
+    public static boolean walkSpeed(Level level, Player player, ItemStack itemStack) {
+        if (!player.isSprinting() && player.fallDistance <= 0 && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.WALKSPEED.getName()) / 10;
+            if (!player.onGround())
+                speed = speed / 4;
+            player.moveRelative(speed, new Vec3(0, 0, 1));
+        }
+        return false;
+    }
+
+    public static boolean jumpBoost(Level level, Player player, ItemStack itemStack) {
+        if (!player.isInWaterOrBubble() && !player.isFallFlying()) {
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.JUMPBOOST.getName()) / 7.5f;
+            player.moveRelative(speed, new Vec3(0, 1, 0));
+        }
+        return false;
+    }
+
+    public static boolean invulnerability(Level level, Player player, ItemStack itemStack) {
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.INVULNERABILITY);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.INVULNERABILITY)) {
+            AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.INVULNERABILITY);
+            ToggleableTool.addCooldown(itemStack, Ability.INVULNERABILITY, abilityParams.activeCooldown, true);
+            player.playNotifySound(SoundEvents.CONDUIT_ACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            Helpers.damageTool(itemStack, player, Ability.INVULNERABILITY);
+        }
+        return false;
+    }
+
 }

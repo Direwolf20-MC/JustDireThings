@@ -22,6 +22,10 @@ import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
 import com.direwolf20.justdirethings.common.items.*;
+import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
+import com.direwolf20.justdirethings.common.items.armors.FerricoreChestplate;
+import com.direwolf20.justdirethings.common.items.armors.FerricoreHelmet;
+import com.direwolf20.justdirethings.common.items.armors.FerricoreLeggings;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.resources.*;
@@ -59,6 +63,7 @@ public class Registration {
     public static final DeferredRegister.Blocks SIDEDBLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items ARMORS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
     private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(Registries.MENU, MODID);
@@ -82,6 +87,7 @@ public class Registration {
         RECIPE_TYPES.register(eventBus);
         PARTICLE_TYPES.register(eventBus);
         ENTITY_TYPES.register(eventBus);
+        ARMORS.register(eventBus);
     }
 
     //Gooblocks
@@ -260,13 +266,13 @@ public class Registration {
     public static final DeferredHolder<Item, EclipseAlloyHoe> EclipseAlloyHoe = TOOLS.register("eclipsealloy_hoe", EclipseAlloyHoe::new);
     public static final DeferredHolder<Item, EclipseAlloyPaxel> EclipseAlloyPaxel = TOOLS.register("eclipsealloy_paxel", EclipseAlloyPaxel::new);
 
-    //Entities
-    /*public static final EntityType<CreatureCatcherEntity> CreatureCatcherEntityType = EntityType.Builder.of(CreatureCatcherEntity::new, MobCategory.MISC)
-            .sized(0.25F, 0.25F)
-            .clientTrackingRange(4)
-            .updateInterval(10)
-            .build("creature_catcher");*/
+    //Items - Armor
+    public static final DeferredHolder<Item, FerricoreBoots> FerricoreBoots = ARMORS.register("ferricore_boots", FerricoreBoots::new);
+    public static final DeferredHolder<Item, FerricoreChestplate> FerricoreChestplate = ARMORS.register("ferricore_chestplate", FerricoreChestplate::new);
+    public static final DeferredHolder<Item, FerricoreLeggings> FerricoreLeggings = ARMORS.register("ferricore_leggings", FerricoreLeggings::new);
+    public static final DeferredHolder<Item, FerricoreHelmet> FerricoreHelmet = ARMORS.register("ferricore_helmet", FerricoreHelmet::new);
 
+    //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",
             () -> EntityType.Builder.<CreatureCatcherEntity>of(CreatureCatcherEntity::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F)

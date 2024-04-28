@@ -1,4 +1,4 @@
-// 1.20.4	2024-04-25T10:33:52.8393444	Item Models: justdirethings
+// 1.20.4	2024-04-25T16:54:31.4943379	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -65,9 +65,13 @@ acf1922ba0cd70df4e7ccf30684508a47ac1a14b assets/justdirethings/models/item/energ
 eb052d000da5f8d7999360f7bbfe773aa23ce70d assets/justdirethings/models/item/ferricore_axe.json
 62a8f615d9bd8a95b2e7e21b8f6658454008fb54 assets/justdirethings/models/item/ferricore_axe_active.json
 6c85011e764ec697b9be64a2f7fc12ddacf56f74 assets/justdirethings/models/item/ferricore_block.json
+030d331613f6217ac5659c8dde6ff777449875c2 assets/justdirethings/models/item/ferricore_boots.json
+4ef4ffc3cc14c131abf75c2e607f99e658273544 assets/justdirethings/models/item/ferricore_chestplate.json
+7890098347b5554c7cfabeb82f5f3f67199d53b9 assets/justdirethings/models/item/ferricore_helmet.json
 8d350c7076bc4fbfeef634bdf63ea2ecfaa58671 assets/justdirethings/models/item/ferricore_hoe.json
 a8fda8ef29074c54880dea40c78d2f1daa64400a assets/justdirethings/models/item/ferricore_hoe_active.json
 759ac9a72139623d3d7933c1b72eea98d1a30748 assets/justdirethings/models/item/ferricore_ingot.json
+bd9f1426e9d3fb5aaedb38d95baf551c4f7bd843 assets/justdirethings/models/item/ferricore_leggings.json
 e8fe24a651cfa4b70ac87bf7ffd84ddb1928863a assets/justdirethings/models/item/ferricore_pickaxe.json
 6c44ad4bd06ed26fbf26df8b0562d475d4ee7597 assets/justdirethings/models/item/ferricore_pickaxe_active.json
 c1f98f07809e0861d419147937c700e0b3df3d3b assets/justdirethings/models/item/ferricore_shovel.json

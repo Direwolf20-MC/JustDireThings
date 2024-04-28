@@ -51,6 +51,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected final Map<Button, ToggleButton> leftRightClickButtons = new HashMap<>();
     protected final Map<Button, GrayscaleButton> bindingButtons = new HashMap<>();
     protected final Map<Button, GrayscaleButton> hideRenderButtons = new HashMap<>();
+    protected final Map<Button, Ability> buttonToAbilityMap = new HashMap<>();
     protected Map<ToggleButton, LeftClickableTool.Binding> bindingMap = new HashMap<>();
     protected boolean bindingEnabled = false;
     protected Set<AbstractWidget> widgetsToRemove = new HashSet<>();
@@ -70,10 +71,22 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         }
     }
 
+    public void clearMaps() {
+        sliders.clear();
+        leftRightClickButtons.clear();
+        bindingButtons.clear();
+        hideRenderButtons.clear();
+        buttonToAbilityMap.clear();
+        bindingMap.clear();
+        bindingEnabled = false;
+        shownAbilityButton = null;
+    }
+
     public void refreshButtons() {
         buttonsStartX = getGuiLeft() + 5;
         buttonsStartY = getGuiTop() + 25;
         clearWidgets();
+        clearMaps();
         int counter = 0;
         for (Ability toolAbility : abilities) {
             Button button = null;
@@ -105,33 +118,51 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 addRenderableWidget(button);
                 AbilityParams abilityParams = ((ToggleableTool) tool.getItem()).getAbilityParams(toolAbility);
                 int currentValue = ToggleableTool.getToolValue(tool, toolAbility.getName());
-                ExtendedSlider slider = new ExtendedSlider(buttonsStartX + 20, buttonsStartY - 18, 100, 15, Component.translatable(toolAbility.getLocalization()).append(": "), Component.empty(), abilityParams.minSlider, abilityParams.maxSlider, currentValue, true) {
-                    @Override
-                    protected void applyValue() {
-                        setSetting(toolAbility.getName(), this.getValueInt());
-                        super.applyValue();
-                    }
-                };
-                sliders.put(button, slider);
+                if (abilityParams.minSlider != abilityParams.maxSlider) {
+                    ExtendedSlider slider = new ExtendedSlider(buttonsStartX + 20, buttonsStartY - 18, 100, 15, Component.translatable(toolAbility.getLocalization()).append(": "), Component.empty(), abilityParams.minSlider, abilityParams.maxSlider, currentValue, true) {
+                        @Override
+                        protected void applyValue() {
+                            setSetting(toolAbility.getName(), this.getValueInt());
+                            super.applyValue();
+                        }
+                    };
+                    sliders.put(button, slider);
+                }
                 counter++;
             }
             if (button != null && tool.getItem() instanceof LeftClickableTool && toolAbility.isBindable()) {
                 int currentValue = LeftClickableTool.getBindingMode(tool, toolAbility);
-                ToggleButton toggleButton = ToggleButtonFactory.LEFTRIGHTONLYCLICKBUTTON(buttonsStartX + 125, buttonsStartY - 18, currentValue, (clicked) -> {
-                    LeftClickableTool.Binding binding = bindingMap.get(((ToggleButton) clicked));
-                    if (binding == null)
-                        sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), -1, false);
-                    else
-                        sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), binding.keyCode, binding.isMouse);
-                    if (((ToggleButton) clicked).getTexturePosition() == 2) {
+                ToggleButton toggleButton;
+                if (toolAbility.getBindingType() == Ability.BindingType.LEFT_AND_CUSTOM) {
+                    toggleButton = ToggleButtonFactory.LEFTRIGHTCUSTOMCLICKBUTTON(buttonsStartX + 125, buttonsStartY - 18, currentValue, (clicked) -> {
+                        LeftClickableTool.Binding binding = bindingMap.get(((ToggleButton) clicked));
+                        if (binding == null)
+                            sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), -1, false);
+                        else
+                            sendBinding(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition(), binding.keyCode, binding.isMouse);
+                        if (((ToggleButton) clicked).getTexturePosition() == 2) {
+                            if (!renderables.contains(bindingButtons.get(shownAbilityButton)))
+                                widgetsToAdd.add(bindingButtons.get(shownAbilityButton));
+                        } else {
+                            widgetsToRemove.add(bindingButtons.get(shownAbilityButton));
+                        }
+                        renderablesChanged = true;
+                    });
+                    leftRightClickButtons.put(button, toggleButton);
+                } else {
+                    toggleButton = ToggleButtonFactory.CUSTOMCLICKBUTTON(buttonsStartX + 125, buttonsStartY - 18, 0, (clicked) -> {
+                        LeftClickableTool.Binding binding = bindingMap.get(((ToggleButton) clicked));
+                        if (binding == null)
+                            sendBinding(toolAbility.getName(), 2, -1, false); //Button Type 2 hardcoded to custom
+                        else
+                            sendBinding(toolAbility.getName(), 2, binding.keyCode, binding.isMouse);
                         if (!renderables.contains(bindingButtons.get(shownAbilityButton)))
                             widgetsToAdd.add(bindingButtons.get(shownAbilityButton));
-                    } else {
-                        widgetsToRemove.add(bindingButtons.get(shownAbilityButton));
-                    }
-                    renderablesChanged = true;
-                });
-                leftRightClickButtons.put(button, toggleButton);
+
+                        renderablesChanged = true;
+                    });
+                    leftRightClickButtons.put(button, toggleButton);
+                }
 
                 GrayscaleButton bindingButton = ToggleButtonFactory.KEYBIND_BUTTON(buttonsStartX + 143, buttonsStartY - 18, false, (clicked) -> {
                     bindingEnabled = true;
@@ -148,6 +179,8 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 });
                 this.hideRenderButtons.put(button, hideRenderButton);
             }
+            if (button != null)
+                buttonToAbilityMap.put(button, toolAbility);
         }
     }
 
@@ -193,7 +226,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         super.renderTooltip(pGuiGraphics, pX, pY);
         for (Renderable renderable : this.renderables) {
-            if (renderable instanceof ToggleButton button && leftRightClickButtons.containsValue(button) && button.getTexturePosition() == 2 && !button.getLocalization(pX, pY).equals(Component.empty())) { //2 is custom
+            if (renderable instanceof ToggleButton button && showCustomBinding() && !button.getLocalization(pX, pY).equals(Component.empty())) { //2 is custom
                 if (bindingMap.get(button) == null) {
                     pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(button.getLocalization(), Component.translatable("justdirethings.unbound-screen"))), pX, pY);
                 } else {
@@ -310,7 +343,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                     if (leftRightClickButtons.containsKey(shownAbilityButton)) {
                         widgetsToAdd.add(leftRightClickButtons.get(shownAbilityButton));
                     }
-                    if (bindingButtons.containsKey(shownAbilityButton) && leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 2) {
+                    if (bindingButtons.containsKey(shownAbilityButton) && showCustomBinding()) {
                         widgetsToAdd.add(bindingButtons.get(shownAbilityButton));
                     }
                     if (hideRenderButtons.containsKey(shownAbilityButton)) {
@@ -326,6 +359,10 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             }
         }
         return super.mouseClicked(x, y, btn);
+    }
+
+    public boolean showCustomBinding() {
+        return (shownAbilityButton != null & leftRightClickButtons.containsKey(shownAbilityButton) && (leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 2 || (leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 0 && buttonToAbilityMap.get(shownAbilityButton).getBindingType() == Ability.BindingType.CUSTOM_ONLY)));
     }
 
     public void updateRenderables() {

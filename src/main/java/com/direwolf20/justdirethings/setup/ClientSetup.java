@@ -13,6 +13,7 @@ import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
+import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
 import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
@@ -27,7 +28,9 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
@@ -49,6 +52,11 @@ public class ClientSetup {
             }
             registerEnabledToolTextures(Registration.Pocket_Generator.get());
         });
+    }
+
+    @SubscribeEvent
+    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), new ResourceLocation(JustDireThings.MODID, "abilitycooldownoverlay"), AbilityCooldownOverlay.INSTANCE);
     }
 
     public static void registerEnabledToolTextures(Item tool) {

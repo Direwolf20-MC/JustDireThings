@@ -95,6 +95,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.EclipseAlloyPaxel.get(), "Eclipse Alloy Paxel");
         add(Registration.FerricoreWrench.get(), "Ferricore Wrench");
 
+        //Armors
+        add(Registration.FerricoreBoots.get(), "Ferricore Boots");
+        add(Registration.FerricoreChestplate.get(), "Ferricore Chestplate");
+        add(Registration.FerricoreLeggings.get(), "Ferricore Leggings");
+        add(Registration.FerricoreHelmet.get(), "Ferricore Helmet");
+
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");
         add(Registration.RawFerricore.get(), "Raw Ferricore");
@@ -132,6 +138,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.bound-mouse", "Mouse Button: %s");
         add("justdirethings.boundside", " -Bound Side: ");
         add("justdirethings.creature", "Creature: ");
+        add("justdirethings.ability", "Ability: %s - %s");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -161,6 +168,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.AIRBURST.getLocalization(), "Air Burst");
         add(Ability.VOIDSHIFT.getLocalization(), "Void Shift");
         add(Ability.ECLIPSEGATE.getLocalization(), "Eclipse Gate");
+        add(Ability.RUNSPEED.getLocalization(), "Run Speed");
+        add(Ability.WALKSPEED.getLocalization(), "Walk Speed");
+        add(Ability.STEPHEIGHT.getLocalization(), "Step Assist");
+        add(Ability.JUMPBOOST.getLocalization(), "Jump Boost");
+        add(Ability.MINDFOG.getLocalization(), "Mind Fog");
+        add(Ability.INVULNERABILITY.getLocalization(), "Invulnerability");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

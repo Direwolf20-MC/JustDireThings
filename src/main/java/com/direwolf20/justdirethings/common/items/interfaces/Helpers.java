@@ -3,6 +3,8 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -18,6 +20,8 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -506,5 +510,11 @@ public class Helpers {
         BlockPos lavaPos = getLavaPos(stack);
         entity.level().setBlock(lavaPos, Blocks.OBSIDIAN.defaultBlockState(), 3); // Remove the lava block
         entity.level().playSound(null, lavaPos, SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 1F, 1.0F);
+    }
+
+    public static Multimap<Attribute, AttributeModifier> addAttributeToModifiers(Multimap<Attribute, AttributeModifier> originalModifiers, Attribute attributeToAdd, AttributeModifier attributeModifier) {
+        Multimap<Attribute, AttributeModifier> modifiers = ArrayListMultimap.create(originalModifiers);
+        modifiers.put(attributeToAdd, attributeModifier);
+        return modifiers;
     }
 }
