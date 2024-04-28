@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 public class AbilityParams {
     public final int minSlider, maxSlider, increment, defaultValue;
+    public int activeCooldown = -1, cooldown = -1;
 
     public AbilityParams(int minSlider, int maxSlider, int increment) {
         this.minSlider = minSlider;
@@ -15,5 +16,14 @@ public class AbilityParams {
         this.maxSlider = maxSlider;
         this.increment = increment;
         this.defaultValue = defaultValue;
+    }
+
+    public AbilityParams(int minSlider, int maxSlider, int increment, int defaultValue, int activeCooldown, int cooldown) {
+        this.minSlider = minSlider;
+        this.maxSlider = maxSlider;
+        this.increment = increment;
+        this.defaultValue = defaultValue;
+        this.activeCooldown = activeCooldown;
+        this.cooldown = cooldown;
     }
 }
