@@ -76,7 +76,7 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
             // Calculate the interpolated position
             Vector3f entityPosition = new Vector3f((float) pEntity.getX(), (float) pEntity.getY() + (float) (pEntity.getBoundingBox().getYsize() / 2), (float) pEntity.getZ());
             Vector3f originalPosition;
-            float fraction;
+            float fraction; // Shrink Factor ranging from 0.0 being full-size, to 1.0 being shrunken to nothing
             int currentShrinkingTime = Math.min(pEntity.renderTick, pEntity.getAnimationTicks());
             int lastShrinkingTime = pEntity.renderTick == 0 ? 0 : pEntity.renderTick - 1;
 
@@ -89,12 +89,16 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
                 fraction = (pEntity.getAnimationTicks() - interpolatedShrinkingTime) / (float) pEntity.getAnimationTicks();
                 originalPosition = new Vector3f(entityPosition);
             }
+            // Flattens the shrinkage rate when near 0
+            fraction = Mth.cos(fraction * Mth.PI) * -0.5f + 0.5f;
 
             Vector3f interpolatedPosition = originalPosition.lerp(entityPosition, fraction);
 
             pPoseStack.translate(interpolatedPosition.x() - pEntity.getX(), interpolatedPosition.y() - pEntity.getY(), interpolatedPosition.z() - pEntity.getZ());
 
-            float scale = 1.0f - fraction;
+            float bigScale = 1;
+            float smallScale = 0.2f;
+            float scale = Mth.clampedLerp(bigScale, smallScale, fraction);
             pPoseStack.scale(scale, scale, scale);
 
             EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
