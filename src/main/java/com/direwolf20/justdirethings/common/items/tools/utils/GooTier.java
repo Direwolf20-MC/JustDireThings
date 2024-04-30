@@ -50,7 +50,7 @@ public enum GooTier implements Tier {
 
     @Override
     public TagKey<Block> getIncorrectBlocksForDrops() {
-        return null;
+        return incorrectBlocksForDrops;
     }
 
     @Override

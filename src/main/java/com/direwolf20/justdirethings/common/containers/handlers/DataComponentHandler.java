@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.containers.handlers;
 
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -125,13 +125,13 @@ public class DataComponentHandler implements IItemHandlerModifiable {
     }
 
     private NonNullList<ItemStack> getItemList() {
-        ItemContainerContents contents = this.stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        ItemContainerContents contents = this.stack.getOrDefault(JustDireDataComponents.ITEMSTACK_HANDLER, ItemContainerContents.fromItems(NonNullList.withSize(size, ItemStack.EMPTY)));
         NonNullList<ItemStack> list = NonNullList.create();
         contents.copyInto(list);
         return list;
     }
 
     private void setItemList(NonNullList<ItemStack> itemStacks) {
-        this.stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(itemStacks));
+        this.stack.set(JustDireDataComponents.ITEMSTACK_HANDLER, ItemContainerContents.fromItems(itemStacks));
     }
 }

@@ -2,7 +2,6 @@ package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.client.renderers.JustDireItemRenderer;
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
@@ -10,7 +9,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -69,14 +67,14 @@ public class CreatureCatcher extends Item {
             return;
         }
 
-        Mob mob = CreatureCatcherEntity.getEntityFromItemStack(stack, mc.level);
+        /*Mob mob = CreatureCatcherEntity.getEntityFromItemStack(stack, mc.level);
         if (mob == null) return;
 
         tooltip.add(Component.translatable("justdirethings.creature")
                 .withStyle(ChatFormatting.DARK_GRAY)
                 .append(Component.literal("")
                         .append(mob.getName())
-                        .withStyle(ChatFormatting.GREEN)));
+                        .withStyle(ChatFormatting.GREEN)));*/
     }
 
     @Override

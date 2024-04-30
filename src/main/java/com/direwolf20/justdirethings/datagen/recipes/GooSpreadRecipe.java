@@ -8,7 +8,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -127,7 +126,7 @@ public class GooSpreadRecipe implements CraftingRecipe {
             return STREAM_CODEC;
         }
 
-        public static GooSpreadRecipe fromNetwork(FriendlyByteBuf pBuffer) {
+        public static GooSpreadRecipe fromNetwork(RegistryFriendlyByteBuf pBuffer) {
             ResourceLocation resourceLocation = pBuffer.readResourceLocation();
             BlockState inputState = Block.stateById(pBuffer.readInt());
             BlockState outputState = Block.stateById(pBuffer.readInt());
@@ -137,7 +136,7 @@ public class GooSpreadRecipe implements CraftingRecipe {
             return new GooSpreadRecipe(resourceLocation, inputState, outputState, tierRequirement, craftingDuration);
         }
 
-        public static void toNetwork(FriendlyByteBuf pBuffer, GooSpreadRecipe pRecipe) {
+        public static void toNetwork(RegistryFriendlyByteBuf pBuffer, GooSpreadRecipe pRecipe) {
             pBuffer.writeResourceLocation(pRecipe.id);
             pBuffer.writeInt(Block.getId(pRecipe.input));
             pBuffer.writeInt(Block.getId(pRecipe.output));
