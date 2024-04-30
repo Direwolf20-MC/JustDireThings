@@ -563,11 +563,6 @@ public interface ToggleableTool extends ToggleableItem {
         stack.update(JustDireDataComponents.ABILITY_RENDER_TOGGLES.get(toolAbility), true, val -> !val);
     }
 
-    @Override
-    default boolean getEnabled(ItemStack stack) {
-        return stack.getOrDefault(JustDireDataComponents.TOOL_ENABLED, true); //True by default
-    }
-
     static void setToolValue(ItemStack stack, String setting, int value) {
         Ability toolAbility = Ability.byName(setting);
         AbilityParams abilityParams = ((ToggleableTool) stack.getItem()).getAbilityParams(toolAbility);

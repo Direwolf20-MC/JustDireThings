@@ -20,7 +20,7 @@ public class ToggleToolPacket {
 
             ItemStack toggleableItem = ToggleableItem.getToggleableItem(sender);
             if (toggleableItem.getItem() instanceof ToggleableItem toggleableTool) {
-                toggleableTool.toggleEnabled(toggleableItem);
+                toggleableTool.toggleEnabled(toggleableItem, sender);
             }
 
         });

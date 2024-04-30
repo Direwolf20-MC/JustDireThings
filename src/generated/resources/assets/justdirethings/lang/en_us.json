@@ -196,6 +196,7 @@
   "justdirethings.screen.target-player": "Target Player",
   "justdirethings.screen.tickspeed": "Speed (Ticks)",
   "justdirethings.shiftmoreinfo": "Hold Shift for details",
+  "justdirethings.toolenabled": "Tool: %s - %s",
   "justdirethings.unbound": " -Not Bound",
   "justdirethings.unbound-screen": "Not Bound"
 }
