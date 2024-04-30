@@ -10,7 +10,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexSorting;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -233,15 +232,10 @@ public class ThingFinder {
         } else {
             sortCounter++;
         }
-        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-        net.neoforged.neoforge.client.event.ViewportEvent.ComputeCameraAngles cameraSetup = net.neoforged.neoforge.client.ClientHooks.onCameraSetup(Minecraft.getInstance().gameRenderer, camera, evt.getPartialTick());
-        camera.setAnglesInternal(cameraSetup.getYaw(), cameraSetup.getPitch());
-        Matrix4f matrix4f1 = new Matrix4f()
-                .rotationXYZ(camera.getXRot() * (float) (Math.PI / 180.0), camera.getYRot() * (float) (Math.PI / 180.0) + (float) Math.PI, cameraSetup.getRoll() * (float) (Math.PI / 180.0));
 
         PoseStack matrix = evt.getPoseStack();
         matrix.pushPose();
-        matrix.mulPose(matrix4f1);
+        matrix.mulPose(evt.getModelViewMatrix());
         matrix.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
         matrix.translate(renderPos.getX(), renderPos.getY(), renderPos.getZ());
         //Draw the renders in the specified order
