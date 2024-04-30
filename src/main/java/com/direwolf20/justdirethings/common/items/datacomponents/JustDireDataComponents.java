@@ -49,6 +49,7 @@ public class JustDireDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CustomData>> CUSTOM_DATA_1 = COMPONENTS.register("custom_data_1", () -> DataComponentType.<CustomData>builder().persistent(CustomData.CODEC).networkSynchronized(CustomData.STREAM_CODEC).build());
 
     public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>>> ABILITY_TOGGLES = new HashMap<>();
+    public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>>> ABILITY_RENDER_TOGGLES = new HashMap<>();
     public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Integer>>> ABILITY_VALUES = new HashMap<>();
     public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Integer>>> ABILITY_BINDING_MODES = new HashMap<>();
 
@@ -60,6 +61,10 @@ public class JustDireDataComponents {
             ABILITY_TOGGLES.put(ability, ABILITY_TOGGLE);
             ABILITY_VALUES.put(ability, ABILITY_VALUE);
             ABILITY_BINDING_MODES.put(ability, ABILITY_BINDING_MODE);
+            if (ability.hasRenderButton()) {
+                DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ABILITY_RENDER = COMPONENTS.register(ability.getName() + "_render", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
+                ABILITY_RENDER_TOGGLES.put(ability, ABILITY_RENDER);
+            }
         }
     }
 

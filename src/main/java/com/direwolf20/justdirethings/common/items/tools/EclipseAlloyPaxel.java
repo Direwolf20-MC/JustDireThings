@@ -57,11 +57,11 @@ public class EclipseAlloyPaxel extends BasePickaxe implements PoweredTool {
 
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
-        return (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_AXE)) && isCorrectToolForDrops(stack, state);
+        return (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_AXE)) && super.isCorrectToolForDrops(stack, state);
     }
 
     @Override
     public float getDestroySpeed(ItemStack pStack, BlockState state) {
-        return (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_AXE)) ? this.getDestroySpeed(pStack, Blocks.COBBLESTONE.defaultBlockState()) : 1.0F; //Possible hacky way to do this? :)
+        return (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_AXE)) ? super.getDestroySpeed(pStack, Blocks.COBBLESTONE.defaultBlockState()) : 1.0F; //Possible hacky way to do this? :)
     }
 }

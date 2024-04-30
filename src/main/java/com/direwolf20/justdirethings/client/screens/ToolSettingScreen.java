@@ -204,6 +204,10 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         PacketDistributor.sendToServer(new ToggleToolSlotPayload(settingName, toolSlot, 2, value));
     }
 
+    public void toggleRender(String settingName) {
+        PacketDistributor.sendToServer(new ToggleToolSlotPayload(settingName, toolSlot, 3, -1));
+    }
+
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);

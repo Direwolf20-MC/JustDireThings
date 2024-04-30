@@ -548,6 +548,21 @@ public interface ToggleableTool extends ToggleableItem {
         return !stack.has(JustDireDataComponents.ABILITY_TOGGLES.get(toolAbility)) || stack.getOrDefault(JustDireDataComponents.ABILITY_TOGGLES.get(toolAbility), true); //Enabled by default
     }
 
+    static void setRender(ItemStack stack, String setting, boolean value) {
+        Ability toolAbility = Ability.byName(setting);
+        stack.set(JustDireDataComponents.ABILITY_RENDER_TOGGLES.get(toolAbility), value);
+    }
+
+    static boolean getRender(ItemStack stack, String setting) {
+        Ability toolAbility = Ability.byName(setting);
+        return !stack.has(JustDireDataComponents.ABILITY_RENDER_TOGGLES.get(toolAbility)) || stack.getOrDefault(JustDireDataComponents.ABILITY_RENDER_TOGGLES.get(toolAbility), true); //Enabled by default
+    }
+
+    static void toggleRender(ItemStack stack, String setting) {
+        Ability toolAbility = Ability.byName(setting);
+        stack.update(JustDireDataComponents.ABILITY_RENDER_TOGGLES.get(toolAbility), true, val -> !val);
+    }
+
     @Override
     default boolean getEnabled(ItemStack stack) {
         return stack.getOrDefault(JustDireDataComponents.TOOL_ENABLED, true); //True by default
