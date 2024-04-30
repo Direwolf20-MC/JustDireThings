@@ -1,10 +1,10 @@
 package com.direwolf20.justdirethings.common.items;
 
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -50,8 +50,7 @@ public class TotemOfDeathRecall extends Item {
             if (usedDuration >= 20) {  // 60 ticks = 3 seconds
                 // Retrieve death location from NBT and teleport
                 if (!world.isClientSide) {
-                    CompoundTag tag = stack.getTag();
-                    if (tag != null) {
+                    if (stack.has(JustDireDataComponents.BOUND_GLOBAL_VEC3)) {
                         NBTHelpers.GlobalVec3 globalPos = getBoundTo(stack);
                         if (globalPos == null) return;
                         Vec3 position = globalPos.position();
@@ -77,20 +76,20 @@ public class TotemOfDeathRecall extends Item {
     }
 
     public static NBTHelpers.GlobalVec3 getBoundTo(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && tag.contains("boundTo") ? NBTHelpers.nbtToGlobalVec3(tag.getCompound("boundTo")) : null;
+        if (stack.has(JustDireDataComponents.BOUND_GLOBAL_VEC3))
+            return stack.get(JustDireDataComponents.BOUND_GLOBAL_VEC3);
+        return null;
     }
 
     public static void setBoundTo(ItemStack stack, NBTHelpers.GlobalVec3 globalPos) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.put("boundTo", NBTHelpers.globalVec3ToNBT(globalPos));
+        stack.set(JustDireDataComponents.BOUND_GLOBAL_VEC3, globalPos);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         Minecraft mc = Minecraft.getInstance();
-        if (level == null || mc.player == null) {
+        if (mc.level == null || mc.player == null) {
             return;
         }
         NBTHelpers.GlobalVec3 boundPos = getBoundTo(stack);

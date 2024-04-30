@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyHoe extends BaseHoe implements PoweredTool {
     public EclipseAlloyHoe() {
-        super(GooTier.ECLIPSEALLOY, -2, -1.0F, new Properties().fireResistant());
+        super(GooTier.ECLIPSEALLOY, new Properties().fireResistant());
         registerAbility(Ability.DROPTELEPORT);
     }
 

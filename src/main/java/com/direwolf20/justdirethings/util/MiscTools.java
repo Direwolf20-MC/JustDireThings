@@ -24,7 +24,7 @@ public class MiscTools {
     public static BlockHitResult getHitResult(Player player) {
         var playerLook = new Vec3(player.getX(), player.getY() + player.getEyeHeight(), player.getZ());
         var lookVec = player.getViewVector(1.0F);
-        var reach = player.getBlockReach();
+        var reach = player.blockInteractionRange();
         var endLook = playerLook.add(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
         BlockHitResult hitResult = player.level().clip(new ClipContext(playerLook, endLook, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
         return hitResult;

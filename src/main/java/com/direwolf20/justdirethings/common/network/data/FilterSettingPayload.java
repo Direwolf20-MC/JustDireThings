@@ -2,6 +2,8 @@ package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
@@ -10,21 +12,17 @@ public record FilterSettingPayload(
         boolean compareNBT,
         int blockItemFilter
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "filter_setting_packet");
-
-    public FilterSettingPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readBoolean(), buffer.readBoolean(), buffer.readInt());
-    }
+    public static final Type<FilterSettingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "filter_setting_packet"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeBoolean(allowList);
-        buffer.writeBoolean(compareNBT);
-        buffer.writeInt(blockItemFilter);
+    public Type<FilterSettingPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<FriendlyByteBuf, FilterSettingPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL, FilterSettingPayload::allowList,
+            ByteBufCodecs.BOOL, FilterSettingPayload::compareNBT,
+            ByteBufCodecs.INT, FilterSettingPayload::blockItemFilter,
+            FilterSettingPayload::new
+    );
 }

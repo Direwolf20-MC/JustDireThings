@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:raw_ferricore"
-            ]
+            "items": "justdirethings:raw_ferricore"
           }
         ]
       },

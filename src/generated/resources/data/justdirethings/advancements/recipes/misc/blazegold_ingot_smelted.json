@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:raw_blazegold"
-            ]
+            "items": "justdirethings:raw_blazegold"
           }
         ]
       },

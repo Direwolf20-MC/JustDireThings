@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldAxe extends BaseAxe {
     public BlazegoldAxe() {
-        super(GooTier.BLAZEGOLD, 7.0F, -2.5F, new Properties().fireResistant());
+        super(GooTier.BLAZEGOLD, new Properties().fireResistant());
         registerAbility(Ability.TREEFELLER);
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);

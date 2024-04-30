@@ -1,11 +1,7 @@
-// 1.20.4	2024-04-25T16:54:31.4918353	JustDireThings Item Tags
-9fe82440f26f7e59a365714fd11ee981a11262e6 data/forge/tags/items/armors/boots.json
-350112b77f94c2e8d536974bea9b257a579f98a6 data/forge/tags/items/armors/chestplates.json
-c107d94f65b5298e856eba5c50f99533edf539e2 data/forge/tags/items/armors/helmets.json
-e14d698c7f531253b35e435a3728305e9ec371a0 data/forge/tags/items/armors/leggings.json
-c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/forge/tags/items/gems.json
-55719b9c6f0430ad38bf081d697aa5406cc27cfb data/forge/tags/items/ingots.json
-9171911801c408201b64d8d6b0f5818f194267e9 data/forge/tags/items/raw_materials.json
+// 1.20.6	2024-04-29T23:52:17.1586698	JustDireThings Item Tags
+c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/c/tags/items/gems.json
+55719b9c6f0430ad38bf081d697aa5406cc27cfb data/c/tags/items/ingots.json
+9171911801c408201b64d8d6b0f5818f194267e9 data/c/tags/items/raw_materials.json
 2bb6f820084862dce0f4373f0f41c3baf4db6eba data/forge/tags/items/tools/wrench.json
 2bb6f820084862dce0f4373f0f41c3baf4db6eba data/forge/tags/items/wrenches.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/items/auto_smelt_deny.json

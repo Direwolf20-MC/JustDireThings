@@ -83,14 +83,14 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.FerricoreWrench.get());
         tag(TOOLS_WRENCH)
                 .add(Registration.FerricoreWrench.get());
-        tag(Tags.Items.ARMORS_BOOTS)
+        /*tag(Tags.Items.ARMORS_BOOTS)
                 .add(Registration.FerricoreBoots.get());
         tag(Tags.Items.ARMORS_LEGGINGS)
                 .add(Registration.FerricoreLeggings.get());
         tag(Tags.Items.ARMORS_CHESTPLATES)
                 .add(Registration.FerricoreChestplate.get());
         tag(Tags.Items.ARMORS_HELMETS)
-                .add(Registration.FerricoreHelmet.get());
+                .add(Registration.FerricoreHelmet.get());*/
     }
 
     @Override

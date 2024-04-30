@@ -88,7 +88,7 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.SERVER.noArg().send(new SensorPayload(senseTarget, strongSignal, 0, 0));
+        PacketDistributor.sendToServer(new SensorPayload(senseTarget, strongSignal, 0, 0));
     }
 
     public Comparable<?> getValue(Property<?> property) {
@@ -124,7 +124,7 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
         for (int i = 0; i < container.FILTER_SLOTS; i++) {
             ItemStack stack = container.filterHandler.getStackInSlot(i);
             ItemStack cachedStack = itemStackCache.get(i);
-            if (!ItemStack.isSameItemSameTags(stack, cachedStack)) { //If the stack has changed, clear the props!
+            if (!ItemStack.isSameItemSameComponents(stack, cachedStack)) { //If the stack has changed, clear the props!
                 clearStateProperties(i);
                 saveBlockStateData(i);
                 itemStackCache.put(i, stack);
@@ -138,7 +138,7 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
         CompoundTag tag = new CompoundTag();
         ListTag listTag = SensorT1BE.saveBlockStateProperty(props);
         tag.put("tagList", listTag);
-        PacketDistributor.SERVER.noArg().send(new BlockStateFilterPayload(slot, tag));
+        PacketDistributor.sendToServer(new BlockStateFilterPayload(slot, tag));
     }
 
     @Override

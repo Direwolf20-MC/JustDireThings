@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyAxe extends BaseAxe implements PoweredTool {
     public EclipseAlloyAxe() {
-        super(GooTier.ECLIPSEALLOY, 7.0F, -2.5F, new Properties().fireResistant());
+        super(GooTier.ECLIPSEALLOY, new Properties().fireResistant());
         registerAbility(Ability.TREEFELLER);
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);

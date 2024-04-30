@@ -9,7 +9,7 @@ public class BlazejetWand extends BaseToggleableTool implements LeftClickableToo
     public BlazejetWand() {
         super(new Properties()
                 .fireResistant()
-                .defaultDurability(200));
+                .durability(200));
         registerAbility(Ability.LAVAREPAIR);
         registerAbility(Ability.AIRBURST, new AbilityParams(1, 3, 1, 1));
     }

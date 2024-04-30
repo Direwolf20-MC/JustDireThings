@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldShovel extends BaseShovel {
     public BlazegoldShovel() {
-        super(GooTier.BLAZEGOLD, 1.5F, -3.0F, new Properties().fireResistant());
+        super(GooTier.BLAZEGOLD, new Properties().fireResistant());
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
         registerAbility(Ability.SMELTER);

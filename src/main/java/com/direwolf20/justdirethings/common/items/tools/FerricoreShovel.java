@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 
 public class FerricoreShovel extends BaseShovel {
     public FerricoreShovel() {
-        super(GooTier.FERRICORE, 1.5F, -3.0F, new Item.Properties());
+        super(GooTier.FERRICORE, new Item.Properties());
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
     }

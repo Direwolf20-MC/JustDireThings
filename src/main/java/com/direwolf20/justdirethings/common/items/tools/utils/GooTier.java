@@ -1,27 +1,31 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
-public enum GooTier implements Tier {
-    FERRICORE(2, 500, 7.0F, 2.5F, 15, () -> Ingredient.of(Registration.FerricoreIngot.get())),
-    BLAZEGOLD(3, 1440, 12.0F, 3.0F, 22, () -> Ingredient.of(Registration.BlazegoldIngot.get())),
-    CELESTIGEM(4, 1561, 10.0F, 4.0F, 18, () -> Ingredient.of(Registration.Celestigem.get())),
-    ECLIPSEALLOY(5, 2561, 16.0F, 5.0F, 25, () -> Ingredient.of(Registration.EclipseAlloyIngot.get()));
+import static net.minecraft.tags.BlockTags.*;
 
-    private final int level;
+public enum GooTier implements Tier {
+    FERRICORE(INCORRECT_FOR_IRON_TOOL, 500, 7.0F, 2.5F, 15, () -> Ingredient.of(Registration.FerricoreIngot.get())),
+    BLAZEGOLD(INCORRECT_FOR_DIAMOND_TOOL, 1440, 12.0F, 3.0F, 22, () -> Ingredient.of(Registration.BlazegoldIngot.get())),
+    CELESTIGEM(INCORRECT_FOR_DIAMOND_TOOL, 1561, 10.0F, 4.0F, 18, () -> Ingredient.of(Registration.Celestigem.get())),
+    ECLIPSEALLOY(INCORRECT_FOR_NETHERITE_TOOL, 2561, 16.0F, 5.0F, 25, () -> Ingredient.of(Registration.EclipseAlloyIngot.get()));
+
+    private final TagKey<Block> incorrectBlocksForDrops;
     private final int uses;
     private final float speed;
     private final float damage;
     private final int enchantmentValue;
     private final LazyLoadedValue<Ingredient> repairIngredient;
 
-    GooTier(int pLevel, int pUses, float pSpeed, float pDamage, int pEnchantmentValue, Supplier<Ingredient> pRepairIngredient) {
-        this.level = pLevel;
+    GooTier(TagKey<Block> incorrectBlocksForDrops, int pUses, float pSpeed, float pDamage, int pEnchantmentValue, Supplier<Ingredient> pRepairIngredient) {
+        this.incorrectBlocksForDrops = incorrectBlocksForDrops;
         this.uses = pUses;
         this.speed = pSpeed;
         this.damage = pDamage;
@@ -45,8 +49,8 @@ public enum GooTier implements Tier {
     }
 
     @Override
-    public int getLevel() {
-        return this.level;
+    public TagKey<Block> getIncorrectBlocksForDrops() {
+        return null;
     }
 
     @Override

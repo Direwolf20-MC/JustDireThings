@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:gooblock_tier2"
-            ]
+            "items": "justdirethings:gooblock_tier2"
           }
         ]
       },

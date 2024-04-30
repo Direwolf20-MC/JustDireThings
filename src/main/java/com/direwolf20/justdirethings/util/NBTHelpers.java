@@ -1,25 +1,71 @@
 package com.direwolf20.justdirethings.util;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class NBTHelpers {
+    public static StreamCodec<ByteBuf, Vec3> VEC3_STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.DOUBLE,
+            Vec3::x,
+            ByteBufCodecs.DOUBLE,
+            Vec3::y,
+            ByteBufCodecs.DOUBLE,
+            Vec3::z,
+            Vec3::new
+    );
+
     public record GlobalVec3(ResourceKey<Level> dimension, Vec3 position) {
         public String toVec3ShortString() {
             return String.format("%.2f, %.2f, %.2f", position.x(), position.y(), position.z());
         }
+
+        public static final Codec<GlobalVec3> CODEC = RecordCodecBuilder.create(
+                cooldownInstance -> cooldownInstance.group(
+                                Level.RESOURCE_KEY_CODEC.fieldOf("dimension").forGetter(GlobalVec3::dimension),
+                                Vec3.CODEC.fieldOf("direction").forGetter(GlobalVec3::position)
+                        )
+                        .apply(cooldownInstance, GlobalVec3::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, GlobalVec3> STREAM_CODEC = StreamCodec.composite(
+                ResourceKey.streamCodec(Registries.DIMENSION),
+                GlobalVec3::dimension,
+                VEC3_STREAM_CODEC,
+                GlobalVec3::position,
+                GlobalVec3::new
+        );
     }
 
     public record BoundInventory(GlobalPos globalPos, Direction direction) {
+        public static final Codec<BoundInventory> CODEC = RecordCodecBuilder.create(
+                cooldownInstance -> cooldownInstance.group(
+                                GlobalPos.CODEC.fieldOf("globalpos").forGetter(BoundInventory::globalPos),
+                                Direction.CODEC.fieldOf("direction").forGetter(BoundInventory::direction)
+                        )
+                        .apply(cooldownInstance, BoundInventory::new)
+        );
+        public static final StreamCodec<FriendlyByteBuf, BoundInventory> STREAM_CODEC = StreamCodec.composite(
+                GlobalPos.STREAM_CODEC,
+                BoundInventory::globalPos,
+                Direction.STREAM_CODEC,
+                BoundInventory::direction,
+                BoundInventory::new
+        );
+
         public static BoundInventory fromNBT(CompoundTag tag) {
             BoundInventory boundInventory = null;
             if (tag.contains("boundinventory") && tag.contains("boundinventory_side")) {
@@ -38,30 +84,6 @@ public class NBTHelpers {
         }
     }
 
-    public static boolean toggleBoolean(ItemStack itemStack, String name) {
-        CompoundTag tagCompound = itemStack.getOrCreateTag();
-        tagCompound.putBoolean(name, !tagCompound.getBoolean(name));
-        return tagCompound.getBoolean(name);
-    }
-
-    public static boolean getBoolean(ItemStack itemStack, String name) {
-        return itemStack.getOrCreateTag().getBoolean(name);
-    }
-
-    public static boolean setBoolean(ItemStack itemStack, String name, boolean value) {
-        itemStack.getOrCreateTag().putBoolean(name, value);
-        return value;
-    }
-
-    public static int getIntValue(ItemStack itemStack, String name) {
-        return itemStack.getOrCreateTag().getInt(name);
-    }
-
-    public static int setIntValue(ItemStack itemStack, String name, int value) {
-        itemStack.getOrCreateTag().putInt(name, value);
-        return value;
-    }
-
     public static CompoundTag globalPosToNBT(GlobalPos globalPos) {
         CompoundTag tag = new CompoundTag();
         tag.putString("dimension", globalPos.dimension().location().toString());
@@ -71,24 +93,14 @@ public class NBTHelpers {
 
     public static GlobalPos nbtToGlobalPos(CompoundTag tag) {
         ResourceKey<Level> levelKey;
-        if (tag.contains("dimension")) //TODO Fixes a direDerp - remove in 1.21+
+        if (tag.contains("dimension"))
             levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("dimension")));
-        else if (tag.contains("level"))
-            levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("level")));
         else
             return null;
-        BlockPos blockPos = NbtUtils.readBlockPos(tag.getCompound("blockpos"));
-        return GlobalPos.of(levelKey, blockPos);
+        BlockPos blockPos = NbtUtils.readBlockPos(tag, "blockpos").orElse(BlockPos.ZERO);
+        return blockPos.equals(BlockPos.ZERO) ? null : GlobalPos.of(levelKey, blockPos);
     }
 
-    public static CompoundTag globalVec3ToNBT(GlobalVec3 globalVec3) {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("dimension", globalVec3.dimension.location().toString());
-        tag.putDouble("vec3x", globalVec3.position.x);
-        tag.putDouble("vec3y", globalVec3.position.y);
-        tag.putDouble("vec3z", globalVec3.position.z);
-        return tag;
-    }
 
     public static CompoundTag globalVec3ToNBT(ResourceKey<Level> level, Vec3 position) {
         CompoundTag tag = new CompoundTag();

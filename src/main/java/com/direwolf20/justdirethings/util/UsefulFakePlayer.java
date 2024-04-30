@@ -5,12 +5,12 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.ITeleporter;
 
@@ -24,7 +24,7 @@ public class UsefulFakePlayer extends FakePlayer {
 
     public UsefulFakePlayer(Level world, GameProfile name) {
         super((ServerLevel) world, name);
-        setReach(getAttributeValue(NeoForgeMod.BLOCK_REACH));
+        setReach(getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE));
     }
 
     @Override

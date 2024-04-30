@@ -1,5 +1,5 @@
 package com.direwolf20.justdirethings.client.jei;
-
+/*
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.jei.ghostfilters.GhostFilterBasic;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseScreen;
@@ -95,3 +95,4 @@ public class JEIIntegration implements IModPlugin {
     }
 
 }
+*/

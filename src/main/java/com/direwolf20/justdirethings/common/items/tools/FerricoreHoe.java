@@ -6,6 +6,6 @@ import net.minecraft.world.item.Item;
 
 public class FerricoreHoe extends BaseHoe {
     public FerricoreHoe() {
-        super(GooTier.FERRICORE, -2, -1.0F, new Item.Properties());
+        super(GooTier.FERRICORE, new Item.Properties());
     }
 }

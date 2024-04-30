@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:blockswappert2"
-            ]
+            "items": "justdirethings:blockswappert2"
           }
         ]
       },

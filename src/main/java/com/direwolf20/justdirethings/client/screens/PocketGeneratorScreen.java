@@ -5,9 +5,9 @@ import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.util.MagicHelpers;
-import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
@@ -47,7 +47,7 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
         if (mouseX > (leftPos + 7) && mouseX < (leftPos + 7) + 18 && mouseY > (topPos + 7) && mouseY < (topPos + 7) + 73) {
-            int counter = NBTHelpers.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
+            int counter = pocketGenerator.getOrDefault(JustDireDataComponents.POCKETGEN_COUNTER, 0);
             int feBurnPerTick = 0;
             if (pocketGenerator.getItem() instanceof PocketGenerator pocketGeneratorItem) {
                 feBurnPerTick = pocketGeneratorItem.getFePerFuelTick() * pocketGeneratorItem.getBurnSpeedMultiplier(pocketGenerator);
@@ -115,8 +115,8 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         this.energyStorage = pocketGenerator.getCapability(Capabilities.EnergyStorage.ITEM);
         if (energyStorage == null)
             return;
-        int maxBurn = NBTHelpers.getIntValue(pocketGenerator, PocketGenerator.MAXBURN);
-        int counter = NBTHelpers.getIntValue(pocketGenerator, PocketGenerator.COUNTER);
+        int maxBurn = pocketGenerator.getOrDefault(JustDireDataComponents.POCKETGEN_MAXBURN, 0);
+        int counter = pocketGenerator.getOrDefault(JustDireDataComponents.POCKETGEN_COUNTER, 0);
         int maxHeight = 13;
         if (maxBurn > 0) {
             int remaining = (counter * maxHeight) / maxBurn;

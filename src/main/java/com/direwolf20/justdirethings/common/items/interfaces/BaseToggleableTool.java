@@ -15,17 +15,16 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
@@ -65,10 +64,10 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         Minecraft mc = Minecraft.getInstance();
-        if (level == null || mc.player == null) {
+        if (mc.level == null || mc.player == null) {
             return;
         }
 
@@ -84,7 +83,7 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
     }
 
     @Override
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Runnable onBroken) {
         if (stack.getItem() instanceof PoweredItem) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
@@ -112,7 +111,7 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
     }
 
     private boolean canAcceptEnchantments(ItemStack book) {
-        return !EnchantmentHelper.getEnchantments(book).containsKey(Enchantments.MENDING);
+        return !(book.getEnchantmentLevel(Enchantments.MENDING) > 0); //TODO Validate
     }
 
     private boolean canAcceptEnchantments(Enchantment enchantment) {

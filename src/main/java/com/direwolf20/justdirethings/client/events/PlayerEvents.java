@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.network.data.LeftClickPayload;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

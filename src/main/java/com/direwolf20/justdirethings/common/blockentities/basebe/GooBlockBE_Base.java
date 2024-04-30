@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -146,8 +147,8 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         ListTag counterListTag = new ListTag();
         for (Direction direction : Direction.values()) {
             CompoundTag counterTag = new CompoundTag();
@@ -168,7 +169,7 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         if (tag.contains("sideCounters")) {
             ListTag listNBT = tag.getList("sideCounters", Tag.TAG_COMPOUND);
             for (int i = 0; i < listNBT.size(); i++) {
@@ -187,7 +188,7 @@ public class GooBlockBE_Base extends BlockEntity {
                 this.sidedDurations.put(Direction.values()[direction], duration);
             }
         }
-        super.load(tag);
+        super.loadAdditional(tag, provider);
     }
 
     @Override
@@ -197,20 +198,20 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        this.load(tag);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        this.loadAdditional(tag, lookupProvider);
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider p_323910_) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
+        saveAdditional(tag, p_323910_);
         return tag;
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        this.loadAdditional(pkt.getTag(), lookupProvider);
     }
 
     public void markDirtyClient() {

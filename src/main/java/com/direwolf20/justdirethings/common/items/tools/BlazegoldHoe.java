@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldHoe extends BaseHoe {
     public BlazegoldHoe() {
-        super(GooTier.BLAZEGOLD, -2, -1.0F, new Properties().fireResistant());
+        super(GooTier.BLAZEGOLD, new Properties().fireResistant());
         registerAbility(Ability.LAVAREPAIR);
     }
 

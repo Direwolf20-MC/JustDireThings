@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.google.common.collect.ArrayListMultimap;
@@ -8,16 +9,14 @@ import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -88,33 +87,33 @@ public class Helpers {
 
     public static void damageTool(ItemStack stack, LivingEntity player) {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
-            stack.hurtAndBreak(poweredTool.getBlockBreakFECost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(poweredTool.getBlockBreakFECost(), player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
-            stack.hurtAndBreak(1, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         }
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, int amount) {
         if (stack.getItem() instanceof PoweredItem poweredTool) {
-            stack.hurtAndBreak(amount, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(amount, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
-            stack.hurtAndBreak(amount, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(amount, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         }
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
         if (stack.getItem() instanceof PoweredItem) {
-            stack.hurtAndBreak(ability.getFeCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(ability.getFeCost(), player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
-            stack.hurtAndBreak(ability.getDurabilityCost(), player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(ability.getDurabilityCost(), player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         }
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability, int multiplier) {
         if (stack.getItem() instanceof PoweredItem) {
-            stack.hurtAndBreak(ability.getFeCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(ability.getFeCost() * multiplier, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
-            stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, pOnBroken -> pOnBroken.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         }
     }
 
@@ -162,7 +161,7 @@ public class Helpers {
         for (ItemStack newDrop : newDrops) {
             // Attempt to find a matching ItemStack in 'drops' that can be merged with 'newDrop'
             Optional<ItemStack> match = drops.stream()
-                    .filter(drop -> ItemStack.isSameItemSameTags(drop, newDrop))
+                    .filter(drop -> ItemStack.isSameItemSameComponents(drop, newDrop))
                     .findFirst();
 
             if (match.isPresent()) {
@@ -444,42 +443,40 @@ public class Helpers {
 
 
     public static boolean doLavaRepair(ItemStack stack, ItemEntity entity) {
-        CompoundTag tag = stack.getOrCreateTag();
         if (isInLava(entity)) {
-            tag.putInt("floatingTicks", 0);
-            tag.put("lavaBlockLoc", NbtUtils.writeBlockPos(entity.blockPosition()));
+            stack.set(JustDireDataComponents.FLOATINGTICKS, 0);
+            stack.set(JustDireDataComponents.LAVAREPAIR_LAVAPOS, entity.blockPosition());
             entity.setPickUpDelay(85);
             entity.setOnGround(true);
         }
         if (!validateLava(stack, entity)) {
-            tag.remove("floatingTicks");
-            tag.remove("lavaBlockLoc");
+            stack.remove(JustDireDataComponents.FLOATINGTICKS);
+            stack.remove(JustDireDataComponents.LAVAREPAIR_LAVAPOS);
             entity.setOnGround(false);
         }
-        if (tag.contains("floatingTicks")) {
+        if (stack.has(JustDireDataComponents.FLOATINGTICKS)) {
             if (entity.position().y - getLavaPos(stack).getY() < 3)
                 entity.setDeltaMovement(new Vec3(0, 0.05, 0)); // Slower floating effect
             else
                 entity.setDeltaMovement(new Vec3(0, 0.005, 0)); // Slower floating effect
             entity.move(MoverType.SELF, entity.getDeltaMovement());
-            tag.putInt("floatingTicks", tag.getInt("floatingTicks") + 1);
+            stack.update(JustDireDataComponents.FLOATINGTICKS, 0, v -> v + 1);
             entity.setOnGround(true);
-            if (tag.getInt("floatingTicks") >= 80) {
+            if (stack.get(JustDireDataComponents.FLOATINGTICKS) >= 80) {
                 turnLavaIntoObsidian(stack, entity);
                 repairItem(stack);
-                tag.remove("floatingTicks"); // Reset the counter
-                tag.remove("lavaBlockLoc");
+                stack.remove(JustDireDataComponents.FLOATINGTICKS);
+                stack.remove(JustDireDataComponents.LAVAREPAIR_LAVAPOS);
                 entity.setOnGround(false);
             }
-            if (!entity.level().isClientSide && tag.getInt("floatingTicks") < 40)
+            if (!entity.level().isClientSide && stack.get(JustDireDataComponents.FLOATINGTICKS) < 40)
                 doParticles(stack, entity);
         }
         return false; // Return false to allow normal item update processing
     }
 
     private static BlockPos getLavaPos(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        return NbtUtils.readBlockPos(tag.getCompound("lavaBlockLoc"));
+        return stack.getOrDefault(JustDireDataComponents.LAVAREPAIR_LAVAPOS, BlockPos.ZERO);
     }
 
     private static void doParticles(ItemStack itemStack, ItemEntity entity) {

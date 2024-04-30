@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -129,20 +130,20 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        this.load(tag);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        this.loadAdditional(tag, lookupProvider);
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
+        saveAdditional(tag, provider);
         return tag;
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        super.onDataPacket(net, pkt, lookupProvider);
         if (this instanceof AreaAffectingBE areaAffectingBE)
             areaAffectingBE.getAreaAffectingData().area = null; //Clear this cache when a packet comes in, so it can redraw properly if the area was changed
     }
@@ -198,8 +199,8 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         tag.putInt("tickspeed", tickSpeed);
         if (placedByUUID != null)
             tag.putUUID("placedBy", placedByUUID);
@@ -213,7 +214,7 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         if (tag.contains("direction"))
             direction = tag.getInt("direction");
         if (tag.contains("tickspeed"))
@@ -226,6 +227,6 @@ public class BaseMachineBE extends BlockEntity {
             filterableBE.loadFilterSettings(tag);
         if (this instanceof RedstoneControlledBE redstoneControlledBE)
             redstoneControlledBE.loadRedstoneSettings(tag);
-        super.load(tag);
+        super.loadAdditional(tag, provider);
     }
 }

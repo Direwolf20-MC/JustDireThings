@@ -4,6 +4,10 @@ import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
@@ -16,6 +20,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
@@ -39,13 +44,25 @@ public class JustDireThings {
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new DataComponentHandler(itemStack, 1),
                 Registration.Pocket_Generator.get()
         );
-        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGENORECEIVE),
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
+                    int capacity = 1000000; //Default
+                    if (itemStack.getItem() instanceof PoweredTool poweredTool) {
+                        capacity = poweredTool.getMaxEnergy();
+                    }
+                    return new EnergyStorageNoReceive(capacity);
+                },
                 Registration.Pocket_Generator.get()
         );
-        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
+                    int capacity = 1000000; //Default
+                    if (itemStack.getItem() instanceof PoweredItem poweredItem) {
+                        capacity = poweredItem.getMaxEnergy();
+                    }
+                    return new EnergyStorage(capacity);
+                },
                 Registration.CelestigemSword.get(),
                 Registration.CelestigemPickaxe.get(),
                 Registration.CelestigemAxe.get(),

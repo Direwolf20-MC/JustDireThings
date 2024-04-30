@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldSword extends BaseSword {
     public BlazegoldSword() {
-        super(GooTier.BLAZEGOLD, 3, -2.0F, new Properties().fireResistant());
+        super(GooTier.BLAZEGOLD, new Properties().fireResistant());
         registerAbility(Ability.MOBSCANNER);
         registerAbility(Ability.LAVAREPAIR);
         registerAbility(Ability.CAUTERIZEWOUNDS);

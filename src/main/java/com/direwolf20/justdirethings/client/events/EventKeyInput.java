@@ -24,7 +24,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.Set;
+import java.util.List;
 
 import static com.direwolf20.justdirethings.util.MiscTools.getHitResult;
 
@@ -49,7 +49,7 @@ public class EventKeyInput {
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.screen != null)
+        if (mc.level == null || mc.player == null || mc.screen != null)
             return;
         Player player = mc.player;
         if (event.getAction() == InputConstants.PRESS) {
@@ -76,10 +76,10 @@ public class EventKeyInput {
     }
 
     // Handling mouse clicks
-    @SubscribeEvent
+    /*@SubscribeEvent
     public static void onMouseInput(InputEvent.MouseButton.Post event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.screen != null || event.getButton() == 0 || event.getButton() == 1 || event.getAction() != InputConstants.PRESS)
+        if (mc.level == null || mc.player == null || mc.screen != null || event.getButton() == 0 || event.getButton() == 1 || event.getAction() != InputConstants.PRESS)
             return;
         Player player = mc.player;
         for (int i = 0; i < mc.player.getInventory().items.size(); i++) {
@@ -88,10 +88,10 @@ public class EventKeyInput {
                 activateAbilities(itemStack, event.getButton(), toggleableTool, player, i, true);
             }
         }
-    }
+    }*/
 
     private static void activateAbilities(ItemStack itemStack, int key, ToggleableTool toggleableTool, Player player, int invSlot, boolean isMouse) {
-        Set<Ability> abilities = LeftClickableTool.getCustomBindingList(itemStack, new LeftClickableTool.Binding(key, isMouse));
+        List<Ability> abilities = LeftClickableTool.getCustomBindingListFor(itemStack, key, isMouse);
         if (!abilities.isEmpty()) {
             //Do them client side and Server side, since some abilities (like ore scanner) are client side activated.
             toggleableTool.useAbility(player.level(), player, itemStack, key, isMouse);

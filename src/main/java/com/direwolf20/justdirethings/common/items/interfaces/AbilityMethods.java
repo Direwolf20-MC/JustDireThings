@@ -31,6 +31,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -178,7 +179,7 @@ public class AbilityMethods {
         if (blockState.isAir()) return false;
         if (blockState.getDestroySpeed(serverLevel, blockPos) < 0) return false;
         if (blockState.is(JustDireBlockTags.ECLISEGATEDENY)) return false;
-        if (blockState.is(JustDireBlockTags.NO_MOVE)) return false;
+        if (blockState.is(Tags.Blocks.RELOCATION_NOT_SUPPORTED)) return false;
         return true;
     }
 
@@ -196,7 +197,7 @@ public class AbilityMethods {
                 player.teleportTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
             }
             player.resetFallDistance();
-            PacketDistributor.PLAYER.with((ServerPlayer) player).send(new ClientSoundPayload(SoundEvents.PLAYER_TELEPORT.getLocation(), 1f, 1f));
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new ClientSoundPayload(SoundEvents.PLAYER_TELEPORT.getLocation(), 1f, 1f));
             level.playSound(player, BlockPos.containing(shiftPosition), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1F, 1.0F);
             damageTool(itemStack, player, Ability.VOIDSHIFT, distanceTraveled);
         }
@@ -251,7 +252,7 @@ public class AbilityMethods {
             player.resetFallDistance();
             // Optionally, you could add some effects or sounds here
             damageTool(itemStack, player, Ability.AIRBURST, multiplier);
-            PacketDistributor.PLAYER.with((ServerPlayer) player).send(new ClientSoundPayload(SoundEvents.FIRECHARGE_USE.getLocation(), 0.5f, 0.125f));
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new ClientSoundPayload(SoundEvents.FIRECHARGE_USE.getLocation(), 0.5f, 0.125f));
             level.playSound(player, player.getOnPos(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.5f, 0.125f);
             return true;
         }

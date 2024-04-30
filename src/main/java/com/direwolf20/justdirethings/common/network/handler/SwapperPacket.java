@@ -5,9 +5,7 @@ import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachin
 import com.direwolf20.justdirethings.common.network.data.SwapperPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
-
-import java.util.Optional;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class SwapperPacket {
     public static final SwapperPacket INSTANCE = new SwapperPacket();
@@ -16,12 +14,9 @@ public class SwapperPacket {
         return INSTANCE;
     }
 
-    public void handle(final SwapperPayload payload, final PlayPayloadContext context) {
-        context.workHandler().submitAsync(() -> {
-            Optional<Player> senderOptional = context.player();
-            if (senderOptional.isEmpty())
-                return;
-            Player sender = senderOptional.get();
+    public void handle(final SwapperPayload payload, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player sender = context.player();
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof BlockSwapperT1BE swapper) {

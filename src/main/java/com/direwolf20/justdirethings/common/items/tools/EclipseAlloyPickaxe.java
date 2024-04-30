@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyPickaxe extends BasePickaxe implements PoweredTool {
     public EclipseAlloyPickaxe() {
-        super(GooTier.ECLIPSEALLOY, 1, -2.8F, new Properties().fireResistant());
+        super(GooTier.ECLIPSEALLOY, new Properties().fireResistant());
         registerAbility(Ability.OREXRAY);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);

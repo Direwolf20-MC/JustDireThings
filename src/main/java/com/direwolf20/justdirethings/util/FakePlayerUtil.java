@@ -5,7 +5,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +18,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -48,8 +51,8 @@ public class FakePlayerUtil {
         double y = a == Direction.Axis.Y ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         player.setPos(pos.x() + x, pos.y() + y - player.getEyeHeight(), pos.z() + z);
-        if (!toHold.isEmpty())
-            player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
+        /*if (!toHold.isEmpty())
+            player.getAttributes().addTransientAttributeModifiers(toHold.getItem().getAttributeModifiers(toHold));*/ //Todo Still Needed?
         player.setShiftKeyDown(sneaking);
     }
 
@@ -73,8 +76,8 @@ public class FakePlayerUtil {
         double y = a == Direction.Axis.Y ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         player.setPos(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
-        if (!toHold.isEmpty())
-            player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
+        /*if (!toHold.isEmpty())
+            player.getAttributes().addTransientAttributeModifiers(toHold.getItem().getAttributeModifiers(toHold));*/ //Todo Still Needed?
         player.setShiftKeyDown(sneaking);
     }
 
@@ -98,8 +101,8 @@ public class FakePlayerUtil {
         double y = a == Direction.Axis.Y ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         player.setPos(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
-        if (!toHold.isEmpty())
-            player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
+        /*if (!toHold.isEmpty())
+            player.getAttributes().addTransientAttributeModifiers(toHold.getItem().getAttributeModifiers(toHold));*/ //Todo Still Needed?
         player.setShiftKeyDown(sneaking);
 
         // Calculate the rotation angles to look at the target position
@@ -120,12 +123,12 @@ public class FakePlayerUtil {
      * @param oldStack The previous stack, from before use.
      */
     public static void cleanupFakePlayerFromUse(UsefulFakePlayer player, ItemStack oldStack) {
-        if (!oldStack.isEmpty())
-            player.getAttributes().removeAttributeModifiers(oldStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
+        /*if (!oldStack.isEmpty())
+            player.getAttributes().removeAttributeModifiers(oldStack.getAttributeModifiers(EquipmentSlot.MAINHAND));*/ //Todo Still Needed?
         player.getInventory().items.set(player.getInventory().selected, ItemStack.EMPTY);
         //if (!player.getInventory().isEmpty()) player.getInventory().dropAll(); //Disabed for now, since I have no plans to give these players anything besides a mainhand
         player.setShiftKeyDown(false);
-        player.setReach(player.getAttributeValue(NeoForgeMod.BLOCK_REACH));
+        player.setReach(player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE));
     }
 
     public static FakePlayerResult clickEntityInDirection(UsefulFakePlayer player, Level world, LivingEntity entity, int clickType, int maxHold) {

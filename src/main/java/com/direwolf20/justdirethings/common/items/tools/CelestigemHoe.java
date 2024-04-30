@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class CelestigemHoe extends BaseHoe implements PoweredTool {
     public CelestigemHoe() {
-        super(GooTier.CELESTIGEM, -2, -1.0F, new Properties().fireResistant());
+        super(GooTier.CELESTIGEM, new Properties().fireResistant());
         registerAbility(Ability.DROPTELEPORT);
     }
 

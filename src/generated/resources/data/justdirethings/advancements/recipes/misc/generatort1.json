@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:ferricore_ingot"
-            ]
+            "items": "justdirethings:ferricore_ingot"
           }
         ]
       },

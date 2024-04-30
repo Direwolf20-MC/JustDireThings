@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldPickaxe extends BasePickaxe {
     public BlazegoldPickaxe() {
-        super(GooTier.BLAZEGOLD, 1, -2.8F, new Properties().fireResistant());
+        super(GooTier.BLAZEGOLD, new Properties().fireResistant());
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);

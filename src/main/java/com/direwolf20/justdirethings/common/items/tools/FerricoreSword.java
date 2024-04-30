@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 
 public class FerricoreSword extends BaseSword {
     public FerricoreSword() {
-        super(GooTier.FERRICORE, 3, -2.0F, new Item.Properties());
+        super(GooTier.FERRICORE, new Item.Properties());
         registerAbility(Ability.MOBSCANNER);
     }
 }

@@ -16,25 +16,25 @@ import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
 import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
-import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-@Mod.EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
     public static void init(final FMLClientSetupEvent event) {
         NeoForge.EVENT_BUS.addListener(KeyBindings::onClientInput);
@@ -55,8 +55,8 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), new ResourceLocation(JustDireThings.MODID, "abilitycooldownoverlay"), AbilityCooldownOverlay.INSTANCE);
+    public static void registerOverlays(RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.HOTBAR, new ResourceLocation(JustDireThings.MODID, "abilitycooldownoverlay"), AbilityCooldownOverlay.INSTANCE);
     }
 
     public static void registerEnabledToolTextures(Item tool) {
@@ -68,7 +68,7 @@ public class ClientSetup {
                             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
                             if (energyStorage == null) return 0.0f;
                             if (energyStorage.getEnergyStored() > 0) return 1.0f;
-                            if (!(NBTHelpers.getIntValue(stack, PocketGenerator.COUNTER) > 0)) return 0.0f;
+                            if (!(stack.getOrDefault(JustDireDataComponents.POCKETGEN_COUNTER, 0) > 0)) return 0.0f;
                             return 1.0f;
                         } else
                             return toggleableItem.getEnabled(stack) ? 1.0f : 0.0f;

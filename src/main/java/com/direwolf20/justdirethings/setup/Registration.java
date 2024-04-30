@@ -26,8 +26,7 @@ import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreChestplate;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreHelmet;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreLeggings;
-import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
-import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
@@ -39,7 +38,6 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -47,7 +45,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
-import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -88,6 +85,10 @@ public class Registration {
         PARTICLE_TYPES.register(eventBus);
         ENTITY_TYPES.register(eventBus);
         ARMORS.register(eventBus);
+
+        JustDireDataComponents.genAbilityData();
+        JustDireDataComponents.COMPONENTS.register(eventBus);
+
     }
 
     //Gooblocks
@@ -338,18 +339,7 @@ public class Registration {
                 return new FilterBasicHandler(0);
             }).build());
 
-    public static final Supplier<AttachmentType<EnergyStorage>> ENERGYSTORAGE = ATTACHMENT_TYPES.register(
-            "energystorage", () -> AttachmentType.serializable(holder -> {
-                if (holder instanceof ItemStack itemStack) {
-                    int capacity = 1000000; //Default
-                    if (itemStack.getItem() instanceof PoweredItem poweredItem) {
-                        capacity = poweredItem.getMaxEnergy();
-                    }
-                    return new EnergyStorage(capacity);
-                } else {
-                    throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
-                }
-            }).build());
+
     public static final Supplier<AttachmentType<MachineEnergyStorage>> ENERGYSTORAGE_MACHINES = ATTACHMENT_TYPES.register(
             "energystorage_machines", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof PoweredMachineBE feMachineBE) {
@@ -375,18 +365,6 @@ public class Registration {
                     return new EnergyStorageNoReceive(capacity);
                 } else {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-PoweredMachine.");
-                }
-            }).build());
-    public static final Supplier<AttachmentType<EnergyStorageNoReceive>> ENERGYSTORAGENORECEIVE = ATTACHMENT_TYPES.register(
-            "energystoragenoreceive", () -> AttachmentType.serializable(holder -> {
-                if (holder instanceof ItemStack itemStack) {
-                    int capacity = 1000000; //Default
-                    if (itemStack.getItem() instanceof PoweredTool poweredTool) {
-                        capacity = poweredTool.getMaxEnergy();
-                    }
-                    return new EnergyStorageNoReceive(capacity);
-                } else {
-                    throw new IllegalStateException("Cannot attach energy handler item to a non-item.");
                 }
             }).build());
     public static final Supplier<AttachmentType<CompoundTag>> DEATH_DATA = ATTACHMENT_TYPES.register(

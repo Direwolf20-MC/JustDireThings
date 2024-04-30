@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:generatort1"
-            ]
+            "items": "justdirethings:generatort1"
           }
         ]
       },

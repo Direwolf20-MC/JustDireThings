@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
@@ -282,7 +283,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         outerLoop:
         for (Map.Entry<Integer, Map<Property<?>, Comparable<?>>> propertyValues : blockStateProperties.entrySet()) {
             ItemStack filterStack = getFilterHandler().getStackInSlot(propertyValues.getKey());
-            if (!ItemStack.isSameItemSameTags(filterStack, blockItemStack)) //If the itemstack we are comparing in this slot doesn't match the blockItem
+            if (!ItemStack.isSameItemSameComponents(filterStack, blockItemStack)) //If the itemstack we are comparing in this slot doesn't match the blockItem
                 continue;
             for (Map.Entry<Property<?>, Comparable<?>> prop : propertyValues.getValue().entrySet()) {
                 Comparable<?> comparable = blockState.getValue(prop.getKey());
@@ -330,8 +331,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         tag.putInt("senseTarget", sense_target.ordinal());
         tag.putBoolean("strongSignal", strongSignal);
         tag.put("blockStateProps", saveBlockStateProperties());
@@ -340,12 +341,12 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         this.sense_target = SENSE_TARGET.values()[tag.getInt("senseTarget")];
         this.strongSignal = tag.getBoolean("strongSignal");
         this.senseAmount = tag.getInt("senseAmount");
         this.equality = tag.getInt("equality");
-        super.load(tag);
+        super.loadAdditional(tag, provider);
         loadBlockStateProperties(tag.getCompound("blockStateProps")); //Do this after the filter data comes in, so we know the itemstack in the filter
     }
 }

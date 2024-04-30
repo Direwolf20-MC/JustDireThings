@@ -1,14 +1,13 @@
 package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.blockentities.BlockSwapperT1BE;
-import com.direwolf20.justdirethings.util.NBTHelpers;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -93,25 +92,22 @@ public class FerricoreWrench extends Item {
     }
 
     public static GlobalPos getBoundTo(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && tag.contains("boundTo") ? NBTHelpers.nbtToGlobalPos(tag.getCompound("boundTo")) : null;
+        return stack.getOrDefault(JustDireDataComponents.BOUND_GLOBAL_POS, null);
     }
 
     public static void setBoundTo(ItemStack stack, GlobalPos globalPos) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.put("boundTo", NBTHelpers.globalPosToNBT(globalPos));
+        stack.set(JustDireDataComponents.BOUND_GLOBAL_POS, globalPos);
     }
 
     public static void removeBoundTo(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.remove("boundTo");
+        stack.remove(JustDireDataComponents.BOUND_GLOBAL_POS);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         Minecraft mc = Minecraft.getInstance();
-        if (level == null || mc.player == null) {
+        if (mc.level == null || mc.player == null) {
             return;
         }
         GlobalPos boundPos = getBoundTo(stack);

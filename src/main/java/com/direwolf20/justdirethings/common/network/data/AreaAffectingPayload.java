@@ -2,33 +2,32 @@ package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record AreaAffectingPayload(
         double xRadius, double yRadius, double zRadius,
         int xOffset, int yOffset, int zOffset,
         boolean renderArea
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "area_affecting_packet");
-
-    public AreaAffectingPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readBoolean());
-    }
+    public static final Type<AreaAffectingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "area_affecting_packet"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeDouble(xRadius);
-        buffer.writeDouble(yRadius);
-        buffer.writeDouble(zRadius);
-        buffer.writeInt(xOffset);
-        buffer.writeInt(yOffset);
-        buffer.writeInt(zOffset);
-        buffer.writeBoolean(renderArea);
+    public Type<AreaAffectingPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<FriendlyByteBuf, AreaAffectingPayload> STREAM_CODEC = NeoForgeStreamCodecs.composite(
+            ByteBufCodecs.DOUBLE, AreaAffectingPayload::xRadius,
+            ByteBufCodecs.DOUBLE, AreaAffectingPayload::yRadius,
+            ByteBufCodecs.DOUBLE, AreaAffectingPayload::zRadius,
+            ByteBufCodecs.INT, AreaAffectingPayload::xOffset,
+            ByteBufCodecs.INT, AreaAffectingPayload::yOffset,
+            ByteBufCodecs.INT, AreaAffectingPayload::zOffset,
+            ByteBufCodecs.BOOL, AreaAffectingPayload::renderArea,
+            AreaAffectingPayload::new
+    );
 }

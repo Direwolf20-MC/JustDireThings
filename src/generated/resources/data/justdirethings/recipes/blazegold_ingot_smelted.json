@@ -6,5 +6,8 @@
   "ingredient": {
     "item": "justdirethings:raw_blazegold"
   },
-  "result": "justdirethings:blazegold_ingot"
+  "result": {
+    "count": 1,
+    "id": "justdirethings:blazegold_ingot"
+  }
 }

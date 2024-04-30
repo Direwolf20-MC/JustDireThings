@@ -48,6 +48,6 @@ public class EnergyTransmitterScreen extends BaseMachineScreen<EnergyTransmitter
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.SERVER.noArg().send(new EnergyTransmitterSettingPayload(showParticles));
+        PacketDistributor.sendToServer(new EnergyTransmitterSettingPayload(showParticles));
     }
 }

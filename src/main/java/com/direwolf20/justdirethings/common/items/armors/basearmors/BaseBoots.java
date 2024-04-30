@@ -1,40 +1,40 @@
 package com.direwolf20.justdirethings.common.items.armors.basearmors;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickableTool {
     public static final UUID STEPHEIGHT = UUID.fromString("dac96a09-4758-419d-aa1b-83a27d266484");
-    public static final AttributeModifier stepHeight = new AttributeModifier(STEPHEIGHT, "JustDireStepAssist", 1.0, AttributeModifier.Operation.ADDITION);
+    public static final AttributeModifier stepHeight = new AttributeModifier(STEPHEIGHT, "JustDireStepAssist", 1.0, AttributeModifier.Operation.ADD_VALUE);
 
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 
-    public BaseBoots(ArmorMaterial pMaterial, Item.Properties pProperties) {
+    public BaseBoots(Holder<ArmorMaterial> pMaterial, Item.Properties pProperties) {
         super(pMaterial, Type.BOOTS, pProperties);
     }
 
@@ -49,10 +49,10 @@ public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickabl
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         Minecraft mc = Minecraft.getInstance();
-        if (level == null || mc.player == null) {
+        if (mc.level == null || mc.player == null) {
             return;
         }
 
@@ -75,20 +75,20 @@ public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickabl
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> modifiers = super.getAttributeModifiers(slot, stack);
-        if (slot == EquipmentSlot.FEET) {
-            if (canUseAbility(stack, Ability.STEPHEIGHT))
-                modifiers = Helpers.addAttributeToModifiers(modifiers, NeoForgeMod.STEP_HEIGHT.value(), stepHeight);
-        }
-        if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return modifiers;
+    public ItemAttributeModifiers getAttributeModifiers(ItemStack stack) {
+        ItemAttributeModifiers itemAttributeModifiers = super.getAttributeModifiers(stack);
+        itemAttributeModifiers.withModifierAdded(Attributes.STEP_HEIGHT, stepHeight, EquipmentSlotGroup.FEET);
+        if (canUseAbility(stack, Ability.STEPHEIGHT))
+            itemAttributeModifiers.withModifierAdded(Attributes.STEP_HEIGHT, stepHeight, EquipmentSlotGroup.FEET);
 
-        return poweredTool.getPoweredAttributeModifiers(slot, stack, modifiers);
+        if (!(stack.getItem() instanceof PoweredTool poweredTool))
+            return itemAttributeModifiers;
+
+        return poweredTool.getPoweredAttributeModifiers(stack, itemAttributeModifiers);
     }
 
     @Override
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Runnable onBroken) {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
@@ -116,7 +116,7 @@ public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickabl
     }
 
     private boolean canAcceptEnchantments(ItemStack book) {
-        return !EnchantmentHelper.getEnchantments(book).containsKey(Enchantments.MENDING);
+        return !(book.getEnchantmentLevel(Enchantments.MENDING) > 0); //TODO Validate
     }
 
     private boolean canAcceptEnchantments(Enchantment enchantment) {

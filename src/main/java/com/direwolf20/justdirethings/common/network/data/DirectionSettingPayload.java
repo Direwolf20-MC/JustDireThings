@@ -2,25 +2,23 @@ package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record DirectionSettingPayload(
         int direction
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "direction_setting_packet");
-
-    public DirectionSettingPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt());
-    }
+    public static final Type<DirectionSettingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "direction_setting_packet"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(direction);
+    public Type<DirectionSettingPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<FriendlyByteBuf, DirectionSettingPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, DirectionSettingPayload::direction,
+            DirectionSettingPayload::new
+    );
 }

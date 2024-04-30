@@ -21,6 +21,8 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
+
 public class CreatureCatcher extends Item {
     public CreatureCatcher() {
         super(new Properties()
@@ -56,17 +58,18 @@ public class CreatureCatcher extends Item {
     }
 
     public static boolean hasEntity(ItemStack itemStack) {
-        return !itemStack.getOrCreateTag().isEmpty();  //Any tag will be an entity
+        return itemStack.has(ENTITIYTYPE);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         Minecraft mc = Minecraft.getInstance();
-        if (level == null || mc.player == null) {
+        if (mc.level == null || mc.player == null) {
             return;
         }
-        Mob mob = CreatureCatcherEntity.getEntityFromItemStack(stack, level);
+
+        Mob mob = CreatureCatcherEntity.getEntityFromItemStack(stack, mc.level);
         if (mob == null) return;
 
         tooltip.add(Component.translatable("justdirethings.creature")

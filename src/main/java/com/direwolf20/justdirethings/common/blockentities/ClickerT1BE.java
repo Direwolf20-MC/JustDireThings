@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -255,8 +256,8 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         tag.putInt("clickType", clickType);
         tag.putInt("clickTarget", clickTarget.ordinal());
         tag.putBoolean("sneaking", sneaking);
@@ -265,13 +266,13 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         this.clickType = tag.getInt("clickType");
         this.clickTarget = CLICK_TARGET.values()[tag.getInt("clickTarget")];
         this.sneaking = tag.getBoolean("sneaking");
         this.showFakePlayer = tag.getBoolean("showFakePlayer");
         if (tag.contains("maxHoldTicks"))
             maxHoldTicks = tag.getInt("maxHoldTicks");
-        super.load(tag);
+        super.loadAdditional(tag, provider);
     }
 }

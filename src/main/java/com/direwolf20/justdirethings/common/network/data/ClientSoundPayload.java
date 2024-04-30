@@ -2,6 +2,8 @@ package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
@@ -10,21 +12,17 @@ public record ClientSoundPayload(
         float pitch,
         float volume
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "client_sound_packet");
-
-    public ClientSoundPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readResourceLocation(), buffer.readFloat(), buffer.readFloat());
-    }
+    public static final Type<ClientSoundPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "client_sound_packet"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeResourceLocation(soundEvent);
-        buffer.writeFloat(pitch);
-        buffer.writeFloat(volume);
+    public Type<ClientSoundPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<FriendlyByteBuf, ClientSoundPayload> STREAM_CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC, ClientSoundPayload::soundEvent,
+            ByteBufCodecs.FLOAT, ClientSoundPayload::pitch,
+            ByteBufCodecs.FLOAT, ClientSoundPayload::volume,
+            ClientSoundPayload::new
+    );
 }

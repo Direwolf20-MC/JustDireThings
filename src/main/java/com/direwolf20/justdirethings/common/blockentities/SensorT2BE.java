@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -98,18 +99,18 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         tag.putInt("senseTarget", sense_target.ordinal());
         tag.putBoolean("strongSignal", strongSignal);
         tag.put("blockStateProps", saveBlockStateProperties());
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         this.sense_target = SENSE_TARGET.values()[tag.getInt("senseTarget")];
         this.strongSignal = tag.getBoolean("strongSignal");
-        super.load(tag);
+        super.loadAdditional(tag, provider);
         loadBlockStateProperties(tag.getCompound("blockStateProps")); //Do this after the filter data comes in, so we know the itemstack in the filter
     }
 }

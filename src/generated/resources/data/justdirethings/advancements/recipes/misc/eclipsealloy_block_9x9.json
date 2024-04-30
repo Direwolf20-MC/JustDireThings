@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:eclipsealloy_block"
-            ]
+            "items": "justdirethings:eclipsealloy_block"
           }
         ]
       },

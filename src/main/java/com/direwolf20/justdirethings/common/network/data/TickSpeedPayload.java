@@ -2,25 +2,23 @@ package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record TickSpeedPayload(
         int tickSpeed
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "tick_speed_packet");
-
-    public TickSpeedPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt());
-    }
+    public static final Type<TickSpeedPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "tick_speed_packet"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(tickSpeed);
+    public Type<TickSpeedPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<FriendlyByteBuf, TickSpeedPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, TickSpeedPayload::tickSpeed,
+            TickSpeedPayload::new
+    );
 }

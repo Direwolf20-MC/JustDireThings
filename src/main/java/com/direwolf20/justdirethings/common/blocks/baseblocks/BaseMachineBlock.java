@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.blocks.baseblocks;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -40,11 +42,10 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
         if (!world.isClientSide && entity instanceof Player player) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof BaseMachineBE baseMachineBE) {
-                CompoundTag tag = stack.getTag();
-                if (tag != null) {
-                    CompoundTag compound = stack.getTag().getCompound("JustDiresBEData");
+                if (stack.has(JustDireDataComponents.CUSTOM_DATA_1)) {
+                    CompoundTag compound = stack.get(JustDireDataComponents.CUSTOM_DATA_1).copyTag();
                     if (!compound.isEmpty())
-                        blockEntity.load(compound);
+                        blockEntity.loadCustomOnly(compound, world.registryAccess());
                 }
                 baseMachineBE.setPlacedBy(player.getUUID());
             }
@@ -107,9 +108,9 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
         if (blockEntity instanceof BaseMachineBE baseMachineBE && !baseMachineBE.isDefaultSettings()) {
             ItemStack itemStack = new ItemStack(Item.byBlock(this));
             CompoundTag compoundTag = new CompoundTag();
-            ((BaseMachineBE) blockEntity).saveAdditional(compoundTag);
+            ((BaseMachineBE) blockEntity).saveAdditional(compoundTag, builder.getLevel().registryAccess());
             if (!compoundTag.isEmpty()) {
-                itemStack.getOrCreateTag().put("JustDiresBEData", compoundTag);
+                itemStack.set(JustDireDataComponents.CUSTOM_DATA_1, CustomData.of(compoundTag));
             }
             drops.clear(); // Clear any default drops
             drops.add(itemStack); // Add your custom item stack with NBT data

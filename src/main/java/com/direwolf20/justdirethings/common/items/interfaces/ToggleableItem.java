@@ -1,22 +1,18 @@
 package com.direwolf20.justdirethings.common.items.interfaces;
 
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getSetting;
-import static com.direwolf20.justdirethings.util.NBTHelpers.setBoolean;
 
 public interface ToggleableItem {
     default boolean getEnabled(ItemStack stack) {
         return getSetting(stack, "enabled");
     }
 
-    default boolean setEnabled(ItemStack stack, boolean enabled) {
-        return setBoolean(stack, "enabled", enabled);
-    }
-
-    default boolean toggleEnabled(ItemStack stack) {
-        return setBoolean(stack, "enabled", !getEnabled(stack));
+    default void toggleEnabled(ItemStack stack) {
+        stack.update(JustDireDataComponents.TOOL_ENABLED, true, v -> !v);
     }
 
     static ItemStack getToggleableItem(Player player) {

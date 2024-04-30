@@ -1,7 +1,9 @@
 package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -12,22 +14,18 @@ public record GhostSlotPayload(
         int count,
         int mbAmt
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "ghost_slot");
-
-    public GhostSlotPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt(), buffer.readItem(), buffer.readInt(), buffer.readInt());
-    }
+    public static final Type<GhostSlotPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "ghost_slot"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(slotNumber());
-        buffer.writeItem(stack());
-        buffer.writeInt(count());
-        buffer.writeInt(mbAmt());
+    public Type<GhostSlotPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, GhostSlotPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, GhostSlotPayload::slotNumber,
+            ItemStack.OPTIONAL_STREAM_CODEC, GhostSlotPayload::stack,
+            ByteBufCodecs.INT, GhostSlotPayload::count,
+            ByteBufCodecs.INT, GhostSlotPayload::mbAmt,
+            GhostSlotPayload::new
+    );
 }

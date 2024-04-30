@@ -1,26 +1,18 @@
 package com.direwolf20.justdirethings.common.items.interfaces;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Map;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 
 public interface PoweredTool extends PoweredItem {
-    default Multimap<Attribute, AttributeModifier> getPoweredAttributeModifiers(EquipmentSlot slot, ItemStack stack, Multimap<Attribute, AttributeModifier> originalModifiers) {
-        Multimap<Attribute, AttributeModifier> modifiers = HashMultimap.create();
-        if (slot == EquipmentSlot.MAINHAND) {
-            if (getAvailableEnergy(stack) >= getBlockBreakFECost()) {
-                return originalModifiers;
-            } else {
-                for (Map.Entry<Attribute, AttributeModifier> entry : originalModifiers.entries()) {
-                    if (!entry.getKey().equals(Attributes.ATTACK_DAMAGE))
-                        modifiers.put(entry.getKey(), entry.getValue());
-                }
+    default ItemAttributeModifiers getPoweredAttributeModifiers(ItemStack stack, ItemAttributeModifiers originalModifiers) {
+        ItemAttributeModifiers modifiers = ItemAttributeModifiers.builder().build();
+        if (getAvailableEnergy(stack) >= getBlockBreakFECost()) {
+            return originalModifiers;
+        } else {
+            for (ItemAttributeModifiers.Entry entry : originalModifiers.modifiers()) {
+                if (!entry.attribute().equals(Attributes.ATTACK_DAMAGE))
+                    modifiers.withModifierAdded(entry.attribute(), entry.modifier(), entry.slot());
             }
         }
         return modifiers;

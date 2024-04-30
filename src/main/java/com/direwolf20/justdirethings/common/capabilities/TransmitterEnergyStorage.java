@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.capabilities;
 
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 
@@ -90,12 +91,12 @@ public class TransmitterEnergyStorage extends MachineEnergyStorage {
     }
 
     @Override
-    public Tag serializeNBT() {
+    public Tag serializeNBT(HolderLookup.Provider provider) {
         return IntTag.valueOf(this.getRealEnergyStored());
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
+    public void deserializeNBT(HolderLookup.Provider provider, Tag nbt) {
         if (!(nbt instanceof IntTag intNbt))
             throw new IllegalArgumentException("Can not deserialize to an instance that isn't the default implementation");
         this.energy = intNbt.getAsInt();

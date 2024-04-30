@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:coal_t2"
-            ]
+            "items": "justdirethings:coal_t2"
           }
         ]
       },

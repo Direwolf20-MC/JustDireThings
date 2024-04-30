@@ -4,10 +4,13 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
@@ -65,7 +68,7 @@ public class GooSpreadRecipe implements CraftingRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
@@ -78,7 +81,7 @@ public class GooSpreadRecipe implements CraftingRecipe {
         return false;
     }
 
-    public ItemStack assemble(CraftingContainer pContainer, RegistryAccess pRegistryAccess) {
+    public ItemStack assemble(CraftingContainer pContainer, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
@@ -98,7 +101,7 @@ public class GooSpreadRecipe implements CraftingRecipe {
 
     public static class Serializer implements RecipeSerializer<GooSpreadRecipe> {
         private static final net.minecraft.resources.ResourceLocation NAME = new net.minecraft.resources.ResourceLocation(JustDireThings.MODID, "goospread");
-        private static final Codec<GooSpreadRecipe> CODEC = RecordCodecBuilder.create(
+        private static final MapCodec<GooSpreadRecipe> CODEC = RecordCodecBuilder.mapCodec(
                 p_311734_ -> p_311734_.group(
                                 ResourceLocation.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
                                 BlockState.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
@@ -109,12 +112,22 @@ public class GooSpreadRecipe implements CraftingRecipe {
                         .apply(p_311734_, GooSpreadRecipe::new)
         );
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipe> STREAM_CODEC = StreamCodec.of(
+                GooSpreadRecipe.Serializer::toNetwork, GooSpreadRecipe.Serializer::fromNetwork
+        );
+
+
         @Override
-        public Codec<GooSpreadRecipe> codec() {
+        public MapCodec<GooSpreadRecipe> codec() {
             return CODEC;
         }
 
-        public GooSpreadRecipe fromNetwork(FriendlyByteBuf pBuffer) {
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipe> streamCodec() {
+            return STREAM_CODEC;
+        }
+
+        public static GooSpreadRecipe fromNetwork(FriendlyByteBuf pBuffer) {
             ResourceLocation resourceLocation = pBuffer.readResourceLocation();
             BlockState inputState = Block.stateById(pBuffer.readInt());
             BlockState outputState = Block.stateById(pBuffer.readInt());
@@ -124,7 +137,7 @@ public class GooSpreadRecipe implements CraftingRecipe {
             return new GooSpreadRecipe(resourceLocation, inputState, outputState, tierRequirement, craftingDuration);
         }
 
-        public void toNetwork(FriendlyByteBuf pBuffer, GooSpreadRecipe pRecipe) {
+        public static void toNetwork(FriendlyByteBuf pBuffer, GooSpreadRecipe pRecipe) {
             pBuffer.writeResourceLocation(pRecipe.id);
             pBuffer.writeInt(Block.getId(pRecipe.input));
             pBuffer.writeInt(Block.getId(pRecipe.output));

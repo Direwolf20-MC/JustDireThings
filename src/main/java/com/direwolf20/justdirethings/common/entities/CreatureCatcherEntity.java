@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.entities;
 import com.direwolf20.justdirethings.common.items.CreatureCatcher;
 import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -15,12 +16,15 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.joml.Vector3f;
+
+import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
 
 public class CreatureCatcherEntity extends ThrowableItemProjectile {
     private static final EntityDataAccessor<Boolean> HAS_HIT = SynchedEntityData.defineId(CreatureCatcherEntity.class, EntityDataSerializers.BOOLEAN);
@@ -39,15 +43,15 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(HAS_HIT, false);
-        this.getEntityData().define(CAPTURING, false);
-        this.getEntityData().define(SHRINKING_TIME, 0);
-        this.getEntityData().define(RETURN_ITEM_STACK, ItemStack.EMPTY);
-        this.getEntityData().define(ENTITY_POSITION, new Vector3f(0, 0, 0));
-        this.getEntityData().define(ENTITY_BODY_ROT, 0f);
-        this.getEntityData().define(ENTITY_HEAD_ROT, 0f);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HAS_HIT, false);
+        builder.define(CAPTURING, false);
+        builder.define(SHRINKING_TIME, 0);
+        builder.define(RETURN_ITEM_STACK, ItemStack.EMPTY);
+        builder.define(ENTITY_POSITION, new Vector3f(0, 0, 0));
+        builder.define(ENTITY_BODY_ROT, 0f);
+        builder.define(ENTITY_HEAD_ROT, 0f);
 
     }
 
@@ -186,13 +190,11 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
     }
 
     protected ItemStack createItemStack(Mob entity) {
-        CompoundTag tag = new CompoundTag();
-        tag.putString("entityType", EntityType.getKey(entity.getType()).toString());
         CompoundTag entityData = new CompoundTag();
         entity.saveWithoutId(entityData);
-        tag.put("entityData", entityData);
         ItemStack itemStack = new ItemStack(getDefaultItem());
-        itemStack.setTag(tag);
+        itemStack.set(ENTITIYTYPE, EntityType.getKey(entity.getType()).toString());
+        itemStack.set(DataComponents.ENTITY_DATA, CustomData.of(entityData));
         return itemStack;
     }
 
@@ -200,18 +202,16 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         Entity entity = getEntityFromItemStack(itemStack, this.level());
         Vec3 location = getPosition(0);
         entity.moveTo(location);
-        itemStack.setTag(new CompoundTag());
         level().addFreshEntity(entity);
     }
 
     public static Mob getEntityFromItemStack(ItemStack itemStack, Level level) {
-        CompoundTag tag = itemStack.getOrCreateTag();
-        if (tag.isEmpty() || !tag.contains("entityType")) return null;
-        EntityType<?> type = EntityType.byString(tag.getString("entityType")).orElse(null);
+        if (!itemStack.has(ENTITIYTYPE)) return null;
+        EntityType<?> type = EntityType.byString(itemStack.get(ENTITIYTYPE)).orElse(null);
         if (type == null) return null;
         Entity entity = type.create(level);
         if (!(entity instanceof Mob)) return null;
-        entity.load(tag.getCompound("entityData"));
+        entity.load(itemStack.get(DataComponents.ENTITY_DATA).copyTag());
         return (Mob) entity;
     }
 
@@ -233,7 +233,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         pCompound.putBoolean("HasHitEntity", this.entityData.get(HAS_HIT));
         pCompound.putBoolean("Capturing", this.entityData.get(CAPTURING));
         pCompound.putInt("ShrinkingTime", this.entityData.get(SHRINKING_TIME));
-        pCompound.put("ReturnItemStack", this.entityData.get(RETURN_ITEM_STACK).save(new CompoundTag()));
+        pCompound.put("ReturnItemStack", this.entityData.get(RETURN_ITEM_STACK).save(this.registryAccess()));
         pCompound.putFloat("EntityPosX", this.entityData.get(ENTITY_POSITION).x());
         pCompound.putFloat("EntityPosY", this.entityData.get(ENTITY_POSITION).y());
         pCompound.putFloat("EntityPosZ", this.entityData.get(ENTITY_POSITION).z());
@@ -247,7 +247,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         this.entityData.set(HAS_HIT, pCompound.getBoolean("HasHitEntity"));
         this.entityData.set(CAPTURING, pCompound.getBoolean("Capturing"));
         this.entityData.set(SHRINKING_TIME, pCompound.getInt("ShrinkingTime"));
-        ItemStack stack = ItemStack.of(pCompound.getCompound("ReturnItemStack"));
+        ItemStack stack = ItemStack.parse(this.registryAccess(), pCompound.getCompound("ReturnItemStack")).orElseGet(() -> new ItemStack(this.getDefaultItem()));
         this.entityData.set(RETURN_ITEM_STACK, stack);
         Vector3f position = new Vector3f(
                 pCompound.getFloat("EntityPosX"),

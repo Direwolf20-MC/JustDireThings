@@ -116,7 +116,7 @@ public class ThingFinder {
         if (!blockState.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)))
             return false;
         if (itemStack.getItem() instanceof TieredItem tieredItem) {
-            return net.neoforged.neoforge.common.TierSortingRegistry.isCorrectTierForDrops(tieredItem.getTier(), blockState);
+            return itemStack.isCorrectToolForDrops(blockState);
         }
         return true;
     }
