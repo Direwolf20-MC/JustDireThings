@@ -40,7 +40,7 @@ public interface LeftClickableTool {
 
     static Set<Ability> getLeftClickList(ItemStack stack) {
         Set<Ability> abilities = new HashSet<>();
-        List<String> abilitiesList = stack.get(JustDireDataComponents.LEFT_CLICK_ABILITIES);
+        List<String> abilitiesList = stack.getOrDefault(JustDireDataComponents.LEFT_CLICK_ABILITIES, new ArrayList<>());
         for (String abilityName : abilitiesList) {
             abilities.add(Ability.byName(abilityName));
         }
@@ -73,9 +73,7 @@ public interface LeftClickableTool {
     }
 
     static List<ToolRecords.AbilityBinding> getCustomBindingList(ItemStack stack) {
-        if (stack.has(JustDireDataComponents.ABILITY_BINDINGS))
-            return stack.get(JustDireDataComponents.ABILITY_BINDINGS);
-        return new ArrayList<>();
+        return stack.getOrDefault(JustDireDataComponents.ABILITY_BINDINGS, new ArrayList<>());
     }
 
     static List<Ability> getCustomBindingListFor(ItemStack stack, int key, boolean isMouse) {

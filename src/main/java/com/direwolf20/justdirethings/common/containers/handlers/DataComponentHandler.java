@@ -3,7 +3,6 @@ package com.direwolf20.justdirethings.common.containers.handlers;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -24,6 +23,8 @@ public class DataComponentHandler implements IItemHandlerModifiable {
     @Override
     public ItemStack getStackInSlot(int slot) {
         validateSlotIndex(slot);
+        if (getItemList().size() < slot + 1)
+            return ItemStack.EMPTY;
         return getItemList().get(slot);
     }
 
@@ -125,13 +126,13 @@ public class DataComponentHandler implements IItemHandlerModifiable {
     }
 
     private NonNullList<ItemStack> getItemList() {
-        ItemContainerContents contents = this.stack.getOrDefault(JustDireDataComponents.ITEMSTACK_HANDLER, ItemContainerContents.fromItems(NonNullList.withSize(size, ItemStack.EMPTY)));
-        NonNullList<ItemStack> list = NonNullList.create();
+        JustDireItemContainerContents contents = this.stack.getOrDefault(JustDireDataComponents.ITEMSTACK_HANDLER, JustDireItemContainerContents.fromItems(NonNullList.withSize(size, ItemStack.EMPTY)));
+        NonNullList<ItemStack> list = NonNullList.withSize(size, ItemStack.EMPTY);
         contents.copyInto(list);
         return list;
     }
 
     private void setItemList(NonNullList<ItemStack> itemStacks) {
-        this.stack.set(JustDireDataComponents.ITEMSTACK_HANDLER, ItemContainerContents.fromItems(itemStacks));
+        this.stack.set(JustDireDataComponents.ITEMSTACK_HANDLER, JustDireItemContainerContents.fromItems(itemStacks));
     }
 }

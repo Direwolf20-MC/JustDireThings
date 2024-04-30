@@ -116,8 +116,10 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
             }
             if (fuelStack.hasCraftingRemainingItem())
                 handler.setStackInSlot(0, fuelStack.getCraftingRemainingItem());
-            else
+            else {
                 fuelStack.shrink(1);
+                handler.setStackInSlot(0, fuelStack);
+            }
 
 
             int counter = (int) (Math.floor(burnTime) / getBurnSpeedMultiplier(itemStack));

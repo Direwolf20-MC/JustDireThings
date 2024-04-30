@@ -462,14 +462,14 @@ public class Helpers {
             entity.move(MoverType.SELF, entity.getDeltaMovement());
             stack.update(JustDireDataComponents.FLOATINGTICKS, 0, v -> v + 1);
             entity.setOnGround(true);
-            if (stack.get(JustDireDataComponents.FLOATINGTICKS) >= 80) {
+            if (stack.getOrDefault(JustDireDataComponents.FLOATINGTICKS, 0) >= 80) {
                 turnLavaIntoObsidian(stack, entity);
                 repairItem(stack);
                 stack.remove(JustDireDataComponents.FLOATINGTICKS);
                 stack.remove(JustDireDataComponents.LAVAREPAIR_LAVAPOS);
                 entity.setOnGround(false);
             }
-            if (!entity.level().isClientSide && stack.get(JustDireDataComponents.FLOATINGTICKS) < 40)
+            if (!entity.level().isClientSide && stack.getOrDefault(JustDireDataComponents.FLOATINGTICKS, 0) < 40)
                 doParticles(stack, entity);
         }
         return false; // Return false to allow normal item update processing

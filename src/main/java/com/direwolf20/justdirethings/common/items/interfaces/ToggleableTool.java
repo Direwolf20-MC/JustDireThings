@@ -501,7 +501,7 @@ public interface ToggleableTool extends ToggleableItem {
 
     static void toggleSetting(ItemStack stack, String setting) {
         Ability toolAbility = Ability.byName(setting);
-        stack.update(JustDireDataComponents.ABILITY_TOGGLES.get(toolAbility), false, val -> !val);
+        stack.update(JustDireDataComponents.ABILITY_TOGGLES.get(toolAbility), true, val -> !val);
     }
 
     /**
