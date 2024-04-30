@@ -52,6 +52,17 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
             if (pocketGenerator.getItem() instanceof PocketGenerator pocketGeneratorItem) {
                 feBurnPerTick = pocketGeneratorItem.getFePerFuelTick() * pocketGeneratorItem.getBurnSpeedMultiplier(pocketGenerator);
             }
+            if (hasShiftDown())
+                guiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                        Component.translatable("justdirethings.screen.energy", MagicHelpers.formatted(energyStorage.getEnergyStored()), MagicHelpers.withSuffix(energyStorage.getMaxEnergyStored())),
+                        counter <= 0 ?
+                                Component.translatable("justdirethings.screen.no_fuel") :
+                                Component.translatable("justdirethings.screen.burn_time", MagicHelpers.ticksInSeconds(counter)),
+                        counter > 0 ?
+                                Component.translatable("justdirethings.screen.fepertick", MagicHelpers.formatted(feBurnPerTick)) :
+                                Component.translatable("justdirethings.screen.fepertick", MagicHelpers.formatted(0))
+                )), mouseX, mouseY);
+            else
             guiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
                     Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(energyStorage.getEnergyStored()), MagicHelpers.withSuffix(energyStorage.getMaxEnergyStored())),
                     counter <= 0 ?

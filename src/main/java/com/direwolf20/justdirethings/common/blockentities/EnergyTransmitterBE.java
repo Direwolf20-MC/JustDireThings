@@ -3,7 +3,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.blocks.EnergyTransmitter;
-import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
@@ -256,7 +256,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (energyStorage == null) return;
         if (itemStack.getItem() instanceof PocketGenerator pocketGenerator) {
-            pocketGenerator.tryBurn((EnergyStorageNoReceive) energyStorage, itemStack);
+            pocketGenerator.tryBurn((EnergyStorageItemStackNoReceive) energyStorage, itemStack);
         }
         if (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
             return; //Don't do anything if already full...

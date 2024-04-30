@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
-import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
 import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
@@ -54,8 +54,8 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         if (entity instanceof Player player && itemStack.getItem() instanceof ToggleableItem toggleableItem && toggleableItem.getEnabled(itemStack)) {
             IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return;
-            if (energyStorage instanceof EnergyStorageNoReceive energyStorageNoReceive) {
-                tryBurn(energyStorageNoReceive, itemStack);
+            if (energyStorage instanceof EnergyStorageItemStackNoReceive EnergyStorageItemStackNoReceive) {
+                tryBurn(EnergyStorageItemStackNoReceive, itemStack);
                 if (energyStorage.getEnergyStored() >= (getFEPerTick() / 10)) { //If we have 1/10th the max transfer speed, go ahead and let it rip
                     for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                         ItemStack slotStack = player.getInventory().getItem(i);
@@ -77,7 +77,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         return (getFePerFuelTick() * getBurnSpeedMultiplier(itemStack));
     }
 
-    public void tryBurn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
+    public void tryBurn(EnergyStorageItemStackNoReceive energyStorage, ItemStack itemStack) {
         boolean canInsertEnergy = energyStorage.forceReceiveEnergy(fePerTick(itemStack), true) > 0;
         if (itemStack.getOrDefault(JustDireDataComponents.POCKETGEN_COUNTER, 0) > 0 && canInsertEnergy) {
             burn(energyStorage, itemStack);
@@ -88,7 +88,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
     }
 
 
-    private void burn(EnergyStorageNoReceive energyStorage, ItemStack itemStack) {
+    private void burn(EnergyStorageItemStackNoReceive energyStorage, ItemStack itemStack) {
         energyStorage.forceReceiveEnergy(fePerTick(itemStack), false);
         int counter = itemStack.getOrDefault(JustDireDataComponents.POCKETGEN_COUNTER, 0);
         counter--;

@@ -4,7 +4,8 @@ import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
-import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
 import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
@@ -20,7 +21,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
@@ -52,7 +52,7 @@ public class JustDireThings {
                     if (itemStack.getItem() instanceof PoweredTool poweredTool) {
                         capacity = poweredTool.getMaxEnergy();
                     }
-                    return new EnergyStorageNoReceive(capacity);
+                    return new EnergyStorageItemStackNoReceive(capacity, itemStack);
                 },
                 Registration.Pocket_Generator.get()
         );
@@ -61,7 +61,7 @@ public class JustDireThings {
                     if (itemStack.getItem() instanceof PoweredItem poweredItem) {
                         capacity = poweredItem.getMaxEnergy();
                     }
-                    return new EnergyStorage(capacity);
+                    return new EnergyStorageItemstack(capacity, itemStack);
                 },
                 Registration.CelestigemSword.get(),
                 Registration.CelestigemPickaxe.get(),
