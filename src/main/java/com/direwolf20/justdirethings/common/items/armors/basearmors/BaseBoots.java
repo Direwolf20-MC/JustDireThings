@@ -77,9 +77,8 @@ public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickabl
     @Override
     public ItemAttributeModifiers getAttributeModifiers(ItemStack stack) {
         ItemAttributeModifiers itemAttributeModifiers = super.getAttributeModifiers(stack);
-        itemAttributeModifiers.withModifierAdded(Attributes.STEP_HEIGHT, stepHeight, EquipmentSlotGroup.FEET);
         if (canUseAbility(stack, Ability.STEPHEIGHT))
-            itemAttributeModifiers.withModifierAdded(Attributes.STEP_HEIGHT, stepHeight, EquipmentSlotGroup.FEET);
+            itemAttributeModifiers = itemAttributeModifiers.withModifierAdded(Attributes.STEP_HEIGHT, stepHeight, EquipmentSlotGroup.FEET);
 
         if (!(stack.getItem() instanceof PoweredTool poweredTool))
             return itemAttributeModifiers;

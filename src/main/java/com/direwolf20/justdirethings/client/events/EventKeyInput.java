@@ -76,7 +76,7 @@ public class EventKeyInput {
     }
 
     // Handling mouse clicks
-    /*@SubscribeEvent
+    @SubscribeEvent
     public static void onMouseInput(InputEvent.MouseButton.Post event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null || mc.screen != null || event.getButton() == 0 || event.getButton() == 1 || event.getAction() != InputConstants.PRESS)
@@ -88,7 +88,7 @@ public class EventKeyInput {
                 activateAbilities(itemStack, event.getButton(), toggleableTool, player, i, true);
             }
         }
-    }*/
+    }
 
     private static void activateAbilities(ItemStack itemStack, int key, ToggleableTool toggleableTool, Player player, int invSlot, boolean isMouse) {
         List<Ability> abilities = LeftClickableTool.getCustomBindingListFor(itemStack, key, isMouse);
