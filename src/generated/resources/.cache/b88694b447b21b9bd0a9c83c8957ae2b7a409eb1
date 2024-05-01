@@ -1,7 +1,8 @@
-// 1.20.6	2024-04-29T23:52:17.1586698	JustDireThings Item Tags
+// 1.20.6	2024-04-30T22:07:11.2367404	JustDireThings Item Tags
 c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/c/tags/items/gems.json
 55719b9c6f0430ad38bf081d697aa5406cc27cfb data/c/tags/items/ingots.json
 9171911801c408201b64d8d6b0f5818f194267e9 data/c/tags/items/raw_materials.json
+455bada5b950203f61d1da4946e513ee909c6275 data/c/tags/items/storage_blocks.json
 2bb6f820084862dce0f4373f0f41c3baf4db6eba data/forge/tags/items/tools/wrench.json
 2bb6f820084862dce0f4373f0f41c3baf4db6eba data/forge/tags/items/wrenches.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/items/auto_smelt_deny.json
