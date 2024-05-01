@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.joml.Vector3f;
 
@@ -221,6 +222,8 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         if (entity.isMultipartEntity())
             return false;
         if (entity instanceof PartEntity<?>)
+            return false;
+        if (entity.getType().is(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED))
             return false;
         if (entity.getType().is(JustDireEntityTags.CREATURE_CATCHER_DENY))
             return false;
