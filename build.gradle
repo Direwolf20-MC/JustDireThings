@@ -60,7 +60,6 @@ base {
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
-        //TODO Fix this
         vendor.set(JvmVendorSpec.JETBRAINS)
     }
 }

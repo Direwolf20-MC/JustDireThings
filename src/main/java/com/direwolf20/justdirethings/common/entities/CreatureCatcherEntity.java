@@ -192,7 +192,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
 
     protected ItemStack createItemStack(Mob entity) {
         CompoundTag entityData = new CompoundTag();
-        entity.saveWithoutId(entityData);
+        entity.save(entityData);
         ItemStack itemStack = new ItemStack(getDefaultItem());
         itemStack.set(ENTITIYTYPE, EntityType.getKey(entity.getType()).toString());
         itemStack.set(DataComponents.ENTITY_DATA, CustomData.of(entityData));
