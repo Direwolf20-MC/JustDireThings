@@ -27,7 +27,7 @@ public class AbilityCooldownOverlay implements LayeredDraw.Layer {
         int screenWidth = guiGraphics.guiWidth();
         int screenHeight = guiGraphics.guiHeight();
         int xPosition = screenWidth / 2 - 91;
-        int yPosition = screenHeight - 30 - 30; //TODO Review
+        int yPosition = screenHeight - 40 - 30;
 
         ItemStack chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
         if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
@@ -53,6 +53,7 @@ public class AbilityCooldownOverlay implements LayeredDraw.Layer {
                 RenderSystem.defaultBlendFunc(); // Sets up standard alpha blending
                 RenderSystem.setShaderColor(1f, 0.5f, 0.5f, 0.25f);
                 guiGraphics.blit(INVULNERABILITY_ICON, xPosition, yPosition, 0, 0, 18, 18, 18, 18);
+                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             }
         }
     }

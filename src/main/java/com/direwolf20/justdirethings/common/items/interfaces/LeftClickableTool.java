@@ -55,7 +55,7 @@ public interface LeftClickableTool {
     }
 
     static void removeFromCustomBindingList(ItemStack stack, Ability ability) {
-        List<ToolRecords.AbilityBinding> abilityBindings = getCustomBindingList(stack);
+        List<ToolRecords.AbilityBinding> abilityBindings = new ArrayList<>(getCustomBindingList(stack));
         abilityBindings.removeIf(k -> k.abilityName().equals(ability.getName()));
         setCustomBindingList(stack, abilityBindings);
     }
@@ -80,7 +80,7 @@ public interface LeftClickableTool {
         List<Ability> returnSet = new ArrayList<>();
         List<ToolRecords.AbilityBinding> abilityBindings = getCustomBindingList(stack);
         returnSet.addAll(
-                abilityBindings.stream().filter(k -> k.isMouse() == isMouse && k.key() == key)
+                abilityBindings.stream().filter(k -> k.isMouse() == isMouse && k.key() == key && stack.get(JustDireDataComponents.ABILITY_BINDING_MODES.get(Ability.byName(k.abilityName()))) == 2)
                         .map(ToolRecords.AbilityBinding::abilityName)
                         .map(Ability::byName)
                         .toList()

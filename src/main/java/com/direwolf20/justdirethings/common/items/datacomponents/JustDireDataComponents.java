@@ -41,7 +41,7 @@ public class JustDireDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FUELCANISTER_FUELLEVEL = COMPONENTS.register("fuelcanister_fuellevel", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Double>> FUELCANISTER_BURNSPEED = COMPONENTS.register("fuelcanister_burnspeed", () -> DataComponentType.<Double>builder().persistent(Codec.DOUBLE).networkSynchronized(ByteBufCodecs.DOUBLE).build());
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FORGE_ENERGY = COMPONENTS.register("forge_energy", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FORGE_ENERGY = COMPONENTS.register("forge_energy", () -> DataComponentType.<Integer>builder().persistent(Codec.INT.orElse(0)).networkSynchronized(ByteBufCodecs.VAR_INT).build());
 
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<JustDireItemContainerContents>> ITEMSTACK_HANDLER = COMPONENTS.register("itemstack_handler", () -> DataComponentType.<JustDireItemContainerContents>builder().persistent(JustDireItemContainerContents.CODEC).networkSynchronized(JustDireItemContainerContents.STREAM_CODEC).cacheEncoding().build());
@@ -55,14 +55,14 @@ public class JustDireDataComponents {
 
     public static void genAbilityData() {
         for (Ability ability : Ability.values()) {
-            DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ABILITY_TOGGLE = COMPONENTS.register(ability.getName() + "_toggle", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
+            DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ABILITY_TOGGLE = COMPONENTS.register(ability.getName() + "_toggle", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL.orElse(true)).networkSynchronized(ByteBufCodecs.BOOL).build());
             DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ABILITY_VALUE = COMPONENTS.register(ability.getName() + "_value", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
-            DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ABILITY_BINDING_MODE = COMPONENTS.register(ability.getName() + "_bindingmode", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+            DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ABILITY_BINDING_MODE = COMPONENTS.register(ability.getName() + "_bindingmode", () -> DataComponentType.<Integer>builder().persistent(Codec.INT.orElse(0)).networkSynchronized(ByteBufCodecs.VAR_INT).build());
             ABILITY_TOGGLES.put(ability, ABILITY_TOGGLE);
             ABILITY_VALUES.put(ability, ABILITY_VALUE);
             ABILITY_BINDING_MODES.put(ability, ABILITY_BINDING_MODE);
             if (ability.hasRenderButton()) {
-                DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ABILITY_RENDER = COMPONENTS.register(ability.getName() + "_render", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).build());
+                DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ABILITY_RENDER = COMPONENTS.register(ability.getName() + "_render", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL.orElse(true)).networkSynchronized(ByteBufCodecs.BOOL).build());
                 ABILITY_RENDER_TOGGLES.put(ability, ABILITY_RENDER);
             }
         }
