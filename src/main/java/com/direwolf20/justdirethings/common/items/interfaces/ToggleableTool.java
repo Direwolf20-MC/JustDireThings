@@ -435,6 +435,7 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default boolean bindDrops(UseOnContext pContext) {
+        if (pContext.getLevel().isClientSide) return false;
         Player player = pContext.getPlayer();
         if (player == null) return false;
         if (!player.isShiftKeyDown()) return false;
