@@ -88,14 +88,22 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.BlazeGoldBlock_ITEM.get())
                 .add(Registration.CelestigemBlock_ITEM.get())
                 .add(Registration.EclipseAlloyBlock_ITEM.get());
-        /*tag(Tags.Items.ARMORS_BOOTS)
+        tag(ItemTags.FOOT_ARMOR)
                 .add(Registration.FerricoreBoots.get());
-        tag(Tags.Items.ARMORS_LEGGINGS)
+        tag(ItemTags.LEG_ARMOR)
                 .add(Registration.FerricoreLeggings.get());
-        tag(Tags.Items.ARMORS_CHESTPLATES)
+        tag(ItemTags.CHEST_ARMOR)
                 .add(Registration.FerricoreChestplate.get());
-        tag(Tags.Items.ARMORS_HELMETS)
-                .add(Registration.FerricoreHelmet.get());*/
+        tag(ItemTags.HEAD_ARMOR)
+                .add(Registration.FerricoreHelmet.get());
+        tag(ItemTags.FOOT_ARMOR_ENCHANTABLE)
+                .add(Registration.FerricoreBoots.get());
+        tag(ItemTags.LEG_ARMOR_ENCHANTABLE)
+                .add(Registration.FerricoreLeggings.get());
+        tag(ItemTags.CHEST_ARMOR_ENCHANTABLE)
+                .add(Registration.FerricoreChestplate.get());
+        tag(ItemTags.HEAD_ARMOR_ENCHANTABLE)
+                .add(Registration.FerricoreHelmet.get());
     }
 
     @Override
