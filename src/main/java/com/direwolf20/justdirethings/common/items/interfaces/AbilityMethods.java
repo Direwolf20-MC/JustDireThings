@@ -125,7 +125,7 @@ public class AbilityMethods {
     public static boolean eclipseGate(UseOnContext pContext) {
         ItemStack pStack = pContext.getItemInHand();
         Level level = pContext.getLevel();
-        if (level.isClientSide) return false;
+        if (level.isClientSide) return true;
         Set<BlockPos> posList = getEclipseGateBlocks(pContext);
         boolean anyWorked = false;
         for (BlockPos blockPos : posList) {
