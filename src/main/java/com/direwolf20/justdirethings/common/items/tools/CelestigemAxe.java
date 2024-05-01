@@ -4,11 +4,14 @@ import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseAxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 
 public class CelestigemAxe extends BaseAxe implements PoweredTool {
     public CelestigemAxe() {
-        super(GooTier.CELESTIGEM, new Properties().fireResistant());
+        super(GooTier.CELESTIGEM, new Properties()
+                .attributes(AxeItem.createAttributes(GooTier.CELESTIGEM, 7.0F, -2.5F))
+                .fireResistant());
         registerAbility(Ability.TREEFELLER);
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);

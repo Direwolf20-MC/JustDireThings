@@ -5,10 +5,13 @@ import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseSword;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 
 public class EclipseAlloySword extends BaseSword implements PoweredTool {
     public EclipseAlloySword() {
-        super(GooTier.ECLIPSEALLOY, new Properties().fireResistant());
+        super(GooTier.ECLIPSEALLOY, new Properties()
+                .attributes(SwordItem.createAttributes(GooTier.ECLIPSEALLOY, 3, -2.0F))
+                .fireResistant());
         registerAbility(Ability.GLOWING);
         registerAbility(Ability.CAUTERIZEWOUNDS);
         registerAbility(Ability.DROPTELEPORT);

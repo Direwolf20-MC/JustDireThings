@@ -7,12 +7,15 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BasePickaxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CelestigemPaxel extends BasePickaxe implements PoweredTool {
     public CelestigemPaxel() {
-        super(GooTier.CELESTIGEM, new Properties().fireResistant());
+        super(GooTier.CELESTIGEM, new Properties()
+                .attributes(PickaxeItem.createAttributes(GooTier.CELESTIGEM, 1.0F, -2.8F))
+                .fireResistant());
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SKYSWEEPER);

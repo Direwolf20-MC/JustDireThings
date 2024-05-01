@@ -6,10 +6,13 @@ import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BasePickaxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 
 public class CelestigemPickaxe extends BasePickaxe implements PoweredTool {
     public CelestigemPickaxe() {
-        super(GooTier.CELESTIGEM, new Properties().fireResistant());
+        super(GooTier.CELESTIGEM, new Properties()
+                .attributes(PickaxeItem.createAttributes(GooTier.CELESTIGEM, 1.0F, -2.8F))
+                .fireResistant());
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);

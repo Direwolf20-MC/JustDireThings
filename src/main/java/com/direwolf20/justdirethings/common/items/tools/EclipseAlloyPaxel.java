@@ -7,12 +7,15 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BasePickaxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class EclipseAlloyPaxel extends BasePickaxe implements PoweredTool {
     public EclipseAlloyPaxel() {
-        super(GooTier.ECLIPSEALLOY, new Properties().fireResistant());
+        super(GooTier.ECLIPSEALLOY, new Properties()
+                .attributes(PickaxeItem.createAttributes(GooTier.ECLIPSEALLOY, 1.0F, -2.8F))
+                .fireResistant());
         registerAbility(Ability.OREXRAY);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SKYSWEEPER);

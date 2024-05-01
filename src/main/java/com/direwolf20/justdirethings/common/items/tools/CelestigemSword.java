@@ -5,10 +5,13 @@ import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseSword;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
 
 public class CelestigemSword extends BaseSword implements PoweredTool {
     public CelestigemSword() {
-        super(GooTier.CELESTIGEM, new Properties().fireResistant());
+        super(GooTier.CELESTIGEM, new Properties()
+                .attributes(SwordItem.createAttributes(GooTier.CELESTIGEM, 3, -2.0F))
+                .fireResistant());
         registerAbility(Ability.MOBSCANNER);
         registerAbility(Ability.CAUTERIZEWOUNDS);
         registerAbility(Ability.DROPTELEPORT);

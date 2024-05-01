@@ -4,11 +4,14 @@ import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseHoe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
 
 public class CelestigemHoe extends BaseHoe implements PoweredTool {
     public CelestigemHoe() {
-        super(GooTier.CELESTIGEM, new Properties().fireResistant());
+        super(GooTier.CELESTIGEM, new Properties()
+                .attributes(HoeItem.createAttributes(GooTier.CELESTIGEM, -2.0F, -1.0F))
+                .fireResistant());
         registerAbility(Ability.DROPTELEPORT);
     }
 
