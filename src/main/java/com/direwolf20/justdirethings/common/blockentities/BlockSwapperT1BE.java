@@ -320,6 +320,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             return false;
         if (!entity.canChangeDimensions() && !isSameLevel())
             return false;
+        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
+            return false;
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.HOSTILE) && !(entity instanceof Monster))
             return false;
         if (((swap_entity_type.equals(SWAP_ENTITY_TYPE.PASSIVE)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.ADULT)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.CHILD))) && !(entity instanceof Animal))
