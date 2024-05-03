@@ -102,6 +102,14 @@ runs {
     client {
         // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArguments.addAll '--username', 'Direwolf20'
+    }
+
+    client2 {
+        // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        configure('client')
+        programArguments.addAll '--username', 'Direwolf21'
     }
 
     server {

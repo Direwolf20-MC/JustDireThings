@@ -25,7 +25,7 @@ public class JustDireItemTags extends ItemTagsProvider {
     public static final TagKey<Item> TOOLS_WRENCH = forgeTag("tools/wrench");
 
     private static TagKey<Item> forgeTag(String name) {
-        return ItemTags.create(new ResourceLocation("forge", name));
+        return ItemTags.create(new ResourceLocation("c", name));
     }
 
     public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "deny_fuel_canister"));
