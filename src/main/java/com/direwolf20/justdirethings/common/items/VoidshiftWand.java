@@ -7,7 +7,7 @@ public class VoidshiftWand extends BaseToggleableTool implements PoweredItem, Le
         super(new Properties()
                 .durability(200)
                 .fireResistant());
-        registerAbility(Ability.AIRBURST, new AbilityParams(1, 5, 1, 1));
+        registerAbility(Ability.AIRBURST, new AbilityParams(1, 4, 1, 4));
         registerAbility(Ability.VOIDSHIFT, new AbilityParams(1, 15, 1, 15));
     }
 }

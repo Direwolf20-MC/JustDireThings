@@ -7,7 +7,7 @@ public class EclipsegateWand extends BaseToggleableTool implements PoweredItem, 
         super(new Properties()
                 .durability(200)
                 .fireResistant());
-        registerAbility(Ability.AIRBURST, new AbilityParams(1, 10, 1, 1));
+        registerAbility(Ability.AIRBURST, new AbilityParams(1, 8, 1, 8));
         registerAbility(Ability.VOIDSHIFT, new AbilityParams(1, 30, 1, 30));
         registerAbility(Ability.ECLIPSEGATE);
     }
