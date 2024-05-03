@@ -165,7 +165,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         fakePlayer.setReach(0.9);
         Direction placing = Direction.values()[direction];
         FakePlayerUtil.setupFakePlayerForUse(fakePlayer, entity.blockPosition(), placing, entity.position(), itemStack, sneaking);
-        if (showFakePlayer && level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
+        if (showFakePlayer && level instanceof ServerLevel serverLevel && !itemStack.isEmpty()) {
             fakePlayer.drawParticles(serverLevel, itemStack);
         }
         FakePlayerUtil.FakePlayerResult fakePlayerResult;
@@ -178,7 +178,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public InteractionResult clickBlock(ItemStack itemStack, UsefulFakePlayer fakePlayer, BlockPos blockPos) {
         Direction placing = Direction.values()[direction];
         FakePlayerUtil.setupFakePlayerForUse(fakePlayer, blockPos, placing, itemStack, sneaking);
-        if (showFakePlayer && level instanceof ServerLevel serverLevel) { //Temp (maybe) for showing where the fake player is...
+        if (showFakePlayer && level instanceof ServerLevel serverLevel && !itemStack.isEmpty()) {
             fakePlayer.drawParticles(serverLevel, itemStack);
         }
         FakePlayerUtil.FakePlayerResult fakePlayerResult = new FakePlayerUtil.FakePlayerResult(InteractionResult.FAIL, itemStack);
