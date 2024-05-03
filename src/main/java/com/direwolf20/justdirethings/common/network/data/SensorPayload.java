@@ -21,10 +21,10 @@ public record SensorPayload(
     }
 
     public static final StreamCodec<FriendlyByteBuf, SensorPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, SensorPayload::senseCount,
+            ByteBufCodecs.VAR_INT, SensorPayload::senseTarget,
             ByteBufCodecs.BOOL, SensorPayload::strongSignal,
-            ByteBufCodecs.INT, SensorPayload::senseCount,
-            ByteBufCodecs.INT, SensorPayload::equality,
+            ByteBufCodecs.VAR_INT, SensorPayload::senseCount,
+            ByteBufCodecs.VAR_INT, SensorPayload::equality,
             SensorPayload::new
     );
 }
