@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -248,7 +249,8 @@ public class AbilityMethods {
             double burstStrength = 1.5 + addedStrength;
             // Set the player's motion based on the look direction and burst strength
             player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
-            player.hurtMarked = true; //This tells the server to move the client
+            ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
+            //player.hurtMarked = true; //This tells the server to move the client
             player.resetFallDistance();
             // Optionally, you could add some effects or sounds here
             damageTool(itemStack, player, Ability.AIRBURST, multiplier);
