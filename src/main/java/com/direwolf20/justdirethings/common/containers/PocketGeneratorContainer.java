@@ -66,6 +66,7 @@ public class PocketGeneratorContainer extends BaseContainer {
             if (currentStack.isEmpty()) {
                 slot.set(ItemStack.EMPTY);
             } else {
+                slot.set(currentStack);
                 slot.setChanged();
             }
 
