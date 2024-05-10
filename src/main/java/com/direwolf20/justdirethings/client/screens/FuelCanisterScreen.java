@@ -18,7 +18,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.neoforged.neoforge.common.CommonHooks;
 
 import java.awt.*;
 import java.util.List;
@@ -51,7 +50,7 @@ public class FuelCanisterScreen extends AbstractContainerScreen<FuelCanisterCont
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
             ItemStack itemstack = this.hoveredSlot.getItem();
-            int fuelPerPiece = CommonHooks.getBurnTime(itemstack, RecipeType.SMELTING);
+            int fuelPerPiece = itemstack.getBurnTime(RecipeType.SMELTING);
             List<Component> tooltip = this.getTooltipFromContainerItem(itemstack);
             if (container.handler.isItemValid(0, itemstack)) {
                 if (hasShiftDown()) {
