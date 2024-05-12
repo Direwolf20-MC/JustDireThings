@@ -6,5 +6,8 @@
   "ingredient": {
     "item": "justdirethings:raw_eclipsealloy"
   },
-  "result": "justdirethings:eclipsealloy_ingot"
+  "result": {
+    "count": 1,
+    "id": "justdirethings:eclipsealloy_ingot"
+  }
 }

@@ -5,11 +5,14 @@ import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseHoe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldHoe extends BaseHoe {
     public BlazegoldHoe() {
-        super(GooTier.BLAZEGOLD, -2, -1.0F, new Properties().fireResistant());
+        super(GooTier.BLAZEGOLD, new Properties()
+                .attributes(HoeItem.createAttributes(GooTier.BLAZEGOLD, -2.0F, -1.0F))
+                .fireResistant());
         registerAbility(Ability.LAVAREPAIR);
     }
 

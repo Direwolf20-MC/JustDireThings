@@ -9,6 +9,7 @@ import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
 
 import java.util.ArrayList;
@@ -318,6 +320,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             return false;
         if (!entity.canChangeDimensions() && !isSameLevel())
             return false;
+        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
+            return false;
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.HOSTILE) && !(entity instanceof Monster))
             return false;
         if (((swap_entity_type.equals(SWAP_ENTITY_TYPE.PASSIVE)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.ADULT)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.CHILD))) && !(entity instanceof Animal))
@@ -350,11 +354,11 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         CompoundTag thatNBT = new CompoundTag();
 
         if (thisBE != null) {
-            thisNBT = thisBE.saveWithFullMetadata();
+            thisNBT = thisBE.saveWithFullMetadata(level.registryAccess());
         }
 
         if (thatBE != null) {
-            thatNBT = thatBE.saveWithFullMetadata();
+            thatNBT = thatBE.saveWithFullMetadata(level.registryAccess());
         }
 
         //Remove existing blocks and BE's
@@ -368,7 +372,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 BlockEntity newBE = partnerLevel.getBlockEntity(remoteSwapPos);
                 if (newBE != null) {
                     try {
-                        newBE.load(thisNBT);
+                        newBE.loadCustomOnly(thisNBT, level.registryAccess());
                     } catch (Exception e) {
                         System.out.println("Failed to restore tile data for block at: " + remoteSwapPos + " with NBT: " + thisNBT + ". Consider adding it to the blacklist");
                     }
@@ -385,7 +389,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 BlockEntity newBE = level.getBlockEntity(blockPos);
                 if (newBE != null) {
                     try {
-                        newBE.load(thatNBT);
+                        newBE.loadCustomOnly(thatNBT, level.registryAccess());
                     } catch (Exception e) {
                         System.out.println("Failed to restore tile data for block at: " + blockPos + " with NBT: " + thatNBT + ". Consider adding it to the blacklist");
                     }
@@ -425,7 +429,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean isBlockPosValid(ServerLevel serverLevel, BlockPos blockPos) {
-        if (serverLevel.getBlockState(blockPos).is(JustDireBlockTags.NO_MOVE) || serverLevel.getBlockState(blockPos).is(JustDireBlockTags.SWAPPERDENY))
+        if (serverLevel.getBlockState(blockPos).is(Tags.Blocks.RELOCATION_NOT_SUPPORTED) || serverLevel.getBlockState(blockPos).is(JustDireBlockTags.SWAPPERDENY))
             return false;
         GlobalPos targetGlobalPos = GlobalPos.of(serverLevel.dimension(), blockPos);
         if (targetGlobalPos.equals(getGlobalPos()) || targetGlobalPos.equals(boundTo))
@@ -476,8 +480,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         if (boundTo != null)
             tag.put("boundTo", NBTHelpers.globalPosToNBT(boundTo));
         tag.putBoolean("swapBlocks", swapBlocks);
@@ -485,8 +489,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
         if (tag.contains("boundTo")) {
             GlobalPos newBoundTo = NBTHelpers.nbtToGlobalPos(tag.getCompound("boundTo"));
             boolean same = newBoundTo.equals(boundTo);

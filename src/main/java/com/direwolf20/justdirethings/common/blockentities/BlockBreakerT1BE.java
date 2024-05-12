@@ -10,8 +10,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -202,7 +203,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public float getDestroySpeed(BlockPos blockPos, ItemStack tool, FakePlayer player, BlockState blockState) {
         float toolDestroySpeed = tool.getDestroySpeed(blockState);
         if (toolDestroySpeed > 1.0F) {
-            int efficiency = EnchantmentHelper.getTagEnchantmentLevel(Enchantments.BLOCK_EFFICIENCY, tool);
+            int efficiency = tool.getEnchantmentLevel(Enchantments.EFFICIENCY);
             if (efficiency > 0) {
                 toolDestroySpeed += (float) (efficiency * efficiency + 1);
             }
@@ -225,8 +226,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         if (success) {
             Block.dropResources(state, level, breakPos, level.getBlockEntity(breakPos), player, itemStack);
             if (state.getDestroySpeed(level, breakPos) != 0.0F)
-                itemStack.hurtAndBreak(1, player, pOnBroken -> {
-                });
+                itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         }
     }
 

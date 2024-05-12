@@ -180,7 +180,6 @@ public class LivingEntityEvents {
         CompoundTag deathData = oldPlayer.getData(Registration.DEATH_DATA);
 
         if (deathData.contains("direDeathData")) {
-            //GlobalPos boundTo = NBTHelpers.nbtToGlobalPos(deathData.getCompound("direDeathData"));
             NBTHelpers.GlobalVec3 boundTo = NBTHelpers.nbtToGlobalVec3(deathData.getCompound("direDeathData"));
             ItemStack totemStack = new ItemStack(Registration.TotemOfDeathRecall.get());
             TotemOfDeathRecall.setBoundTo(totemStack, boundTo);

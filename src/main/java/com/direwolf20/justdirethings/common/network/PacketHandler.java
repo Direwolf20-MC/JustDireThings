@@ -3,33 +3,33 @@ package com.direwolf20.justdirethings.common.network;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.network.data.*;
 import com.direwolf20.justdirethings.common.network.handler.*;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class PacketHandler {
-    public static void registerNetworking(final RegisterPayloadHandlerEvent event) {
-        final IPayloadRegistrar registrar = event.registrar(JustDireThings.MODID);
+    public static void registerNetworking(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar(JustDireThings.MODID);
 
         //Going to Server
-        registrar.play(AreaAffectingPayload.ID, AreaAffectingPayload::new, handler -> handler.server(AreaAffectingPacket.get()::handle));
-        registrar.play(BlockStateFilterPayload.ID, BlockStateFilterPayload::new, handler -> handler.server(BlockStateFilterPacket.get()::handle));
-        registrar.play(ClickerPayload.ID, ClickerPayload::new, handler -> handler.server(ClickerPacket.get()::handle));
-        registrar.play(DirectionSettingPayload.ID, DirectionSettingPayload::new, handler -> handler.server(DirectionSettingPacket.get()::handle));
-        registrar.play(DropperSettingPayload.ID, DropperSettingPayload::new, handler -> handler.server(DropperSettingPacket.get()::handle));
-        registrar.play(EnergyTransmitterSettingPayload.ID, EnergyTransmitterSettingPayload::new, handler -> handler.server(EnergyTransmitterPacket.get()::handle));
-        registrar.play(FilterSettingPayload.ID, FilterSettingPayload::new, handler -> handler.server(FilterSettingPacket.get()::handle));
-        registrar.play(GhostSlotPayload.ID, GhostSlotPayload::new, handler -> handler.server(GhostSlotPacket.get()::handle));
-        registrar.play(LeftClickPayload.ID, LeftClickPayload::new, handler -> handler.server(LeftClickPacket.get()::handle));
-        registrar.play(PlayerAccessorPayload.ID, PlayerAccessorPayload::new, handler -> handler.server(PlayerAccessorPacket.get()::handle));
-        registrar.play(RedstoneSettingPayload.ID, RedstoneSettingPayload::new, handler -> handler.server(RedstoneSettingPacket.get()::handle));
-        registrar.play(SensorPayload.ID, SensorPayload::new, handler -> handler.server(SensorPacket.get()::handle));
-        registrar.play(SwapperPayload.ID, SwapperPayload::new, handler -> handler.server(SwapperPacket.get()::handle));
-        registrar.play(TickSpeedPayload.ID, TickSpeedPayload::new, handler -> handler.server(TickSpeedPacket.get()::handle));
-        registrar.play(ToggleToolLeftRightClickPayload.ID, ToggleToolLeftRightClickPayload::new, handler -> handler.server(ToggleToolLeftRightClickPacket.get()::handle));
-        registrar.play(ToggleToolPayload.ID, ToggleToolPayload::new, handler -> handler.server(ToggleToolPacket.get()::handle));
-        registrar.play(ToggleToolSlotPayload.ID, ToggleToolSlotPayload::new, handler -> handler.server(ToggleToolSlotPacket.get()::handle));
+        registrar.playToServer(AreaAffectingPayload.TYPE, AreaAffectingPayload.STREAM_CODEC, AreaAffectingPacket.get()::handle);
+        registrar.playToServer(BlockStateFilterPayload.TYPE, BlockStateFilterPayload.STREAM_CODEC, BlockStateFilterPacket.get()::handle);
+        registrar.playToServer(ClickerPayload.TYPE, ClickerPayload.STREAM_CODEC, ClickerPacket.get()::handle);
+        registrar.playToServer(DirectionSettingPayload.TYPE, DirectionSettingPayload.STREAM_CODEC, DirectionSettingPacket.get()::handle);
+        registrar.playToServer(DropperSettingPayload.TYPE, DropperSettingPayload.STREAM_CODEC, DropperSettingPacket.get()::handle);
+        registrar.playToServer(EnergyTransmitterSettingPayload.TYPE, EnergyTransmitterSettingPayload.STREAM_CODEC, EnergyTransmitterPacket.get()::handle);
+        registrar.playToServer(FilterSettingPayload.TYPE, FilterSettingPayload.STREAM_CODEC, FilterSettingPacket.get()::handle);
+        registrar.playToServer(GhostSlotPayload.TYPE, GhostSlotPayload.STREAM_CODEC, GhostSlotPacket.get()::handle);
+        registrar.playToServer(LeftClickPayload.TYPE, LeftClickPayload.STREAM_CODEC, LeftClickPacket.get()::handle);
+        registrar.playToServer(PlayerAccessorPayload.TYPE, PlayerAccessorPayload.STREAM_CODEC, PlayerAccessorPacket.get()::handle);
+        registrar.playToServer(RedstoneSettingPayload.TYPE, RedstoneSettingPayload.STREAM_CODEC, RedstoneSettingPacket.get()::handle);
+        registrar.playToServer(SensorPayload.TYPE, SensorPayload.STREAM_CODEC, SensorPacket.get()::handle);
+        registrar.playToServer(SwapperPayload.TYPE, SwapperPayload.STREAM_CODEC, SwapperPacket.get()::handle);
+        registrar.playToServer(TickSpeedPayload.TYPE, TickSpeedPayload.STREAM_CODEC, TickSpeedPacket.get()::handle);
+        registrar.playToServer(ToggleToolLeftRightClickPayload.TYPE, ToggleToolLeftRightClickPayload.STREAM_CODEC, ToggleToolLeftRightClickPacket.get()::handle);
+        registrar.playToServer(ToggleToolPayload.TYPE, ToggleToolPayload.STREAM_CODEC, ToggleToolPacket.get()::handle);
+        registrar.playToServer(ToggleToolSlotPayload.TYPE, ToggleToolSlotPayload.STREAM_CODEC, ToggleToolSlotPacket.get()::handle);
 
         //Going to Client
-        registrar.play(ClientSoundPayload.ID, ClientSoundPayload::new, handler -> handler.client(ClientSoundPacket.get()::handle));
+        registrar.playToClient(ClientSoundPayload.TYPE, ClientSoundPayload.STREAM_CODEC, ClientSoundPacket.get()::handle);
     }
 }

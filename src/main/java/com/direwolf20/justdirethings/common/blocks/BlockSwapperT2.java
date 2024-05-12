@@ -35,11 +35,11 @@ public class BlockSwapperT2 extends BaseMachineBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult hit) {
         if (level.isClientSide)
             return InteractionResult.SUCCESS;
 
-        ItemStack playerHolding = player.getItemInHand(hand);
+        ItemStack playerHolding = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (playerHolding.getItem() instanceof FerricoreWrench) return InteractionResult.PASS;
 
         BlockEntity te = level.getBlockEntity(blockPos);

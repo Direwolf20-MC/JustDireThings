@@ -19,28 +19,28 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.Set;
+import java.util.List;
 
 import static com.direwolf20.justdirethings.util.MiscTools.getHitResult;
 
-@Mod.EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
 public class EventKeyInput {
 
     @SubscribeEvent
-    public static void handleEventInput(TickEvent.ClientTickEvent event) {
+    public static void handleEventInput(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || event.phase == TickEvent.Phase.START)
+        if (mc.player == null)
             return;
 
         ItemStack toggleableItem = ToggleableItem.getToggleableItem(mc.player);
         if (!toggleableItem.isEmpty()) {
             if (KeyBindings.toggleTool.consumeClick()) {
-                PacketDistributor.SERVER.noArg().send(new ToggleToolPayload("enabled"));
+                PacketDistributor.sendToServer(new ToggleToolPayload("enabled"));
             }
         }
     }
@@ -49,7 +49,7 @@ public class EventKeyInput {
     @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.screen != null)
+        if (mc.level == null || mc.player == null || mc.screen != null)
             return;
         Player player = mc.player;
         if (event.getAction() == InputConstants.PRESS) {
@@ -79,7 +79,7 @@ public class EventKeyInput {
     @SubscribeEvent
     public static void onMouseInput(InputEvent.MouseButton.Post event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.screen != null || event.getButton() == 0 || event.getButton() == 1 || event.getAction() != InputConstants.PRESS)
+        if (mc.level == null || mc.player == null || mc.screen != null || event.getButton() == 0 || event.getButton() == 1 || event.getAction() != InputConstants.PRESS)
             return;
         Player player = mc.player;
         for (int i = 0; i < mc.player.getInventory().items.size(); i++) {
@@ -91,7 +91,7 @@ public class EventKeyInput {
     }
 
     private static void activateAbilities(ItemStack itemStack, int key, ToggleableTool toggleableTool, Player player, int invSlot, boolean isMouse) {
-        Set<Ability> abilities = LeftClickableTool.getCustomBindingList(itemStack, new LeftClickableTool.Binding(key, isMouse));
+        List<Ability> abilities = LeftClickableTool.getCustomBindingListFor(itemStack, key, isMouse);
         if (!abilities.isEmpty()) {
             //Do them client side and Server side, since some abilities (like ore scanner) are client side activated.
             toggleableTool.useAbility(player.level(), player, itemStack, key, isMouse);
@@ -100,7 +100,7 @@ public class EventKeyInput {
                 UseOnContext useoncontext = new UseOnContext(player.level(), player, InteractionHand.MAIN_HAND, itemStack, blockHitResult);
                 toggleableTool.useOnAbility(useoncontext, itemStack, key, isMouse);
             }
-            PacketDistributor.SERVER.noArg().send(new LeftClickPayload(0, false, BlockPos.ZERO, -1, invSlot, key, isMouse)); //Type 0 == air
+            PacketDistributor.sendToServer(new LeftClickPayload(0, false, BlockPos.ZERO, -1, invSlot, key, isMouse)); //Type 0 == air
         }
     }
 }

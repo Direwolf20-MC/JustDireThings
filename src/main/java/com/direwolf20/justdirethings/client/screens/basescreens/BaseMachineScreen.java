@@ -114,7 +114,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     public void addTickSpeedButton() {
         addRenderableWidget(ToggleButtonFactory.TICKSPEEDBUTTON(getGuiLeft() + 144, topSectionTop + 40, tickSpeed, b -> {
             tickSpeed = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
-            PacketDistributor.SERVER.noArg().send(new TickSpeedPayload(tickSpeed));
+            PacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
         }));
     }
 
@@ -284,7 +284,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
                 ItemStack stack = this.menu.getCarried();// getMinecraft().player.inventoryMenu.getCarried();
                 stack = stack.copy().split(hoveredSlot.getMaxStackSize()); // Limit to slot limit
                 hoveredSlot.set(stack); // Temporarily update the client for continuity purposes
-                PacketDistributor.SERVER.noArg().send(new GhostSlotPayload(hoveredSlot.index, stack, stack.getCount(), -1));
+                PacketDistributor.sendToServer(new GhostSlotPayload(hoveredSlot.index, stack, stack.getCount(), -1));
                 return true;
             }
         }
@@ -326,10 +326,10 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
     public void saveSettings() {
         if (baseMachineBE instanceof AreaAffectingBE)
-            PacketDistributor.SERVER.noArg().send(new AreaAffectingPayload(xRadius, yRadius, zRadius, xOffset, yOffset, zOffset, renderArea));
+            PacketDistributor.sendToServer(new AreaAffectingPayload(xRadius, yRadius, zRadius, xOffset, yOffset, zOffset, renderArea));
         if (baseMachineBE instanceof FilterableBE)
-            PacketDistributor.SERVER.noArg().send(new FilterSettingPayload(filterData.allowlist, filterData.compareNBT, filterData.blockItemFilter));
+            PacketDistributor.sendToServer(new FilterSettingPayload(filterData.allowlist, filterData.compareNBT, filterData.blockItemFilter));
         if (baseMachineBE instanceof RedstoneControlledBE)
-            PacketDistributor.SERVER.noArg().send(new RedstoneSettingPayload(redstoneMode.ordinal()));
+            PacketDistributor.sendToServer(new RedstoneSettingPayload(redstoneMode.ordinal()));
     }
 }

@@ -32,7 +32,7 @@ public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollLi
         super(Minecraft.getInstance(), listWidth, bottom - top, top, parent.getFontRenderer().lineHeight * 2 + 8);
         this.parent = parent;
         this.listWidth = listWidth;
-        this.setRenderBackground(false);
+        //this.setRenderBackground(false);
         this.refreshList();
         setX(left);
     }

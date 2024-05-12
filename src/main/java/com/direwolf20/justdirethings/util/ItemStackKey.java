@@ -1,29 +1,30 @@
 package com.direwolf20.justdirethings.util;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
 
 public class ItemStackKey {
-    public final Item item;
-    public final CompoundTag nbt;
+    public final Holder<Item> item;
+    public final DataComponentPatch dataComponents;
     private final int hash;
 
 
     public ItemStackKey(ItemStack stack, boolean compareNBT) {
-        this.item = stack.getItem();
-        this.nbt = compareNBT ? stack.getTag() : new CompoundTag();
-        this.hash = Objects.hash(item, nbt);
+        this.item = stack.getItemHolder();
+        this.dataComponents = compareNBT ? stack.getComponentsPatch() : DataComponentPatch.EMPTY;
+        this.hash = Objects.hash(item, dataComponents);
     }
 
     public ItemStack getStack() {
-        return new ItemStack(item, 1, nbt);
+        return new ItemStack(item, 1, dataComponents);
     }
 
     public ItemStack getStack(int amt) {
-        return new ItemStack(item, amt, nbt);
+        return new ItemStack(item, amt, dataComponents);
     }
 
     @Override
@@ -34,7 +35,7 @@ public class ItemStackKey {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ItemStackKey) {
-            return (((ItemStackKey) obj).item == this.item) && Objects.equals(((ItemStackKey) obj).nbt, this.nbt);
+            return (((ItemStackKey) obj).item == this.item) && Objects.equals(((ItemStackKey) obj).dataComponents, this.dataComponents);
         }
         return false;
     }

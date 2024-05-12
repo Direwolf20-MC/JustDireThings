@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -31,6 +32,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -124,7 +126,7 @@ public class AbilityMethods {
     public static boolean eclipseGate(UseOnContext pContext) {
         ItemStack pStack = pContext.getItemInHand();
         Level level = pContext.getLevel();
-        if (level.isClientSide) return false;
+        if (level.isClientSide) return true;
         Set<BlockPos> posList = getEclipseGateBlocks(pContext);
         boolean anyWorked = false;
         for (BlockPos blockPos : posList) {
@@ -178,7 +180,7 @@ public class AbilityMethods {
         if (blockState.isAir()) return false;
         if (blockState.getDestroySpeed(serverLevel, blockPos) < 0) return false;
         if (blockState.is(JustDireBlockTags.ECLISEGATEDENY)) return false;
-        if (blockState.is(JustDireBlockTags.NO_MOVE)) return false;
+        if (blockState.is(Tags.Blocks.RELOCATION_NOT_SUPPORTED)) return false;
         return true;
     }
 
@@ -196,7 +198,7 @@ public class AbilityMethods {
                 player.teleportTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
             }
             player.resetFallDistance();
-            PacketDistributor.PLAYER.with((ServerPlayer) player).send(new ClientSoundPayload(SoundEvents.PLAYER_TELEPORT.getLocation(), 1f, 1f));
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new ClientSoundPayload(SoundEvents.PLAYER_TELEPORT.getLocation(), 1f, 1f));
             level.playSound(player, BlockPos.containing(shiftPosition), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1F, 1.0F);
             damageTool(itemStack, player, Ability.VOIDSHIFT, distanceTraveled);
         }
@@ -247,11 +249,12 @@ public class AbilityMethods {
             double burstStrength = 1.5 + addedStrength;
             // Set the player's motion based on the look direction and burst strength
             player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
-            player.hurtMarked = true; //This tells the server to move the client
+            ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
+            //player.hurtMarked = true; //This tells the server to move the client
             player.resetFallDistance();
             // Optionally, you could add some effects or sounds here
             damageTool(itemStack, player, Ability.AIRBURST, multiplier);
-            PacketDistributor.PLAYER.with((ServerPlayer) player).send(new ClientSoundPayload(SoundEvents.FIRECHARGE_USE.getLocation(), 0.5f, 0.125f));
+            PacketDistributor.sendToPlayer((ServerPlayer) player, new ClientSoundPayload(SoundEvents.FIRECHARGE_USE.getLocation(), 0.5f, 0.125f));
             level.playSound(player, player.getOnPos(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.5f, 0.125f);
             return true;
         }
@@ -338,7 +341,7 @@ public class AbilityMethods {
 
     public static boolean runSpeed(Level level, Player player, ItemStack itemStack) {
         if (player.isSprinting() && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
-            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.RUNSPEED.getName()) / 10;
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.RUNSPEED.getName()) / 25;
             if (!player.onGround())
                 speed = speed / 4;
             player.moveRelative(speed, new Vec3(0, 0, 1));
@@ -348,7 +351,7 @@ public class AbilityMethods {
 
     public static boolean walkSpeed(Level level, Player player, ItemStack itemStack) {
         if (!player.isSprinting() && player.fallDistance <= 0 && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
-            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.WALKSPEED.getName()) / 10;
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.WALKSPEED.getName()) / 25;
             if (!player.onGround())
                 speed = speed / 4;
             player.moveRelative(speed, new Vec3(0, 0, 1));

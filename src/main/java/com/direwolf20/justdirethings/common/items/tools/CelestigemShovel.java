@@ -6,10 +6,13 @@ import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseShovel;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShovelItem;
 
 public class CelestigemShovel extends BaseShovel implements PoweredTool {
     public CelestigemShovel() {
-        super(GooTier.CELESTIGEM, 1.5F, -3.0F, new Properties().fireResistant());
+        super(GooTier.CELESTIGEM, new Properties()
+                .attributes(ShovelItem.createAttributes(GooTier.CELESTIGEM, 1.5F, -3.0F))
+                .fireResistant());
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
         registerAbility(Ability.SMELTER);

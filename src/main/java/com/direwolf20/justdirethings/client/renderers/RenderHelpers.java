@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import java.awt.*;
@@ -25,7 +24,7 @@ public class RenderHelpers {
 
         matrix.pushPose();
         Matrix4f matrix4f = matrix.last().pose();
-        Matrix3f matrix3f = matrix.last().normal();
+        PoseStack.Pose matrix3f = matrix.last();
         int colorRGB = color.getRGB();
 
         builder.vertex(matrix4f, x, y, z).color(colorRGB).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
@@ -69,7 +68,7 @@ public class RenderHelpers {
 
         matrix.pushPose();
         Matrix4f matrix4f = matrix.last().pose();
-        Matrix3f matrix3f = matrix.last().normal();
+        PoseStack.Pose matrix3f = matrix.last();
         int colorRGB = color.getRGB();
 
         builder.vertex(matrix4f, x, y, z).color(colorRGB).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
@@ -113,7 +112,7 @@ public class RenderHelpers {
 
         matrix.pushPose();
         Matrix4f matrix4f = matrix.last().pose();
-        Matrix3f matrix3f = matrix.last().normal();
+        PoseStack.Pose matrix3f = matrix.last();
         int colorRGB = color.getRGB();
 
         builder.vertex(matrix4f, x, y, z).color(colorRGB).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();

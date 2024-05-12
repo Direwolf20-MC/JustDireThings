@@ -7,10 +7,13 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BasePickaxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PickaxeItem;
 
 public class BlazegoldPickaxe extends BasePickaxe {
     public BlazegoldPickaxe() {
-        super(GooTier.BLAZEGOLD, 1, -2.8F, new Properties().fireResistant());
+        super(GooTier.BLAZEGOLD, new Properties()
+                .attributes(PickaxeItem.createAttributes(GooTier.BLAZEGOLD, 1.0F, -2.8F))
+                .fireResistant());
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);

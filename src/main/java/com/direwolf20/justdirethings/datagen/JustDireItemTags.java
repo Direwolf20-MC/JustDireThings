@@ -25,7 +25,7 @@ public class JustDireItemTags extends ItemTagsProvider {
     public static final TagKey<Item> TOOLS_WRENCH = forgeTag("tools/wrench");
 
     private static TagKey<Item> forgeTag(String name) {
-        return ItemTags.create(new ResourceLocation("forge", name));
+        return ItemTags.create(new ResourceLocation("c", name));
     }
 
     public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "deny_fuel_canister"));
@@ -83,13 +83,26 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.FerricoreWrench.get());
         tag(TOOLS_WRENCH)
                 .add(Registration.FerricoreWrench.get());
-        tag(Tags.Items.ARMORS_BOOTS)
+        tag(Tags.Items.STORAGE_BLOCKS)
+                .add(Registration.FerricoreBlock_ITEM.get())
+                .add(Registration.BlazeGoldBlock_ITEM.get())
+                .add(Registration.CelestigemBlock_ITEM.get())
+                .add(Registration.EclipseAlloyBlock_ITEM.get());
+        tag(ItemTags.FOOT_ARMOR)
                 .add(Registration.FerricoreBoots.get());
-        tag(Tags.Items.ARMORS_LEGGINGS)
+        tag(ItemTags.LEG_ARMOR)
                 .add(Registration.FerricoreLeggings.get());
-        tag(Tags.Items.ARMORS_CHESTPLATES)
+        tag(ItemTags.CHEST_ARMOR)
                 .add(Registration.FerricoreChestplate.get());
-        tag(Tags.Items.ARMORS_HELMETS)
+        tag(ItemTags.HEAD_ARMOR)
+                .add(Registration.FerricoreHelmet.get());
+        tag(ItemTags.FOOT_ARMOR_ENCHANTABLE)
+                .add(Registration.FerricoreBoots.get());
+        tag(ItemTags.LEG_ARMOR_ENCHANTABLE)
+                .add(Registration.FerricoreLeggings.get());
+        tag(ItemTags.CHEST_ARMOR_ENCHANTABLE)
+                .add(Registration.FerricoreChestplate.get());
+        tag(ItemTags.HEAD_ARMOR_ENCHANTABLE)
                 .add(Registration.FerricoreHelmet.get());
     }
 

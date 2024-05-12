@@ -1,30 +1,23 @@
 package com.direwolf20.justdirethings.common.items.armors.basearmors;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
@@ -32,7 +25,7 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 
-    public BaseHelmet(ArmorMaterial pMaterial, Properties pProperties) {
+    public BaseHelmet(Holder<ArmorMaterial> pMaterial, Properties pProperties) {
         super(pMaterial, Type.HELMET, pProperties);
     }
 
@@ -47,10 +40,10 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         Minecraft mc = Minecraft.getInstance();
-        if (level == null || mc.player == null) {
+        if (mc.level == null || mc.player == null) {
             return;
         }
 
@@ -66,16 +59,16 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> modifiers = super.getAttributeModifiers(slot, stack);
+    public ItemAttributeModifiers getAttributeModifiers(ItemStack stack) {
+        ItemAttributeModifiers itemAttributeModifiers = super.getAttributeModifiers(stack);
         if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return modifiers;
+            return itemAttributeModifiers;
 
-        return poweredTool.getPoweredAttributeModifiers(slot, stack, modifiers);
+        return poweredTool.getPoweredAttributeModifiers(stack, itemAttributeModifiers);
     }
 
     @Override
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Runnable onBroken) {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
@@ -103,7 +96,7 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
     }
 
     private boolean canAcceptEnchantments(ItemStack book) {
-        return !EnchantmentHelper.getEnchantments(book).containsKey(Enchantments.MENDING);
+        return !(book.getEnchantmentLevel(Enchantments.MENDING) > 0); //TODO Validate
     }
 
     private boolean canAcceptEnchantments(Enchantment enchantment) {

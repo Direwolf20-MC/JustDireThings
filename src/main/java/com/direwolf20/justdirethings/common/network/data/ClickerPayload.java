@@ -1,7 +1,9 @@
 package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import net.minecraft.network.FriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
@@ -12,23 +14,19 @@ public record ClickerPayload(
         boolean showFakePlayer,
         int maxHoldTicks
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "clicker_packet");
-
-    public ClickerPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt(), buffer.readInt(), buffer.readBoolean(), buffer.readBoolean(), buffer.readInt());
-    }
+    public static final Type<ClickerPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "clicker_packet"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(clickType);
-        buffer.writeInt(clickTarget);
-        buffer.writeBoolean(sneaking);
-        buffer.writeBoolean(showFakePlayer);
-        buffer.writeInt(maxHoldTicks);
+    public Type<ClickerPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<ByteBuf, ClickerPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, ClickerPayload::clickType,
+            ByteBufCodecs.INT, ClickerPayload::clickTarget,
+            ByteBufCodecs.BOOL, ClickerPayload::sneaking,
+            ByteBufCodecs.BOOL, ClickerPayload::showFakePlayer,
+            ByteBufCodecs.INT, ClickerPayload::maxHoldTicks,
+            ClickerPayload::new
+    );
 }

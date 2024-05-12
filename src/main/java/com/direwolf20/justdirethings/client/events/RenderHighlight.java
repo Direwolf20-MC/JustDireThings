@@ -93,11 +93,11 @@ public class RenderHighlight {
                     f2 /= f3;
                     pConsumer.vertex(posestack$pose.pose(), (float) (p_234280_ + pX), (float) (p_234281_ + pY), (float) (p_234282_ + pZ))
                             .color(pRed, pGreen, pBlue, pAlpha)
-                            .normal(posestack$pose.normal(), f, f1, f2)
+                            .normal(posestack$pose, f, f1, f2)
                             .endVertex();
                     pConsumer.vertex(posestack$pose.pose(), (float) (p_234283_ + pX), (float) (p_234284_ + pY), (float) (p_234285_ + pZ))
                             .color(pRed, pGreen, pBlue, pAlpha)
-                            .normal(posestack$pose.normal(), f, f1, f2)
+                            .normal(posestack$pose, f, f1, f2)
                             .endVertex();
                 }
         );

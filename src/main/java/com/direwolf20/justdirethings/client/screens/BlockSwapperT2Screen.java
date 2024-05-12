@@ -97,6 +97,6 @@ public class BlockSwapperT2Screen extends BaseMachineScreen<BlockSwapperT2Contai
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.SERVER.noArg().send(new SwapperPayload(swapBlocks, swap_entity_type));
+        PacketDistributor.sendToServer(new SwapperPayload(swapBlocks, swap_entity_type));
     }
 }

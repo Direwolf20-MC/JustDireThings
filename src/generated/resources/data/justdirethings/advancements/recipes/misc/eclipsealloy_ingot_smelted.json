@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:raw_eclipsealloy"
-            ]
+            "items": "justdirethings:raw_eclipsealloy"
           }
         ]
       },

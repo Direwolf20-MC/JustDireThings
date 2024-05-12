@@ -5,9 +5,8 @@ import com.direwolf20.justdirethings.common.containers.handlers.PlayerHandler;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -114,19 +113,19 @@ public class PlayerAccessorBE extends BaseMachineBE {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         for (Direction direction : Direction.values()) {
             tag.putInt("sidedInventory_" + direction.ordinal(), sidedInventoryTypes.getOrDefault(direction, 0));
         }
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         for (Direction direction : Direction.values()) {
             sidedInventoryTypes.put(direction, tag.getInt("sidedInventory_" + direction.ordinal()));
         }
-        super.load(tag);
+        super.loadAdditional(tag, provider);
     }
 
     @Override
@@ -136,10 +135,5 @@ public class PlayerAccessorBE extends BaseMachineBE {
             level.invalidateCapabilities(getBlockPos());
         }
         super.markDirtyClient();
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
     }
 }

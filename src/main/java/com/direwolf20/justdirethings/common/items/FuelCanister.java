@@ -2,13 +2,13 @@ package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -33,14 +32,13 @@ public class FuelCanister extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @javax.annotation.Nullable Level level, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, level, tooltip, flagIn);
-
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
         Minecraft mc = Minecraft.getInstance();
-
-        if (level == null || mc.player == null) {
+        if (mc.level == null || mc.player == null) {
             return;
         }
+
         boolean sneakPressed = Screen.hasShiftDown();
         if (sneakPressed)
             tooltip.add(Component.translatable("justdirethings.fuelcanisteramt", MagicHelpers.formatted(getFuelLevel(stack))).withStyle(ChatFormatting.AQUA));
@@ -56,7 +54,7 @@ public class FuelCanister extends Item {
 
         player.openMenu(new SimpleMenuProvider(
                 (windowId, playerInventory, playerEntity) -> new FuelCanisterContainer(windowId, playerInventory, player, itemstack), Component.translatable("")), (buf -> {
-            buf.writeItem(itemstack);
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, itemstack);
         }));
 
         return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
@@ -80,18 +78,15 @@ public class FuelCanister extends Item {
     }
 
     public static int getFuelLevel(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && tag.contains("FuelLevel") ? tag.getInt("FuelLevel") : 0;
+        return stack.getOrDefault(JustDireDataComponents.FUELCANISTER_FUELLEVEL, 0);
     }
 
     public static void setFuelLevel(ItemStack stack, int fuelLevel) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt("FuelLevel", fuelLevel);
+        stack.set(JustDireDataComponents.FUELCANISTER_FUELLEVEL, fuelLevel);
     }
 
     public static double getBurnSpeed(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && tag.contains("BurnSpeed") ? tag.getDouble("BurnSpeed") : 1.0;
+        return stack.getOrDefault(JustDireDataComponents.FUELCANISTER_BURNSPEED, 1.0);
     }
 
     public static int getBurnSpeedMultiplier(ItemStack stack) {
@@ -100,8 +95,7 @@ public class FuelCanister extends Item {
     }
 
     public static void setBurnSpeed(ItemStack stack, double burnSpeed) {
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putDouble("BurnSpeed", burnSpeed);
+        stack.set(JustDireDataComponents.FUELCANISTER_BURNSPEED, burnSpeed);
     }
 
     public static void decrementFuel(ItemStack stack) {
@@ -120,7 +114,7 @@ public class FuelCanister extends Item {
 
     public static void incrementFuel(ItemStack stack, ItemStack fuelStack) {
         int currentFuel = getFuelLevel(stack);
-        int fuelPerPiece = CommonHooks.getBurnTime(fuelStack, RecipeType.SMELTING);
+        int fuelPerPiece = fuelStack.getBurnTime(RecipeType.SMELTING);
         if (fuelPerPiece == 0) return;
         double currentBurnSpeedMultiplier = getBurnSpeed(stack);
         int fuelMultiplier = 1;

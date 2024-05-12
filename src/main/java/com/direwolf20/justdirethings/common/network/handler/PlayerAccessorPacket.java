@@ -6,9 +6,7 @@ import com.direwolf20.justdirethings.common.network.data.PlayerAccessorPayload;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
-
-import java.util.Optional;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class PlayerAccessorPacket {
     public static final PlayerAccessorPacket INSTANCE = new PlayerAccessorPacket();
@@ -17,16 +15,13 @@ public class PlayerAccessorPacket {
         return INSTANCE;
     }
 
-    public void handle(final PlayerAccessorPayload payload, final PlayPayloadContext context) {
-        context.workHandler().submitAsync(() -> {
-            Optional<Player> senderOptional = context.player();
-            if (senderOptional.isEmpty())
-                return;
-            Player sender = senderOptional.get();
+    public void handle(final PlayerAccessorPayload payload, final IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player sender = context.player();
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof PlayerAccessorBE playerAccessorBE) {
-                playerAccessorBE.updateSidedInventory(Direction.values()[payload.direction()], payload.type());
+                playerAccessorBE.updateSidedInventory(Direction.values()[payload.direction()], payload.accessType());
             }
         });
     }

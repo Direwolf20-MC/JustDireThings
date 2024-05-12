@@ -116,7 +116,7 @@ public class ThingFinder {
         if (!blockState.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)))
             return false;
         if (itemStack.getItem() instanceof TieredItem tieredItem) {
-            return net.neoforged.neoforge.common.TierSortingRegistry.isCorrectTierForDrops(tieredItem.getTier(), blockState);
+            return itemStack.isCorrectToolForDrops(blockState);
         }
         return true;
     }
@@ -235,6 +235,7 @@ public class ThingFinder {
 
         PoseStack matrix = evt.getPoseStack();
         matrix.pushPose();
+        matrix.mulPose(evt.getModelViewMatrix());
         matrix.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
         matrix.translate(renderPos.getX(), renderPos.getY(), renderPos.getZ());
         //Draw the renders in the specified order

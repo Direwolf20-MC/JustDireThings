@@ -65,7 +65,7 @@ public class DropperT2Screen extends BaseMachineScreen<DropperT2Container> {
         super.init();
         addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 122, topSectionTop + 38, direction, b -> {
             direction = ((ToggleButton) b).getTexturePosition();
-            PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction));
+            PacketDistributor.sendToServer(new DirectionSettingPayload(direction));
         }));
 
         addRenderableWidget(new NumberButton(getGuiLeft() + 20, topSectionTop + 41, 24, 12, dropCount, 1, 64, Component.translatable("justdirethings.screen.dropcount"), b -> {
@@ -83,7 +83,7 @@ public class DropperT2Screen extends BaseMachineScreen<DropperT2Container> {
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.SERVER.noArg().send(new DropperSettingPayload(dropCount));
+        PacketDistributor.sendToServer(new DropperSettingPayload(dropCount));
     }
 
     @Override

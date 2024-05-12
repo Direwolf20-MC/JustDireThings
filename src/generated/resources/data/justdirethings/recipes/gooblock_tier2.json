@@ -10,7 +10,7 @@
       "item": "justdirethings:gooblock_tier1"
     },
     "r": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     "w": {
       "item": "minecraft:nether_wart"
@@ -22,6 +22,7 @@
     "brb"
   ],
   "result": {
-    "item": "justdirethings:gooblock_tier2"
+    "count": 1,
+    "id": "justdirethings:gooblock_tier2"
   }
 }

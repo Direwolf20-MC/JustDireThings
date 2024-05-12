@@ -139,6 +139,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.boundside", " -Bound Side: ");
         add("justdirethings.creature", "Creature: ");
         add("justdirethings.ability", "Ability: %s - %s");
+        add("justdirethings.toolenabled", "Tool: %s - %s");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");

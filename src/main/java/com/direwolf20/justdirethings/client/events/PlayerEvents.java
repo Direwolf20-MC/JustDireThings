@@ -18,13 +18,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = JustDireThings.MODID)
+@EventBusSubscriber(modid = JustDireThings.MODID)
 public class PlayerEvents {
     private static BlockPos destroyPos = BlockPos.ZERO;
     private static int gameTicksMining = 0;
@@ -112,7 +112,7 @@ public class PlayerEvents {
             //Do them client side and Server side, since some abilities (like ore scanner) are client side activated.
             if (air) { //Air
                 toggleableTool.useAbility(player.level(), player, hand, false);
-                PacketDistributor.SERVER.noArg().send(new LeftClickPayload(0, hand == InteractionHand.MAIN_HAND, BlockPos.ZERO, -1, -1, -1, false)); //Type 0 == air
+                PacketDistributor.sendToServer(new LeftClickPayload(0, hand == InteractionHand.MAIN_HAND, BlockPos.ZERO, -1, -1, -1, false)); //Type 0 == air
             } else { //Block - No need for a packet since this will run both client and server side! (See above!)
                 UseOnContext useoncontext = new UseOnContext(player.level(), player, hand, itemStack, new BlockHitResult(Vec3.atCenterOf(blockPos), direction, blockPos, false));
                 toggleableTool.useOnAbility(useoncontext, false);

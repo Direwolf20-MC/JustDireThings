@@ -26,8 +26,6 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "noautoclick"));
     public static final TagKey<Block> SWAPPERDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "swapper_deny"));
     public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "eclipsegate_deny"));
-    public static final TagKey<Block> NO_MOVE = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
-
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -86,6 +84,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.RawBlazegoldOre.get())
                 .add(Registration.RawCelestigemOre.get())
                 .add(Registration.RawEclipseAlloyOre.get());
+        tag(Tags.Blocks.STORAGE_BLOCKS)
+                .add(Registration.FerricoreBlock.get())
+                .add(Registration.BlazeGoldBlock.get())
+                .add(Registration.CelestigemBlock.get())
+                .add(Registration.EclipseAlloyBlock.get());
         tag(BlockTags.BAMBOO_PLANTABLE_ON)
                 .add(Registration.GooSoil_Tier1.get())
                 .add(Registration.GooSoil_Tier2.get())

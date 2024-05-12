@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:clickert1"
-            ]
+            "items": "justdirethings:clickert1"
           }
         ]
       },

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "justdirethings:blockplacert2"
-            ]
+            "items": "justdirethings:blockplacert2"
           }
         ]
       },

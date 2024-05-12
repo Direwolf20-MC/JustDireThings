@@ -2,6 +2,8 @@ package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
@@ -12,23 +14,19 @@ public record ToggleToolLeftRightClickPayload(
         int keyCode,
         boolean isMouse
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "tool_left_right_click_settings_packet");
-
-    public ToggleToolLeftRightClickPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt(), buffer.readUtf(), buffer.readInt(), buffer.readInt(), buffer.readBoolean());
-    }
+    public static final Type<ToggleToolLeftRightClickPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "tool_left_right_click_settings_packet"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(slot);
-        buffer.writeUtf(abilityName);
-        buffer.writeInt(button);
-        buffer.writeInt(keyCode);
-        buffer.writeBoolean(isMouse);
+    public Type<ToggleToolLeftRightClickPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<FriendlyByteBuf, ToggleToolLeftRightClickPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, ToggleToolLeftRightClickPayload::slot,
+            ByteBufCodecs.STRING_UTF8, ToggleToolLeftRightClickPayload::abilityName,
+            ByteBufCodecs.INT, ToggleToolLeftRightClickPayload::button,
+            ByteBufCodecs.INT, ToggleToolLeftRightClickPayload::keyCode,
+            ByteBufCodecs.BOOL, ToggleToolLeftRightClickPayload::isMouse,
+            ToggleToolLeftRightClickPayload::new
+    );
 }

@@ -3,7 +3,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.blocks.EnergyTransmitter;
-import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
@@ -14,6 +14,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
@@ -255,7 +256,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (energyStorage == null) return;
         if (itemStack.getItem() instanceof PocketGenerator pocketGenerator) {
-            pocketGenerator.tryBurn((EnergyStorageNoReceive) energyStorage, itemStack);
+            pocketGenerator.tryBurn((EnergyStorageItemStackNoReceive) energyStorage, itemStack);
         }
         if (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
             return; //Don't do anything if already full...
@@ -403,14 +404,14 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         tag.putBoolean("showParticles", showParticles);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
         if (tag.contains("showParticles"))
             showParticles = tag.getBoolean("showParticles");
     }

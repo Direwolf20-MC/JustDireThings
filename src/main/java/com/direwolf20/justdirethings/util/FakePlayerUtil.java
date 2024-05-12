@@ -6,6 +6,9 @@ import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,6 +27,31 @@ import java.util.Optional;
  */
 public class FakePlayerUtil {
     public record FakePlayerResult(InteractionResult interactionResult, ItemStack returnStack) {
+    }
+
+    protected static void addAttributes(UsefulFakePlayer player, ItemStack itemStack, EquipmentSlot equipmentSlot) {
+        AttributeMap attributemap = player.getAttributes();
+        if (!itemStack.isEmpty()) {
+            itemStack.forEachModifier(equipmentSlot, (p_332602_, p_332603_) -> {
+                AttributeInstance attributeinstance = attributemap.getInstance(p_332602_);
+                if (attributeinstance != null) {
+                    attributeinstance.removeModifier(p_332603_.id());
+                    attributeinstance.addTransientModifier(p_332603_);
+                }
+            });
+        }
+    }
+
+    protected static void removeAttributes(UsefulFakePlayer player, ItemStack itemStack, EquipmentSlot equipmentSlot) {
+        AttributeMap attributemap = player.getAttributes();
+        if (!itemStack.isEmpty()) {
+            itemStack.forEachModifier(equipmentSlot, (p_330002_, p_330003_) -> {
+                AttributeInstance attributeinstance = attributemap.getInstance(p_330002_);
+                if (attributeinstance != null) {
+                    attributeinstance.removeModifier(p_330003_);
+                }
+            });
+        }
     }
 
 
@@ -49,7 +76,7 @@ public class FakePlayerUtil {
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         player.setPos(pos.x() + x, pos.y() + y - player.getEyeHeight(), pos.z() + z);
         if (!toHold.isEmpty())
-            player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
+            addAttributes(player, toHold, EquipmentSlot.MAINHAND);
         player.setShiftKeyDown(sneaking);
     }
 
@@ -74,7 +101,7 @@ public class FakePlayerUtil {
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         player.setPos(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
         if (!toHold.isEmpty())
-            player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
+            addAttributes(player, toHold, EquipmentSlot.MAINHAND);
         player.setShiftKeyDown(sneaking);
     }
 
@@ -99,7 +126,7 @@ public class FakePlayerUtil {
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         player.setPos(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
         if (!toHold.isEmpty())
-            player.getAttributes().addTransientAttributeModifiers(toHold.getAttributeModifiers(EquipmentSlot.MAINHAND));
+            addAttributes(player, toHold, EquipmentSlot.MAINHAND);
         player.setShiftKeyDown(sneaking);
 
         // Calculate the rotation angles to look at the target position
@@ -121,11 +148,11 @@ public class FakePlayerUtil {
      */
     public static void cleanupFakePlayerFromUse(UsefulFakePlayer player, ItemStack oldStack) {
         if (!oldStack.isEmpty())
-            player.getAttributes().removeAttributeModifiers(oldStack.getAttributeModifiers(EquipmentSlot.MAINHAND));
+            removeAttributes(player, oldStack, EquipmentSlot.MAINHAND);
         player.getInventory().items.set(player.getInventory().selected, ItemStack.EMPTY);
         //if (!player.getInventory().isEmpty()) player.getInventory().dropAll(); //Disabed for now, since I have no plans to give these players anything besides a mainhand
         player.setShiftKeyDown(false);
-        player.setReach(player.getAttributeValue(NeoForgeMod.BLOCK_REACH));
+        player.setReach(player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE));
     }
 
     public static FakePlayerResult clickEntityInDirection(UsefulFakePlayer player, Level world, LivingEntity entity, int clickType, int maxHold) {
@@ -245,7 +272,6 @@ public class FakePlayerUtil {
             }
             player.fakeupdateUsingItem(itemstack);
             int holdingFor = player.getTicksUsingItem();
-            //System.out.println("Holding For: " + holdingFor);
             if (holdingFor >= maxHold) {
                 player.releaseUsingItem();
                 return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());

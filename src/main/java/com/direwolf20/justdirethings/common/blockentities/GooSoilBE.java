@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -41,17 +42,17 @@ public class GooSoilBE extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
         if (boundInventory != null) {
             tag.put("boundinventory", NBTHelpers.BoundInventory.toNBT(boundInventory));
         }
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         if (tag.contains("boundinventory"))
             boundInventory = NBTHelpers.BoundInventory.fromNBT(tag.getCompound("boundinventory"));
-        super.load(tag);
+        super.loadAdditional(tag, provider);
     }
 }

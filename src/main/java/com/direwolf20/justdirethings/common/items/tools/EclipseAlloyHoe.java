@@ -4,11 +4,14 @@ import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseHoe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyHoe extends BaseHoe implements PoweredTool {
     public EclipseAlloyHoe() {
-        super(GooTier.ECLIPSEALLOY, -2, -1.0F, new Properties().fireResistant());
+        super(GooTier.ECLIPSEALLOY, new Properties()
+                .attributes(HoeItem.createAttributes(GooTier.ECLIPSEALLOY, -2.0F, -1.0F))
+                .fireResistant());
         registerAbility(Ability.DROPTELEPORT);
     }
 

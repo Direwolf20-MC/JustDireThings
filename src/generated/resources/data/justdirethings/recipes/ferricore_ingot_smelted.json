@@ -6,5 +6,8 @@
   "ingredient": {
     "item": "justdirethings:raw_ferricore"
   },
-  "result": "justdirethings:ferricore_ingot"
+  "result": {
+    "count": 1,
+    "id": "justdirethings:ferricore_ingot"
+  }
 }

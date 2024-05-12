@@ -4,6 +4,11 @@ import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
+import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
@@ -19,7 +24,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
-// The value here should match an entry in the META-INF/mods.toml file
+// The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(JustDireThings.MODID)
 public class JustDireThings {
     public static final String MODID = "justdirethings";
@@ -39,13 +44,25 @@ public class JustDireThings {
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> itemStack.getData(Registration.HANDLER),
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new DataComponentHandler(itemStack, 1),
                 Registration.Pocket_Generator.get()
         );
-        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGENORECEIVE),
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
+                    int capacity = 1000000; //Default
+                    if (itemStack.getItem() instanceof PoweredTool poweredTool) {
+                        capacity = poweredTool.getMaxEnergy();
+                    }
+                    return new EnergyStorageItemStackNoReceive(capacity, itemStack);
+                },
                 Registration.Pocket_Generator.get()
         );
-        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> itemStack.getData(Registration.ENERGYSTORAGE),
+        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
+                    int capacity = 1000000; //Default
+                    if (itemStack.getItem() instanceof PoweredItem poweredItem) {
+                        capacity = poweredItem.getMaxEnergy();
+                    }
+                    return new EnergyStorageItemstack(capacity, itemStack);
+                },
                 Registration.CelestigemSword.get(),
                 Registration.CelestigemPickaxe.get(),
                 Registration.CelestigemAxe.get(),

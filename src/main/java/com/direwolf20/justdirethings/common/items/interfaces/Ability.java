@@ -160,6 +160,10 @@ public enum Ability {
         return renderButton;
     }
 
+    public static Ability byName(String name) {
+        return Ability.valueOf(name.toUpperCase(Locale.ROOT));
+    }
+
     @FunctionalInterface
     public interface AbilityAction {
         boolean execute(Level level, Player player, ItemStack itemStack);

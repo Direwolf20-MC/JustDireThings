@@ -7,10 +7,13 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BaseShovel;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShovelItem;
 
 public class BlazegoldShovel extends BaseShovel {
     public BlazegoldShovel() {
-        super(GooTier.BLAZEGOLD, 1.5F, -3.0F, new Properties().fireResistant());
+        super(GooTier.BLAZEGOLD, new Properties()
+                .attributes(ShovelItem.createAttributes(GooTier.BLAZEGOLD, 1.5F, -3.0F))
+                .fireResistant());
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
         registerAbility(Ability.SMELTER);

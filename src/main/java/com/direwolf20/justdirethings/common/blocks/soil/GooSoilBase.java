@@ -93,6 +93,9 @@ public class GooSoilBase extends FarmBlock {
     }
 
     public static void bonemealMe(ServerLevel pLevel, BlockPos pPos) {
+        BlockState soilState = pLevel.getBlockState(pPos);
+        if (!(soilState.getBlock() instanceof GooSoilBase) || soilState.getValue(MOISTURE) < 7)
+            return;
         BlockPos cropPos = pPos.above();
         BlockState crop = pLevel.getBlockState(cropPos);
         BlockState crop1 = null;

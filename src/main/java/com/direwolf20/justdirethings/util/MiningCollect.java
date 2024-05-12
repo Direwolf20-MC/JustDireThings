@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +85,12 @@ public class MiningCollect {
     }
 
     private static boolean isValid(LivingEntity player, BlockPos pos, Level level, ItemStack tool) {
+        BlockState blockState = level.getBlockState(pos);
+        if (blockState.isAir())
+            return false;
         if (level.getBlockEntity(pos) != null)
             return false;
-        if (!tool.isCorrectToolForDrops(level.getBlockState(pos)))
+        if (!tool.isCorrectToolForDrops(blockState))
             return false;
         return true;
     }

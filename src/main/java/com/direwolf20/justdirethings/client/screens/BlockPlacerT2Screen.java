@@ -25,7 +25,7 @@ public class BlockPlacerT2Screen extends BaseMachineScreen<BlockPlacerT2Containe
         super.init();
         addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 116, topSectionTop + 62, direction, b -> {
             direction = ((ToggleButton) b).getTexturePosition();
-            PacketDistributor.SERVER.noArg().send(new DirectionSettingPayload(direction));
+            PacketDistributor.sendToServer(new DirectionSettingPayload(direction));
         }));
     }
 }

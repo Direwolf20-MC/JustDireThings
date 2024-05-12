@@ -2,27 +2,25 @@ package com.direwolf20.justdirethings.common.network.data;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record PlayerAccessorPayload(
         int direction,
-        int type
+        int accessType
 ) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(JustDireThings.MODID, "player_accessor_packet");
-
-    public PlayerAccessorPayload(final FriendlyByteBuf buffer) {
-        this(buffer.readInt(), buffer.readInt());
-    }
+    public static final Type<PlayerAccessorPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "player_accessor_packet"));
 
     @Override
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeInt(direction);
-        buffer.writeInt(type);
+    public Type<PlayerAccessorPayload> type() {
+        return TYPE;
     }
 
-    @Override
-    public ResourceLocation id() {
-        return ID;
-    }
+    public static final StreamCodec<FriendlyByteBuf, PlayerAccessorPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, PlayerAccessorPayload::direction,
+            ByteBufCodecs.INT, PlayerAccessorPayload::accessType,
+            PlayerAccessorPayload::new
+    );
 }
