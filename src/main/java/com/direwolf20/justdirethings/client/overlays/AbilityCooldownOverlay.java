@@ -35,20 +35,25 @@ public class AbilityCooldownOverlay implements LayeredDraw.Layer {
             if (activeCooldown > -1) {
                 AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.INVULNERABILITY);
                 int activeMax = abilityParams.activeCooldown;
-                int iconHeight = ((activeCooldown * 17) / activeMax) + 1;
+                int iconHeight = ((activeCooldown * 8) / activeMax) + 1;
                 int blitYPosition = yPosition + (18 - iconHeight);  // This positions the blit starting point to the bottom of the intended icon segment
-                int textureYOffset = 18 - iconHeight; // This ensures the texture is sliced from the bottom upwards
-                guiGraphics.blit(INVULNERABILITY_ICON, xPosition, blitYPosition, 0, textureYOffset, 18, iconHeight, 18, 18);
+                int textureYOffset = 9 - iconHeight; // This ensures the texture is sliced from the bottom upwards
+//                RenderSystem.setShaderColor(1f, 1f, 1f, 1.0f);
+                guiGraphics.blit(INVULNERABILITY_ICON, xPosition, blitYPosition, 0, textureYOffset, 9, iconHeight, 9, 9);
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc(); // Sets up standard alpha blending
+                RenderSystem.setShaderColor(1f, 1f, 1f, 0.25f);
+                guiGraphics.blit(INVULNERABILITY_ICON, xPosition, yPosition + 9, 0, 0, 9, 9, 9, 9);
             }
             int cooldown = ToggleableTool.getCooldown(chestplate, Ability.INVULNERABILITY, false);
             if (cooldown > -1) {
                 AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.INVULNERABILITY);
                 int cooldownMax = abilityParams.cooldown;
-                int iconHeight = 18 - ((cooldown * 18) / cooldownMax);
+                int iconHeight = 9 - ((cooldown * 9) / cooldownMax);
                 int blitYPosition = yPosition + (18 - iconHeight);  // This positions the blit starting point to the bottom of the intended icon segment
-                int textureYOffset = 18 - iconHeight; // This ensures the texture is sliced from the bottom upwards
+                int textureYOffset = 9 - iconHeight; // This ensures the texture is sliced from the bottom upwards
                 RenderSystem.setShaderColor(1f, 0.5f, 0.5f, 1.0f);
-                guiGraphics.blit(INVULNERABILITY_ICON, xPosition, blitYPosition, 0, textureYOffset, 18, iconHeight, 18, 18);
+                guiGraphics.blit(INVULNERABILITY_ICON, xPosition, blitYPosition, 0, textureYOffset, 9, iconHeight, 9, 9);
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc(); // Sets up standard alpha blending
                 RenderSystem.setShaderColor(1f, 0.5f, 0.5f, 0.25f);

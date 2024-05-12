@@ -37,27 +37,19 @@ public class JustDireItemRenderer extends BlockEntityWithoutLevelRenderer {
             ItemRenderer irenderer = Minecraft.getInstance().getItemRenderer();
             BakedModel base = irenderer.getItemModelShaper().getModelManager().getModel(CREATURE_CATCHER_BASE);
             pPoseStack.pushPose();
-            if (pDisplayContext == ItemDisplayContext.FIXED) { //??
-                /*pPoseStack.translate(1, 1, 0);
-                float scale = 0.5F;
+            if (pDisplayContext != ItemDisplayContext.GUI) { //Ground?
+                pPoseStack.translate(0.2, 0.5, 0.5);
+                float scale = 0.4F;
                 pPoseStack.scale(scale, scale, scale);
-                pPoseStack.translate(-1.5F, -0.5F, 0.5F);
-                pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
-                pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
-                pPoseStack.translate(0, 0, -1);*/
-            } else if (pDisplayContext != ItemDisplayContext.GUI) { //Ground?
-                pPoseStack.translate(1, 1, 0);
-                float scale = 0.5F;
-                pPoseStack.scale(scale, scale, scale);
-                pPoseStack.translate(-1.5F, -0.5F, 0.5F);
-                pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
+                pPoseStack.translate(0F, 0F, 0F);
+                pPoseStack.mulPose(Axis.YP.rotationDegrees(45));
             } else { //GUI?
-                pPoseStack.translate(0, -.5F, -.5F);
-                pPoseStack.mulPose(Axis.XN.rotationDegrees(75));
-                pPoseStack.mulPose(Axis.ZP.rotationDegrees(45));
-                float scale = 0.9F;
+                pPoseStack.translate(0.95F, 0.25F, 0);
+                pPoseStack.mulPose(Axis.XP.rotationDegrees(30));
+                pPoseStack.mulPose(Axis.YP.rotationDegrees(225));
+                float scale = 0.625F;
                 pPoseStack.scale(scale, scale, scale);
-                pPoseStack.translate(0.775, 0, -0.0825);
+                pPoseStack.translate(0, 0, 0);
             }
             for (var model : base.getRenderPasses(pStack, true)) {
                 for (var rendertype : model.getRenderTypes(pStack, true)) {
