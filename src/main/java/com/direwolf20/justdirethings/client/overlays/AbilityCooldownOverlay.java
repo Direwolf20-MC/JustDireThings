@@ -44,6 +44,7 @@ public class AbilityCooldownOverlay implements LayeredDraw.Layer {
                 RenderSystem.defaultBlendFunc(); // Sets up standard alpha blending
                 RenderSystem.setShaderColor(1f, 1f, 1f, 0.25f);
                 guiGraphics.blit(INVULNERABILITY_ICON, xPosition, yPosition + 9, 0, 0, 9, 9, 9, 9);
+                RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             }
             int cooldown = ToggleableTool.getCooldown(chestplate, Ability.INVULNERABILITY, false);
             if (cooldown > -1) {
@@ -57,7 +58,7 @@ public class AbilityCooldownOverlay implements LayeredDraw.Layer {
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc(); // Sets up standard alpha blending
                 RenderSystem.setShaderColor(1f, 0.5f, 0.5f, 0.25f);
-                guiGraphics.blit(INVULNERABILITY_ICON, xPosition, yPosition, 0, 0, 18, 18, 18, 18);
+                guiGraphics.blit(INVULNERABILITY_ICON, xPosition, yPosition + 9, 0, 0, 9, 9, 9, 9);
                 RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             }
         }
