@@ -33,15 +33,17 @@ public enum Ability {
             AbilityMethods::jumpBoost, false),
     MINDFOG(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     INVULNERABILITY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::invulnerability, false),
+            AbilityMethods::invulnerability, false,
+            new ResourceLocation(JustDireThings.MODID, "textures/gui/overlay/invulnerability.png")),
 
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     SMOKER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     HAMMER(SettingType.CYCLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     LAVAREPAIR(SettingType.TOGGLE, 0, 0, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
-    CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::cauterizeWounds, false),
+    CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500, UseType.USE_COOLDOWN, BindingType.LEFT_AND_CUSTOM,
+            AbilityMethods::cauterizeWounds, false,
+            new ResourceLocation(JustDireThings.MODID, "textures/gui/overlay/cauterizewounds.png")),
     AIRBURST(SettingType.SLIDER, 1, 250, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::airBurst, false),
 
@@ -92,6 +94,7 @@ public enum Ability {
     private static final Map<Ability, AbilityParams> dynamicParams = new EnumMap<>(Ability.class);
     public AbilityAction action;  // Functional interface for action
     public UseOnAbilityAction useOnAction;  // Additional functional interface for use-on action
+    private ResourceLocation cooldownIcon;
 
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, boolean renderButton) {
@@ -113,6 +116,12 @@ public enum Ability {
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton) {
         this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
         this.action = action;
+    }
+
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton, ResourceLocation cooldownIcon) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
+        this.action = action;
+        this.cooldownIcon = cooldownIcon;
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, UseOnAbilityAction useOnAction, boolean renderButton) {
@@ -162,6 +171,10 @@ public enum Ability {
 
     public static Ability byName(String name) {
         return Ability.valueOf(name.toUpperCase(Locale.ROOT));
+    }
+
+    public ResourceLocation getCooldownIcon() {
+        return cooldownIcon;
     }
 
     @FunctionalInterface

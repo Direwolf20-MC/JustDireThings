@@ -266,11 +266,12 @@ public class AbilityMethods {
             return false;
         if (player.getHealth() >= player.getMaxHealth()) return false;
         if (!level.isClientSide) {
-            if (player.getCooldowns().isOnCooldown(itemStack.getItem())) {
-                return false;
-            } else {
+            int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.CAUTERIZEWOUNDS);
+            if (currentCooldown != -1) return false;
+            if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.CAUTERIZEWOUNDS)) {
+                AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.CAUTERIZEWOUNDS);
+                ToggleableTool.addCooldown(itemStack, Ability.CAUTERIZEWOUNDS, abilityParams.cooldown, false);
                 player.heal(6f);
-                player.getCooldowns().addCooldown(itemStack.getItem(), 200);
                 player.playNotifySound(SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, 1.0F, 1.0F);
                 Random random = new Random();
                 Vec3 pos = player.getEyePosition();

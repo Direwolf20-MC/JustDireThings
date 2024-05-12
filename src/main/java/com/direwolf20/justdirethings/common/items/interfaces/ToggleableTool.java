@@ -285,10 +285,10 @@ public interface ToggleableTool extends ToggleableItem {
         return -1;
     }
 
-    static void tickCooldowns(ItemStack itemStack, Player player) {
-        if (!itemStack.has(JustDireDataComponents.ABILITY_COOLDOWNS)) return;
+    static void tickCooldowns(Level level, ItemStack itemStack, Player player) {
+        if (level.isClientSide || !itemStack.has(JustDireDataComponents.ABILITY_COOLDOWNS)) return;
         Set<ToolRecords.AbilityCooldown> cooldownsToRemove = new HashSet<>();
-        List<ToolRecords.AbilityCooldown> abilityCooldowns = itemStack.get(JustDireDataComponents.ABILITY_COOLDOWNS);
+        List<ToolRecords.AbilityCooldown> abilityCooldowns = new ArrayList<>(itemStack.getOrDefault(JustDireDataComponents.ABILITY_COOLDOWNS, new ArrayList<>()));
         for (int i = 0; i < abilityCooldowns.size(); i++) {
             ToolRecords.AbilityCooldown abilityCooldown = abilityCooldowns.get(i);
             int cooldown = abilityCooldown.cooldownTicks();
@@ -387,7 +387,7 @@ public interface ToggleableTool extends ToggleableItem {
             if (ability.action.execute(level, player, itemStack))
                 anyRan = true;
         }
-        tickCooldowns(itemStack, player);
+        tickCooldowns(level, itemStack, player);
         return anyRan;
     }
 
