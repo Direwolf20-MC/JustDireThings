@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToolRecords;
+import com.direwolf20.justdirethings.setup.Config;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,6 +30,8 @@ public class AbilityCooldownOverlay implements LayeredDraw.Layer {
         int screenWidth = guiGraphics.guiWidth();
         int screenHeight = guiGraphics.guiHeight();
         int renderedIcons = 0;
+        double scaleFactor = mc.getWindow().getGuiScale();
+        //int scaleFactorHeight = mc.getWindow().getGuiScaledHeight();
 
         for (EquipmentSlot slot : EQUIPMENT_ORDER) {
             ItemStack itemStack = player.getItemBySlot(slot);
@@ -38,8 +41,10 @@ public class AbilityCooldownOverlay implements LayeredDraw.Layer {
             if (abilityCooldowns == null) continue;
 
             for (ToolRecords.AbilityCooldown abilityCooldown : abilityCooldowns) {
-                int xPosition = screenWidth / 2 - 91 + ((renderedIcons % 7) * 11);
-                int yPosition = screenHeight - 40 - 30 - ((renderedIcons / 7) * 11);
+                //int xPosition = (int)(684/scaleFactor) + ((renderedIcons % 7) * 11);
+                //int yPosition = (int)(885/scaleFactor) + ((renderedIcons / 7) * 11);
+                int xPosition = screenWidth / 2 - Config.OVERLAY_X.get() + ((renderedIcons % 7) * 11);
+                int yPosition = screenHeight - Config.OVERLAY_Y.get() - ((renderedIcons / 7) * 11);
                 Ability ability = Ability.byName(abilityCooldown.abilityName());
                 int cooldown = abilityCooldown.cooldownTicks();
                 boolean active = abilityCooldown.isactive();

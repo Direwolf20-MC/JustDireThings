@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.setup;
 
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
@@ -8,6 +8,10 @@ public class Config {
     public static final ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
+
+    public static final String OVERLAY_POSITION = "overlay_position";
+    public static ModConfigSpec.IntValue OVERLAY_X;
+    public static ModConfigSpec.IntValue OVERLAY_Y;
 
     public static final String CATEGORY_GENERAL = "general";
     public static ModConfigSpec.IntValue MINIMUM_MACHINE_TICK_SPEED;
@@ -33,30 +37,38 @@ public class Config {
     public static ModConfigSpec.IntValue POCKET_GENERATOR_MAX_FE;
     public static ModConfigSpec.IntValue POCKET_GENERATOR_FE_PER_TICK;
 
-    public static void register() {
-        //registerServerConfigs();
-        registerCommonConfigs();
-        //registerClientConfigs();
+    public static void register(ModContainer container) {
+        //registerServerConfigs(container);
+        registerCommonConfigs(container);
+        registerClientConfigs(container);
     }
 
-    private static void registerClientConfigs() {
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_BUILDER.build());
+    private static void registerClientConfigs(ModContainer container) {
+        overlayConfig();
+        container.registerConfig(ModConfig.Type.CLIENT, CLIENT_BUILDER.build());
     }
 
-    private static void registerCommonConfigs() {
+    private static void registerCommonConfigs(ModContainer container) {
         generalConfig();
         generatorT1Config();
         energyTransmitter();
         fuelCanisterConfig();
         pocketGeneratorConfig();
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
+        container.registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
     }
 
-    private static void registerServerConfigs() {
+    private static void registerServerConfigs(ModContainer container) {
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_BUILDER.build());
+        container.registerConfig(ModConfig.Type.SERVER, SERVER_BUILDER.build());
+    }
+
+    private static void overlayConfig() {
+        CLIENT_BUILDER.comment("Cooldown Overlay Position").push(OVERLAY_POSITION);
+        OVERLAY_X = CLIENT_BUILDER.comment("The X position of the cooldown overlay - this is pixels left from the center of the screen")
+                .defineInRange("overlay_x_position", 91, -500, 500);
+        OVERLAY_Y = CLIENT_BUILDER.comment("The Y position of the cooldown overlay - this is pixels up from the bottom of the screen")
+                .defineInRange("overlay_y_position", 70, 0, 500);
+        CLIENT_BUILDER.pop();
     }
 
     private static void generalConfig() {
