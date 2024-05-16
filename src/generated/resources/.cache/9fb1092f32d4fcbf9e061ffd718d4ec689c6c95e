@@ -1,4 +1,4 @@
-// 1.20.6	2024-04-30T00:28:48.7825092	Recipes
+// 1.20.6	2024-05-16T14:20:32.8116858	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancements/recipes/building_blocks/coal_t1_9x9.json
@@ -79,6 +79,7 @@ f965796d5be85d63ad61a862e9e7819d4c6a8a68 data/justdirethings/advancements/recipe
 fdebc5b40b207807304f336cf17a8e3a43b01d66 data/justdirethings/advancements/recipes/misc/gooblock_tier4.json
 e10812b6725eb2ece42eaa4153f759a8b6c0afed data/justdirethings/advancements/recipes/misc/itemcollector.json
 6c3ff48d510d379f907fd43b1da46f37e87f7b6a data/justdirethings/advancements/recipes/misc/itemcollector_nbtclear.json
+3c0f94c52d98fa71451b71aa1ad0b01e295712a0 data/justdirethings/advancements/recipes/misc/machinesettingscopier.json
 dad2a7782e9a1e1d8e7099a6596640b309925ed9 data/justdirethings/advancements/recipes/misc/playeraccessor.json
 03992be4d27e423dcc303d757758251d64134ba3 data/justdirethings/advancements/recipes/misc/playeraccessor_nbtclear.json
 2cf19ff627966b28128eb42fd47c9b9e84bc43d8 data/justdirethings/advancements/recipes/misc/pocket_generator.json
@@ -176,6 +177,7 @@ b6bf47c9ad5cd5b8dd2436966c94ebea194bdfb9 data/justdirethings/recipes/gooblock_ti
 e3990dbefb4f17cf3a84f6ef65168524adc0e543 data/justdirethings/recipes/gooblock_tier4.json
 4d63f24946629911b30e62e200beb6c75fd033ee data/justdirethings/recipes/itemcollector.json
 2827bca3da58aebda20b9fb5c572cb9252c40e7a data/justdirethings/recipes/itemcollector_nbtclear.json
+748448f660b8991e9407f8a14ab645234b91a398 data/justdirethings/recipes/machinesettingscopier.json
 702cf6fc55598870be3558d1f103293b990bce7a data/justdirethings/recipes/playeraccessor.json
 67995b0eb9933b4c6fac1cf56d9c52480eb0b5d1 data/justdirethings/recipes/playeraccessor_nbtclear.json
 cc73b7c24448814a0e8663c8065a6625cbd30072 data/justdirethings/recipes/pocket_generator.json
