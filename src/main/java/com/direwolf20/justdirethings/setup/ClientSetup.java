@@ -8,7 +8,10 @@ import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBloc
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier2;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier3;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier4;
+import com.direwolf20.justdirethings.client.entitymodels.PortalProjectileModel;
 import com.direwolf20.justdirethings.client.entityrenders.CreatureCatcherEntityRender;
+import com.direwolf20.justdirethings.client.entityrenders.PortalEntityRender;
+import com.direwolf20.justdirethings.client.entityrenders.PortalProjectileRender;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
@@ -82,6 +85,11 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
+    public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(PortalProjectileModel.Portal_Projectile_Layer, PortalProjectileModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(Registration.FuelCanister_Container.get(), FuelCanisterScreen::new);
         event.register(Registration.PocketGenerator_Container.get(), PocketGeneratorScreen::new);
@@ -123,5 +131,7 @@ public class ClientSetup {
 
         //Entities
         event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);
+        event.registerEntityRenderer(Registration.PortalEntity.get(), PortalEntityRender::new);
+        event.registerEntityRenderer(Registration.PortalProjectile.get(), PortalProjectileRender::new);
     }
 }
