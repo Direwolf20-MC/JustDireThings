@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -41,14 +43,14 @@ public class PortalProjectile extends Projectile {
         this.setPos(d0, d1, d2);
         //System.out.println("I'm here: " + this.tickCount);
         if (tickCount > 60)
-            spawnPortal(this.getX(), this.getY(), this.getZ(), getPrimaryDirection(vec3));
+            spawnPortal(this.getX(), this.getY(), this.getZ(), getPrimaryDirection(vec3), this.blockPosition());
     }
 
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
         Vec3 hitPos = Vec3.atCenterOf(result.getBlockPos()).relative(result.getDirection(), 0.501); // Slightly offset to avoid z-fighting
-        spawnPortal(hitPos.x(), hitPos.y(), hitPos.z(), result.getDirection());
+        spawnPortal(hitPos.x(), hitPos.y(), hitPos.z(), result.getDirection(), result.getBlockPos());
     }
 
     @Override
@@ -56,10 +58,21 @@ public class PortalProjectile extends Projectile {
 
     }
 
-    protected void spawnPortal(double x, double y, double z, Direction direction) {
+    protected void spawnPortal(double x, double y, double z, Direction direction, BlockPos hitPos) {
         Level level = this.level();
         if (!level.isClientSide) {
             PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction, getPortalAlignment(getDeltaMovement()));
+            if (direction.getAxis() != Direction.Axis.Y) {
+                BlockState belowState = level.getBlockState(hitPos.relative(direction).below());
+                if (!belowState.isAir()) {
+                    y = y + 1;
+                    BlockState aboveState = level.getBlockState(hitPos.relative(direction));
+                    if (!aboveState.isAir()) {
+                        this.discard();
+                        return;
+                    }
+                }
+            }
             portal.setPos(x, y, z);
             portal.refreshDimensions();
             AABB newBoundingBox = portal.getBoundingBox();
