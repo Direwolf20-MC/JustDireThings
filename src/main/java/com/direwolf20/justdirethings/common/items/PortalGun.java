@@ -40,14 +40,14 @@ public class PortalGun extends Item {
         );
         if (!level.isClientSide) {
             if (!player.isShiftKeyDown())
-                spawnProjectile(level, player, itemStack);
+                spawnProjectile(level, player, itemStack, false);
             else
                 closeMyPortals((ServerLevel) level, itemStack);
         }
         return InteractionResultHolder.fail(itemStack);
     }
 
-    public void closeMyPortals(ServerLevel level, ItemStack itemStack) {
+    public static void closeMyPortals(ServerLevel level, ItemStack itemStack) {
         UUID portalGunUUID = getUUID(itemStack);
         MinecraftServer server = level.getServer();
         for (ServerLevel serverLevel : server.getAllLevels()) {
@@ -59,8 +59,8 @@ public class PortalGun extends Item {
         }
     }
 
-    public void spawnProjectile(Level level, Player player, ItemStack itemStack) {
-        PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack));
+    public static void spawnProjectile(Level level, Player player, ItemStack itemStack, boolean isPrimaryType) {
+        PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType);
         projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.5F, 1.0F);
         level.addFreshEntity(projectile);
     }

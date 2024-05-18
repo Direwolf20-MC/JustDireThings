@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -22,15 +24,17 @@ import java.util.UUID;
 
 public class PortalProjectile extends Projectile {
     private UUID portalGunUUID;
+    private boolean isPrimaryType;
     public PortalProjectile(EntityType<? extends Projectile> entityType, Level world) {
         super(entityType, world);
     }
 
-    public PortalProjectile(Level world, Player player, UUID portalGunUUID) {
+    public PortalProjectile(Level world, Player player, UUID portalGunUUID, boolean isPrimaryType) {
         this(Registration.PortalProjectile.get(), world);
         setOwner(player);
         setPos(player.getEyePosition());
         this.portalGunUUID = portalGunUUID;
+        this.isPrimaryType = isPrimaryType;
     }
 
     @Override
@@ -45,9 +49,9 @@ public class PortalProjectile extends Projectile {
         double d1 = this.getY() + vec3.y;
         double d2 = this.getZ() + vec3.z;
         this.setPos(d0, d1, d2);
-        //System.out.println("I'm here: " + this.tickCount);
-        if (tickCount > 60)
-            spawnPortal(this.getX(), this.getY(), this.getZ(), getPrimaryDirection(vec3), this.blockPosition());
+        if (tickCount > 200)
+            this.discard();
+        //spawnPortal(this.getX(), this.getY(), this.getZ(), getPrimaryDirection(vec3), this.blockPosition());
     }
 
 
@@ -62,15 +66,40 @@ public class PortalProjectile extends Projectile {
 
     }
 
+    protected PortalEntity findMatchingPortal(MinecraftServer server, boolean isPrimaryType) {
+        for (ServerLevel serverLevel : server.getAllLevels()) {
+            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID) && k.getIsPrimary() == isPrimaryType);
+            if (!customEntities.isEmpty())
+                return customEntities.getFirst();
+        }
+        return null;
+    }
+
+    protected void clearMatchingPortal(MinecraftServer server) {
+        PortalEntity matchingPortal = findMatchingPortal(server, isPrimaryType);
+        if (matchingPortal != null)
+            matchingPortal.discard();
+    }
+
+    protected void linkPortals(MinecraftServer server, PortalEntity portal) {
+        PortalEntity matchingPortal = findMatchingPortal(server, !isPrimaryType);
+        if (matchingPortal != null) {
+            portal.setLinkedPortal(matchingPortal);
+            matchingPortal.setLinkedPortal(portal);
+        }
+    }
+
     protected void spawnPortal(double x, double y, double z, Direction direction, BlockPos hitPos) {
         Level level = this.level();
+        MinecraftServer server = level.getServer();
+        if (server == null) return;
         if (!level.isClientSide) {
-            PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction, getPortalAlignment(getDeltaMovement()), portalGunUUID);
+            PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType);
             if (direction.getAxis() != Direction.Axis.Y) {
                 BlockState belowState = level.getBlockState(hitPos.relative(direction).below());
                 if (!belowState.isAir()) {
                     y = y + 1;
-                    BlockState aboveState = level.getBlockState(hitPos.relative(direction));
+                    BlockState aboveState = level.getBlockState(hitPos.relative(direction).above());
                     if (!aboveState.isAir()) {
                         this.discard();
                         return;
@@ -84,7 +113,9 @@ public class PortalProjectile extends Projectile {
 
             boolean overlaps = existingPortals.stream().anyMatch(existingPortal -> existingPortal.getBoundingBox().intersects(newBoundingBox));
             if (!overlaps) {
+                clearMatchingPortal(server);
                 level.addFreshEntity(portal);
+                linkPortals(server, portal);
             }
             this.discard();
         }
@@ -94,13 +125,14 @@ public class PortalProjectile extends Projectile {
     protected void readAdditionalSaveData(CompoundTag compound) {
         if (compound.hasUUID("portalGunUUID"))
             portalGunUUID = compound.getUUID("portalGunUUID");
+        isPrimaryType = compound.getBoolean("isPrimaryType");
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
-        if (portalGunUUID != null) {
+        compound.putBoolean("isPrimaryType", isPrimaryType);
+        if (portalGunUUID != null)
             compound.putUUID("portalGunUUID", portalGunUUID);
-        }
     }
 
     public static Direction getPrimaryDirection(Vec3 vec) {

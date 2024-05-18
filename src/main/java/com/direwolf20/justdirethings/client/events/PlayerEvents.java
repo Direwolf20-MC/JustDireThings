@@ -1,10 +1,12 @@
 package com.direwolf20.justdirethings.client.events;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.items.PortalGun;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.network.data.LeftClickPayload;
+import com.direwolf20.justdirethings.common.network.data.PortalGunLeftClickPayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
@@ -35,6 +37,8 @@ public class PlayerEvents {
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.getItem() instanceof LeftClickableTool) {
             activateAbilities(itemStack, toggleableTool, event.getEntity(), event.getHand(), true, BlockPos.ZERO, Direction.DOWN);
         }
+        if (itemStack.getItem() instanceof PortalGun)
+            PacketDistributor.sendToServer(new PortalGunLeftClickPayload());
     }
 
     @SubscribeEvent
@@ -48,6 +52,8 @@ public class PlayerEvents {
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.HAMMER) && event.getFace() != null) {
             doExtraCrumblings(event, itemStack, toggleableTool);
         }
+        if (itemStack.getItem() instanceof PortalGun)
+            PacketDistributor.sendToServer(new PortalGunLeftClickPayload());
     }
 
     private static void doExtraCrumblings(PlayerInteractEvent.LeftClickBlock event, ItemStack itemStack, ToggleableTool toggleableTool) {

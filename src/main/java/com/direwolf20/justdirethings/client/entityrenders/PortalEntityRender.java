@@ -47,7 +47,8 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
                 this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, end, end, start - 1, start - 1);
             }
         }
-        RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.GREEN, pBuffer);
+        Color color = pEntity.getIsPrimary() ? Color.GREEN : Color.RED;
+        RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), color, pBuffer);
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
