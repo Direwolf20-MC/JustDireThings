@@ -57,7 +57,7 @@ public class PortalProjectile extends Projectile {
     protected void spawnPortal(double x, double y, double z, Direction direction) {
         Level level = this.level();
         if (!level.isClientSide) {
-            PortalEntity portal = new PortalEntity(level, direction);
+            PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction);
             portal.setPos(x, y, z);
             level.addFreshEntity(portal);
             this.discard();

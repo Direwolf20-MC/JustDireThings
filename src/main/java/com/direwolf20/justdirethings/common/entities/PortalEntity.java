@@ -11,17 +11,26 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
+import java.util.UUID;
+
 public class PortalEntity extends Entity {
     private PortalEntity linkedPortal;
+    private UUID ownerUUID;
+
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
 
     public PortalEntity(EntityType<?> entityType, Level world) {
         super(entityType, world);
     }
 
-    public PortalEntity(Level world, Direction direction) {
+    public PortalEntity(Level world, Player player, Direction direction) {
         this(Registration.PortalEntity.get(), world);
         this.entityData.set(DIRECTION, (byte) direction.ordinal());
+        this.ownerUUID = player.getUUID();
+    }
+
+    public UUID getOwnerUUID() {
+        return ownerUUID;
     }
 
     @Override
@@ -44,11 +53,16 @@ public class PortalEntity extends Entity {
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(DIRECTION, compound.getByte("direction"));
+        if (compound.hasUUID("Owner"))
+            ownerUUID = compound.getUUID("Owner");
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
         compound.putByte("direction", this.entityData.get(DIRECTION));
+        if (this.getOwnerUUID() != null) {
+            compound.putUUID("Owner", this.getOwnerUUID());
+        }
     }
 
     public void setLinkedPortal(PortalEntity linkedPortal) {
