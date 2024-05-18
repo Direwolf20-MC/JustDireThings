@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -48,6 +49,11 @@ public class PortalEntity extends Entity {
 
     public UUID getPortalGunUUID() {
         return portalGunUUID;
+    }
+
+    @Override
+    public void playerTouch(Player pPlayer) {
+        pPlayer.resetFallDistance();
     }
 
     @Override
@@ -184,13 +190,15 @@ public class PortalEntity extends Entity {
             Vec3 teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY, linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
             Vec3 motion = entity.getDeltaMovement();
             Vec3 newMotion = transformMotion(motion, this.getDirection(), linkedPortal.getDirection().getOpposite());
+            //newMotion = newMotion.multiply(10,10,10);
 
-            // Set the entity's new motion
+            //System.out.println(motion + ":" + newMotion);
             entity.setDeltaMovement(newMotion);
 
             // Adjust the entity's rotation to match the exit portal's direction
             float newYaw = getYawFromDirection(linkedPortal.getDirection());
             float newPitch = entity.getXRot(); // Maintain the same pitch
+            entity.resetFallDistance();
 
             // Teleport the entity to the new location and set its rotation
             boolean success = entity.teleportTo((ServerLevel) linkedPortal.level(), teleportTo.x(), teleportTo.y(), teleportTo.z(), new HashSet<>(), newYaw, newPitch);
@@ -198,8 +206,14 @@ public class PortalEntity extends Entity {
             if (success) {
                 entity.resetFallDistance();
                 entity.setDeltaMovement(newMotion);
-                if (entity instanceof Player player)
+                if (entity instanceof Player player) {
                     ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
+                    ((ServerPlayer) player).connection.send(new ClientboundTeleportEntityPacket(entity));
+                } else {
+                    // For non-player entities, send custom packet
+                    ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundSetEntityMotionPacket(entity));
+                    ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundTeleportEntityPacket(entity));
+                }
             }
         }
     }
