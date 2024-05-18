@@ -9,9 +9,12 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
 
 public class PortalProjectile extends Projectile {
     public PortalProjectile(EntityType<? extends Projectile> entityType, Level world) {
@@ -58,7 +61,14 @@ public class PortalProjectile extends Projectile {
         if (!level.isClientSide) {
             PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction, getPortalAlignment(getDeltaMovement()));
             portal.setPos(x, y, z);
-            level.addFreshEntity(portal);
+            portal.refreshDimensions();
+            AABB newBoundingBox = portal.getBoundingBox();
+            List<PortalEntity> existingPortals = level.getEntitiesOfClass(PortalEntity.class, newBoundingBox.inflate(-0.1));
+
+            boolean overlaps = existingPortals.stream().anyMatch(existingPortal -> existingPortal.getBoundingBox().intersects(newBoundingBox));
+            if (!overlaps) {
+                level.addFreshEntity(portal);
+            }
             this.discard();
         }
     }
