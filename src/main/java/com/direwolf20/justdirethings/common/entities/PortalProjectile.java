@@ -1,12 +1,17 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class PortalProjectile extends Projectile {
     public PortalProjectile(EntityType<? extends Projectile> entityType, Level world) {
@@ -22,14 +27,26 @@ public class PortalProjectile extends Projectile {
     @Override
     public void tick() {
         super.tick();
-        System.out.println("I'm here: " + this.tickCount);
+        HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity, ClipContext.Block.COLLIDER);
+        if (hitresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, hitresult)) {
+            this.hitTargetOrDeflectSelf(hitresult);
+        }
+        Vec3 vec3 = this.getDeltaMovement();
+        double d0 = this.getX() + vec3.x;
+        double d1 = this.getY() + vec3.y;
+        double d2 = this.getZ() + vec3.z;
+        this.setPos(d0, d1, d2);
+        //System.out.println("I'm here: " + this.tickCount);
         if (tickCount > 60)
-            spawnPortal(this.getX(), this.getY(), this.getZ());
+            spawnPortal(this.getX(), this.getY(), this.getZ(), getPrimaryDirection(vec3));
     }
+
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
-        spawnPortal(result.getLocation().x, result.getLocation().y, result.getLocation().z);
+        Vec3 hitPos = result.getBlockPos().getCenter();
+        hitPos = hitPos.relative(result.getDirection(), 0.501);
+        spawnPortal(hitPos.x(), hitPos.y(), hitPos.z(), result.getDirection());
     }
 
     @Override
@@ -37,13 +54,28 @@ public class PortalProjectile extends Projectile {
 
     }
 
-    protected void spawnPortal(double x, double y, double z) {
+    protected void spawnPortal(double x, double y, double z, Direction direction) {
         Level level = this.level();
         if (!level.isClientSide) {
-            PortalEntity portal = new PortalEntity(Registration.PortalEntity.get(), level);
+            PortalEntity portal = new PortalEntity(level, direction);
             portal.setPos(x, y, z);
             level.addFreshEntity(portal);
             this.discard();
+        }
+    }
+
+    public static Direction getPrimaryDirection(Vec3 vec) {
+        double absX = Math.abs(vec.x);
+        double absY = Math.abs(vec.y);
+        double absZ = Math.abs(vec.z);
+
+        // Determine the largest magnitude component
+        if (absX > absY && absX > absZ) {
+            return vec.x > 0 ? Direction.EAST : Direction.WEST;
+        } else if (absY > absX && absY > absZ) {
+            return vec.y > 0 ? Direction.UP : Direction.DOWN;
+        } else {
+            return vec.z > 0 ? Direction.SOUTH : Direction.NORTH;
         }
     }
 }

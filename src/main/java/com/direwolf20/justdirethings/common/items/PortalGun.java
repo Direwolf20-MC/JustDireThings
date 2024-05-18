@@ -31,7 +31,7 @@ public class PortalGun extends Item {
         );
         if (!pLevel.isClientSide) {
             PortalProjectile projectile = new PortalProjectile(pLevel, pPlayer);
-            projectile.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), 0.0F, 1.5F, 1.0F);
+            projectile.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), 0.0F, 0.5F, 1.0F);
             pLevel.addFreshEntity(projectile);
         }
         return InteractionResultHolder.sidedSuccess(itemStack, pLevel.isClientSide());

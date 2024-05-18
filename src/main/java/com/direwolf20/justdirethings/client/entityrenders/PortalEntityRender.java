@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
@@ -21,29 +21,23 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
     @Override
     public void render(T pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
+        float start = -0.5f;
+        float end = 0.5f;
 
-        // Translate to the entity's position
-        BlockPos blockPos = pEntity.blockPosition();
-        //pPoseStack.translate(blockPos.getX() - 0.5, blockPos.getY(), blockPos.getZ() - 0.5);
-
-        // Prepare the buffer for rendering the end portal effect
         VertexConsumer vertexConsumer = pBuffer.getBuffer(RenderType.endPortal());
+        Direction direction = pEntity.getDirection();
 
-        // Render the portal effect for each of the two blocks
-        //for (int y = 0; y < 2; y++) {
-        pPoseStack.pushPose();
-        //pPoseStack.translate(0, y, 0);
-        //North and South
-        this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F);
-        this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0.0F, 1.0F, 1.0F, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F);
-        //this.renderFace(pPoseStack.last().pose(), vertexConsumer, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F);
-        //this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F);
-        //this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0.0F, 1.0F, 0.375F, 0.375F, 0.0F, 0.0F, 1.0F, 1.0F);
-        //this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0.0F, 1.0F, 0.75F, 0.75F, 1.0F, 1.0F, 0.0F, 0.0F);
-        //renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 1, 0, 1, 0, 1, 1, 1);
-        pPoseStack.popPose();
-        //}
 
+        if (direction.getAxis() == Direction.Axis.Z) { //North and South
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, start - 1, end, 0, 0, 0, 0);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, end, start - 1, 0, 0, 0, 0);
+        } else if (direction.getAxis() == Direction.Axis.X) { //East and West
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, end, start - 1, start, end, end, start);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, start - 1, end, start, end, end, start);
+        } else { //Top and Bottom
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start - 1, end, 0, 0, start, start, end, end);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start - 1, end, 0, 0, end, end, start, start);
+        }
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
