@@ -287,7 +287,7 @@ public class Registration {
 
     public static final DeferredHolder<EntityType<?>, EntityType<PortalEntity>> PortalEntity = ENTITY_TYPES.register("portal_entity",
             () -> EntityType.Builder.<PortalEntity>of(PortalEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F)
+                    .sized(1F, 2F)
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("portal_entity"));

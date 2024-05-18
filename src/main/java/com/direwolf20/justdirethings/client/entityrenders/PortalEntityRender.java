@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.client.entityrenders;
 
+import com.direwolf20.justdirethings.client.renderers.RenderHelpers;
 import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -11,6 +12,8 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
+
+import java.awt.*;
 
 public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T> {
 
@@ -26,6 +29,7 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
 
         VertexConsumer vertexConsumer = pBuffer.getBuffer(RenderType.endPortal());
         Direction direction = pEntity.getDirection();
+        Direction.Axis alignment = pEntity.getAlignment();
 
 
         if (direction.getAxis() == Direction.Axis.Z) { //North and South
@@ -35,9 +39,15 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
             this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, end, start - 1, start, end, end, start);
             this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, start - 1, end, start, end, end, start);
         } else { //Top and Bottom
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start - 1, end, 0, 0, start, start, end, end);
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start - 1, end, 0, 0, end, end, start, start);
+            if (alignment == Direction.Axis.X) {
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start - 1, end, 0, 0, start, start, end, end);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start - 1, end, 0, 0, end, end, start, start);
+            } else {
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, start - 1, start - 1, end, end);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, end, end, start - 1, start - 1);
+            }
         }
+        RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.GREEN, pBuffer);
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }

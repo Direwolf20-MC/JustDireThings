@@ -44,8 +44,7 @@ public class PortalProjectile extends Projectile {
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
-        Vec3 hitPos = result.getBlockPos().getCenter();
-        hitPos = hitPos.relative(result.getDirection(), 0.501);
+        Vec3 hitPos = Vec3.atCenterOf(result.getBlockPos()).relative(result.getDirection(), 0.501); // Slightly offset to avoid z-fighting
         spawnPortal(hitPos.x(), hitPos.y(), hitPos.z(), result.getDirection());
     }
 
@@ -57,7 +56,7 @@ public class PortalProjectile extends Projectile {
     protected void spawnPortal(double x, double y, double z, Direction direction) {
         Level level = this.level();
         if (!level.isClientSide) {
-            PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction);
+            PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction, getPortalAlignment(getDeltaMovement()));
             portal.setPos(x, y, z);
             level.addFreshEntity(portal);
             this.discard();
@@ -77,5 +76,11 @@ public class PortalProjectile extends Projectile {
         } else {
             return vec.z > 0 ? Direction.SOUTH : Direction.NORTH;
         }
+    }
+
+    private static Direction.Axis getPortalAlignment(Vec3 velocity) {
+        double absX = Math.abs(velocity.x);
+        double absZ = Math.abs(velocity.z);
+        return absX > absZ ? Direction.Axis.X : Direction.Axis.Z;
     }
 }
