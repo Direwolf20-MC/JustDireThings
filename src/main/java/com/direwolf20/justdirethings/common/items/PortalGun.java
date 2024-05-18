@@ -2,7 +2,9 @@ package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,6 +17,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PortalGun extends Item {
     public PortalGun() {
@@ -37,23 +40,27 @@ public class PortalGun extends Item {
         );
         if (!level.isClientSide) {
             if (!player.isShiftKeyDown())
-                spawnProjectile(level, player);
+                spawnProjectile(level, player, itemStack);
             else
-                closeMyPortals((ServerLevel) level, player);
+                closeMyPortals((ServerLevel) level, itemStack);
         }
         return InteractionResultHolder.fail(itemStack);
     }
 
-    public void closeMyPortals(ServerLevel level, Player player) {
-        List<? extends PortalEntity> customEntities = level.getEntities(Registration.PortalEntity.get(), k -> k.getOwnerUUID().equals(player.getUUID()));
+    public void closeMyPortals(ServerLevel level, ItemStack itemStack) {
+        UUID portalGunUUID = getUUID(itemStack);
+        MinecraftServer server = level.getServer();
+        for (ServerLevel serverLevel : server.getAllLevels()) {
+            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
 
-        for (PortalEntity entity : customEntities) {
-            entity.discard();
+            for (PortalEntity entity : customEntities) {
+                entity.discard();
+            }
         }
     }
 
-    public void spawnProjectile(Level level, Player player) {
-        PortalProjectile projectile = new PortalProjectile(level, player);
+    public void spawnProjectile(Level level, Player player, ItemStack itemStack) {
+        PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack));
         projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 0.5F, 1.0F);
         level.addFreshEntity(projectile);
     }
@@ -66,5 +73,17 @@ public class PortalGun extends Item {
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
+    }
+
+    public static UUID setUUID(ItemStack itemStack) {
+        UUID uuid = UUID.randomUUID();
+        itemStack.set(JustDireDataComponents.PORTALGUN_UUID, uuid);
+        return uuid;
+    }
+
+    public static UUID getUUID(ItemStack itemStack) {
+        if (!itemStack.has(JustDireDataComponents.PORTALGUN_UUID))
+            return setUUID(itemStack);
+        return itemStack.get(JustDireDataComponents.PORTALGUN_UUID);
     }
 }

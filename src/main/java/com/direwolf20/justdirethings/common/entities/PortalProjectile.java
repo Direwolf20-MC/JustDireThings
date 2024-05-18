@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.entities;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -17,16 +18,19 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+import java.util.UUID;
 
 public class PortalProjectile extends Projectile {
+    private UUID portalGunUUID;
     public PortalProjectile(EntityType<? extends Projectile> entityType, Level world) {
         super(entityType, world);
     }
 
-    public PortalProjectile(Level world, Player player) {
+    public PortalProjectile(Level world, Player player, UUID portalGunUUID) {
         this(Registration.PortalProjectile.get(), world);
         setOwner(player);
         setPos(player.getEyePosition());
+        this.portalGunUUID = portalGunUUID;
     }
 
     @Override
@@ -61,7 +65,7 @@ public class PortalProjectile extends Projectile {
     protected void spawnPortal(double x, double y, double z, Direction direction, BlockPos hitPos) {
         Level level = this.level();
         if (!level.isClientSide) {
-            PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction, getPortalAlignment(getDeltaMovement()));
+            PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction, getPortalAlignment(getDeltaMovement()), portalGunUUID);
             if (direction.getAxis() != Direction.Axis.Y) {
                 BlockState belowState = level.getBlockState(hitPos.relative(direction).below());
                 if (!belowState.isAir()) {
@@ -83,6 +87,19 @@ public class PortalProjectile extends Projectile {
                 level.addFreshEntity(portal);
             }
             this.discard();
+        }
+    }
+
+    @Override
+    protected void readAdditionalSaveData(CompoundTag compound) {
+        if (compound.hasUUID("portalGunUUID"))
+            portalGunUUID = compound.getUUID("portalGunUUID");
+    }
+
+    @Override
+    protected void addAdditionalSaveData(CompoundTag compound) {
+        if (portalGunUUID != null) {
+            compound.putUUID("portalGunUUID", portalGunUUID);
         }
     }
 

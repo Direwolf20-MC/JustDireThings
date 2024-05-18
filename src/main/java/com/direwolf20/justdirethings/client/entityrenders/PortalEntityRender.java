@@ -58,9 +58,9 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
     }
 
     private void renderFace(Matrix4f matrixStack, VertexConsumer vertexConsumer, float x1, float x2, float y1, float y2, float z1, float z2, float z3, float z4) {
-        vertexConsumer.vertex(matrixStack, x1, y1, z1).endVertex();
-        vertexConsumer.vertex(matrixStack, x2, y1, z2).endVertex();
-        vertexConsumer.vertex(matrixStack, x2, y2, z3).endVertex();
-        vertexConsumer.vertex(matrixStack, x1, y2, z4).endVertex();
+        vertexConsumer.vertex(matrixStack, x1, y1, z1).color(1f, 0f, 0f, 0.25f).endVertex();
+        vertexConsumer.vertex(matrixStack, x2, y1, z2).color(1f, 0f, 0f, 0.25f).endVertex();
+        vertexConsumer.vertex(matrixStack, x2, y2, z3).color(1f, 0f, 0f, 0.25f).endVertex();
+        vertexConsumer.vertex(matrixStack, x1, y2, z4).color(1f, 0f, 0f, 0.25f).endVertex();
     }
 }

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class PortalEntity extends Entity {
     private PortalEntity linkedPortal;
-    private UUID ownerUUID;
+    private UUID portalGunUUID;
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
@@ -25,15 +25,15 @@ public class PortalEntity extends Entity {
         super(entityType, world);
     }
 
-    public PortalEntity(Level world, Player player, Direction direction, Direction.Axis axis) {
+    public PortalEntity(Level world, Player player, Direction direction, Direction.Axis axis, UUID portalGunUUID) {
         this(Registration.PortalEntity.get(), world);
         this.entityData.set(DIRECTION, (byte) direction.ordinal());
-        this.ownerUUID = player.getUUID();
+        this.portalGunUUID = portalGunUUID;
         this.entityData.set(ALIGNMENT, (byte) axis.ordinal());
     }
 
-    public UUID getOwnerUUID() {
-        return ownerUUID;
+    public UUID getPortalGunUUID() {
+        return portalGunUUID;
     }
 
     @Override
@@ -63,16 +63,16 @@ public class PortalEntity extends Entity {
     protected void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(DIRECTION, compound.getByte("direction"));
         this.entityData.set(ALIGNMENT, compound.getByte("alignment"));
-        if (compound.hasUUID("Owner"))
-            ownerUUID = compound.getUUID("Owner");
+        if (compound.hasUUID("portalGunUUID"))
+            portalGunUUID = compound.getUUID("portalGunUUID");
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
         compound.putByte("direction", this.entityData.get(DIRECTION));
         compound.putByte("alignment", this.entityData.get(ALIGNMENT));
-        if (this.getOwnerUUID() != null) {
-            compound.putUUID("Owner", this.getOwnerUUID());
+        if (this.getPortalGunUUID() != null) {
+            compound.putUUID("portalGunUUID", this.getPortalGunUUID());
         }
     }
 
