@@ -22,6 +22,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
@@ -39,9 +40,14 @@ public class JustDireThings {
         ModSetup.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(this::registerCapabilities);
         modEventBus.addListener(PacketHandler::registerNetworking);
+        modEventBus.addListener(this::registerChunkLoaders);
         if (FMLLoader.getDist().isClient()) {
             modEventBus.addListener(ClientSetup::init);
         }
+    }
+
+    private void registerChunkLoaders(RegisterTicketControllersEvent event) {
+        event.register(Registration.TICKET_CONTROLLER);
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

@@ -25,7 +25,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class MachineSettingsCopier extends Item {
     public MachineSettingsCopier() {
-        super(new Properties());
+        super(new Properties()
+                .stacksTo(1));
     }
 
     @Override

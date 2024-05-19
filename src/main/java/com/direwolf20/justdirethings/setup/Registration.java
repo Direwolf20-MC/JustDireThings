@@ -21,6 +21,8 @@ import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorag
 import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
+import com.direwolf20.justdirethings.common.entities.PortalEntity;
+import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreChestplate;
@@ -45,6 +47,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -56,6 +59,8 @@ import static com.direwolf20.justdirethings.JustDireThings.MODID;
 import static com.direwolf20.justdirethings.client.particles.ModParticles.PARTICLE_TYPES;
 
 public class Registration {
+    public static final TicketController TICKET_CONTROLLER = new TicketController(new ResourceLocation(MODID, "chunk_loader"), null);
+
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Blocks SIDEDBLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
@@ -236,6 +241,7 @@ public class Registration {
     public static final DeferredHolder<Item, EclipsegateWand> EclipsegateWand = ITEMS.register("eclipsegate_wand", EclipsegateWand::new);
     public static final DeferredHolder<Item, CreatureCatcher> CreatureCatcher = ITEMS.register("creaturecatcher", CreatureCatcher::new);
     public static final DeferredHolder<Item, MachineSettingsCopier> MachineSettingsCopier = ITEMS.register("machinesettingscopier", MachineSettingsCopier::new);
+    public static final DeferredHolder<Item, PortalGun> PortalGun = ITEMS.register("portalgun", PortalGun::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);
@@ -274,6 +280,20 @@ public class Registration {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("creature_catcher"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<PortalProjectile>> PortalProjectile = ENTITY_TYPES.register("portal_projectile",
+            () -> EntityType.Builder.<PortalProjectile>of(PortalProjectile::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("portal_projectile"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<PortalEntity>> PortalEntity = ENTITY_TYPES.register("portal_entity",
+            () -> EntityType.Builder.<PortalEntity>of(PortalEntity::new, MobCategory.MISC)
+                    .sized(1F, 2F)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("portal_entity"));
 
     //Containers
     public static final DeferredHolder<MenuType<?>, MenuType<FuelCanisterContainer>> FuelCanister_Container = CONTAINERS.register("fuelcanister",

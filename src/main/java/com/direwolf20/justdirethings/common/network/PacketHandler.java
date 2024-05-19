@@ -22,6 +22,7 @@ public class PacketHandler {
         registrar.playToServer(GhostSlotPayload.TYPE, GhostSlotPayload.STREAM_CODEC, GhostSlotPacket.get()::handle);
         registrar.playToServer(LeftClickPayload.TYPE, LeftClickPayload.STREAM_CODEC, LeftClickPacket.get()::handle);
         registrar.playToServer(PlayerAccessorPayload.TYPE, PlayerAccessorPayload.STREAM_CODEC, PlayerAccessorPacket.get()::handle);
+        registrar.playToServer(PortalGunLeftClickPayload.TYPE, PortalGunLeftClickPayload.STREAM_CODEC, PortalGunLeftClickPacket.get()::handle);
         registrar.playToServer(RedstoneSettingPayload.TYPE, RedstoneSettingPayload.STREAM_CODEC, RedstoneSettingPacket.get()::handle);
         registrar.playToServer(SensorPayload.TYPE, SensorPayload.STREAM_CODEC, SensorPacket.get()::handle);
         registrar.playToServer(SwapperPayload.TYPE, SwapperPayload.STREAM_CODEC, SwapperPacket.get()::handle);
