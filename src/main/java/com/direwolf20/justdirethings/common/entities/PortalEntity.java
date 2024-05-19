@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -160,6 +161,26 @@ public class PortalEntity extends Entity {
         }
         if (this.linkedPortalUUID != null) {
             compound.putUUID("linkedPortalUUID", this.linkedPortalUUID);
+        }
+    }
+
+    @Override
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        if (!level().isClientSide) {
+            ServerLevel serverLevel = (ServerLevel) this.level();
+            ChunkPos chunkPos = new ChunkPos(this.blockPosition());
+            Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x, chunkPos.z, true, false);
+        }
+    }
+
+    @Override
+    public void remove(Entity.RemovalReason pReason) {
+        super.remove(pReason);
+        if (!level().isClientSide) {
+            ServerLevel serverLevel = (ServerLevel) this.level();
+            ChunkPos chunkPos = new ChunkPos(this.blockPosition());
+            Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x, chunkPos.z, false, false);
         }
     }
 

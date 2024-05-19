@@ -47,6 +47,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -58,6 +59,8 @@ import static com.direwolf20.justdirethings.JustDireThings.MODID;
 import static com.direwolf20.justdirethings.client.particles.ModParticles.PARTICLE_TYPES;
 
 public class Registration {
+    public static final TicketController TICKET_CONTROLLER = new TicketController(new ResourceLocation(MODID, "chunk_loader"), null);
+
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Blocks SIDEDBLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
