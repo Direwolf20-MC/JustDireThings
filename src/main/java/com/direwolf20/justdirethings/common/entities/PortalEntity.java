@@ -31,6 +31,7 @@ public class PortalEntity extends Entity {
     public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
     public final Map<UUID, Integer> entityVelocityCooldowns = new HashMap<>();
     public final Map<UUID, Vec3> entityLastPosition = new HashMap<>();
+    public final Map<UUID, Vec3> entityLastLastPosition = new HashMap<>();
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
@@ -73,6 +74,7 @@ public class PortalEntity extends Entity {
         entityVelocityCooldowns.entrySet().removeIf(entry -> {
             if (entry.getValue() <= 0) {
                 entityLastPosition.remove(entry.getKey());
+                entityLastLastPosition.remove(entry.getKey());
                 return true;
             }
             entry.setValue(entry.getValue() - 1);
@@ -91,16 +93,19 @@ public class PortalEntity extends Entity {
         AABB boundingBox = getVelocityBoundingBox();
         List<Entity> entities = level().getEntities(this, boundingBox);
         for (Entity entity : entities) {
+            UUID entityUUID = entity.getUUID();
             if (entity != this && isValidEntity(entity)) {
                 Vec3 currentPos = entity.position();
-                entityLastPosition.put(entity.getUUID(), currentPos);
-                entityVelocityCooldowns.put(entity.getUUID(), 10);
+                if (entityLastPosition.containsKey(entityUUID))
+                    entityLastLastPosition.put(entityUUID, entityLastPosition.get(entityUUID));
+                entityLastPosition.put(entityUUID, currentPos);
+                entityVelocityCooldowns.put(entityUUID, 10);
             }
         }
     }
 
     public AABB getVelocityBoundingBox() {
-        return this.getBoundingBox().expandTowards(getDirection().getStepX() * 1.75, getDirection().getStepY() * 1.75, getDirection().getStepZ() * 1.75);
+        return this.getBoundingBox().expandTowards(getDirection().getStepX() * 2.5, getDirection().getStepY() * 2.5, getDirection().getStepZ() * 2.5);
     }
 
     public void teleportCollidingEntities() {
@@ -259,16 +264,25 @@ public class PortalEntity extends Entity {
 
     public Vec3 calculateVelocity(Entity entity) {
         Vec3 newMotion = Vec3.ZERO;
-        if (entityLastPosition.containsKey(entity.getUUID())) {
+        UUID entityUUID = entity.getUUID();
+        if (entityLastPosition.containsKey(entityUUID)) {
             double threshold = 0.2;
-            Vec3 previousPos = entityLastPosition.get(entity.getUUID());
+            Vec3 previousPos = entityLastPosition.get(entityUUID);
             Vec3 currentPos = entity.position();
             // Calculate velocity based on position change and assuming a tick length of 1/20th of a second
-            Vec3 velocity = currentPos.subtract(previousPos);
+            Vec3 thisVelocity = currentPos.subtract(previousPos);
+            Vec3 lastVelocity = Vec3.ZERO;
+            if (entityLastLastPosition.containsKey(entityUUID)) {
+                Vec3 lastLastPos = entityLastLastPosition.get(entityUUID);
+                Vec3 lastPos = entityLastPosition.get(entityUUID);
+                lastVelocity = lastPos.subtract(lastLastPos);
+            }
+            Vec3 velocity = lastVelocity.equals(Vec3.ZERO) ? thisVelocity : lastVelocity;
             if (Math.abs(velocity.x) > threshold || Math.abs(velocity.y) > threshold || Math.abs(velocity.z) > threshold || velocity.y > 0) {
                 newMotion = transformMotion(velocity, getDirection(), linkedPortal.getDirection().getOpposite());
             }
-            entityLastPosition.remove(entity.getUUID());
+            entityLastPosition.remove(entityUUID);
+            entityLastLastPosition.remove(entityUUID);
         }
         return newMotion;
     }
