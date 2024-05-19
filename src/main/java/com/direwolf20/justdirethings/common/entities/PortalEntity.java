@@ -21,14 +21,14 @@ import net.neoforged.neoforge.entity.PartEntity;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PortalEntity extends Entity {
     private PortalEntity linkedPortal;
     private UUID portalGunUUID;
     private UUID linkedPortalUUID;
+    private static final int TELEPORT_COOLDOWN = 10; // Cooldown period in ticks (1 second)
+    public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
@@ -60,13 +60,29 @@ public class PortalEntity extends Entity {
         super.tick();
         refreshDimensions();
         if (!level().isClientSide) {
-            AABB boundingBox = this.getBoundingBox();
-            List<Entity> entities = level().getEntities(this, boundingBox, k -> k.getY() >= boundingBox.minY && k.getY() <= boundingBox.maxY);
-            for (Entity entity : entities) {
-                if (entity != this && isValidEntity(entity)) {
-                    //System.out.println(entity.getY() + ":" + entity.yo + ":" + entity.yOld);
-                    teleport(entity);
-                }
+            tickCooldowns();
+            teleportCollidingEntities();
+        }
+    }
+
+    public void tickCooldowns() {
+        // Update cooldowns
+        entityCooldowns.entrySet().removeIf(entry -> {
+            if (entry.getValue() <= 0) {
+                return true;
+            }
+            entry.setValue(entry.getValue() - 1);
+            return false;
+        });
+    }
+
+    public void teleportCollidingEntities() {
+        AABB boundingBox = this.getBoundingBox();
+        List<Entity> entities = level().getEntities(this, boundingBox);
+        for (Entity entity : entities) {
+            if (entity != this && isValidEntity(entity)) {
+                //System.out.println(entity.getY() + ":" + entity.yo + ":" + entity.yOld);
+                teleport(entity);
             }
         }
     }
@@ -193,6 +209,7 @@ public class PortalEntity extends Entity {
 
             entity.setDeltaMovement(newMotion);
 
+
             // Adjust the entity's rotation to match the exit portal's direction
             float newYaw = getYawFromDirection(linkedPortal.getDirection());
             float newPitch = entity.getXRot(); // Maintain the same pitch
@@ -209,11 +226,16 @@ public class PortalEntity extends Entity {
                     ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
                 else
                     ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundSetEntityMotionPacket(entity));
+
+                linkedPortal.entityCooldowns.put(entity.getUUID(), TELEPORT_COOLDOWN); //Ensure it doesn't get teleported back!
             }
         }
     }
 
     public boolean isValidEntity(Entity entity) {
+        if (entityCooldowns.containsKey(entity.getUUID())) {
+            return false; // Skip entities with active cooldown
+        }
         if (entity.isMultipartEntity())
             return false;
         if (entity instanceof PartEntity<?>)
