@@ -118,7 +118,7 @@ public class PortalEntity extends Entity {
                     teleport(entity);
                 } else {
                     if (entityVelocities.containsKey(entity.getUUID())) {
-                        PacketDistributor.sendToServer(new MomentumPayload(entityVelocities.get(entity.getUUID()), getUUID()));
+                        PacketDistributor.sendToServer(new MomentumPayload(entityVelocities.get(entity.getUUID()), getUUID(), entity.getUUID()));
                         entityVelocities.remove(entity.getUUID());
                     }
                 }
@@ -245,7 +245,10 @@ public class PortalEntity extends Entity {
             Vec3 teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY, linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
             if (linkedPortal.getDirection() == Direction.DOWN)
                 teleportTo = teleportTo.relative(Direction.DOWN, 1f);
+            Vec3 motion = entity.getDeltaMovement();
+            Vec3 newMotion = transformMotion(motion, this.getDirection(), linkedPortal.getDirection());
 
+            entity.setDeltaMovement(newMotion);
 
             // Adjust the entity's rotation to match the exit portal's direction
             float newYaw = getYawFromDirection(linkedPortal.getDirection());
@@ -257,12 +260,12 @@ public class PortalEntity extends Entity {
 
             if (success) {
                 entity.resetFallDistance();
+                entity.setDeltaMovement(newMotion);
                 entity.hasImpulse = true;
                 if (entity instanceof Player player)
                     ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
                 else
                     ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundSetEntityMotionPacket(entity));
-
                 linkedPortal.entityCooldowns.put(entity.getUUID(), TELEPORT_COOLDOWN); //Ensure it doesn't get teleported back!
             }
         }

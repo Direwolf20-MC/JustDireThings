@@ -13,7 +13,8 @@ import java.util.UUID;
 
 public record MomentumPayload(
         Vec3 momentum,
-        UUID portalUUID
+        UUID portalUUID,
+        UUID entityUUID
 ) implements CustomPacketPayload {
     public static final Type<MomentumPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "momentum_packet"));
 
@@ -25,6 +26,7 @@ public record MomentumPayload(
     public static final StreamCodec<FriendlyByteBuf, MomentumPayload> STREAM_CODEC = StreamCodec.composite(
             NBTHelpers.VEC3_STREAM_CODEC, MomentumPayload::momentum,
             UUIDUtil.STREAM_CODEC, MomentumPayload::portalUUID,
+            UUIDUtil.STREAM_CODEC, MomentumPayload::entityUUID,
             MomentumPayload::new
     );
 }
