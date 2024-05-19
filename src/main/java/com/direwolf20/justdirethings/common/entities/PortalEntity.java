@@ -61,7 +61,7 @@ public class PortalEntity extends Entity {
         refreshDimensions();
         if (!level().isClientSide) {
             AABB boundingBox = this.getBoundingBox();
-            List<Entity> entities = level().getEntities(this, boundingBox);
+            List<Entity> entities = level().getEntities(this, boundingBox, k -> k.getY() >= boundingBox.minY && k.getY() <= boundingBox.maxY);
             for (Entity entity : entities) {
                 if (entity != this && isValidEntity(entity)) {
                     //System.out.println(entity.getY() + ":" + entity.yo + ":" + entity.yOld);
