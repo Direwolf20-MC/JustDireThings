@@ -139,7 +139,7 @@ public class PortalEntity extends Entity {
     protected AABB makeBoundingBox() {
         float width = 1f;
         float height = 2f;
-        float depth = 0.1F; // Default depth
+        float depth = 0.2F; // Default depth
 
         float setWidth = width;
         float setHeight = height;
@@ -204,6 +204,8 @@ public class PortalEntity extends Entity {
         if (entity.level().isClientSide) return;
         if (getLinkedPortal() != null) {
             Vec3 teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY, linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+            if (linkedPortal.getDirection() == Direction.DOWN)
+                teleportTo = teleportTo.relative(Direction.DOWN, 1f);
             Vec3 motion = entity.getDeltaMovement();
             Vec3 newMotion = transformMotion(motion, this.getDirection(), linkedPortal.getDirection().getOpposite());
 
