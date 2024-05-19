@@ -270,12 +270,12 @@ public class PortalEntity extends Entity {
         }
         if (matchingPortal.getDirection().getAxis() == Direction.Axis.Y) {
             if (matchingPortal.getAlignment() == Direction.Axis.X) {
-                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 0.5f);
             } else {
-                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 1f);
+                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 0.5f);
             }
         } else {
-            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 0.5f);
         }
 
         if (linkedPortal.getDirection() == Direction.DOWN)
