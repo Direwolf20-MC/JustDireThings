@@ -3,23 +3,17 @@ package com.direwolf20.justdirethings.common.blocks;
 import com.direwolf20.justdirethings.common.blockentities.BlockSwapperT1BE;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.containers.BlockSwapperT1Container;
-import com.direwolf20.justdirethings.common.items.FerricoreWrench;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
@@ -39,22 +33,16 @@ public class BlockSwapperT1 extends BaseMachineBlock {
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult hit) {
-        if (level.isClientSide)
-            return InteractionResult.SUCCESS;
-
-        ItemStack playerHolding = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if (playerHolding.getItem() instanceof FerricoreWrench) return InteractionResult.PASS;
-
-        BlockEntity te = level.getBlockEntity(blockPos);
-        if (!(te instanceof BlockSwapperT1BE))
-            return InteractionResult.FAIL;
-
+    public void openMenu(Player player, BlockPos blockPos) {
         player.openMenu(new SimpleMenuProvider(
                 (windowId, playerInventory, playerEntity) -> new BlockSwapperT1Container(windowId, playerInventory, blockPos), Component.translatable("")), (buf -> {
             buf.writeBlockPos(blockPos);
         }));
-        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public boolean isValidBE(BlockEntity blockEntity) {
+        return blockEntity instanceof BlockSwapperT1BE;
     }
 
     @Override

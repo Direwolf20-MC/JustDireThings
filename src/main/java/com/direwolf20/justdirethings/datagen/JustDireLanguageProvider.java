@@ -69,6 +69,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.VoidshiftWand.get(), "Voidshift Wand");
         add(Registration.EclipsegateWand.get(), "Eclipsegate Wand");
         add(Registration.CreatureCatcher.get(), "Creature Catcher");
+        add(Registration.MachineSettingsCopier.get(), "Machine Settings Copier");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -140,6 +141,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.creature", "Creature: ");
         add("justdirethings.ability", "Ability: %s - %s");
         add("justdirethings.toolenabled", "Tool: %s - %s");
+        add("justdirethings.settingscopied", "Settings Copied");
+        add("justdirethings.settingspasted", "Settings Pasted");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -234,7 +237,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.inv-armor", "Armor Slots");
         add("justdirethings.screen.inv-offhand", "Offhand Slots");
         add("justdirethings.screen.rightclicksettings", "Right Click for Settings");
-
+        add("justdirethings.screen.copy_area", "Copy Area");
+        add("justdirethings.screen.copy_offset", "Copy Offset");
+        add("justdirethings.screen.copy_filter", "Copy Filters");
+        add("justdirethings.screen.copy_redstone", "Copy Redstone");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

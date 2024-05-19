@@ -4,7 +4,6 @@ import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataCom
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class DataComponentHandler implements IItemHandlerModifiable {
     private final ItemStack stack;
@@ -45,7 +44,7 @@ public class DataComponentHandler implements IItemHandlerModifiable {
         int limit = Math.min(getSlotLimit(slot), stack.getMaxStackSize());
 
         if (!existing.isEmpty()) {
-            if (!ItemHandlerHelper.canItemStacksStack(stack, existing))
+            if (!ItemStack.isSameItemSameComponents(stack, existing))
                 return stack;
 
             limit -= existing.getCount();
@@ -58,14 +57,14 @@ public class DataComponentHandler implements IItemHandlerModifiable {
 
         if (!simulate) {
             if (existing.isEmpty()) {
-                itemStacks.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
+                itemStacks.set(slot, reachedLimit ? stack.copyWithCount(limit) : stack);
             } else {
                 existing.grow(reachedLimit ? limit : stack.getCount());
             }
             setItemList(itemStacks);
         }
 
-        return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
+        return reachedLimit ? stack.copyWithCount(stack.getCount() - limit) : ItemStack.EMPTY;
     }
 
     @Override
@@ -93,11 +92,11 @@ public class DataComponentHandler implements IItemHandlerModifiable {
             }
         } else {
             if (!simulate) {
-                itemStacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
+                itemStacks.set(slot, existing.copyWithCount(existing.getCount() - toExtract));
                 setItemList(itemStacks);
             }
 
-            return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
+            return existing.copyWithCount(toExtract);
         }
     }
 

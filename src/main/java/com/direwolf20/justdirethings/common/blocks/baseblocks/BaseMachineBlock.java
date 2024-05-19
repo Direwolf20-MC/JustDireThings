@@ -2,11 +2,13 @@ package com.direwolf20.justdirethings.common.blocks.baseblocks;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.items.MachineSettingsCopier;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,6 +54,27 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
             }
         }
     }
+
+    @Override
+    public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult hit) {
+        if (level.isClientSide)
+            return InteractionResult.SUCCESS;
+
+        ItemStack itemStack = player.getMainHandItem();
+        if (itemStack.getItem() instanceof MachineSettingsCopier) return InteractionResult.PASS;
+
+        BlockEntity te = level.getBlockEntity(blockPos);
+        if (!isValidBE(te))
+            return InteractionResult.FAIL;
+
+        openMenu(player, blockPos);
+
+        return InteractionResult.SUCCESS;
+    }
+
+    public abstract void openMenu(Player player, BlockPos blockPos);
+
+    public abstract boolean isValidBE(BlockEntity blockEntity);
 
     @Nullable
     @Override

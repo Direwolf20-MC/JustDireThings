@@ -17,6 +17,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -30,9 +31,9 @@ public class JustDireThings {
     public static final String MODID = "justdirethings";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public JustDireThings(IEventBus modEventBus) {
+    public JustDireThings(IEventBus modEventBus, ModContainer container) {
         Registration.init(modEventBus);
-        Config.register();
+        Config.register(container);
 
         modEventBus.addListener(ModSetup::init);
         ModSetup.CREATIVE_MODE_TABS.register(modEventBus);

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "c": {
+      "item": "justdirethings:coal_t1"
+    },
+    "f": {
+      "item": "justdirethings:ferricore_ingot"
+    },
+    "p": {
+      "item": "minecraft:paper"
+    }
+  },
+  "pattern": [
+    "  c",
+    " p ",
+    "f  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:machinesettingscopier"
+  }
+}
