@@ -52,7 +52,7 @@ public class PlayerEvents {
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.HAMMER) && event.getFace() != null) {
             doExtraCrumblings(event, itemStack, toggleableTool);
         }
-        if (itemStack.getItem() instanceof PortalGun)
+        if (itemStack.getItem() instanceof PortalGun && event.getAction().equals(PlayerInteractEvent.LeftClickBlock.Action.START))
             PacketDistributor.sendToServer(new PortalGunLeftClickPayload());
     }
 
