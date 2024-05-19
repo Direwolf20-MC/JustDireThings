@@ -29,7 +29,7 @@ public class PortalEntity extends Entity {
     private PortalEntity linkedPortal;
     private UUID portalGunUUID;
     private UUID linkedPortalUUID;
-    private static final int TELEPORT_COOLDOWN = 5; // Cooldown period in ticks (1 second)
+    private static final int TELEPORT_COOLDOWN = 10; // Cooldown period in ticks (1 second)
     public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
     public final Map<UUID, Integer> entityVelocityCooldowns = new HashMap<>();
     public final Map<UUID, Vec3> entityVelocities = new HashMap<>();
@@ -97,14 +97,16 @@ public class PortalEntity extends Entity {
         List<Entity> entities = level().getEntities(this, boundingBox);
         for (Entity entity : entities) {
             if (entity != this && isValidEntity(entity) && !entityVelocities.containsKey(entity.getUUID())) {
+                double threshold = 0.75;
                 Vec3 previousPos = new Vec3(entity.xo, entity.yo, entity.zo);
                 Vec3 currentPos = entity.position();
                 if (previousPos.equals(currentPos)) continue;
                 // Calculate velocity based on position change and assuming a tick length of 1/20th of a second
                 Vec3 velocity = currentPos.subtract(previousPos);
-
-                entityVelocities.put(entity.getUUID(), velocity);
-                entityVelocityCooldowns.put(entity.getUUID(), 10);
+                if (Math.abs(velocity.x) > threshold || Math.abs(velocity.y) > threshold || Math.abs(velocity.z) > threshold || velocity.y > 0) {
+                    entityVelocities.put(entity.getUUID(), velocity);
+                    entityVelocityCooldowns.put(entity.getUUID(), 10);
+                }
             }
         }
     }
@@ -241,14 +243,38 @@ public class PortalEntity extends Entity {
 
     public void teleport(Entity entity) {
         if (entity.level().isClientSide) return;
-        if (getLinkedPortal() != null) {
-            Vec3 teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY, linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+        PortalEntity matchingPortal = getLinkedPortal();
+        if (matchingPortal != null) {
+            Vec3 teleportTo;
+            double entityHeightFraction;
+            AABB entityBB = entity.getBoundingBox();
+            AABB portalBB = this.getBoundingBox();
+            if (getDirection().getAxis() == Direction.Axis.Y) {
+                if (getAlignment() == Direction.Axis.X) {
+                    entityHeightFraction = Math.abs((((entityBB.maxX + entityBB.minX) / 2) - portalBB.minX) / portalBB.getXsize());
+                } else {
+                    entityHeightFraction = Math.abs((((entityBB.maxZ + entityBB.minZ) / 2) - portalBB.minZ) / portalBB.getZsize());
+                }
+            } else {
+                entityHeightFraction = (entityBB.minY - portalBB.minY) / portalBB.getYsize();
+            }
+            if (matchingPortal.getDirection().getAxis() == Direction.Axis.Y) {
+                if (matchingPortal.getAlignment() == Direction.Axis.X) {
+                    teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+                } else {
+                    teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 1f);
+                }
+            } else {
+                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+            }
+            //Vec3 teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY, linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+
             if (linkedPortal.getDirection() == Direction.DOWN)
                 teleportTo = teleportTo.relative(Direction.DOWN, 1f);
-            Vec3 motion = entity.getDeltaMovement();
-            Vec3 newMotion = transformMotion(motion, this.getDirection(), linkedPortal.getDirection());
-
-            entity.setDeltaMovement(newMotion);
+            //Vec3 motion = entity.getDeltaMovement();
+            //Vec3 newMotion = transformMotion(motion, this.getDirection(), linkedPortal.getDirection().getOpposite());
+            //System.out.println(motion + ":" + newMotion);
+            //entity.setDeltaMovement(newMotion);
 
             // Adjust the entity's rotation to match the exit portal's direction
             float newYaw = getYawFromDirection(linkedPortal.getDirection());
@@ -260,7 +286,7 @@ public class PortalEntity extends Entity {
 
             if (success) {
                 entity.resetFallDistance();
-                entity.setDeltaMovement(newMotion);
+                //entity.setDeltaMovement(newMotion);
                 entity.hasImpulse = true;
                 if (entity instanceof Player player)
                     ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
