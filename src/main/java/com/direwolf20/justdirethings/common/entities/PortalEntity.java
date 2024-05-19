@@ -4,13 +4,11 @@ import com.direwolf20.justdirethings.common.network.data.MomentumPayload;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -267,14 +265,9 @@ public class PortalEntity extends Entity {
             } else {
                 teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
             }
-            //Vec3 teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY, linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
 
             if (linkedPortal.getDirection() == Direction.DOWN)
                 teleportTo = teleportTo.relative(Direction.DOWN, 1f);
-            //Vec3 motion = entity.getDeltaMovement();
-            //Vec3 newMotion = transformMotion(motion, this.getDirection(), linkedPortal.getDirection().getOpposite());
-            //System.out.println(motion + ":" + newMotion);
-            //entity.setDeltaMovement(newMotion);
 
             // Adjust the entity's rotation to match the exit portal's direction
             float newYaw = getYawFromDirection(linkedPortal.getDirection());
@@ -286,12 +279,7 @@ public class PortalEntity extends Entity {
 
             if (success) {
                 entity.resetFallDistance();
-                //entity.setDeltaMovement(newMotion);
                 entity.hasImpulse = true;
-                if (entity instanceof Player player)
-                    ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
-                else
-                    ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundSetEntityMotionPacket(entity));
                 linkedPortal.entityCooldowns.put(entity.getUUID(), TELEPORT_COOLDOWN); //Ensure it doesn't get teleported back!
             }
         }
