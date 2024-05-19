@@ -70,6 +70,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.EclipsegateWand.get(), "Eclipsegate Wand");
         add(Registration.CreatureCatcher.get(), "Creature Catcher");
         add(Registration.MachineSettingsCopier.get(), "Machine Settings Copier");
+        add(Registration.PortalGun.get(), "Portal Gun");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
