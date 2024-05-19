@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.entities;
 
+import com.direwolf20.justdirethings.common.network.data.MomentumPayload;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +19,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -27,8 +29,10 @@ public class PortalEntity extends Entity {
     private PortalEntity linkedPortal;
     private UUID portalGunUUID;
     private UUID linkedPortalUUID;
-    private static final int TELEPORT_COOLDOWN = 10; // Cooldown period in ticks (1 second)
+    private static final int TELEPORT_COOLDOWN = 5; // Cooldown period in ticks (1 second)
     public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
+    public final Map<UUID, Integer> entityVelocityCooldowns = new HashMap<>();
+    public final Map<UUID, Vec3> entityVelocities = new HashMap<>();
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
@@ -59,21 +63,50 @@ public class PortalEntity extends Entity {
     public void tick() {
         super.tick();
         refreshDimensions();
-        if (!level().isClientSide) {
-            tickCooldowns();
-            teleportCollidingEntities();
+        tickCooldowns();
+        if (level().isClientSide) {
+            captureVelocity();
         }
+        teleportCollidingEntities();
     }
 
     public void tickCooldowns() {
         // Update cooldowns
-        entityCooldowns.entrySet().removeIf(entry -> {
-            if (entry.getValue() <= 0) {
-                return true;
+        if (level().isClientSide) {
+            entityVelocityCooldowns.entrySet().removeIf(entry -> {
+                if (entry.getValue() <= 0) {
+                    entityVelocities.remove(entry.getKey());
+                    return true;
+                }
+                entry.setValue(entry.getValue() - 1);
+                return false;
+            });
+        } else {
+            entityCooldowns.entrySet().removeIf(entry -> {
+                if (entry.getValue() <= 0) {
+                    return true;
+                }
+                entry.setValue(entry.getValue() - 1);
+                return false;
+            });
+        }
+    }
+
+    public void captureVelocity() {
+        AABB boundingBox = this.getBoundingBox().expandTowards(getDirection().getStepX() * 0.75, getDirection().getStepY() * 0.75, getDirection().getStepZ() * 0.75);
+        List<Entity> entities = level().getEntities(this, boundingBox);
+        for (Entity entity : entities) {
+            if (entity != this && isValidEntity(entity) && !entityVelocities.containsKey(entity.getUUID())) {
+                Vec3 previousPos = new Vec3(entity.xo, entity.yo, entity.zo);
+                Vec3 currentPos = entity.position();
+                if (previousPos.equals(currentPos)) continue;
+                // Calculate velocity based on position change and assuming a tick length of 1/20th of a second
+                Vec3 velocity = currentPos.subtract(previousPos);
+
+                entityVelocities.put(entity.getUUID(), velocity);
+                entityVelocityCooldowns.put(entity.getUUID(), 10);
             }
-            entry.setValue(entry.getValue() - 1);
-            return false;
-        });
+        }
     }
 
     public void teleportCollidingEntities() {
@@ -81,8 +114,14 @@ public class PortalEntity extends Entity {
         List<Entity> entities = level().getEntities(this, boundingBox);
         for (Entity entity : entities) {
             if (entity != this && isValidEntity(entity)) {
-                //System.out.println(entity.getY() + ":" + entity.yo + ":" + entity.yOld);
-                teleport(entity);
+                if (!level().isClientSide) {
+                    teleport(entity);
+                } else {
+                    if (entityVelocities.containsKey(entity.getUUID())) {
+                        PacketDistributor.sendToServer(new MomentumPayload(entityVelocities.get(entity.getUUID()), getUUID()));
+                        entityVelocities.remove(entity.getUUID());
+                    }
+                }
             }
         }
     }
@@ -178,7 +217,7 @@ public class PortalEntity extends Entity {
         return new AABB(x - halfWidth, y - halfHeight, z - halfDepth, x + halfWidth, y + halfHeight, z + halfDepth);
     }
 
-    protected PortalEntity findPartnerPortal(MinecraftServer server) {
+    public PortalEntity findPartnerPortal(MinecraftServer server) {
         for (ServerLevel serverLevel : server.getAllLevels()) {
             List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getUUID().equals(this.linkedPortalUUID));
             if (!customEntities.isEmpty())
@@ -206,10 +245,6 @@ public class PortalEntity extends Entity {
             Vec3 teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY, linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
             if (linkedPortal.getDirection() == Direction.DOWN)
                 teleportTo = teleportTo.relative(Direction.DOWN, 1f);
-            Vec3 motion = entity.getDeltaMovement();
-            Vec3 newMotion = transformMotion(motion, this.getDirection(), linkedPortal.getDirection().getOpposite());
-
-            entity.setDeltaMovement(newMotion);
 
 
             // Adjust the entity's rotation to match the exit portal's direction
@@ -222,7 +257,6 @@ public class PortalEntity extends Entity {
 
             if (success) {
                 entity.resetFallDistance();
-                entity.setDeltaMovement(newMotion);
                 entity.hasImpulse = true;
                 if (entity instanceof Player player)
                     ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
@@ -254,7 +288,7 @@ public class PortalEntity extends Entity {
     }
 
     // Helper method to transform the motion vector based on entry and exit directions
-    private Vec3 transformMotion(Vec3 motion, Direction from, Direction to) {
+    public static Vec3 transformMotion(Vec3 motion, Direction from, Direction to) {
         // Get the rotation quaternions for the from and to directions
         Quaternionf fromRotation = from.getRotation();
         Quaternionf toRotation = to.getRotation();
