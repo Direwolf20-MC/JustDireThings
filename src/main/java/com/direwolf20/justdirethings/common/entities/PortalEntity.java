@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.common.entities;
 
-import com.direwolf20.justdirethings.common.network.data.MomentumPayload;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +18,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -32,7 +30,7 @@ public class PortalEntity extends Entity {
     private static final int TELEPORT_COOLDOWN = 10; // Cooldown period in ticks (1 second)
     public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
     public final Map<UUID, Integer> entityVelocityCooldowns = new HashMap<>();
-    public final Map<UUID, Vec3> entityVelocities = new HashMap<>();
+    public final Map<UUID, Vec3> entityLastPosition = new HashMap<>();
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
@@ -63,52 +61,46 @@ public class PortalEntity extends Entity {
     public void tick() {
         super.tick();
         refreshDimensions();
-        tickCooldowns();
-        if (level().isClientSide) {
+        if (!level().isClientSide) {
+            tickCooldowns();
+            teleportCollidingEntities();
             captureVelocity();
         }
-        teleportCollidingEntities();
     }
 
     public void tickCooldowns() {
         // Update cooldowns
-        if (level().isClientSide) {
-            entityVelocityCooldowns.entrySet().removeIf(entry -> {
-                if (entry.getValue() <= 0) {
-                    entityVelocities.remove(entry.getKey());
-                    return true;
-                }
-                entry.setValue(entry.getValue() - 1);
-                return false;
-            });
-        } else {
-            entityCooldowns.entrySet().removeIf(entry -> {
-                if (entry.getValue() <= 0) {
-                    return true;
-                }
-                entry.setValue(entry.getValue() - 1);
-                return false;
-            });
-        }
+        entityVelocityCooldowns.entrySet().removeIf(entry -> {
+            if (entry.getValue() <= 0) {
+                entityLastPosition.remove(entry.getKey());
+                return true;
+            }
+            entry.setValue(entry.getValue() - 1);
+            return false;
+        });
+        entityCooldowns.entrySet().removeIf(entry -> {
+            if (entry.getValue() <= 0) {
+                return true;
+            }
+            entry.setValue(entry.getValue() - 1);
+            return false;
+        });
     }
 
     public void captureVelocity() {
-        AABB boundingBox = this.getBoundingBox().expandTowards(getDirection().getStepX() * 0.75, getDirection().getStepY() * 0.75, getDirection().getStepZ() * 0.75);
+        AABB boundingBox = getVelocityBoundingBox();
         List<Entity> entities = level().getEntities(this, boundingBox);
         for (Entity entity : entities) {
-            if (entity != this && isValidEntity(entity) && !entityVelocities.containsKey(entity.getUUID())) {
-                double threshold = 0.075;
-                Vec3 previousPos = new Vec3(entity.xo, entity.yo, entity.zo);
+            if (entity != this && isValidEntity(entity)) {
                 Vec3 currentPos = entity.position();
-                if (previousPos.equals(currentPos)) continue;
-                // Calculate velocity based on position change and assuming a tick length of 1/20th of a second
-                Vec3 velocity = currentPos.subtract(previousPos);
-                if (Math.abs(velocity.x) > threshold || Math.abs(velocity.y) > threshold || Math.abs(velocity.z) > threshold || velocity.y > 0) {
-                    entityVelocities.put(entity.getUUID(), velocity);
-                    entityVelocityCooldowns.put(entity.getUUID(), 10);
-                }
+                entityLastPosition.put(entity.getUUID(), currentPos);
+                entityVelocityCooldowns.put(entity.getUUID(), 10);
             }
         }
+    }
+
+    public AABB getVelocityBoundingBox() {
+        return this.getBoundingBox().expandTowards(getDirection().getStepX() * 1.75, getDirection().getStepY() * 1.75, getDirection().getStepZ() * 1.75);
     }
 
     public void teleportCollidingEntities() {
@@ -118,11 +110,6 @@ public class PortalEntity extends Entity {
             if (entity != this && isValidEntity(entity)) {
                 if (!level().isClientSide) {
                     teleport(entity);
-                } else {
-                    if (entityVelocities.containsKey(entity.getUUID()) && !entityCooldowns.containsKey(entity.getUUID())) {
-                        PacketDistributor.sendToServer(new MomentumPayload(entityVelocities.get(entity.getUUID()), getUUID(), entity.getUUID()));
-                        entityVelocities.remove(entity.getUUID());
-                    }
                 }
             }
         }
@@ -270,26 +257,46 @@ public class PortalEntity extends Entity {
         return teleportTo;
     }
 
+    public Vec3 calculateVelocity(Entity entity) {
+        Vec3 newMotion = Vec3.ZERO;
+        if (entityLastPosition.containsKey(entity.getUUID())) {
+            double threshold = 0.2;
+            Vec3 previousPos = entityLastPosition.get(entity.getUUID());
+            Vec3 currentPos = entity.position();
+            // Calculate velocity based on position change and assuming a tick length of 1/20th of a second
+            Vec3 velocity = currentPos.subtract(previousPos);
+            if (Math.abs(velocity.x) > threshold || Math.abs(velocity.y) > threshold || Math.abs(velocity.z) > threshold || velocity.y > 0) {
+                newMotion = transformMotion(velocity, getDirection(), linkedPortal.getDirection().getOpposite());
+            }
+            entityLastPosition.remove(entity.getUUID());
+        }
+        return newMotion;
+    }
+
     public void teleport(Entity entity) {
         if (entity.level().isClientSide) return;
-        PortalEntity matchingPortal = getLinkedPortal();
-        if (matchingPortal != null) {
-            Vec3 teleportTo = getTeleportTo(entity, matchingPortal);
+        if (getLinkedPortal() != null) {
+            Vec3 teleportTo = getTeleportTo(entity, linkedPortal);
             // Adjust the entity's rotation to match the exit portal's direction
             float newYaw = getYawFromDirection(linkedPortal.getDirection());
             float newPitch = entity.getXRot(); // Maintain the same pitch
             entity.resetFallDistance();
+
+            Vec3 newMotion = calculateVelocity(entity);
 
             // Teleport the entity to the new location and set its rotation
             boolean success = entity.teleportTo((ServerLevel) linkedPortal.level(), teleportTo.x(), teleportTo.y(), teleportTo.z(), new HashSet<>(), newYaw, newPitch);
 
             if (success) {
                 entity.resetFallDistance();
-                entity.hasImpulse = true;
-                if (entity instanceof Player player)
-                    ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
-                else
-                    ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundSetEntityMotionPacket(entity));
+                if (!newMotion.equals(Vec3.ZERO)) {
+                    entity.setDeltaMovement(newMotion);
+                    entity.hasImpulse = true;
+                    if (entity instanceof Player player)
+                        ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
+                    else
+                        ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundSetEntityMotionPacket(entity));
+                }
                 linkedPortal.entityCooldowns.put(entity.getUUID(), TELEPORT_COOLDOWN); //Ensure it doesn't get teleported back!
             }
         }

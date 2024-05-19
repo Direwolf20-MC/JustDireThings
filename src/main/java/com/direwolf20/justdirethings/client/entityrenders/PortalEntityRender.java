@@ -49,7 +49,7 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         }
         Color color = pEntity.getIsPrimary() ? Color.GREEN : Color.RED;
         RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), color, pBuffer);
-        RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()).expandTowards(pEntity.getDirection().getStepX() * 0.75, pEntity.getDirection().getStepY() * 0.75, pEntity.getDirection().getStepZ() * 0.75), Color.BLUE, pBuffer);
+        RenderHelpers.renderLines(pPoseStack, pEntity.getVelocityBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.BLUE, pBuffer);
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
