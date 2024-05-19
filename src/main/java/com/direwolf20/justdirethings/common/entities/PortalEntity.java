@@ -4,11 +4,13 @@ import com.direwolf20.justdirethings.common.network.data.MomentumPayload;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -95,7 +97,7 @@ public class PortalEntity extends Entity {
         List<Entity> entities = level().getEntities(this, boundingBox);
         for (Entity entity : entities) {
             if (entity != this && isValidEntity(entity) && !entityVelocities.containsKey(entity.getUUID())) {
-                double threshold = 0.75;
+                double threshold = 0.075;
                 Vec3 previousPos = new Vec3(entity.xo, entity.yo, entity.zo);
                 Vec3 currentPos = entity.position();
                 if (previousPos.equals(currentPos)) continue;
@@ -117,7 +119,7 @@ public class PortalEntity extends Entity {
                 if (!level().isClientSide) {
                     teleport(entity);
                 } else {
-                    if (entityVelocities.containsKey(entity.getUUID())) {
+                    if (entityVelocities.containsKey(entity.getUUID()) && !entityCooldowns.containsKey(entity.getUUID())) {
                         PacketDistributor.sendToServer(new MomentumPayload(entityVelocities.get(entity.getUUID()), getUUID(), entity.getUUID()));
                         entityVelocities.remove(entity.getUUID());
                     }
@@ -239,36 +241,40 @@ public class PortalEntity extends Entity {
         this.linkedPortal = null;
     }
 
+    public Vec3 getTeleportTo(Entity entity, PortalEntity matchingPortal) {
+        Vec3 teleportTo;
+        double entityHeightFraction;
+        AABB entityBB = entity.getBoundingBox();
+        AABB portalBB = this.getBoundingBox();
+        if (getDirection().getAxis() == Direction.Axis.Y) {
+            if (getAlignment() == Direction.Axis.X) {
+                entityHeightFraction = Math.abs((((entityBB.maxX + entityBB.minX) / 2) - portalBB.minX) / portalBB.getXsize());
+            } else {
+                entityHeightFraction = Math.abs((((entityBB.maxZ + entityBB.minZ) / 2) - portalBB.minZ) / portalBB.getZsize());
+            }
+        } else {
+            entityHeightFraction = (entityBB.minY - portalBB.minY) / portalBB.getYsize();
+        }
+        if (matchingPortal.getDirection().getAxis() == Direction.Axis.Y) {
+            if (matchingPortal.getAlignment() == Direction.Axis.X) {
+                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+            } else {
+                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 1f);
+            }
+        } else {
+            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+        }
+
+        if (linkedPortal.getDirection() == Direction.DOWN)
+            teleportTo = teleportTo.relative(Direction.DOWN, 1f);
+        return teleportTo;
+    }
+
     public void teleport(Entity entity) {
         if (entity.level().isClientSide) return;
         PortalEntity matchingPortal = getLinkedPortal();
         if (matchingPortal != null) {
-            Vec3 teleportTo;
-            double entityHeightFraction;
-            AABB entityBB = entity.getBoundingBox();
-            AABB portalBB = this.getBoundingBox();
-            if (getDirection().getAxis() == Direction.Axis.Y) {
-                if (getAlignment() == Direction.Axis.X) {
-                    entityHeightFraction = Math.abs((((entityBB.maxX + entityBB.minX) / 2) - portalBB.minX) / portalBB.getXsize());
-                } else {
-                    entityHeightFraction = Math.abs((((entityBB.maxZ + entityBB.minZ) / 2) - portalBB.minZ) / portalBB.getZsize());
-                }
-            } else {
-                entityHeightFraction = (entityBB.minY - portalBB.minY) / portalBB.getYsize();
-            }
-            if (matchingPortal.getDirection().getAxis() == Direction.Axis.Y) {
-                if (matchingPortal.getAlignment() == Direction.Axis.X) {
-                    teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
-                } else {
-                    teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 1f);
-                }
-            } else {
-                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
-            }
-
-            if (linkedPortal.getDirection() == Direction.DOWN)
-                teleportTo = teleportTo.relative(Direction.DOWN, 1f);
-
+            Vec3 teleportTo = getTeleportTo(entity, matchingPortal);
             // Adjust the entity's rotation to match the exit portal's direction
             float newYaw = getYawFromDirection(linkedPortal.getDirection());
             float newPitch = entity.getXRot(); // Maintain the same pitch
@@ -280,6 +286,10 @@ public class PortalEntity extends Entity {
             if (success) {
                 entity.resetFallDistance();
                 entity.hasImpulse = true;
+                if (entity instanceof Player player)
+                    ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
+                else
+                    ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundSetEntityMotionPacket(entity));
                 linkedPortal.entityCooldowns.put(entity.getUUID(), TELEPORT_COOLDOWN); //Ensure it doesn't get teleported back!
             }
         }
