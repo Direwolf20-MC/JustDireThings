@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 
 import java.awt.*;
@@ -48,6 +49,7 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
             }
         }
         Color color = pEntity.getIsPrimary() ? Color.GREEN : Color.RED;
+        RenderHelpers.renderLines(pPoseStack, new AABB(pEntity.getX() - 0.05, pEntity.getY() - 0.05, pEntity.getZ() - 0.05, pEntity.getX() + 0.05, pEntity.getY() + 0.05, pEntity.getZ() + 0.05).move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.WHITE, pBuffer);
         RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), color, pBuffer);
         RenderHelpers.renderLines(pPoseStack, pEntity.getVelocityBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.BLUE, pBuffer);
         pPoseStack.popPose();

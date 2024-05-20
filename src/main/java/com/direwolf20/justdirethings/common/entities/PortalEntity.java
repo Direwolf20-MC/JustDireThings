@@ -28,11 +28,13 @@ public class PortalEntity extends Entity {
     private PortalEntity linkedPortal;
     private UUID portalGunUUID;
     private UUID linkedPortalUUID;
+    private boolean isAdvanced;
     private static final int TELEPORT_COOLDOWN = 10; // Cooldown period in ticks (1 second)
     public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
     public final Map<UUID, Integer> entityVelocityCooldowns = new HashMap<>();
     public final Map<UUID, Vec3> entityLastPosition = new HashMap<>();
     public final Map<UUID, Vec3> entityLastLastPosition = new HashMap<>();
+    public int expirationTime = -99;
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
@@ -42,12 +44,15 @@ public class PortalEntity extends Entity {
         super(entityType, world);
     }
 
-    public PortalEntity(Level world, Player player, Direction direction, Direction.Axis axis, UUID portalGunUUID, boolean isPrimary) {
+    public PortalEntity(Level world, Direction direction, Direction.Axis axis, UUID portalGunUUID, boolean isPrimary, boolean isAdvanced) {
         this(Registration.PortalEntity.get(), world);
         this.entityData.set(DIRECTION, (byte) direction.ordinal());
         this.portalGunUUID = portalGunUUID;
         this.entityData.set(ALIGNMENT, (byte) axis.ordinal());
         this.entityData.set(ISPRIMARY, isPrimary);
+        this.isAdvanced = isAdvanced;
+        if (isAdvanced)
+            expirationTime = 100;
     }
 
     public UUID getPortalGunUUID() {
@@ -88,6 +93,13 @@ public class PortalEntity extends Entity {
             entry.setValue(entry.getValue() - 1);
             return false;
         });
+        if (isAdvanced && expirationTime > 0) {
+            expirationTime = expirationTime - 1;
+            if (expirationTime == 0) {
+                getLinkedPortal().discard();
+                discard();
+            }
+        }
     }
 
     public void captureVelocity() {

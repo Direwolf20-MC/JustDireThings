@@ -2,8 +2,10 @@ package com.direwolf20.justdirethings.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -37,5 +39,37 @@ public class MiscHelpers {
             return handler;
         }
         return null;
+    }
+
+    public static Direction getPrimaryDirection(Vec3 vec) {
+        double absX = Math.abs(vec.x);
+        double absY = Math.abs(vec.y);
+        double absZ = Math.abs(vec.z);
+
+        // Determine the largest magnitude component
+        if (absX > absY && absX > absZ) {
+            return vec.x > 0 ? Direction.EAST : Direction.WEST;
+        } else if (absY > absX && absY > absZ) {
+            return vec.y > 0 ? Direction.UP : Direction.DOWN;
+        } else {
+            return vec.z > 0 ? Direction.SOUTH : Direction.NORTH;
+        }
+    }
+
+    public static Direction getFacingDirection(Player player) {
+        float yaw = player.getYRot();
+        float pitch = player.getXRot();
+
+        // Convert yaw to horizontal direction
+        Direction horizontalDirection = Direction.fromYRot(yaw);
+
+        // Adjust for vertical direction if necessary (e.g., UP or DOWN)
+        if (pitch < -45) {
+            return Direction.UP;
+        } else if (pitch > 45) {
+            return Direction.DOWN;
+        } else {
+            return horizontalDirection;
+        }
     }
 }

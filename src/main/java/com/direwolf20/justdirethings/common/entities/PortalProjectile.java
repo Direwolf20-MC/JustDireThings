@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,16 +26,29 @@ import java.util.UUID;
 public class PortalProjectile extends Projectile {
     private UUID portalGunUUID;
     private boolean isPrimaryType;
+    private boolean isAdvanced;
+    private NBTHelpers.PortalDestination portalDestination;
     public PortalProjectile(EntityType<? extends Projectile> entityType, Level world) {
         super(entityType, world);
     }
 
-    public PortalProjectile(Level world, Player player, UUID portalGunUUID, boolean isPrimaryType) {
+    public PortalProjectile(Level world, Player player, UUID portalGunUUID, boolean isPrimaryType, boolean isAdvanced) {
         this(Registration.PortalProjectile.get(), world);
         setOwner(player);
         setPos(player.getEyePosition());
         this.portalGunUUID = portalGunUUID;
         this.isPrimaryType = isPrimaryType;
+        this.isAdvanced = isAdvanced;
+    }
+
+    public PortalProjectile(Level world, Player player, UUID portalGunUUID, boolean isPrimaryType, boolean isAdvanced, NBTHelpers.PortalDestination portalDestination) {
+        this(Registration.PortalProjectile.get(), world);
+        setOwner(player);
+        setPos(player.getEyePosition());
+        this.portalGunUUID = portalGunUUID;
+        this.isPrimaryType = isPrimaryType;
+        this.isAdvanced = isAdvanced;
+        this.portalDestination = portalDestination;
     }
 
     @Override
@@ -49,8 +63,13 @@ public class PortalProjectile extends Projectile {
         double d1 = this.getY() + vec3.y;
         double d2 = this.getZ() + vec3.z;
         this.setPos(d0, d1, d2);
-        if (tickCount > 200)
-            this.discard();
+        if (isAdvanced) {
+            if (tickCount > 20)
+                System.out.println("Spawn Portal Here");
+        } else {
+            if (tickCount > 200)
+                this.discard();
+        }
         //spawnPortal(this.getX(), this.getY(), this.getZ(), getPrimaryDirection(vec3), this.blockPosition());
     }
 
@@ -58,7 +77,10 @@ public class PortalProjectile extends Projectile {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         Vec3 hitPos = Vec3.atCenterOf(result.getBlockPos()).relative(result.getDirection(), 0.501); // Slightly offset to avoid z-fighting
-        spawnPortal(hitPos.x(), hitPos.y(), hitPos.z(), result.getDirection(), result.getBlockPos());
+        if (isAdvanced)
+            spawnAdvancedPortal(hitPos.x(), hitPos.y(), hitPos.z(), result.getDirection(), result.getBlockPos());
+        else
+            spawnPortal(hitPos.x(), hitPos.y(), hitPos.z(), result.getDirection(), result.getBlockPos());
     }
 
     @Override
@@ -75,6 +97,16 @@ public class PortalProjectile extends Projectile {
         return null;
     }
 
+    public void closeMyPortals(MinecraftServer server) {
+        for (ServerLevel serverLevel : server.getAllLevels()) {
+            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
+
+            for (PortalEntity entity : customEntities) {
+                entity.discard();
+            }
+        }
+    }
+
     protected void clearMatchingPortal(MinecraftServer server) {
         PortalEntity matchingPortal = findMatchingPortal(server, isPrimaryType);
         if (matchingPortal != null)
@@ -89,12 +121,59 @@ public class PortalProjectile extends Projectile {
         }
     }
 
+    protected void linkPortals(PortalEntity source, PortalEntity destination) {
+        source.setLinkedPortal(destination);
+        destination.setLinkedPortal(source);
+    }
+
+    protected void spawnAdvancedPortal(double x, double y, double z, Direction direction, BlockPos hitPos) {
+        Level level = this.level();
+        MinecraftServer server = level.getServer();
+        if (server == null) return;
+        if (!level.isClientSide) {
+            PortalEntity source = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, true);
+            if (direction.getAxis() != Direction.Axis.Y) {
+                BlockState belowState = level.getBlockState(hitPos.relative(direction).below());
+                if (!belowState.isAir()) {
+                    y = y + 1;
+                    BlockState aboveState = level.getBlockState(hitPos.relative(direction).above());
+                    if (!aboveState.isAir()) {
+                        this.discard();
+                        return;
+                    }
+                }
+            }
+            source.setPos(x, y, z);
+            source.refreshDimensions();
+            AABB newBoundingBox = source.getBoundingBox();
+            List<PortalEntity> existingPortals = level.getEntitiesOfClass(PortalEntity.class, newBoundingBox.inflate(-0.1));
+
+            ServerLevel boundLevel = server.getLevel(portalDestination.globalVec3().dimension());
+            if (boundLevel == null) return;
+            PortalEntity destination = new PortalEntity(boundLevel, portalDestination.direction(), portalDestination.direction().getAxis(), portalGunUUID, isPrimaryType, true);
+            destination.setPos(portalDestination.globalVec3().position());
+            destination.refreshDimensions();
+            AABB destinationBoundingBox = destination.getBoundingBox();
+            List<PortalEntity> existingPortals2 = level.getEntitiesOfClass(PortalEntity.class, destinationBoundingBox.inflate(-0.1));
+
+            boolean overlaps = existingPortals.stream().anyMatch(existingPortal -> existingPortal.getBoundingBox().intersects(newBoundingBox)) ||
+                    existingPortals2.stream().anyMatch(existingPortal2 -> existingPortal2.getBoundingBox().intersects(destinationBoundingBox));
+            if (!overlaps) {
+                closeMyPortals(server);
+                level.addFreshEntity(source);
+                level.addFreshEntity(destination);
+                linkPortals(source, destination);
+            }
+            this.discard();
+        }
+    }
+
     protected void spawnPortal(double x, double y, double z, Direction direction, BlockPos hitPos) {
         Level level = this.level();
         MinecraftServer server = level.getServer();
         if (server == null) return;
         if (!level.isClientSide) {
-            PortalEntity portal = new PortalEntity(level, (Player) getOwner(), direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType);
+            PortalEntity portal = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, false);
             if (direction.getAxis() != Direction.Axis.Y) {
                 BlockState belowState = level.getBlockState(hitPos.relative(direction).below());
                 if (!belowState.isAir()) {
@@ -125,6 +204,8 @@ public class PortalProjectile extends Projectile {
     protected void readAdditionalSaveData(CompoundTag compound) {
         if (compound.hasUUID("portalGunUUID"))
             portalGunUUID = compound.getUUID("portalGunUUID");
+        if (compound.contains("portalDestination"))
+            portalDestination = NBTHelpers.PortalDestination.fromNBT(compound.getCompound("portalDestination"));
         isPrimaryType = compound.getBoolean("isPrimaryType");
     }
 
@@ -133,21 +214,8 @@ public class PortalProjectile extends Projectile {
         compound.putBoolean("isPrimaryType", isPrimaryType);
         if (portalGunUUID != null)
             compound.putUUID("portalGunUUID", portalGunUUID);
-    }
-
-    public static Direction getPrimaryDirection(Vec3 vec) {
-        double absX = Math.abs(vec.x);
-        double absY = Math.abs(vec.y);
-        double absZ = Math.abs(vec.z);
-
-        // Determine the largest magnitude component
-        if (absX > absY && absX > absZ) {
-            return vec.x > 0 ? Direction.EAST : Direction.WEST;
-        } else if (absY > absX && absY > absZ) {
-            return vec.y > 0 ? Direction.UP : Direction.DOWN;
-        } else {
-            return vec.z > 0 ? Direction.SOUTH : Direction.NORTH;
-        }
+        if (portalDestination != null)
+            compound.put("portalDestination", NBTHelpers.PortalDestination.toNBT(portalDestination));
     }
 
     private static Direction.Axis getPortalAlignment(Vec3 velocity) {
