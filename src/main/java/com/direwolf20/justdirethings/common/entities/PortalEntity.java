@@ -219,20 +219,20 @@ public class PortalEntity extends Entity {
             if (alignment == Direction.Axis.X) {
                 setWidth = height;
                 setDepth = width;
-                return this.makeBoundingBox(this.getX() - 0.5f, this.getY(), this.getZ(), setWidth, setHeight, setDepth);
+                return this.makeBoundingBox(this.getX() + 1, this.getY(), this.getZ(), setWidth, setHeight, setDepth);
             } else {
                 setWidth = width;
                 setDepth = height;
-                return this.makeBoundingBox(this.getX(), this.getY(), this.getZ() - 0.5f, setWidth, setHeight, setDepth);
+                return this.makeBoundingBox(this.getX(), this.getY(), this.getZ() + 1, setWidth, setHeight, setDepth);
             }
         } else if (direction.getAxis() == Direction.Axis.Z) {
             setWidth = width;
             setDepth = depth;
-            return this.makeBoundingBox(this.getX(), this.getY() - .5f, this.getZ(), setWidth, setHeight, setDepth);
+            return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), setWidth, setHeight, setDepth);
         } else if (direction.getAxis() == Direction.Axis.X) {
             setWidth = depth;
             setDepth = width;
-            return this.makeBoundingBox(this.getX(), this.getY() - .5f, this.getZ(), setWidth, setHeight, setDepth);
+            return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), setWidth, setHeight, setDepth);
         }
         return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), width, height, depth);
     }
@@ -240,8 +240,7 @@ public class PortalEntity extends Entity {
     private AABB makeBoundingBox(double x, double y, double z, float width, float height, float depth) {
         float halfWidth = width / 2.0F;
         float halfDepth = depth / 2.0F;
-        float halfHeight = height / 2.0F;
-        return new AABB(x - halfWidth, y - halfHeight, z - halfDepth, x + halfWidth, y + halfHeight, z + halfDepth);
+        return new AABB(x - halfWidth, y, z - halfDepth, x + halfWidth, y + height, z + halfDepth);
     }
 
     public PortalEntity findPartnerPortal(MinecraftServer server) {

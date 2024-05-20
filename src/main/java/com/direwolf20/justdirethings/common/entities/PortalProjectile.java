@@ -133,6 +133,7 @@ public class PortalProjectile extends Projectile {
         if (!level.isClientSide) {
             PortalEntity source = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, true);
             if (direction.getAxis() != Direction.Axis.Y) {
+                y = y - 1.5;
                 BlockState belowState = level.getBlockState(hitPos.relative(direction).below());
                 if (!belowState.isAir()) {
                     y = y + 1;
@@ -142,6 +143,11 @@ public class PortalProjectile extends Projectile {
                         return;
                     }
                 }
+            } else {
+                if (getPortalAlignment(getDeltaMovement()) == Direction.Axis.X)
+                    x = x - 0.5;
+                else
+                    z = z - 0.5;
             }
             source.setPos(x, y, z);
             source.refreshDimensions();
@@ -175,6 +181,7 @@ public class PortalProjectile extends Projectile {
         if (!level.isClientSide) {
             PortalEntity portal = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, false);
             if (direction.getAxis() != Direction.Axis.Y) {
+                y = y - 1.5;
                 BlockState belowState = level.getBlockState(hitPos.relative(direction).below());
                 if (!belowState.isAir()) {
                     y = y + 1;
@@ -184,6 +191,11 @@ public class PortalProjectile extends Projectile {
                         return;
                     }
                 }
+            } else {
+                if (getPortalAlignment(getDeltaMovement()) == Direction.Axis.X)
+                    x = x - 0.5;
+                else
+                    z = z - 0.5;
             }
             portal.setPos(x, y, z);
             portal.refreshDimensions();
