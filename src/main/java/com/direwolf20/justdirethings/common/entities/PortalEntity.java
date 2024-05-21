@@ -28,11 +28,13 @@ public class PortalEntity extends Entity {
     private PortalEntity linkedPortal;
     private UUID portalGunUUID;
     private UUID linkedPortalUUID;
+    private boolean isAdvanced;
     private static final int TELEPORT_COOLDOWN = 10; // Cooldown period in ticks (1 second)
     public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
     public final Map<UUID, Integer> entityVelocityCooldowns = new HashMap<>();
     public final Map<UUID, Vec3> entityLastPosition = new HashMap<>();
     public final Map<UUID, Vec3> entityLastLastPosition = new HashMap<>();
+    public int expirationTime = -99;
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
@@ -42,12 +44,15 @@ public class PortalEntity extends Entity {
         super(entityType, world);
     }
 
-    public PortalEntity(Level world, Player player, Direction direction, Direction.Axis axis, UUID portalGunUUID, boolean isPrimary) {
+    public PortalEntity(Level world, Direction direction, Direction.Axis axis, UUID portalGunUUID, boolean isPrimary, boolean isAdvanced) {
         this(Registration.PortalEntity.get(), world);
         this.entityData.set(DIRECTION, (byte) direction.ordinal());
         this.portalGunUUID = portalGunUUID;
         this.entityData.set(ALIGNMENT, (byte) axis.ordinal());
         this.entityData.set(ISPRIMARY, isPrimary);
+        this.isAdvanced = isAdvanced;
+        if (isAdvanced)
+            expirationTime = 100;
     }
 
     public UUID getPortalGunUUID() {
@@ -88,6 +93,13 @@ public class PortalEntity extends Entity {
             entry.setValue(entry.getValue() - 1);
             return false;
         });
+        if (isAdvanced && expirationTime > 0) {
+            expirationTime = expirationTime - 1;
+            if (expirationTime == 0) {
+                getLinkedPortal().discard();
+                discard();
+            }
+        }
     }
 
     public void captureVelocity() {
@@ -207,20 +219,20 @@ public class PortalEntity extends Entity {
             if (alignment == Direction.Axis.X) {
                 setWidth = height;
                 setDepth = width;
-                return this.makeBoundingBox(this.getX() - 0.5f, this.getY(), this.getZ(), setWidth, setHeight, setDepth);
+                return this.makeBoundingBox(this.getX() + 1, this.getY(), this.getZ(), setWidth, setHeight, setDepth);
             } else {
                 setWidth = width;
                 setDepth = height;
-                return this.makeBoundingBox(this.getX(), this.getY(), this.getZ() - 0.5f, setWidth, setHeight, setDepth);
+                return this.makeBoundingBox(this.getX(), this.getY(), this.getZ() + 1, setWidth, setHeight, setDepth);
             }
         } else if (direction.getAxis() == Direction.Axis.Z) {
             setWidth = width;
             setDepth = depth;
-            return this.makeBoundingBox(this.getX(), this.getY() - .5f, this.getZ(), setWidth, setHeight, setDepth);
+            return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), setWidth, setHeight, setDepth);
         } else if (direction.getAxis() == Direction.Axis.X) {
             setWidth = depth;
             setDepth = width;
-            return this.makeBoundingBox(this.getX(), this.getY() - .5f, this.getZ(), setWidth, setHeight, setDepth);
+            return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), setWidth, setHeight, setDepth);
         }
         return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), width, height, depth);
     }
@@ -228,8 +240,7 @@ public class PortalEntity extends Entity {
     private AABB makeBoundingBox(double x, double y, double z, float width, float height, float depth) {
         float halfWidth = width / 2.0F;
         float halfDepth = depth / 2.0F;
-        float halfHeight = height / 2.0F;
-        return new AABB(x - halfWidth, y - halfHeight, z - halfDepth, x + halfWidth, y + halfHeight, z + halfDepth);
+        return new AABB(x - halfWidth, y, z - halfDepth, x + halfWidth, y + height, z + halfDepth);
     }
 
     public PortalEntity findPartnerPortal(MinecraftServer server) {
@@ -270,12 +281,12 @@ public class PortalEntity extends Entity {
         }
         if (matchingPortal.getDirection().getAxis() == Direction.Axis.Y) {
             if (matchingPortal.getAlignment() == Direction.Axis.X) {
-                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 0.5f);
             } else {
-                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 1f);
+                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 0.5f);
             }
         } else {
-            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 1f);
+            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 0.5f);
         }
 
         if (linkedPortal.getDirection() == Direction.DOWN)

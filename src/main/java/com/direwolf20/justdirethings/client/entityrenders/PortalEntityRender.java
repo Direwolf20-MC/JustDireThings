@@ -11,7 +11,9 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.awt.*;
 
@@ -31,24 +33,32 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         Direction direction = pEntity.getDirection();
         Direction.Axis alignment = pEntity.getAlignment();
 
+        AABB renderBounds = pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ());
+        Vector3f renderSpots = new Vector3f(renderBounds.getXsize() < 0.5 ? 0f : (float) renderBounds.getXsize(),
+                renderBounds.getYsize() < 0.5 ? 0f : (float) renderBounds.getYsize(),
+                renderBounds.getZsize() < 0.5 ? 0f : (float) renderBounds.getZsize());
+
+        //this.renderFace(pPoseStack.last().pose(), vertexConsumer, -renderSpots.x/2, renderSpots.x/2, -renderSpots.y/2, renderSpots.y/2, -renderSpots.z/2, renderSpots.z/2, -renderSpots.z/2, renderSpots.z/2);
+        //this.renderFace(pPoseStack.last().pose(), vertexConsumer, -renderSpots.x/2, renderSpots.x/2, -renderSpots.y/2, renderSpots.y/2, -renderSpots.z/2, renderSpots.z/2, -renderSpots.z/2, renderSpots.z/2);
 
         if (direction.getAxis() == Direction.Axis.Z) { //North and South
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, start - 1, end, 0, 0, 0, 0);
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, end, start - 1, 0, 0, 0, 0);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 2, 0, 0, 0, 0);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 2, 0, 0, 0, 0, 0);
         } else if (direction.getAxis() == Direction.Axis.X) { //East and West
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, end, start - 1, start, end, end, start);
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, start - 1, end, start, end, end, start);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, 2, 0, start, end, end, start);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, 0, 2, start, end, end, start);
         } else { //Top and Bottom
             if (alignment == Direction.Axis.X) {
-                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start - 1, end, 0, 0, start, start, end, end);
-                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start - 1, end, 0, 0, end, end, start, start);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 2, 0, 0, start, start, end, end);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 2, 0, 0, end, end, start, start);
             } else {
-                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, start - 1, start - 1, end, end);
-                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, end, end, start - 1, start - 1);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, 0, 0, 2, 2);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, 2, 2, 0, 0);
             }
         }
         Color color = pEntity.getIsPrimary() ? Color.GREEN : Color.RED;
-        RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), color, pBuffer);
+        RenderHelpers.renderLines(pPoseStack, new AABB(pEntity.getX() - 0.05, pEntity.getY() - 0.05, pEntity.getZ() - 0.05, pEntity.getX() + 0.05, pEntity.getY() + 0.05, pEntity.getZ() + 0.05).move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.WHITE, pBuffer);
+        RenderHelpers.renderLines(pPoseStack, renderBounds, color, pBuffer);
         RenderHelpers.renderLines(pPoseStack, pEntity.getVelocityBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.BLUE, pBuffer);
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);

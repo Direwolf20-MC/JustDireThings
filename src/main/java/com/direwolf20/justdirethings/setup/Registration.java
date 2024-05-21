@@ -242,6 +242,7 @@ public class Registration {
     public static final DeferredHolder<Item, CreatureCatcher> CreatureCatcher = ITEMS.register("creaturecatcher", CreatureCatcher::new);
     public static final DeferredHolder<Item, MachineSettingsCopier> MachineSettingsCopier = ITEMS.register("machinesettingscopier", MachineSettingsCopier::new);
     public static final DeferredHolder<Item, PortalGun> PortalGun = ITEMS.register("portalgun", PortalGun::new);
+    public static final DeferredHolder<Item, PortalGunV2> PortalGunV2 = ITEMS.register("portalgun_v2", PortalGunV2::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);

@@ -60,7 +60,7 @@ public class PortalGun extends Item {
     }
 
     public static void spawnProjectile(Level level, Player player, ItemStack itemStack, boolean isPrimaryType) {
-        PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType);
+        PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType, false);
         projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1F, 1.0F);
         level.addFreshEntity(projectile);
     }

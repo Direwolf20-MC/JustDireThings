@@ -84,6 +84,40 @@ public class NBTHelpers {
         }
     }
 
+    public record PortalDestination(GlobalVec3 globalVec3, Direction direction) {
+        public static final Codec<PortalDestination> CODEC = RecordCodecBuilder.create(
+                cooldownInstance -> cooldownInstance.group(
+                                GlobalVec3.CODEC.fieldOf("globalVec3").forGetter(PortalDestination::globalVec3),
+                                Direction.CODEC.fieldOf("direction").forGetter(PortalDestination::direction)
+                        )
+                        .apply(cooldownInstance, PortalDestination::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, PortalDestination> STREAM_CODEC = StreamCodec.composite(
+                GlobalVec3.STREAM_CODEC,
+                PortalDestination::globalVec3,
+                Direction.STREAM_CODEC,
+                PortalDestination::direction,
+                PortalDestination::new
+        );
+
+        public static PortalDestination fromNBT(CompoundTag tag) {
+            PortalDestination portalDestination = null;
+            if (tag.contains("globalVec3") && tag.contains("direction")) {
+                GlobalVec3 globalVec = NBTHelpers.nbtToGlobalVec3(tag.getCompound("globalVec3"));
+                if (globalVec == null) return null;
+                portalDestination = new PortalDestination(globalVec, Direction.values()[tag.getInt("direction")]);
+            }
+            return portalDestination;
+        }
+
+        public static CompoundTag toNBT(PortalDestination portalDestination) {
+            CompoundTag tag = new CompoundTag();
+            tag.put("globalVec3", NBTHelpers.globalVec3ToNBT(portalDestination.globalVec3));
+            tag.putInt("direction", portalDestination.direction.ordinal());
+            return tag;
+        }
+    }
+
     public static CompoundTag globalPosToNBT(GlobalPos globalPos) {
         CompoundTag tag = new CompoundTag();
         tag.putString("dimension", globalPos.dimension().location().toString());
@@ -108,6 +142,15 @@ public class NBTHelpers {
         tag.putDouble("vec3x", position.x);
         tag.putDouble("vec3y", position.y);
         tag.putDouble("vec3z", position.z);
+        return tag;
+    }
+
+    public static CompoundTag globalVec3ToNBT(GlobalVec3 globalVec3) {
+        CompoundTag tag = new CompoundTag();
+        tag.putString("dimension", globalVec3.dimension.location().toString());
+        tag.putDouble("vec3x", globalVec3.position.x);
+        tag.putDouble("vec3y", globalVec3.position.y);
+        tag.putDouble("vec3z", globalVec3.position.z);
         return tag;
     }
 
