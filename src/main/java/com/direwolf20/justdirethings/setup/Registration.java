@@ -35,6 +35,7 @@ import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
@@ -77,6 +78,10 @@ public class Registration {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, JustDireThings.MODID);
     public static final Supplier<GooSpreadRecipe.Serializer> GOO_SPREAD_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("goospread", GooSpreadRecipe.Serializer::new);
 
+    private static final DeferredRegister<SoundEvent> SOUND_REGISTRY = DeferredRegister.create(Registries.SOUND_EVENT, JustDireThings.MODID);
+    public static final Supplier<SoundEvent> BEEP = SOUND_REGISTRY.register("beep", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(JustDireThings.MODID, "beep")));
+
+
     public static void init(IEventBus eventBus) {
         BLOCKS.register(eventBus);
         SIDEDBLOCKS.register(eventBus);
@@ -90,6 +95,7 @@ public class Registration {
         PARTICLE_TYPES.register(eventBus);
         ENTITY_TYPES.register(eventBus);
         ARMORS.register(eventBus);
+        SOUND_REGISTRY.register(eventBus);
 
         JustDireDataComponents.genAbilityData();
         JustDireDataComponents.COMPONENTS.register(eventBus);

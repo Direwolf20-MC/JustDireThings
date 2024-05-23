@@ -2,10 +2,7 @@ package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
-import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -15,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,19 +39,14 @@ public class PortalGunV2 extends Item {
                 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
         );
         if (!level.isClientSide) {
-            if (!player.isShiftKeyDown())
-                spawnProjectile(level, player, itemStack, false);
-            else {
-                addFavorite(itemStack, 0, new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(player.level().dimension(), player.position()), MiscHelpers.getFacingDirection(player)));
-                player.displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(player.level().dimension().location().getPath()), "[" + player.position().toString() + "]"), true);
-            }
+            spawnProjectile(level, player, itemStack, false);
         }
         return InteractionResultHolder.fail(itemStack);
     }
 
     public static void spawnProjectile(Level level, Player player, ItemStack itemStack, boolean isPrimaryType) {
         NBTHelpers.PortalDestination portalDestination = getSelectedFavorite(itemStack);
-        if (portalDestination == null || portalDestination.globalVec3().position().equals(Vec3.ZERO)) return;
+        if (portalDestination == null || portalDestination.equals(NBTHelpers.PortalDestination.EMPTY)) return;
         PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType, true, portalDestination);
         projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1F, 1.0F);
         level.addFreshEntity(projectile);
@@ -89,6 +80,12 @@ public class PortalGunV2 extends Item {
         return favoritesList.get(getFavoritePosition(itemStack));
     }
 
+    public static NBTHelpers.PortalDestination getFavorite(ItemStack itemStack, int slot) {
+        List<NBTHelpers.PortalDestination> favoritesList = new ArrayList<>(getFavorites(itemStack));
+        if (favoritesList.isEmpty()) return null;
+        return favoritesList.get(slot);
+    }
+
     public static int getFavoritePosition(ItemStack itemStack) {
         return itemStack.getOrDefault(JustDireDataComponents.PORTALGUN_FAVORITE, 0);
     }
@@ -109,7 +106,7 @@ public class PortalGunV2 extends Item {
         if (!itemStack.has(JustDireDataComponents.PORTAL_GUN_FAVORITES)) {
             List<NBTHelpers.PortalDestination> list = new ArrayList<>(MAX_FAVORITES);
             for (int i = 0; i < MAX_FAVORITES; i++) {
-                list.add(new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(portalDestination.globalVec3().dimension(), Vec3.ZERO), Direction.NORTH)); //Prefill List
+                list.add(NBTHelpers.PortalDestination.EMPTY); //Prefill List
             }
             setFavorites(itemStack, list);
         }
@@ -121,7 +118,17 @@ public class PortalGunV2 extends Item {
     public static void removeFavorite(ItemStack itemStack, int position) {
         List<NBTHelpers.PortalDestination> favoritesList = new ArrayList<>(getFavorites(itemStack));
         if (favoritesList.isEmpty()) return;
-        favoritesList.set(position, new NBTHelpers.PortalDestination(null, null));
+        favoritesList.set(position, NBTHelpers.PortalDestination.EMPTY);
         setFavorites(itemStack, favoritesList);
+    }
+
+    public static ItemStack getPortalGunv2(Player player) {
+        ItemStack mainHand = player.getMainHandItem();
+        if (mainHand.getItem() instanceof PortalGunV2)
+            return mainHand;
+        ItemStack offHand = player.getOffhandItem();
+        if (offHand.getItem() instanceof PortalGunV2)
+            return offHand;
+        return ItemStack.EMPTY;
     }
 }

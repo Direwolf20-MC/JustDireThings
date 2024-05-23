@@ -156,14 +156,14 @@ public class PortalProjectile extends Projectile {
 
             ServerLevel boundLevel = server.getLevel(portalDestination.globalVec3().dimension());
             if (boundLevel == null) return;
-            PortalEntity destination = new PortalEntity(boundLevel, portalDestination.direction(), portalDestination.direction().getAxis(), portalGunUUID, isPrimaryType, true);
+            PortalEntity destination = new PortalEntity(boundLevel, portalDestination.direction(), portalDestination.direction().getAxis(), portalGunUUID, !isPrimaryType, true);
             destination.setPos(portalDestination.globalVec3().position());
             destination.refreshDimensions();
             AABB destinationBoundingBox = destination.getBoundingBox();
             List<PortalEntity> existingPortals2 = level.getEntitiesOfClass(PortalEntity.class, destinationBoundingBox.inflate(-0.1));
 
-            boolean overlaps = existingPortals.stream().anyMatch(existingPortal -> existingPortal.getBoundingBox().intersects(newBoundingBox)) ||
-                    existingPortals2.stream().anyMatch(existingPortal2 -> existingPortal2.getBoundingBox().intersects(destinationBoundingBox));
+            boolean overlaps = existingPortals.stream().anyMatch(existingPortal -> existingPortal.getBoundingBox().intersects(newBoundingBox) && !existingPortal.getPortalGunUUID().equals(source.getPortalGunUUID())) ||
+                    existingPortals2.stream().anyMatch(existingPortal2 -> existingPortal2.getBoundingBox().intersects(destinationBoundingBox) && !existingPortal2.getPortalGunUUID().equals(destination.getPortalGunUUID()));
             if (!overlaps) {
                 closeMyPortals(server);
                 level.addFreshEntity(source);

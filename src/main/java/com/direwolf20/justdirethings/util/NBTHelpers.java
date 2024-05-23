@@ -84,11 +84,13 @@ public class NBTHelpers {
         }
     }
 
-    public record PortalDestination(GlobalVec3 globalVec3, Direction direction) {
+    public record PortalDestination(GlobalVec3 globalVec3, Direction direction, String name) {
+        public static final PortalDestination EMPTY = new PortalDestination(new GlobalVec3(Level.OVERWORLD, Vec3.ZERO), Direction.DOWN, "EMPTY");
         public static final Codec<PortalDestination> CODEC = RecordCodecBuilder.create(
                 cooldownInstance -> cooldownInstance.group(
                                 GlobalVec3.CODEC.fieldOf("globalVec3").forGetter(PortalDestination::globalVec3),
-                                Direction.CODEC.fieldOf("direction").forGetter(PortalDestination::direction)
+                                Direction.CODEC.fieldOf("direction").forGetter(PortalDestination::direction),
+                                Codec.STRING.fieldOf("name").forGetter(PortalDestination::name)
                         )
                         .apply(cooldownInstance, PortalDestination::new)
         );
@@ -97,15 +99,17 @@ public class NBTHelpers {
                 PortalDestination::globalVec3,
                 Direction.STREAM_CODEC,
                 PortalDestination::direction,
+                ByteBufCodecs.STRING_UTF8,
+                PortalDestination::name,
                 PortalDestination::new
         );
 
         public static PortalDestination fromNBT(CompoundTag tag) {
             PortalDestination portalDestination = null;
-            if (tag.contains("globalVec3") && tag.contains("direction")) {
+            if (tag.contains("globalVec3") && tag.contains("direction") && tag.contains("name")) {
                 GlobalVec3 globalVec = NBTHelpers.nbtToGlobalVec3(tag.getCompound("globalVec3"));
                 if (globalVec == null) return null;
-                portalDestination = new PortalDestination(globalVec, Direction.values()[tag.getInt("direction")]);
+                portalDestination = new PortalDestination(globalVec, Direction.values()[tag.getInt("direction")], tag.getString("name"));
             }
             return portalDestination;
         }
@@ -114,6 +118,7 @@ public class NBTHelpers {
             CompoundTag tag = new CompoundTag();
             tag.put("globalVec3", NBTHelpers.globalVec3ToNBT(portalDestination.globalVec3));
             tag.putInt("direction", portalDestination.direction.ordinal());
+            tag.putString("name", portalDestination.name);
             return tag;
         }
     }
