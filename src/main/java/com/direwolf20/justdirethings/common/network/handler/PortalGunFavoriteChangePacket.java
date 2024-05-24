@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.network.data.PortalGunFavoriteChange
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -27,14 +28,23 @@ public class PortalGunFavoriteChangePacket {
             if (!(itemStack.getItem() instanceof PortalGunV2))
                 return;
 
+            Level level = sender.level();
             if (!payload.add())
                 PortalGunV2.removeFavorite(itemStack, payload.favorite());
             else {
-                Level level = sender.level();
-                Vec3 position = sender.position();
-                Direction facing = MiscHelpers.getFacingDirection(sender);
-                NBTHelpers.PortalDestination portalDestination = new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(level.dimension(), position), facing, payload.name());
-                PortalGunV2.addFavorite(itemStack, payload.favorite(), portalDestination);
+                NBTHelpers.PortalDestination portalDestination = PortalGunV2.getFavorite(itemStack, payload.favorite());
+                if (!payload.editing()) {
+                    Vec3 position = sender.position();
+                    Direction facing = MiscHelpers.getFacingDirection(sender);
+                    portalDestination = new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(level.dimension(), position), facing, payload.name());
+                    PortalGunV2.addFavorite(itemStack, payload.favorite(), portalDestination);
+                } else {
+                    Vec3 position = payload.coordinates().equals(Vec3.ZERO) ? sender.position() : payload.coordinates();
+                    Direction facing = portalDestination == null || portalDestination.equals(NBTHelpers.PortalDestination.EMPTY) ? MiscHelpers.getFacingDirection(sender) : portalDestination.direction();
+                    ResourceKey<Level> dimension = portalDestination == null || portalDestination.equals(NBTHelpers.PortalDestination.EMPTY) ? level.dimension() : portalDestination.globalVec3().dimension();
+                    NBTHelpers.PortalDestination newDestination = new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(dimension, position), facing, payload.name());
+                    PortalGunV2.addFavorite(itemStack, payload.favorite(), newDestination);
+                }
             }
 
         });

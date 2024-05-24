@@ -245,6 +245,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.copy_redstone", "Copy Redstone");
         add("justdirethings.screen.add_favorite", "Add Favorite");
         add("justdirethings.screen.remove_favorite", "Remove Favorite");
+        add("justdirethings.screen.edit_favorite", "Edit Favorite");
+        add("justdirethings.screen.stay_open", "Stay Open");
+        add("justdirethings.screen.save_close", "Save and Close");
+        add("justdirethings.screen.cancel", "Cancel");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

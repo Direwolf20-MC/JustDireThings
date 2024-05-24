@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.OurSounds;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
+import com.direwolf20.justdirethings.client.screens.widgets.BaseButton;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.network.data.PortalGunFavoriteChangePayload;
@@ -22,6 +23,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -36,19 +38,23 @@ import java.awt.*;
 public class AdvPortalRadialMenu extends Screen {
     ToggleButtonFactory.TextureLocalization ADD_BUTTON = new ToggleButtonFactory.TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/add.png"), Component.translatable("justdirethings.screen.add_favorite"));
     ToggleButtonFactory.TextureLocalization REMOVE_BUTTON = new ToggleButtonFactory.TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/remove.png"), Component.translatable("justdirethings.screen.remove_favorite"));
+    ToggleButtonFactory.TextureLocalization EDIT_BUTTON = new ToggleButtonFactory.TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/matchnbttrue.png"), Component.translatable("justdirethings.screen.edit_favorite"));
+    ToggleButtonFactory.TextureLocalization STAYOPEN_BUTTON = new ToggleButtonFactory.TextureLocalization(new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/area.png"), Component.translatable("justdirethings.screen.stay_open"));
     private static final int SEGMENTS = PortalGunV2.MAX_FAVORITES;
-    //private final List<Button> conditionalButtons = new ArrayList<>();
+
     private int timeIn = 0;
     private int slotHovered = -1;
     private int slotSelected = 0;
     private ItemStack portalGun;
     private final static int radiusMin = 26;
     private final static int radiusMax = 120;
+    private boolean staysOpen = false;
 
     public AdvPortalRadialMenu(ItemStack stack) {
         super(Component.literal(""));
         portalGun = stack;
         slotSelected = PortalGunV2.getFavoritePosition(portalGun);
+        this.staysOpen = PortalGunV2.getStayOpen(portalGun);
     }
 
     private static float mouseAngle(int x, int y, int mx, int my) {
@@ -65,22 +71,35 @@ public class AdvPortalRadialMenu extends Screen {
 
     @Override
     public void init() {
-        GrayscaleButton addButton = new GrayscaleButton(width / 2 - 150, height / 2, 16, 16, ADD_BUTTON.texture(), ADD_BUTTON.localization(), true, (clicked) -> {
+        GrayscaleButton addButton = new GrayscaleButton(width / 2 - 150, height / 2 - 20, 16, 16, ADD_BUTTON.texture(), ADD_BUTTON.localization(), true, (clicked) -> {
             addFavorite();
         });
         addRenderableWidget(addButton);
 
-        GrayscaleButton removeButton = new GrayscaleButton(width / 2 + 150, height / 2, 16, 16, REMOVE_BUTTON.texture(), REMOVE_BUTTON.localization(), true, (clicked) -> {
+        GrayscaleButton removeButton = new GrayscaleButton(width / 2 + 140, height / 2 - 20, 16, 16, REMOVE_BUTTON.texture(), REMOVE_BUTTON.localization(), true, (clicked) -> {
             removeFavorite();
         });
         addRenderableWidget(removeButton);
+
+        GrayscaleButton editButton = new GrayscaleButton(width / 2 - 150, height / 2 + 20, 16, 16, EDIT_BUTTON.texture(), EDIT_BUTTON.localization(), true, (clicked) -> {
+            editFavorite();
+        });
+        addRenderableWidget(editButton);
+
+        GrayscaleButton stayOpenButton = new GrayscaleButton(width / 2 + 140, height / 2 + 20, 16, 16, STAYOPEN_BUTTON.texture(), STAYOPEN_BUTTON.localization(), staysOpen, (clicked) -> {
+            staysOpen = !staysOpen;
+            saveFavorite();
+            ((GrayscaleButton) clicked).toggleActive();
+        });
+        addRenderableWidget(stayOpenButton);
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mx, int my, float partialTicks) {
+        renderTooltip(guiGraphics, mx, my);
         portalGun = PortalGunV2.getPortalGunv2(Minecraft.getInstance().player);
         PoseStack matrices = guiGraphics.pose();
-        float speedOfButtonGrowth = 10f; // How fast the buttons move during initial window opening
+        float speedOfButtonGrowth = 5f; // How fast the buttons move during initial window opening
         float fract = Math.min(speedOfButtonGrowth, this.timeIn + partialTicks) / speedOfButtonGrowth;
         int x = this.width / 2;
         int y = this.height / 2;
@@ -109,7 +128,7 @@ public class AdvPortalRadialMenu extends Screen {
                     (int) favorite.globalVec3().position().z()) : "";
             boolean mouseInSector = this.isCursorInSlice(angle, totalDeg, degPer, inRange);
             float delayBetweenSegments = 1f;
-            float speedOfSegmentGrowth = 10f;
+            float speedOfSegmentGrowth = 25f;
             float radius = Math.max(0F, Math.min((this.timeIn + partialTicks - seg * delayBetweenSegments / SEGMENTS) * speedOfSegmentGrowth, radiusMax));
             float gs = 0.25F;
             if (seg % 2 == 0) {
@@ -147,14 +166,15 @@ public class AdvPortalRadialMenu extends Screen {
 
             // Draw the name of the favorite destination, centered within each slice
             float nameAngle = (totalDeg - degPer / 2) * (float) Math.PI / 180F;
-            float nameX = x + (float) (Math.cos(nameAngle) * (radiusMax / 1.5));
-            float nameY = y + (float) (Math.sin(nameAngle) * (radiusMax / 1.5));
+            float nameX = x + (float) (Math.cos(nameAngle) * (radiusMax / 1.4));
+            float nameY = y + (float) (Math.sin(nameAngle) * (radiusMax / 1.4));
             int textWidth = this.font.width(favoriteName);
             int dimensionWidth = this.font.width(dimension);
             int coordinatesWidth = this.font.width(coordinates);
 
             matrices.pushPose();
             matrices.translate(nameX, nameY, 0);
+            matrices.scale(0.85f, 0.85f, 0.85f); // Scale down to simulate a smaller font
             // Determine if the text is upside down and adjust the rotation
             if (nameAngle > Math.PI / 2 && nameAngle < 3 * Math.PI / 2) {
                 matrices.mulPose(Axis.ZP.rotation(nameAngle + (float) Math.PI)); // Rotate the text upside down
@@ -162,9 +182,17 @@ public class AdvPortalRadialMenu extends Screen {
                 matrices.mulPose(Axis.ZP.rotation(nameAngle)); // Rotate the text normally
             }
             guiGraphics.drawString(this.font, favoriteName, -textWidth / 2, -15, Color.WHITE.getRGB());
+            matrices.popPose();
 
+            matrices.pushPose();
+            matrices.translate(nameX, nameY, 0);
             // Draw the dimension and coordinates underneath the name in a smaller font
             matrices.scale(0.7f, 0.7f, 0.7f); // Scale down to simulate a smaller font
+            if (nameAngle > Math.PI / 2 && nameAngle < 3 * Math.PI / 2) {
+                matrices.mulPose(Axis.ZP.rotation(nameAngle + (float) Math.PI)); // Rotate the text upside down
+            } else {
+                matrices.mulPose(Axis.ZP.rotation(nameAngle)); // Rotate the text normally
+            }
             guiGraphics.drawString(this.font, dimension, -dimensionWidth / 2, -5, Color.LIGHT_GRAY.getRGB());
             guiGraphics.drawString(this.font, coordinates, -coordinatesWidth / 2, 10, Color.LIGHT_GRAY.getRGB());
             matrices.popPose();
@@ -191,13 +219,30 @@ public class AdvPortalRadialMenu extends Screen {
     }
 
     @Override
-    public void tick() {
-        if (!InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), KeyBindings.toggleTool.getKey().getValue())) {
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+        if (staysOpen && (p_keyPressed_1_ == 256 || p_keyPressed_1_ == KeyBindings.toggleTool.getKey().getValue())) {
             onClose();
-            //saveFavorite();
+            return true;
+        }
+
+        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+    }
+
+    @Override
+    public void tick() {
+        if (!staysOpen && !InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), KeyBindings.toggleTool.getKey().getValue())) {
+            onClose();
         }
 
         this.timeIn++;
+    }
+
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof BaseButton button && !button.getLocalization(pX, pY).equals(Component.empty())) {
+                pGuiGraphics.renderTooltip(font, button.getLocalization(), pX, pY);
+            }
+        }
     }
 
     @Override
@@ -207,17 +252,22 @@ public class AdvPortalRadialMenu extends Screen {
 
     public void saveFavorite() {
         slotSelected = slotHovered;
-        PacketDistributor.sendToServer(new PortalGunFavoritePayload(slotSelected));
+        PacketDistributor.sendToServer(new PortalGunFavoritePayload(slotSelected, staysOpen));
         OurSounds.playSound(Registration.BEEP.get());
     }
 
     public void addFavorite() {
-        PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, "TODO"));
+        PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, "UNNAMED", false, Vec3.ZERO));
         OurSounds.playSound(Registration.BEEP.get());
     }
 
     public void removeFavorite() {
-        PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, false, "NOTNEEDED"));
+        PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, false, "NOTNEEDED", false, Vec3.ZERO));
+        OurSounds.playSound(Registration.BEEP.get());
+    }
+
+    public void editFavorite() {
+        Minecraft.getInstance().setScreen(new AdvPortalEditMenu(portalGun, slotSelected));
         OurSounds.playSound(Registration.BEEP.get());
     }
 

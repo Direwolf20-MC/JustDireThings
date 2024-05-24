@@ -122,6 +122,14 @@ public class PortalGunV2 extends Item {
         setFavorites(itemStack, favoritesList);
     }
 
+    public static boolean getStayOpen(ItemStack itemStack) {
+        return itemStack.getOrDefault(JustDireDataComponents.PORTAL_GUN_STAY_OPEN, false);
+    }
+
+    public static void setStayOpen(ItemStack itemStack, boolean stayOpen) {
+        itemStack.set(JustDireDataComponents.PORTAL_GUN_STAY_OPEN, stayOpen);
+    }
+
     public static ItemStack getPortalGunv2(Player player) {
         ItemStack mainHand = player.getMainHandItem();
         if (mainHand.getItem() instanceof PortalGunV2)

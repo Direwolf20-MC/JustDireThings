@@ -23,7 +23,7 @@ public class PortalGunFavoritePacket {
                 return;
 
             PortalGunV2.setFavoritePosition(itemStack, payload.favorite());
-
+            PortalGunV2.setStayOpen(itemStack, payload.staysOpen());
         });
     }
 }
