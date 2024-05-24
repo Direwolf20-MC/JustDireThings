@@ -23,6 +23,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.UUID;
 
+import static com.direwolf20.justdirethings.util.MiscHelpers.getPrimaryDirection;
+
 public class PortalProjectile extends Projectile {
     private UUID portalGunUUID;
     private boolean isPrimaryType;
@@ -64,13 +66,17 @@ public class PortalProjectile extends Projectile {
         double d2 = this.getZ() + vec3.z;
         this.setPos(d0, d1, d2);
         if (isAdvanced) {
-            if (tickCount > 20)
-                System.out.println("Spawn Portal Here");
+            if (tickCount > 5) {
+                BlockPos blockPos = this.blockPosition();
+                if (!level().getBlockState(blockPos).isAir() || !level().getBlockState(blockPos.below()).isAir())
+                    blockPos = blockPos.relative(getPrimaryDirection(vec3).getOpposite());
+                Vec3 hitPos = Vec3.atCenterOf(blockPos); // Slightly offset to avoid z-fighting
+                spawnAdvancedPortal(hitPos.x(), hitPos.y(), hitPos.z(), getPrimaryDirection(vec3), blockPos);
+            }
         } else {
             if (tickCount > 200)
                 this.discard();
         }
-        //spawnPortal(this.getX(), this.getY(), this.getZ(), getPrimaryDirection(vec3), this.blockPosition());
     }
 
 
