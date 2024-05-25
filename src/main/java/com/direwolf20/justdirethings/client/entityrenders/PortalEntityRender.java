@@ -26,6 +26,10 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         float endValueStart = -0.5f;
         float endValueEnd = 0.5f;
 
+        float startValue2 = 1.0f;
+        float endValueStart2 = 0.0f;
+        float endValueEnd2 = 2.0f;
+
         int maxTicks = PortalEntity.ANIMATION_COOLDOWN;
         int currentTick = pEntity.tickCount;
         float progress;
@@ -48,6 +52,12 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         float start = interpolatedStart;
         float end = interpolatedEnd;
 
+        float interpolatedStart2 = startValue2 + (endValueStart2 - startValue2) * progress;
+        float interpolatedEnd2 = startValue2 + (endValueEnd2 - startValue2) * progress;
+
+        float start2 = interpolatedStart2;
+        float end2 = interpolatedEnd2;
+
         VertexConsumer vertexConsumer = pBuffer.getBuffer(RenderType.endPortal());
         Direction direction = pEntity.getDirection();
         Direction.Axis alignment = pEntity.getAlignment();
@@ -61,18 +71,18 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         //this.renderFace(pPoseStack.last().pose(), vertexConsumer, -renderSpots.x/2, renderSpots.x/2, -renderSpots.y/2, renderSpots.y/2, -renderSpots.z/2, renderSpots.z/2, -renderSpots.z/2, renderSpots.z/2);
 
         if (direction.getAxis() == Direction.Axis.Z) { //North and South
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 2, 0, 0, 0, 0);
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 2, 0, 0, 0, 0, 0);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, start2, end2, 0, 0, 0, 0);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, end2, start2, 0, 0, 0, 0);
         } else if (direction.getAxis() == Direction.Axis.X) { //East and West
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, 2, 0, start, end, end, start);
-            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, 0, 2, start, end, end, start);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, end2, start2, start, end, end, start);
+            this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 0, start2, end2, start, end, end, start);
         } else { //Top and Bottom
             if (alignment == Direction.Axis.X) {
-                this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 2, 0, 0, start, start, end, end);
-                this.renderFace(pPoseStack.last().pose(), vertexConsumer, 0, 2, 0, 0, end, end, start, start);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start2, end2, 0, 0, start, start, end, end);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start2, end2, 0, 0, end, end, start, start);
             } else {
-                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, 0, 0, 2, 2);
-                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, 2, 2, 0, 0);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, start2, start2, end2, end2);
+                this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, end2, end2, start2, start2);
             }
         }
 
