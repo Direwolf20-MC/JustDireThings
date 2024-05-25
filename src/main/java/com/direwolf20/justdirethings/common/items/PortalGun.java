@@ -54,7 +54,7 @@ public class PortalGun extends Item {
             List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
 
             for (PortalEntity entity : customEntities) {
-                entity.discard();
+                entity.setDying();
             }
         }
     }

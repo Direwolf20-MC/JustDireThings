@@ -30,6 +30,7 @@ public class PortalEntity extends Entity {
     private UUID linkedPortalUUID;
     private boolean isAdvanced;
     private static final int TELEPORT_COOLDOWN = 10; // Cooldown period in ticks (1 second)
+    public static int ANIMATION_COOLDOWN = 5;
     public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
     public final Map<UUID, Integer> entityVelocityCooldowns = new HashMap<>();
     public final Map<UUID, Vec3> entityLastPosition = new HashMap<>();
@@ -38,7 +39,9 @@ public class PortalEntity extends Entity {
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
+    private static final EntityDataAccessor<Byte> DEATH_COUNTER = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Boolean> ISPRIMARY = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> ISDYING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BOOLEAN);
 
     public PortalEntity(EntityType<?> entityType, Level world) {
         super(entityType, world);
@@ -96,9 +99,14 @@ public class PortalEntity extends Entity {
         if (isAdvanced && expirationTime > 0) {
             expirationTime = expirationTime - 1;
             if (expirationTime == 0) {
-                getLinkedPortal().discard();
-                discard();
+                getLinkedPortal().setDying();
+                setDying();
             }
+        }
+        if (isDying()) {
+            this.entityData.set(DEATH_COUNTER, (byte) (getDeathCounter() + 1));
+            if (this.entityData.get(DEATH_COUNTER) > ANIMATION_COOLDOWN)
+                this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -145,11 +153,21 @@ public class PortalEntity extends Entity {
         return this.entityData.get(ISPRIMARY);
     }
 
+    public byte getDeathCounter() {
+        return this.entityData.get(DEATH_COUNTER);
+    }
+
+    public boolean isDying() {
+        return this.entityData.get(ISDYING);
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DIRECTION, (byte) 0);
         builder.define(ALIGNMENT, (byte) Direction.Axis.Z.ordinal());
+        builder.define(DEATH_COUNTER, (byte) 0);
         builder.define(ISPRIMARY, false);
+        builder.define(ISDYING, false);
     }
 
     @Override
@@ -184,6 +202,11 @@ public class PortalEntity extends Entity {
             ChunkPos chunkPos = new ChunkPos(this.blockPosition());
             Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x, chunkPos.z, true, false);
         }
+    }
+
+    public void setDying() {
+        this.entityData.set(ISDYING, true);
+        this.entityData.set(DEATH_COUNTER, (byte) 0);
     }
 
     @Override
@@ -349,9 +372,10 @@ public class PortalEntity extends Entity {
     }
 
     public boolean isValidEntity(Entity entity) {
-        if (entityCooldowns.containsKey(entity.getUUID())) {
+        if (entity.getType().equals(Registration.PortalEntity.get()))
+            return false;
+        if (entityCooldowns.containsKey(entity.getUUID()))
             return false; // Skip entities with active cooldown
-        }
         if (entity.isMultipartEntity())
             return false;
         if (entity instanceof PartEntity<?>)

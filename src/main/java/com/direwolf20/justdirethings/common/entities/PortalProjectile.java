@@ -71,7 +71,7 @@ public class PortalProjectile extends Projectile {
                 if (!level().getBlockState(blockPos).isAir() || !level().getBlockState(blockPos.below()).isAir())
                     blockPos = blockPos.relative(getPrimaryDirection(vec3).getOpposite());
                 Vec3 hitPos = Vec3.atCenterOf(blockPos); // Slightly offset to avoid z-fighting
-                spawnAdvancedPortal(hitPos.x(), hitPos.y(), hitPos.z(), getPrimaryDirection(vec3), blockPos);
+                spawnAdvancedPortal(hitPos.x(), hitPos.y(), hitPos.z(), getPrimaryDirection(vec3).getOpposite(), blockPos);
             }
         } else {
             if (tickCount > 200)
@@ -108,7 +108,7 @@ public class PortalProjectile extends Projectile {
             List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
 
             for (PortalEntity entity : customEntities) {
-                entity.discard();
+                entity.setDying();
             }
         }
     }
@@ -116,7 +116,7 @@ public class PortalProjectile extends Projectile {
     protected void clearMatchingPortal(MinecraftServer server) {
         PortalEntity matchingPortal = findMatchingPortal(server, isPrimaryType);
         if (matchingPortal != null)
-            matchingPortal.discard();
+            matchingPortal.setDying();
     }
 
     protected void linkPortals(MinecraftServer server, PortalEntity portal) {

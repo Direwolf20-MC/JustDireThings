@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.client.entityrenders;
 
-import com.direwolf20.justdirethings.client.renderers.RenderHelpers;
 import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -15,10 +14,7 @@ import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import java.awt.*;
-
 public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T> {
-
     public PortalEntityRender(EntityRendererProvider.Context pContext) {
         super(pContext);
     }
@@ -26,8 +22,33 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
     @Override
     public void render(T pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
-        float start = -0.5f;
-        float end = 0.5f;
+        float startValue = 0.0f;
+        float endValueStart = -0.5f;
+        float endValueEnd = 0.5f;
+
+        int maxTicks = PortalEntity.ANIMATION_COOLDOWN;
+        int currentTick = pEntity.tickCount;
+        float progress;
+
+        if (pEntity.isDying()) {
+            byte deathCounter = pEntity.getDeathCounter();
+            // Calculate the reverse progress factor (1.0 to 0.0)
+            float deathTicks = deathCounter + pPartialTicks;
+            progress = (maxTicks - Math.min(deathTicks, maxTicks)) / maxTicks;
+            System.out.println("Progress: " + pEntity.getDeathCounter() + " -- " + pPartialTicks + " : " + progress);
+
+        } else {
+            // Calculate the forward progress factor (0.0 to 1.0)
+            float totalTicks = currentTick + pPartialTicks;
+            progress = Math.min(totalTicks / maxTicks, 1.0f);
+        }
+
+        // Interpolate values
+        float interpolatedStart = startValue + (endValueStart - startValue) * progress;
+        float interpolatedEnd = startValue + (endValueEnd - startValue) * progress;
+
+        float start = interpolatedStart;
+        float end = interpolatedEnd;
 
         VertexConsumer vertexConsumer = pBuffer.getBuffer(RenderType.endPortal());
         Direction direction = pEntity.getDirection();
@@ -56,10 +77,11 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
                 this.renderFace(pPoseStack.last().pose(), vertexConsumer, start, end, 0, 0, 2, 2, 0, 0);
             }
         }
-        Color color = pEntity.getIsPrimary() ? Color.GREEN : Color.RED;
-        RenderHelpers.renderLines(pPoseStack, new AABB(pEntity.getX() - 0.05, pEntity.getY() - 0.05, pEntity.getZ() - 0.05, pEntity.getX() + 0.05, pEntity.getY() + 0.05, pEntity.getZ() + 0.05).move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.WHITE, pBuffer);
-        RenderHelpers.renderLines(pPoseStack, renderBounds, color, pBuffer);
-        RenderHelpers.renderLines(pPoseStack, pEntity.getVelocityBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.BLUE, pBuffer);
+
+        //Color color = pEntity.getIsPrimary() ? Color.GREEN : Color.RED;
+        //RenderHelpers.renderLines(pPoseStack, new AABB(pEntity.getX() - 0.05, pEntity.getY() - 0.05, pEntity.getZ() - 0.05, pEntity.getX() + 0.05, pEntity.getY() + 0.05, pEntity.getZ() + 0.05).move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.WHITE, pBuffer);
+        //RenderHelpers.renderLines(pPoseStack, renderBounds, color, pBuffer);
+        //RenderHelpers.renderLines(pPoseStack, pEntity.getVelocityBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.BLUE, pBuffer);
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
