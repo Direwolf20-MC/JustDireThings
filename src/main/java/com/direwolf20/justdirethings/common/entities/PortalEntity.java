@@ -36,10 +36,10 @@ public class PortalEntity extends Entity {
     public final Map<UUID, Vec3> entityLastPosition = new HashMap<>();
     public final Map<UUID, Vec3> entityLastLastPosition = new HashMap<>();
     public int expirationTime = -99;
+    public int deathCounter = 0;
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
-    private static final EntityDataAccessor<Byte> DEATH_COUNTER = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Boolean> ISPRIMARY = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ISDYING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -76,6 +76,7 @@ public class PortalEntity extends Entity {
             teleportCollidingEntities();
             captureVelocity();
         }
+        tickDying();
     }
 
     public void tickCooldowns() {
@@ -103,9 +104,13 @@ public class PortalEntity extends Entity {
                 setDying();
             }
         }
+
+    }
+
+    public void tickDying() {
         if (isDying()) {
-            this.entityData.set(DEATH_COUNTER, (byte) (getDeathCounter() + 1));
-            if (this.entityData.get(DEATH_COUNTER) > ANIMATION_COOLDOWN)
+            deathCounter++;
+            if (deathCounter > ANIMATION_COOLDOWN)
                 this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -153,8 +158,8 @@ public class PortalEntity extends Entity {
         return this.entityData.get(ISPRIMARY);
     }
 
-    public byte getDeathCounter() {
-        return this.entityData.get(DEATH_COUNTER);
+    public int getDeathCounter() {
+        return deathCounter;
     }
 
     public boolean isDying() {
@@ -165,7 +170,6 @@ public class PortalEntity extends Entity {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DIRECTION, (byte) 0);
         builder.define(ALIGNMENT, (byte) Direction.Axis.Z.ordinal());
-        builder.define(DEATH_COUNTER, (byte) 0);
         builder.define(ISPRIMARY, false);
         builder.define(ISDYING, false);
     }
@@ -175,6 +179,8 @@ public class PortalEntity extends Entity {
         this.entityData.set(DIRECTION, compound.getByte("direction"));
         this.entityData.set(ALIGNMENT, compound.getByte("alignment"));
         this.entityData.set(ISPRIMARY, compound.getBoolean("isPrimary"));
+        this.entityData.set(ISDYING, compound.getBoolean("isDying"));
+        deathCounter = compound.getInt("deathCounter");
         if (compound.hasUUID("portalGunUUID"))
             portalGunUUID = compound.getUUID("portalGunUUID");
         if (compound.hasUUID("linkedPortalUUID"))
@@ -186,6 +192,8 @@ public class PortalEntity extends Entity {
         compound.putByte("direction", this.entityData.get(DIRECTION));
         compound.putByte("alignment", this.entityData.get(ALIGNMENT));
         compound.putBoolean("isPrimary", getIsPrimary());
+        compound.putBoolean("isDying", isDying());
+        compound.putInt("deathCounter", deathCounter);
         if (this.getPortalGunUUID() != null) {
             compound.putUUID("portalGunUUID", this.getPortalGunUUID());
         }
@@ -206,7 +214,6 @@ public class PortalEntity extends Entity {
 
     public void setDying() {
         this.entityData.set(ISDYING, true);
-        this.entityData.set(DEATH_COUNTER, (byte) 0);
     }
 
     @Override

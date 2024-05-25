@@ -31,12 +31,10 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         float progress;
 
         if (pEntity.isDying()) {
-            byte deathCounter = pEntity.getDeathCounter();
+            int deathCounter = pEntity.getDeathCounter();
             // Calculate the reverse progress factor (1.0 to 0.0)
             float deathTicks = deathCounter + pPartialTicks;
             progress = (maxTicks - Math.min(deathTicks, maxTicks)) / maxTicks;
-            System.out.println("Progress: " + pEntity.getDeathCounter() + " -- " + pPartialTicks + " : " + progress);
-
         } else {
             // Calculate the forward progress factor (0.0 to 1.0)
             float totalTicks = currentTick + pPartialTicks;
