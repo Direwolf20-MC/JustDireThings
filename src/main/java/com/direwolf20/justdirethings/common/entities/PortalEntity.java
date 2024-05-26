@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -209,11 +210,32 @@ public class PortalEntity extends Entity {
             ServerLevel serverLevel = (ServerLevel) this.level();
             ChunkPos chunkPos = new ChunkPos(this.blockPosition());
             Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x, chunkPos.z, true, false);
+
+            level().playSound(
+                    null,
+                    getX(),
+                    getY(),
+                    getZ(),
+                    Registration.PORTAL_GUN_OPEN.get(),
+                    SoundSource.NEUTRAL,
+                    0.75F,
+                    0.4F
+            );
         }
     }
 
     public void setDying() {
         this.entityData.set(ISDYING, true);
+        level().playSound(
+                null,
+                getX(),
+                getY(),
+                getZ(),
+                Registration.PORTAL_GUN_CLOSE.get(),
+                SoundSource.NEUTRAL,
+                0.5F,
+                0.2F
+        );
     }
 
     @Override

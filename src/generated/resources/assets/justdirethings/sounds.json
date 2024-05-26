@@ -1,0 +1,14 @@
+{
+  "portal_gun_close": {
+    "sounds": [
+      "mob/endermen/portal"
+    ],
+    "subtitle": "sound.justdirethings.portal_gun_close"
+  },
+  "portal_gun_open": {
+    "sounds": [
+      "mob/endermen/portal2"
+    ],
+    "subtitle": "sound.justdirethings.portal_gun_open"
+  }
+}

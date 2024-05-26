@@ -80,6 +80,8 @@ public class Registration {
 
     private static final DeferredRegister<SoundEvent> SOUND_REGISTRY = DeferredRegister.create(Registries.SOUND_EVENT, JustDireThings.MODID);
     public static final Supplier<SoundEvent> BEEP = SOUND_REGISTRY.register("beep", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(JustDireThings.MODID, "beep")));
+    public static final Supplier<SoundEvent> PORTAL_GUN_CLOSE = SOUND_REGISTRY.register("portal_gun_close", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(JustDireThings.MODID, "portal_gun_close")));
+    public static final Supplier<SoundEvent> PORTAL_GUN_OPEN = SOUND_REGISTRY.register("portal_gun_open", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(JustDireThings.MODID, "portal_gun_open")));
 
 
     public static void init(IEventBus eventBus) {
