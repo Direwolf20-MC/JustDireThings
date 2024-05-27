@@ -3,8 +3,6 @@ package com.direwolf20.justdirethings.common.items;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.util.NBTHelpers;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +26,7 @@ public class PortalGunV2 extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        level.playSound(
+        /*level.playSound(
                 null,
                 player.getX(),
                 player.getY(),
@@ -37,9 +35,9 @@ public class PortalGunV2 extends Item {
                 SoundSource.NEUTRAL,
                 0.5F,
                 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
-        );
+        );*/
         if (!level.isClientSide) {
-            spawnProjectile(level, player, itemStack, false);
+            spawnProjectile(level, player, itemStack, true);
         }
         return InteractionResultHolder.fail(itemStack);
     }
