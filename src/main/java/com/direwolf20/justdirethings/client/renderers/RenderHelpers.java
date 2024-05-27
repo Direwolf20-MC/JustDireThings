@@ -166,8 +166,8 @@ public class RenderHelpers {
         renderBoxSolid(matrix, buffer, minX, minY, minZ, maxX, maxY, maxZ, r, g, b, alpha);
     }
 
-    protected static void renderBoxSolid(Matrix4f matrix, MultiBufferSource buffer, double x, double y, double z, double xEnd, double yEnd, double zEnd, float red, float green, float blue, float alpha) {
-        VertexConsumer builder = buffer.getBuffer(OurRenderTypes.SolidBoxArea);
+    public static void renderBoxSolid(Matrix4f matrix, MultiBufferSource buffer, double x, double y, double z, double xEnd, double yEnd, double zEnd, float red, float green, float blue, float alpha) {
+        VertexConsumer builder = buffer.getBuffer(OurRenderTypes.SolidBoxAreaOpaque);
 
         //careful: mc want's it's vertices to be defined CCW - if you do it the other way around weird cullling issues will arise
         //CCW herby counts as if you were looking at it from the outside

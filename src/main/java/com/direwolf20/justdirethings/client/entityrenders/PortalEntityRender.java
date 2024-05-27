@@ -14,6 +14,10 @@ import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.awt.*;
+
+import static com.direwolf20.justdirethings.client.renderers.RenderHelpers.renderBoxSolid;
+
 public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T> {
     public PortalEntityRender(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -86,12 +90,62 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
             }
         }
 
-        //Color color = pEntity.getIsPrimary() ? Color.GREEN : Color.RED;
+        Color lightBlue = new Color(0, 153, 255, 255); // The last value is for alpha (opacity)
+        Color orangePortalColor = new Color(255, 165, 0, 255);
+        Color color = pEntity.getIsPrimary() ? lightBlue : orangePortalColor;
+        renderFlatFrame(pPoseStack, pBuffer, renderBounds, 0.025f, color, direction.getAxis());
         //RenderHelpers.renderLines(pPoseStack, new AABB(pEntity.getX() - 0.05, pEntity.getY() - 0.05, pEntity.getZ() - 0.05, pEntity.getX() + 0.05, pEntity.getY() + 0.05, pEntity.getZ() + 0.05).move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.WHITE, pBuffer);
         //RenderHelpers.renderLines(pPoseStack, renderBounds, color, pBuffer);
         //RenderHelpers.renderLines(pPoseStack, pEntity.getVelocityBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.BLUE, pBuffer);
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
+    }
+
+    // New method to render a thick border
+    private void renderFlatFrame(PoseStack matrix, MultiBufferSource buffer, AABB aabb, float thickness, Color color, Direction.Axis alignment) {
+        float minX = (float) aabb.minX;
+        float minY = (float) aabb.minY;
+        float minZ = (float) aabb.minZ;
+        float maxX = (float) aabb.maxX;
+        float maxY = (float) aabb.maxY;
+        float maxZ = (float) aabb.maxZ;
+
+        float r = color.getRed() / 255.0f;
+        float g = color.getGreen() / 255.0f;
+        float b = color.getBlue() / 255.0f;
+        float alpha = color.getAlpha() / 255.0f;
+
+        if (alignment == Direction.Axis.Z) {
+            // Render the frame on the Z plane (North-South)
+            // Left border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, (minZ + maxZ) / 2, minX + thickness, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
+            // Right border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB(maxX - thickness, minY, (minZ + maxZ) / 2, maxX, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
+            // Bottom border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, (minZ + maxZ) / 2, maxX, minY + thickness, (minZ + maxZ) / 2), r, g, b, alpha);
+            // Top border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, maxY - thickness, (minZ + maxZ) / 2, maxX, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
+        } else if (alignment == Direction.Axis.X) {
+            // Render the frame on the X plane (East-West)
+            // Left border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, minZ, (minX + maxX) / 2, maxY, minZ + thickness), r, g, b, alpha);
+            // Right border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, maxZ - thickness, (minX + maxX) / 2, maxY, maxZ), r, g, b, alpha);
+            // Bottom border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, minZ, (minX + maxX) / 2, minY + thickness, maxZ), r, g, b, alpha);
+            // Top border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, maxY - thickness, minZ, (minX + maxX) / 2, maxY, maxZ), r, g, b, alpha);
+        } else {
+            // Render the frame on the Y plane (Top-Bottom)
+            // Left border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, minZ, minX + thickness, minY, maxZ), r, g, b, alpha);
+            // Right border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB(maxX - thickness, minY, minZ, maxX, minY, maxZ), r, g, b, alpha);
+            // Front border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, minZ, maxX, minY, minZ + thickness), r, g, b, alpha);
+            // Back border
+            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, maxZ - thickness, maxX, minY, maxZ), r, g, b, alpha);
+        }
     }
 
     @Override
