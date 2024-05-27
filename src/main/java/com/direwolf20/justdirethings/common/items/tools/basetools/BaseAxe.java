@@ -40,7 +40,11 @@ public class BaseAxe extends AxeItem implements ToggleableTool, LeftClickableToo
     public InteractionResult useOn(UseOnContext pContext) {
         if (bindDrops(pContext))
             return InteractionResult.SUCCESS;
+        Level level = pContext.getLevel();
+        boolean oldSnapshot = level.captureBlockSnapshots;
+        level.captureBlockSnapshots = false;
         useOnAbility(pContext);
+        level.captureBlockSnapshots = oldSnapshot;
         return super.useOn(pContext);
     }
 
