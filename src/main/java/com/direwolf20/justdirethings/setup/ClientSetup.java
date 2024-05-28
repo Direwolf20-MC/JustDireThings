@@ -21,6 +21,7 @@ import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -29,10 +30,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -133,5 +131,17 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);
         event.registerEntityRenderer(Registration.PortalEntity.get(), PortalEntityRender::new);
         event.registerEntityRenderer(Registration.PortalProjectile.get(), PortalProjectileRender::new);
+    }
+
+    @SubscribeEvent
+    static void itemColors(RegisterColorHandlersEvent.Item event) {
+        final ItemColors colors = event.getItemColors();
+
+        colors.register((stack, index) -> {
+            if (index == 1) {
+                return 0xFF00DD00;
+            }
+            return 0xFFFFFFFF;
+        }, Registration.PORTAL_FLUID_BUCKET.get());
     }
 }

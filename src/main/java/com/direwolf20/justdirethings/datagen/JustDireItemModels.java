@@ -6,7 +6,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
 
 public class JustDireItemModels extends ItemModelProvider {
     public JustDireItemModels(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -93,6 +95,11 @@ public class JustDireItemModels extends ItemModelProvider {
 
         //Generators
         registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
+
+        //Buckets
+        withExistingParent(Registration.PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+                .customLoader(DynamicFluidContainerModelBuilder::begin)
+                .fluid(Registration.PORTAL_FLUID_BUCKET.get().content);
     }
 
     public void registerTools() {

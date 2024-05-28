@@ -23,6 +23,7 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
 import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
+import com.direwolf20.justdirethings.common.fluids.PortalFluid;
 import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreChestplate;
@@ -32,6 +33,8 @@ import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataCom
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -40,20 +43,34 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
+import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static com.direwolf20.justdirethings.JustDireThings.MODID;
@@ -63,6 +80,8 @@ public class Registration {
     public static final TicketController TICKET_CONTROLLER = new TicketController(new ResourceLocation(MODID, "chunk_loader"), null);
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, MODID);
+    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, MODID);
     public static final DeferredRegister.Blocks SIDEDBLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
@@ -86,6 +105,8 @@ public class Registration {
 
     public static void init(IEventBus eventBus) {
         BLOCKS.register(eventBus);
+        FLUID_TYPES.register(eventBus);
+        FLUIDS.register(eventBus);
         SIDEDBLOCKS.register(eventBus);
         ITEMS.register(eventBus);
         TOOLS.register(eventBus);
@@ -127,6 +148,74 @@ public class Registration {
     public static final DeferredHolder<Block, GooSoilTier4> GooSoil_Tier4 = BLOCKS.register("goosoil_tier4", GooSoilTier4::new);
     public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier4 = ITEMS.register("goosoil_tier4", () -> new BlockItem(GooSoil_Tier4.get(), new Item.Properties()));
     public static final DeferredHolder<Block, EclipseGateBlock> EclipseGateBlock = BLOCKS.register("eclipsegateblock", EclipseGateBlock::new);
+
+    //Fluids
+    public static final DeferredHolder<FluidType, FluidType> PORTAL_FLUID_TYPE = FLUID_TYPES.register("portal_fluid_type",
+            () -> new FluidType(FluidType.Properties.create().density(1000).viscosity(1000).temperature(300)) {
+                @Override
+                public boolean canConvertToSource(FluidState state, LevelReader reader, BlockPos pos) {
+                    return false;
+                }
+
+                @Override
+                public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
+                    consumer.accept(new IClientFluidTypeExtensions() {
+                        private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation("textures/misc/underwater.png"),
+                                PORTALF_STILL = new ResourceLocation(MODID, "block/portal_fluid_source"),
+                                PORTALF_FLOW = new ResourceLocation(MODID, "block/portal_fluid_flowing"),
+                                PORTALF_OVERLAY = new ResourceLocation(MODID, "block/portal_fluid_overlay");
+
+                        @Override
+                        public ResourceLocation getStillTexture() {
+                            return PORTALF_STILL;
+                        }
+
+                        @Override
+                        public ResourceLocation getFlowingTexture() {
+                            return PORTALF_FLOW;
+                        }
+
+                        @Override
+                        public ResourceLocation getOverlayTexture() {
+                            return PORTALF_OVERLAY;
+                        }
+
+                        @Override
+                        public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+                            return UNDERWATER_LOCATION;
+                        }
+
+                        @Override
+                        public int getTintColor() {
+                            return 0xFF00DD00;
+                        }
+
+                        @Override
+                        public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+                            return 0xFF00DD00;
+                        }
+                    });
+                }
+            });
+    public static final DeferredHolder<Fluid, PortalFluid> PORTAL_FLUID_FLOWING = FLUIDS.register("portal_fluid_flowing",
+            PortalFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, PortalFluid> PORTAL_FLUID_SOURCE = FLUIDS.register("portal_fluid_source",
+            PortalFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = BLOCKS.register("portal_fluid_block",
+            () -> new LiquidBlock(Registration.PORTAL_FLUID_SOURCE.get(), BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_GREEN)
+                    .replaceable()
+                    .noCollission()
+                    .strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY)
+                    .noLootTable()
+                    .liquid()
+                    .sound(SoundType.EMPTY)
+            ));
+    public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = ITEMS.register("portal_fluid_bucket",
+            () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+
 
     //Machines
     public static final DeferredHolder<Block, ItemCollector> ItemCollector = BLOCKS.register("itemcollector", ItemCollector::new);
