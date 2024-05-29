@@ -121,6 +121,7 @@ public class PortalGunV2 extends Item {
     }
 
     public static int calculateFluidCost(ServerLevel sourceLevel, Player player, NBTHelpers.PortalDestination portalDestination) {
+        if (player.isCreative()) return 0;
         ServerLevel targetLevel = sourceLevel.getServer().getLevel(portalDestination.globalVec3().dimension());
         if (!targetLevel.equals(sourceLevel)) {
             return 100; //Todo Config
