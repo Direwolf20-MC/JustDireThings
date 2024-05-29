@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.fluids;
+package com.direwolf20.justdirethings.common.fluids.portalfluid;
 
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.world.item.Item;
