@@ -7,6 +7,8 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
 import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
+import com.direwolf20.justdirethings.common.items.PortalGunV2;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
@@ -23,6 +25,7 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
+import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
@@ -51,6 +54,7 @@ public class JustDireThings {
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        //Items
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new DataComponentHandler(itemStack, 1),
                 Registration.Pocket_Generator.get()
         );
@@ -85,6 +89,17 @@ public class JustDireThings {
                 Registration.VoidshiftWand.get(),
                 Registration.EclipsegateWand.get()
         );
+
+        event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
+                    if (itemStack.getItem() instanceof PortalGunV2) {
+                        return new FluidHandlerItemStack(JustDireDataComponents.PORTAL_GUN_FLUID_CONTAINER, itemStack, PortalGunV2.maxMB);
+                    }
+                    return null;
+                },
+                Registration.PortalGunV2.get()
+        );
+
+        //Blocks
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof BaseMachineBE)
