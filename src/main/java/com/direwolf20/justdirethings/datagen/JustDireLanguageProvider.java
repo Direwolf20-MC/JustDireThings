@@ -42,6 +42,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlockSwapperT2.get(), "Advanced Swapper");
         add(Registration.PlayerAccessor.get(), "Player Accessor");
         add(Registration.EclipseGateBlock.get(), "Eclipse Gate");
+        add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -72,6 +73,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.MachineSettingsCopier.get(), "Machine Settings Copier");
         add(Registration.PortalGun.get(), "Portal Gun");
         add(Registration.PortalGunV2.get(), "Advanced Portal Gun");
+        add(Registration.PORTAL_FLUID_BUCKET.get(), "Portal Fluid Bucket");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -131,6 +133,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratorfuelstack", "Fuel: %f %s");
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
         add("justdirethings.festored", "Forge Energy: %s / %s");
+        add("justdirethings.portalfluidamt", "Portal Fluid: %s / %s");
+        add("justdirethings.lowportalfluid", "Insufficient Portal Fluid");
         add("justdirethings.boundto", "Bound to: %s:%s");
         add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");

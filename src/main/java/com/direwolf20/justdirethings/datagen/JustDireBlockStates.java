@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.datagen;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -11,14 +10,17 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.ModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.Objects;
 
+import static com.direwolf20.justdirethings.JustDireThings.MODID;
+
 
 public class JustDireBlockStates extends BlockStateProvider {
     public JustDireBlockStates(PackOutput output, ExistingFileHelper helper) {
-        super(output, JustDireThings.MODID, helper);
+        super(output, MODID, helper);
     }
 
     @Override
@@ -39,11 +41,15 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.PlayerAccessor.get(), models().cubeAll(Registration.PlayerAccessor.getId().getPath(), blockTexture(Registration.PlayerAccessor.get())));
         simpleBlock(Registration.EclipseGateBlock.get(), models().cubeAll(Registration.EclipseGateBlock.getId().getPath(), blockTexture(Registration.EclipseGateBlock.get())).renderType("cutout"));
 
+        //Fluids
+        simpleBlock(Registration.PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "portal_fluid_source")));
+
         patternBlock();
         soilBlocks();
         sidedBlocks();
         sidedNonRotating();
     }
+
 
     private void sidedNonRotating() {
         simpleBlock(Registration.BlockBreakerT2.get(), models().cubeBottomTop(
