@@ -74,6 +74,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.PortalGun.get(), "Portal Gun");
         add(Registration.PortalGunV2.get(), "Advanced Portal Gun");
         add(Registration.PORTAL_FLUID_BUCKET.get(), "Portal Fluid Bucket");
+        add(Registration.FluidCanister.get(), "Fluid Canister");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");

@@ -1,0 +1,57 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "justdirethings:item/fluidcanister/fluid_canister",
+    "layer1": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_0"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "justdirethings:fullness": 1
+      },
+      "model": "justdirethings:item/fluid_canister_1"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 2
+      },
+      "model": "justdirethings:item/fluid_canister_2"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 3
+      },
+      "model": "justdirethings:item/fluid_canister_3"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 4
+      },
+      "model": "justdirethings:item/fluid_canister_4"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 5
+      },
+      "model": "justdirethings:item/fluid_canister_5"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 6
+      },
+      "model": "justdirethings:item/fluid_canister_6"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 7
+      },
+      "model": "justdirethings:item/fluid_canister_7"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 8
+      },
+      "model": "justdirethings:item/fluid_canister_8"
+    }
+  ]
+}

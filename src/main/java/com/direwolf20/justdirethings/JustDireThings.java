@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
 import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
+import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
@@ -92,11 +93,15 @@ public class JustDireThings {
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
                     if (itemStack.getItem() instanceof PortalGunV2) {
-                        return new FluidHandlerItemStack(JustDireDataComponents.PORTAL_GUN_FLUID_CONTAINER, itemStack, PortalGunV2.maxMB);
+                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, PortalGunV2.maxMB);
+                    }
+                    if (itemStack.getItem() instanceof FluidCanister) {
+                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, FluidCanister.maxMB);
                     }
                     return null;
                 },
-                Registration.PortalGunV2.get()
+                Registration.PortalGunV2.get(),
+                Registration.FluidCanister.get()
         );
 
         //Blocks
