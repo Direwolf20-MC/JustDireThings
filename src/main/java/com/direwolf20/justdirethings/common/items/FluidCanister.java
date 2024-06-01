@@ -186,7 +186,7 @@ public class FluidCanister extends Item {
         SimpleFluidContent fluidData = getFluidData(itemStack);
         if (fluidData != null && !fluidData.isEmpty()) {
             if (fluidData.getFluid().isSame(Fluids.LAVA)) //Special case lava
-                return 0xFFDB6B19;
+                return 0xFFFF4500;
             return IClientFluidTypeExtensions.of(fluidData.getFluidType()).getTintColor(fluidData.copy());
         }
         return 0xFFFFFFFF;
