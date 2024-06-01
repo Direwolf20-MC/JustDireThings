@@ -52,10 +52,14 @@ public class FluidCanister extends Item {
         if (blockhitresult.getType() == HitResult.Type.BLOCK) {
             if (player.isShiftKeyDown()) {
                 if (placeFluid(level, player, itemStack, blockhitresult))
-                    return InteractionResultHolder.fail(itemStack);
+                    return InteractionResultHolder.success(itemStack);
             } else {
                 if (pickupFluid(level, player, itemStack, blockhitresult))
-                    return InteractionResultHolder.fail(itemStack);
+                    return InteractionResultHolder.success(itemStack);
+                else {
+                    if (placeFluid(level, player, itemStack, blockhitresult))
+                        return InteractionResultHolder.success(itemStack);
+                }
             }
         }
         return InteractionResultHolder.fail(itemStack);
@@ -65,6 +69,7 @@ public class FluidCanister extends Item {
     public boolean placeFluid(Level level, Player player, ItemStack itemStack, BlockHitResult blockhitresult) {
         BlockPos blockpos = blockhitresult.getBlockPos();
         BlockState blockstate = level.getBlockState(blockpos);
+        if (blockstate.getBlock() instanceof LiquidBlock && !player.isShiftKeyDown()) return false;
         IFluidHandlerItem fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler == null) return false;
         FluidStack fluidStack = fluidHandler.getFluidInTank(0);
