@@ -43,6 +43,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.PlayerAccessor.get(), "Player Accessor");
         add(Registration.EclipseGateBlock.get(), "Eclipse Gate");
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
+        add("fluid_type.justdirethings.portal_fluid_type", "Portal Fluid");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -150,6 +151,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.toolenabled", "Tool: %s - %s");
         add("justdirethings.settingscopied", "Settings Copied");
         add("justdirethings.settingspasted", "Settings Pasted");
+        add("justdirethings.fillmode.changed", "Fill Mode Set to: %s");
+        add("justdirethings.fluidamt", "Amount: ");
+        add("justdirethings.fluidname", "Fluid: ");
+        add("justdirethings.fillmode", "Fill Mode: ");
+        add("justdirethings.fillmode.none", "None");
+        add("justdirethings.fillmode.jdtonly", "JustDireThings");
+        add("justdirethings.fillmode.all", "All");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");

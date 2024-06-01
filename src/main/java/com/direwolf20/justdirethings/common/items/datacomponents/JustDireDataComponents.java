@@ -58,6 +58,9 @@ public class JustDireDataComponents {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FORGE_ENERGY = COMPONENTS.register("forge_energy", () -> DataComponentType.<Integer>builder().persistent(Codec.INT.orElse(0)).networkSynchronized(ByteBufCodecs.VAR_INT).build());
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FLUID_CANISTER_MODE = COMPONENTS.register("fluid_canister_mode", () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+
+
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<JustDireItemContainerContents>> ITEMSTACK_HANDLER = COMPONENTS.register("itemstack_handler", () -> DataComponentType.<JustDireItemContainerContents>builder().persistent(JustDireItemContainerContents.CODEC).networkSynchronized(JustDireItemContainerContents.STREAM_CODEC).cacheEncoding().build());
 

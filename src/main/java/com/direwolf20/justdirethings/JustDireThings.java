@@ -95,8 +95,8 @@ public class JustDireThings {
                     if (itemStack.getItem() instanceof PortalGunV2) {
                         return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, PortalGunV2.maxMB);
                     }
-                    if (itemStack.getItem() instanceof FluidCanister) {
-                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, FluidCanister.maxMB);
+                    if (itemStack.getItem() instanceof FluidCanister fluidCanister) {
+                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, fluidCanister.getMaxMB());
                     }
                     return null;
                 },

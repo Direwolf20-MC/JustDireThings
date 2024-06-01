@@ -1,10 +1,17 @@
 package com.direwolf20.justdirethings.common.items;
 
+import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.util.MagicHelpers;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -15,6 +22,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -36,13 +44,38 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class FluidCanister extends Item {
-    public final static int maxMB = 8000;
+    public enum FillMode {
+        NONE("none"),
+        JDTONLY("jdtonly"),
+        ALL("all");
+
+        private final String baseName;
+
+        FillMode(String baseName) {
+            this.baseName = baseName;
+        }
+
+        public Component getTooltip() {
+            return Component.translatable(JustDireThings.MODID + ".fillmode." + baseName);
+        }
+
+        public FillMode next() {
+            FillMode[] values = values();
+            int nextOrdinal = (this.ordinal() + 1) % values.length;
+            return values[nextOrdinal];
+        }
+    }
 
     public FluidCanister() {
         super(new Properties()
                 .stacksTo(1));
+    }
+
+    public int getMaxMB() {
+        return 8000;
     }
 
     @Override
@@ -61,8 +94,36 @@ public class FluidCanister extends Item {
                         return InteractionResultHolder.success(itemStack);
                 }
             }
+        } else {
+            if (player.isShiftKeyDown()) {
+                nextFillMode(itemStack);
+                player.displayClientMessage(Component.translatable("justdirethings.fillmode.changed", getFillMode(itemStack).getTooltip()), true);
+            }
         }
         return InteractionResultHolder.fail(itemStack);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || mc.player == null) {
+            return;
+        }
+
+        IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler == null) {
+            return;
+        }
+        FluidStack fluidStack = fluidHandler.getFluidInTank(0);
+        int fluidColor = getFluidColor(stack);
+
+// Creating a Style with the fluid color
+        Style fluidStyle = Style.EMPTY.withColor(TextColor.fromRgb(fluidColor));
+
+        tooltip.add(Component.translatable("justdirethings.fluidname").withStyle(ChatFormatting.GRAY).append(Component.translatable(fluidStack.getHoverName().getString()).withStyle(fluidStyle)));
+        tooltip.add(Component.translatable("justdirethings.fluidamt").withStyle(ChatFormatting.GRAY).append(Component.literal(MagicHelpers.formatted(fluidStack.getAmount()) + "/" + MagicHelpers.formatted(getMaxMB())).withStyle(ChatFormatting.GREEN)));
+        tooltip.add(Component.translatable("justdirethings.fillmode").withStyle(ChatFormatting.GRAY).append(Component.translatable(getFillMode(stack).getTooltip().getString()).withStyle(ChatFormatting.GREEN)));
     }
 
 
@@ -195,5 +256,13 @@ public class FluidCanister extends Item {
             return IClientFluidTypeExtensions.of(fluidData.getFluidType()).getTintColor(fluidData.copy());
         }
         return 0xFFFFFFFF;
+    }
+
+    public static FillMode getFillMode(ItemStack itemStack) {
+        return FillMode.values()[itemStack.getOrDefault(JustDireDataComponents.FLUID_CANISTER_MODE, 0)];
+    }
+
+    public static void nextFillMode(ItemStack itemStack) {
+        itemStack.set(JustDireDataComponents.FLUID_CANISTER_MODE, getFillMode(itemStack).next().ordinal());
     }
 }
