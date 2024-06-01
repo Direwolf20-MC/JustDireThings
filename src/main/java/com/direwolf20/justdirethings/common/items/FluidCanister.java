@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,6 +43,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -101,6 +103,33 @@ public class FluidCanister extends Item {
             }
         }
         return InteractionResultHolder.fail(itemStack);
+    }
+
+    @Override
+    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level world, @NotNull Entity entity, int itemSlot, boolean isSelected) {
+        if (world.isClientSide) return;
+        FillMode fillMode = getFillMode(itemStack);
+        if (fillMode == FillMode.NONE) return;
+        if (entity instanceof Player player) {
+            IFluidHandlerItem fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+            if (fluidHandler == null || fluidHandler.getFluidInTank(0).isEmpty()) return;
+            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                ItemStack slotStack = player.getInventory().getItem(i);
+                if (slotStack.getItem() instanceof FluidCanister) continue;
+                if (fillMode == FillMode.JDTONLY && !slotStack.getItem().getCreatorModId(slotStack).equals(JustDireThings.MODID))
+                    continue;
+                IFluidHandlerItem slotFluidHandler = slotStack.getCapability(Capabilities.FluidHandler.ITEM);
+                if (slotFluidHandler != null) {
+                    FluidStack fluidStack = fluidHandler.getFluidInTank(0);
+                    int amtToFill = Math.min(fluidStack.getAmount(), 100);
+                    int acceptedFluid = slotFluidHandler.fill(new FluidStack(fluidStack.getFluid(), amtToFill), IFluidHandler.FluidAction.SIMULATE);
+                    if (acceptedFluid > 0) {
+                        FluidStack extractedFluid = fluidHandler.drain(new FluidStack(fluidStack.getFluid(), acceptedFluid), IFluidHandler.FluidAction.EXECUTE);
+                        slotFluidHandler.fill(extractedFluid, IFluidHandler.FluidAction.EXECUTE);
+                    }
+                }
+            }
+        }
     }
 
     @Override

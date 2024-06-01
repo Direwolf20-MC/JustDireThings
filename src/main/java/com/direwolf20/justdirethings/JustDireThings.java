@@ -26,6 +26,7 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
@@ -93,7 +94,18 @@ public class JustDireThings {
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
                     if (itemStack.getItem() instanceof PortalGunV2) {
-                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, PortalGunV2.maxMB);
+                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, PortalGunV2.maxMB) {
+                            @Override
+                            public boolean isFluidValid(int tank, FluidStack stack) {
+                                return stack.is(Registration.PORTAL_FLUID_TYPE.get());
+                            }
+
+                            @Override
+                            public boolean canFillFluidType(FluidStack fluid) {
+                                return fluid.is(Registration.PORTAL_FLUID_TYPE.get());
+                            }
+
+                        };
                     }
                     if (itemStack.getItem() instanceof FluidCanister fluidCanister) {
                         return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, fluidCanister.getMaxMB());
