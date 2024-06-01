@@ -1,5 +1,7 @@
 package com.direwolf20.justdirethings.client.entityrenders;
 
+import com.direwolf20.justdirethings.client.renderers.shader.DireRenderTypes;
+import com.direwolf20.justdirethings.client.renderers.shader.ShaderTexture;
 import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -15,6 +17,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.awt.*;
+import java.util.List;
 
 import static com.direwolf20.justdirethings.client.renderers.RenderHelpers.renderBoxSolid;
 
@@ -62,7 +65,7 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         float start2 = interpolatedStart2;
         float end2 = interpolatedEnd2;
 
-        VertexConsumer vertexConsumer = pBuffer.getBuffer(RenderType.endPortal());
+        VertexConsumer vertexConsumer = pBuffer.getBuffer(this.renderType());
         Direction direction = pEntity.getDirection();
         Direction.Axis alignment = pEntity.getAlignment();
 
@@ -158,5 +161,12 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         vertexConsumer.vertex(matrixStack, x2, y1, z2).color(1f, 0f, 0f, 0.25f).endVertex();
         vertexConsumer.vertex(matrixStack, x2, y2, z3).color(1f, 0f, 0f, 0.25f).endVertex();
         vertexConsumer.vertex(matrixStack, x1, y2, z4).color(1f, 0f, 0f, 0.25f).endVertex();
+    }
+
+    protected RenderType renderType() {
+        return DireRenderTypes.getRenderType("portal_entity")
+                .using(List.of(
+                        new ShaderTexture(new ResourceLocation("textures/block/amethyst_block.png"))
+                ));
     }
 }
