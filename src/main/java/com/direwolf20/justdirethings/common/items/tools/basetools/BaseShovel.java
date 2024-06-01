@@ -44,7 +44,7 @@ public class BaseShovel extends ShovelItem implements ToggleableTool, LeftClicka
         return super.useOn(pContext);
     }
 
-    @Override
+    /*@Override
     public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
         if (!player.level().isClientSide) {
             BlockState blockState = player.level().getBlockState(pos);
@@ -53,7 +53,7 @@ public class BaseShovel extends ShovelItem implements ToggleableTool, LeftClicka
             }
         }
         return false;
-    }
+    }*/
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {

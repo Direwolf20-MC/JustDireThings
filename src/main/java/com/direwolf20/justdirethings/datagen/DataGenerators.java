@@ -38,5 +38,10 @@ public class DataGenerators {
         generator.addProvider(event.includeClient(), new JustDireItemModels(packOutput, event.getExistingFileHelper()));
         generator.addProvider(event.includeClient(), new JustDireLanguageProvider(packOutput, "en_us"));
 
+        generator.addProvider(
+                event.includeClient(),
+                new JustDireSounds(packOutput, event.getExistingFileHelper())
+        );
+
     }
 }

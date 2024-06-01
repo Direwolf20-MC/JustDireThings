@@ -42,6 +42,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlockSwapperT2.get(), "Advanced Swapper");
         add(Registration.PlayerAccessor.get(), "Player Accessor");
         add(Registration.EclipseGateBlock.get(), "Eclipse Gate");
+        add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
+        add("fluid_type.justdirethings.portal_fluid_type", "Portal Fluid");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -72,6 +74,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.MachineSettingsCopier.get(), "Machine Settings Copier");
         add(Registration.PortalGun.get(), "Portal Gun");
         add(Registration.PortalGunV2.get(), "Advanced Portal Gun");
+        add(Registration.PORTAL_FLUID_BUCKET.get(), "Portal Fluid Bucket");
+        add(Registration.FluidCanister.get(), "Fluid Canister");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -131,6 +135,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratorfuelstack", "Fuel: %f %s");
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
         add("justdirethings.festored", "Forge Energy: %s / %s");
+        add("justdirethings.portalfluidamt", "Portal Fluid: %s / %s");
+        add("justdirethings.lowportalfluid", "Insufficient Portal Fluid");
         add("justdirethings.boundto", "Bound to: %s:%s");
         add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");
@@ -145,6 +151,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.toolenabled", "Tool: %s - %s");
         add("justdirethings.settingscopied", "Settings Copied");
         add("justdirethings.settingspasted", "Settings Pasted");
+        add("justdirethings.fillmode.changed", "Fill Mode Set to: %s");
+        add("justdirethings.fluidamt", "Amount: ");
+        add("justdirethings.fluidname", "Fluid: ");
+        add("justdirethings.fillmode", "Fill Mode: ");
+        add("justdirethings.fillmode.none", "None");
+        add("justdirethings.fillmode.jdtonly", "JustDireThings");
+        add("justdirethings.fillmode.all", "All");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -243,6 +256,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.copy_offset", "Copy Offset");
         add("justdirethings.screen.copy_filter", "Copy Filters");
         add("justdirethings.screen.copy_redstone", "Copy Redstone");
+        add("justdirethings.screen.add_favorite", "Add Favorite");
+        add("justdirethings.screen.remove_favorite", "Remove Favorite");
+        add("justdirethings.screen.edit_favorite", "Edit Favorite");
+        add("justdirethings.screen.stay_open", "Stay Open");
+        add("justdirethings.screen.save_close", "Save and Close");
+        add("justdirethings.screen.cancel", "Cancel");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

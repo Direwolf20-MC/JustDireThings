@@ -40,11 +40,15 @@ public class BaseAxe extends AxeItem implements ToggleableTool, LeftClickableToo
     public InteractionResult useOn(UseOnContext pContext) {
         if (bindDrops(pContext))
             return InteractionResult.SUCCESS;
+        Level level = pContext.getLevel();
+        boolean oldSnapshot = level.captureBlockSnapshots;
+        level.captureBlockSnapshots = false;
         useOnAbility(pContext);
+        level.captureBlockSnapshots = oldSnapshot;
         return super.useOn(pContext);
     }
 
-    @Override
+    /*@Override
     public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
         if (!player.level().isClientSide) {
             BlockState blockState = player.level().getBlockState(pos);
@@ -53,7 +57,7 @@ public class BaseAxe extends AxeItem implements ToggleableTool, LeftClickableToo
             }
         }
         return false;
-    }
+    }*/
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {

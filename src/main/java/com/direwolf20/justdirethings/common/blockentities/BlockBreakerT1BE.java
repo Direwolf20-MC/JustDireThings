@@ -221,7 +221,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public void breakBlock(FakePlayer player, BlockPos breakPos, ItemStack itemStack, BlockState state) {
-        itemStack.onBlockStartBreak(breakPos, player);
+        //itemStack.onBlockStartBreak(breakPos, player);
         boolean success = level.destroyBlock(breakPos, false, player);
         if (success) {
             Block.dropResources(state, level, breakPos, level.getBlockEntity(breakPos), player, itemStack);

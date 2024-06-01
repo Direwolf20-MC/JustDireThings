@@ -1,0 +1,6 @@
+{
+  "parent": "justdirethings:item/fluid_canister",
+  "textures": {
+    "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_4"
+  }
+}

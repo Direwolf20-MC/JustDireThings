@@ -10,6 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -30,15 +31,18 @@ public class PortalEntity extends Entity {
     private UUID linkedPortalUUID;
     private boolean isAdvanced;
     private static final int TELEPORT_COOLDOWN = 10; // Cooldown period in ticks (1 second)
+    public static int ANIMATION_COOLDOWN = 5;
     public final Map<UUID, Integer> entityCooldowns = new HashMap<>();
     public final Map<UUID, Integer> entityVelocityCooldowns = new HashMap<>();
     public final Map<UUID, Vec3> entityLastPosition = new HashMap<>();
     public final Map<UUID, Vec3> entityLastLastPosition = new HashMap<>();
     public int expirationTime = -99;
+    public int deathCounter = 0;
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Boolean> ISPRIMARY = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> ISDYING = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BOOLEAN);
 
     public PortalEntity(EntityType<?> entityType, Level world) {
         super(entityType, world);
@@ -73,6 +77,7 @@ public class PortalEntity extends Entity {
             teleportCollidingEntities();
             captureVelocity();
         }
+        tickDying();
     }
 
     public void tickCooldowns() {
@@ -96,9 +101,18 @@ public class PortalEntity extends Entity {
         if (isAdvanced && expirationTime > 0) {
             expirationTime = expirationTime - 1;
             if (expirationTime == 0) {
-                getLinkedPortal().discard();
-                discard();
+                getLinkedPortal().setDying();
+                setDying();
             }
+        }
+
+    }
+
+    public void tickDying() {
+        if (isDying()) {
+            deathCounter++;
+            if (deathCounter > ANIMATION_COOLDOWN)
+                this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -145,11 +159,20 @@ public class PortalEntity extends Entity {
         return this.entityData.get(ISPRIMARY);
     }
 
+    public int getDeathCounter() {
+        return deathCounter;
+    }
+
+    public boolean isDying() {
+        return this.entityData.get(ISDYING);
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DIRECTION, (byte) 0);
         builder.define(ALIGNMENT, (byte) Direction.Axis.Z.ordinal());
         builder.define(ISPRIMARY, false);
+        builder.define(ISDYING, false);
     }
 
     @Override
@@ -157,6 +180,8 @@ public class PortalEntity extends Entity {
         this.entityData.set(DIRECTION, compound.getByte("direction"));
         this.entityData.set(ALIGNMENT, compound.getByte("alignment"));
         this.entityData.set(ISPRIMARY, compound.getBoolean("isPrimary"));
+        this.entityData.set(ISDYING, compound.getBoolean("isDying"));
+        deathCounter = compound.getInt("deathCounter");
         if (compound.hasUUID("portalGunUUID"))
             portalGunUUID = compound.getUUID("portalGunUUID");
         if (compound.hasUUID("linkedPortalUUID"))
@@ -168,6 +193,8 @@ public class PortalEntity extends Entity {
         compound.putByte("direction", this.entityData.get(DIRECTION));
         compound.putByte("alignment", this.entityData.get(ALIGNMENT));
         compound.putBoolean("isPrimary", getIsPrimary());
+        compound.putBoolean("isDying", isDying());
+        compound.putInt("deathCounter", deathCounter);
         if (this.getPortalGunUUID() != null) {
             compound.putUUID("portalGunUUID", this.getPortalGunUUID());
         }
@@ -183,7 +210,32 @@ public class PortalEntity extends Entity {
             ServerLevel serverLevel = (ServerLevel) this.level();
             ChunkPos chunkPos = new ChunkPos(this.blockPosition());
             Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x, chunkPos.z, true, false);
+
+            level().playSound(
+                    null,
+                    getX(),
+                    getY(),
+                    getZ(),
+                    Registration.PORTAL_GUN_OPEN.get(),
+                    SoundSource.NEUTRAL,
+                    0.75F,
+                    0.4F
+            );
         }
+    }
+
+    public void setDying() {
+        this.entityData.set(ISDYING, true);
+        level().playSound(
+                null,
+                getX(),
+                getY(),
+                getZ(),
+                Registration.PORTAL_GUN_CLOSE.get(),
+                SoundSource.NEUTRAL,
+                0.5F,
+                0.2F
+        );
     }
 
     @Override
@@ -349,9 +401,10 @@ public class PortalEntity extends Entity {
     }
 
     public boolean isValidEntity(Entity entity) {
-        if (entityCooldowns.containsKey(entity.getUUID())) {
+        if (entity.getType().equals(Registration.PortalEntity.get()))
+            return false;
+        if (entityCooldowns.containsKey(entity.getUUID()))
             return false; // Skip entities with active cooldown
-        }
         if (entity.isMultipartEntity())
             return false;
         if (entity instanceof PartEntity<?>)

@@ -23,6 +23,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 import java.util.UUID;
 
+import static com.direwolf20.justdirethings.util.MiscHelpers.getPrimaryDirection;
+
 public class PortalProjectile extends Projectile {
     private UUID portalGunUUID;
     private boolean isPrimaryType;
@@ -64,13 +66,17 @@ public class PortalProjectile extends Projectile {
         double d2 = this.getZ() + vec3.z;
         this.setPos(d0, d1, d2);
         if (isAdvanced) {
-            if (tickCount > 20)
-                System.out.println("Spawn Portal Here");
+            if (tickCount > 5) {
+                BlockPos blockPos = this.blockPosition();
+                if (!level().getBlockState(blockPos).isAir() || !level().getBlockState(blockPos.below()).isAir())
+                    blockPos = blockPos.relative(getPrimaryDirection(vec3).getOpposite());
+                Vec3 hitPos = Vec3.atCenterOf(blockPos); // Slightly offset to avoid z-fighting
+                spawnAdvancedPortal(hitPos.x(), hitPos.y(), hitPos.z(), getPrimaryDirection(vec3).getOpposite(), blockPos);
+            }
         } else {
             if (tickCount > 200)
                 this.discard();
         }
-        //spawnPortal(this.getX(), this.getY(), this.getZ(), getPrimaryDirection(vec3), this.blockPosition());
     }
 
 
@@ -102,7 +108,7 @@ public class PortalProjectile extends Projectile {
             List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
 
             for (PortalEntity entity : customEntities) {
-                entity.discard();
+                entity.setDying();
             }
         }
     }
@@ -110,7 +116,7 @@ public class PortalProjectile extends Projectile {
     protected void clearMatchingPortal(MinecraftServer server) {
         PortalEntity matchingPortal = findMatchingPortal(server, isPrimaryType);
         if (matchingPortal != null)
-            matchingPortal.discard();
+            matchingPortal.setDying();
     }
 
     protected void linkPortals(MinecraftServer server, PortalEntity portal) {
@@ -156,18 +162,18 @@ public class PortalProjectile extends Projectile {
 
             ServerLevel boundLevel = server.getLevel(portalDestination.globalVec3().dimension());
             if (boundLevel == null) return;
-            PortalEntity destination = new PortalEntity(boundLevel, portalDestination.direction(), portalDestination.direction().getAxis(), portalGunUUID, isPrimaryType, true);
+            PortalEntity destination = new PortalEntity(boundLevel, portalDestination.direction(), portalDestination.direction().getAxis(), portalGunUUID, !isPrimaryType, true);
             destination.setPos(portalDestination.globalVec3().position());
             destination.refreshDimensions();
             AABB destinationBoundingBox = destination.getBoundingBox();
-            List<PortalEntity> existingPortals2 = level.getEntitiesOfClass(PortalEntity.class, destinationBoundingBox.inflate(-0.1));
+            List<PortalEntity> existingPortals2 = boundLevel.getEntitiesOfClass(PortalEntity.class, destinationBoundingBox.inflate(-0.1));
 
-            boolean overlaps = existingPortals.stream().anyMatch(existingPortal -> existingPortal.getBoundingBox().intersects(newBoundingBox)) ||
-                    existingPortals2.stream().anyMatch(existingPortal2 -> existingPortal2.getBoundingBox().intersects(destinationBoundingBox));
+            boolean overlaps = existingPortals.stream().anyMatch(existingPortal -> existingPortal.getBoundingBox().intersects(newBoundingBox) && !existingPortal.getPortalGunUUID().equals(source.getPortalGunUUID())) ||
+                    existingPortals2.stream().anyMatch(existingPortal2 -> existingPortal2.getBoundingBox().intersects(destinationBoundingBox) && !existingPortal2.getPortalGunUUID().equals(destination.getPortalGunUUID()));
             if (!overlaps) {
                 closeMyPortals(server);
                 level.addFreshEntity(source);
-                level.addFreshEntity(destination);
+                boundLevel.addFreshEntity(destination);
                 linkPortals(source, destination);
             }
             this.discard();

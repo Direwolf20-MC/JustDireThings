@@ -2,6 +2,8 @@ package com.direwolf20.justdirethings.client.events;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
+import com.direwolf20.justdirethings.client.screens.AdvPortalRadialMenu;
+import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
@@ -9,6 +11,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.network.data.LeftClickPayload;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolPayload;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +25,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
@@ -36,6 +40,15 @@ public class EventKeyInput {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null)
             return;
+
+        KeyMapping keyMapping = KeyBindings.toggleTool;
+        ItemStack portalGun = PortalGunV2.getPortalGunv2(mc.player);
+        if (!portalGun.isEmpty()) {
+            if (!(mc.screen instanceof AdvPortalRadialMenu) && keyMapping.consumeClick() && ((keyMapping.getKeyModifier() == KeyModifier.NONE
+                    && KeyModifier.getActiveModifier() == KeyModifier.NONE) || keyMapping.getKeyModifier() != KeyModifier.NONE)) {
+                mc.setScreen(new AdvPortalRadialMenu(portalGun));
+            }
+        }
 
         ItemStack toggleableItem = ToggleableItem.getToggleableItem(mc.player);
         if (!toggleableItem.isEmpty()) {

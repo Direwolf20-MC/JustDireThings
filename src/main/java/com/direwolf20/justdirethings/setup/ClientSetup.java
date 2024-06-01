@@ -18,21 +18,22 @@ import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
 import com.direwolf20.justdirethings.client.screens.*;
+import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
+import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -54,6 +55,11 @@ public class ClientSetup {
                 registerEnabledToolTextures(tool.get());
             }
             registerEnabledToolTextures(Registration.Pocket_Generator.get());
+        });
+
+        event.enqueueWork(() -> {
+            ItemProperties.register(Registration.FluidCanister.get(),
+                    new ResourceLocation(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
         });
     }
 
@@ -133,5 +139,24 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);
         event.registerEntityRenderer(Registration.PortalEntity.get(), PortalEntityRender::new);
         event.registerEntityRenderer(Registration.PortalProjectile.get(), PortalProjectileRender::new);
+    }
+
+    @SubscribeEvent
+    static void itemColors(RegisterColorHandlersEvent.Item event) {
+        final ItemColors colors = event.getItemColors();
+
+        colors.register((stack, index) -> {
+            if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
+                return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
+            }
+            return 0xFFFFFFFF;
+        }, Registration.PORTAL_FLUID_BUCKET.get());
+
+        colors.register((stack, index) -> {
+            if (index == 1 && stack.getItem() instanceof FluidCanister) {
+                return FluidCanister.getFluidColor(stack);
+            }
+            return 0xFFFFFFFF;
+        }, Registration.FluidCanister.get());
     }
 }

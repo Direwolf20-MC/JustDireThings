@@ -1,4 +1,4 @@
-// 1.20.6	2024-05-16T14:20:32.8116858	Recipes
+// 1.20.6	2024-05-31T11:34:23.9239105	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancements/recipes/building_blocks/coal_t1_9x9.json
@@ -70,6 +70,7 @@ e7b252df4baa2f681f62b73ec5036b92c5fa873c data/justdirethings/advancements/recipe
 8f8c9b02671327405c6e1fbf5fd889d75341be98 data/justdirethings/advancements/recipes/misc/ferricore_shovel.json
 2d828491b755f3cf8e03124e303b6937be92cc95 data/justdirethings/advancements/recipes/misc/ferricore_sword.json
 220eb1e9c25d5cf4ab452e294d8141ff91367f34 data/justdirethings/advancements/recipes/misc/ferricore_wrench.json
+bab96099ef361c1e97bc145e74e3a22f53cdba5c data/justdirethings/advancements/recipes/misc/fluid_canister.json
 f1669f6e2dba95ffeaeea769703a57269242a935 data/justdirethings/advancements/recipes/misc/fuel_canister.json
 d5d5a2efce1d1c4e375e2af19177ac8691cea014 data/justdirethings/advancements/recipes/misc/generatort1.json
 ade9cd6fedb858c2d867c4870cbf552cf498c612 data/justdirethings/advancements/recipes/misc/generatort1_nbtclear.json
@@ -168,6 +169,7 @@ bf065a6068a45d9fa11dc06d2873478cabea2f8b data/justdirethings/recipes/ferricore_c
 4a7303a7b5bf287d117628e06097b3f5fd175262 data/justdirethings/recipes/ferricore_shovel.json
 54b1b57dd8926893c329b5cad342a665e287d68c data/justdirethings/recipes/ferricore_sword.json
 6f24f0fcb4af9a7834361bd633c99ee4af258cd6 data/justdirethings/recipes/ferricore_wrench.json
+d7b907a04bffbabf6eb0b96aa99a9c309ff4b0f8 data/justdirethings/recipes/fluid_canister.json
 bec94088bbd25914b825fd704053d98748e0ddd4 data/justdirethings/recipes/fuel_canister.json
 ad727ee779884e18264f5460103c78f8c0ac283a data/justdirethings/recipes/generatort1.json
 69de9c4f1f56fc0815fda09bc00ca43a61570f74 data/justdirethings/recipes/generatort1_nbtclear.json

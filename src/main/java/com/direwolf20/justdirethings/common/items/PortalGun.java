@@ -6,8 +6,6 @@ import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataCom
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +26,7 @@ public class PortalGun extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        level.playSound(
+        /*level.playSound(
                 null,
                 player.getX(),
                 player.getY(),
@@ -37,7 +35,7 @@ public class PortalGun extends Item {
                 SoundSource.NEUTRAL,
                 0.5F,
                 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
-        );
+        );*/
         if (!level.isClientSide) {
             if (!player.isShiftKeyDown())
                 spawnProjectile(level, player, itemStack, false);
@@ -54,7 +52,7 @@ public class PortalGun extends Item {
             List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
 
             for (PortalEntity entity : customEntities) {
-                entity.discard();
+                entity.setDying();
             }
         }
     }

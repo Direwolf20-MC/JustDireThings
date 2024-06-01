@@ -50,7 +50,7 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
         return true;  //We handle damage in the BlockEvent.BreakEvent
     }
 
-    @Override
+    /*@Override
     public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
         if (!player.level().isClientSide) {
             BlockState blockState = player.level().getBlockState(pos);
@@ -59,7 +59,7 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
             }
         }
         return false;
-    }
+    }*/
 
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {

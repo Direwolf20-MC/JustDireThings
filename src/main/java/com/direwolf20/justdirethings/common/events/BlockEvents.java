@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.items.tools.BlazegoldHoe;
 import com.direwolf20.justdirethings.common.items.tools.CelestigemHoe;
 import com.direwolf20.justdirethings.common.items.tools.EclipseAlloyHoe;
@@ -35,6 +36,14 @@ public class BlockEvents {
                 if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
                     event.setFinalState(Registration.GooSoil_Tier4.get().defaultBlockState());
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void BlockBreakEvent(BlockEvent.BreakEvent event) {
+        ItemStack itemStack = event.getPlayer().getMainHandItem();
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.isCorrectToolForDrops(event.getState())) {
+            toggleableTool.mineBlocksAbility(itemStack, event.getPlayer().level(), event.getPos(), event.getPlayer());
         }
     }
 }
