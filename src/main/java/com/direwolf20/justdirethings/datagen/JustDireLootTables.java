@@ -50,6 +50,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.BlockSwapperT1.get());
         dropSelf(Registration.BlockSwapperT2.get());
         add(Registration.EclipseGateBlock.get(), noDrop());
+        dropSelf(Registration.FluidPlacerT1.get());
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(

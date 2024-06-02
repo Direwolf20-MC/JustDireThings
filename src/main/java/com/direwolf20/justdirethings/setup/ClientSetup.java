@@ -116,6 +116,7 @@ public class ClientSetup {
         event.register(Registration.BlockSwapperT1_Container.get(), BlockSwapperT1Screen::new);
         event.register(Registration.BlockSwapperT2_Container.get(), BlockSwapperT2Screen::new);
         event.register(Registration.PlayerAccessor_Container.get(), PlayerAccessorScreen::new);
+        event.register(Registration.FluidPlacerT1_Container.get(), FluidPlacerT1Screen::new);
     }
 
     @SubscribeEvent
