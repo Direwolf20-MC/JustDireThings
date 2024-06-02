@@ -3,25 +3,17 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.setup.Registration;
-import com.direwolf20.justdirethings.util.FakePlayerUtil;
 import com.direwolf20.justdirethings.util.MiscHelpers;
-import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.util.FakePlayer;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +28,10 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
 
     public FluidPlacerT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.FluidPlacerT1BE.get(), pPos, pBlockState);
+    }
+
+    public int getMaxMB() {
+        return 8000;
     }
 
     @Override
@@ -55,17 +51,21 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     @Override
     public void tickServer() {
         super.tickServer();
-        doBlockPlace();
+        doFluidPlace();
     }
 
-    public ItemStack getPlaceStack() {
-        return getMachineHandler().getStackInSlot(0);
+    public FluidStack getPlaceStack() {
+        return getFluidTank().getFluid();
     }
 
-    public boolean isStackValid(ItemStack itemStack) {
-        if (itemStack.isEmpty())
+    public FluidTank getFluidTank() {
+        return getData(Registration.MACHINE_FLUID_HANDLER);
+    }
+
+    public boolean isStackValid(FluidStack fluidStack) {
+        if (fluidStack.isEmpty())
             return false;
-        if (!(itemStack.getItem() instanceof BlockItem))
+        if (fluidStack.getAmount() < 1000)
             return false;
         return true;
     }
@@ -74,10 +74,10 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         return true;
     }
 
-    public boolean clearTrackerIfNeeded(ItemStack itemStack) {
+    public boolean clearTrackerIfNeeded(FluidStack fluidStack) {
         if (positionsToPlace.isEmpty())
             return false;
-        if (!isStackValid(itemStack))
+        if (!isStackValid(fluidStack))
             return true;
         if (!canPlace())
             return true;
@@ -86,49 +86,41 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         return false;
     }
 
-    public void doBlockPlace() {
-        ItemStack placeStack = getPlaceStack();
+    public void doFluidPlace() {
+        FluidStack placeStack = getPlaceStack();
         if (!isStackValid(placeStack)) return;
         if (clearTrackerIfNeeded(placeStack)) {
             positionsToPlace.clear();
             return;
         }
         if (!canPlace()) return;
-        UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
         if (isActiveRedstone() && canRun() && positionsToPlace.isEmpty())
-            positionsToPlace = findSpotsToPlace(fakePlayer);
+            positionsToPlace = findSpotsToPlace();
         if (positionsToPlace.isEmpty())
             return;
         if (canRun()) {
-            BlockPos blockPos = positionsToPlace.remove(0);
-            Direction placing = getDirectionValue();
-            FakePlayerUtil.setupFakePlayerForUse(fakePlayer, blockPos, placing, placeStack, false);
-            //setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue());
-            placeBlock(placeStack, fakePlayer, blockPos);
-            FakePlayerUtil.cleanupFakePlayerFromUse(fakePlayer, fakePlayer.getMainHandItem());
+            BlockPos blockPos = positionsToPlace.removeFirst();
+            placeBlock(placeStack, blockPos);
         }
     }
 
-    public InteractionResult placeBlock(ItemStack itemStack, FakePlayer fakePlayer, BlockPos blockPos) {
-        Direction placing = getDirectionValue();
-        Vec3 hitVec = Vec3.atCenterOf(blockPos); // Center of the block where we want to place the new block
-        BlockHitResult hitResult = new BlockHitResult(hitVec, placing, blockPos, false);
-        UseOnContext useoncontext = new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, hitResult);
-        return itemStack.useOn(useoncontext);
+    public void placeBlock(FluidStack fluidStack, BlockPos blockPos) {
+        Fluid fluid = fluidStack.getFluid();
+        BlockState blockState = fluid.defaultFluidState().createLegacyBlock();
+        if (level.setBlock(blockPos, blockState, 3))
+            getFluidTank().drain(1000, IFluidHandler.FluidAction.EXECUTE);
     }
 
-    public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {
-        if (!level.mayInteract(fakePlayer, blockPos))
-            return false;
+    public boolean isBlockPosValid(BlockPos blockPos) {
         if (!level.getBlockState(blockPos).canBeReplaced())
             return false;
         return true;
     }
 
-    public List<BlockPos> findSpotsToPlace(FakePlayer fakePlayer) {
+    public List<BlockPos> findSpotsToPlace() {
         List<BlockPos> returnList = new ArrayList<>();
         BlockPos blockPos = getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING));
-        if (isBlockPosValid(fakePlayer, blockPos))
+        if (isBlockPosValid(blockPos))
             returnList.add(blockPos);
         return returnList;
     }

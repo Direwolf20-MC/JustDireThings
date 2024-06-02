@@ -16,6 +16,7 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.*;
@@ -426,4 +427,12 @@ public class Registration {
             "death_data",
             () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build()
     );
+
+    //Fluids
+    public static final Supplier<AttachmentType<JustDireFluidTank>> MACHINE_FLUID_HANDLER = ATTACHMENT_TYPES.register(
+            "machine_fluid_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof FluidPlacerT1BE fluidPlacerT1BE)
+                    return new JustDireFluidTank(fluidPlacerT1BE.getMaxMB());
+                return new JustDireFluidTank(0);
+            }).build());
 }
