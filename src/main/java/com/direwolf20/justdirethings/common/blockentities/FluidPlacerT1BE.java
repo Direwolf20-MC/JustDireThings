@@ -9,6 +9,8 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -117,8 +119,10 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     public void placeBlock(FluidStack fluidStack, BlockPos blockPos) {
         Fluid fluid = fluidStack.getFluid();
         BlockState blockState = fluid.defaultFluidState().createLegacyBlock();
-        if (level.setBlock(blockPos, blockState, 3))
+        if (level.setBlock(blockPos, blockState, 3)) {
             getFluidTank().drain(1000, IFluidHandler.FluidAction.EXECUTE);
+            level.playSound(null, blockPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1.0F);
+        }
     }
 
     public boolean isBlockPosValid(BlockPos blockPos) {

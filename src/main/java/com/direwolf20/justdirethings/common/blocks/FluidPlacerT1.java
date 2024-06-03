@@ -5,6 +5,8 @@ import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.containers.FluidPlacerT1Container;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -67,6 +69,7 @@ public class FluidPlacerT1 extends BaseMachineBlock {
                         fluidHandlerItem.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
                         if (itemStack.getItem() instanceof BucketItem)
                             player.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, fluidHandlerItem.getContainer());
+                        level.playSound(null, blockPos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1F, 1.0F);
                         return ItemInteractionResult.SUCCESS;
                     }
                 }
@@ -79,6 +82,7 @@ public class FluidPlacerT1 extends BaseMachineBlock {
                         cap.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
                         if (itemStack.getItem() instanceof BucketItem)
                             player.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, fluidHandlerItem.getContainer());
+                        level.playSound(null, blockPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1.0F);
                         return ItemInteractionResult.SUCCESS;
                     }
                 }
