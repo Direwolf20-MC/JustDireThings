@@ -254,20 +254,22 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             }
         }
         if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
-            guiGraphics.blit(FLUIDBAR, topSectionLeft + 24, topSectionTop + 5, 0, 0, 18, 72, 18, 72);
+            guiGraphics.blit(FLUIDBAR, topSectionLeft + 24, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
             int maxMB = fluidMachineBE.getMaxMB(), height = 70;
             if (maxMB > 0) {
                 int remaining = (this.container.getFluidAmount() * height) / maxMB;
-                renderFluid(guiGraphics, topSectionLeft + 24 + 1, topSectionTop + 5 + 72 - 1, topSectionLeft + 24 + 17, topSectionTop + 5 + 72 - 1 - remaining);
+                renderFluid(guiGraphics, topSectionLeft + 24 + 1, topSectionTop + 5 + 72 - 1, 16, remaining);
             }
+            guiGraphics.blit(FLUIDBAR, topSectionLeft + 24, topSectionTop + 5, 18, 0, 18, 72, 36, 72);
         }
         if (renderablesChanged)
             updateRenderables();
     }
 
-    public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int endX, int endY) {
+    public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int width, int height) {
         FluidStack fluidStack = container.getFluidStack();
         if (fluidStack.isEmpty()) return;
+
         Fluid fluid = fluidStack.getFluid();
         ResourceLocation fluidStill = IClientFluidTypeExtensions.of(fluid).getStillTexture();
         TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
@@ -279,25 +281,48 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 
-        PoseStack posestack = guiGraphics.pose();
-        posestack.pushPose();
+        PoseStack poseStack = guiGraphics.pose();
+        poseStack.pushPose();
         RenderSystem.setShaderColor(red, green, blue, 1.0f);
-        int zLevel = 100;
+
+        int zLevel = 0;
         float uMin = fluidStillSprite.getU0();
         float uMax = fluidStillSprite.getU1();
         float vMin = fluidStillSprite.getV0();
         float vMax = fluidStillSprite.getV1();
+        int textureWidth = fluidStillSprite.contents().width();
+        int textureHeight = fluidStillSprite.contents().height();
 
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder vertexBuffer = tessellator.getBuilder();
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder vertexBuffer = tesselator.getBuilder();
 
         vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        vertexBuffer.vertex(posestack.last().pose(), startX, startY, zLevel).uv(uMin, vMax).endVertex();
-        vertexBuffer.vertex(posestack.last().pose(), endX, startY, zLevel).uv(uMax, vMax).endVertex();
-        vertexBuffer.vertex(posestack.last().pose(), endX, endY, zLevel).uv(uMax, vMin).endVertex();
-        vertexBuffer.vertex(posestack.last().pose(), startX, endY, zLevel).uv(uMin, vMin).endVertex();
-        tessellator.end();
-        posestack.popPose();
+
+        int yOffset = 0;
+        while (yOffset < height) {
+            int drawHeight = Math.min(textureHeight, height - yOffset);
+            int drawY = startY - yOffset - drawHeight; // Adjust for bottom-to-top drawing
+
+            float vMaxAdjusted = vMin + (vMax - vMin) * ((float) drawHeight / textureHeight);
+
+            int xOffset = 0;
+            while (xOffset < width) {
+                int drawWidth = Math.min(textureWidth, width - xOffset);
+
+                float uMaxAdjusted = uMin + (uMax - uMin) * ((float) drawWidth / textureWidth);
+
+                vertexBuffer.vertex(poseStack.last().pose(), startX + xOffset, drawY + drawHeight, zLevel).uv(uMin, vMaxAdjusted).endVertex();
+                vertexBuffer.vertex(poseStack.last().pose(), startX + xOffset + drawWidth, drawY + drawHeight, zLevel).uv(uMaxAdjusted, vMaxAdjusted).endVertex();
+                vertexBuffer.vertex(poseStack.last().pose(), startX + xOffset + drawWidth, drawY, zLevel).uv(uMaxAdjusted, vMin).endVertex();
+                vertexBuffer.vertex(poseStack.last().pose(), startX + xOffset, drawY, zLevel).uv(uMin, vMin).endVertex();
+
+                xOffset += drawWidth;
+            }
+            yOffset += drawHeight;
+        }
+
+        tesselator.end();
+        poseStack.popPose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.applyModelViewMatrix();
     }
@@ -319,7 +344,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
     public void fluidBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
-            if (MiscTools.inBounds(topSectionLeft + 24, topSectionTop + 24, 18, 72, pX, pY)) {
+            if (MiscTools.inBounds(topSectionLeft + 24, topSectionTop + 5, 18, 72, pX, pY)) {
                 if (hasShiftDown())
                     pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
                             Component.translatable("justdirethings.screen.fluid", this.container.getFluidStack().getHoverName(), MagicHelpers.formatted(this.container.getFluidAmount()), MagicHelpers.formatted(fluidMachineBE.getMaxMB()))

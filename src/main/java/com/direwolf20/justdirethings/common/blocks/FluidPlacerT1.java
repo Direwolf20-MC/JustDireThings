@@ -12,7 +12,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -21,12 +20,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nullable;
 
@@ -56,20 +54,34 @@ public class FluidPlacerT1 extends BaseMachineBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if (level.isClientSide) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        if (itemStack.getItem() instanceof BucketItem bucketItem) {
-            Fluid fluid = bucketItem.content;
-            if (fluid == Fluids.EMPTY) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            FluidStack fluidStack = new FluidStack(fluid, 1000);
+        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandlerItem != null) {
             IFluidHandler cap = level.getCapability(Capabilities.FluidHandler.BLOCK, blockPos, blockHitResult.getDirection());
             if (cap == null) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            int insertAmt = cap.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
-            if (insertAmt == 1000) {
-                cap.fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
-                if (!player.hasInfiniteMaterials()) {
-                    ItemStack newitemStack = new ItemStack(Items.BUCKET);
-                    player.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, newitemStack);
+            if (fluidHandlerItem.getFluidInTank(0).isEmpty()) {
+                FluidStack testStack = cap.drain(fluidHandlerItem.getTankCapacity(0), IFluidHandler.FluidAction.SIMULATE);
+                if (testStack.getAmount() > 0) {
+                    int amtFit = fluidHandlerItem.fill(testStack, IFluidHandler.FluidAction.SIMULATE);
+                    if (amtFit > 0) {
+                        FluidStack extractedStack = cap.drain(amtFit, IFluidHandler.FluidAction.EXECUTE);
+                        fluidHandlerItem.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
+                        if (itemStack.getItem() instanceof BucketItem)
+                            player.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, fluidHandlerItem.getContainer());
+                        return ItemInteractionResult.SUCCESS;
+                    }
                 }
-                return ItemInteractionResult.SUCCESS;
+            } else {
+                FluidStack fluidStack = fluidHandlerItem.getFluidInTank(0);
+                int insertAmt = cap.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
+                if (insertAmt > 0) {
+                    FluidStack extractedStack = fluidHandlerItem.drain(insertAmt, IFluidHandler.FluidAction.EXECUTE);
+                    if (!extractedStack.isEmpty()) {
+                        cap.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
+                        if (itemStack.getItem() instanceof BucketItem)
+                            player.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, fluidHandlerItem.getContainer());
+                        return ItemInteractionResult.SUCCESS;
+                    }
+                }
             }
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

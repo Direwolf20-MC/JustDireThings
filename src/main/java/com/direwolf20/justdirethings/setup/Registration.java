@@ -27,7 +27,6 @@ import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluid;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
-import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBucket;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidType;
 import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
@@ -48,6 +47,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -152,7 +152,7 @@ public class Registration {
     public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = BLOCKS.register("portal_fluid_block",
             PortalFluidBlock::new);
     public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = ITEMS.register("portal_fluid_bucket",
-            PortalFluidBucket::new);
+            () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
 
