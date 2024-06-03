@@ -25,7 +25,6 @@ public class FluidPlacerT1Screen extends BaseMachineScreen<FluidPlacerT1Containe
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
-        System.out.println(container.getFluidStack());
     }
 
     /*@Override

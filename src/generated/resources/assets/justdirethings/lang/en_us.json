@@ -188,6 +188,7 @@
   "justdirethings.screen.fepertick": "FE/T: %s",
   "justdirethings.screen.filter-block": "Filter: Block",
   "justdirethings.screen.filter-item": "Filter: Item",
+  "justdirethings.screen.fluid": "%s: %s/%s MB",
   "justdirethings.screen.greaterthan": "Greater Than",
   "justdirethings.screen.high": "High",
   "justdirethings.screen.ignored": "Ignored",

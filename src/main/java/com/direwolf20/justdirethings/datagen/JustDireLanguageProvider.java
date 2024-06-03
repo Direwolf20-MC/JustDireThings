@@ -197,6 +197,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
+        add("justdirethings.screen.fluid", "%s: %s/%s MB");
         add("justdirethings.screen.energycost", "Energy Cost: %s");
         add("justdirethings.screen.fepertick", "FE/T: %s");
         add("justdirethings.screen.no_fuel", "Fuel source empty");
