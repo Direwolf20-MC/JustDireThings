@@ -2,10 +2,12 @@ package com.direwolf20.justdirethings.common.containers.basecontainers;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -14,6 +16,9 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
@@ -28,6 +33,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
     protected Player player;
     protected BlockPos pos;
     public ContainerData data;
+    public ContainerData fluidData;
 
     public BaseMachineContainer(@Nullable MenuType<?> menuType, int windowId, Inventory playerInventory, BlockPos blockPos) {
         super(menuType, windowId);
@@ -49,6 +55,10 @@ public abstract class BaseMachineContainer extends BaseContainer {
             data = poweredMachineBE.getContainerData();
             addDataSlots(data);
         }
+        if (blockEntity instanceof FluidMachineBE fluidMachineBE) {
+            fluidData = fluidMachineBE.getFluidContainerData();
+            addDataSlots(fluidData);
+        }
     }
 
     //Override this if you want the slot layout to be different...
@@ -64,6 +74,18 @@ public abstract class BaseMachineContainer extends BaseContainer {
 
     public int getEnergy() {
         return this.data == null ? 0 : ((this.data.get(1) << 16) | this.data.get(0));
+    }
+
+    public int getFluidAmount() {
+        return this.fluidData == null ? 0 : ((this.fluidData.get(2) << 16) | this.fluidData.get(1));
+    }
+
+    public Fluid getFluidType() {
+        return this.fluidData == null ? Fluids.EMPTY : BuiltInRegistries.FLUID.byId(this.fluidData.get(0));
+    }
+
+    public FluidStack getFluidStack() {
+        return new FluidStack(getFluidType(), getFluidAmount());
     }
 
     @Override

@@ -1,11 +1,15 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidContainerData;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,17 +17,18 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlledBE {
+public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlledBE, FluidMachineBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
+    public final FluidContainerData fluidContainerData;
     List<BlockPos> positionsToPlace = new ArrayList<>();
 
     public FluidPlacerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
+        fluidContainerData = new FluidContainerData(this);
     }
 
     public FluidPlacerT1BE(BlockPos pPos, BlockState pBlockState) {
@@ -32,6 +37,11 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
 
     public int getMaxMB() {
         return 8000;
+    }
+
+    @Override
+    public ContainerData getFluidContainerData() {
+        return fluidContainerData;
     }
 
     @Override
@@ -58,7 +68,7 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         return getFluidTank().getFluid();
     }
 
-    public FluidTank getFluidTank() {
+    public JustDireFluidTank getFluidTank() {
         return getData(Registration.MACHINE_FLUID_HANDLER);
     }
 

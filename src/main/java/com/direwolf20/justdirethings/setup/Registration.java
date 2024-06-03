@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.setup;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.*;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
@@ -431,8 +432,8 @@ public class Registration {
     //Fluids
     public static final Supplier<AttachmentType<JustDireFluidTank>> MACHINE_FLUID_HANDLER = ATTACHMENT_TYPES.register(
             "machine_fluid_handler", () -> AttachmentType.serializable(holder -> {
-                if (holder instanceof FluidPlacerT1BE fluidPlacerT1BE)
-                    return new JustDireFluidTank(fluidPlacerT1BE.getMaxMB());
+                if (holder instanceof FluidMachineBE fluidMachineBE)
+                    return new JustDireFluidTank(fluidMachineBE.getMaxMB());
                 return new JustDireFluidTank(0);
             }).build());
 }
