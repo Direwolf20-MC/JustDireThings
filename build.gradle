@@ -49,6 +49,11 @@ repositories {
         }
     }
 
+    maven { // EMI
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+
     maven { url = "https://www.cursemaven.com" } // curse mods
 }
 
@@ -151,6 +156,10 @@ dependencies {
     //compileOnly "mezz.jei:jei-1.20.4-common-api:${jei_version}"
     //compileOnly "mezz.jei:jei-1.20.4-forge-api:${jei_version}"
     //runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
+
+    // NeoForge
+    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
     // Locally sourced extra mods for runtime (i.e. testing)
     for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {

@@ -17,6 +17,7 @@ import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
 import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
+import com.direwolf20.justdirethings.client.renderers.shader.DireRenderTypes;
 import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
@@ -38,6 +39,8 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import java.io.IOException;
+
 @EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
     public static void init(final FMLClientSetupEvent event) {
@@ -48,6 +51,7 @@ public class ClientSetup {
         NeoForge.EVENT_BUS.register(EventKeyInput.class);
         NeoForge.EVENT_BUS.register(RenderHighlight.class);
         NeoForge.EVENT_BUS.register(PlayerEvents.class);
+//        NeoForge.EVENT_BUS.register(RegisterShadersEvent.class);
 
         //Item Properties
         event.enqueueWork(() -> {
@@ -93,6 +97,17 @@ public class ClientSetup {
     @SubscribeEvent
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(PortalProjectileModel.Portal_Projectile_Layer, PortalProjectileModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
+    private static void registerShaders(RegisterShadersEvent event) {
+        try {
+            for(DireRenderTypes.ShaderRenderType type : DireRenderTypes.getRenderTypes().values()) {
+                type.register(event.getResourceProvider(), event::registerShader);
+            }
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SubscribeEvent
