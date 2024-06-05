@@ -30,6 +30,7 @@ public class PortalProjectile extends Projectile {
     private boolean isPrimaryType;
     private boolean isAdvanced;
     private NBTHelpers.PortalDestination portalDestination;
+    private boolean hasSpawnedPortal = false;
     public PortalProjectile(EntityType<? extends Projectile> entityType, Level world) {
         super(entityType, world);
     }
@@ -133,6 +134,7 @@ public class PortalProjectile extends Projectile {
     }
 
     protected void spawnAdvancedPortal(double x, double y, double z, Direction direction, BlockPos hitPos) {
+        if (hasSpawnedPortal) return;
         Level level = this.level();
         MinecraftServer server = level.getServer();
         if (server == null) return;
@@ -175,6 +177,7 @@ public class PortalProjectile extends Projectile {
                 level.addFreshEntity(source);
                 boundLevel.addFreshEntity(destination);
                 linkPortals(source, destination);
+                hasSpawnedPortal = true;
             }
             this.discard();
         }
