@@ -21,6 +21,7 @@ import com.direwolf20.justdirethings.client.renderers.shader.DireRenderTypes;
 import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
+import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import net.minecraft.client.color.item.ItemColors;
@@ -51,7 +52,6 @@ public class ClientSetup {
         NeoForge.EVENT_BUS.register(EventKeyInput.class);
         NeoForge.EVENT_BUS.register(RenderHighlight.class);
         NeoForge.EVENT_BUS.register(PlayerEvents.class);
-//        NeoForge.EVENT_BUS.register(RegisterShadersEvent.class);
 
         //Item Properties
         event.enqueueWork(() -> {
@@ -64,6 +64,11 @@ public class ClientSetup {
         event.enqueueWork(() -> {
             ItemProperties.register(Registration.FluidCanister.get(),
                     new ResourceLocation(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
+        });
+
+        event.enqueueWork(() -> {
+            ItemProperties.register(Registration.PortalGunV2.get(),
+                    new ResourceLocation(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> PortalGunV2.getFullness(stack));
         });
     }
 

@@ -235,4 +235,19 @@ public class PortalGunV2 extends Item {
             return offHand;
         return ItemStack.EMPTY;
     }
+
+    public static int getFullness(ItemStack itemStack) {
+        IFluidHandlerItem fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler != null && !fluidHandler.getFluidInTank(0).isEmpty()) {
+            float percentFull = ((float) fluidHandler.getFluidInTank(0).getAmount() / maxMB) * 100;
+            if (percentFull > 0 && percentFull <= 33) {
+                return 1;
+            } else if (percentFull > 33 && percentFull <= 66) {
+                return 2;
+            } else if (percentFull > 66) {
+                return 3;
+            }
+        }
+        return 0;
+    }
 }
