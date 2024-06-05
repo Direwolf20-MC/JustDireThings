@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.setup;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.*;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
@@ -16,6 +17,7 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.*;
@@ -25,7 +27,6 @@ import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluid;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
-import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBucket;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidType;
 import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
@@ -46,6 +47,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -150,7 +152,7 @@ public class Registration {
     public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = BLOCKS.register("portal_fluid_block",
             PortalFluidBlock::new);
     public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = ITEMS.register("portal_fluid_bucket",
-            PortalFluidBucket::new);
+            () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
 
@@ -183,6 +185,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> BlockSwapperT2_ITEM = ITEMS.register("blockswappert2", () -> new BlockItem(BlockSwapperT2.get(), new Item.Properties()));
     public static final DeferredHolder<Block, PlayerAccessor> PlayerAccessor = BLOCKS.register("playeraccessor", PlayerAccessor::new);
     public static final DeferredHolder<Item, BlockItem> PlayerAccessor_ITEM = ITEMS.register("playeraccessor", () -> new BlockItem(PlayerAccessor.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, FluidPlacerT1> FluidPlacerT1 = SIDEDBLOCKS.register("fluidplacert1", FluidPlacerT1::new);
+    public static final DeferredHolder<Item, BlockItem> FluidPlacerT1_ITEM = ITEMS.register("fluidplacert1", () -> new BlockItem(FluidPlacerT1.get(), new Item.Properties()));
 
     //Power Machines
     public static final DeferredHolder<Block, GeneratorT1> GeneratorT1 = BLOCKS.register("generatort1", GeneratorT1::new);
@@ -249,6 +253,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockSwapperT2BE>> BlockSwapperT2BE = BLOCK_ENTITIES.register("blockswappert2", () -> BlockEntityType.Builder.of(BlockSwapperT2BE::new, BlockSwapperT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlayerAccessorBE>> PlayerAccessorBE = BLOCK_ENTITIES.register("playeraccessorbe", () -> BlockEntityType.Builder.of(PlayerAccessorBE::new, PlayerAccessor.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EclipseGateBE>> EclipseGateBE = BLOCK_ENTITIES.register("eclipsegatebe", () -> BlockEntityType.Builder.of(EclipseGateBE::new, EclipseGateBlock.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPlacerT1BE>> FluidPlacerT1BE = BLOCK_ENTITIES.register("fluidplacert1", () -> BlockEntityType.Builder.of(FluidPlacerT1BE::new, FluidPlacerT1.get()).build(null));
 
     //Items - Raw Resources
     public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
@@ -370,6 +375,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(BlockSwapperT2Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<PlayerAccessorContainer>> PlayerAccessor_Container = CONTAINERS.register("playeraccessor_container",
             () -> IMenuTypeExtension.create(PlayerAccessorContainer::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<FluidPlacerT1Container>> FluidPlacerT1_Container = CONTAINERS.register("fluidplacert1_container",
+            () -> IMenuTypeExtension.create(FluidPlacerT1Container::new));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(
@@ -421,4 +428,12 @@ public class Registration {
             "death_data",
             () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build()
     );
+
+    //Fluids
+    public static final Supplier<AttachmentType<JustDireFluidTank>> MACHINE_FLUID_HANDLER = ATTACHMENT_TYPES.register(
+            "machine_fluid_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof FluidMachineBE fluidMachineBE)
+                    return new JustDireFluidTank(fluidMachineBE.getMaxMB());
+                return new JustDireFluidTank(0);
+            }).build());
 }

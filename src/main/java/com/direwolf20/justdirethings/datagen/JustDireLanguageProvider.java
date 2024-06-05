@@ -44,6 +44,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.EclipseGateBlock.get(), "Eclipse Gate");
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
         add("fluid_type.justdirethings.portal_fluid_type", "Portal Fluid");
+        add(Registration.FluidPlacerT1.get(), "Simple Fluid Placer");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -196,6 +197,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
+        add("justdirethings.screen.fluid", "%s: %s/%s MB");
         add("justdirethings.screen.energycost", "Energy Cost: %s");
         add("justdirethings.screen.fepertick", "FE/T: %s");
         add("justdirethings.screen.no_fuel", "Fuel source empty");

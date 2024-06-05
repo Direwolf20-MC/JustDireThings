@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "d": {
+      "item": "minecraft:bucket"
+    },
+    "f": {
+      "item": "justdirethings:ferricore_ingot"
+    },
+    "l": {
+      "item": "minecraft:lapis_lazuli"
+    },
+    "o": {
+      "item": "minecraft:dispenser"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "fdf",
+    "lol",
+    "frf"
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:fluidplacert1"
+  }
+}

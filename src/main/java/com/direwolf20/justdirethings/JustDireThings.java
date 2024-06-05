@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings;
 
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
+import com.direwolf20.justdirethings.common.blockentities.FluidPlacerT1BE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
@@ -176,6 +177,15 @@ public class JustDireThings {
                     return null;
                 },
                 Registration.EnergyTransmitter.get()
+        );
+        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof FluidPlacerT1BE) {
+                        return be.getData(Registration.MACHINE_FLUID_HANDLER);
+                    }
+                    return null;
+                },
+                Registration.FluidPlacerT1.get()
         );
     }
 }
