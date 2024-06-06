@@ -1,13 +1,13 @@
 package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
-import com.direwolf20.justdirethings.common.containers.FluidPlacerT1Container;
+import com.direwolf20.justdirethings.common.containers.FluidCollectorT1Container;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-public class FluidPlacerT1Screen extends BaseMachineScreen<FluidPlacerT1Container> {
-    public FluidPlacerT1Screen(FluidPlacerT1Container container, Inventory inv, Component name) {
+public class FluidCollectorT1Screen extends BaseMachineScreen<FluidCollectorT1Container> {
+    public FluidCollectorT1Screen(FluidCollectorT1Container container, Inventory inv, Component name) {
         super(container, inv, name);
     }
 

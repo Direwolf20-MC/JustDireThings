@@ -46,6 +46,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("fluid_type.justdirethings.portal_fluid_type", "Portal Fluid");
         add(Registration.FluidPlacerT1.get(), "Simple Fluid Placer");
         add(Registration.FluidPlacerT2.get(), "Advanced Fluid Placer");
+        add(Registration.FluidCollectorT1.get(), "Simple Fluid Collector");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");

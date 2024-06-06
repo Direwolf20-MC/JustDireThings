@@ -1,9 +1,9 @@
 package com.direwolf20.justdirethings;
 
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
-import com.direwolf20.justdirethings.common.blockentities.FluidPlacerT1BE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
@@ -135,7 +135,8 @@ public class JustDireThings {
                 Registration.GeneratorT1.get(),
                 Registration.EnergyTransmitter.get(),
                 Registration.FluidPlacerT1.get(),
-                Registration.FluidPlacerT2.get()
+                Registration.FluidPlacerT2.get(),
+                Registration.FluidCollectorT1.get()
         );
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -183,13 +184,14 @@ public class JustDireThings {
         );
         event.registerBlock(Capabilities.FluidHandler.BLOCK,
                 (level, pos, state, be, side) -> {
-                    if (be instanceof FluidPlacerT1BE) {
+                    if (be instanceof FluidMachineBE) {
                         return be.getData(Registration.MACHINE_FLUID_HANDLER);
                     }
                     return null;
                 },
                 Registration.FluidPlacerT1.get(),
-                Registration.FluidPlacerT2.get()
+                Registration.FluidPlacerT2.get(),
+                Registration.FluidCollectorT1.get()
         );
     }
 }

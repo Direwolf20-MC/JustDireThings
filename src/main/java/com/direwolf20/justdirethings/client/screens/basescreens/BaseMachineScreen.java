@@ -246,11 +246,11 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
         }
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
-            guiGraphics.blit(POWERBAR, topSectionLeft + 5, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+            guiGraphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset(), topSectionTop + 5, 0, 0, 18, 72, 36, 72);
             int maxEnergy = poweredMachineBE.getMaxEnergy(), height = 70;
             if (maxEnergy > 0) {
                 int remaining = (this.container.getEnergy() * height) / maxEnergy;
-                guiGraphics.blit(POWERBAR, topSectionLeft + 5 + 1, topSectionTop + 5 + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
+                guiGraphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset() + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
             }
         }
         if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
@@ -267,8 +267,12 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             updateRenderables();
     }
 
+    public int getEnergyBarOffset() {
+        return 5;
+    }
+
     public int getFluidBarOffset() {
-        return 24;
+        return baseMachineBE instanceof PoweredMachineBE ? 24 : getEnergyBarOffset();
     }
 
     public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int width, int height) {
@@ -334,7 +338,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
     public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
-            if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
+            if (MiscTools.inBounds(topSectionLeft + getEnergyBarOffset(), topSectionTop + 5, 18, 72, pX, pY)) {
                 if (hasShiftDown())
                     pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
                             Component.translatable("justdirethings.screen.energy", MagicHelpers.formatted(this.container.getEnergy()), MagicHelpers.formatted(poweredMachineBE.getMaxEnergy()))

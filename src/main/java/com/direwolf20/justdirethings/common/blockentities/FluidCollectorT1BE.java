@@ -13,11 +13,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -26,19 +27,19 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlledBE, FluidMachineBE {
+public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControlledBE, FluidMachineBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     public final FluidContainerData fluidContainerData;
     List<BlockPos> positionsToPlace = new ArrayList<>();
 
-    public FluidPlacerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
+    public FluidCollectorT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 1; //Slot for a bucket
         fluidContainerData = new FluidContainerData(this);
     }
 
-    public FluidPlacerT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.FluidPlacerT1BE.get(), pPos, pBlockState);
+    public FluidCollectorT1BE(BlockPos pPos, BlockState pBlockState) {
+        this(Registration.FluidCollectorT1BE.get(), pPos, pBlockState);
     }
 
     public int getMaxMB() {
@@ -68,19 +69,19 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     public void tickServer() {
         super.tickServer();
         handleItemStack();
-        doFluidPlace();
+        doFluidCollect();
     }
 
     public void handleItemStack() {
-        if (isFull()) return;
+        FluidStack fluidStack = getFluidStack();
+        if (fluidStack.isEmpty()) return;
         ItemStack itemStack = getItemStack();
-        if (!isStackValid(itemStack)) return;
+        if (!isStackValid(itemStack, fluidStack)) return;
         IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        FluidStack testExtract = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-        int insertAmt = getFluidTank().fill(testExtract, IFluidHandler.FluidAction.SIMULATE);
+        int insertAmt = fluidHandlerItem.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
         if (insertAmt > 0) {
-            FluidStack extractedStack = fluidHandlerItem.drain(insertAmt, IFluidHandler.FluidAction.EXECUTE);
-            getFluidTank().fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
+            FluidStack extractedStack = getFluidTank().drain(Math.min(insertAmt, 1000), IFluidHandler.FluidAction.EXECUTE);
+            fluidHandlerItem.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
         }
     }
 
@@ -88,21 +89,21 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         return getMachineHandler().getStackInSlot(0);
     }
 
-    public boolean isStackValid(ItemStack itemStack) {
+    public boolean isStackValid(ItemStack itemStack, FluidStack fluidStack) {
         if (itemStack.isEmpty())
+            return false;
+        if (fluidStack.isEmpty())
             return false;
         IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandlerItem == null)
             return false;
-        FluidStack fluidStack = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-        if (fluidStack.getAmount() == 0)
-            return false;
-        if (!getFluidStack().isEmpty() && !getFluidStack().is(fluidStack.getFluid()))
+        int amtFilled = fluidHandlerItem.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
+        if (amtFilled == 0)
             return false;
         return true;
     }
 
-    public FluidStack getPlaceStack() {
+    public FluidStack getTankStack() {
         return getFluidTank().getFluid();
     }
 
@@ -118,58 +119,72 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         return true;
     }
 
-    public boolean canPlace() {
+    public boolean canCollect() {
         return true;
     }
 
-    public boolean clearTrackerIfNeeded(FluidStack fluidStack) {
+    public boolean clearTrackerIfNeeded() {
         if (positionsToPlace.isEmpty())
             return false;
-        if (!isStackValid(fluidStack))
-            return true;
-        if (!canPlace())
+        if (!canCollect())
             return true;
         if (!isActiveRedstone() && !redstoneControlData.redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE))
             return true;
         return false;
     }
 
-    public void doFluidPlace() {
-        FluidStack placeStack = getPlaceStack();
-        if (!isStackValid(placeStack)) return;
-        if (clearTrackerIfNeeded(placeStack)) {
+    public void doFluidCollect() {
+        if (clearTrackerIfNeeded()) {
             positionsToPlace.clear();
             return;
         }
-        if (!canPlace()) return;
+        if (!canCollect()) return;
         if (isActiveRedstone() && canRun() && positionsToPlace.isEmpty())
-            positionsToPlace = findSpotsToPlace();
+            positionsToPlace = findSpotsToCollect();
         if (positionsToPlace.isEmpty())
             return;
         if (canRun()) {
             BlockPos blockPos = positionsToPlace.removeFirst();
-            placeFluid(placeStack, blockPos);
+            collectFluid(blockPos);
         }
     }
 
-    public boolean placeFluid(FluidStack fluidStack, BlockPos blockPos) {
-        Fluid fluid = fluidStack.getFluid();
-        BlockState blockState = fluid.defaultFluidState().createLegacyBlock();
-        if (level.setBlock(blockPos, blockState, 3)) {
-            getFluidTank().drain(1000, IFluidHandler.FluidAction.EXECUTE);
-            level.playSound(null, blockPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1.0F);
+    public LiquidBlock getLiquidBlockAt(BlockPos blockPos) {
+        if (level.getBlockState(blockPos).getBlock() instanceof LiquidBlock liquidBlock)
+            return liquidBlock;
+        return null;
+    }
+
+    public boolean collectFluid(BlockPos blockPos) {
+        LiquidBlock liquidBlock = getLiquidBlockAt(blockPos);
+        if (liquidBlock == null) return false;
+        if (!isBlockValidForTank(liquidBlock))
+            return false; //Check again here, in case we picked up water, and now we are operating on lava, before clearing the area list
+        FluidStack fluidStack = new FluidStack(liquidBlock.fluid, 1000);
+        if (getFluidTank().fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) < 1000) return false;
+        if (level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3)) {
+            getFluidTank().fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+            level.playSound(null, blockPos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1F, 1.0F);
             return true;
         }
         return false;
     }
 
-    public boolean isBlockPosValid(BlockPos blockPos) {
-        if (!level.getBlockState(blockPos).canBeReplaced())
+    public boolean isBlockValidForTank(LiquidBlock liquidBlock) {
+        if (!getFluidStack().isEmpty() && !getFluidStack().is(liquidBlock.fluid))
             return false;
         return true;
     }
 
-    public List<BlockPos> findSpotsToPlace() {
+    public boolean isBlockPosValid(BlockPos blockPos) {
+        if (!(level.getBlockState(blockPos).getBlock() instanceof LiquidBlock liquidBlock))
+            return false;
+        if (!isBlockValidForTank(liquidBlock))
+            return false;
+        return true;
+    }
+
+    public List<BlockPos> findSpotsToCollect() {
         List<BlockPos> returnList = new ArrayList<>();
         BlockPos blockPos = getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING));
         if (isBlockPosValid(blockPos))

@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-06T09:16:45.4612139	Item Models: justdirethings
+// 1.20.6	2024-06-06T11:37:38.5941326	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -78,6 +78,7 @@ d7e8aa57768845fa217ec6dd8b1231fe379d6f0c assets/justdirethings/models/item/ferri
 bbd7675c2e3492bf9a3b359d492825ae53b03b80 assets/justdirethings/models/item/ferricore_sword.json
 5d94fa5471736b6c14c1fc07a9d184f3051df65f assets/justdirethings/models/item/ferricore_sword_active.json
 a1ce9ead1232d00769af1db1a121acce49867fca assets/justdirethings/models/item/ferricore_wrench.json
+d31f068e72a68c69220744b3226a75cb1b3bdd25 assets/justdirethings/models/item/fluidcollectort1.json
 f22b6d245d77b6e76ae0ff72fc4e484528bfcc57 assets/justdirethings/models/item/fluidplacert1.json
 805525d33c60fdec5e8dc72cbd11f65f01373d61 assets/justdirethings/models/item/fluidplacert2.json
 af62c31381c904f86fde9370e374e01d828fa643 assets/justdirethings/models/item/fuel_canister.json

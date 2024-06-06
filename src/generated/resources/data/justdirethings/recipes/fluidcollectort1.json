@@ -13,7 +13,7 @@
       "item": "minecraft:lapis_lazuli"
     },
     "o": {
-      "item": "minecraft:dropper"
+      "item": "minecraft:dispenser"
     },
     "r": {
       "item": "minecraft:redstone"
@@ -26,6 +26,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "justdirethings:fluidplacert1"
+    "id": "justdirethings:fluidcollectort1"
   }
 }

@@ -138,6 +138,7 @@ public class ClientSetup {
         event.register(Registration.PlayerAccessor_Container.get(), PlayerAccessorScreen::new);
         event.register(Registration.FluidPlacerT1_Container.get(), FluidPlacerT1Screen::new);
         event.register(Registration.FluidPlacerT2_Container.get(), FluidPlacerT2Screen::new);
+        event.register(Registration.FluidCollectorT1_Container.get(), FluidCollectorT1Screen::new);
     }
 
     @SubscribeEvent

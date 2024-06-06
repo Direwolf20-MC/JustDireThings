@@ -72,7 +72,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.BlockSwapperT2.get())
                 .add(Registration.PlayerAccessor.get())
                 .add(Registration.FluidPlacerT1.get())
-                .add(Registration.FluidPlacerT2.get());
+                .add(Registration.FluidPlacerT2.get())
+                .add(Registration.FluidCollectorT1.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
