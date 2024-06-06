@@ -112,17 +112,19 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             return;
         if (canRun()) {
             BlockPos blockPos = positionsToPlace.removeFirst();
-            placeBlock(placeStack, blockPos);
+            placeFluid(placeStack, blockPos);
         }
     }
 
-    public void placeBlock(FluidStack fluidStack, BlockPos blockPos) {
+    public boolean placeFluid(FluidStack fluidStack, BlockPos blockPos) {
         Fluid fluid = fluidStack.getFluid();
         BlockState blockState = fluid.defaultFluidState().createLegacyBlock();
         if (level.setBlock(blockPos, blockState, 3)) {
             getFluidTank().drain(1000, IFluidHandler.FluidAction.EXECUTE);
             level.playSound(null, blockPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1.0F);
+            return true;
         }
+        return false;
     }
 
     public boolean isBlockPosValid(BlockPos blockPos) {

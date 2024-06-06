@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-02T13:07:26.2702812	Recipes
+// 1.20.6	2024-06-06T09:16:45.4697211	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancements/recipes/building_blocks/coal_t1_9x9.json
@@ -72,6 +72,8 @@ e7b252df4baa2f681f62b73ec5036b92c5fa873c data/justdirethings/advancements/recipe
 220eb1e9c25d5cf4ab452e294d8141ff91367f34 data/justdirethings/advancements/recipes/misc/ferricore_wrench.json
 3b0f3b117dc9080de73b80a2c02722eba5b9a287 data/justdirethings/advancements/recipes/misc/fluidplacert1.json
 fb6a8e91cbfdf8152a0e97d272bbf0b89b543575 data/justdirethings/advancements/recipes/misc/fluidplacert1_nbtclear.json
+36f6deeac86f1e45ca0d1ac5242db612fb759a34 data/justdirethings/advancements/recipes/misc/fluidplacert2.json
+5a36ea06b3fdec7777685cff53da0291a6f6cc5d data/justdirethings/advancements/recipes/misc/fluidplacert2_nbtclear.json
 bab96099ef361c1e97bc145e74e3a22f53cdba5c data/justdirethings/advancements/recipes/misc/fluid_canister.json
 f1669f6e2dba95ffeaeea769703a57269242a935 data/justdirethings/advancements/recipes/misc/fuel_canister.json
 d5d5a2efce1d1c4e375e2af19177ac8691cea014 data/justdirethings/advancements/recipes/misc/generatort1.json
@@ -173,6 +175,8 @@ bf065a6068a45d9fa11dc06d2873478cabea2f8b data/justdirethings/recipes/ferricore_c
 6f24f0fcb4af9a7834361bd633c99ee4af258cd6 data/justdirethings/recipes/ferricore_wrench.json
 02d433a498b37a928712ae0045de9f3112796862 data/justdirethings/recipes/fluidplacert1.json
 7e4d96f040914a68453b9204451ebbaa40b81000 data/justdirethings/recipes/fluidplacert1_nbtclear.json
+346b2e635c9b8c0d35a82f197ab1caaa526c1542 data/justdirethings/recipes/fluidplacert2.json
+093c5683a0c7a4b34890b5934c8be1a51d9b9ff9 data/justdirethings/recipes/fluidplacert2_nbtclear.json
 d7b907a04bffbabf6eb0b96aa99a9c309ff4b0f8 data/justdirethings/recipes/fluid_canister.json
 bec94088bbd25914b825fd704053d98748e0ddd4 data/justdirethings/recipes/fuel_canister.json
 ad727ee779884e18264f5460103c78f8c0ac283a data/justdirethings/recipes/generatort1.json

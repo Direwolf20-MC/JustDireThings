@@ -159,7 +159,8 @@ public class JustDireThings {
                 Registration.ClickerT2.get(),
                 Registration.SensorT2.get(),
                 Registration.DropperT2.get(),
-                Registration.BlockSwapperT2.get()
+                Registration.BlockSwapperT2.get(),
+                Registration.FluidPlacerT2.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -185,7 +186,8 @@ public class JustDireThings {
                     }
                     return null;
                 },
-                Registration.FluidPlacerT1.get()
+                Registration.FluidPlacerT1.get(),
+                Registration.FluidPlacerT2.get()
         );
     }
 }

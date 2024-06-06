@@ -137,6 +137,7 @@ public class ClientSetup {
         event.register(Registration.BlockSwapperT2_Container.get(), BlockSwapperT2Screen::new);
         event.register(Registration.PlayerAccessor_Container.get(), PlayerAccessorScreen::new);
         event.register(Registration.FluidPlacerT1_Container.get(), FluidPlacerT1Screen::new);
+        event.register(Registration.FluidPlacerT2_Container.get(), FluidPlacerT2Screen::new);
     }
 
     @SubscribeEvent
@@ -155,6 +156,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.EnergyTransmitterBE.get(), EnergyTransmitterRenderer::new);
         event.registerBlockEntityRenderer(Registration.BlockSwapperT2BE.get(), BlockSwapperT2BER::new);
         event.registerBlockEntityRenderer(Registration.EclipseGateBE.get(), EclipseGateRenderer::new);
+        event.registerBlockEntityRenderer(Registration.FluidPlacerT2BE.get(), FluidPlacerT2BER::new);
 
         //Entities
         event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);

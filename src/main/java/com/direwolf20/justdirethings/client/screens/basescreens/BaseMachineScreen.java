@@ -254,16 +254,21 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             }
         }
         if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
-            guiGraphics.blit(FLUIDBAR, topSectionLeft + 24, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+            int offset = getFluidBarOffset();
+            guiGraphics.blit(FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
             int maxMB = fluidMachineBE.getMaxMB(), height = 70;
             if (maxMB > 0) {
                 int remaining = (this.container.getFluidAmount() * height) / maxMB;
-                renderFluid(guiGraphics, topSectionLeft + 24 + 1, topSectionTop + 5 + 72 - 1, 16, remaining);
+                renderFluid(guiGraphics, topSectionLeft + offset + 1, topSectionTop + 5 + 72 - 1, 16, remaining);
             }
-            guiGraphics.blit(FLUIDBAR, topSectionLeft + 24, topSectionTop + 5, 18, 0, 18, 72, 36, 72);
+            guiGraphics.blit(FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 18, 0, 18, 72, 36, 72);
         }
         if (renderablesChanged)
             updateRenderables();
+    }
+
+    public int getFluidBarOffset() {
+        return 24;
     }
 
     public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int width, int height) {
@@ -344,7 +349,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
     public void fluidBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
-            if (MiscTools.inBounds(topSectionLeft + 24, topSectionTop + 5, 18, 72, pX, pY)) {
+            if (MiscTools.inBounds(topSectionLeft + getFluidBarOffset(), topSectionTop + 5, 18, 72, pX, pY)) {
                 if (hasShiftDown())
                     pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
                             Component.translatable("justdirethings.screen.fluid", this.container.getFluidStack().getHoverName(), MagicHelpers.formatted(this.container.getFluidAmount()), MagicHelpers.formatted(fluidMachineBE.getMaxMB()))
