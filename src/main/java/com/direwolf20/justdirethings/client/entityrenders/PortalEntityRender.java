@@ -23,6 +23,10 @@ import java.util.List;
 import static com.direwolf20.justdirethings.client.renderers.RenderHelpers.renderBoxSolid;
 
 public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T> {
+    protected static final RenderType renderType = DireRenderTypes.getRenderType("portal_entity")
+            .using(List.of(
+                    new ShaderTexture(new ResourceLocation(JustDireThings.MODID, "textures/block/portal_shader.png"))
+            ));
     public PortalEntityRender(EntityRendererProvider.Context pContext) {
         super(pContext);
     }
@@ -66,7 +70,7 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         float start2 = interpolatedStart2;
         float end2 = interpolatedEnd2;
 
-        VertexConsumer vertexConsumer = pBuffer.getBuffer(this.renderType());
+        VertexConsumer vertexConsumer = pBuffer.getBuffer(renderType);
         Direction direction = pEntity.getDirection();
         Direction.Axis alignment = pEntity.getAlignment();
 
@@ -162,12 +166,5 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         vertexConsumer.vertex(matrixStack, x2, y1, z2).uv(1f, 0f).endVertex();
         vertexConsumer.vertex(matrixStack, x2, y2, z3).uv(1f, 1f).endVertex();
         vertexConsumer.vertex(matrixStack, x1, y2, z4).uv(0f, 1f).endVertex();
-    }
-
-    protected RenderType renderType() {
-        return DireRenderTypes.getRenderType("portal_entity")
-                .using(List.of(
-                        new ShaderTexture(new ResourceLocation(JustDireThings.MODID,"textures/block/portal_shader.png"))
-                ));
     }
 }
