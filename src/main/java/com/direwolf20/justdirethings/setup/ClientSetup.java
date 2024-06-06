@@ -139,6 +139,7 @@ public class ClientSetup {
         event.register(Registration.FluidPlacerT1_Container.get(), FluidPlacerT1Screen::new);
         event.register(Registration.FluidPlacerT2_Container.get(), FluidPlacerT2Screen::new);
         event.register(Registration.FluidCollectorT1_Container.get(), FluidCollectorT1Screen::new);
+        event.register(Registration.FluidCollectorT2_Container.get(), FluidCollectorT2Screen::new);
     }
 
     @SubscribeEvent
@@ -158,6 +159,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.BlockSwapperT2BE.get(), BlockSwapperT2BER::new);
         event.registerBlockEntityRenderer(Registration.EclipseGateBE.get(), EclipseGateRenderer::new);
         event.registerBlockEntityRenderer(Registration.FluidPlacerT2BE.get(), FluidPlacerT2BER::new);
+        event.registerBlockEntityRenderer(Registration.FluidCollectorT2BE.get(), FluidCollectorT2BER::new);
 
         //Entities
         event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);

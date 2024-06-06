@@ -61,6 +61,7 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.FluidPlacerT1_ITEM.getId().getPath(), modLoc("block/fluidplacert1"));
         withExistingParent(Registration.FluidPlacerT2_ITEM.getId().getPath(), modLoc("block/fluidplacert2"));
         withExistingParent(Registration.FluidCollectorT1_ITEM.getId().getPath(), modLoc("block/fluidcollectort1"));
+        withExistingParent(Registration.FluidCollectorT2_ITEM.getId().getPath(), modLoc("block/fluidcollectort2"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));

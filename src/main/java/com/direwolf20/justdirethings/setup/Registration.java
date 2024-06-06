@@ -191,6 +191,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> FluidPlacerT2_ITEM = ITEMS.register("fluidplacert2", () -> new BlockItem(FluidPlacerT2.get(), new Item.Properties()));
     public static final DeferredHolder<Block, FluidCollectorT1> FluidCollectorT1 = SIDEDBLOCKS.register("fluidcollectort1", FluidCollectorT1::new);
     public static final DeferredHolder<Item, BlockItem> FluidCollectorT1_ITEM = ITEMS.register("fluidcollectort1", () -> new BlockItem(FluidCollectorT1.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, FluidCollectorT2> FluidCollectorT2 = BLOCKS.register("fluidcollectort2", FluidCollectorT2::new);
+    public static final DeferredHolder<Item, BlockItem> FluidCollectorT2_ITEM = ITEMS.register("fluidcollectort2", () -> new BlockItem(FluidCollectorT2.get(), new Item.Properties()));
 
     //Power Machines
     public static final DeferredHolder<Block, GeneratorT1> GeneratorT1 = BLOCKS.register("generatort1", GeneratorT1::new);
@@ -260,6 +262,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPlacerT1BE>> FluidPlacerT1BE = BLOCK_ENTITIES.register("fluidplacert1", () -> BlockEntityType.Builder.of(FluidPlacerT1BE::new, FluidPlacerT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPlacerT2BE>> FluidPlacerT2BE = BLOCK_ENTITIES.register("fluidplacert2", () -> BlockEntityType.Builder.of(FluidPlacerT2BE::new, FluidPlacerT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT1BE>> FluidCollectorT1BE = BLOCK_ENTITIES.register("fluidcollectort1", () -> BlockEntityType.Builder.of(FluidCollectorT1BE::new, FluidCollectorT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT2BE>> FluidCollectorT2BE = BLOCK_ENTITIES.register("fluidcollectort2", () -> BlockEntityType.Builder.of(FluidCollectorT2BE::new, FluidCollectorT2.get()).build(null));
 
     //Items - Raw Resources
     public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
@@ -387,6 +390,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(FluidPlacerT2Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<FluidCollectorT1Container>> FluidCollectorT1_Container = CONTAINERS.register("fluidcollectort1_container",
             () -> IMenuTypeExtension.create(FluidCollectorT1Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<FluidCollectorT2Container>> FluidCollectorT2_Container = CONTAINERS.register("fluidcollectort2_container",
+            () -> IMenuTypeExtension.create(FluidCollectorT2Container::new));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(

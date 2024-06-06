@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "justdirethings",
+  "ingredients": [
+    {
+      "item": "justdirethings:fluidcollectort2"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:fluidcollectort2"
+  }
+}

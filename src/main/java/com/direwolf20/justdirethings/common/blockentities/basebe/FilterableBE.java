@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.util.ItemStackKey;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public interface FilterableBE {
@@ -41,6 +42,24 @@ public interface FilterableBE {
     }
 
     default boolean isStackValidFilter(ItemStack testStack) {
+        ItemStackKey key = new ItemStackKey(testStack, getFilterData().compareNBT);
+        if (getFilterData().filterCache.containsKey(key)) return getFilterData().filterCache.get(key);
+
+        FilterBasicHandler filteredItems = getFilterHandler();
+        for (int i = 0; i < filteredItems.getSlots(); i++) {
+            ItemStack stack = filteredItems.getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            if (key.equals(new ItemStackKey(stack, getFilterData().compareNBT))) {
+                getFilterData().filterCache.put(key, getFilterData().allowlist);
+                return getFilterData().allowlist;
+            }
+        }
+        getFilterData().filterCache.put(key, !getFilterData().allowlist);
+        return !getFilterData().allowlist;
+    }
+
+    default boolean isStackValidFilter(LiquidBlock liquidBlock) {
+        ItemStack testStack = new ItemStack(liquidBlock.fluid.getBucket());
         ItemStackKey key = new ItemStackKey(testStack, getFilterData().compareNBT);
         if (getFilterData().filterCache.containsKey(key)) return getFilterData().filterCache.get(key);
 

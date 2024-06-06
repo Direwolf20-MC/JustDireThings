@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -81,6 +82,8 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         if (insertAmt > 0) {
             FluidStack extractedStack = fluidHandlerItem.drain(insertAmt, IFluidHandler.FluidAction.EXECUTE);
             getFluidTank().fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
+            if (itemStack.getItem() instanceof BucketItem)
+                getMachineHandler().setStackInSlot(0, fluidHandlerItem.getContainer());
         }
     }
 

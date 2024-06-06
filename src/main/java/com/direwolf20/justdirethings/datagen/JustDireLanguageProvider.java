@@ -47,6 +47,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FluidPlacerT1.get(), "Simple Fluid Placer");
         add(Registration.FluidPlacerT2.get(), "Advanced Fluid Placer");
         add(Registration.FluidCollectorT1.get(), "Simple Fluid Collector");
+        add(Registration.FluidCollectorT2.get(), "Advanced Fluid Collector");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");

@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -26,6 +27,8 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static net.minecraft.world.level.block.LiquidBlock.LEVEL;
 
 public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControlledBE, FluidMachineBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
@@ -82,6 +85,9 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
         if (insertAmt > 0) {
             FluidStack extractedStack = getFluidTank().drain(Math.min(insertAmt, 1000), IFluidHandler.FluidAction.EXECUTE);
             fluidHandlerItem.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
+            if (itemStack.getItem() instanceof BucketItem)
+                getMachineHandler().setStackInSlot(0, fluidHandlerItem.getContainer());
+
         }
     }
 
@@ -177,7 +183,10 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
     }
 
     public boolean isBlockPosValid(BlockPos blockPos) {
-        if (!(level.getBlockState(blockPos).getBlock() instanceof LiquidBlock liquidBlock))
+        BlockState blockState = level.getBlockState(blockPos);
+        if (!(blockState.getBlock() instanceof LiquidBlock liquidBlock))
+            return false;
+        if (blockState.getValue(LEVEL) != 0)
             return false;
         if (!isBlockValidForTank(liquidBlock))
             return false;
