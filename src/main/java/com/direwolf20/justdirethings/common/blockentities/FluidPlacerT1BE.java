@@ -9,16 +9,20 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +34,7 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
 
     public FluidPlacerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
+        MACHINE_SLOTS = 1; //Slot for a bucket
         fluidContainerData = new FluidContainerData(this);
     }
 
@@ -63,7 +68,40 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     @Override
     public void tickServer() {
         super.tickServer();
+        handleItemStack();
         doFluidPlace();
+    }
+
+    public void handleItemStack() {
+        if (isFull()) return;
+        ItemStack itemStack = getItemStack();
+        if (!isStackValid(itemStack)) return;
+        IFluidHandler cap = level.getCapability(Capabilities.FluidHandler.BLOCK, getBlockPos(), Direction.UP); //Direction doesn't matter, its all the same for me!
+        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        FluidStack testExtract = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
+        int insertAmt = cap.fill(testExtract, IFluidHandler.FluidAction.SIMULATE);
+        if (insertAmt > 0) {
+            FluidStack extractedStack = fluidHandlerItem.drain(insertAmt, IFluidHandler.FluidAction.EXECUTE);
+            cap.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
+        }
+    }
+
+    public ItemStack getItemStack() {
+        return getMachineHandler().getStackInSlot(0);
+    }
+
+    public boolean isStackValid(ItemStack itemStack) {
+        if (itemStack.isEmpty())
+            return false;
+        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandlerItem == null)
+            return false;
+        FluidStack fluidStack = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
+        if (fluidStack.getAmount() == 0)
+            return false;
+        if (!getFluidStack().isEmpty() && !getFluidStack().is(fluidStack.getFluid()))
+            return false;
+        return true;
     }
 
     public FluidStack getPlaceStack() {
@@ -139,5 +177,9 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         if (isBlockPosValid(blockPos))
             returnList.add(blockPos);
         return returnList;
+    }
+
+    public boolean isFull() {
+        return getFluidStack().getAmount() >= getMaxMB();
     }
 }

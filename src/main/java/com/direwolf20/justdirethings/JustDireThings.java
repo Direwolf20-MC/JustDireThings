@@ -133,7 +133,9 @@ public class JustDireThings {
                 Registration.DropperT1.get(),
                 Registration.DropperT2.get(),
                 Registration.GeneratorT1.get(),
-                Registration.EnergyTransmitter.get()
+                Registration.EnergyTransmitter.get(),
+                Registration.FluidPlacerT1.get(),
+                Registration.FluidPlacerT2.get()
         );
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {
