@@ -16,11 +16,9 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -115,6 +113,22 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         Map<Property<?>, Comparable<?>> propertiesMap = new HashMap<>();
         if (stateStack.getItem() instanceof BlockItem blockItem) {
             Block block = blockItem.getBlock();
+            for (int i = 0; i < listTag.size(); i++) {
+                CompoundTag propertiesTag = listTag.getCompound(i);
+                propertiesTag.getAllKeys().forEach(propertyName -> {
+                    Property<?> property = block.getStateDefinition().getProperty(propertyName);
+                    if (property != null) {
+                        String valueStr = propertiesTag.getString(propertyName);
+                        Comparable<?> value = getValue(property, valueStr);
+                        if (value != null)
+                            propertiesMap.put(property, value);
+                    }
+                });
+
+            }
+        } else if (stateStack.getItem() instanceof BucketItem bucketItem) {
+            BlockState defaultState = bucketItem.content.defaultFluidState().createLegacyBlock();
+            Block block = defaultState.getBlock();
             for (int i = 0; i < listTag.size(); i++) {
                 CompoundTag propertiesTag = listTag.getCompound(i);
                 propertiesTag.getAllKeys().forEach(propertyName -> {
@@ -271,7 +285,36 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
             return blockState.isAir();
         if (blockState.isAir()) //Checked above if we're sensing for air, so if its air, false!
             return false;
+        if (blockState.getBlock() instanceof LiquidBlock liquidBlock)
+            return handleBlockStates(blockPos, blockState, liquidBlock);
         return handleBlockStates(blockPos, blockState);
+    }
+
+    public boolean handleBlockStates(BlockPos blockPos, BlockState blockState, LiquidBlock liquidBlock) {
+        ItemStack blockItemStack = new ItemStack(liquidBlock.fluid.getBucket());
+        boolean allowList = filterData.allowlist;
+        if (blockStateFilterCache.containsKey(blockState))
+            return blockStateFilterCache.get(blockState);
+        boolean returnValue = isStackValidFilter(blockItemStack);
+        outerLoop:
+        for (Map.Entry<Integer, Map<Property<?>, Comparable<?>>> propertyValues : blockStateProperties.entrySet()) {
+            ItemStack filterStack = getFilterHandler().getStackInSlot(propertyValues.getKey());
+            if (!ItemStack.isSameItemSameComponents(filterStack, blockItemStack)) //If the itemstack we are comparing in this slot doesn't match the blockItem
+                continue;
+            for (Map.Entry<Property<?>, Comparable<?>> prop : propertyValues.getValue().entrySet()) {
+                Comparable<?> comparable = blockState.getValue(prop.getKey());
+                boolean propertyMatch = comparable.equals(prop.getValue());
+                if ((allowList && propertyMatch) || (!allowList && !propertyMatch)) {
+                    returnValue = true; // Match found in allowlist mode, set return to true
+                } else {
+                    returnValue = false; // Mismatch found in denylist mode, set return to false and exit
+                    break outerLoop;
+                }
+            }
+        }
+
+        blockStateFilterCache.put(blockState, returnValue);
+        return blockStateFilterCache.get(blockState);
     }
 
     public boolean handleBlockStates(BlockPos blockPos, BlockState blockState) {
