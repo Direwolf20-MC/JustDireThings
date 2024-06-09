@@ -219,9 +219,9 @@ public class FluidCanister extends Item {
             }
             return false;
         }
-
-        if (level.dimensionType().ultraWarm() && fluid.is(FluidTags.WATER)) {
-            playExtinguishSound(level, pos);
+        FluidStack fluidStack = new FluidStack(fluid, 1000);
+        if (fluid.getFluidType().isVaporizedOnPlacement(level, pos, fluidStack)) {
+            fluid.getFluidType().onVaporize(player, level, pos, fluidStack);
             return true;
         }
 
