@@ -294,6 +294,7 @@ public class Registration {
     public static final DeferredHolder<Item, Coal_T2> Coal_T2 = ITEMS.register("coal_t2", Coal_T2::new);
     public static final DeferredHolder<Item, Coal_T3> Coal_T3 = ITEMS.register("coal_t3", Coal_T3::new);
     public static final DeferredHolder<Item, Coal_T4> Coal_T4 = ITEMS.register("coal_t4", Coal_T4::new);
+    public static final DeferredHolder<Item, PortalFluidCatalyst> PortalFluidCatalyst = ITEMS.register("portal_fluid_catalyst", PortalFluidCatalyst::new);
 
     //Items
     public static final DeferredHolder<Item, FuelCanister> Fuel_Canister = ITEMS.register("fuel_canister", FuelCanister::new);

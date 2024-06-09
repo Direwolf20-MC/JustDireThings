@@ -67,6 +67,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CoalBlock_T3.get(), "Voidflame Coal Block");
         add(Registration.RawCoal_T4.get(), "Raw Eclipse Ember");
         add(Registration.CoalBlock_T4.get(), "Eclipse Ember Block");
+        add(Registration.PortalFluidCatalyst.get(), "Portal Fluid Catalyst");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
@@ -164,6 +165,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.fillmode.none", "None");
         add("justdirethings.fillmode.jdtonly", "JustDireThings");
         add("justdirethings.fillmode.all", "All");
+        add("justdirethings.hint.dropinwater", "Drop in Water in The End");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");

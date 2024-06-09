@@ -302,6 +302,17 @@ public class JustDireRecipes extends RecipeProvider {
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
                 .save(consumer);
 
+        //Resource
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.PortalFluidCatalyst.get())
+                .pattern(" c ")
+                .pattern("clc")
+                .pattern(" c ")
+                .define('c', Items.CHORUS_FRUIT)
+                .define('l', Items.LAPIS_LAZULI)
+                .group("justdirethings")
+                .unlockedBy("has_chorus_fruit", InventoryChangeTrigger.TriggerInstance.hasItems(Items.CHORUS_FRUIT))
+                .save(consumer);
+
         //Items
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreWrench.get())
                 .pattern(" i ")
