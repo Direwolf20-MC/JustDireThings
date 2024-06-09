@@ -1,13 +1,12 @@
 package com.direwolf20.justdirethings.common.items;
 
-import com.direwolf20.justdirethings.client.screens.MachineSettingsCopierScreen;
+import com.direwolf20.justdirethings.client.screens.ModScreens;
 import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -35,7 +34,8 @@ public class MachineSettingsCopier extends Item {
         if (!level.isClientSide() || !player.isShiftKeyDown())
             return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
 
-        Minecraft.getInstance().setScreen(new MachineSettingsCopierScreen(itemstack));
+        if (level.isClientSide)
+            ModScreens.openMachineSettingsCopierScreen(itemstack);
 
         return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
     }
