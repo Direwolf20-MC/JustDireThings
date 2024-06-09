@@ -25,6 +25,8 @@ import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
@@ -70,6 +72,9 @@ public class ClientSetup {
             ItemProperties.register(Registration.PortalGunV2.get(),
                     new ResourceLocation(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> PortalGunV2.getFullness(stack));
         });
+
+        ItemBlockRenderTypes.setRenderLayer(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.UNSTABLE_PORTAL_FLUID_FLOWING.get(), RenderType.translucent());
     }
 
     @SubscribeEvent
@@ -177,6 +182,13 @@ public class ClientSetup {
             }
             return 0xFFFFFFFF;
         }, Registration.PORTAL_FLUID_BUCKET.get());
+
+        colors.register((stack, index) -> {
+            if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
+                return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
+            }
+            return 0xFFFFFFFF;
+        }, Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get());
 
         colors.register((stack, index) -> {
             if (index == 1 && stack.getItem() instanceof FluidCanister) {

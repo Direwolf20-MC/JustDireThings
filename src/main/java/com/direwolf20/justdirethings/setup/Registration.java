@@ -28,6 +28,9 @@ import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluid;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidType;
+import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluid;
+import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
+import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
 import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreChestplate;
@@ -143,6 +146,7 @@ public class Registration {
     public static final DeferredHolder<Block, EclipseGateBlock> EclipseGateBlock = BLOCKS.register("eclipsegateblock", EclipseGateBlock::new);
 
     //Fluids
+    //Portal Fluid
     public static final DeferredHolder<FluidType, FluidType> PORTAL_FLUID_TYPE = FLUID_TYPES.register("portal_fluid_type",
             PortalFluidType::new);
     public static final DeferredHolder<Fluid, PortalFluid> PORTAL_FLUID_FLOWING = FLUIDS.register("portal_fluid_flowing",
@@ -153,6 +157,18 @@ public class Registration {
             PortalFluidBlock::new);
     public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = ITEMS.register("portal_fluid_bucket",
             () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Unstable Portal Fluid
+    public static final DeferredHolder<FluidType, FluidType> UNSTABLE_PORTAL_FLUID_TYPE = FLUID_TYPES.register("unstable_portal_fluid_type",
+            UnstablePortalFluidType::new);
+    public static final DeferredHolder<Fluid, UnstablePortalFluid> UNSTABLE_PORTAL_FLUID_FLOWING = FLUIDS.register("unstable_portal_fluid_flowing",
+            UnstablePortalFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, UnstablePortalFluid> UNSTABLE_PORTAL_FLUID_SOURCE = FLUIDS.register("unstable_portal_fluid_source",
+            UnstablePortalFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> UNSTABLE_PORTAL_FLUID_BLOCK = BLOCKS.register("unstable_portal_fluid_block",
+            UnstablePortalFluidBlock::new);
+    public static final DeferredHolder<Item, BucketItem> UNSTABLE_PORTAL_FLUID_BUCKET = ITEMS.register("unstable_portal_fluid_bucket",
+            () -> new BucketItem(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
 

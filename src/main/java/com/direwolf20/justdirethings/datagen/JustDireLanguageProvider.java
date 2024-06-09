@@ -44,6 +44,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.EclipseGateBlock.get(), "Eclipse Gate");
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
         add("fluid_type.justdirethings.portal_fluid_type", "Portal Fluid");
+        add("fluid_type.justdirethings.unstable_portal_fluid_type", "Unstable Portal Fluid");
         add(Registration.FluidPlacerT1.get(), "Simple Fluid Placer");
         add(Registration.FluidPlacerT2.get(), "Advanced Fluid Placer");
         add(Registration.FluidCollectorT1.get(), "Simple Fluid Collector");
@@ -79,6 +80,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.PortalGun.get(), "Portal Gun");
         add(Registration.PortalGunV2.get(), "Advanced Portal Gun");
         add(Registration.PORTAL_FLUID_BUCKET.get(), "Portal Fluid Bucket");
+        add(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get(), "Unstable Portal Fluid Bucket");
         add(Registration.FluidCanister.get(), "Fluid Canister");
 
         //Tools

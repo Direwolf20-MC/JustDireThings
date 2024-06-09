@@ -42,7 +42,8 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.EclipseGateBlock.get(), models().cubeAll(Registration.EclipseGateBlock.getId().getPath(), blockTexture(Registration.EclipseGateBlock.get())).renderType("cutout"));
 
         //Fluids
-        simpleBlock(Registration.PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "portal_fluid_source")));
+        simpleBlock(Registration.PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
+        simpleBlock(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
 
         patternBlock();
         soilBlocks();

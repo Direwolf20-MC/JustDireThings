@@ -104,6 +104,9 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(Registration.PORTAL_FLUID_BUCKET.get().content);
+        withExistingParent(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+                .customLoader(DynamicFluidContainerModelBuilder::begin)
+                .fluid(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get().content);
     }
 
     public void registerTools() {

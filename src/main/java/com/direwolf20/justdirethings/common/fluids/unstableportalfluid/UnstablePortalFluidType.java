@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.fluids.portalfluid;
+package com.direwolf20.justdirethings.common.fluids.unstableportalfluid;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -15,9 +15,9 @@ import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
-public class PortalFluidType extends FluidType {
-    public PortalFluidType() {
-        super(FluidType.Properties.create().density(1000).viscosity(1000).temperature(300)
+public class UnstablePortalFluidType extends FluidType {
+    public UnstablePortalFluidType() {
+        super(Properties.create().density(1000).viscosity(1000).temperature(300)
                 .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                 .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
                 .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH));
@@ -32,23 +32,23 @@ public class PortalFluidType extends FluidType {
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
             private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation("textures/misc/underwater.png"),
-                    PORTALFLUID_STILL = new ResourceLocation(MODID, "block/fluid_source"),
-                    PORTALFLUID_FLOW = new ResourceLocation(MODID, "block/fluid_flowing"),
-                    PORTALFLUID_OVERLAY = new ResourceLocation(MODID, "block/fluid_overlay");
+                    UNSTABLE_PORTALFLUID_STILL = new ResourceLocation(MODID, "block/fluid_source"),
+                    UNSTABLE_PORTALFLUID_FLOW = new ResourceLocation(MODID, "block/fluid_flowing"),
+                    UNSTABLE_PORTALFLUID_OVERLAY = new ResourceLocation(MODID, "block/fluid_overlay");
 
             @Override
             public ResourceLocation getStillTexture() {
-                return PORTALFLUID_STILL;
+                return UNSTABLE_PORTALFLUID_STILL;
             }
 
             @Override
             public ResourceLocation getFlowingTexture() {
-                return PORTALFLUID_FLOW;
+                return UNSTABLE_PORTALFLUID_FLOW;
             }
 
             @Override
             public ResourceLocation getOverlayTexture() {
-                return PORTALFLUID_OVERLAY;
+                return UNSTABLE_PORTALFLUID_OVERLAY;
             }
 
             @Override
@@ -58,12 +58,12 @@ public class PortalFluidType extends FluidType {
 
             @Override
             public int getTintColor() {
-                return 0xFF00DD00;
+                return 0xFF9400D3;
             }
 
             @Override
             public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF00DD00;
+                return 0xFF9400D3;
             }
         });
     }
