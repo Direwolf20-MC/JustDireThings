@@ -410,6 +410,27 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.PortalGun.get())
+                .pattern(" bb")
+                .pattern("beb")
+                .pattern("b  ")
+                .define('e', Items.ENDER_EYE)
+                .define('b', Registration.BlazegoldIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.PortalGunV2.get())
+                .pattern(" bc")
+                .pattern("beb")
+                .pattern("bf ")
+                .define('e', Registration.PortalFluidCatalyst.get())
+                .define('b', Registration.BlazegoldIngot.get())
+                .define('c', Registration.Celestigem.get())
+                .define('f', Registration.FluidCanister.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)

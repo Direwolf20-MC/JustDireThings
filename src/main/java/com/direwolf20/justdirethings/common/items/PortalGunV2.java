@@ -3,6 +3,9 @@ package com.direwolf20.justdirethings.common.items;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.common.items.interfaces.BasePoweredItem;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -37,13 +40,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PortalGunV2 extends Item {
+public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
     public static final int MAX_FAVORITES = 12;
     public static final int maxMB = 8000;
 
     public PortalGunV2() {
         super(new Properties()
                 .stacksTo(1));
+    }
+
+    @Override
+    public int getMaxEnergy() {
+        return Config.PORTAL_GUN_V2_RF_CAPACITY.get();
     }
 
     @Override
@@ -77,7 +85,6 @@ public class PortalGunV2 extends Item {
         if (mc.level == null || mc.player == null) {
             return;
         }
-
         IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler == null) {
             return;
@@ -111,6 +118,11 @@ public class PortalGunV2 extends Item {
         int cost = calculateFluidCost((ServerLevel) level, player, portalDestination);
         if (!hasEnoughFluid(itemStack, cost)) {
             player.displayClientMessage(Component.translatable("justdirethings.lowportalfluid"), true);
+            player.playNotifySound(SoundEvents.VAULT_INSERT_ITEM_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            return;
+        }
+        if (!PoweredItem.consumeEnergy(itemStack, Config.PORTAL_GUN_V2_RF_COST.get())) {
+            player.displayClientMessage(Component.translatable("justdirethings.lowenergy"), true);
             player.playNotifySound(SoundEvents.VAULT_INSERT_ITEM_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
             return;
         }

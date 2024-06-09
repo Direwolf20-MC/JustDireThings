@@ -12,7 +12,6 @@ import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
-import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
@@ -63,8 +62,8 @@ public class JustDireThings {
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
                     int capacity = 1000000; //Default
-                    if (itemStack.getItem() instanceof PoweredTool poweredTool) {
-                        capacity = poweredTool.getMaxEnergy();
+                    if (itemStack.getItem() instanceof PoweredItem poweredItem) {
+                        capacity = poweredItem.getMaxEnergy();
                     }
                     return new EnergyStorageItemStackNoReceive(capacity, itemStack);
                 },
@@ -90,7 +89,9 @@ public class JustDireThings {
                 Registration.CelestigemPaxel.get(),
                 Registration.EclipseAlloyPaxel.get(),
                 Registration.VoidshiftWand.get(),
-                Registration.EclipsegateWand.get()
+                Registration.EclipsegateWand.get(),
+                Registration.PortalGun.get(),
+                Registration.PortalGunV2.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {

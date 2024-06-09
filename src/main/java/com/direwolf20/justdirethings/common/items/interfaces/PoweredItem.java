@@ -3,9 +3,10 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public interface PoweredItem {
-    default int getAvailableEnergy(ItemStack stack) {
+    static int getAvailableEnergy(ItemStack stack) {
         var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (energy == null) {
             return -1;
@@ -39,5 +40,16 @@ public interface PoweredItem {
 
     default int getMaxEnergy() {
         return 10000;
+    }
+
+    static boolean hasEnoughEnergy(ItemStack stack, int requiredAmt) {
+        return getAvailableEnergy(stack) >= requiredAmt;
+    }
+
+    static boolean consumeEnergy(ItemStack itemStack, int amt) {
+        IEnergyStorage energyStorage = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energyStorage == null) return false;
+        int amtExtracted = energyStorage.extractEnergy(amt, false);
+        return amtExtracted == amt;
     }
 }

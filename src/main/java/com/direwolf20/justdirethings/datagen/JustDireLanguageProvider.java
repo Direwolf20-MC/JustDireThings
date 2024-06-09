@@ -134,6 +134,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.presshotkey", "<Press %s>");
         add("justdirethings.enabled", "Enabled");
         add("justdirethings.disabled", "Disabled");
+        add("justdirethings.lowenergy", "Insufficient Energy");
         add("justdirethings.fuelcanisteramt", "Cook time (ticks): %d");
         add("justdirethings.fuelcanisteramtstack", "Stack Cook time (ticks): %d");
         add("justdirethings.fuelcanisteritemsamt", "Fuel Amount: %f");

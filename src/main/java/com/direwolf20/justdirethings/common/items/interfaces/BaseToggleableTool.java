@@ -28,7 +28,7 @@ import java.util.Map;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
-public abstract class BaseToggleableTool extends Item implements ToggleableTool {
+public abstract class BaseToggleableTool extends BasePoweredItem implements ToggleableTool {
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 
@@ -72,7 +72,6 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
         }
 
         boolean sneakPressed = Screen.hasShiftDown();
-        appendFEText(stack, tooltip);
         if (sneakPressed) {
             appendToolEnabled(stack, tooltip);
             appendAbilityList(stack, tooltip);
@@ -134,32 +133,4 @@ public abstract class BaseToggleableTool extends Item implements ToggleableTool 
             return Helpers.doLavaRepair(stack, entity);
         return false;
     }
-
-    @Override
-    public boolean isBarVisible(ItemStack stack) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
-            return poweredItem.isPowerBarVisible(stack);
-        }
-        return super.isBarVisible(stack);
-    }
-
-    @Override
-    public int getBarWidth(ItemStack stack) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
-            return poweredItem.getPowerBarWidth(stack);
-        }
-        return super.getBarWidth(stack);
-    }
-
-    @Override
-    public int getBarColor(ItemStack stack) {
-        if (stack.getItem() instanceof PoweredItem poweredItem) {
-            int color = poweredItem.getPowerBarColor(stack);
-            if (color == -1)
-                return super.getBarColor(stack);
-            return color;
-        }
-        return super.getBarColor(stack);
-    }
-
 }

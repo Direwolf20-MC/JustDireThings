@@ -26,6 +26,13 @@ public class Config {
     public static ModConfigSpec.IntValue FUEL_CANISTER_MINIMUM_TICKS_CONSUMED;
     public static ModConfigSpec.IntValue FUEL_CANISTER_MAXIMUM_FUEL;
 
+    public static final String CATEGORY_PORTAL_GUNS = "portal_gun";
+    public static ModConfigSpec.IntValue PORTAL_GUN_V1_RF_CAPACITY;
+    public static ModConfigSpec.IntValue PORTAL_GUN_V1_RF_COST;
+    public static ModConfigSpec.IntValue PORTAL_GUN_V2_RF_CAPACITY;
+    public static ModConfigSpec.IntValue PORTAL_GUN_V2_RF_COST;
+
+
     public static final String ENERGY_TRANSMITTER_T1 = "energy_transmitter_t1";
     public static ModConfigSpec.DoubleValue ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK;
     public static ModConfigSpec.IntValue ENERGY_TRANSMITTER_T1_MAX_RF;
@@ -54,6 +61,7 @@ public class Config {
         energyTransmitter();
         fuelCanisterConfig();
         pocketGeneratorConfig();
+        portalGunConfig();
         container.registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
     }
 
@@ -121,6 +129,20 @@ public class Config {
                 .defineInRange("pocket_gen_max_fe", 1000000, 1, Integer.MAX_VALUE);
         POCKET_GENERATOR_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator charges other items at")
                 .defineInRange("pocket_gen_fe_per_tick", 5000, 1, Integer.MAX_VALUE);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void portalGunConfig() {
+        COMMON_BUILDER.comment("Portal Guns").push(CATEGORY_PORTAL_GUNS);
+        PORTAL_GUN_V1_RF_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Forge Energy the Portal Gun (V1) can hold in its buffer")
+                .defineInRange("portal_gun_v1_rf_capacity", 100000, 1, Integer.MAX_VALUE);
+        PORTAL_GUN_V1_RF_COST = COMMON_BUILDER.comment("The Forge Energy cost to fire the Portal Gun (V1) projectile")
+                .defineInRange("portal_gun_v1_rf_cost", 1000, 1, Integer.MAX_VALUE);
+        PORTAL_GUN_V2_RF_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Forge Energy the Portal Gun (V2) can hold in its buffer")
+                .defineInRange("portal_gun_v2_rf_capacity", 1000000, 1, Integer.MAX_VALUE);
+        PORTAL_GUN_V2_RF_COST = COMMON_BUILDER.comment("The Forge Energy cost to fire the Portal Gun (V2) projectile")
+                .defineInRange("portal_gun_v2_rf_cost", 5000, 1, Integer.MAX_VALUE);
+
         COMMON_BUILDER.pop();
     }
 }

@@ -156,6 +156,7 @@
   "justdirethings.hint.dropinwater": "Drop in Water in The End",
   "justdirethings.key.category": "Just Dire Things",
   "justdirethings.key.toggle_tool": "Toggle Tool Abilities",
+  "justdirethings.lowenergy": "Insufficient Energy",
   "justdirethings.lowportalfluid": "Insufficient Portal Fluid",
   "justdirethings.pocketgeneratorburntime": "Burn Time: %f / %f",
   "justdirethings.pocketgeneratorfuelstack": "Fuel: %f %s",
