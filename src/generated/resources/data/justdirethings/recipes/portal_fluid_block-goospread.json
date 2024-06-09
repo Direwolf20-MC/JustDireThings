@@ -1,0 +1,18 @@
+{
+  "type": "justdirethings:goospread",
+  "craftingDuration": 2400,
+  "id": "justdirethings:portal_fluid",
+  "input": {
+    "Name": "justdirethings:unstable_portal_fluid_block",
+    "Properties": {
+      "level": "0"
+    }
+  },
+  "output": {
+    "Name": "justdirethings:portal_fluid_block",
+    "Properties": {
+      "level": "0"
+    }
+  },
+  "tierRequirement": 3
+}
