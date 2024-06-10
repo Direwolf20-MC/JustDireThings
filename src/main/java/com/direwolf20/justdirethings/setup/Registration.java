@@ -31,6 +31,9 @@ import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicF
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluid;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidType;
+import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2Fuel;
+import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2FuelType;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2Fuel;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelBlock;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelType;
@@ -206,6 +209,18 @@ public class Registration {
             UnrefinedT2FuelBlock::new);
     public static final DeferredHolder<Item, BucketItem> UNREFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t2_fluid_bucket",
             () -> new BucketItem(Registration.UNREFINED_T2_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Refined T2 Fuel
+    public static final DeferredHolder<FluidType, FluidType> REFINED_T2_FLUID_TYPE = FLUID_TYPES.register("refined_t2_fluid_type",
+            RefinedT2FuelType::new);
+    public static final DeferredHolder<Fluid, RefinedT2Fuel> REFINED_T2_FLUID_FLOWING = FLUIDS.register("refined_t2_fluid_flowing",
+            RefinedT2Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, RefinedT2Fuel> REFINED_T2_FLUID_SOURCE = FLUIDS.register("refined_t2_fluid_source",
+            RefinedT2Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> REFINED_T2_FLUID_BLOCK = FLUID_BLOCKS.register("refined_t2_fluid_block",
+            RefinedT2FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> REFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t2_fluid_bucket",
+            () -> new BucketItem(Registration.REFINED_T2_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
 

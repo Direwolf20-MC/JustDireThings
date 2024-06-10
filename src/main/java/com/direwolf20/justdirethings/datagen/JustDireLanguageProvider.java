@@ -60,6 +60,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UNREFINED_T2_FLUID_BLOCK.get(), "Unrefined Blaze Ember Fuel");
         add(Registration.UNREFINED_T2_FLUID_BUCKET.get(), "Unrefined Blaze Ember Fuel Bucket");
         add("fluid_type.justdirethings.unrefined_t2_fluid_type", "Unrefined Blaze Ember Fuel");
+        add(Registration.REFINED_T2_FLUID_BLOCK.get(), "Blaze Ember Fuel");
+        add(Registration.REFINED_T2_FLUID_BUCKET.get(), "Blaze Ember Fuel Bucket");
+        add("fluid_type.justdirethings.refined_t2_fluid_type", "Blaze Ember Fuel");
 
 
 

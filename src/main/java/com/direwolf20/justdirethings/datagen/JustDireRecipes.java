@@ -480,6 +480,10 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
                 .save(consumer);
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "refined_t2_fluid"), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), 2, 2400)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
+                .save(consumer);
 
         //FluidDrop Recipes
         FluidDropRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.PolymorphicCatalyst.get())

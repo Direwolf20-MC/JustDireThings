@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-10T12:43:42.160684	Recipes
+// 1.20.6	2024-06-10T12:54:37.8310752	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancements/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancements/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancements/recipes/building_blocks/coal_t1_9x9.json
@@ -106,6 +106,7 @@ fc83fd81d694386d1887b4ce2e84528864d7c7cc data/justdirethings/advancements/recipe
 525ed0c5fb67b0bafcf0b9feb9ed544df8b2eb5d data/justdirethings/advancements/recipes/misc/raw_coal_t4_ore-goospread.json
 274a70a7b3f8638850749030af99a15b25a8381c data/justdirethings/advancements/recipes/misc/raw_eclipsealloy_ore-goospread.json
 f7b31a85087d220942da1111185aac388180a1d3 data/justdirethings/advancements/recipes/misc/raw_ferricore_ore-goospread.json
+8c9a5208887bb9ddbb267381650092ba4da18354 data/justdirethings/advancements/recipes/misc/refined_t2_fluid_block-goospread.json
 a40bb298623857ce2739d086892326c31d3bd3b4 data/justdirethings/advancements/recipes/misc/sensort1.json
 5f82ba8560633cfbfdf259420891c66ed3c4ab75 data/justdirethings/advancements/recipes/misc/sensort1_nbtclear.json
 497d0641f75f0fb4c1d0ebe1928728730f0e7628 data/justdirethings/advancements/recipes/misc/sensort2.json
@@ -221,6 +222,7 @@ eae8e163cc91b472df0cb3a1642c715f1489ac2f data/justdirethings/recipes/raw_blazego
 3d7b9231f065a67b949298f3cc85d6dc436dc026 data/justdirethings/recipes/raw_coal_t4_ore-goospread.json
 e3effee87b63e519caadd8334e4267e33b2b3c62 data/justdirethings/recipes/raw_eclipsealloy_ore-goospread.json
 c50f9c62a4e5f46acebdf1fc064031c61004f6f1 data/justdirethings/recipes/raw_ferricore_ore-goospread.json
+65062c415483406152c20d3cadeee51981116a47 data/justdirethings/recipes/refined_t2_fluid_block-goospread.json
 9424858a3e0a374b6de789f9a876f07bf0601020 data/justdirethings/recipes/sensort1.json
 e2bf3957c95c67fe2f41c29ca263151ea489b78e data/justdirethings/recipes/sensort1_nbtclear.json
 3d3ce04069e3d7d03fbb07d3e5303e3a62357110 data/justdirethings/recipes/sensort2.json
