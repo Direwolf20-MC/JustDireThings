@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -60,22 +59,22 @@ public class PolymorphicFluidType extends FluidType {
 
             @Override
             public int getTintColor() {
-                Level level = Minecraft.getInstance().level;
+                /*Level level = Minecraft.getInstance().level;
                 if (level != null) {
                     float colorChangeSpeed = 0.5f;
                     return getRainbowColor(level.getGameTime(), colorChangeSpeed);
-                }
-                return 0xFFFFDD00; // Default color if getter is not an instance of Level
+                }*/
+                return 0xFFFFFFFF; // Default color if getter is not an instance of Level
             }
 
             @Override
             public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                Level level = Minecraft.getInstance().level;
+                /*Level level = Minecraft.getInstance().level;
                 if (level != null) {
                     float colorChangeSpeed = 0.5f;
                     return getRainbowColor(level.getGameTime(), colorChangeSpeed);
-                }
-                return 0xFFFFDD00; // Default color if getter is not an instance of Level
+                }*/
+                return 0xFFFFFFFF; // Default color if getter is not an instance of Level
             }
 
             private int getRainbowColor(long worldTime, float speed) {
