@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-09T13:23:54.077534	Item Models: justdirethings
+// 1.20.6	2024-06-09T22:15:30.8959512	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -97,6 +97,7 @@ ac932db480bd510a82b5f207cc05152877106e2e assets/justdirethings/models/item/gooso
 b10bbca68270e48599af7174531b0235c8e7c9a4 assets/justdirethings/models/item/playeraccessor.json
 66aca56ce4b585aebe915412dea2b9a65ec6fb82 assets/justdirethings/models/item/pocket_generator.json
 86e8b463737ba209a47a1f3544b51525598d38a3 assets/justdirethings/models/item/pocket_generator_active.json
+c51b41b9c484aa6724dfe24732b06a196ee05ffe assets/justdirethings/models/item/polymorphic_fluid_bucket.json
 403d14795debb89f422eefb10f3b8188e148190a assets/justdirethings/models/item/portal_fluid_bucket.json
 ea9b4416ff95371822cbc5808fd425323b170cc9 assets/justdirethings/models/item/portal_fluid_catalyst.json
 d8ea68a75b8b49f7765e715d62ad23c2f1939281 assets/justdirethings/models/item/raw_blazegold.json

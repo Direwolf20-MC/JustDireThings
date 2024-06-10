@@ -191,6 +191,13 @@ public class ClientSetup {
         }, Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get());
 
         colors.register((stack, index) -> {
+            if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
+                return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
+            }
+            return 0xFFFFFFFF;
+        }, Registration.POLYMORPHIC_FLUID_BUCKET.get());
+
+        colors.register((stack, index) -> {
             if (index == 1 && stack.getItem() instanceof FluidCanister) {
                 return FluidCanister.getFluidColor(stack);
             }

@@ -25,6 +25,9 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
 import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
+import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluid;
+import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluidBlock;
+import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluidType;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluid;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidType;
@@ -146,6 +149,18 @@ public class Registration {
     public static final DeferredHolder<Block, EclipseGateBlock> EclipseGateBlock = BLOCKS.register("eclipsegateblock", EclipseGateBlock::new);
 
     //Fluids
+    //Polymorphic Fluid
+    public static final DeferredHolder<FluidType, FluidType> POLYMORPHIC_FLUID_TYPE = FLUID_TYPES.register("polymorphic_fluid_type",
+            PolymorphicFluidType::new);
+    public static final DeferredHolder<Fluid, PolymorphicFluid> POLYMORPHIC_FLUID_FLOWING = FLUIDS.register("polymorphic_fluid_flowing",
+            PolymorphicFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, PolymorphicFluid> POLYMORPHIC_FLUID_SOURCE = FLUIDS.register("polymorphic_fluid_source",
+            PolymorphicFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> POLYMORPHIC_FLUID_BLOCK = BLOCKS.register("polymorphic_fluid_block",
+            PolymorphicFluidBlock::new);
+    public static final DeferredHolder<Item, BucketItem> POLYMORPHIC_FLUID_BUCKET = ITEMS.register("polymorphic_fluid_bucket",
+            () -> new BucketItem(Registration.POLYMORPHIC_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
     //Portal Fluid
     public static final DeferredHolder<FluidType, FluidType> PORTAL_FLUID_TYPE = FLUID_TYPES.register("portal_fluid_type",
             PortalFluidType::new);

@@ -44,6 +44,7 @@ public class JustDireBlockStates extends BlockStateProvider {
         //Fluids
         simpleBlock(Registration.PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
         simpleBlock(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
+        simpleBlock(Registration.POLYMORPHIC_FLUID_BLOCK.get(), models().getBuilder(Registration.POLYMORPHIC_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
 
         patternBlock();
         soilBlocks();
