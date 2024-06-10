@@ -34,9 +34,15 @@ import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidType;
 import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2Fuel;
 import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2FuelBlock;
 import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2FuelType;
+import com.direwolf20.justdirethings.common.fluids.refinedt3fuel.RefinedT3Fuel;
+import com.direwolf20.justdirethings.common.fluids.refinedt3fuel.RefinedT3FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.refinedt3fuel.RefinedT3FuelType;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2Fuel;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelBlock;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelType;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt3fuel.UnrefinedT3Fuel;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt3fuel.UnrefinedT3FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt3fuel.UnrefinedT3FuelType;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluid;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
@@ -222,6 +228,29 @@ public class Registration {
     public static final DeferredHolder<Item, BucketItem> REFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t2_fluid_bucket",
             () -> new BucketItem(Registration.REFINED_T2_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
+    //Unrefined T3 Fuel
+    public static final DeferredHolder<FluidType, FluidType> UNREFINED_T3_FLUID_TYPE = FLUID_TYPES.register("unrefined_t3_fluid_type",
+            UnrefinedT3FuelType::new);
+    public static final DeferredHolder<Fluid, UnrefinedT3Fuel> UNREFINED_T3_FLUID_FLOWING = FLUIDS.register("unrefined_t3_fluid_flowing",
+            UnrefinedT3Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, UnrefinedT3Fuel> UNREFINED_T3_FLUID_SOURCE = FLUIDS.register("unrefined_t3_fluid_source",
+            UnrefinedT3Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T3_FLUID_BLOCK = FLUID_BLOCKS.register("unrefined_t3_fluid_block",
+            UnrefinedT3FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> UNREFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t3_fluid_bucket",
+            () -> new BucketItem(Registration.UNREFINED_T3_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Refined T3 Fuel
+    public static final DeferredHolder<FluidType, FluidType> REFINED_T3_FLUID_TYPE = FLUID_TYPES.register("refined_t3_fluid_type",
+            RefinedT3FuelType::new);
+    public static final DeferredHolder<Fluid, RefinedT3Fuel> REFINED_T3_FLUID_FLOWING = FLUIDS.register("refined_t3_fluid_flowing",
+            RefinedT3Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, RefinedT3Fuel> REFINED_T3_FLUID_SOURCE = FLUIDS.register("refined_t3_fluid_source",
+            RefinedT3Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> REFINED_T3_FLUID_BLOCK = FLUID_BLOCKS.register("refined_t3_fluid_block",
+            RefinedT3FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> REFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t3_fluid_bucket",
+            () -> new BucketItem(Registration.REFINED_T3_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
     //Machines

@@ -484,6 +484,10 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);
+        GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "refined_t3_fluid"), Registration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
+                .save(consumer);
 
         //FluidDrop Recipes
         FluidDropRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.PolymorphicCatalyst.get())
@@ -497,6 +501,10 @@ public class JustDireRecipes extends RecipeProvider {
         FluidDropRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "unrefined_t2_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T2.get())
                 .group("justdirethings")
                 .unlockedBy("has_coal_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Coal_T2.get()))
+                .save(consumer);
+        FluidDropRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "unrefined_t3_fluid"), Registration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T3.get())
+                .group("justdirethings")
+                .unlockedBy("has_coal_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Coal_T3.get()))
                 .save(consumer);
 
         //Smelting
