@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-10T14:09:11.8118836	Item Models: justdirethings
+// 1.20.6	2024-06-10T14:19:04.114003	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -114,10 +114,12 @@ dd859b0b386ad41b819dc6e7d46a8979373ef257 assets/justdirethings/models/item/raw_f
 97542b1def735985bb9c9ea40bfb51992ea786e3 assets/justdirethings/models/item/raw_ferricore_ore.json
 4f0083abb1ad8544f5476962c08eda636d321b77 assets/justdirethings/models/item/refined_t2_fluid_bucket.json
 55d03931166a6cf6b861dc3a8b744cc2f72036ac assets/justdirethings/models/item/refined_t3_fluid_bucket.json
+e3ce33fbc4b85fb7bc6cc81e4790f0315bedddc6 assets/justdirethings/models/item/refined_t4_fluid_bucket.json
 a5cb1a907f54e259523e8a93f7aa56b1da6bcc6e assets/justdirethings/models/item/sensort1.json
 15ff8f93bc9c48050641d72595d1a2873948289f assets/justdirethings/models/item/sensort2.json
 cb3be9b73e78631097a0854d5da4a7c87cbe94a1 assets/justdirethings/models/item/totem_of_death_recall.json
 c480174fc37e0c2922f662ad95745fb9d81af0c9 assets/justdirethings/models/item/unrefined_t2_fluid_bucket.json
 499a7ebac41346662e121c02f9820ab8881142b2 assets/justdirethings/models/item/unrefined_t3_fluid_bucket.json
+449846a6c182d7e74ff3ae04edac02d93d9720f3 assets/justdirethings/models/item/unrefined_t4_fluid_bucket.json
 a958cc6f762e237e912a9d97949fcf924c2b844b assets/justdirethings/models/item/unstable_portal_fluid_bucket.json
 e25287d609bca6b8f5528ef11aabe3f67cdbdac8 assets/justdirethings/models/item/voidshift_wand.json

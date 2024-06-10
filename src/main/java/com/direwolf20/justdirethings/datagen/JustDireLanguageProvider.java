@@ -69,6 +69,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.REFINED_T3_FLUID_BLOCK.get(), "Voidflame Fuel");
         add(Registration.REFINED_T3_FLUID_BUCKET.get(), "Voidflame Fuel Bucket");
         add("fluid_type.justdirethings.refined_t3_fluid_type", "Voidflame Fuel");
+        add(Registration.UNREFINED_T4_FLUID_BLOCK.get(), "Unrefined Eclipse Ember Fuel");
+        add(Registration.UNREFINED_T4_FLUID_BUCKET.get(), "Unrefined Eclipse Ember Fuel Bucket");
+        add("fluid_type.justdirethings.unrefined_t4_fluid_type", "Unrefined Eclipse Ember Fuel");
+        add(Registration.REFINED_T4_FLUID_BLOCK.get(), "Eclipse Ember Fuel");
+        add(Registration.REFINED_T4_FLUID_BUCKET.get(), "Eclipse Ember Fuel Bucket");
+        add("fluid_type.justdirethings.refined_t4_fluid_type", "Eclipse Ember Fuel");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
