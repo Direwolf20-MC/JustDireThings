@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.common.events.BlockEvents;
+import com.direwolf20.justdirethings.common.events.EntityEvents;
 import com.direwolf20.justdirethings.common.events.LivingEntityEvents;
 import com.direwolf20.justdirethings.common.events.PlayerEvents;
 import net.minecraft.core.registries.Registries;
@@ -19,6 +20,7 @@ import static com.direwolf20.justdirethings.JustDireThings.MODID;
 public class ModSetup {
     public static void init(final FMLCommonSetupEvent event) {
         NeoForge.EVENT_BUS.register(BlockEvents.class);
+        NeoForge.EVENT_BUS.register(EntityEvents.class);
         NeoForge.EVENT_BUS.register(LivingEntityEvents.class);
         NeoForge.EVENT_BUS.register(PlayerEvents.class);
     }

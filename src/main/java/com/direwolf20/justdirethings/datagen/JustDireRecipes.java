@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
+import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipeBuilder;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -303,6 +304,12 @@ public class JustDireRecipes extends RecipeProvider {
                 .save(consumer);
 
         //Resource
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.PolymorphicCatalyst.get(), 4)
+                .requires(Registration.BlazegoldIngot.get())
+                .requires(Items.NETHER_WART)
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.PortalFluidCatalyst.get())
                 .pattern(" c ")
                 .pattern("clc")
@@ -472,6 +479,16 @@ public class JustDireRecipes extends RecipeProvider {
         GooSpreadRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "portal_fluid"), Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), Registration.PORTAL_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
+                .save(consumer);
+
+        //FluidDrop Recipes
+        FluidDropRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.PolymorphicCatalyst.get())
+                .group("justdirethings")
+                .unlockedBy("has_polymorphic_catalyst", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.PolymorphicCatalyst.get()))
+                .save(consumer);
+        FluidDropRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "unstable_portal_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), Registration.PortalFluidCatalyst.get())
+                .group("justdirethings")
+                .unlockedBy("has_portal_catalyst", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.PortalFluidCatalyst.get()))
                 .save(consumer);
 
         //Smelting
