@@ -176,26 +176,14 @@ public class ClientSetup {
     static void itemColors(RegisterColorHandlersEvent.Item event) {
         final ItemColors colors = event.getItemColors();
 
-        colors.register((stack, index) -> {
-            if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
-                return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
-            }
-            return 0xFFFFFFFF;
-        }, Registration.PORTAL_FLUID_BUCKET.get());
-
-        colors.register((stack, index) -> {
-            if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
-                return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
-            }
-            return 0xFFFFFFFF;
-        }, Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get());
-
-        colors.register((stack, index) -> {
-            if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
-                return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
-            }
-            return 0xFFFFFFFF;
-        }, Registration.POLYMORPHIC_FLUID_BUCKET.get());
+        for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
+            colors.register((stack, index) -> {
+                if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
+                    return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
+                }
+                return 0xFFFFFFFF;
+            }, bucket.get());
+        }
 
         colors.register((stack, index) -> {
             if (index == 1 && stack.getItem() instanceof FluidCanister) {

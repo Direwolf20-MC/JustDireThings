@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
@@ -98,12 +99,13 @@ public class JustDireItemModels extends ItemModelProvider {
         //Tool Items
         registerTools();
         registerArmors();
+        buckets();
 
         //Generators
         registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
 
         //Buckets
-        withExistingParent(Registration.PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+        /*withExistingParent(Registration.PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(Registration.PORTAL_FLUID_BUCKET.get().content);
         withExistingParent(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
@@ -111,7 +113,16 @@ public class JustDireItemModels extends ItemModelProvider {
                 .fluid(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get().content);
         withExistingParent(Registration.POLYMORPHIC_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
-                .fluid(Registration.POLYMORPHIC_FLUID_BUCKET.get().content);
+                .fluid(Registration.POLYMORPHIC_FLUID_BUCKET.get().content);*/
+    }
+
+    public void buckets() {
+        for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
+            withExistingParent(bucket.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+                    .customLoader(DynamicFluidContainerModelBuilder::begin)
+                    .fluid(((BucketItem) bucket.get()).content);
+
+        }
     }
 
     public void registerTools() {

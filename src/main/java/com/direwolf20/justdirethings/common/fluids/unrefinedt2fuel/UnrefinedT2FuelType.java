@@ -1,4 +1,4 @@
-package com.direwolf20.justdirethings.common.fluids.portalfluid;
+package com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -15,9 +15,9 @@ import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
-public class PortalFluidType extends FluidType {
-    public PortalFluidType() {
-        super(FluidType.Properties.create().density(1000).viscosity(1000).temperature(300)
+public class UnrefinedT2FuelType extends FluidType {
+    public UnrefinedT2FuelType() {
+        super(Properties.create().density(1000).viscosity(1000).temperature(300)
                 .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                 .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
                 .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH));
@@ -58,12 +58,12 @@ public class PortalFluidType extends FluidType {
 
             @Override
             public int getTintColor() {
-                return 0xFF00DD00;
+                return 0xFF8B4500;
             }
 
             @Override
             public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF00DD00;
+                return 0xFF8B4500;
             }
         });
     }

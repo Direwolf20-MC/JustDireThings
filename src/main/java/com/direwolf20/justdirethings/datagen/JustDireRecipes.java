@@ -490,6 +490,10 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_portal_catalyst", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.PortalFluidCatalyst.get()))
                 .save(consumer);
+        FluidDropRecipeBuilder.shapeless(new ResourceLocation(JustDireThings.MODID, "unrefined_t2_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T2.get())
+                .group("justdirethings")
+                .unlockedBy("has_coal_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Coal_T2.get()))
+                .save(consumer);
 
         //Smelting
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC,

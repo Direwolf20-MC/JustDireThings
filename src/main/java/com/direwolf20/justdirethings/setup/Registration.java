@@ -31,6 +31,9 @@ import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicF
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluid;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidType;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2Fuel;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelType;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluid;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
@@ -80,10 +83,12 @@ public class Registration {
     public static final TicketController TICKET_CONTROLLER = new TicketController(new ResourceLocation(MODID, "chunk_loader"), null);
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister.Blocks FLUID_BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, MODID);
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, MODID);
     public static final DeferredRegister.Blocks SIDEDBLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items BUCKET_ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items ARMORS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
@@ -107,10 +112,12 @@ public class Registration {
 
     public static void init(IEventBus eventBus) {
         BLOCKS.register(eventBus);
+        FLUID_BLOCKS.register(eventBus);
         FLUID_TYPES.register(eventBus);
         FLUIDS.register(eventBus);
         SIDEDBLOCKS.register(eventBus);
         ITEMS.register(eventBus);
+        BUCKET_ITEMS.register(eventBus);
         TOOLS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);
         CONTAINERS.register(eventBus);
@@ -159,9 +166,9 @@ public class Registration {
             PolymorphicFluid.Flowing::new);
     public static final DeferredHolder<Fluid, PolymorphicFluid> POLYMORPHIC_FLUID_SOURCE = FLUIDS.register("polymorphic_fluid_source",
             PolymorphicFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> POLYMORPHIC_FLUID_BLOCK = BLOCKS.register("polymorphic_fluid_block",
+    public static final DeferredHolder<Block, LiquidBlock> POLYMORPHIC_FLUID_BLOCK = FLUID_BLOCKS.register("polymorphic_fluid_block",
             PolymorphicFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> POLYMORPHIC_FLUID_BUCKET = ITEMS.register("polymorphic_fluid_bucket",
+    public static final DeferredHolder<Item, BucketItem> POLYMORPHIC_FLUID_BUCKET = BUCKET_ITEMS.register("polymorphic_fluid_bucket",
             () -> new BucketItem(Registration.POLYMORPHIC_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     //Portal Fluid
@@ -171,9 +178,9 @@ public class Registration {
             PortalFluid.Flowing::new);
     public static final DeferredHolder<Fluid, PortalFluid> PORTAL_FLUID_SOURCE = FLUIDS.register("portal_fluid_source",
             PortalFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = BLOCKS.register("portal_fluid_block",
+    public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = FLUID_BLOCKS.register("portal_fluid_block",
             PortalFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = ITEMS.register("portal_fluid_bucket",
+    public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = BUCKET_ITEMS.register("portal_fluid_bucket",
             () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     //Unstable Portal Fluid
@@ -183,10 +190,22 @@ public class Registration {
             UnstablePortalFluid.Flowing::new);
     public static final DeferredHolder<Fluid, UnstablePortalFluid> UNSTABLE_PORTAL_FLUID_SOURCE = FLUIDS.register("unstable_portal_fluid_source",
             UnstablePortalFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> UNSTABLE_PORTAL_FLUID_BLOCK = BLOCKS.register("unstable_portal_fluid_block",
+    public static final DeferredHolder<Block, LiquidBlock> UNSTABLE_PORTAL_FLUID_BLOCK = FLUID_BLOCKS.register("unstable_portal_fluid_block",
             UnstablePortalFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> UNSTABLE_PORTAL_FLUID_BUCKET = ITEMS.register("unstable_portal_fluid_bucket",
+    public static final DeferredHolder<Item, BucketItem> UNSTABLE_PORTAL_FLUID_BUCKET = BUCKET_ITEMS.register("unstable_portal_fluid_bucket",
             () -> new BucketItem(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Unrefined T2 Fuel
+    public static final DeferredHolder<FluidType, FluidType> UNREFINED_T2_FLUID_TYPE = FLUID_TYPES.register("unrefined_t2_fluid_type",
+            UnrefinedT2FuelType::new);
+    public static final DeferredHolder<Fluid, UnrefinedT2Fuel> UNREFINED_T2_FLUID_FLOWING = FLUIDS.register("unrefined_t2_fluid_flowing",
+            UnrefinedT2Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, UnrefinedT2Fuel> UNREFINED_T2_FLUID_SOURCE = FLUIDS.register("unrefined_t2_fluid_source",
+            UnrefinedT2Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T2_FLUID_BLOCK = FLUID_BLOCKS.register("unrefined_t2_fluid_block",
+            UnrefinedT2FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> UNREFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t2_fluid_bucket",
+            () -> new BucketItem(Registration.UNREFINED_T2_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
 

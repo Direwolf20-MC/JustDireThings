@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-09T22:15:30.9004564	Block States: justdirethings
+// 1.20.6	2024-06-10T12:37:03.3507709	Block States: justdirethings
 e5976480ed9485e0bae43d4edde0c8aecaabe8a5 assets/justdirethings/blockstates/blazegold_block.json
 6580258682ab076313135ecb0c16dc2595a1a0df assets/justdirethings/blockstates/blockbreakert1.json
 95a464dab1435a688905144daea5a6aff761f382 assets/justdirethings/blockstates/blockbreakert2.json
@@ -36,6 +36,7 @@ b59fd6f494e8c21421ddf11d645c261348d7f3d6 assets/justdirethings/blockstates/polym
 b835070706eeb4adab56dcfa8a411da6285b04bc assets/justdirethings/blockstates/portal_fluid_block.json
 1d373d4f9b794922306aeb4c1d1b2ca7c957c9ff assets/justdirethings/blockstates/sensort1.json
 a24f5a3e6b42d0275e125574156c7554e9385eab assets/justdirethings/blockstates/sensort2.json
+f49a72ecbf07e06b65c649abe5868d3d4ef1f311 assets/justdirethings/blockstates/unrefined_t2_fluid_block.json
 db57ae5afcebace0cb6847909f30fe9458feef8a assets/justdirethings/blockstates/unstable_portal_fluid_block.json
 9bd3946cfa107459786529b2af21eb125a901fb7 assets/justdirethings/models/block/blazegold_block.json
 9659e3f59756a5bb95fdd0504c1bf43fe30d2724 assets/justdirethings/models/block/blockbreakert1.json
@@ -90,4 +91,5 @@ afb260733f29a4754b2282eb26b78af1a2940bcd assets/justdirethings/models/block/play
 4cbb3c8e0147ca797cb922394a58a3950e00ffef assets/justdirethings/models/block/portal_fluid_block.json
 c036acaa7ebbc9c620fe9e4e74c99c59526b053e assets/justdirethings/models/block/sensort1.json
 45ae055949f929510cbf995d4c64e3682eb8ddf6 assets/justdirethings/models/block/sensort2.json
+4cbb3c8e0147ca797cb922394a58a3950e00ffef assets/justdirethings/models/block/unrefined_t2_fluid_block.json
 4cbb3c8e0147ca797cb922394a58a3950e00ffef assets/justdirethings/models/block/unstable_portal_fluid_block.json

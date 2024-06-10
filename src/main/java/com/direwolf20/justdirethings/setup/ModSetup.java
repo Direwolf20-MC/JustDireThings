@@ -35,6 +35,10 @@ public class ModSetup {
                     Item item = e.get();
                     output.accept(item);
                 });
+                Registration.BUCKET_ITEMS.getEntries().forEach(e -> {
+                    Item item = e.get();
+                    output.accept(item);
+                });
                 Registration.TOOLS.getEntries().forEach(e -> {
                     Item item = e.get();
                     output.accept(item);
