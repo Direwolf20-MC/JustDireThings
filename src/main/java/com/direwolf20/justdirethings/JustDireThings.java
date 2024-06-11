@@ -133,13 +133,27 @@ public class JustDireThings {
                 Registration.ClickerT2.get(),
                 Registration.DropperT1.get(),
                 Registration.DropperT2.get(),
-                Registration.GeneratorT1.get(),
-                Registration.GeneratorFluidT1.get(),
                 Registration.EnergyTransmitter.get(),
                 Registration.FluidPlacerT1.get(),
                 Registration.FluidPlacerT2.get(),
                 Registration.FluidCollectorT1.get(),
                 Registration.FluidCollectorT2.get()
+        );
+        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof BaseMachineBE)
+                        return be.getData(Registration.GENERATOR_ITEM_HANDLER);
+                    return null;
+                },
+                Registration.GeneratorT1.get()
+        );
+        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof BaseMachineBE)
+                        return be.getData(Registration.GENERATOR_FLUID_ITEM_HANDLER);
+                    return null;
+                },
+                Registration.GeneratorFluidT1.get()
         );
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {

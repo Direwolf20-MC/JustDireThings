@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.fluids.refinedt2fuel;
 
 import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
@@ -21,8 +22,8 @@ public abstract class RefinedT2Fuel extends BaseFlowingFluid implements RefinedF
     }
 
     @Override
-    public int getBurnSpeedMultiplier() {
-        return 4;
+    public int fePerMb() {
+        return Config.FUEL_TIER2_FE_PER_MB.get();
     }
 
     @Override

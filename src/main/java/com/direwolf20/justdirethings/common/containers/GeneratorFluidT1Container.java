@@ -28,14 +28,6 @@ public class GeneratorFluidT1Container extends BaseMachineContainer {
         addFuelSlotRange(machineHandler, 0, 80, 13, 1, 18);
     }
 
-    public int getBurnRemaining() {
-        return this.data == null ? 0 : this.data.get(2);
-    }
-
-    public int getMaxBurn() {
-        return this.data == null ? 0 : this.data.get(3);
-    }
-
     protected int addFuelSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
             addSlot(new RefinedFuelSlot(handler, index, x, y));

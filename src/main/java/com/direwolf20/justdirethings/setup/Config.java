@@ -22,6 +22,13 @@ public class Config {
     public static ModConfigSpec.IntValue GENERATOR_T1_MAX_FE;
     public static ModConfigSpec.IntValue GENERATOR_T1_FE_PER_TICK;
 
+    public static final String CATEGORY_GENERATOR_FLUID_T1 = "generator_fluid_t1";
+    public static ModConfigSpec.IntValue GENERATOR_FLUID_T1_MAX_FE;
+    public static ModConfigSpec.IntValue GENERATOR_FLUID_T1_FE_PER_TICK;
+    public static ModConfigSpec.IntValue FUEL_TIER2_FE_PER_MB;
+    public static ModConfigSpec.IntValue FUEL_TIER3_FE_PER_MB;
+    public static ModConfigSpec.IntValue FUEL_TIER4_FE_PER_MB;
+
     public static final String CATEGORY_FUEL_CANISTER = "fuel_canister";
     public static ModConfigSpec.IntValue FUEL_CANISTER_MINIMUM_TICKS_CONSUMED;
     public static ModConfigSpec.IntValue FUEL_CANISTER_MAXIMUM_FUEL;
@@ -58,6 +65,7 @@ public class Config {
     private static void registerCommonConfigs(ModContainer container) {
         generalConfig();
         generatorT1Config();
+        generatorFluidT1Config();
         energyTransmitter();
         fuelCanisterConfig();
         pocketGeneratorConfig();
@@ -96,6 +104,21 @@ public class Config {
                 .defineInRange("generator_t1_max_fe", 1000000, 1, Integer.MAX_VALUE);
         GENERATOR_T1_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator outputs")
                 .defineInRange("generator_t1_fe_per_tick", 1000, 1, Integer.MAX_VALUE);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void generatorFluidT1Config() {
+        COMMON_BUILDER.comment("Fluid Generator T1").push(CATEGORY_GENERATOR_FLUID_T1);
+        GENERATOR_FLUID_T1_MAX_FE = COMMON_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
+                .defineInRange("generator_fluid_t1_max_fe", 10000000, 1, Integer.MAX_VALUE);
+        GENERATOR_FLUID_T1_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator outputs")
+                .defineInRange("generator_fluid_t1_fe_per_tick", 10000, 1, Integer.MAX_VALUE);
+        FUEL_TIER2_FE_PER_MB = COMMON_BUILDER.comment("The FE per produced per MB of Tier 2 fuel (Blaze Ember)")
+                .defineInRange("fuel_tier2_fe_per_mb", 450, 1, Integer.MAX_VALUE);
+        FUEL_TIER3_FE_PER_MB = COMMON_BUILDER.comment("The FE per produced per MB of Tier 3 fuel (Voidflame)")
+                .defineInRange("fuel_tier3_fe_per_mb", 1300, 1, Integer.MAX_VALUE);
+        FUEL_TIER4_FE_PER_MB = COMMON_BUILDER.comment("The FE per produced per MB of Tier 4 fuel (Eclipse Ember)")
+                .defineInRange("fuel_tier4_fe_per_mb", 4000, 1, Integer.MAX_VALUE);
         COMMON_BUILDER.pop();
     }
 

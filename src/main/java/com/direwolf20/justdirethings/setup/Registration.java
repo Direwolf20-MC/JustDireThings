@@ -16,10 +16,7 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier1;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
-import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
-import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
-import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
-import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorage;
+import com.direwolf20.justdirethings.common.capabilities.*;
 import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
@@ -536,6 +533,18 @@ public class Registration {
                 if (holder instanceof BaseMachineBE baseMachineBE)
                     return new ItemStackHandler(baseMachineBE.MACHINE_SLOTS);
                 return new ItemStackHandler(1);
+            }).build());
+    public static final Supplier<AttachmentType<GeneratorItemHandler>> GENERATOR_ITEM_HANDLER = ATTACHMENT_TYPES.register(
+            "generator_item_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof BaseMachineBE baseMachineBE)
+                    return new GeneratorItemHandler(baseMachineBE.MACHINE_SLOTS);
+                return new GeneratorItemHandler(1);
+            }).build());
+    public static final Supplier<AttachmentType<GeneratorFluidItemHandler>> GENERATOR_FLUID_ITEM_HANDLER = ATTACHMENT_TYPES.register(
+            "generator_fluid_item_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof BaseMachineBE baseMachineBE)
+                    return new GeneratorFluidItemHandler(baseMachineBE.MACHINE_SLOTS);
+                return new GeneratorFluidItemHandler(1);
             }).build());
     public static final Supplier<AttachmentType<FilterBasicHandler>> HANDLER_BASIC_FILTER = ATTACHMENT_TYPES.register(
             "handler_item_collector", () -> AttachmentType.serializable(() -> new FilterBasicHandler(9)).build());
