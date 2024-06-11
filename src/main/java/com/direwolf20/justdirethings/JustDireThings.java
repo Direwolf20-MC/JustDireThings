@@ -134,6 +134,7 @@ public class JustDireThings {
                 Registration.DropperT1.get(),
                 Registration.DropperT2.get(),
                 Registration.GeneratorT1.get(),
+                Registration.GeneratorFluidT1.get(),
                 Registration.EnergyTransmitter.get(),
                 Registration.FluidPlacerT1.get(),
                 Registration.FluidPlacerT2.get(),
@@ -174,7 +175,8 @@ public class JustDireThings {
                         return be.getData(Registration.ENERGYSTORAGE_GENERATORS);
                     return null;
                 },
-                Registration.GeneratorT1.get()
+                Registration.GeneratorT1.get(),
+                Registration.GeneratorFluidT1.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -196,6 +198,15 @@ public class JustDireThings {
                 Registration.FluidPlacerT2.get(),
                 Registration.FluidCollectorT1.get(),
                 Registration.FluidCollectorT2.get()
+        );
+        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof FluidMachineBE) {
+                        return be.getData(Registration.GENERATOR_FLUID_HANDLER);
+                    }
+                    return null;
+                },
+                Registration.GeneratorFluidT1.get()
         );
     }
 }

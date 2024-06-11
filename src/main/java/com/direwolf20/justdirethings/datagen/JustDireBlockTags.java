@@ -59,6 +59,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.DropperT1.get())
                 .add(Registration.DropperT2.get())
                 .add(Registration.GeneratorT1.get())
+                .add(Registration.GeneratorFluidT1.get())
                 .add(Registration.EnergyTransmitter.get())
                 .add(Registration.RawCoal_T1.get())
                 .add(Registration.RawCoal_T2.get())

@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-06T15:17:20.887011	JustDireThings Tags
+// 1.20.6	2024-06-10T20:06:31.108967	JustDireThings Tags
 82c72c3a9660a4dcf836d04e2ee8acd9bdd5aefd data/c/tags/blocks/ores.json
 455bada5b950203f61d1da4946e513ee909c6275 data/c/tags/blocks/storage_blocks.json
 6b759feacfe6972f14253353017194b6d77858d7 data/justdirethings/tags/blocks/eclipsegate_deny.json
@@ -6,5 +6,5 @@
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/blocks/noautoclick.json
 b73bf681aa4023a1ac69623485bbec13846a282a data/justdirethings/tags/blocks/swapper_deny.json
 704d4386b02b3ad86131bd6cf1e36461baa4169f data/minecraft/tags/blocks/bamboo_plantable_on.json
-4fc032fb0bae6b83989de8f879e41bf32ab80229 data/minecraft/tags/blocks/mineable/pickaxe.json
+18f8b6413c0fde3fdfa97cf53263b1c4dc281678 data/minecraft/tags/blocks/mineable/pickaxe.json
 8882a0a52d428036a957d24fb046777a8795e588 data/minecraft/tags/blocks/mineable/shovel.json

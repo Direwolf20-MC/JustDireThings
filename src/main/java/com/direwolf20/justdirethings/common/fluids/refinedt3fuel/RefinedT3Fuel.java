@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.fluids.refinedt3fuel;
 
+import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
@@ -8,7 +9,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
-public abstract class RefinedT3Fuel extends BaseFlowingFluid {
+public abstract class RefinedT3Fuel extends BaseFlowingFluid implements RefinedFuel {
     public static final Properties PROPERTIES = new Properties(
             Registration.REFINED_T3_FLUID_TYPE,
             Registration.REFINED_T3_FLUID_FLOWING,
@@ -17,6 +18,11 @@ public abstract class RefinedT3Fuel extends BaseFlowingFluid {
 
     protected RefinedT3Fuel(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public int getBurnSpeedMultiplier() {
+        return 8;
     }
 
     @Override

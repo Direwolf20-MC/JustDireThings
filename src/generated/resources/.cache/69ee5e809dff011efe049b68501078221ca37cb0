@@ -1,4 +1,4 @@
-// 1.20.6	2024-06-10T14:19:04.114003	Item Models: justdirethings
+// 1.20.6	2024-06-10T20:06:31.1109687	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -83,6 +83,7 @@ d31f068e72a68c69220744b3226a75cb1b3bdd25 assets/justdirethings/models/item/fluid
 f22b6d245d77b6e76ae0ff72fc4e484528bfcc57 assets/justdirethings/models/item/fluidplacert1.json
 805525d33c60fdec5e8dc72cbd11f65f01373d61 assets/justdirethings/models/item/fluidplacert2.json
 af62c31381c904f86fde9370e374e01d828fa643 assets/justdirethings/models/item/fuel_canister.json
+1ac0164c3e7593f7bd9dba80916574c672546ded assets/justdirethings/models/item/generatorfluidt1.json
 3704b53abb2c321bda2b0e187417031d0f8c08ef assets/justdirethings/models/item/generatort1.json
 2ec271fed6a1fb15d49837326283ca1f0e269689 assets/justdirethings/models/item/gooblock_tier1.json
 8e2f93de57bf331b80c25882febe5601d1b9d26a assets/justdirethings/models/item/gooblock_tier2.json

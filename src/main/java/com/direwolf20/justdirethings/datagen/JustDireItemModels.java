@@ -47,6 +47,7 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.DropperT1_ITEM.getId().getPath(), modLoc("block/droppert1"));
         withExistingParent(Registration.DropperT2_ITEM.getId().getPath(), modLoc("block/droppert2"));
         withExistingParent(Registration.GeneratorT1_ITEM.getId().getPath(), modLoc("block/generatort1"));
+        withExistingParent(Registration.GeneratorFluidT1_ITEM.getId().getPath(), modLoc("block/generatorfluidt1"));
         withExistingParent(Registration.EnergyTransmitter_ITEM.getId().getPath(), modLoc("block/energytransmitter"));
         withExistingParent(Registration.RawCoal_T1_ITEM.getId().getPath(), modLoc("block/raw_coal_t1_ore"));
         withExistingParent(Registration.RawCoal_T2_ITEM.getId().getPath(), modLoc("block/raw_coal_t2_ore"));

@@ -182,8 +182,4 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             returnList.add(blockPos);
         return returnList;
     }
-
-    public boolean isFull() {
-        return getFluidStack().getAmount() >= getMaxMB();
-    }
 }

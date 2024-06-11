@@ -36,7 +36,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.SensorT2.get(), "Advanced Sensor");
         add(Registration.DropperT1.get(), "Simple Dropper");
         add(Registration.DropperT2.get(), "Advanced Dropper");
-        add(Registration.GeneratorT1.get(), "Simple Fuel Generator");
+        add(Registration.GeneratorT1.get(), "Simple Coal Generator");
+        add(Registration.GeneratorFluidT1.get(), "Simple Fuel Generator");
         add(Registration.EnergyTransmitter.get(), "Energy Transmitter");
         add(Registration.BlockSwapperT1.get(), "Simple Swapper");
         add(Registration.BlockSwapperT2.get(), "Advanced Swapper");

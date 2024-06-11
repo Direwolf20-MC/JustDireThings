@@ -29,4 +29,8 @@ public interface FluidMachineBE {
     default void setAmountStored(int value) {
         getFluidTank().getFluid().setAmount(value);
     }
+
+    default boolean isFull() {
+        return getFluidStack().getAmount() >= getMaxMB();
+    }
 }

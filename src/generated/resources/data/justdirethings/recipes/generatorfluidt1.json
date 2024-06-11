@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": {
+      "item": "minecraft:bucket"
+    },
+    "f": {
+      "item": "minecraft:blast_furnace"
+    },
+    "g": {
+      "item": "justdirethings:blazegold_ingot"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "grg",
+    "bfb",
+    "grg"
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:generatorfluidt1"
+  }
+}

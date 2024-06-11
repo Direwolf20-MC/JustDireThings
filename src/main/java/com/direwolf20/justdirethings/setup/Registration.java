@@ -25,6 +25,7 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
 import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
+import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
 import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluid;
 import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluidType;
@@ -323,7 +324,9 @@ public class Registration {
 
     //Power Machines
     public static final DeferredHolder<Block, GeneratorT1> GeneratorT1 = BLOCKS.register("generatort1", GeneratorT1::new);
+    public static final DeferredHolder<Block, GeneratorFluidT1> GeneratorFluidT1 = BLOCKS.register("generatorfluidt1", GeneratorFluidT1::new);
     public static final DeferredHolder<Item, BlockItem> GeneratorT1_ITEM = ITEMS.register("generatort1", () -> new BlockItem(GeneratorT1.get(), new Item.Properties()));
+    public static final DeferredHolder<Item, BlockItem> GeneratorFluidT1_ITEM = ITEMS.register("generatorfluidt1", () -> new BlockItem(GeneratorFluidT1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, EnergyTransmitter> EnergyTransmitter = BLOCKS.register("energytransmitter", EnergyTransmitter::new);
     public static final DeferredHolder<Item, BlockItem> EnergyTransmitter_ITEM = ITEMS.register("energytransmitter", () -> new BlockItem(EnergyTransmitter.get(), new Item.Properties()));
 
@@ -381,6 +384,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DropperT1BE>> DropperT1BE = BLOCK_ENTITIES.register("droppert1", () -> BlockEntityType.Builder.of(DropperT1BE::new, DropperT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DropperT2BE>> DropperT2BE = BLOCK_ENTITIES.register("droppert2", () -> BlockEntityType.Builder.of(DropperT2BE::new, DropperT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeneratorT1BE>> GeneratorT1BE = BLOCK_ENTITIES.register("generatort1", () -> BlockEntityType.Builder.of(GeneratorT1BE::new, GeneratorT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeneratorFluidT1BE>> GeneratorFluidT1BE = BLOCK_ENTITIES.register("generatorfluidt1", () -> BlockEntityType.Builder.of(GeneratorFluidT1BE::new, GeneratorFluidT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyTransmitterBE>> EnergyTransmitterBE = BLOCK_ENTITIES.register("energytransmitter", () -> BlockEntityType.Builder.of(EnergyTransmitterBE::new, EnergyTransmitter.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockSwapperT1BE>> BlockSwapperT1BE = BLOCK_ENTITIES.register("blockswappert1", () -> BlockEntityType.Builder.of(BlockSwapperT1BE::new, BlockSwapperT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockSwapperT2BE>> BlockSwapperT2BE = BLOCK_ENTITIES.register("blockswappert2", () -> BlockEntityType.Builder.of(BlockSwapperT2BE::new, BlockSwapperT2.get()).build(null));
@@ -503,6 +507,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(DropperT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<DropperT2Container>> DropperT2_Container = CONTAINERS.register("droppert2_container",
             () -> IMenuTypeExtension.create(DropperT2Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<GeneratorFluidT1Container>> GeneratorFluidT1_Container = CONTAINERS.register("generatorfluidt1_container",
+            () -> IMenuTypeExtension.create(GeneratorFluidT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<GeneratorT1Container>> GeneratorT1_Container = CONTAINERS.register("generatort1_container",
             () -> IMenuTypeExtension.create(GeneratorT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<EnergyTransmitterContainer>> EnergyTransmitter_Container = CONTAINERS.register("energytransmitter_container",
@@ -578,6 +584,12 @@ public class Registration {
             "machine_fluid_handler", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof FluidMachineBE fluidMachineBE)
                     return new JustDireFluidTank(fluidMachineBE.getMaxMB());
+                return new JustDireFluidTank(0);
+            }).build());
+    public static final Supplier<AttachmentType<JustDireFluidTank>> GENERATOR_FLUID_HANDLER = ATTACHMENT_TYPES.register(
+            "generator_fluid_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof FluidMachineBE fluidMachineBE)
+                    return new JustDireFluidTank(fluidMachineBE.getMaxMB(), fluidstack -> fluidstack.getFluid() instanceof RefinedFuel);
                 return new JustDireFluidTank(0);
             }).build());
 }
