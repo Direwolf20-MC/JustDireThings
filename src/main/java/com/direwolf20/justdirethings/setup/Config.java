@@ -110,9 +110,9 @@ public class Config {
     private static void generatorFluidT1Config() {
         COMMON_BUILDER.comment("Fluid Generator T1").push(CATEGORY_GENERATOR_FLUID_T1);
         GENERATOR_FLUID_T1_MAX_FE = COMMON_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
-                .defineInRange("generator_fluid_t1_max_fe", 10000000, 1, Integer.MAX_VALUE);
+                .defineInRange("generator_fluid_t1_max_fe", 5000000, 1, Integer.MAX_VALUE);
         GENERATOR_FLUID_T1_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator outputs")
-                .defineInRange("generator_fluid_t1_fe_per_tick", 10000, 1, Integer.MAX_VALUE);
+                .defineInRange("generator_fluid_t1_fe_per_tick", 5000, 1, Integer.MAX_VALUE);
         FUEL_TIER2_FE_PER_MB = COMMON_BUILDER.comment("The FE per produced per MB of Tier 2 fuel (Blaze Ember)")
                 .defineInRange("fuel_tier2_fe_per_mb", 450, 1, Integer.MAX_VALUE);
         FUEL_TIER3_FE_PER_MB = COMMON_BUILDER.comment("The FE per produced per MB of Tier 3 fuel (Voidflame)")
