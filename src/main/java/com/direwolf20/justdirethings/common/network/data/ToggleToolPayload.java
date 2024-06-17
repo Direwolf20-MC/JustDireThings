@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public record ToggleToolPayload(
         String settingName
 ) implements CustomPacketPayload {
-    public static final Type<ToggleToolPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "toggle_tool_setting"));
+    public static final Type<ToggleToolPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "toggle_tool_setting"));
 
     @Override
     public Type<ToggleToolPayload> type() {

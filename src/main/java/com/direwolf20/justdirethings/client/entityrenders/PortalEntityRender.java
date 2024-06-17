@@ -25,7 +25,7 @@ import static com.direwolf20.justdirethings.client.renderers.RenderHelpers.rende
 public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T> {
     protected static final RenderType renderType = DireRenderTypes.getRenderType("portal_entity")
             .using(List.of(
-                    new ShaderTexture(new ResourceLocation(JustDireThings.MODID, "textures/block/portal_shader.png"))
+                    new ShaderTexture(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/block/portal_shader.png"))
             ));
     public PortalEntityRender(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -162,9 +162,9 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
     }
 
     private void renderFace(Matrix4f matrixStack, VertexConsumer vertexConsumer, float x1, float x2, float y1, float y2, float z1, float z2, float z3, float z4) {
-        vertexConsumer.vertex(matrixStack, x1, y1, z1).uv(0f, 0f).endVertex();
-        vertexConsumer.vertex(matrixStack, x2, y1, z2).uv(1f, 0f).endVertex();
-        vertexConsumer.vertex(matrixStack, x2, y2, z3).uv(1f, 1f).endVertex();
-        vertexConsumer.vertex(matrixStack, x1, y2, z4).uv(0f, 1f).endVertex();
+        vertexConsumer.addVertex(matrixStack, x1, y1, z1).setUv(0f, 0f);
+        vertexConsumer.addVertex(matrixStack, x2, y1, z2).setUv(1f, 0f);
+        vertexConsumer.addVertex(matrixStack, x2, y2, z3).setUv(1f, 1f);
+        vertexConsumer.addVertex(matrixStack, x1, y2, z4).setUv(0f, 1f);
     }
 }

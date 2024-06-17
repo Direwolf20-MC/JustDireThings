@@ -14,7 +14,7 @@ public record GhostSlotPayload(
         int count,
         int mbAmt
 ) implements CustomPacketPayload {
-    public static final Type<GhostSlotPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "ghost_slot"));
+    public static final Type<GhostSlotPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ghost_slot"));
 
     @Override
     public Type<GhostSlotPayload> type() {

@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -27,8 +28,8 @@ public class JustDireItemRenderer extends BlockEntityWithoutLevelRenderer {
         super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
     }
 
-    private static final ResourceLocation CREATURE_CATCHER_BASE = new ResourceLocation(JustDireThings.MODID, "item/creaturecatcher_base");
-    private static final ResourceLocation CREATURE_CATCHER = new ResourceLocation(JustDireThings.MODID, "item/creaturecatcher");
+    private static final ModelResourceLocation CREATURE_CATCHER_BASE = ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "item/creaturecatcher_base"));
+
 
 
     @Override
@@ -105,8 +106,8 @@ public class JustDireItemRenderer extends BlockEntityWithoutLevelRenderer {
         pLivingEntity.yHeadRotO = pLivingEntity.getYRot();
         EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
         entityrenderermanager.setRenderShadow(false);
-        RenderSystem.runAsFancy(() -> {
-            entityrenderermanager.render(pLivingEntity, 0, 0, 0, 0.0F, Minecraft.getInstance().getDeltaFrameTime(), matrix, pBuffer, 15728880);
+        RenderSystem.runAsFancy(() -> { //TODO Validate getFrameTimeNs
+            entityrenderermanager.render(pLivingEntity, 0, 0, 0, 0.0F, Minecraft.getInstance().getFrameTimeNs(), matrix, pBuffer, 15728880);
         });
         entityrenderermanager.setRenderShadow(true);
         matrix.popPose();

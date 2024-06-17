@@ -34,7 +34,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 
 public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContainer> {
-    private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/settings.png");
+    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/settings.png");
 
     protected final ToolSettingContainer container;
     Player player;

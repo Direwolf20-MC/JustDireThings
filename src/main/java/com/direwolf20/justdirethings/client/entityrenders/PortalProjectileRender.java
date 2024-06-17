@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
-    protected static final ResourceLocation TEXTURE = new ResourceLocation(JustDireThings.MODID, "textures/entity/portal_projectile.png");
+    protected static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/portal_projectile.png");
     protected final PortalProjectileModel model;
 
     public PortalProjectileRender(EntityRendererProvider.Context pContext) {
@@ -40,7 +40,7 @@ public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
 
         this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
         VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(TEXTURE));
-        this.model.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1F);
+        this.model.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY);
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }

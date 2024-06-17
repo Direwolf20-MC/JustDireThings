@@ -133,7 +133,7 @@ public class NBTHelpers {
     public static GlobalPos nbtToGlobalPos(CompoundTag tag) {
         ResourceKey<Level> levelKey;
         if (tag.contains("dimension"))
-            levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("dimension")));
+            levelKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("dimension")));
         else
             return null;
         BlockPos blockPos = NbtUtils.readBlockPos(tag, "blockpos").orElse(BlockPos.ZERO);
@@ -161,7 +161,7 @@ public class NBTHelpers {
 
     public static GlobalVec3 nbtToGlobalVec3(CompoundTag tag) {
         if (!tag.contains("dimension")) return null;
-        ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("dimension")));
+        ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("dimension")));
         double x = tag.getDouble("vec3x");
         double y = tag.getDouble("vec3y");
         double z = tag.getDouble("vec3z");

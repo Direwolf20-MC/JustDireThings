@@ -22,10 +22,10 @@ public class JustDireBlockTags extends BlockTagsProvider {
         super(output, lookupProvider, JustDireThings.MODID, existingFileHelper);
     }
 
-    public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "lawnmowerable"));
-    public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "noautoclick"));
-    public static final TagKey<Block> SWAPPERDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "swapper_deny"));
-    public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "eclipsegate_deny"));
+    public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "lawnmowerable"));
+    public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "noautoclick"));
+    public static final TagKey<Block> SWAPPERDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "swapper_deny"));
+    public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsegate_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {

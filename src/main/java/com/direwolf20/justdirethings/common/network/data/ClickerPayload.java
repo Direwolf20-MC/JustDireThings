@@ -14,7 +14,7 @@ public record ClickerPayload(
         boolean showFakePlayer,
         int maxHoldTicks
 ) implements CustomPacketPayload {
-    public static final Type<ClickerPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "clicker_packet"));
+    public static final Type<ClickerPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "clicker_packet"));
 
     @Override
     public Type<ClickerPayload> type() {

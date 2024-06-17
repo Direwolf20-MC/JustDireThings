@@ -13,7 +13,7 @@ public record SensorPayload(
         int senseCount,
         int equality
 ) implements CustomPacketPayload {
-    public static final Type<SensorPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "sensor_packet"));
+    public static final Type<SensorPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "sensor_packet"));
 
     @Override
     public Type<SensorPayload> type() {

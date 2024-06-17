@@ -10,9 +10,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.ITeleporter;
 
 import java.util.OptionalInt;
 
@@ -52,8 +52,8 @@ public class UsefulFakePlayer extends FakePlayer {
     }
 
     @Override
-    public Entity changeDimension(ServerLevel server, ITeleporter teleporter) {
-        return createPlayer(server, this.getGameProfile());
+    public Entity changeDimension(DimensionTransition dimensionTransition) {
+        return createPlayer(dimensionTransition.newLevel(), this.getGameProfile());
     }
 
     /**

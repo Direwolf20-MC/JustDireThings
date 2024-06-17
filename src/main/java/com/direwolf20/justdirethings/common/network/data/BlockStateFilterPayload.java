@@ -12,7 +12,7 @@ public record BlockStateFilterPayload(
         int slot,
         CompoundTag compoundTag
 ) implements CustomPacketPayload {
-    public static final Type<BlockStateFilterPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "block_state_filter_packet"));
+    public static final Type<BlockStateFilterPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "block_state_filter_packet"));
 
     @Override
     public Type<BlockStateFilterPayload> type() {

@@ -63,7 +63,7 @@ public class DireRenderTypes extends RenderType {
 			this.name = name;
 			this.format = format;
 			this.builder = Util.memoize(builder);
-			this.shaderLocation = new ResourceLocation(JustDireThings.MODID, this.name);
+			this.shaderLocation = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, this.name);
 		}
 
 		public RenderType using(List<ShaderTexture> textures) {

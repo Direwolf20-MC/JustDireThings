@@ -158,8 +158,8 @@ dependencies {
     //runtimeOnly "mezz.jei:jei-1.20.4-neoforge:${jei_version}"
 
     // NeoForge
-    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
+    //compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+    //runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
     // Locally sourced extra mods for runtime (i.e. testing)
     for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {

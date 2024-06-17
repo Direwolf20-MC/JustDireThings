@@ -34,7 +34,7 @@ public enum Ability {
     MINDFOG(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     INVULNERABILITY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::invulnerability, false,
-            new ResourceLocation(JustDireThings.MODID, "textures/gui/overlay/invulnerability.png")),
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/invulnerability.png")),
 
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
@@ -43,7 +43,7 @@ public enum Ability {
     LAVAREPAIR(SettingType.TOGGLE, 0, 0, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500, UseType.USE_COOLDOWN, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::cauterizeWounds, false,
-            new ResourceLocation(JustDireThings.MODID, "textures/gui/overlay/cauterizewounds.png")),
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/cauterizewounds.png")),
     AIRBURST(SettingType.SLIDER, 1, 250, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::airBurst, false),
 
@@ -101,7 +101,7 @@ public enum Ability {
         this.name = this.name().toLowerCase(Locale.ROOT);
         this.settingType = settingType;
         this.localization = "justdirethings.ability." + name;
-        this.iconLocation = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/" + name + ".png");
+        this.iconLocation = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/" + name + ".png");
         this.durabilityCost = durabilityCost;
         this.feCost = feCost;
         this.bindingType = bindingType;

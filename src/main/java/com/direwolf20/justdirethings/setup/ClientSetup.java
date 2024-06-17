@@ -28,6 +28,7 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -65,12 +66,12 @@ public class ClientSetup {
 
         event.enqueueWork(() -> {
             ItemProperties.register(Registration.FluidCanister.get(),
-                    new ResourceLocation(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
+                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
         });
 
         event.enqueueWork(() -> {
             ItemProperties.register(Registration.PortalGunV2.get(),
-                    new ResourceLocation(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> PortalGunV2.getFullness(stack));
+                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> PortalGunV2.getFullness(stack));
         });
 
         ItemBlockRenderTypes.setRenderLayer(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), RenderType.translucent());
@@ -79,13 +80,13 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.HOTBAR, new ResourceLocation(JustDireThings.MODID, "abilitycooldownoverlay"), AbilityCooldownOverlay.INSTANCE);
+        event.registerAbove(VanillaGuiLayers.HOTBAR, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "abilitycooldownoverlay"), AbilityCooldownOverlay.INSTANCE);
     }
 
     public static void registerEnabledToolTextures(Item tool) {
         if (tool instanceof ToggleableItem toggleableItem) {
             ItemProperties.register(tool,
-                    new ResourceLocation(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
+                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
                         if (stack.getItem() instanceof PocketGenerator) {
                             if (!toggleableItem.getEnabled(stack)) return 0.0f;
                             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
@@ -101,7 +102,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void mrl(ModelEvent.RegisterAdditional e) {
-        e.register(new ResourceLocation(JustDireThings.MODID, "item/creaturecatcher_base"));
+        e.register(ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "item/creaturecatcher_base")));
     }
 
     @SubscribeEvent

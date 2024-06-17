@@ -409,7 +409,7 @@ public class PortalEntity extends Entity {
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (!entity.canChangeDimensions() && !isSameLevel())
+        if (!entity.canChangeDimensions(level(), getLinkedPortal().level()) && !isSameLevel())
             return false;
         if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;

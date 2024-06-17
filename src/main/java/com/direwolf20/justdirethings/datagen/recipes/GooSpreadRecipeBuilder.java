@@ -92,7 +92,7 @@ public class GooSpreadRecipeBuilder implements RecipeBuilder {
     }
 
     public void save(RecipeOutput pRecipeOutput) {
-        this.save(pRecipeOutput, new ResourceLocation(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-goospread"));
+        this.save(pRecipeOutput, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-goospread"));
     }
 
     @Override

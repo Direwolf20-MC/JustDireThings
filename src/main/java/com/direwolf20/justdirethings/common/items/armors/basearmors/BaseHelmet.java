@@ -4,6 +4,8 @@ import com.direwolf20.justdirethings.common.items.interfaces.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
@@ -18,6 +20,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
@@ -59,8 +62,8 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
     }
 
     @Override
-    public ItemAttributeModifiers getAttributeModifiers(ItemStack stack) {
-        ItemAttributeModifiers itemAttributeModifiers = super.getAttributeModifiers(stack);
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        ItemAttributeModifiers itemAttributeModifiers = super.getDefaultAttributeModifiers(stack);
         if (!(stack.getItem() instanceof PoweredTool poweredTool))
             return itemAttributeModifiers;
 
@@ -68,11 +71,12 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
     }
 
     @Override
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Runnable onBroken) {
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
-            int unbreakingLevel = stack.getEnchantmentLevel(Enchantments.UNBREAKING);
+            HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
             double reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
             int finalEnergyCost = (int) Math.max(0, amount - (amount * reductionFactor));
             energyStorage.extractEnergy(finalEnergyCost, false);
@@ -80,7 +84,8 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
         }
         return amount;
     }
-
+//TODO Review
+    /*
     @Override
     public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
         if (stack.getItem() instanceof PoweredTool)
@@ -96,11 +101,11 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
     }
 
     private boolean canAcceptEnchantments(ItemStack book) {
-        return !(book.getEnchantmentLevel(Enchantments.MENDING) > 0); //TODO Validate
+        return !(book.getEnchantmentLevel(Enchantments.MENDING) > 0);
     }
 
     private boolean canAcceptEnchantments(Enchantment enchantment) {
         return enchantment != Enchantments.MENDING;
-    }
+    }*/
 
 }

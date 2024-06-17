@@ -42,10 +42,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends BaseScreen<T> {
-    protected final ResourceLocation JUSTSLOT = new ResourceLocation(JustDireThings.MODID, "textures/gui/justslot.png");
-    protected final ResourceLocation POWERBAR = new ResourceLocation(JustDireThings.MODID, "textures/gui/powerbar.png");
-    protected final ResourceLocation FLUIDBAR = new ResourceLocation(JustDireThings.MODID, "textures/gui/fluidbar.png");
-    protected final ResourceLocation SOCIALBACKGROUND = new ResourceLocation(JustDireThings.MODID, "background");
+    protected final ResourceLocation JUSTSLOT = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/justslot.png");
+    protected final ResourceLocation POWERBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/powerbar.png");
+    protected final ResourceLocation FLUIDBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fluidbar.png");
+    protected final ResourceLocation SOCIALBACKGROUND = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "background");
     protected BaseMachineContainer container;
     protected BaseMachineBE baseMachineBE;
     protected double xRadius = 3, yRadius = 3, zRadius = 3;
@@ -303,9 +303,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         int textureHeight = fluidStillSprite.contents().height();
 
         Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder vertexBuffer = tesselator.getBuilder();
-
-        vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        BufferBuilder vertexBuffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         int yOffset = 0;
         while (yOffset < height) {
@@ -320,17 +318,17 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
                 float uMaxAdjusted = uMin + (uMax - uMin) * ((float) drawWidth / textureWidth);
 
-                vertexBuffer.vertex(poseStack.last().pose(), startX + xOffset, drawY + drawHeight, zLevel).uv(uMin, vMaxAdjusted).endVertex();
-                vertexBuffer.vertex(poseStack.last().pose(), startX + xOffset + drawWidth, drawY + drawHeight, zLevel).uv(uMaxAdjusted, vMaxAdjusted).endVertex();
-                vertexBuffer.vertex(poseStack.last().pose(), startX + xOffset + drawWidth, drawY, zLevel).uv(uMaxAdjusted, vMin).endVertex();
-                vertexBuffer.vertex(poseStack.last().pose(), startX + xOffset, drawY, zLevel).uv(uMin, vMin).endVertex();
+                vertexBuffer.addVertex(poseStack.last().pose(), startX + xOffset, drawY + drawHeight, zLevel).setUv(uMin, vMaxAdjusted);
+                vertexBuffer.addVertex(poseStack.last().pose(), startX + xOffset + drawWidth, drawY + drawHeight, zLevel).setUv(uMaxAdjusted, vMaxAdjusted);
+                vertexBuffer.addVertex(poseStack.last().pose(), startX + xOffset + drawWidth, drawY, zLevel).setUv(uMaxAdjusted, vMin);
+                vertexBuffer.addVertex(poseStack.last().pose(), startX + xOffset, drawY, zLevel).setUv(uMin, vMin);
 
                 xOffset += drawWidth;
             }
             yOffset += drawHeight;
         }
 
-        tesselator.end();
+        BufferUploader.drawWithShader(vertexBuffer.buildOrThrow());
         poseStack.popPose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.applyModelViewMatrix();

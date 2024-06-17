@@ -22,7 +22,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -175,14 +174,12 @@ public interface ToggleableTool extends ToggleableItem {
         BlockState pState = pLevel.getBlockState(pPos);
         List<ItemStack> drops = new ArrayList<>();
         int totalExp = 0;
-        int fortuneLevel = pEntityLiving.getMainHandItem().getEnchantmentLevel(Enchantments.FORTUNE);
-        int silkTouchLevel = pEntityLiving.getMainHandItem().getEnchantmentLevel(Enchantments.SILK_TOUCH);
         Set<BlockPos> breakBlockPositions = getBreakBlockPositions(pStack, pLevel, pPos, pEntityLiving, pState);
         boolean instaBreak = canInstaBreak(pStack, pLevel, breakBlockPositions);
         for (BlockPos breakPos : breakBlockPositions) {
             if (testUseTool(pStack) < 0)
                 break;
-            int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pLevel.random, pPos, fortuneLevel, silkTouchLevel);
+            int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pLevel.random, pPos);
             totalExp = totalExp + exp;
             Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, true, instaBreak));
         }

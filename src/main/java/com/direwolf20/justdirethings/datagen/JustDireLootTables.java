@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -13,6 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JustDireLootTables extends VanillaBlockLoot {
+
+    public JustDireLootTables(HolderLookup.Provider p_344962_) {
+        super(p_344962_);
+    }
 
     @Override
     protected void generate() {

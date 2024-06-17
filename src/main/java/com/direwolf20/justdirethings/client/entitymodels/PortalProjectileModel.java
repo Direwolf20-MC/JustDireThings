@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PortalProjectileModel extends HierarchicalModel<PortalProjectile> {
 
-    public static ModelLayerLocation Portal_Projectile_Layer = new ModelLayerLocation(new ResourceLocation(JustDireThings.MODID, "portal_projectile"), "body");
+    public static ModelLayerLocation Portal_Projectile_Layer = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_projectile"), "body");
     private static final String MAIN = "main";
     private final ModelPart root;
     private final ModelPart main;
