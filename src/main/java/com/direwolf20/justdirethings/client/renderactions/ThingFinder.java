@@ -42,14 +42,14 @@ public class ThingFinder {
     private static long lastBlockDrawTime = 0; // The last time particles were drawn
     private static long lastEntityDrawTime = 0; // The last time particles were drawn
     public static long entityParticlesStartTime;
-    //public static Map<BlockPos, BlockState> oreMap = new HashMap<>();
+
     public static List<BlockPos> oreBlocksList = new ArrayList<>();
     public static List<Entity> entityList = new ArrayList<>();
     private static int sortCounter = 0;
 
     //A eBufferBuilder, so we can draw the render
     private static final ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(RenderType.cutout().bufferSize());
-    //private static BufferBuilder builder = new BufferBuilder(byteBufferBuilder, RenderType.cutout().mode(), RenderType.cutout().format());
+
     //Cached SortStates used for re-sorting every so often
     private static MeshData meshdata;
     private static MeshData.SortState sortState;
