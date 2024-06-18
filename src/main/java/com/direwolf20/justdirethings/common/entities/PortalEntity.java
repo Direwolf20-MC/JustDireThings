@@ -74,8 +74,10 @@ public class PortalEntity extends Entity {
         refreshDimensions();
         if (!level().isClientSide) {
             tickCooldowns();
-            teleportCollidingEntities();
-            captureVelocity();
+            if (getLinkedPortal() != null) {
+                teleportCollidingEntities();
+                captureVelocity();
+            }
         }
         tickDying();
     }
