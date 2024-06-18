@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -132,29 +134,17 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
         }
         return amount;
     }
-//TODO Review
-    /*
-    @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-        if (stack.getItem() instanceof PoweredTool)
-            return super.isBookEnchantable(stack, book) && canAcceptEnchantments(book);
-        return super.isBookEnchantable(stack, book);
-    }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+    public boolean isPrimaryItemFor(ItemStack stack, Holder<Enchantment> enchantment) {
         if (stack.getItem() instanceof PoweredTool)
-            return super.canApplyAtEnchantingTable(stack, enchantment) && canAcceptEnchantments(enchantment);
-        return super.canApplyAtEnchantingTable(stack, enchantment);
+            return super.isPrimaryItemFor(stack, enchantment) && canAcceptEnchantments(enchantment);
+        return super.isPrimaryItemFor(stack, enchantment);
     }
 
-    private boolean canAcceptEnchantments(ItemStack book) {
-        return !(book.getEnchantmentLevel(Enchantments.MENDING) > 0);
+    private boolean canAcceptEnchantments(Holder<Enchantment> enchantment) {
+        return !enchantment.value().effects().has(EnchantmentEffectComponents.REPAIR_WITH_XP);
     }
-
-    private boolean canAcceptEnchantments(Enchantment enchantment) {
-        return enchantment != Enchantments.MENDING;
-    }*/
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
