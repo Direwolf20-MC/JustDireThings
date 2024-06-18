@@ -49,7 +49,7 @@ public class ThingFinder {
 
     //A eBufferBuilder, so we can draw the render
     private static final ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(RenderType.cutout().bufferSize());
-    private static BufferBuilder builder = new BufferBuilder(byteBufferBuilder, RenderType.cutout().mode(), RenderType.cutout().format());
+    //private static BufferBuilder builder = new BufferBuilder(byteBufferBuilder, RenderType.cutout().mode(), RenderType.cutout().format());
     //Cached SortStates used for re-sorting every so often
     private static MeshData meshdata;
     private static MeshData.SortState sortState;
@@ -169,8 +169,8 @@ public class ThingFinder {
         Level level = player.level();
         renderedAtPos = player.getOnPos();
 
-        Tesselator tesselator = RenderSystem.renderThreadTesselator();
-        builder = tesselator.begin(renderType.mode(), renderType.format());
+        byteBufferBuilder.clear();
+        BufferBuilder builder = new BufferBuilder(byteBufferBuilder, renderType.mode(), renderType.format());
 
         for (BlockPos pos : oreBlocksList) {
             BlockState renderState = level.getBlockState(pos);
@@ -200,16 +200,16 @@ public class ThingFinder {
         Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         Vec3 subtracted = projectedView.subtract(renderedAtPos.getX(), renderedAtPos.getY(), renderedAtPos.getZ());
         Vector3f sortPos = new Vector3f((float) subtracted.x, (float) subtracted.y, (float) subtracted.z);
-
-        //builder.setQuadSorting(VertexSorting.byDistance(sortPos));
-        /*ByteBufferBuilder.Result bytebufferbuilder$result = sortState.buildSortedIndexBuffer(
-                byteBufferBuilder, VertexSorting.byDistance(sortPos));*/
+        if (meshdata != null) {
+            meshdata.close();
+        }
         meshdata = builder.build();
-        sortState = meshdata.sortQuads(byteBufferBuilder, VertexSorting.byDistance(sortPos));
-        vertexBuffer.bind();
-        vertexBuffer.upload(builder.buildOrThrow());
-        VertexBuffer.unbind();
-
+        if (meshdata != null) {
+            sortState = meshdata.sortQuads(byteBufferBuilder, VertexSorting.byDistance(sortPos));
+            vertexBuffer.bind();
+            vertexBuffer.upload(meshdata);
+            VertexBuffer.unbind();
+        }
         oreBlocksList.clear();
     }
 
@@ -256,22 +256,18 @@ public class ThingFinder {
     }
 
     public static void sortAll(BlockPos lookingAt) {
-        MeshData renderedBuffer = sort(lookingAt, renderType);
+        ByteBufferBuilder.Result sortResult = sort(lookingAt);
         vertexBuffer.bind();
-        vertexBuffer.upload(renderedBuffer);
+        vertexBuffer.uploadIndexBuffer(sortResult);
         VertexBuffer.unbind();
 
     }
 
     //Sort the render type we pass in - using DireBufferBuilder because we want to sort in the opposite direction from normal
-    public static MeshData sort(BlockPos lookingAt, RenderType renderType) {
+    public static ByteBufferBuilder.Result sort(BlockPos lookingAt) {
         Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         Vec3 subtracted = projectedView.subtract(lookingAt.getX(), lookingAt.getY(), lookingAt.getZ());
         Vector3f sortPos = new Vector3f((float) subtracted.x, (float) subtracted.y, (float) subtracted.z);
-        //builder.begin(renderType.mode(), renderType.format());
-        sortState = meshdata.sortQuads(byteBufferBuilder, VertexSorting.byDistance(sortPos));
-        //builder.setQuadSorting(VertexSorting.byDistance(sortPos));
-        //sortState = builder.getSortState();
-        return builder.buildOrThrow();
+        return sortState.buildSortedIndexBuffer(byteBufferBuilder, VertexSorting.byDistance(sortPos));
     }
 }
