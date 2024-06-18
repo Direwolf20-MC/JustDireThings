@@ -1,5 +1,5 @@
 package com.direwolf20.justdirethings.client.jei.ghostfilters;
-/*
+
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseScreen;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import com.direwolf20.justdirethings.common.network.data.GhostSlotPayload;
@@ -43,4 +43,4 @@ public class GhostFilterBasic implements IGhostIngredientHandler<BaseScreen> {
     public void onComplete() {
         // NO OP
     }
-}*/
+}

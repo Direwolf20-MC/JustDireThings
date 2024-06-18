@@ -1,5 +1,5 @@
 package com.direwolf20.justdirethings.client.jei;
-/*
+
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -96,4 +96,3 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe>
         }
     }
 }
-*/

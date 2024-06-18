@@ -16,7 +16,7 @@
                     "predicates": {
                       "minecraft:enchantments": [
                         {
-                          "enchantment": "minecraft:silk_touch",
+                          "enchantments": "minecraft:silk_touch",
                           "levels": {
                             "min": 1
                           }
@@ -26,7 +26,7 @@
                   }
                 }
               ],
-              "name": "justdirethings:raw_blazegold_ore"
+              "name": "justdirethings:raw_coal_t4_ore"
             },
             {
               "type": "minecraft:item",
@@ -44,7 +44,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "justdirethings:raw_blazegold"
+              "name": "justdirethings:coal_t4"
             }
           ]
         }
@@ -52,5 +52,5 @@
       "rolls": 1.0
     }
   ],
-  "random_sequence": "justdirethings:blocks/raw_blazegold_ore"
+  "random_sequence": "justdirethings:blocks/raw_coal_t4_ore"
 }
