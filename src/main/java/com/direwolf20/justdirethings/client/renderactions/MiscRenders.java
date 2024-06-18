@@ -23,7 +23,6 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 public class MiscRenders {
     public static void renderTransparentPlayer(RenderLevelStageEvent evt, Player player, ItemStack itemStack) {
-        //TODO Validate Partial Ticks is correct, AND check out how to make them transparent again...
         Vec3 renderPosition = AbilityMethods.getShiftPosition(player.level(), player, itemStack);
         Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         PoseStack matrixStack = evt.getPoseStack();
@@ -73,7 +72,8 @@ public class MiscRenders {
             entityModel.young = player.isBaby();
             entityModel.prepareMobModel(player, f4, f8, pPartialTicks.getGameTimeDeltaTicks());
             entityModel.setupAnim(player, f4, f8, f7, f2, f5);
-            entityModel.renderToBuffer(matrixStack, vertexconsumer, packedLight, i);
+            int packedARGB = (127 << 24) | (255 << 16) | (255 << 8) | 255;
+            entityModel.renderToBuffer(matrixStack, vertexconsumer, packedLight, i, packedARGB);
         }
 
         matrixStack.popPose();

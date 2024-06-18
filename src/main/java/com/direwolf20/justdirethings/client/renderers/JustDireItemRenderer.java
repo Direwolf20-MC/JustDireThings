@@ -106,7 +106,7 @@ public class JustDireItemRenderer extends BlockEntityWithoutLevelRenderer {
         pLivingEntity.yHeadRotO = pLivingEntity.getYRot();
         EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance().getEntityRenderDispatcher();
         entityrenderermanager.setRenderShadow(false);
-        RenderSystem.runAsFancy(() -> { //TODO Validate getFrameTimeNs
+        RenderSystem.runAsFancy(() -> {
             entityrenderermanager.render(pLivingEntity, 0, 0, 0, 0.0F, Minecraft.getInstance().getFrameTimeNs(), matrix, pBuffer, 15728880);
         });
         entityrenderermanager.setRenderShadow(true);

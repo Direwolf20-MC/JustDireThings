@@ -96,7 +96,7 @@ public class ThingFinder {
     private static void discoverOres(Player player, Ability toolAbility, ItemStack itemStack) {
         oreBlocksList.clear();
         BlockPos playerPos = player.getOnPos();
-        int radius = 10; //TODO 50 seems to be ok perf wise but ridiculous
+        int radius = 10;
         oreBlocksList = BlockPos.betweenClosedStream(playerPos.offset(-radius, -radius, -radius), playerPos.offset(radius, radius, radius))
                 .filter(blockPos -> isValidBlock(blockPos, player, itemStack))
                 .map(BlockPos::immutable)
@@ -122,7 +122,7 @@ public class ThingFinder {
     private static void discoverMobs(Player player, boolean startTimer) {
         entityList.clear();
         BlockPos playerPos = player.getOnPos();
-        int radius = 10; //TODO 50 seems to be ok perf wise but ridiculous
+        int radius = 10;
 
         entityList = player.level().getEntities(player, AABB.encapsulatingFullBlocks(playerPos.offset(-radius, -radius, -radius), playerPos.offset(radius, radius, radius)))
                 .stream()
