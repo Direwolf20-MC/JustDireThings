@@ -40,7 +40,7 @@ public interface PoweredMachineBE {
     default void chargeItemStack(ItemStack itemStack) {
         IEnergyStorage slotEnergy = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
         if (slotEnergy != null) {
-            int acceptedEnergy = slotEnergy.receiveEnergy(500, true); //Todo Config?
+            int acceptedEnergy = slotEnergy.receiveEnergy(500, true);
             if (acceptedEnergy > 0) {
                 int extractedEnergy = getEnergyStorage().extractEnergy(acceptedEnergy, false);
                 slotEnergy.receiveEnergy(extractedEnergy, false);

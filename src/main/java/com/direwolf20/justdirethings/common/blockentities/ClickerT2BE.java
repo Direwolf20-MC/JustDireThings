@@ -49,7 +49,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
 
     @Override
     public int getStandardEnergyCost() {
-        return 250; // Todo Config?
+        return 250;
     }
 
     @Override

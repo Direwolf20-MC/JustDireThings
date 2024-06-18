@@ -133,10 +133,10 @@ public interface ToggleableTool extends ToggleableItem {
     default Set<BlockPos> getBreakBlockPositions(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving, BlockState pState) {
         Set<BlockPos> breakBlockPositions = new HashSet<>();
         if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2));
         }
         if (canUseAbility(pStack, Ability.TREEFELLER) && logCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2)); //Todo: Balance and Config?
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2));
         }
         if (canUseAbility(pStack, Ability.HAMMER)) {
             breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
@@ -147,7 +147,7 @@ public interface ToggleableTool extends ToggleableItem {
             for (BlockPos blockPos : breakBlockPositions) {
                 BlockState blockState = pLevel.getBlockState(blockPos);
                 if (fallingBlockCondition.test(blockState))
-                    newPos.addAll(findLikeBlocks(pLevel, blockState, blockPos, Direction.UP, 64, 2)); //Todo: Balance and Config?
+                    newPos.addAll(findLikeBlocks(pLevel, blockState, blockPos, Direction.UP, 64, 2));
             }
             breakBlockPositions.addAll(newPos);
         }
@@ -491,7 +491,7 @@ public interface ToggleableTool extends ToggleableItem {
     static Direction getTargetLookDirection(LivingEntity livingEntity) {
         var playerLook = new Vec3(livingEntity.getX(), livingEntity.getY() + livingEntity.getEyeHeight(), livingEntity.getZ());
         var lookVec = livingEntity.getViewVector(1.0F);
-        var reach = livingEntity instanceof Player player ? player.blockInteractionRange() : 1; //Todo check if this is good
+        var reach = livingEntity instanceof Player player ? player.blockInteractionRange() : 1;
         var endLook = playerLook.add(lookVec.x * reach, lookVec.y * reach, lookVec.z * reach);
         var hitResult = livingEntity.level().clip(new ClipContext(playerLook, endLook, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, livingEntity));
         return hitResult.getDirection().getOpposite();

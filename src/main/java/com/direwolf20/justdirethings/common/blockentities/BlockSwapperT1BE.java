@@ -205,7 +205,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         if (blockSwapperT1BE != null) {
             addPartnerConnection(boundTo, blockSwapperT1BE); //If the partner still exists at the old spot, connect them, else remove
         } else {
-            //removePartnerConnection(); //TODO What should we do here?
+            //removePartnerConnection();
         }
     }
 

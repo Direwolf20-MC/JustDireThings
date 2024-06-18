@@ -136,12 +136,12 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
         if (player.isCreative()) return 0;
         ServerLevel targetLevel = sourceLevel.getServer().getLevel(portalDestination.globalVec3().dimension());
         if (!targetLevel.equals(sourceLevel)) {
-            return 100; //Todo Config
+            return 100;
         }
         HitResult result = player.pick(5, 0f, false); //This will get the location the projectile will hit, or close to it probably
         Vec3 targetPosition = portalDestination.globalVec3().position();
         double distance = targetPosition.distanceTo(result.getLocation());
-        return Math.min((int) Math.ceil(distance * 0.25), 100); //TODO Config
+        return Math.min((int) Math.ceil(distance * 0.25), 100);
     }
 
     public static boolean hasEnoughFluid(ItemStack itemStack, int amt) {

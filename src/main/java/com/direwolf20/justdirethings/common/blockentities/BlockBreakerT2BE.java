@@ -49,7 +49,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
 
     @Override
     public int getStandardEnergyCost() {
-        return 500; // Todo Config?
+        return 500;
     }
 
     @Override

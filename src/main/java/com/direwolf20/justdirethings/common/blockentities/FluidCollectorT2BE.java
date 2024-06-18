@@ -45,7 +45,7 @@ public class FluidCollectorT2BE extends FluidCollectorT1BE implements PoweredMac
 
     @Override
     public int getStandardEnergyCost() {
-        return 500; // Todo Config?
+        return 500;
     }
 
     @Override

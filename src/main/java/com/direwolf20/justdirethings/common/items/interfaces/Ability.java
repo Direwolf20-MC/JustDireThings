@@ -13,7 +13,7 @@ import java.util.Map;
 
 public enum Ability {
     //Tier 1
-    MOBSCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM, //TODO Configs
+    MOBSCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::scanForMobScanner, false),
     OREMINER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     ORESCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM,

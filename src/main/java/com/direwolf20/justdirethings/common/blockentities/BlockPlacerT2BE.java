@@ -44,7 +44,7 @@ public class BlockPlacerT2BE extends BlockPlacerT1BE implements PoweredMachineBE
 
     @Override
     public int getStandardEnergyCost() {
-        return 500; // Todo Config?
+        return 500;
     }
 
     @Override
