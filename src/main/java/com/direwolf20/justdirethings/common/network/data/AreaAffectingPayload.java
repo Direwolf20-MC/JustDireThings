@@ -13,7 +13,7 @@ public record AreaAffectingPayload(
         int xOffset, int yOffset, int zOffset,
         boolean renderArea
 ) implements CustomPacketPayload {
-    public static final Type<AreaAffectingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "area_affecting_packet"));
+    public static final Type<AreaAffectingPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "area_affecting_packet"));
 
     @Override
     public Type<AreaAffectingPayload> type() {

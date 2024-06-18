@@ -55,7 +55,7 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
 
     @Override
     public int getStandardEnergyCost() {
-        return 2; // Todo Config?
+        return 2;
     }
 
     public int getEnergyCost() {

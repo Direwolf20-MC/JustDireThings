@@ -11,7 +11,7 @@ public record CopyMachineSettingsPayload(
         boolean area, boolean offset,
         boolean filter, boolean redstone
 ) implements CustomPacketPayload {
-    public static final Type<CopyMachineSettingsPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "copy_machine_settings_packet"));
+    public static final Type<CopyMachineSettingsPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "copy_machine_settings_packet"));
 
     @Override
     public Type<CopyMachineSettingsPayload> type() {

@@ -46,7 +46,7 @@ public class TotemOfDeathRecall extends Item {
     @Override
     public void releaseUsing(ItemStack stack, Level world, LivingEntity entityLiving, int timeLeft) {
         if (entityLiving instanceof Player player) {
-            int usedDuration = this.getUseDuration(stack) - timeLeft;
+            int usedDuration = this.getUseDuration(stack, entityLiving) - timeLeft;
             if (usedDuration >= 20) {  // 60 ticks = 3 seconds
                 // Retrieve death location from NBT and teleport
                 if (!world.isClientSide) {
@@ -67,7 +67,7 @@ public class TotemOfDeathRecall extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity livingEntity) {
         return 72000;  // Max duration (arbitrary large number)
     }
 

@@ -23,7 +23,7 @@ import java.awt.*;
 import java.util.List;
 
 public class FuelCanisterScreen extends AbstractContainerScreen<FuelCanisterContainer> {
-    private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/fuelcanister.png");
+    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fuelcanister.png");
 
     protected final FuelCanisterContainer container;
     private ItemStack fuelCanister;

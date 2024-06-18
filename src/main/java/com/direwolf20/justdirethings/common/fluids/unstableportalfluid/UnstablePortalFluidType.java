@@ -52,10 +52,10 @@ public class UnstablePortalFluidType extends FluidType {
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation("textures/misc/underwater.png"),
-                    UNSTABLE_PORTALFLUID_STILL = new ResourceLocation(MODID, "block/fluid_source"),
-                    UNSTABLE_PORTALFLUID_FLOW = new ResourceLocation(MODID, "block/fluid_flowing"),
-                    UNSTABLE_PORTALFLUID_OVERLAY = new ResourceLocation(MODID, "block/fluid_overlay");
+            private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.parse("textures/misc/underwater.png"),
+                    UNSTABLE_PORTALFLUID_STILL = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_source"),
+                    UNSTABLE_PORTALFLUID_FLOW = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_flowing"),
+                    UNSTABLE_PORTALFLUID_OVERLAY = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_overlay");
 
             @Override
             public ResourceLocation getStillTexture() {

@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGeneratorContainer> {
-    private final ResourceLocation GUI = new ResourceLocation(JustDireThings.MODID, "textures/gui/pocketgenerator.png");
+    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/pocketgenerator.png");
 
     protected final PocketGeneratorContainer container;
     private ItemStack pocketGenerator;

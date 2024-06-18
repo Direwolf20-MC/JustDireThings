@@ -19,6 +19,6 @@ public interface PoweredTool extends PoweredItem {
     }
 
     default int getBlockBreakFECost() {
-        return 50; //Todo Config?
+        return 50;
     }
 }

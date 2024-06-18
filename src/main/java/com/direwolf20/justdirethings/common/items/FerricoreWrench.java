@@ -57,6 +57,7 @@ public class FerricoreWrench extends Item {
 
     private boolean specialBlockHandling(Level level, Player player, BlockPos blockPos, BlockState blockState, ItemStack itemStack) {
         if (level.getBlockEntity(blockPos) instanceof BlockSwapperT1BE blockSwapperT1BE) {
+            if (level.isClientSide) return false;
             GlobalPos boundPos = getBoundTo(itemStack);
             if (boundPos == null) {
                 GlobalPos newBind = GlobalPos.of(level.dimension(), blockPos);

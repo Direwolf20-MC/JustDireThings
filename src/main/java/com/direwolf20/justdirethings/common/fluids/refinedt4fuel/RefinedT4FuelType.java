@@ -31,10 +31,10 @@ public class RefinedT4FuelType extends FluidType {
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation("textures/misc/underwater.png"),
-                    FLUID_STILL = new ResourceLocation(MODID, "block/fluid_source"),
-                    FLUID_FLOW = new ResourceLocation(MODID, "block/fluid_flowing"),
-                    FLUID_OVERLAY = new ResourceLocation(MODID, "block/fluid_overlay");
+            private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.parse("textures/misc/underwater.png"),
+                    FLUID_STILL = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_source"),
+                    FLUID_FLOW = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_flowing"),
+                    FLUID_OVERLAY = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_overlay");
 
             @Override
             public ResourceLocation getStillTexture() {

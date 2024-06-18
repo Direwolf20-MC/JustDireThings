@@ -16,7 +16,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -190,7 +189,7 @@ public class Helpers {
         RegistryAccess registryAccess = level.registryAccess();
         RecipeManager recipeManager = level.getRecipeManager();
         ItemStack returnStack = ItemStack.EMPTY;
-        Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(itemStack), level);
+        Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(itemStack), level);
         if (smeltingRecipe.isPresent() && !itemStack.is(JustDireItemTags.AUTO_SMELT_DENY))
             returnStack = smeltingRecipe.get().value().getResultItem(registryAccess);
         if (returnStack.isEmpty()) return itemStack;
@@ -204,7 +203,7 @@ public class Helpers {
         didISmelt[0] = false;
         for (ItemStack drop : drops) {
             // Check if there's a smelting recipe for the drop
-            Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(drop), level);
+            Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(drop), level);
 
             if (smeltingRecipe.isPresent() && !drop.is(JustDireItemTags.AUTO_SMELT_DENY)) {
                 // Get the result of the smelting recipe
@@ -234,7 +233,7 @@ public class Helpers {
         didISmoke[0] = false;
         
         // Check if there's a smoking recipe for the drop
-        Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SimpleContainer(drop.getItem()), level);
+        Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(drop.getItem()), level);
 
         if (smokingRecipe.isPresent() && !drop.getItem().is(JustDireItemTags.AUTO_SMOKE_DENY)) {
             // Get the result of the smoking recipe

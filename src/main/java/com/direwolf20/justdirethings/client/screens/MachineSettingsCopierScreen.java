@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class MachineSettingsCopierScreen extends Screen {
-    public static final ResourceLocation SOCIALBACKGROUND = new ResourceLocation(JustDireThings.MODID, "background");
+    public static final ResourceLocation SOCIALBACKGROUND = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "background");
     private ItemStack copyMachineSettingsItemstack;
     boolean area, offset, filter, redstone;
     int topSectionWidth, topSectionHeight, topSectionLeft, topSectionTop;

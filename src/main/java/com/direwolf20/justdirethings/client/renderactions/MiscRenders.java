@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.AbilityMethods;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.LightTexture;
@@ -40,23 +41,23 @@ public class MiscRenders {
         RenderType renderType = RenderType.itemEntityTranslucentCull(renderer.getTextureLocation(player));
         VertexConsumer vertexconsumer = buffer.getBuffer(renderType);
         int i = LivingEntityRenderer.getOverlayCoords(player, 0);
-        float pPartialTicks = evt.getPartialTick();
+        DeltaTracker pPartialTicks = evt.getPartialTick();
         if (renderer instanceof LivingEntityRenderer<?, ?>) {
             LivingEntityRenderer<Player, ?> livingRenderer = (LivingEntityRenderer<Player, ?>) renderer;
-            float f = Mth.rotLerp(pPartialTicks, player.yBodyRotO, player.yBodyRot);
-            float f1 = Mth.rotLerp(pPartialTicks, player.yHeadRotO, player.yHeadRot);
+            float f = Mth.rotLerp(pPartialTicks.getGameTimeDeltaTicks(), player.yBodyRotO, player.yBodyRot);
+            float f1 = Mth.rotLerp(pPartialTicks.getGameTimeDeltaTicks(), player.yHeadRotO, player.yHeadRot);
             float f2 = f1 - f;
-            float f5 = Mth.lerp(pPartialTicks, player.xRotO, player.getXRot());
+            float f5 = Mth.lerp(pPartialTicks.getGameTimeDeltaTicks(), player.xRotO, player.getXRot());
             float f7 = 0;
-            setupRotations(player, matrixStack, f7, f, pPartialTicks);
+            setupRotations(player, matrixStack, f7, f, pPartialTicks.getGameTimeDeltaTicks());
             matrixStack.scale(-1.0F, -1.0F, 1.0F);
-            scale(player, matrixStack, pPartialTicks);
+            scale(player, matrixStack, pPartialTicks.getGameTimeDeltaTicks());
             matrixStack.translate(0.0F, -1.501F, 0.0F);
             float f8 = 0.0F;
             float f4 = 0.0F;
             if (player.isAlive()) {
-                f8 = player.walkAnimation.speed(pPartialTicks);
-                f4 = player.walkAnimation.position(pPartialTicks);
+                f8 = player.walkAnimation.speed(pPartialTicks.getGameTimeDeltaTicks());
+                f4 = player.walkAnimation.position(pPartialTicks.getGameTimeDeltaTicks());
                 if (player.isBaby()) {
                     f4 *= 3.0F;
                 }
@@ -69,9 +70,10 @@ public class MiscRenders {
             entityModel.attackTime = 0f;
             entityModel.riding = false;
             entityModel.young = player.isBaby();
-            entityModel.prepareMobModel(player, f4, f8, pPartialTicks);
+            entityModel.prepareMobModel(player, f4, f8, pPartialTicks.getGameTimeDeltaTicks());
             entityModel.setupAnim(player, f4, f8, f7, f2, f5);
-            entityModel.renderToBuffer(matrixStack, vertexconsumer, packedLight, i, 1.0F, 1.0F, 1.0F, 0.5F);
+            int packedARGB = (127 << 24) | (255 << 16) | (255 << 8) | 255;
+            entityModel.renderToBuffer(matrixStack, vertexconsumer, packedLight, i, packedARGB);
         }
 
         matrixStack.popPose();

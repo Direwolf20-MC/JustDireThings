@@ -10,7 +10,7 @@ public record PortalGunLeftClickPayload(
 
 ) implements CustomPacketPayload {
     public static final PortalGunLeftClickPayload INSTANCE = new PortalGunLeftClickPayload();
-    public static final Type<PortalGunLeftClickPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "portal_gun_left_click"));
+    public static final Type<PortalGunLeftClickPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_left_click"));
 
     @Override
     public Type<PortalGunLeftClickPayload> type() {

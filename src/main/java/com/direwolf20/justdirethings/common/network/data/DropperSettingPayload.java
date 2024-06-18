@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public record DropperSettingPayload(
         int dropCount
 ) implements CustomPacketPayload {
-    public static final Type<DropperSettingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "dropper_setting_packet"));
+    public static final Type<DropperSettingPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dropper_setting_packet"));
 
     @Override
     public Type<DropperSettingPayload> type() {

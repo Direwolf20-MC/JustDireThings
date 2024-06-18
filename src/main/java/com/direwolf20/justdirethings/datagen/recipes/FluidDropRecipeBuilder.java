@@ -90,7 +90,7 @@ public class FluidDropRecipeBuilder implements RecipeBuilder {
     }
 
     public void save(RecipeOutput pRecipeOutput) {
-        this.save(pRecipeOutput, new ResourceLocation(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-fluiddrop"));
+        this.save(pRecipeOutput, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-fluiddrop"));
     }
 
     @Override

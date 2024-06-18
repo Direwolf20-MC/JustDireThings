@@ -14,7 +14,7 @@ public record ToggleToolLeftRightClickPayload(
         int keyCode,
         boolean isMouse
 ) implements CustomPacketPayload {
-    public static final Type<ToggleToolLeftRightClickPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "tool_left_right_click_settings_packet"));
+    public static final Type<ToggleToolLeftRightClickPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tool_left_right_click_settings_packet"));
 
     @Override
     public Type<ToggleToolLeftRightClickPayload> type() {

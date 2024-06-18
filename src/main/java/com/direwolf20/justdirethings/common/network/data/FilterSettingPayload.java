@@ -12,7 +12,7 @@ public record FilterSettingPayload(
         boolean compareNBT,
         int blockItemFilter
 ) implements CustomPacketPayload {
-    public static final Type<FilterSettingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "filter_setting_packet"));
+    public static final Type<FilterSettingPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "filter_setting_packet"));
 
     @Override
     public Type<FilterSettingPayload> type() {

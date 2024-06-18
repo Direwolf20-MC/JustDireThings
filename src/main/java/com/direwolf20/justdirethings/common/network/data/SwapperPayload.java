@@ -11,7 +11,7 @@ public record SwapperPayload(
         boolean swapBlocks,
         int swap_entity_type
 ) implements CustomPacketPayload {
-    public static final Type<SwapperPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "swapper_packet"));
+    public static final Type<SwapperPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "swapper_packet"));
 
     @Override
     public Type<SwapperPayload> type() {

@@ -20,8 +20,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.Arrays;
 
 public class BlockSwapperT2Screen extends BaseMachineScreen<BlockSwapperT2Container> {
-    protected final ResourceLocation ACTIVE = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/active.png");
-    protected final ResourceLocation INACTIVE = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/inactive.png");
+    protected final ResourceLocation ACTIVE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/active.png");
+    protected final ResourceLocation INACTIVE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/inactive.png");
     public GlobalPos boundTo;
     public BlockSwapperT1BE be;
     BlockSwapperT2Container container;

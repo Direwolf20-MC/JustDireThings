@@ -4,6 +4,9 @@ import com.direwolf20.justdirethings.common.items.interfaces.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,6 +18,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,6 +31,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
@@ -86,8 +91,8 @@ public class BaseSword extends SwordItem implements ToggleableTool, LeftClickabl
      * Reduces the attack damage of a tool when unpowered
      */
     @Override
-    public ItemAttributeModifiers getAttributeModifiers(ItemStack stack) {
-        ItemAttributeModifiers itemAttributeModifiers = super.getAttributeModifiers(stack);
+    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
+        ItemAttributeModifiers itemAttributeModifiers = super.getDefaultAttributeModifiers(stack);
         if (!(stack.getItem() instanceof PoweredTool poweredTool))
             return itemAttributeModifiers;
 
@@ -113,11 +118,12 @@ public class BaseSword extends SwordItem implements ToggleableTool, LeftClickabl
     }
 
     @Override
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Runnable onBroken) {
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
-            int unbreakingLevel = stack.getEnchantmentLevel(Enchantments.UNBREAKING);
+            HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
             double reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
             int finalEnergyCost = (int) Math.max(0, amount - (amount * reductionFactor));
             energyStorage.extractEnergy(finalEnergyCost, false);
@@ -127,25 +133,14 @@ public class BaseSword extends SwordItem implements ToggleableTool, LeftClickabl
     }
 
     @Override
-    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+    public boolean isPrimaryItemFor(ItemStack stack, Holder<Enchantment> enchantment) {
         if (stack.getItem() instanceof PoweredTool)
-            return super.isBookEnchantable(stack, book) && canAcceptEnchantments(book);
-        return super.isBookEnchantable(stack, book);
+            return super.isPrimaryItemFor(stack, enchantment) && canAcceptEnchantments(enchantment);
+        return super.isPrimaryItemFor(stack, enchantment);
     }
 
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        if (stack.getItem() instanceof PoweredTool)
-            return super.canApplyAtEnchantingTable(stack, enchantment) && canAcceptEnchantments(enchantment);
-        return super.canApplyAtEnchantingTable(stack, enchantment);
-    }
-
-    private boolean canAcceptEnchantments(ItemStack book) {
-        return !(book.getEnchantmentLevel(Enchantments.MENDING) > 0); //TODO Validate
-    }
-
-    private boolean canAcceptEnchantments(Enchantment enchantment) {
-        return enchantment != Enchantments.MENDING;
+    private boolean canAcceptEnchantments(Holder<Enchantment> enchantment) {
+        return !enchantment.value().effects().has(EnchantmentEffectComponents.REPAIR_WITH_XP);
     }
 
     @Override

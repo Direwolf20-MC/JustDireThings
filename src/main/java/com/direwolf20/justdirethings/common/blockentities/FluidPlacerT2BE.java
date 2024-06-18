@@ -48,7 +48,7 @@ public class FluidPlacerT2BE extends FluidPlacerT1BE implements PoweredMachineBE
 
     @Override
     public int getStandardEnergyCost() {
-        return 500; // Todo Config?
+        return 500;
     }
 
     @Override

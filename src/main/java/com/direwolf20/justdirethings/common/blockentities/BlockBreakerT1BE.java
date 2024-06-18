@@ -7,12 +7,15 @@ import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -203,7 +206,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public float getDestroySpeed(BlockPos blockPos, ItemStack tool, FakePlayer player, BlockState blockState) {
         float toolDestroySpeed = tool.getDestroySpeed(blockState);
         if (toolDestroySpeed > 1.0F) {
-            int efficiency = tool.getEnchantmentLevel(Enchantments.EFFICIENCY);
+            HolderLookup.RegistryLookup<Enchantment> registrylookup = level.getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+            int efficiency = tool.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.EFFICIENCY));
             if (efficiency > 0) {
                 toolDestroySpeed += (float) (efficiency * efficiency + 1);
             }

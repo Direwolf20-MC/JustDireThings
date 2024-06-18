@@ -16,7 +16,7 @@ public record PortalGunFavoriteChangePayload(
         boolean editing,
         Vec3 coordinates
 ) implements CustomPacketPayload {
-    public static final Type<PortalGunFavoriteChangePayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "portal_gun_favorite_change"));
+    public static final Type<PortalGunFavoriteChangePayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_favorite_change"));
 
     @Override
     public Type<PortalGunFavoriteChangePayload> type() {

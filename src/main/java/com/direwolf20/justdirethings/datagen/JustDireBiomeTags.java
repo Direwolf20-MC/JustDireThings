@@ -19,7 +19,7 @@ public class JustDireBiomeTags extends BiomeTagsProvider {
         super(p_255800_, p_256205_, JustDireThings.MODID, existingFileHelper);
     }
 
-    public static final TagKey<Biome> UNSTABLE_PORTAL_FLUID_VIABLE = TagKey.create(Registries.BIOME, new ResourceLocation(JustDireThings.MODID, "unstable_portal_fluid_viable"));
+    public static final TagKey<Biome> UNSTABLE_PORTAL_FLUID_VIABLE = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "unstable_portal_fluid_viable"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {

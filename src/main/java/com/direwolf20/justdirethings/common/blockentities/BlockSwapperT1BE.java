@@ -205,7 +205,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         if (blockSwapperT1BE != null) {
             addPartnerConnection(boundTo, blockSwapperT1BE); //If the partner still exists at the old spot, connect them, else remove
         } else {
-            //removePartnerConnection(); //TODO What should we do here?
+            //removePartnerConnection();
         }
     }
 
@@ -318,7 +318,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (!entity.canChangeDimensions() && !isSameLevel())
+        if (!entity.canChangeDimensions(level, getPartnerBE().level) && !isSameLevel())
             return false;
         if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;

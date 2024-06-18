@@ -25,14 +25,14 @@ public class DireVertexConsumer extends VertexConsumerWrapper {
     }
 
     @Override
-    public VertexConsumer color(int r, int g, int b, int a) {
+    public VertexConsumer setColor(int r, int g, int b, int a) {
         if (red == -1)
-            parent.color(r, g, b, Math.round((float) 255 * alpha));
+            parent.setColor(r, g, b, Math.round((float) 255 * alpha));
         else {
             int rCol = (int) Mth.lerp(red, 0, r);
             int gCol = (int) Mth.lerp(green, 0, g);
             int bCol = (int) Mth.lerp(blue, 0, b);
-            parent.color(rCol, gCol, bCol, Math.round((float) 255 * alpha));
+            parent.setColor(rCol, gCol, bCol, Math.round((float) 255 * alpha));
         }
         return this;
     }

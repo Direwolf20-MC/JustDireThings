@@ -119,7 +119,7 @@ public class JustDireItemModels extends ItemModelProvider {
 
     public void buckets() {
         for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
-            withExistingParent(bucket.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+            withExistingParent(bucket.getId().getPath(), ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/bucket"))
                     .customLoader(DynamicFluidContainerModelBuilder::begin)
                     .fluid(((BucketItem) bucket.get()).content);
 
@@ -147,7 +147,7 @@ public class JustDireItemModels extends ItemModelProvider {
                 .parent(getExistingFile(mcLoc("item/handheld")))
                 .texture("layer0", defaultModelPath)
                 .override()
-                .predicate(new ResourceLocation("justdirethings", "enabled"), 1.0F) // Using custom property
+                .predicate(ResourceLocation.fromNamespaceAndPath("justdirethings", "enabled"), 1.0F) // Using custom property
                 .model(singleTexture(path + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
                 .end();
     }
