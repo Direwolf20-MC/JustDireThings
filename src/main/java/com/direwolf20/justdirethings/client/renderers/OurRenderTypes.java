@@ -66,7 +66,7 @@ public class OurRenderTypes extends RenderType {
                     .createCompositeState(false));
 
     public static final RenderType TRANSPARENT_BOX = create("transparent_box",
-            DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, true, true,
+            DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true,
             RenderType.CompositeState.builder()
                     .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)  // Use the translucent shader
                     .setLayeringState(VIEW_OFFSET_Z_LAYERING)  // View offset Z layering

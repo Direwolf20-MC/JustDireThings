@@ -126,33 +126,33 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         if (alignment == Direction.Axis.Z) {
             // Render the frame on the Z plane (North-South)
             // Left border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, (minZ + maxZ) / 2, minX + thickness, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB(minX, minY, (minZ + maxZ) / 2, minX + thickness, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
             // Right border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB(maxX - thickness, minY, (minZ + maxZ) / 2, maxX, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB(maxX - thickness, minY, (minZ + maxZ) / 2, maxX, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
             // Bottom border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, (minZ + maxZ) / 2, maxX, minY + thickness, (minZ + maxZ) / 2), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB(minX, minY, (minZ + maxZ) / 2, maxX, minY + thickness, (minZ + maxZ) / 2), r, g, b, alpha);
             // Top border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, maxY - thickness, (minZ + maxZ) / 2, maxX, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB(minX, maxY - thickness, (minZ + maxZ) / 2, maxX, maxY, (minZ + maxZ) / 2), r, g, b, alpha);
         } else if (alignment == Direction.Axis.X) {
             // Render the frame on the X plane (East-West)
             // Left border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, minZ, (minX + maxX) / 2, maxY, minZ + thickness), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, minZ, (minX + maxX) / 2, maxY, minZ + thickness), r, g, b, alpha);
             // Right border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, maxZ - thickness, (minX + maxX) / 2, maxY, maxZ), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, maxZ - thickness, (minX + maxX) / 2, maxY, maxZ), r, g, b, alpha);
             // Bottom border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, minZ, (minX + maxX) / 2, minY + thickness, maxZ), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, minY, minZ, (minX + maxX) / 2, minY + thickness, maxZ), r, g, b, alpha);
             // Top border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, maxY - thickness, minZ, (minX + maxX) / 2, maxY, maxZ), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB((minX + maxX) / 2, maxY - thickness, minZ, (minX + maxX) / 2, maxY, maxZ), r, g, b, alpha);
         } else {
             // Render the frame on the Y plane (Top-Bottom)
             // Left border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, minZ, minX + thickness, minY, maxZ), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB(minX, minY, minZ, minX + thickness, minY, maxZ), r, g, b, alpha);
             // Right border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB(maxX - thickness, minY, minZ, maxX, minY, maxZ), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB(maxX - thickness, minY, minZ, maxX, minY, maxZ), r, g, b, alpha);
             // Front border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, minZ, maxX, minY, minZ + thickness), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB(minX, minY, minZ, maxX, minY, minZ + thickness), r, g, b, alpha);
             // Back border
-            renderBoxSolid(matrix.last().pose(), buffer, new AABB(minX, minY, maxZ - thickness, maxX, minY, maxZ), r, g, b, alpha);
+            renderBoxSolid(matrix, matrix.last().pose(), buffer, new AABB(minX, minY, maxZ - thickness, maxX, minY, maxZ), r, g, b, alpha);
         }
     }
 
