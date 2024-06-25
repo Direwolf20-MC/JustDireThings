@@ -11,7 +11,7 @@ public record PlayerAccessorPayload(
         int direction,
         int accessType
 ) implements CustomPacketPayload {
-    public static final Type<PlayerAccessorPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "player_accessor_packet"));
+    public static final Type<PlayerAccessorPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "player_accessor_packet"));
 
     @Override
     public Type<PlayerAccessorPayload> type() {

@@ -65,6 +65,19 @@ public class OurRenderTypes extends RenderType {
                     .setWriteMaskState(COLOR_DEPTH_WRITE)
                     .createCompositeState(false));
 
+    public static final RenderType TRANSPARENT_BOX = create("transparent_box",
+            DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)  // Use the translucent shader
+                    .setLayeringState(VIEW_OFFSET_Z_LAYERING)  // View offset Z layering
+                    .setTransparencyState(TRANSLUCENT_TRANSPARENCY)  // Enable translucent transparency
+                    .setTextureState(NO_TEXTURE)  // No texture state
+                    .setDepthTestState(LEQUAL_DEPTH_TEST)  // Depth test state
+                    .setCullState(NO_CULL)  // No cull state
+                    .setLightmapState(NO_LIGHTMAP)  // No lightmap state
+                    .setWriteMaskState(COLOR_WRITE)  // Only write color
+                    .createCompositeState(true));  // Enable sort on transparency
+
     public static final RenderType TRIANGLE_STRIP =
             create("triangle_strip", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP, 256, false, false,
                     RenderType.CompositeState.builder()
@@ -80,15 +93,17 @@ public class OurRenderTypes extends RenderType {
     }
 
     /*public static void updateRenders() { //Only used when testing
-        OreXRAY = create("OreXRAY",
-                DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
+        TRANSPARENT_BOX = create("transparent_box",
+                DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, true, true,
                 RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.RENDERTYPE_SOLID_SHADER)
-                        .setLightmapState(LIGHTMAP)
-                        .setTextureState(BLOCK_SHEET)
-                        .setTransparencyState(NO_TRANSPARENCY)
-                        .setWriteMaskState(RenderStateShard.COLOR_WRITE)
-                        .setDepthTestState(GREATER_DEPTH_TEST)
-                        .createCompositeState(false));
+                        .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)  // Use the translucent shader
+                        .setLayeringState(VIEW_OFFSET_Z_LAYERING)  // View offset Z layering
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)  // Enable translucent transparency
+                        .setTextureState(NO_TEXTURE)  // No texture state
+                        .setDepthTestState(LEQUAL_DEPTH_TEST)  // Depth test state
+                        .setCullState(NO_CULL)  // No cull state
+                        .setLightmapState(NO_LIGHTMAP)  // No lightmap state
+                        .setWriteMaskState(COLOR_WRITE)  // Only write color
+                        .createCompositeState(true));  // Enable sort on transparency
     }*/
 }

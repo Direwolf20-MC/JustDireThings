@@ -49,7 +49,7 @@ public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, Powered
 
     @Override
     public int getStandardEnergyCost() {
-        return 25; // Todo Config?
+        return 25;
     }
 
     @Override

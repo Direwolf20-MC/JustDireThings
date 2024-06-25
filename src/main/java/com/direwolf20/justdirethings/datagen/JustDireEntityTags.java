@@ -18,7 +18,7 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
         super(packOutput, providerCompletableFuture, JustDireThings.MODID, existingFileHelper);
     }
 
-    public static final TagKey<EntityType<?>> CREATURE_CATCHER_DENY = TagKey.create(Registries.ENTITY_TYPE, new ResourceLocation(JustDireThings.MODID, "creature_catcher_deny"));
+    public static final TagKey<EntityType<?>> CREATURE_CATCHER_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "creature_catcher_deny"));
 
     @Override
     public void addTags(HolderLookup.Provider lookupProvider) {

@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings;
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
@@ -11,7 +12,6 @@ import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
-import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
@@ -62,8 +62,8 @@ public class JustDireThings {
         );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
                     int capacity = 1000000; //Default
-                    if (itemStack.getItem() instanceof PoweredTool poweredTool) {
-                        capacity = poweredTool.getMaxEnergy();
+                    if (itemStack.getItem() instanceof PoweredItem poweredItem) {
+                        capacity = poweredItem.getMaxEnergy();
                     }
                     return new EnergyStorageItemStackNoReceive(capacity, itemStack);
                 },
@@ -89,7 +89,9 @@ public class JustDireThings {
                 Registration.CelestigemPaxel.get(),
                 Registration.EclipseAlloyPaxel.get(),
                 Registration.VoidshiftWand.get(),
-                Registration.EclipsegateWand.get()
+                Registration.EclipsegateWand.get(),
+                Registration.PortalGun.get(),
+                Registration.PortalGunV2.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
@@ -131,8 +133,27 @@ public class JustDireThings {
                 Registration.ClickerT2.get(),
                 Registration.DropperT1.get(),
                 Registration.DropperT2.get(),
-                Registration.GeneratorT1.get(),
-                Registration.EnergyTransmitter.get()
+                Registration.EnergyTransmitter.get(),
+                Registration.FluidPlacerT1.get(),
+                Registration.FluidPlacerT2.get(),
+                Registration.FluidCollectorT1.get(),
+                Registration.FluidCollectorT2.get()
+        );
+        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof BaseMachineBE)
+                        return be.getData(Registration.GENERATOR_ITEM_HANDLER);
+                    return null;
+                },
+                Registration.GeneratorT1.get()
+        );
+        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof BaseMachineBE)
+                        return be.getData(Registration.GENERATOR_FLUID_ITEM_HANDLER);
+                    return null;
+                },
+                Registration.GeneratorFluidT1.get()
         );
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -158,7 +179,9 @@ public class JustDireThings {
                 Registration.ClickerT2.get(),
                 Registration.SensorT2.get(),
                 Registration.DropperT2.get(),
-                Registration.BlockSwapperT2.get()
+                Registration.BlockSwapperT2.get(),
+                Registration.FluidPlacerT2.get(),
+                Registration.FluidCollectorT2.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -166,7 +189,8 @@ public class JustDireThings {
                         return be.getData(Registration.ENERGYSTORAGE_GENERATORS);
                     return null;
                 },
-                Registration.GeneratorT1.get()
+                Registration.GeneratorT1.get(),
+                Registration.GeneratorFluidT1.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -176,6 +200,27 @@ public class JustDireThings {
                     return null;
                 },
                 Registration.EnergyTransmitter.get()
+        );
+        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof FluidMachineBE) {
+                        return be.getData(Registration.MACHINE_FLUID_HANDLER);
+                    }
+                    return null;
+                },
+                Registration.FluidPlacerT1.get(),
+                Registration.FluidPlacerT2.get(),
+                Registration.FluidCollectorT1.get(),
+                Registration.FluidCollectorT2.get()
+        );
+        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof FluidMachineBE) {
+                        return be.getData(Registration.GENERATOR_FLUID_HANDLER);
+                    }
+                    return null;
+                },
+                Registration.GeneratorFluidT1.get()
         );
     }
 }

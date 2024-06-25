@@ -25,12 +25,12 @@ public class JustDireItemTags extends ItemTagsProvider {
     public static final TagKey<Item> TOOLS_WRENCH = forgeTag("tools/wrench");
 
     private static TagKey<Item> forgeTag(String name) {
-        return ItemTags.create(new ResourceLocation("c", name));
+        return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
     }
 
-    public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "deny_fuel_canister"));
-    public static final TagKey<Item> AUTO_SMELT_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "auto_smelt_deny"));
-    public static final TagKey<Item> AUTO_SMOKE_DENY = ItemTags.create(new ResourceLocation(JustDireThings.MODID, "auto_smoke_deny"));
+    public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "deny_fuel_canister"));
+    public static final TagKey<Item> AUTO_SMELT_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "auto_smelt_deny"));
+    public static final TagKey<Item> AUTO_SMOKE_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "auto_smoke_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {

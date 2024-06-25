@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": {
+      "item": "justdirethings:blazegold_ingot"
+    },
+    "e": {
+      "item": "minecraft:ender_eye"
+    }
+  },
+  "pattern": [
+    " bb",
+    "beb",
+    "b  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:portalgun"
+  }
+}

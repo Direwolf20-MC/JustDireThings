@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
@@ -46,6 +47,7 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.DropperT1_ITEM.getId().getPath(), modLoc("block/droppert1"));
         withExistingParent(Registration.DropperT2_ITEM.getId().getPath(), modLoc("block/droppert2"));
         withExistingParent(Registration.GeneratorT1_ITEM.getId().getPath(), modLoc("block/generatort1"));
+        withExistingParent(Registration.GeneratorFluidT1_ITEM.getId().getPath(), modLoc("block/generatorfluidt1"));
         withExistingParent(Registration.EnergyTransmitter_ITEM.getId().getPath(), modLoc("block/energytransmitter"));
         withExistingParent(Registration.RawCoal_T1_ITEM.getId().getPath(), modLoc("block/raw_coal_t1_ore"));
         withExistingParent(Registration.RawCoal_T2_ITEM.getId().getPath(), modLoc("block/raw_coal_t2_ore"));
@@ -58,6 +60,10 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.BlockSwapperT1_ITEM.getId().getPath(), modLoc("block/blockswappert1"));
         withExistingParent(Registration.BlockSwapperT2_ITEM.getId().getPath(), modLoc("block/blockswappert2"));
         withExistingParent(Registration.PlayerAccessor.getId().getPath(), modLoc("block/playeraccessor"));
+        withExistingParent(Registration.FluidPlacerT1_ITEM.getId().getPath(), modLoc("block/fluidplacert1"));
+        withExistingParent(Registration.FluidPlacerT2_ITEM.getId().getPath(), modLoc("block/fluidplacert2"));
+        withExistingParent(Registration.FluidCollectorT1_ITEM.getId().getPath(), modLoc("block/fluidcollectort1"));
+        withExistingParent(Registration.FluidCollectorT2_ITEM.getId().getPath(), modLoc("block/fluidcollectort2"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));
@@ -78,6 +84,8 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.Coal_T2.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/coal_t2"));
         singleTexture(Registration.Coal_T3.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/coal_t3"));
         singleTexture(Registration.Coal_T4.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/coal_t4"));
+        singleTexture(Registration.PolymorphicCatalyst.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/polymorphic_catalyst"));
+        singleTexture(Registration.PortalFluidCatalyst.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/portal_fluid_catalyst"));
 
         singleTexture(Registration.FerricoreWrench.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ferricore_wrench"));
         singleTexture(Registration.TotemOfDeathRecall.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/totem_of_death_recall"));
@@ -92,14 +100,30 @@ public class JustDireItemModels extends ItemModelProvider {
         //Tool Items
         registerTools();
         registerArmors();
+        buckets();
 
         //Generators
         registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
 
         //Buckets
-        withExistingParent(Registration.PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+        /*withExistingParent(Registration.PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(Registration.PORTAL_FLUID_BUCKET.get().content);
+        withExistingParent(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+                .customLoader(DynamicFluidContainerModelBuilder::begin)
+                .fluid(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get().content);
+        withExistingParent(Registration.POLYMORPHIC_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+                .customLoader(DynamicFluidContainerModelBuilder::begin)
+                .fluid(Registration.POLYMORPHIC_FLUID_BUCKET.get().content);*/
+    }
+
+    public void buckets() {
+        for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
+            withExistingParent(bucket.getId().getPath(), ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/bucket"))
+                    .customLoader(DynamicFluidContainerModelBuilder::begin)
+                    .fluid(((BucketItem) bucket.get()).content);
+
+        }
     }
 
     public void registerTools() {
@@ -123,7 +147,7 @@ public class JustDireItemModels extends ItemModelProvider {
                 .parent(getExistingFile(mcLoc("item/handheld")))
                 .texture("layer0", defaultModelPath)
                 .override()
-                .predicate(new ResourceLocation("justdirethings", "enabled"), 1.0F) // Using custom property
+                .predicate(ResourceLocation.fromNamespaceAndPath("justdirethings", "enabled"), 1.0F) // Using custom property
                 .model(singleTexture(path + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
                 .end();
     }

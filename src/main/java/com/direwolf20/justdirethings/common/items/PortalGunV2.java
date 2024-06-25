@@ -3,6 +3,9 @@ package com.direwolf20.justdirethings.common.items;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.common.items.interfaces.BasePoweredItem;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -37,13 +40,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PortalGunV2 extends Item {
+public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
     public static final int MAX_FAVORITES = 12;
     public static final int maxMB = 8000;
 
     public PortalGunV2() {
         super(new Properties()
                 .stacksTo(1));
+    }
+
+    @Override
+    public int getMaxEnergy() {
+        return Config.PORTAL_GUN_V2_RF_CAPACITY.get();
     }
 
     @Override
@@ -77,7 +85,6 @@ public class PortalGunV2 extends Item {
         if (mc.level == null || mc.player == null) {
             return;
         }
-
         IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler == null) {
             return;
@@ -114,6 +121,11 @@ public class PortalGunV2 extends Item {
             player.playNotifySound(SoundEvents.VAULT_INSERT_ITEM_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
             return;
         }
+        if (!PoweredItem.consumeEnergy(itemStack, Config.PORTAL_GUN_V2_RF_COST.get())) {
+            player.displayClientMessage(Component.translatable("justdirethings.lowenergy"), true);
+            player.playNotifySound(SoundEvents.VAULT_INSERT_ITEM_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            return;
+        }
         PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType, true, portalDestination);
         projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1F, 1.0F);
         level.addFreshEntity(projectile);
@@ -124,12 +136,12 @@ public class PortalGunV2 extends Item {
         if (player.isCreative()) return 0;
         ServerLevel targetLevel = sourceLevel.getServer().getLevel(portalDestination.globalVec3().dimension());
         if (!targetLevel.equals(sourceLevel)) {
-            return 100; //Todo Config
+            return 100;
         }
         HitResult result = player.pick(5, 0f, false); //This will get the location the projectile will hit, or close to it probably
         Vec3 targetPosition = portalDestination.globalVec3().position();
         double distance = targetPosition.distanceTo(result.getLocation());
-        return Math.min((int) Math.ceil(distance * 0.25), 100); //TODO Config
+        return Math.min((int) Math.ceil(distance * 0.25), 100);
     }
 
     public static boolean hasEnoughFluid(ItemStack itemStack, int amt) {
@@ -234,5 +246,20 @@ public class PortalGunV2 extends Item {
         if (offHand.getItem() instanceof PortalGunV2)
             return offHand;
         return ItemStack.EMPTY;
+    }
+
+    public static int getFullness(ItemStack itemStack) {
+        IFluidHandlerItem fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler != null && !fluidHandler.getFluidInTank(0).isEmpty()) {
+            float percentFull = ((float) fluidHandler.getFluidInTank(0).getAmount() / maxMB) * 100;
+            if (percentFull > 0 && percentFull <= 33) {
+                return 1;
+            } else if (percentFull > 33 && percentFull <= 66) {
+                return 2;
+            } else if (percentFull > 66) {
+                return 3;
+            }
+        }
+        return 0;
     }
 }

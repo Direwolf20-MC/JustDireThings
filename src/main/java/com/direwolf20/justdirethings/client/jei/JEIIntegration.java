@@ -1,5 +1,5 @@
 package com.direwolf20.justdirethings.client.jei;
-/*
+
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.jei.ghostfilters.GhostFilterBasic;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseScreen;
@@ -36,7 +36,7 @@ public class JEIIntegration implements IModPlugin {
     @Nonnull
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(JustDireThings.MODID, "jei_plugin");
+        return ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "jei_plugin");
     }
 
     @Override
@@ -47,13 +47,13 @@ public class JEIIntegration implements IModPlugin {
         List<RecipeHolder<CraftingRecipe>> hiddenRecipes = new ArrayList<>();
         for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
-                Optional<RecipeHolder<?>> recipe = recipeManager.byKey(new ResourceLocation(sidedBlock.getId() + "_nbtclear"));
+                Optional<RecipeHolder<?>> recipe = recipeManager.byKey(ResourceLocation.parse(sidedBlock.getId() + "_nbtclear"));
                 recipe.ifPresent(recipeHolder -> hiddenRecipes.add((RecipeHolder<CraftingRecipe>) recipeHolder));
             }
         }
         for (var sidedBlock : Registration.BLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
-                Optional<RecipeHolder<?>> recipe = recipeManager.byKey(new ResourceLocation(sidedBlock.getId() + "_nbtclear"));
+                Optional<RecipeHolder<?>> recipe = recipeManager.byKey(ResourceLocation.parse(sidedBlock.getId() + "_nbtclear"));
                 recipe.ifPresent(recipeHolder -> hiddenRecipes.add((RecipeHolder<CraftingRecipe>) recipeHolder));
             }
         }
@@ -95,4 +95,3 @@ public class JEIIntegration implements IModPlugin {
     }
 
 }
-*/

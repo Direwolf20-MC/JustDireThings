@@ -32,7 +32,7 @@ public class ArmorTiers {
             0.0F,
             0.0F,
             () -> Ingredient.of(Registration.FerricoreIngot.get()),
-            List.of(new ArmorMaterial.Layer(new ResourceLocation(JustDireThings.MODID, "ferricore"), "", true), new ArmorMaterial.Layer(new ResourceLocation(JustDireThings.MODID, "ferricore"), "_overlay", false))
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ferricore"), "", true), new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ferricore"), "_overlay", false))
     );
     public static final Holder<ArmorMaterial> BLAZEGOLD = register(
             "blazegold",
@@ -48,7 +48,7 @@ public class ArmorTiers {
             0.0F,
             0.0F,
             () -> Ingredient.of(Registration.BlazegoldIngot.get()),
-            List.of(new ArmorMaterial.Layer(new ResourceLocation(JustDireThings.MODID, "blazegold"), "", true), new ArmorMaterial.Layer(new ResourceLocation(JustDireThings.MODID, "blazegold"), "_overlay", false))
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "blazegold"), "", true), new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "blazegold"), "_overlay", false))
     );
     public static final Holder<ArmorMaterial> CELESTIGEM = register(
             "celestigem",
@@ -64,7 +64,7 @@ public class ArmorTiers {
             2.0F,
             0.0F,
             () -> Ingredient.of(Registration.Celestigem.get()),
-            List.of(new ArmorMaterial.Layer(new ResourceLocation(JustDireThings.MODID, "celestigem"), "", true), new ArmorMaterial.Layer(new ResourceLocation(JustDireThings.MODID, "celestigem"), "_overlay", false))
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "celestigem"), "", true), new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "celestigem"), "_overlay", false))
     );
     public static final Holder<ArmorMaterial> ECLIPSEALLOY = register(
             "eclipsealloy",
@@ -80,7 +80,7 @@ public class ArmorTiers {
             3.0F,
             0.1F,
             () -> Ingredient.of(Registration.EclipseAlloyIngot.get()),
-            List.of(new ArmorMaterial.Layer(new ResourceLocation(JustDireThings.MODID, "eclipsealloy"), "", true), new ArmorMaterial.Layer(new ResourceLocation(JustDireThings.MODID, "eclipsealloy"), "_overlay", false))
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy"), "", true), new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy"), "_overlay", false))
     );
 
     private static Holder<ArmorMaterial> register(
@@ -101,7 +101,7 @@ public class ArmorTiers {
 
         return Registry.registerForHolder(
                 BuiltInRegistries.ARMOR_MATERIAL,
-                new ResourceLocation(JustDireThings.MODID, name),
+                ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, name),
                 new ArmorMaterial(enummap, enchantability, equipsound, repairMaterial, armorLayers, toughness, knockbackResistance)
         );
     }

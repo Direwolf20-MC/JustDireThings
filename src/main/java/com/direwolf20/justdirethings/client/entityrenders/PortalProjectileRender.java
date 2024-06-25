@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
-    protected static final ResourceLocation TEXTURE = new ResourceLocation(JustDireThings.MODID, "textures/entity/portal_projectile.png");
+    protected static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/portal_projectile.png");
     protected final PortalProjectileModel model;
 
     public PortalProjectileRender(EntityRendererProvider.Context pContext) {
@@ -26,6 +26,7 @@ public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
     @Override
     public void render(PortalProjectile pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
         pPoseStack.pushPose();
+        //RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.BLUE, pBuffer);
         float f = Mth.rotLerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot());
         float f1 = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
         float f2 = (float) pEntity.tickCount + pPartialTicks;
@@ -35,11 +36,11 @@ public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
         pPoseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(f2 * 0.15F) * 360.0F));
         //pPoseStack.mulPose(Axis.YP.rotationDegrees(f2 % 360 * 20));
         //pPoseStack.mulPose(Vector3f.YP.rotationDegrees(f2 % 360 * 20));
-        pPoseStack.scale(1f, 1f, 1f);
+        pPoseStack.scale(0.5f, 0.5f, 0.5f);
 
         this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
         VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(TEXTURE));
-        this.model.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1F);
+        this.model.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY);
         pPoseStack.popPose();
         super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }

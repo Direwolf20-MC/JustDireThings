@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import net.minecraft.core.BlockPos;
@@ -24,7 +25,7 @@ public class PlayerEvents {
         int rfCost = 0;
         if (stack.getItem() instanceof ToggleableTool toggleableTool && stack.isCorrectToolForDrops(event.getState())) {
             if (stack.getItem() instanceof PoweredTool poweredTool) {
-                if (poweredTool.getAvailableEnergy(stack) < poweredTool.getBlockBreakFECost()) {
+                if (PoweredItem.getAvailableEnergy(stack) < poweredTool.getBlockBreakFECost()) {
                     event.setNewSpeed(0.1f);
                     return;
                 }
@@ -50,7 +51,7 @@ public class PlayerEvents {
                 float relative = originalDestroySpeed / cumulativeDestroy;
                 targetSpeed = event.getOriginalSpeed() * relative;
             }
-            if (toggleableTool.canUseAbility(stack, Ability.INSTABREAK) && stack.getItem() instanceof PoweredTool poweredTool && poweredTool.getAvailableEnergy(stack) >= rfCost) {
+            if (toggleableTool.canUseAbility(stack, Ability.INSTABREAK) && stack.getItem() instanceof PoweredItem && PoweredItem.getAvailableEnergy(stack) >= rfCost) {
                 targetSpeed = 10000f;
             }
             if (targetSpeed != event.getOriginalSpeed())

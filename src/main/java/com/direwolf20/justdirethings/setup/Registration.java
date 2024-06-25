@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.setup;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.*;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier1;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier2;
@@ -15,18 +16,40 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier1;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier2;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier3;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
-import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
-import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
-import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorage;
+import com.direwolf20.justdirethings.common.capabilities.*;
 import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
 import com.direwolf20.justdirethings.common.entities.PortalEntity;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
+import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
+import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluid;
+import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluidBlock;
+import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluidType;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluid;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
-import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBucket;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidType;
+import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2Fuel;
+import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.refinedt2fuel.RefinedT2FuelType;
+import com.direwolf20.justdirethings.common.fluids.refinedt3fuel.RefinedT3Fuel;
+import com.direwolf20.justdirethings.common.fluids.refinedt3fuel.RefinedT3FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.refinedt3fuel.RefinedT3FuelType;
+import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4Fuel;
+import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4FuelType;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2Fuel;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelType;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt3fuel.UnrefinedT3Fuel;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt3fuel.UnrefinedT3FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt3fuel.UnrefinedT3FuelType;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt4fuel.UnrefinedT4Fuel;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt4fuel.UnrefinedT4FuelBlock;
+import com.direwolf20.justdirethings.common.fluids.unrefinedt4fuel.UnrefinedT4FuelType;
+import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluid;
+import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
+import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
 import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
 import com.direwolf20.justdirethings.common.items.armors.FerricoreChestplate;
@@ -35,6 +58,7 @@ import com.direwolf20.justdirethings.common.items.armors.FerricoreLeggings;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
+import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -46,6 +70,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -68,13 +93,15 @@ import static com.direwolf20.justdirethings.JustDireThings.MODID;
 import static com.direwolf20.justdirethings.client.particles.ModParticles.PARTICLE_TYPES;
 
 public class Registration {
-    public static final TicketController TICKET_CONTROLLER = new TicketController(new ResourceLocation(MODID, "chunk_loader"), null);
+    public static final TicketController TICKET_CONTROLLER = new TicketController(ResourceLocation.fromNamespaceAndPath(MODID, "chunk_loader"), null);
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister.Blocks FLUID_BLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.FLUID_TYPES, MODID);
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, MODID);
     public static final DeferredRegister.Blocks SIDEDBLOCKS = DeferredRegister.createBlocks(MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items BUCKET_ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items ARMORS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
@@ -83,23 +110,27 @@ public class Registration {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, MODID);
 
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
-    public static final Supplier<RecipeType<GooSpreadRecipe>> GOO_SPREAD_RECIPE_TYPE = RECIPE_TYPES.register("goospreadrecipe", () -> RecipeType.simple(new ResourceLocation(MODID, "goospreadrecipe")));
+    public static final Supplier<RecipeType<GooSpreadRecipe>> GOO_SPREAD_RECIPE_TYPE = RECIPE_TYPES.register("goospreadrecipe", () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(MODID, "goospreadrecipe")));
+    public static final Supplier<RecipeType<FluidDropRecipe>> FLUID_DROP_RECIPE_TYPE = RECIPE_TYPES.register("fluiddroprecipe", () -> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(MODID, "fluiddroprecipe")));
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, JustDireThings.MODID);
     public static final Supplier<GooSpreadRecipe.Serializer> GOO_SPREAD_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("goospread", GooSpreadRecipe.Serializer::new);
+    public static final Supplier<FluidDropRecipe.Serializer> FLUID_DROP_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("fluiddrop", FluidDropRecipe.Serializer::new);
 
     private static final DeferredRegister<SoundEvent> SOUND_REGISTRY = DeferredRegister.create(Registries.SOUND_EVENT, JustDireThings.MODID);
-    public static final Supplier<SoundEvent> BEEP = SOUND_REGISTRY.register("beep", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(JustDireThings.MODID, "beep")));
-    public static final Supplier<SoundEvent> PORTAL_GUN_CLOSE = SOUND_REGISTRY.register("portal_gun_close", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(JustDireThings.MODID, "portal_gun_close")));
-    public static final Supplier<SoundEvent> PORTAL_GUN_OPEN = SOUND_REGISTRY.register("portal_gun_open", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(JustDireThings.MODID, "portal_gun_open")));
+    public static final Supplier<SoundEvent> BEEP = SOUND_REGISTRY.register("beep", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "beep")));
+    public static final Supplier<SoundEvent> PORTAL_GUN_CLOSE = SOUND_REGISTRY.register("portal_gun_close", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_close")));
+    public static final Supplier<SoundEvent> PORTAL_GUN_OPEN = SOUND_REGISTRY.register("portal_gun_open", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_open")));
 
 
     public static void init(IEventBus eventBus) {
         BLOCKS.register(eventBus);
+        FLUID_BLOCKS.register(eventBus);
         FLUID_TYPES.register(eventBus);
         FLUIDS.register(eventBus);
         SIDEDBLOCKS.register(eventBus);
         ITEMS.register(eventBus);
+        BUCKET_ITEMS.register(eventBus);
         TOOLS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);
         CONTAINERS.register(eventBus);
@@ -141,17 +172,113 @@ public class Registration {
     public static final DeferredHolder<Block, EclipseGateBlock> EclipseGateBlock = BLOCKS.register("eclipsegateblock", EclipseGateBlock::new);
 
     //Fluids
+    //Polymorphic Fluid
+    public static final DeferredHolder<FluidType, FluidType> POLYMORPHIC_FLUID_TYPE = FLUID_TYPES.register("polymorphic_fluid_type",
+            PolymorphicFluidType::new);
+    public static final DeferredHolder<Fluid, PolymorphicFluid> POLYMORPHIC_FLUID_FLOWING = FLUIDS.register("polymorphic_fluid_flowing",
+            PolymorphicFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, PolymorphicFluid> POLYMORPHIC_FLUID_SOURCE = FLUIDS.register("polymorphic_fluid_source",
+            PolymorphicFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> POLYMORPHIC_FLUID_BLOCK = FLUID_BLOCKS.register("polymorphic_fluid_block",
+            PolymorphicFluidBlock::new);
+    public static final DeferredHolder<Item, BucketItem> POLYMORPHIC_FLUID_BUCKET = BUCKET_ITEMS.register("polymorphic_fluid_bucket",
+            () -> new BucketItem(Registration.POLYMORPHIC_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Portal Fluid
     public static final DeferredHolder<FluidType, FluidType> PORTAL_FLUID_TYPE = FLUID_TYPES.register("portal_fluid_type",
             PortalFluidType::new);
     public static final DeferredHolder<Fluid, PortalFluid> PORTAL_FLUID_FLOWING = FLUIDS.register("portal_fluid_flowing",
             PortalFluid.Flowing::new);
     public static final DeferredHolder<Fluid, PortalFluid> PORTAL_FLUID_SOURCE = FLUIDS.register("portal_fluid_source",
             PortalFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = BLOCKS.register("portal_fluid_block",
+    public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = FLUID_BLOCKS.register("portal_fluid_block",
             PortalFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = ITEMS.register("portal_fluid_bucket",
-            PortalFluidBucket::new);
+    public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = BUCKET_ITEMS.register("portal_fluid_bucket",
+            () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
+    //Unstable Portal Fluid
+    public static final DeferredHolder<FluidType, FluidType> UNSTABLE_PORTAL_FLUID_TYPE = FLUID_TYPES.register("unstable_portal_fluid_type",
+            UnstablePortalFluidType::new);
+    public static final DeferredHolder<Fluid, UnstablePortalFluid> UNSTABLE_PORTAL_FLUID_FLOWING = FLUIDS.register("unstable_portal_fluid_flowing",
+            UnstablePortalFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, UnstablePortalFluid> UNSTABLE_PORTAL_FLUID_SOURCE = FLUIDS.register("unstable_portal_fluid_source",
+            UnstablePortalFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> UNSTABLE_PORTAL_FLUID_BLOCK = FLUID_BLOCKS.register("unstable_portal_fluid_block",
+            UnstablePortalFluidBlock::new);
+    public static final DeferredHolder<Item, BucketItem> UNSTABLE_PORTAL_FLUID_BUCKET = BUCKET_ITEMS.register("unstable_portal_fluid_bucket",
+            () -> new BucketItem(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Unrefined T2 Fuel
+    public static final DeferredHolder<FluidType, FluidType> UNREFINED_T2_FLUID_TYPE = FLUID_TYPES.register("unrefined_t2_fluid_type",
+            UnrefinedT2FuelType::new);
+    public static final DeferredHolder<Fluid, UnrefinedT2Fuel> UNREFINED_T2_FLUID_FLOWING = FLUIDS.register("unrefined_t2_fluid_flowing",
+            UnrefinedT2Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, UnrefinedT2Fuel> UNREFINED_T2_FLUID_SOURCE = FLUIDS.register("unrefined_t2_fluid_source",
+            UnrefinedT2Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T2_FLUID_BLOCK = FLUID_BLOCKS.register("unrefined_t2_fluid_block",
+            UnrefinedT2FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> UNREFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t2_fluid_bucket",
+            () -> new BucketItem(Registration.UNREFINED_T2_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Refined T2 Fuel
+    public static final DeferredHolder<FluidType, FluidType> REFINED_T2_FLUID_TYPE = FLUID_TYPES.register("refined_t2_fluid_type",
+            RefinedT2FuelType::new);
+    public static final DeferredHolder<Fluid, RefinedT2Fuel> REFINED_T2_FLUID_FLOWING = FLUIDS.register("refined_t2_fluid_flowing",
+            RefinedT2Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, RefinedT2Fuel> REFINED_T2_FLUID_SOURCE = FLUIDS.register("refined_t2_fluid_source",
+            RefinedT2Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> REFINED_T2_FLUID_BLOCK = FLUID_BLOCKS.register("refined_t2_fluid_block",
+            RefinedT2FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> REFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t2_fluid_bucket",
+            () -> new BucketItem(Registration.REFINED_T2_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Unrefined T3 Fuel
+    public static final DeferredHolder<FluidType, FluidType> UNREFINED_T3_FLUID_TYPE = FLUID_TYPES.register("unrefined_t3_fluid_type",
+            UnrefinedT3FuelType::new);
+    public static final DeferredHolder<Fluid, UnrefinedT3Fuel> UNREFINED_T3_FLUID_FLOWING = FLUIDS.register("unrefined_t3_fluid_flowing",
+            UnrefinedT3Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, UnrefinedT3Fuel> UNREFINED_T3_FLUID_SOURCE = FLUIDS.register("unrefined_t3_fluid_source",
+            UnrefinedT3Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T3_FLUID_BLOCK = FLUID_BLOCKS.register("unrefined_t3_fluid_block",
+            UnrefinedT3FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> UNREFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t3_fluid_bucket",
+            () -> new BucketItem(Registration.UNREFINED_T3_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Refined T3 Fuel
+    public static final DeferredHolder<FluidType, FluidType> REFINED_T3_FLUID_TYPE = FLUID_TYPES.register("refined_t3_fluid_type",
+            RefinedT3FuelType::new);
+    public static final DeferredHolder<Fluid, RefinedT3Fuel> REFINED_T3_FLUID_FLOWING = FLUIDS.register("refined_t3_fluid_flowing",
+            RefinedT3Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, RefinedT3Fuel> REFINED_T3_FLUID_SOURCE = FLUIDS.register("refined_t3_fluid_source",
+            RefinedT3Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> REFINED_T3_FLUID_BLOCK = FLUID_BLOCKS.register("refined_t3_fluid_block",
+            RefinedT3FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> REFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t3_fluid_bucket",
+            () -> new BucketItem(Registration.REFINED_T3_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Unrefined T4 Fuel
+    public static final DeferredHolder<FluidType, FluidType> UNREFINED_T4_FLUID_TYPE = FLUID_TYPES.register("unrefined_t4_fluid_type",
+            UnrefinedT4FuelType::new);
+    public static final DeferredHolder<Fluid, UnrefinedT4Fuel> UNREFINED_T4_FLUID_FLOWING = FLUIDS.register("unrefined_t4_fluid_flowing",
+            UnrefinedT4Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, UnrefinedT4Fuel> UNREFINED_T4_FLUID_SOURCE = FLUIDS.register("unrefined_t4_fluid_source",
+            UnrefinedT4Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T4_FLUID_BLOCK = FLUID_BLOCKS.register("unrefined_t4_fluid_block",
+            UnrefinedT4FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> UNREFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t4_fluid_bucket",
+            () -> new BucketItem(Registration.UNREFINED_T4_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Refined T4 Fuel
+    public static final DeferredHolder<FluidType, FluidType> REFINED_T4_FLUID_TYPE = FLUID_TYPES.register("refined_t4_fluid_type",
+            RefinedT4FuelType::new);
+    public static final DeferredHolder<Fluid, RefinedT4Fuel> REFINED_T4_FLUID_FLOWING = FLUIDS.register("refined_t4_fluid_flowing",
+            RefinedT4Fuel.Flowing::new);
+    public static final DeferredHolder<Fluid, RefinedT4Fuel> REFINED_T4_FLUID_SOURCE = FLUIDS.register("refined_t4_fluid_source",
+            RefinedT4Fuel.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> REFINED_T4_FLUID_BLOCK = FLUID_BLOCKS.register("refined_t4_fluid_block",
+            RefinedT4FuelBlock::new);
+    public static final DeferredHolder<Item, BucketItem> REFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t4_fluid_bucket",
+            () -> new BucketItem(Registration.REFINED_T4_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
     //Machines
@@ -183,10 +310,20 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> BlockSwapperT2_ITEM = ITEMS.register("blockswappert2", () -> new BlockItem(BlockSwapperT2.get(), new Item.Properties()));
     public static final DeferredHolder<Block, PlayerAccessor> PlayerAccessor = BLOCKS.register("playeraccessor", PlayerAccessor::new);
     public static final DeferredHolder<Item, BlockItem> PlayerAccessor_ITEM = ITEMS.register("playeraccessor", () -> new BlockItem(PlayerAccessor.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, FluidPlacerT1> FluidPlacerT1 = SIDEDBLOCKS.register("fluidplacert1", FluidPlacerT1::new);
+    public static final DeferredHolder<Item, BlockItem> FluidPlacerT1_ITEM = ITEMS.register("fluidplacert1", () -> new BlockItem(FluidPlacerT1.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, FluidPlacerT2> FluidPlacerT2 = BLOCKS.register("fluidplacert2", FluidPlacerT2::new);
+    public static final DeferredHolder<Item, BlockItem> FluidPlacerT2_ITEM = ITEMS.register("fluidplacert2", () -> new BlockItem(FluidPlacerT2.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, FluidCollectorT1> FluidCollectorT1 = SIDEDBLOCKS.register("fluidcollectort1", FluidCollectorT1::new);
+    public static final DeferredHolder<Item, BlockItem> FluidCollectorT1_ITEM = ITEMS.register("fluidcollectort1", () -> new BlockItem(FluidCollectorT1.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, FluidCollectorT2> FluidCollectorT2 = BLOCKS.register("fluidcollectort2", FluidCollectorT2::new);
+    public static final DeferredHolder<Item, BlockItem> FluidCollectorT2_ITEM = ITEMS.register("fluidcollectort2", () -> new BlockItem(FluidCollectorT2.get(), new Item.Properties()));
 
     //Power Machines
     public static final DeferredHolder<Block, GeneratorT1> GeneratorT1 = BLOCKS.register("generatort1", GeneratorT1::new);
+    public static final DeferredHolder<Block, GeneratorFluidT1> GeneratorFluidT1 = BLOCKS.register("generatorfluidt1", GeneratorFluidT1::new);
     public static final DeferredHolder<Item, BlockItem> GeneratorT1_ITEM = ITEMS.register("generatort1", () -> new BlockItem(GeneratorT1.get(), new Item.Properties()));
+    public static final DeferredHolder<Item, BlockItem> GeneratorFluidT1_ITEM = ITEMS.register("generatorfluidt1", () -> new BlockItem(GeneratorFluidT1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, EnergyTransmitter> EnergyTransmitter = BLOCKS.register("energytransmitter", EnergyTransmitter::new);
     public static final DeferredHolder<Item, BlockItem> EnergyTransmitter_ITEM = ITEMS.register("energytransmitter", () -> new BlockItem(EnergyTransmitter.get(), new Item.Properties()));
 
@@ -244,11 +381,16 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DropperT1BE>> DropperT1BE = BLOCK_ENTITIES.register("droppert1", () -> BlockEntityType.Builder.of(DropperT1BE::new, DropperT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DropperT2BE>> DropperT2BE = BLOCK_ENTITIES.register("droppert2", () -> BlockEntityType.Builder.of(DropperT2BE::new, DropperT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeneratorT1BE>> GeneratorT1BE = BLOCK_ENTITIES.register("generatort1", () -> BlockEntityType.Builder.of(GeneratorT1BE::new, GeneratorT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeneratorFluidT1BE>> GeneratorFluidT1BE = BLOCK_ENTITIES.register("generatorfluidt1", () -> BlockEntityType.Builder.of(GeneratorFluidT1BE::new, GeneratorFluidT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnergyTransmitterBE>> EnergyTransmitterBE = BLOCK_ENTITIES.register("energytransmitter", () -> BlockEntityType.Builder.of(EnergyTransmitterBE::new, EnergyTransmitter.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockSwapperT1BE>> BlockSwapperT1BE = BLOCK_ENTITIES.register("blockswappert1", () -> BlockEntityType.Builder.of(BlockSwapperT1BE::new, BlockSwapperT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BlockSwapperT2BE>> BlockSwapperT2BE = BLOCK_ENTITIES.register("blockswappert2", () -> BlockEntityType.Builder.of(BlockSwapperT2BE::new, BlockSwapperT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PlayerAccessorBE>> PlayerAccessorBE = BLOCK_ENTITIES.register("playeraccessorbe", () -> BlockEntityType.Builder.of(PlayerAccessorBE::new, PlayerAccessor.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EclipseGateBE>> EclipseGateBE = BLOCK_ENTITIES.register("eclipsegatebe", () -> BlockEntityType.Builder.of(EclipseGateBE::new, EclipseGateBlock.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPlacerT1BE>> FluidPlacerT1BE = BLOCK_ENTITIES.register("fluidplacert1", () -> BlockEntityType.Builder.of(FluidPlacerT1BE::new, FluidPlacerT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPlacerT2BE>> FluidPlacerT2BE = BLOCK_ENTITIES.register("fluidplacert2", () -> BlockEntityType.Builder.of(FluidPlacerT2BE::new, FluidPlacerT2.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT1BE>> FluidCollectorT1BE = BLOCK_ENTITIES.register("fluidcollectort1", () -> BlockEntityType.Builder.of(FluidCollectorT1BE::new, FluidCollectorT1.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT2BE>> FluidCollectorT2BE = BLOCK_ENTITIES.register("fluidcollectort2", () -> BlockEntityType.Builder.of(FluidCollectorT2BE::new, FluidCollectorT2.get()).build(null));
 
     //Items - Raw Resources
     public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
@@ -264,6 +406,8 @@ public class Registration {
     public static final DeferredHolder<Item, Coal_T2> Coal_T2 = ITEMS.register("coal_t2", Coal_T2::new);
     public static final DeferredHolder<Item, Coal_T3> Coal_T3 = ITEMS.register("coal_t3", Coal_T3::new);
     public static final DeferredHolder<Item, Coal_T4> Coal_T4 = ITEMS.register("coal_t4", Coal_T4::new);
+    public static final DeferredHolder<Item, PolymorphicCatalyst> PolymorphicCatalyst = ITEMS.register("polymorphic_catalyst", PolymorphicCatalyst::new);
+    public static final DeferredHolder<Item, PortalFluidCatalyst> PortalFluidCatalyst = ITEMS.register("portal_fluid_catalyst", PortalFluidCatalyst::new);
 
     //Items
     public static final DeferredHolder<Item, FuelCanister> Fuel_Canister = ITEMS.register("fuel_canister", FuelCanister::new);
@@ -360,6 +504,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(DropperT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<DropperT2Container>> DropperT2_Container = CONTAINERS.register("droppert2_container",
             () -> IMenuTypeExtension.create(DropperT2Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<GeneratorFluidT1Container>> GeneratorFluidT1_Container = CONTAINERS.register("generatorfluidt1_container",
+            () -> IMenuTypeExtension.create(GeneratorFluidT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<GeneratorT1Container>> GeneratorT1_Container = CONTAINERS.register("generatort1_container",
             () -> IMenuTypeExtension.create(GeneratorT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<EnergyTransmitterContainer>> EnergyTransmitter_Container = CONTAINERS.register("energytransmitter_container",
@@ -370,6 +516,14 @@ public class Registration {
             () -> IMenuTypeExtension.create(BlockSwapperT2Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<PlayerAccessorContainer>> PlayerAccessor_Container = CONTAINERS.register("playeraccessor_container",
             () -> IMenuTypeExtension.create(PlayerAccessorContainer::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<FluidPlacerT1Container>> FluidPlacerT1_Container = CONTAINERS.register("fluidplacert1_container",
+            () -> IMenuTypeExtension.create(FluidPlacerT1Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<FluidPlacerT2Container>> FluidPlacerT2_Container = CONTAINERS.register("fluidplacert2_container",
+            () -> IMenuTypeExtension.create(FluidPlacerT2Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<FluidCollectorT1Container>> FluidCollectorT1_Container = CONTAINERS.register("fluidcollectort1_container",
+            () -> IMenuTypeExtension.create(FluidCollectorT1Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<FluidCollectorT2Container>> FluidCollectorT2_Container = CONTAINERS.register("fluidcollectort2_container",
+            () -> IMenuTypeExtension.create(FluidCollectorT2Container::new));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(
@@ -379,6 +533,18 @@ public class Registration {
                 if (holder instanceof BaseMachineBE baseMachineBE)
                     return new ItemStackHandler(baseMachineBE.MACHINE_SLOTS);
                 return new ItemStackHandler(1);
+            }).build());
+    public static final Supplier<AttachmentType<GeneratorItemHandler>> GENERATOR_ITEM_HANDLER = ATTACHMENT_TYPES.register(
+            "generator_item_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof BaseMachineBE baseMachineBE)
+                    return new GeneratorItemHandler(baseMachineBE.MACHINE_SLOTS);
+                return new GeneratorItemHandler(1);
+            }).build());
+    public static final Supplier<AttachmentType<GeneratorFluidItemHandler>> GENERATOR_FLUID_ITEM_HANDLER = ATTACHMENT_TYPES.register(
+            "generator_fluid_item_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof BaseMachineBE baseMachineBE)
+                    return new GeneratorFluidItemHandler(baseMachineBE.MACHINE_SLOTS);
+                return new GeneratorFluidItemHandler(1);
             }).build());
     public static final Supplier<AttachmentType<FilterBasicHandler>> HANDLER_BASIC_FILTER = ATTACHMENT_TYPES.register(
             "handler_item_collector", () -> AttachmentType.serializable(() -> new FilterBasicHandler(9)).build());
@@ -421,4 +587,18 @@ public class Registration {
             "death_data",
             () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build()
     );
+
+    //Fluids
+    public static final Supplier<AttachmentType<JustDireFluidTank>> MACHINE_FLUID_HANDLER = ATTACHMENT_TYPES.register(
+            "machine_fluid_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof FluidMachineBE fluidMachineBE)
+                    return new JustDireFluidTank(fluidMachineBE.getMaxMB());
+                return new JustDireFluidTank(0);
+            }).build());
+    public static final Supplier<AttachmentType<JustDireFluidTank>> GENERATOR_FLUID_HANDLER = ATTACHMENT_TYPES.register(
+            "generator_fluid_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof FluidMachineBE fluidMachineBE)
+                    return new JustDireFluidTank(fluidMachineBE.getMaxMB(), fluidstack -> fluidstack.getFluid() instanceof RefinedFuel);
+                return new JustDireFluidTank(0);
+            }).build());
 }

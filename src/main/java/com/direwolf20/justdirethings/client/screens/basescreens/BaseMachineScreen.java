@@ -17,17 +17,24 @@ import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -35,9 +42,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends BaseScreen<T> {
-    protected final ResourceLocation JUSTSLOT = new ResourceLocation(JustDireThings.MODID, "textures/gui/justslot.png");
-    protected final ResourceLocation POWERBAR = new ResourceLocation(JustDireThings.MODID, "textures/gui/powerbar.png");
-    protected final ResourceLocation SOCIALBACKGROUND = new ResourceLocation(JustDireThings.MODID, "background");
+    protected final ResourceLocation JUSTSLOT = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/justslot.png");
+    protected final ResourceLocation POWERBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/powerbar.png");
+    protected final ResourceLocation FLUIDBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fluidbar.png");
+    protected final ResourceLocation SOCIALBACKGROUND = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "background");
     protected BaseMachineContainer container;
     protected BaseMachineBE baseMachineBE;
     protected double xRadius = 3, yRadius = 3, zRadius = 3;
@@ -238,20 +246,97 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
             guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
         }
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
-            guiGraphics.blit(POWERBAR, topSectionLeft + 5, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+            guiGraphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset(), topSectionTop + 5, 0, 0, 18, 72, 36, 72);
             int maxEnergy = poweredMachineBE.getMaxEnergy(), height = 70;
             if (maxEnergy > 0) {
                 int remaining = (this.container.getEnergy() * height) / maxEnergy;
-                guiGraphics.blit(POWERBAR, topSectionLeft + 5 + 1, topSectionTop + 5 + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
+                guiGraphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset() + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
             }
+        }
+        if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
+            int offset = getFluidBarOffset();
+            guiGraphics.blit(FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+            int maxMB = fluidMachineBE.getMaxMB(), height = 70;
+            if (maxMB > 0) {
+                int remaining = (this.container.getFluidAmount() * height) / maxMB;
+                renderFluid(guiGraphics, topSectionLeft + offset + 1, topSectionTop + 5 + 72 - 1, 16, remaining);
+            }
+            guiGraphics.blit(FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 18, 0, 18, 72, 36, 72);
         }
         if (renderablesChanged)
             updateRenderables();
     }
 
+    public int getEnergyBarOffset() {
+        return 5;
+    }
+
+    public int getFluidBarOffset() {
+        return baseMachineBE instanceof PoweredMachineBE ? 24 : getEnergyBarOffset();
+    }
+
+    public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int width, int height) {
+        FluidStack fluidStack = container.getFluidStack();
+        if (fluidStack.isEmpty()) return;
+
+        Fluid fluid = fluidStack.getFluid();
+        ResourceLocation fluidStill = IClientFluidTypeExtensions.of(fluid).getStillTexture();
+        TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
+        int fluidColor = IClientFluidTypeExtensions.of(fluid).getTintColor(fluidStack);
+
+        float red = (float) (fluidColor >> 16 & 255) / 255.0F;
+        float green = (float) (fluidColor >> 8 & 255) / 255.0F;
+        float blue = (float) (fluidColor & 255) / 255.0F;
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+
+        PoseStack poseStack = guiGraphics.pose();
+        poseStack.pushPose();
+        RenderSystem.setShaderColor(red, green, blue, 1.0f);
+
+        int zLevel = 0;
+        float uMin = fluidStillSprite.getU0();
+        float uMax = fluidStillSprite.getU1();
+        float vMin = fluidStillSprite.getV0();
+        float vMax = fluidStillSprite.getV1();
+        int textureWidth = fluidStillSprite.contents().width();
+        int textureHeight = fluidStillSprite.contents().height();
+
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder vertexBuffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+        int yOffset = 0;
+        while (yOffset < height) {
+            int drawHeight = Math.min(textureHeight, height - yOffset);
+            int drawY = startY - yOffset - drawHeight; // Adjust for bottom-to-top drawing
+
+            float vMaxAdjusted = vMin + (vMax - vMin) * ((float) drawHeight / textureHeight);
+
+            int xOffset = 0;
+            while (xOffset < width) {
+                int drawWidth = Math.min(textureWidth, width - xOffset);
+
+                float uMaxAdjusted = uMin + (uMax - uMin) * ((float) drawWidth / textureWidth);
+
+                vertexBuffer.addVertex(poseStack.last().pose(), startX + xOffset, drawY + drawHeight, zLevel).setUv(uMin, vMaxAdjusted);
+                vertexBuffer.addVertex(poseStack.last().pose(), startX + xOffset + drawWidth, drawY + drawHeight, zLevel).setUv(uMaxAdjusted, vMaxAdjusted);
+                vertexBuffer.addVertex(poseStack.last().pose(), startX + xOffset + drawWidth, drawY, zLevel).setUv(uMaxAdjusted, vMin);
+                vertexBuffer.addVertex(poseStack.last().pose(), startX + xOffset, drawY, zLevel).setUv(uMin, vMin);
+
+                xOffset += drawWidth;
+            }
+            yOffset += drawHeight;
+        }
+
+        BufferUploader.drawWithShader(vertexBuffer.buildOrThrow());
+        poseStack.popPose();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.applyModelViewMatrix();
+    }
+
     public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
-            if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
+            if (MiscTools.inBounds(topSectionLeft + getEnergyBarOffset(), topSectionTop + 5, 18, 72, pX, pY)) {
                 if (hasShiftDown())
                     pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
                             Component.translatable("justdirethings.screen.energy", MagicHelpers.formatted(this.container.getEnergy()), MagicHelpers.formatted(poweredMachineBE.getMaxEnergy()))
@@ -264,10 +349,26 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         }
     }
 
+    public void fluidBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
+            if (MiscTools.inBounds(topSectionLeft + getFluidBarOffset(), topSectionTop + 5, 18, 72, pX, pY)) {
+                if (hasShiftDown())
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.fluid", this.container.getFluidStack().getHoverName(), MagicHelpers.formatted(this.container.getFluidAmount()), MagicHelpers.formatted(fluidMachineBE.getMaxMB()))
+                    )), pX, pY);
+                else
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.fluid", this.container.getFluidStack().getHoverName(), MagicHelpers.withSuffix(this.container.getFluidAmount()), MagicHelpers.withSuffix(fluidMachineBE.getMaxMB()))
+                    )), pX, pY);
+            }
+        }
+    }
+
     @Override
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         super.renderTooltip(pGuiGraphics, pX, pY);
         powerBarTooltip(pGuiGraphics, pX, pY);
+        fluidBarTooltip(pGuiGraphics, pX, pY);
     }
 
     @Override

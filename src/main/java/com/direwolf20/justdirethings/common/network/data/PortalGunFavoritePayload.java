@@ -11,7 +11,7 @@ public record PortalGunFavoritePayload(
         int favorite,
         boolean staysOpen
 ) implements CustomPacketPayload {
-    public static final Type<PortalGunFavoritePayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "portal_gun_favorite"));
+    public static final Type<PortalGunFavoritePayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_favorite"));
 
     @Override
     public Type<PortalGunFavoritePayload> type() {

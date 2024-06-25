@@ -106,7 +106,7 @@ public class AbilityMethods {
         LivingEntity pEntityLiving = pContext.getPlayer();
 
         if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
-            Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2); //Todo: Balance and Config?
+            Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2);
             List<ItemStack> drops = new ArrayList<>();
             for (BlockPos breakPos : alsoBreakSet) {
                 if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
@@ -292,7 +292,7 @@ public class AbilityMethods {
         if (!level.isClientSide) {
             List<TagKey<Block>> tags = new ArrayList<>();
             tags.add(JustDireBlockTags.LAWNMOWERABLE);
-            Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5); //TODO Balance/Config?
+            Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5);
             List<ItemStack> drops = new ArrayList<>();
             for (BlockPos breakPos : breakBlocks) {
                 if (testUseTool(itemStack, Ability.LAWNMOWER) < 0)

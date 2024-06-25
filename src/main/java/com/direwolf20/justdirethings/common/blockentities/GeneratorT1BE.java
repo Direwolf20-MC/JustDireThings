@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,6 +76,11 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
 
     public GeneratorT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.GeneratorT1BE.get(), pPos, pBlockState);
+    }
+
+    @Override
+    public ItemStackHandler getMachineHandler() {
+        return getData(Registration.GENERATOR_ITEM_HANDLER);
     }
 
     @Override

@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public record RedstoneSettingPayload(
         int redstoneMode
 ) implements CustomPacketPayload {
-    public static final Type<RedstoneSettingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "redstone_setting_packet"));
+    public static final Type<RedstoneSettingPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "redstone_setting_packet"));
 
     @Override
     public Type<RedstoneSettingPayload> type() {

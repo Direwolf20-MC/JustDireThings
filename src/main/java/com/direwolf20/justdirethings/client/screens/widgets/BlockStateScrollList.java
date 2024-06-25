@@ -9,6 +9,7 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,6 +61,18 @@ public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollLi
         if (stateStack.getItem() instanceof BlockItem blockItem) {
             Block block = blockItem.getBlock();
             BlockState defaultState = block.defaultBlockState();
+            for (Property<?> property : defaultState.getProperties()) {
+                List<Comparable<?>> values = new ArrayList<>(property.getPossibleValues());
+                Comparable<?> setValue = parent.getValue(property);
+                boolean isAny = false;
+                if (setValue == null) {
+                    setValue = defaultState.getValue(property);
+                    isAny = true;
+                }
+                addEntry(new BlockStateEntry(property, setValue, defaultState.getValue(property), parent, values, isAny));
+            }
+        } else if (stateStack.getItem() instanceof BucketItem bucketItem) {
+            BlockState defaultState = bucketItem.content.defaultFluidState().createLegacyBlock();
             for (Property<?> property : defaultState.getProperties()) {
                 List<Comparable<?>> values = new ArrayList<>(property.getPossibleValues());
                 Comparable<?> setValue = parent.getValue(property);

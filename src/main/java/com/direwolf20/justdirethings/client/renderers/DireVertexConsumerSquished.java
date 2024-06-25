@@ -51,15 +51,15 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
     }
 
     @Override
-    public VertexConsumer color(int r, int g, int b, int a) {
+    public VertexConsumer setColor(int r, int g, int b, int a) {
         if (red == -1)
-            parent.color(r, g, b, a);
+            parent.setColor(r, g, b, a);
         else {
             int rCol = (int) Mth.lerp(red, 0, r);
             int gCol = (int) Mth.lerp(green, 0, g);
             int bCol = (int) Mth.lerp(blue, 0, b);
             int aCol = (int) Mth.lerp(alpha, 0, a);
-            parent.color(rCol, gCol, bCol, aCol);
+            parent.setColor(rCol, gCol, bCol, aCol);
         }
         return this;
     }
@@ -77,22 +77,22 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
     }
 
     @Override
-    public VertexConsumer vertex(double x, double y, double z) {
+    public VertexConsumer addVertex(float x, float y, float z) {
         Matrix4f inverseMatrix = new Matrix4f(matrix4f);
         inverseMatrix.invert();
 
-        Vector4f originalVector = inverseMatrix.transform(new Vector4f((float) x, (float) y, (float) z, 1.0f));
+        Vector4f originalVector = inverseMatrix.transform(new Vector4f(x, y, z, 1.0f));
         float adjustedX = originalVector.x * (maxX - minX) + minX;
         float adjustedY = originalVector.y * (maxY - minY) + minY;
         float adjustedZ = originalVector.z * (maxZ - minZ) + minZ;
 
         Vector4f vector4f = matrix4f.transform(new Vector4f(adjustedX, adjustedY, adjustedZ, 1.0F));
-        parent.vertex(vector4f.x, vector4f.y, vector4f.z);
+        parent.addVertex(vector4f.x, vector4f.y, vector4f.z);
         return this;
     }
 
     @Override
-    public VertexConsumer uv(float u, float v) {
+    public VertexConsumer setUv(float u, float v) {
         if (adjustUV) {
             //Growing up from ground!
             if (bottomUp) {
@@ -106,10 +106,10 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
                     float adjustedU = minU + adjustedUDistance;
                     float adjustedV = minV + adjustedVDistance;
 
-                    parent.uv(adjustedU, adjustedV);
+                    parent.setUv(adjustedU, adjustedV);
                     return this;
                 } else {
-                    parent.uv(u, v);
+                    parent.setUv(u, v);
                     return this;
                 }
             } else {
@@ -154,7 +154,7 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
                         float adjustedVDistance = vDistanceToEnd * (maxY); // Adjust for the block height
                         float adjustedV2Distance = vDistanceToStart * (minY);
                         float adjustedV = maxV - adjustedVDistance - adjustedV2Distance; // Subtracting because we're adjusting from the end.
-                        parent.uv(adjustedU, adjustedV);
+                        parent.setUv(adjustedU, adjustedV);
                         return this;
                     } else {
                         //When drawing the top/bottom, we do like above, but both U and V are different, so we calculate both
@@ -189,13 +189,13 @@ public class DireVertexConsumerSquished extends VertexConsumerWrapper {
                             adjustedV2Distance = vDistanceToStart * minZ;
                             adjustedV = maxV - adjustedVDistance - adjustedV2Distance;
                         }
-                        parent.uv(adjustedU, adjustedV);
+                        parent.setUv(adjustedU, adjustedV);
                         return this;
                     }
                 }
             }
         }
-        parent.uv(u, v);
+        parent.setUv(u, v);
         return this;
     }
 }

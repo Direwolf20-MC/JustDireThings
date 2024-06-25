@@ -22,10 +22,10 @@ public class JustDireBlockTags extends BlockTagsProvider {
         super(output, lookupProvider, JustDireThings.MODID, existingFileHelper);
     }
 
-    public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "lawnmowerable"));
-    public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "noautoclick"));
-    public static final TagKey<Block> SWAPPERDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "swapper_deny"));
-    public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(new ResourceLocation(JustDireThings.MODID, "eclipsegate_deny"));
+    public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "lawnmowerable"));
+    public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "noautoclick"));
+    public static final TagKey<Block> SWAPPERDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "swapper_deny"));
+    public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsegate_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -59,6 +59,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.DropperT1.get())
                 .add(Registration.DropperT2.get())
                 .add(Registration.GeneratorT1.get())
+                .add(Registration.GeneratorFluidT1.get())
                 .add(Registration.EnergyTransmitter.get())
                 .add(Registration.RawCoal_T1.get())
                 .add(Registration.RawCoal_T2.get())
@@ -70,7 +71,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.CoalBlock_T4.get())
                 .add(Registration.BlockSwapperT1.get())
                 .add(Registration.BlockSwapperT2.get())
-                .add(Registration.PlayerAccessor.get());
+                .add(Registration.PlayerAccessor.get())
+                .add(Registration.FluidPlacerT1.get())
+                .add(Registration.FluidPlacerT2.get())
+                .add(Registration.FluidCollectorT1.get())
+                .add(Registration.FluidCollectorT2.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)

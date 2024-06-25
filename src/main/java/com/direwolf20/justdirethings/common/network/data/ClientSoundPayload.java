@@ -12,7 +12,7 @@ public record ClientSoundPayload(
         float pitch,
         float volume
 ) implements CustomPacketPayload {
-    public static final Type<ClientSoundPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "client_sound_packet"));
+    public static final Type<ClientSoundPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "client_sound_packet"));
 
     @Override
     public Type<ClientSoundPayload> type() {

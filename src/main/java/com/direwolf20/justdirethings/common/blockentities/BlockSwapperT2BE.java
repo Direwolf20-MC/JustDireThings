@@ -44,7 +44,7 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
 
     @Override
     public int getStandardEnergyCost() {
-        return 50; // Todo Config?
+        return 50;
     }
 
     public int getEnergyCost(int numBlocks) {

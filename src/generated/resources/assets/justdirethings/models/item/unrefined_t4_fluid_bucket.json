@@ -1,0 +1,5 @@
+{
+  "parent": "neoforge:item/bucket",
+  "fluid": "justdirethings:unrefined_t4_fluid_source",
+  "loader": "neoforge:fluid_container"
+}

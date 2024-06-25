@@ -42,14 +42,22 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.EclipseGateBlock.get(), models().cubeAll(Registration.EclipseGateBlock.getId().getPath(), blockTexture(Registration.EclipseGateBlock.get())).renderType("cutout"));
 
         //Fluids
-        simpleBlock(Registration.PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "portal_fluid_source")));
+        //simpleBlock(Registration.PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
+        //simpleBlock(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
+        //simpleBlock(Registration.POLYMORPHIC_FLUID_BLOCK.get(), models().getBuilder(Registration.POLYMORPHIC_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
 
         patternBlock();
         soilBlocks();
         sidedBlocks();
         sidedNonRotating();
+        fluidBlocks();
     }
 
+    private void fluidBlocks() {
+        for (var fluidBlock : Registration.FLUID_BLOCKS.getEntries()) {
+            simpleBlock(fluidBlock.get(), models().getBuilder(fluidBlock.getId().getPath()).texture("particle", ResourceLocation.fromNamespaceAndPath(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
+        }
+    }
 
     private void sidedNonRotating() {
         simpleBlock(Registration.BlockBreakerT2.get(), models().cubeBottomTop(
@@ -82,6 +90,16 @@ public class JustDireBlockStates extends BlockStateProvider {
                 modLoc("block/" + Registration.BlockSwapperT2.getId().getPath() + "_side"),
                 modLoc("block/" + Registration.BlockSwapperT2.getId().getPath() + "_bottom"),
                 modLoc("block/" + Registration.BlockSwapperT2.getId().getPath() + "_top")));
+        simpleBlock(Registration.FluidPlacerT2.get(), models().cubeBottomTop(
+                Registration.FluidPlacerT2.getId().getPath(),
+                modLoc("block/" + Registration.FluidPlacerT2.getId().getPath() + "_side"),
+                modLoc("block/" + Registration.FluidPlacerT2.getId().getPath() + "_bottom"),
+                modLoc("block/" + Registration.FluidPlacerT2.getId().getPath() + "_top")));
+        simpleBlock(Registration.FluidCollectorT2.get(), models().cubeBottomTop(
+                Registration.FluidCollectorT2.getId().getPath(),
+                modLoc("block/" + Registration.FluidCollectorT2.getId().getPath() + "_side"),
+                modLoc("block/" + Registration.FluidCollectorT2.getId().getPath() + "_bottom"),
+                modLoc("block/" + Registration.FluidCollectorT2.getId().getPath() + "_top")));
     }
 
     private void sidedBlocks() {
@@ -133,11 +151,11 @@ public class JustDireBlockStates extends BlockStateProvider {
             ModelFile model;
             int Moisture = s.getValue(BlockStateProperties.MOISTURE);
             if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil_Tier1.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                model = models().withExistingParent(Registration.GooSoil_Tier1.getId().getPath() + "_moist", ResourceLocation.parse("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier1"))
                         .texture("top", modLoc("block/goofarmland_tier1_moist"));
             } else {
-                model = models().withExistingParent(Registration.GooSoil_Tier1.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                model = models().withExistingParent(Registration.GooSoil_Tier1.getId().getPath(), ResourceLocation.parse("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier1"))
                         .texture("top", modLoc("block/goofarmland_tier1"));
             }
@@ -149,11 +167,11 @@ public class JustDireBlockStates extends BlockStateProvider {
             ModelFile model;
             int Moisture = s.getValue(BlockStateProperties.MOISTURE);
             if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath() + "_moist", ResourceLocation.parse("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier2"))
                         .texture("top", modLoc("block/goofarmland_tier2_moist"));
             } else {
-                model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath(), ResourceLocation.parse("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier2"))
                         .texture("top", modLoc("block/goofarmland_tier2"));
             }
@@ -165,11 +183,11 @@ public class JustDireBlockStates extends BlockStateProvider {
             ModelFile model;
             int Moisture = s.getValue(BlockStateProperties.MOISTURE);
             if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath() + "_moist", ResourceLocation.parse("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier3"))
                         .texture("top", modLoc("block/goofarmland_tier3_moist"));
             } else {
-                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath(), ResourceLocation.parse("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier3"))
                         .texture("top", modLoc("block/goofarmland_tier3"));
             }
@@ -180,11 +198,11 @@ public class JustDireBlockStates extends BlockStateProvider {
             ModelFile model;
             int Moisture = s.getValue(BlockStateProperties.MOISTURE);
             if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil_Tier4.getId().getPath() + "_moist", new ResourceLocation("minecraft:block/template_farmland"))
+                model = models().withExistingParent(Registration.GooSoil_Tier4.getId().getPath() + "_moist", ResourceLocation.parse("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier4"))
                         .texture("top", modLoc("block/goofarmland_tier4_moist"));
             } else {
-                model = models().withExistingParent(Registration.GooSoil_Tier4.getId().getPath(), new ResourceLocation("minecraft:block/template_farmland"))
+                model = models().withExistingParent(Registration.GooSoil_Tier4.getId().getPath(), ResourceLocation.parse("minecraft:block/template_farmland"))
                         .texture("dirt", modLoc("block/goosoilside_tier4"))
                         .texture("top", modLoc("block/goofarmland_tier4"));
             }

@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -13,6 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JustDireLootTables extends VanillaBlockLoot {
+
+    public JustDireLootTables(HolderLookup.Provider p_344962_) {
+        super(p_344962_);
+    }
 
     @Override
     protected void generate() {
@@ -41,6 +46,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.DropperT1.get());
         dropSelf(Registration.DropperT2.get());
         dropSelf(Registration.GeneratorT1.get());
+        dropSelf(Registration.GeneratorFluidT1.get());
         dropSelf(Registration.EnergyTransmitter.get());
         dropSelf(Registration.PlayerAccessor.get());
         dropOther(Registration.GooSoil_Tier1.get(), Items.DIRT);
@@ -50,6 +56,10 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.BlockSwapperT1.get());
         dropSelf(Registration.BlockSwapperT2.get());
         add(Registration.EclipseGateBlock.get(), noDrop());
+        dropSelf(Registration.FluidPlacerT1.get());
+        dropSelf(Registration.FluidPlacerT2.get());
+        dropSelf(Registration.FluidCollectorT1.get());
+        dropSelf(Registration.FluidCollectorT2.get());
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(

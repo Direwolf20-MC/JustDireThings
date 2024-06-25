@@ -7,7 +7,7 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 public interface PoweredTool extends PoweredItem {
     default ItemAttributeModifiers getPoweredAttributeModifiers(ItemStack stack, ItemAttributeModifiers originalModifiers) {
         ItemAttributeModifiers modifiers = ItemAttributeModifiers.builder().build();
-        if (getAvailableEnergy(stack) >= getBlockBreakFECost()) {
+        if (PoweredItem.getAvailableEnergy(stack) >= getBlockBreakFECost()) {
             return originalModifiers;
         } else {
             for (ItemAttributeModifiers.Entry entry : originalModifiers.modifiers()) {
@@ -19,6 +19,6 @@ public interface PoweredTool extends PoweredItem {
     }
 
     default int getBlockBreakFECost() {
-        return 50; //Todo Config?
+        return 50;
     }
 }

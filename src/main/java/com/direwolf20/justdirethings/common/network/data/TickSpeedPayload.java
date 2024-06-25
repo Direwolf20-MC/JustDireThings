@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public record TickSpeedPayload(
         int tickSpeed
 ) implements CustomPacketPayload {
-    public static final Type<TickSpeedPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "tick_speed_packet"));
+    public static final Type<TickSpeedPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tick_speed_packet"));
 
     @Override
     public Type<TickSpeedPayload> type() {

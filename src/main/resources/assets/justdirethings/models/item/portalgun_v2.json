@@ -206,5 +206,31 @@
 			"rotation": [0, 90, 0],
 			"translation": [0, 2, 0]
 		}
-	}
+    },
+  "overrides": [
+    {
+      "predicate": {
+        "justdirethings:fullness": 0
+      },
+      "model": "justdirethings:item/portalgun_v2_0"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 1
+      },
+      "model": "justdirethings:item/portalgun_v2_33"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 2
+      },
+      "model": "justdirethings:item/portalgun_v2_66"
+    },
+    {
+      "predicate": {
+        "justdirethings:fullness": 3
+      },
+      "model": "justdirethings:item/portalgun_v2_100"
+    }
+  ]
 }

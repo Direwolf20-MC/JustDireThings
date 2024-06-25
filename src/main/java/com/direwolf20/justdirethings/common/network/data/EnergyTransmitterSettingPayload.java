@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public record EnergyTransmitterSettingPayload(
         boolean showParticles
 ) implements CustomPacketPayload {
-    public static final Type<EnergyTransmitterSettingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "energy_transmitter_packet"));
+    public static final Type<EnergyTransmitterSettingPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "energy_transmitter_packet"));
 
     @Override
     public Type<EnergyTransmitterSettingPayload> type() {

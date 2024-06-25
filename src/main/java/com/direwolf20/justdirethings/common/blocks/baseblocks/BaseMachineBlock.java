@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.blocks.baseblocks;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.items.FerricoreWrench;
 import com.direwolf20.justdirethings.common.items.MachineSettingsCopier;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import net.minecraft.core.BlockPos;
@@ -61,7 +62,8 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
             return InteractionResult.SUCCESS;
 
         ItemStack itemStack = player.getMainHandItem();
-        if (itemStack.getItem() instanceof MachineSettingsCopier) return InteractionResult.PASS;
+        if (itemStack.getItem() instanceof MachineSettingsCopier || itemStack.getItem() instanceof FerricoreWrench)
+            return InteractionResult.PASS;
 
         BlockEntity te = level.getBlockEntity(blockPos);
         if (!isValidBE(te))

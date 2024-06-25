@@ -31,24 +31,24 @@ public class PortalFluidType extends FluidType {
     @Override
     public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
         consumer.accept(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER_LOCATION = new ResourceLocation("textures/misc/underwater.png"),
-                    PORTALFLUID_STILL = new ResourceLocation(MODID, "block/portal_fluid_source"),
-                    PORTALFLUID_FLOW = new ResourceLocation(MODID, "block/portal_fluid_flowing"),
-                    PORTALFLUID_OVERLAY = new ResourceLocation(MODID, "block/portal_fluid_overlay");
+            private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.parse("textures/misc/underwater.png"),
+                    FLUID_STILL = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_source"),
+                    FLUID_FLOW = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_flowing"),
+                    FLUID_OVERLAY = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_overlay");
 
             @Override
             public ResourceLocation getStillTexture() {
-                return PORTALFLUID_STILL;
+                return FLUID_STILL;
             }
 
             @Override
             public ResourceLocation getFlowingTexture() {
-                return PORTALFLUID_FLOW;
+                return FLUID_FLOW;
             }
 
             @Override
             public ResourceLocation getOverlayTexture() {
-                return PORTALFLUID_OVERLAY;
+                return FLUID_OVERLAY;
             }
 
             @Override

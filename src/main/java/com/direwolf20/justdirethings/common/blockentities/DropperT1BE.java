@@ -121,8 +121,6 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public boolean isBlockPosValid(BlockPos blockPos) {
-        if (!level.getBlockState(blockPos).isAir())
-            return false;
         return true;
     }
 

@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ValueButtons {
-    private static final ResourceLocation add = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/add.png");
-    private static final ResourceLocation subtract = new ResourceLocation(JustDireThings.MODID, "textures/gui/buttons/remove.png");
+    private static final ResourceLocation add = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png");
+    private static final ResourceLocation subtract = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png");
     private static final int STANDARD_WIDTH = 12; // Example width
     private static final int STANDARD_HEIGHT = 12; // Example height
     private final Font font;

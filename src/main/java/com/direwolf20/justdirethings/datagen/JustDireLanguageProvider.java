@@ -36,14 +36,46 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.SensorT2.get(), "Advanced Sensor");
         add(Registration.DropperT1.get(), "Simple Dropper");
         add(Registration.DropperT2.get(), "Advanced Dropper");
-        add(Registration.GeneratorT1.get(), "Simple Fuel Generator");
+        add(Registration.GeneratorT1.get(), "Simple Coal Generator");
+        add(Registration.GeneratorFluidT1.get(), "Simple Fuel Generator");
         add(Registration.EnergyTransmitter.get(), "Energy Transmitter");
         add(Registration.BlockSwapperT1.get(), "Simple Swapper");
         add(Registration.BlockSwapperT2.get(), "Advanced Swapper");
         add(Registration.PlayerAccessor.get(), "Player Accessor");
         add(Registration.EclipseGateBlock.get(), "Eclipse Gate");
+        add(Registration.FluidPlacerT1.get(), "Simple Fluid Placer");
+        add(Registration.FluidPlacerT2.get(), "Advanced Fluid Placer");
+        add(Registration.FluidCollectorT1.get(), "Simple Fluid Collector");
+        add(Registration.FluidCollectorT2.get(), "Advanced Fluid Collector");
+
+        //Fluids
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
+        add(Registration.PORTAL_FLUID_BUCKET.get(), "Portal Fluid Bucket");
         add("fluid_type.justdirethings.portal_fluid_type", "Portal Fluid");
+        add(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get(), "Unstable Portal Fluid");
+        add(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get(), "Unstable Portal Fluid Bucket");
+        add("fluid_type.justdirethings.unstable_portal_fluid_type", "Unstable Portal Fluid");
+        add(Registration.POLYMORPHIC_FLUID_BLOCK.get(), "Polymorphic Fluid");
+        add(Registration.POLYMORPHIC_FLUID_BUCKET.get(), "Polymorphic Fluid Bucket");
+        add("fluid_type.justdirethings.polymorphic_fluid_type", "Polymorphic Fluid");
+        add(Registration.UNREFINED_T2_FLUID_BLOCK.get(), "Unrefined Blaze Ember Fuel");
+        add(Registration.UNREFINED_T2_FLUID_BUCKET.get(), "Unrefined Blaze Ember Fuel Bucket");
+        add("fluid_type.justdirethings.unrefined_t2_fluid_type", "Unrefined Blaze Ember Fuel");
+        add(Registration.REFINED_T2_FLUID_BLOCK.get(), "Blaze Ember Fuel");
+        add(Registration.REFINED_T2_FLUID_BUCKET.get(), "Blaze Ember Fuel Bucket");
+        add("fluid_type.justdirethings.refined_t2_fluid_type", "Blaze Ember Fuel");
+        add(Registration.UNREFINED_T3_FLUID_BLOCK.get(), "Unrefined Voidflame Fuel");
+        add(Registration.UNREFINED_T3_FLUID_BUCKET.get(), "Unrefined Voidflame Fuel Bucket");
+        add("fluid_type.justdirethings.unrefined_t3_fluid_type", "Unrefined Voidflame Fuel");
+        add(Registration.REFINED_T3_FLUID_BLOCK.get(), "Voidflame Fuel");
+        add(Registration.REFINED_T3_FLUID_BUCKET.get(), "Voidflame Fuel Bucket");
+        add("fluid_type.justdirethings.refined_t3_fluid_type", "Voidflame Fuel");
+        add(Registration.UNREFINED_T4_FLUID_BLOCK.get(), "Unrefined Eclipse Ember Fuel");
+        add(Registration.UNREFINED_T4_FLUID_BUCKET.get(), "Unrefined Eclipse Ember Fuel Bucket");
+        add("fluid_type.justdirethings.unrefined_t4_fluid_type", "Unrefined Eclipse Ember Fuel");
+        add(Registration.REFINED_T4_FLUID_BLOCK.get(), "Eclipse Ember Fuel");
+        add(Registration.REFINED_T4_FLUID_BUCKET.get(), "Eclipse Ember Fuel Bucket");
+        add("fluid_type.justdirethings.refined_t4_fluid_type", "Eclipse Ember Fuel");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -62,6 +94,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CoalBlock_T3.get(), "Voidflame Coal Block");
         add(Registration.RawCoal_T4.get(), "Raw Eclipse Ember");
         add(Registration.CoalBlock_T4.get(), "Eclipse Ember Block");
+        add(Registration.PolymorphicCatalyst.get(), "Polymorphic Catalyst");
+        add(Registration.PortalFluidCatalyst.get(), "Portal Fluid Catalyst");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
@@ -74,7 +108,6 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.MachineSettingsCopier.get(), "Machine Settings Copier");
         add(Registration.PortalGun.get(), "Portal Gun");
         add(Registration.PortalGunV2.get(), "Advanced Portal Gun");
-        add(Registration.PORTAL_FLUID_BUCKET.get(), "Portal Fluid Bucket");
         add(Registration.FluidCanister.get(), "Fluid Canister");
 
         //Tools
@@ -127,6 +160,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.presshotkey", "<Press %s>");
         add("justdirethings.enabled", "Enabled");
         add("justdirethings.disabled", "Disabled");
+        add("justdirethings.lowenergy", "Insufficient Energy");
         add("justdirethings.fuelcanisteramt", "Cook time (ticks): %d");
         add("justdirethings.fuelcanisteramtstack", "Stack Cook time (ticks): %d");
         add("justdirethings.fuelcanisteritemsamt", "Fuel Amount: %f");
@@ -158,6 +192,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.fillmode.none", "None");
         add("justdirethings.fillmode.jdtonly", "JustDireThings");
         add("justdirethings.fillmode.all", "All");
+        add("justdirethings.hint.dropinwater", "Drop in Water");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -196,6 +231,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
+        add("justdirethings.screen.fluid", "%s: %s/%s MB");
         add("justdirethings.screen.energycost", "Energy Cost: %s");
         add("justdirethings.screen.fepertick", "FE/T: %s");
         add("justdirethings.screen.no_fuel", "Fuel source empty");

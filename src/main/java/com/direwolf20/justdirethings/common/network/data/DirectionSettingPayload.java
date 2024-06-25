@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 public record DirectionSettingPayload(
         int direction
 ) implements CustomPacketPayload {
-    public static final Type<DirectionSettingPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "direction_setting_packet"));
+    public static final Type<DirectionSettingPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "direction_setting_packet"));
 
     @Override
     public Type<DirectionSettingPayload> type() {

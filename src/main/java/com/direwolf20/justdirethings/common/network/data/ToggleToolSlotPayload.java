@@ -13,7 +13,7 @@ public record ToggleToolSlotPayload(
         int typeTool,
         int value
 ) implements CustomPacketPayload {
-    public static final Type<ToggleToolSlotPayload> TYPE = new Type<>(new ResourceLocation(JustDireThings.MODID, "toggle_tool_slot_setting"));
+    public static final Type<ToggleToolSlotPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "toggle_tool_slot_setting"));
 
     @Override
     public Type<ToggleToolSlotPayload> type() {

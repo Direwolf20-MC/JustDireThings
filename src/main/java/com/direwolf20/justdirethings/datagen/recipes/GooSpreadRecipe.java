@@ -11,12 +11,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,11 +72,13 @@ public class GooSpreadRecipe implements CraftingRecipe {
         return true;
     }
 
-    public boolean matches(CraftingContainer pInv, Level pLevel) {
+    @Override
+    public boolean matches(CraftingInput p_346065_, Level p_345375_) {
         return false;
     }
 
-    public ItemStack assemble(CraftingContainer pContainer, HolderLookup.Provider provider) {
+    @Override
+    public ItemStack assemble(CraftingInput p_345149_, HolderLookup.Provider p_346030_) {
         return ItemStack.EMPTY;
     }
 
@@ -99,7 +97,7 @@ public class GooSpreadRecipe implements CraftingRecipe {
 
 
     public static class Serializer implements RecipeSerializer<GooSpreadRecipe> {
-        private static final net.minecraft.resources.ResourceLocation NAME = new net.minecraft.resources.ResourceLocation(JustDireThings.MODID, "goospread");
+        private static final net.minecraft.resources.ResourceLocation NAME = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goospread");
         private static final MapCodec<GooSpreadRecipe> CODEC = RecordCodecBuilder.mapCodec(
                 p_311734_ -> p_311734_.group(
                                 ResourceLocation.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
