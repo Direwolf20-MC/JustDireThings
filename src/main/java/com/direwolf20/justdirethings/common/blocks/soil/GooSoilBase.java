@@ -58,6 +58,9 @@ public class GooSoilBase extends FarmBlock {
         if (plant.getBlock() == Blocks.NETHER_WART)
             return TriState.TRUE;
 
+        if (plant.getBlock() instanceof BushBlock)
+            return TriState.TRUE;
+
 
         //if (plantable instanceof BushBlock)
         //    return true; //Bushes?
