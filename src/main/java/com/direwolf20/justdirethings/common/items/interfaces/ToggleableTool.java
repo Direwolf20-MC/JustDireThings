@@ -179,7 +179,7 @@ public interface ToggleableTool extends ToggleableItem {
         for (BlockPos breakPos : breakBlockPositions) {
             if (testUseTool(pStack) < 0)
                 break;
-            int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pLevel.random, pPos);
+            int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pPos, pLevel.getBlockEntity(pPos), pEntityLiving, pStack);
             totalExp = totalExp + exp;
             Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, true, instaBreak));
         }

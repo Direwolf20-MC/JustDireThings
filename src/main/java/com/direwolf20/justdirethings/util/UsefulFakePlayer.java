@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,10 +24,6 @@ public class UsefulFakePlayer extends FakePlayer {
     public UsefulFakePlayer(Level world, GameProfile name) {
         super((ServerLevel) world, name);
         setReach(getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE));
-    }
-
-    @Override
-    public void initMenu(AbstractContainerMenu p_143400_) {
     }
 
     @Override

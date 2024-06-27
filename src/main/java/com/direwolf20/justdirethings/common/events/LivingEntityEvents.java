@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -31,15 +33,15 @@ import java.util.Iterator;
 public class LivingEntityEvents {
 
     @SubscribeEvent
-    public static void blockDamage(LivingDamageEvent e) {
-        LivingEntity target = e.getEntity();
+    public static void blockDamage(EntityInvulnerabilityCheckEvent e) {
+        Entity target = e.getEntity();
         if (target instanceof Player player) {
             ItemStack chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
             if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
                 int activeCooldown = ToggleableTool.getCooldown(chestplate, Ability.INVULNERABILITY, true);
                 if (activeCooldown == -1) return;
                 player.playNotifySound(SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
-                e.setCanceled(true);
+                e.setInvulnerable(true);
             }
         }
     }

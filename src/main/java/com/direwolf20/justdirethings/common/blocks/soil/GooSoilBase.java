@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.IPlantable;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.ArrayList;
@@ -44,23 +44,25 @@ public class GooSoilBase extends FarmBlock {
     }
 
     @Override
-    public boolean canSustainPlant(BlockState blockState, BlockGetter level, BlockPos pos, Direction facing, IPlantable plantable) {
-        BlockState plant = plantable.getPlant(level, pos.relative(facing));
-        net.neoforged.neoforge.common.PlantType type = plantable.getPlantType(level, pos.relative(facing));
-
+    public TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos soilPosition, Direction facing, BlockState plant) {
+        if (facing != Direction.UP) return TriState.FALSE;
         if (plant.getBlock() == Blocks.CACTUS)
-            return true;
+            return TriState.TRUE;
 
         if (plant.getBlock() == Blocks.SUGAR_CANE)
-            return true;
+            return TriState.TRUE;
 
         if (plant.getBlock() == Blocks.BAMBOO || plant.getBlock() == Blocks.BAMBOO_SAPLING)
-            return true;
+            return TriState.TRUE;
+
+        if (plant.getBlock() == Blocks.NETHER_WART)
+            return TriState.TRUE;
+
 
         //if (plantable instanceof BushBlock)
         //    return true; //Bushes?
 
-        if (net.neoforged.neoforge.common.PlantType.NETHER.equals(type)) {
+        /*if (net.neoforged.neoforge.common.PlantType.NETHER.equals(type)) {
             return true; //Netherwart
         } else if (net.neoforged.neoforge.common.PlantType.CROP.equals(type)) {
             return true; //Wheat
@@ -70,8 +72,8 @@ public class GooSoilBase extends FarmBlock {
             return false; //Saplings / Flowers -- Vanilla this is apparently true - who knew!?
         } else if (net.neoforged.neoforge.common.PlantType.WATER.equals(type)) {
             return (blockState.is(Blocks.WATER) || blockState.getBlock() instanceof IceBlock) && level.getFluidState(pos.relative(facing)).isEmpty();
-        }
-        return false;
+        }*/
+        return TriState.DEFAULT;
     }
 
     @Override

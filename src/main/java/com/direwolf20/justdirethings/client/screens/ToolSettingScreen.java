@@ -169,7 +169,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                 this.bindingButtons.put(button, bindingButton);
             }
             if (button != null && toolAbility.hasRenderButton()) {
-                boolean renderActive = true;
+                boolean renderActive = ToggleableTool.getRender(tool, toolAbility.getName());
                 GrayscaleButton hideRenderButton = ToggleButtonFactory.HIDE_RENDER_ABILITY_BUTTON(buttonsStartX + 143, buttonsStartY, renderActive, (clicked) -> {
                     toggleRender(toolAbility.getName());
                     ((GrayscaleButton) clicked).toggleActive();
