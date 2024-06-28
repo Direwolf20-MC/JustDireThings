@@ -123,10 +123,19 @@ public class AdvPortalEditMenu extends Screen {
     public void addFavorite() {
         // Convert the valid string to a double
         try {
-            double xValue = Double.parseDouble(xPos.getValue());
-            double yValue = Double.parseDouble(yPos.getValue());
-            double zValue = Double.parseDouble(zPos.getValue());
-            PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, nameField.getValue(), true, new Vec3(xValue, yValue, zValue)));
+            //TODO Bring this back when/if I allow editing the Positions. Should fix bug #71
+            //double xValue = Double.parseDouble(xPos.getValue());
+            //double yValue = Double.parseDouble(yPos.getValue());
+            //double zValue = Double.parseDouble(zPos.getValue());
+            NBTHelpers.PortalDestination portalDestination = PortalGunV2.getFavorite(portalGun, slotSelected);
+            if (portalDestination == null || portalDestination.equals(NBTHelpers.PortalDestination.EMPTY)) {
+                Player player = Minecraft.getInstance().player;
+                Vec3 position = player.position();
+                Direction facing = MiscHelpers.getFacingDirection(player);
+                portalDestination = new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(player.level().dimension(), position), facing, "UNNAMED");
+            }
+            Vec3 coords = portalDestination.globalVec3().position();
+            PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, nameField.getValue(), true, coords));
             this.onClose();
         } catch (NumberFormatException e) {
             System.out.println("Error: Invalid format for the validFormattedX string");
