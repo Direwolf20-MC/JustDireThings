@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
@@ -489,7 +490,8 @@ public class Helpers {
     }
 
     private static boolean isInLava(ItemEntity entity) {
-        return entity.level().getBlockState(entity.blockPosition()).is(Blocks.LAVA);
+        BlockState blockState = entity.level().getBlockState(entity.blockPosition());
+        return blockState.is(Blocks.LAVA) && blockState.getValue(BlockStateProperties.LEVEL) == 0;
     }
 
     private static void repairItem(ItemStack stack) {
@@ -497,7 +499,8 @@ public class Helpers {
     }
 
     private static boolean validateLava(ItemStack stack, ItemEntity entity) {
-        return entity.level().getBlockState(getLavaPos(stack)).is(Blocks.LAVA);
+        BlockState blockState = entity.level().getBlockState(getLavaPos(stack));
+        return blockState.is(Blocks.LAVA) && blockState.getValue(BlockStateProperties.LEVEL) == 0;
     }
 
     private static void turnLavaIntoObsidian(ItemStack stack, ItemEntity entity) {
