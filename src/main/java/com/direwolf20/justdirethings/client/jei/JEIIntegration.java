@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.jei.ghostfilters.GhostFilterBasic;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseScreen;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
+import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import mezz.jei.api.IModPlugin;
@@ -67,7 +68,8 @@ public class JEIIntegration implements IModPlugin {
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();
         IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
         registration.addRecipeCategories(
-                new GooSpreadRecipeCategory(guiHelper)
+                new GooSpreadRecipeCategory(guiHelper),
+                new FluidDropRecipeCategory(guiHelper)
         );
     }
 
@@ -79,6 +81,11 @@ public class JEIIntegration implements IModPlugin {
                 .stream().map(RecipeHolder::value).collect(Collectors.toList());
 
         registration.addRecipes(GooSpreadRecipeCategory.TYPE, goospreadrecipes);
+
+        List<FluidDropRecipe> fluidDropRecipes = recipeManager.getAllRecipesFor(Registration.FLUID_DROP_RECIPE_TYPE.get())
+                .stream().map(RecipeHolder::value).collect(Collectors.toList());
+
+        registration.addRecipes(FluidDropRecipeCategory.TYPE, fluidDropRecipes);
     }
 
     @Override
@@ -87,6 +94,7 @@ public class JEIIntegration implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(Registration.GooBlock_Tier2.get()), GooSpreadRecipeCategory.TYPE);
         registry.addRecipeCatalyst(new ItemStack(Registration.GooBlock_Tier3.get()), GooSpreadRecipeCategory.TYPE);
         registry.addRecipeCatalyst(new ItemStack(Registration.GooBlock_Tier4.get()), GooSpreadRecipeCategory.TYPE);
+        //registry.addRecipeCatalyst(new ItemStack(Registration.PolymorphicCatalyst.get()), FluidDropRecipeCategory.TYPE);
     }
 
     @Override

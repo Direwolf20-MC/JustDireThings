@@ -171,6 +171,7 @@
   "justdirethings.fillmode.jdtonly": "JustDireThings",
   "justdirethings.fillmode.none": "None",
   "justdirethings.fluidamt": "Amount: ",
+  "justdirethings.fluiddroprecipe.title": "Fluid Drop Recipes",
   "justdirethings.fluidname": "Fluid: ",
   "justdirethings.fuelcanisteramt": "Cook time (ticks): %d",
   "justdirethings.fuelcanisteramtstack": "Stack Cook time (ticks): %d",
