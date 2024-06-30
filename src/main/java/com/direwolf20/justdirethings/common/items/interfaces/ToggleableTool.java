@@ -37,6 +37,7 @@ import static com.direwolf20.justdirethings.common.items.interfaces.AbilityMetho
 import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 
 public interface ToggleableTool extends ToggleableItem {
+    EnumSet<Ability> getAllAbilities();
     EnumSet<Ability> getAbilities();
 
     Map<Ability, AbilityParams> getAbilityParamsMap();
@@ -46,11 +47,11 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default void registerAbility(Ability ability) {
-        getAbilities().add(ability);
+        getAllAbilities().add(ability);
     }
 
     default void registerAbility(Ability ability, AbilityParams abilityParams) {
-        getAbilities().add(ability);
+        getAllAbilities().add(ability);
         getAbilityParamsMap().put(ability, abilityParams);
     }
 
