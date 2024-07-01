@@ -9,6 +9,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.ContainerData;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -145,8 +147,9 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
             return;
         }
         if (!canCollect()) return;
+        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         if (isActiveRedstone() && canRun() && positionsToPlace.isEmpty())
-            positionsToPlace = findSpotsToCollect();
+            positionsToPlace = findSpotsToCollect(fakePlayer);
         if (positionsToPlace.isEmpty())
             return;
         if (canRun()) {
@@ -182,7 +185,7 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
         return true;
     }
 
-    public boolean isBlockPosValid(BlockPos blockPos) {
+    public boolean isBlockPosValid(BlockPos blockPos, FakePlayer fakePlayer) {
         BlockState blockState = level.getBlockState(blockPos);
         if (!(blockState.getBlock() instanceof LiquidBlock liquidBlock))
             return false;
@@ -190,13 +193,15 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
             return false;
         if (!isBlockValidForTank(liquidBlock))
             return false;
+        if (!canPlaceAt(level, blockPos, fakePlayer))
+            return false;
         return true;
     }
 
-    public List<BlockPos> findSpotsToCollect() {
+    public List<BlockPos> findSpotsToCollect(FakePlayer fakePlayer) {
         List<BlockPos> returnList = new ArrayList<>();
         BlockPos blockPos = getBlockPos().relative(getBlockState().getValue(BlockStateProperties.FACING));
-        if (isBlockPosValid(blockPos))
+        if (isBlockPosValid(blockPos, fakePlayer))
             returnList.add(blockPos);
         return returnList;
     }

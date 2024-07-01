@@ -203,6 +203,8 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
             return false;
         if (level.getBlockState(blockPos).is(JustDireBlockTags.NO_AUTO_CLICK))
             return false;
+        if (!canPlaceAt(level, blockPos, fakePlayer))
+            return false;
         return true;
     }
 

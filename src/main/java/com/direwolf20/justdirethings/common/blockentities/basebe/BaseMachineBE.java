@@ -17,11 +17,14 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.UUID;
@@ -89,6 +92,25 @@ public class BaseMachineBE extends BlockEntity {
         if (placedByUUID == null)
             return defaultFakePlayerProfile;
         return new GameProfile(placedByUUID, "[JustDiresFakePlayer]");
+    }
+
+    protected boolean canPlaceAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
+        if (EventHooks.onBlockPlace(fakePlayer, BlockSnapshot.create(level.dimension(), level, blockPos.below()), Direction.UP))
+            return false;
+        ; //FTB Chunk Protection, etc
+        return true;
+    }
+
+    protected boolean canBreakAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
+        //TODO Revisit once a proper approach to doing this exists
+        //BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, blockPos, level.getBlockState(blockPos), fakePlayer);
+        //if (NeoForge.EVENT_BUS.post(event).isCanceled())
+        //   return false;
+        return true;
+    }
+
+    protected boolean canBreakAndPlaceAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
+        return canBreakAt(level, blockPos, fakePlayer) && canPlaceAt(level, blockPos, fakePlayer);
     }
 
     protected FakePlayer getFakePlayer(ServerLevel level) {

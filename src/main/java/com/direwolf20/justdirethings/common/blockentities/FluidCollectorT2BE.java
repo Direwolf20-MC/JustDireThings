@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.Comparator;
 import java.util.List;
@@ -77,18 +78,18 @@ public class FluidCollectorT2BE extends FluidCollectorT1BE implements PoweredMac
     }
 
     @Override
-    public List<BlockPos> findSpotsToCollect() {
+    public List<BlockPos> findSpotsToCollect(FakePlayer fakePlayer) {
         AABB area = getAABB(getBlockPos());
         return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
-                .filter(this::isBlockPosValid)
+                .filter(blockPos -> isBlockPosValid(blockPos, fakePlayer))
                 .map(BlockPos::immutable)
                 .sorted(Comparator.comparingDouble(x -> x.distSqr(getBlockPos())))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public boolean isBlockPosValid(BlockPos blockPos) {
-        if (!super.isBlockPosValid(blockPos))
+    public boolean isBlockPosValid(BlockPos blockPos, FakePlayer fakePlayer) {
+        if (!super.isBlockPosValid(blockPos, fakePlayer))
             return false; //Do the same checks as normal, then check the filters
         if (!(level.getBlockState(blockPos).getBlock() instanceof LiquidBlock liquidBlock))
             return false;
