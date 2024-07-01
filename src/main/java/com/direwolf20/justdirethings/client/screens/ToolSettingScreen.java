@@ -382,13 +382,38 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         renderablesChanged = false;
     }
 
+    @Override
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+        if (pButton == 0 && this.isDragging()) {
+            this.setDragging(false);
+            if (this.getFocused() != null) {
+                return this.getFocused().mouseReleased(pMouseX, pMouseY, pButton);
+            }
+            return this.getChildAt(pMouseX, pMouseY).filter(p_94708_ -> p_94708_.mouseReleased(pMouseX, pMouseY, pButton)).isPresent();
+        }
         return super.mouseReleased(pMouseX, pMouseY, pButton);
+
+    }
+
+    @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (pButton == 0 && this.isDragging()) {
+            return this.getFocused() != null && this.isDragging() && pButton == 0
+                    ? this.getFocused().mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY)
+                    : false;
+        }
+        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double pScrollX, double pScrollY) {
-        return super.mouseScrolled(mouseX, mouseY, pScrollX, pScrollY);
+        this.sliders.forEach((button, slider) -> {
+            if (slider.isMouseOver(mouseX, mouseY)) {
+                slider.setValue(slider.getValueInt() + (pScrollY > 0 ? 1 : -1));
+            }
+        });
+
+        return false;
     }
 
     private static MutableComponent getTrans(String key, Object... args) {
