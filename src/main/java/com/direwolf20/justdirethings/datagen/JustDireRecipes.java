@@ -778,6 +778,38 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldBoots.get())
+                .pattern("f f")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', Registration.BlazegoldIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldLeggings.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("f f")
+                .define('f', Registration.BlazegoldIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldChestplate.get())
+                .pattern("f f")
+                .pattern("fff")
+                .pattern("fff")
+                .define('f', Registration.BlazegoldIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldHelmet.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', Registration.BlazegoldIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
 
 
         //Resource Conversions
