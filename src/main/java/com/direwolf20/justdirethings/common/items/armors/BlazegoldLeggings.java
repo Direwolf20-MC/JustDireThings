@@ -15,6 +15,7 @@ public class BlazegoldLeggings extends BaseLeggings {
                 .durability(Type.LEGGINGS.getDurability(25)));
         registerAbility(Ability.RUNSPEED, new AbilityParams(1, 2, 1));
         registerAbility(Ability.WALKSPEED, new AbilityParams(1, 2, 1));
+        registerAbility(Ability.SWIMSPEED, new AbilityParams(1, 2, 1));
         registerAbility(Ability.LAVAREPAIR);
     }
 

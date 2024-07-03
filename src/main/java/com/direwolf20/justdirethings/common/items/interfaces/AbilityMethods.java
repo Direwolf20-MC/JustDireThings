@@ -360,6 +360,14 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean swimSpeed(Level level, Player player, ItemStack itemStack) {
+        if (player.fallDistance <= 0 && !player.isFallFlying() && player.zza > 0F && player.isInWaterOrBubble()) {
+            float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.SWIMSPEED.getName()) / 50;
+            player.moveRelative(speed, new Vec3(0, 0, 1));
+        }
+        return false;
+    }
+
     public static boolean jumpBoost(Level level, Player player, ItemStack itemStack) {
         if (!player.isInWaterOrBubble() && !player.isFallFlying()) {
             float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.JUMPBOOST.getName()) / 7.5f;
