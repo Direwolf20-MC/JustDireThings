@@ -539,6 +539,18 @@ public class JustDireRecipes extends RecipeProvider {
                         Registration.EclipseAlloyIngot.get(), 1.0f, 200)
                 .unlockedBy("has_eclipsealloy_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawEclipseAlloy.get()).build()))
                 .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy_ingot_smelted"));
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC,
+                        Registration.FerricoreIngot.get(), 1.0f, 100)
+                .unlockedBy("has_ferricore_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawFerricore.get()).build()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ferricore_ingot_blasted"));
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawBlazegold.get()), RecipeCategory.MISC,
+                        Registration.BlazegoldIngot.get(), 1.0f, 100)
+                .unlockedBy("has_blazegold_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawBlazegold.get()).build()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "blazegold_ingot_blasted"));
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawEclipseAlloy.get()), RecipeCategory.MISC,
+                        Registration.EclipseAlloyIngot.get(), 1.0f, 100)
+                .unlockedBy("has_eclipsealloy_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawEclipseAlloy.get()).build()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy_ingot_blasted"));
 
         //Tools
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreSword.get())
