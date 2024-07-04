@@ -15,7 +15,7 @@ public class BlazegoldHelmet extends BaseHelmet {
                 .durability(Type.HELMET.getDurability(25)));
         registerAbility(Ability.MINDFOG);
         registerAbility(Ability.LAVAREPAIR);
-        registerAbility(Ability.STUPEFY, new AbilityParams(1, 1, 1, 1, 100, 1000));
+        registerAbility(Ability.STUPEFY, new AbilityParams(1, 1, 1, 1, 100, 600));
     }
 
     @Override
