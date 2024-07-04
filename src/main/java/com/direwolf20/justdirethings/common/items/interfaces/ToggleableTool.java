@@ -80,7 +80,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getPassiveTickAbilities(ItemStack itemStack) {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if (ability.useType == Ability.UseType.PASSIVE_TICK && canUseAbility(itemStack, ability))
+            if ((ability.useType == Ability.UseType.PASSIVE_TICK || ability.useType == Ability.UseType.PASSIVE_COOLDOWN) && canUseAbility(itemStack, ability))
                 abilityList.add(ability);
         }
         return abilityList;
@@ -89,7 +89,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getCooldownAbilities() {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if (ability.useType == Ability.UseType.USE_COOLDOWN)
+            if (ability.useType == Ability.UseType.USE_COOLDOWN || ability.useType == Ability.UseType.PASSIVE_COOLDOWN)
                 abilityList.add(ability);
         }
         return abilityList;
@@ -101,7 +101,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getAllPassiveAbilities() {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK))
+            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK || ability.useType == Ability.UseType.PASSIVE_COOLDOWN))
                 abilityList.add(ability);
         }
         return abilityList;

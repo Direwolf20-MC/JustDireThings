@@ -15,6 +15,7 @@ public class BlazegoldChestplate extends BaseChestplate {
                 .durability(Type.CHESTPLATE.getDurability(25)));
         registerAbility(Ability.INVULNERABILITY, new AbilityParams(1, 1, 1, 1, 200, 1200));
         registerAbility(Ability.LAVAREPAIR);
+        registerAbility(Ability.EXTINGUISH, new AbilityParams(1, 1, 1, 1, 0, 200));
     }
 
     @Override

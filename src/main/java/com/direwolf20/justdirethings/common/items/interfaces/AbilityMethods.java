@@ -378,7 +378,25 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean extinguish(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.EXTINGUISH);
+        if (currentCooldown != -1) return false;
+        if (player.isOnFire()) {
+            if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EXTINGUISH)) {
+                AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.EXTINGUISH);
+                ToggleableTool.addCooldown(itemStack, Ability.EXTINGUISH, abilityParams.cooldown, false);
+                player.clearFire();
+                player.playNotifySound(SoundEvents.LAVA_EXTINGUISH, SoundSource.PLAYERS, .5F, 1.0F);
+                ((ServerLevel) level).sendParticles(ParticleTypes.SOUL_FIRE_FLAME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 1.5, 0.5, 0);
+                Helpers.damageTool(itemStack, player, Ability.EXTINGUISH);
+            }
+        }
+        return false;
+    }
+
     public static boolean invulnerability(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
         int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.INVULNERABILITY);
         if (currentCooldown != -1) return false;
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.INVULNERABILITY)) {
