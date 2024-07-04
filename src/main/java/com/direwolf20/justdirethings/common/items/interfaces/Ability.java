@@ -54,6 +54,9 @@ public enum Ability {
     EXTINGUISH(SettingType.SLIDER, 25, 5000, UseType.PASSIVE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::extinguish, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/extinguish.png")),
+    STUPEFY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
+            AbilityMethods::stupefy, false,
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/stupefy.png")),
 
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY),

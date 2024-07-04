@@ -2,9 +2,11 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -408,6 +410,25 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean stupefy(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.STUPEFY);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.STUPEFY)) {
+            Entity entity = MiscTools.getEntityLookedAt(player, 32);
+            if (entity instanceof Mob mob) {
+                addStupefyTarget(itemStack, entity.getStringUUID());
+                mob.setTarget(null);
+                AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.STUPEFY);
+                ToggleableTool.addCooldown(itemStack, Ability.STUPEFY, abilityParams.activeCooldown, true);
+                player.playNotifySound(SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.5F, 0.75F);
+                ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
+                Helpers.damageTool(itemStack, player, Ability.STUPEFY);
+            }
+        }
+        return false;
+    }
+
     public static boolean groundstomp(Level level, Player player, ItemStack itemStack) {
         if (level.isClientSide) return false;
         int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.GROUNDSTOMP);
@@ -447,6 +468,20 @@ public class AbilityMethods {
         if (entity instanceof PartEntity<?>)
             return false;
         return true;
+    }
+
+    public static List<String> getStupefyTargets(ItemStack itemStack) {
+        return itemStack.getOrDefault(JustDireDataComponents.STUPEFY_TARGETS.get(), new ArrayList<>());
+    }
+
+    public static void addStupefyTarget(ItemStack itemStack, String entityUUID) {
+        List<String> stupefyTargets = new ArrayList<>(getStupefyTargets(itemStack));
+        stupefyTargets.add(entityUUID);
+        itemStack.set(JustDireDataComponents.STUPEFY_TARGETS, stupefyTargets);
+    }
+
+    public static void clearStupefyTargets(ItemStack itemStack) {
+        itemStack.set(JustDireDataComponents.STUPEFY_TARGETS, new ArrayList<>());
     }
 
 }

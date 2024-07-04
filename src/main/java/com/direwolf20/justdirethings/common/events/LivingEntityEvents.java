@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.AbilityMethods;
 import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -52,11 +53,15 @@ public class LivingEntityEvents {
         LivingEntity target = e.getOriginalTarget();
         if (target instanceof Player player) {
             ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
-            if (helmet.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(helmet, Ability.MINDFOG)) {
-                double distance = source.position().distanceTo(target.position());
-                double defaultRange = source.getAttributes().hasAttribute(Attributes.FOLLOW_RANGE) ? source.getAttribute(Attributes.FOLLOW_RANGE).getValue() : 16;
-                if (distance > (defaultRange / 2))
+            if (helmet.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.canUseAbilityAndDurability(helmet, Ability.STUPEFY) && ToggleableTool.getCooldown(helmet, Ability.STUPEFY, true) != -1 && AbilityMethods.getStupefyTargets(helmet).contains(source.getStringUUID())) {
                     e.setCanceled(true);
+                } else if (toggleableTool.canUseAbilityAndDurability(helmet, Ability.MINDFOG)) {
+                    double distance = source.position().distanceTo(target.position());
+                    double defaultRange = source.getAttributes().hasAttribute(Attributes.FOLLOW_RANGE) ? source.getAttribute(Attributes.FOLLOW_RANGE).getValue() : 16;
+                    if (distance > (defaultRange / 2))
+                        e.setCanceled(true);
+                }
             }
         }
     }
@@ -112,12 +117,12 @@ public class LivingEntityEvents {
             if (mainHand.getItem() instanceof ToggleableTool toggleableTool) {
                 if (toggleableTool.canUseAbility(mainHand, Ability.SMOKER)) {
                     Iterator<ItemEntity> iterator = event.getDrops().iterator();
-                    
+
                     while (iterator.hasNext()) {
                         ItemEntity itemEntity = iterator.next();
                         boolean[] dropSmoked = new boolean[1];
                         Helpers.smokeDrop((ServerLevel) player.level(), itemEntity, mainHand, event.getEntity(), dropSmoked);
-                        
+
                         if (dropSmoked[0]) {
                             ToggleableTool.smokerParticles((ServerLevel) player.level(), itemEntity.blockPosition(), itemEntity.getItem().getCount());
                         }
@@ -130,9 +135,9 @@ public class LivingEntityEvents {
                         while (iterator.hasNext()) {
                             ItemEntity itemEntity = iterator.next();
                             ItemStack stack = itemEntity.getItem();
-    
+
                             ItemStack leftover = Helpers.teleportDrop(stack, handler, mainHand, player);
-    
+
                             if (leftover.isEmpty()) {
                                 // If the stack is now empty, remove the ItemEntity from the collection
                                 iterator.remove(); // Optionally remove from your collection if it's being directly manipulated

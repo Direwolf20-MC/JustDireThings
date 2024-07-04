@@ -304,6 +304,7 @@ public interface ToggleableTool extends ToggleableItem {
                         );
                         abilityCooldowns.set(i, updatedCooldown);
                         player.playNotifySound(SoundEvents.CONDUIT_DEACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                        cooldownDataClear(itemStack, ability);
                     }
                 }
             } else {
@@ -321,6 +322,11 @@ public interface ToggleableTool extends ToggleableItem {
             itemStack.remove(JustDireDataComponents.ABILITY_COOLDOWNS);
         else
             itemStack.set(JustDireDataComponents.ABILITY_COOLDOWNS, abilityCooldowns);
+    }
+
+    static void cooldownDataClear(ItemStack itemStack, Ability ability) {
+        if (ability == Ability.STUPEFY)
+            AbilityMethods.clearStupefyTargets(itemStack);
     }
 
     static void addCooldown(ItemStack itemStack, Ability ability, int cooldown, boolean active) {

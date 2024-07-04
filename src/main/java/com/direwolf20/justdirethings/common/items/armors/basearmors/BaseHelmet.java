@@ -79,7 +79,7 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.LEGS.getIndex() && (!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
+        if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.HEAD.getIndex() && (!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
             armorTick(level, player, itemStack);
         }
     }
