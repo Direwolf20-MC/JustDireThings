@@ -229,6 +229,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.RUNSPEED.getLocalization(), "Run Speed");
         add(Ability.WALKSPEED.getLocalization(), "Walk Speed");
         add(Ability.SWIMSPEED.getLocalization(), "Swim Speed");
+        add(Ability.GROUNDSTOMP.getLocalization(), "Ground Stomp");
         add(Ability.STEPHEIGHT.getLocalization(), "Step Assist");
         add(Ability.JUMPBOOST.getLocalization(), "Jump Boost");
         add(Ability.MINDFOG.getLocalization(), "Mind Fog");

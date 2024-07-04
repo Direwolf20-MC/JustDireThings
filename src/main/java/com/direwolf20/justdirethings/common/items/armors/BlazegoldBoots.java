@@ -16,6 +16,7 @@ public class BlazegoldBoots extends BaseBoots {
         registerAbility(Ability.STEPHEIGHT);
         registerAbility(Ability.JUMPBOOST, new AbilityParams(1, 2, 1, 2));
         registerAbility(Ability.LAVAREPAIR);
+        registerAbility(Ability.GROUNDSTOMP, new AbilityParams(1, 2, 1, 2, 0, 200));
     }
 
     @Override

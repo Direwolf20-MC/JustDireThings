@@ -48,6 +48,9 @@ public enum Ability {
             AbilityMethods::airBurst, false),
     SWIMSPEED(SettingType.SLIDER, 1, 5, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
             AbilityMethods::swimSpeed, false),
+    GROUNDSTOMP(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
+            AbilityMethods::groundstomp, false,
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/groundstomp.png")),
 
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY),

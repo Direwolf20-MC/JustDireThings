@@ -17,6 +17,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -386,6 +388,47 @@ public class AbilityMethods {
             Helpers.damageTool(itemStack, player, Ability.INVULNERABILITY);
         }
         return false;
+    }
+
+    public static boolean groundstomp(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.GROUNDSTOMP);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.GROUNDSTOMP)) {
+            AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.GROUNDSTOMP);
+            ToggleableTool.addCooldown(itemStack, Ability.GROUNDSTOMP, abilityParams.cooldown, false);
+            int radius = 3;
+            AABB aabb = new AABB(player.getX() - radius, player.getY() - radius, player.getZ() - radius,
+                    player.getX() + radius, player.getY() + radius, player.getZ() + radius);
+
+            List<Mob> stompList = new ArrayList<>(level.getEntitiesOfClass(Mob.class, aabb, AbilityMethods::isValidStompEntity));
+            double strength = ToggleableTool.getToolValue(itemStack, Ability.GROUNDSTOMP.getName());
+
+            for (Mob mob : stompList) {
+                double dx = mob.getX() - player.getX();
+                double dz = mob.getZ() - player.getZ();
+                double distance = Math.sqrt(dx * dx + dz * dz);
+
+                // Normalize the direction vector and apply knockback
+                if (distance != 0) {
+                    dx /= distance;
+                    dz /= distance;
+                    mob.knockback(strength, -dx, -dz);
+                }
+            }
+            player.playNotifySound(SoundEvents.MACE_SMASH_GROUND, SoundSource.PLAYERS, .5F, 1.0F);
+            ((ServerLevel) level).sendParticles(ParticleTypes.DUST_PLUME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 0.2, 0.5, 0);
+            Helpers.damageTool(itemStack, player, Ability.GROUNDSTOMP);
+        }
+        return false;
+    }
+
+    public static boolean isValidStompEntity(Entity entity) {
+        if (entity.isMultipartEntity())
+            return false;
+        if (entity instanceof PartEntity<?>)
+            return false;
+        return true;
     }
 
 }
