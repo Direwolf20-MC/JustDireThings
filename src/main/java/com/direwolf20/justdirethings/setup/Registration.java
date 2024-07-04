@@ -445,14 +445,15 @@ public class Registration {
     public static final DeferredHolder<Item, EclipseAlloyPaxel> EclipseAlloyPaxel = TOOLS.register("eclipsealloy_paxel", EclipseAlloyPaxel::new);
 
     //Items - Armor
-    public static final DeferredHolder<Item, FerricoreBoots> FerricoreBoots = ARMORS.register("ferricore_boots", FerricoreBoots::new);
+    public static final DeferredHolder<Item, FerricoreHelmet> FerricoreHelmet = ARMORS.register("ferricore_helmet", FerricoreHelmet::new);
     public static final DeferredHolder<Item, FerricoreChestplate> FerricoreChestplate = ARMORS.register("ferricore_chestplate", FerricoreChestplate::new);
     public static final DeferredHolder<Item, FerricoreLeggings> FerricoreLeggings = ARMORS.register("ferricore_leggings", FerricoreLeggings::new);
-    public static final DeferredHolder<Item, FerricoreHelmet> FerricoreHelmet = ARMORS.register("ferricore_helmet", FerricoreHelmet::new);
-    public static final DeferredHolder<Item, BlazegoldBoots> BlazegoldBoots = ARMORS.register("blazegold_boots", BlazegoldBoots::new);
+    public static final DeferredHolder<Item, FerricoreBoots> FerricoreBoots = ARMORS.register("ferricore_boots", FerricoreBoots::new);
+
+    public static final DeferredHolder<Item, BlazegoldHelmet> BlazegoldHelmet = ARMORS.register("blazegold_helmet", BlazegoldHelmet::new);
     public static final DeferredHolder<Item, BlazegoldChestplate> BlazegoldChestplate = ARMORS.register("blazegold_chestplate", BlazegoldChestplate::new);
     public static final DeferredHolder<Item, BlazegoldLeggings> BlazegoldLeggings = ARMORS.register("blazegold_leggings", BlazegoldLeggings::new);
-    public static final DeferredHolder<Item, BlazegoldHelmet> BlazegoldHelmet = ARMORS.register("blazegold_helmet", BlazegoldHelmet::new);
+    public static final DeferredHolder<Item, BlazegoldBoots> BlazegoldBoots = ARMORS.register("blazegold_boots", BlazegoldBoots::new);
 
 
     //Entities
