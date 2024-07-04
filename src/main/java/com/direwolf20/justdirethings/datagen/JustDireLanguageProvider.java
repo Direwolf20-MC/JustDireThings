@@ -140,6 +140,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FerricoreChestplate.get(), "Ferricore Chestplate");
         add(Registration.FerricoreLeggings.get(), "Ferricore Leggings");
         add(Registration.FerricoreHelmet.get(), "Ferricore Helmet");
+        add(Registration.BlazegoldBoots.get(), "Blazegold Boots");
+        add(Registration.BlazegoldChestplate.get(), "Blazegold Chestplate");
+        add(Registration.BlazegoldLeggings.get(), "Blazegold Leggings");
+        add(Registration.BlazegoldHelmet.get(), "Blazegold Helmet");
 
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");
@@ -224,6 +228,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.ECLIPSEGATE.getLocalization(), "Eclipse Gate");
         add(Ability.RUNSPEED.getLocalization(), "Run Speed");
         add(Ability.WALKSPEED.getLocalization(), "Walk Speed");
+        add(Ability.SWIMSPEED.getLocalization(), "Swim Speed");
+        add(Ability.GROUNDSTOMP.getLocalization(), "Ground Stomp");
+        add(Ability.EXTINGUISH.getLocalization(), "Extinguish");
+        add(Ability.STUPEFY.getLocalization(), "Stupefy");
         add(Ability.STEPHEIGHT.getLocalization(), "Step Assist");
         add(Ability.JUMPBOOST.getLocalization(), "Jump Boost");
         add(Ability.MINDFOG.getLocalization(), "Mind Fog");

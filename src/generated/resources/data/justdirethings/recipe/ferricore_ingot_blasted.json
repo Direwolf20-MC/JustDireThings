@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 1.0,
+  "ingredient": {
+    "item": "justdirethings:raw_ferricore"
+  },
+  "result": {
+    "count": 1,
+    "id": "justdirethings:ferricore_ingot"
+  }
+}

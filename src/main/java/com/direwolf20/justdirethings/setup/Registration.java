@@ -51,10 +51,7 @@ import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstableP
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
 import com.direwolf20.justdirethings.common.items.*;
-import com.direwolf20.justdirethings.common.items.armors.FerricoreBoots;
-import com.direwolf20.justdirethings.common.items.armors.FerricoreChestplate;
-import com.direwolf20.justdirethings.common.items.armors.FerricoreHelmet;
-import com.direwolf20.justdirethings.common.items.armors.FerricoreLeggings;
+import com.direwolf20.justdirethings.common.items.armors.*;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
@@ -452,6 +449,11 @@ public class Registration {
     public static final DeferredHolder<Item, FerricoreChestplate> FerricoreChestplate = ARMORS.register("ferricore_chestplate", FerricoreChestplate::new);
     public static final DeferredHolder<Item, FerricoreLeggings> FerricoreLeggings = ARMORS.register("ferricore_leggings", FerricoreLeggings::new);
     public static final DeferredHolder<Item, FerricoreHelmet> FerricoreHelmet = ARMORS.register("ferricore_helmet", FerricoreHelmet::new);
+    public static final DeferredHolder<Item, BlazegoldBoots> BlazegoldBoots = ARMORS.register("blazegold_boots", BlazegoldBoots::new);
+    public static final DeferredHolder<Item, BlazegoldChestplate> BlazegoldChestplate = ARMORS.register("blazegold_chestplate", BlazegoldChestplate::new);
+    public static final DeferredHolder<Item, BlazegoldLeggings> BlazegoldLeggings = ARMORS.register("blazegold_leggings", BlazegoldLeggings::new);
+    public static final DeferredHolder<Item, BlazegoldHelmet> BlazegoldHelmet = ARMORS.register("blazegold_helmet", BlazegoldHelmet::new);
+
 
     //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",

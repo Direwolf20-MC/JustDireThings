@@ -86,7 +86,7 @@ public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickabl
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.FEET.getIndex() && !getPassiveTickAbilities(itemStack).isEmpty() && entity instanceof Player player) {
+        if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.FEET.getIndex() && (!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
             armorTick(level, player, itemStack);
         }
     }

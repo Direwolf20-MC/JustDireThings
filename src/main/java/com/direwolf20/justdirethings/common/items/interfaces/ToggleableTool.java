@@ -80,7 +80,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getPassiveTickAbilities(ItemStack itemStack) {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if (ability.useType == Ability.UseType.PASSIVE_TICK && canUseAbility(itemStack, ability))
+            if ((ability.useType == Ability.UseType.PASSIVE_TICK || ability.useType == Ability.UseType.PASSIVE_COOLDOWN) && canUseAbility(itemStack, ability))
                 abilityList.add(ability);
         }
         return abilityList;
@@ -89,7 +89,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getCooldownAbilities() {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if (ability.useType == Ability.UseType.USE_COOLDOWN)
+            if (ability.useType == Ability.UseType.USE_COOLDOWN || ability.useType == Ability.UseType.PASSIVE_COOLDOWN)
                 abilityList.add(ability);
         }
         return abilityList;
@@ -101,7 +101,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getAllPassiveAbilities() {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK))
+            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK || ability.useType == Ability.UseType.PASSIVE_COOLDOWN))
                 abilityList.add(ability);
         }
         return abilityList;
@@ -304,6 +304,7 @@ public interface ToggleableTool extends ToggleableItem {
                         );
                         abilityCooldowns.set(i, updatedCooldown);
                         player.playNotifySound(SoundEvents.CONDUIT_DEACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                        cooldownDataClear(itemStack, ability);
                     }
                 }
             } else {
@@ -321,6 +322,11 @@ public interface ToggleableTool extends ToggleableItem {
             itemStack.remove(JustDireDataComponents.ABILITY_COOLDOWNS);
         else
             itemStack.set(JustDireDataComponents.ABILITY_COOLDOWNS, abilityCooldowns);
+    }
+
+    static void cooldownDataClear(ItemStack itemStack, Ability ability) {
+        if (ability == Ability.STUPEFY)
+            AbilityMethods.clearStupefyTargets(itemStack);
     }
 
     static void addCooldown(ItemStack itemStack, Ability ability, int cooldown, boolean active) {

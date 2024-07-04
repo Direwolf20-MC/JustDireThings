@@ -32,7 +32,7 @@ public class ArmorTiers {
             0.0F,
             0.0F,
             () -> Ingredient.of(Registration.FerricoreIngot.get()),
-            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ferricore"), "", true), new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ferricore"), "_overlay", false))
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ferricore"), "", true))
     );
     public static final Holder<ArmorMaterial> BLAZEGOLD = register(
             "blazegold",
@@ -48,7 +48,7 @@ public class ArmorTiers {
             0.0F,
             0.0F,
             () -> Ingredient.of(Registration.BlazegoldIngot.get()),
-            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "blazegold"), "", true), new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "blazegold"), "_overlay", false))
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "blazegold"), "", true))
     );
     public static final Holder<ArmorMaterial> CELESTIGEM = register(
             "celestigem",
@@ -57,14 +57,14 @@ public class ArmorTiers {
                 p_323384_.put(ArmorItem.Type.LEGGINGS, 6);
                 p_323384_.put(ArmorItem.Type.CHESTPLATE, 8);
                 p_323384_.put(ArmorItem.Type.HELMET, 3);
-                p_323384_.put(ArmorItem.Type.BODY, 8);
+                p_323384_.put(ArmorItem.Type.BODY, 11);
             }),
             10,
             SoundEvents.ARMOR_EQUIP_DIAMOND,
             2.0F,
             0.0F,
             () -> Ingredient.of(Registration.Celestigem.get()),
-            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "celestigem"), "", true), new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "celestigem"), "_overlay", false))
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "celestigem"), "", true))
     );
     public static final Holder<ArmorMaterial> ECLIPSEALLOY = register(
             "eclipsealloy",
@@ -73,14 +73,14 @@ public class ArmorTiers {
                 p_323384_.put(ArmorItem.Type.LEGGINGS, 6);
                 p_323384_.put(ArmorItem.Type.CHESTPLATE, 8);
                 p_323384_.put(ArmorItem.Type.HELMET, 3);
-                p_323384_.put(ArmorItem.Type.BODY, 8);
+                p_323384_.put(ArmorItem.Type.BODY, 11);
             }),
             15,
             SoundEvents.ARMOR_EQUIP_NETHERITE,
             3.0F,
             0.1F,
             () -> Ingredient.of(Registration.EclipseAlloyIngot.get()),
-            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy"), "", true), new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy"), "_overlay", false))
+            List.of(new ArmorMaterial.Layer(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy"), "", true))
     );
 
     private static Holder<ArmorMaterial> register(
