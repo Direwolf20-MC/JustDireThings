@@ -15,6 +15,7 @@ public class CelestigemBoots extends BaseBoots implements PoweredTool {
         registerAbility(Ability.STEPHEIGHT);
         registerAbility(Ability.JUMPBOOST, new AbilityParams(1, 3, 1, 3));
         registerAbility(Ability.GROUNDSTOMP, new AbilityParams(1, 3, 1, 3, 0, 200));
+        registerAbility(Ability.NEGATEFALLDAMAGE);
     }
 
     @Override

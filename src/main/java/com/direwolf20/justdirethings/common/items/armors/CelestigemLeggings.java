@@ -9,12 +9,13 @@ import net.minecraft.world.item.ItemStack;
 
 public class CelestigemLeggings extends BaseLeggings implements PoweredTool {
     public CelestigemLeggings() {
-        super(ArmorTiers.BLAZEGOLD, new Properties()
+        super(ArmorTiers.CELESTIGEM, new Properties()
                 .fireResistant()
                 .durability(Type.BOOTS.getDurability(25)));
         registerAbility(Ability.RUNSPEED, new AbilityParams(1, 3, 1));
         registerAbility(Ability.WALKSPEED, new AbilityParams(1, 3, 1));
         registerAbility(Ability.SWIMSPEED, new AbilityParams(1, 3, 1));
+        registerAbility(Ability.DECOY, new AbilityParams(1, 1, 1, 1, 200, 1200));
     }
 
     @Override

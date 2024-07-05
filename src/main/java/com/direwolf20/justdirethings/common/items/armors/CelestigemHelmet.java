@@ -14,6 +14,7 @@ public class CelestigemHelmet extends BaseHelmet implements PoweredTool {
                 .durability(Type.BOOTS.getDurability(25)));
         registerAbility(Ability.MINDFOG);
         registerAbility(Ability.STUPEFY, new AbilityParams(1, 1, 1, 1, 100, 400));
+        registerAbility(Ability.NIGHTVISION);
     }
 
     @Override

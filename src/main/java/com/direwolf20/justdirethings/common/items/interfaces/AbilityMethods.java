@@ -20,6 +20,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -355,7 +356,11 @@ public class AbilityMethods {
     }
 
     public static boolean walkSpeed(Level level, Player player, ItemStack itemStack) {
-        if (!player.isSprinting() && player.fallDistance <= 0 && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
+        ItemStack chestItem = player.getItemBySlot(EquipmentSlot.CHEST);
+        boolean canBoostElytra = chestItem.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.ELYTRA);
+        boolean isNotFlying = player.fallDistance <= 0 && !player.isFallFlying();
+        boolean shouldBoostFlight = canBoostElytra || isNotFlying;
+        if (!player.isSprinting() && shouldBoostFlight && player.zza > 0F && !player.isInWaterOrBubble()) {
             float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.WALKSPEED.getName()) / 25;
             if (!player.onGround())
                 speed = speed / 4;
@@ -459,6 +464,16 @@ public class AbilityMethods {
             ((ServerLevel) level).sendParticles(ParticleTypes.DUST_PLUME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 0.2, 0.5, 0);
             Helpers.damageTool(itemStack, player, Ability.GROUNDSTOMP);
         }
+        return false;
+    }
+
+    public static boolean nightVision(Level level, Player player, ItemStack itemStack) {
+        player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 500, 0, false, false, false));
+        return false;
+    }
+
+    public static boolean decoy(Level level, Player player, ItemStack itemStack) {
+
         return false;
     }
 
