@@ -467,11 +467,6 @@ public class AbilityMethods {
         return false;
     }
 
-    public static boolean nightVision(Level level, Player player, ItemStack itemStack) {
-        player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 500, 0, false, false, false));
-        return false;
-    }
-
     public static boolean decoy(Level level, Player player, ItemStack itemStack) {
 
         return false;

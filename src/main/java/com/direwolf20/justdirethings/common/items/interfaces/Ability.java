@@ -63,8 +63,7 @@ public enum Ability {
     VOIDSHIFT(SettingType.SLIDER, 1, 50, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::voidShift, true), //FE Per block traveled
     NEGATEFALLDAMAGE(SettingType.SLIDER, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
-    NIGHTVISION(SettingType.SLIDER, 1, 25, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
-            AbilityMethods::nightVision, false),
+    NIGHTVISION(SettingType.SLIDER, 1, 25, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     ELYTRA(SettingType.SLIDER, 1, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     DECOY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::decoy, false,
