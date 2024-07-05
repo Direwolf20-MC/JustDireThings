@@ -822,6 +822,38 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemBoots.get())
+                .pattern("f f")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', Registration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemLeggings.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("f f")
+                .define('f', Registration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemChestplate.get())
+                .pattern("f f")
+                .pattern("fff")
+                .pattern("fff")
+                .define('f', Registration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemHelmet.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', Registration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
 
 
         //Resource Conversions

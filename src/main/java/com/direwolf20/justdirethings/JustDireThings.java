@@ -91,7 +91,11 @@ public class JustDireThings {
                 Registration.VoidshiftWand.get(),
                 Registration.EclipsegateWand.get(),
                 Registration.PortalGun.get(),
-                Registration.PortalGunV2.get()
+                Registration.PortalGunV2.get(),
+                Registration.CelestigemBoots.get(),
+                Registration.CelestigemLeggings.get(),
+                Registration.CelestigemChestplate.get(),
+                Registration.CelestigemHelmet.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
