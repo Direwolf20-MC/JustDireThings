@@ -201,6 +201,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.fillmode.jdtonly", "JustDireThings");
         add("justdirethings.fillmode.all", "All");
         add("justdirethings.hint.dropinwater", "Drop in Water");
+        add("justdirethings.decoy", "Decoy");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -318,8 +319,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Buttons
         //add("justdirethings.buttons.save", "Save");
 
-        //Messages to Player
-        //add("justdirethings.messages.invalidblock", "Invalid Block");
+        //Entities
+        add("entity.justdirethings.decoy_entity", "Decoy Entity");
 
         //Recipes
         add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");

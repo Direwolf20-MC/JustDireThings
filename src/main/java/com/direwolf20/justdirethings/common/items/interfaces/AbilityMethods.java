@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
+import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
@@ -468,7 +469,21 @@ public class AbilityMethods {
     }
 
     public static boolean decoy(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.DECOY);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.DECOY)) {
+            AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.DECOY);
+            DecoyEntity decoy = new DecoyEntity(level);
+            decoy.setPos(player.position());
+            decoy.setSummonerName(player.getName().getString());
+            decoy.setOwnerUUID(player.getUUID());
+            level.addFreshEntity(decoy);
+            ToggleableTool.addCooldown(itemStack, Ability.DECOY, abilityParams.activeCooldown, true);
+            player.playNotifySound(SoundEvents.CONDUIT_ACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            Helpers.damageTool(itemStack, player, Ability.DECOY);
 
+        }
         return false;
     }
 
