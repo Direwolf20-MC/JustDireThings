@@ -144,6 +144,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.BlazegoldChestplate.get(), "Blazegold Chestplate");
         add(Registration.BlazegoldLeggings.get(), "Blazegold Leggings");
         add(Registration.BlazegoldHelmet.get(), "Blazegold Helmet");
+        add(Registration.CelestigemBoots.get(), "Celestigem Boots");
+        add(Registration.CelestigemChestplate.get(), "Celestigem Chestplate");
+        add(Registration.CelestigemLeggings.get(), "Celestigem Leggings");
+        add(Registration.CelestigemHelmet.get(), "Celestigem Helmet");
 
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");
@@ -197,6 +201,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.fillmode.jdtonly", "JustDireThings");
         add("justdirethings.fillmode.all", "All");
         add("justdirethings.hint.dropinwater", "Drop in Water");
+        add("justdirethings.decoy", "Decoy");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -236,6 +241,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.JUMPBOOST.getLocalization(), "Jump Boost");
         add(Ability.MINDFOG.getLocalization(), "Mind Fog");
         add(Ability.INVULNERABILITY.getLocalization(), "Invulnerability");
+        add(Ability.ELYTRA.getLocalization(), "Elytra");
+        add(Ability.NEGATEFALLDAMAGE.getLocalization(), "Negate Fall Damage");
+        add(Ability.DECOY.getLocalization(), "Decoy");
+        add(Ability.NIGHTVISION.getLocalization(), "Night Vision");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
@@ -310,8 +319,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Buttons
         //add("justdirethings.buttons.save", "Save");
 
-        //Messages to Player
-        //add("justdirethings.messages.invalidblock", "Invalid Block");
+        //Entities
+        add("entity.justdirethings.decoy_entity", "Decoy Entity");
 
         //Recipes
         add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");
