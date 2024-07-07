@@ -1,10 +1,7 @@
 package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
-import com.direwolf20.justdirethings.common.items.interfaces.Ability;
-import com.direwolf20.justdirethings.common.items.interfaces.AbilityMethods;
-import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
@@ -29,6 +26,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.Iterator;
+import java.util.Map;
 
 
 public class LivingEntityEvents {
@@ -100,6 +98,14 @@ public class LivingEntityEvents {
             }
             heldItem = player.getItemBySlot(EquipmentSlot.FEET);
             if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.canUseAbilityAndDurability(heldItem, Ability.NEGATEFALLDAMAGE)) {
+                    int distance = (int) event.getDistance();
+                    Helpers.damageTool(heldItem, player, Ability.NEGATEFALLDAMAGE, distance);
+                    event.setDistance(0.0f);
+                    return;
+                }
+            }
+            if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
                 if (toggleableTool.canUseAbilityAndDurability(heldItem, Ability.JUMPBOOST)) {
                     int jumpBoost = ToggleableTool.getToolValue(heldItem, Ability.JUMPBOOST.getName());
                     event.setDistance(event.getDistance() - jumpBoost);
@@ -153,6 +159,17 @@ public class LivingEntityEvents {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onArmorDamage(ArmorHurtEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Map<EquipmentSlot, ArmorHurtEvent.ArmorEntry> armorEntries = event.getArmorMap();
+        for (Map.Entry<EquipmentSlot, ArmorHurtEvent.ArmorEntry> entry : armorEntries.entrySet()) {
+            if (entry.getKey() == EquipmentSlot.MAINHAND || entry.getKey() == EquipmentSlot.OFFHAND) continue;
+            if (entry.getValue().armorItemStack.getItem() instanceof PoweredItem)
+                entry.getValue().newDamage = entry.getValue().originalDamage * 100;
         }
     }
 

@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
+import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
@@ -20,6 +21,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -355,7 +357,11 @@ public class AbilityMethods {
     }
 
     public static boolean walkSpeed(Level level, Player player, ItemStack itemStack) {
-        if (!player.isSprinting() && player.fallDistance <= 0 && !player.isFallFlying() && player.zza > 0F && !player.isInWaterOrBubble()) {
+        ItemStack chestItem = player.getItemBySlot(EquipmentSlot.CHEST);
+        boolean canBoostElytra = chestItem.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.ELYTRA);
+        boolean isNotFlying = player.fallDistance <= 0 && !player.isFallFlying();
+        boolean shouldBoostFlight = canBoostElytra || isNotFlying;
+        if (!player.isSprinting() && shouldBoostFlight && player.zza > 0F && !player.isInWaterOrBubble()) {
             float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.WALKSPEED.getName()) / 25;
             if (!player.onGround())
                 speed = speed / 4;
@@ -458,6 +464,25 @@ public class AbilityMethods {
             player.playNotifySound(SoundEvents.MACE_SMASH_GROUND, SoundSource.PLAYERS, .5F, 1.0F);
             ((ServerLevel) level).sendParticles(ParticleTypes.DUST_PLUME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 0.2, 0.5, 0);
             Helpers.damageTool(itemStack, player, Ability.GROUNDSTOMP);
+        }
+        return false;
+    }
+
+    public static boolean decoy(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.DECOY);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.DECOY)) {
+            AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.DECOY);
+            DecoyEntity decoy = new DecoyEntity(level);
+            decoy.setPos(player.position());
+            decoy.setSummonerName(player.getName().getString());
+            decoy.setOwnerUUID(player.getUUID());
+            level.addFreshEntity(decoy);
+            ToggleableTool.addCooldown(itemStack, Ability.DECOY, abilityParams.activeCooldown, true);
+            player.playNotifySound(SoundEvents.CONDUIT_ACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            Helpers.damageTool(itemStack, player, Ability.DECOY);
+
         }
         return false;
     }

@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
 import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
+import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
@@ -26,6 +27,7 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -46,9 +48,15 @@ public class JustDireThings {
         modEventBus.addListener(this::registerCapabilities);
         modEventBus.addListener(PacketHandler::registerNetworking);
         modEventBus.addListener(this::registerChunkLoaders);
+        modEventBus.addListener(this::registerEntityAttributes);
         if (FMLLoader.getDist().isClient()) {
             modEventBus.addListener(ClientSetup::init);
         }
+    }
+
+    private void registerEntityAttributes(EntityAttributeCreationEvent event) {
+        event.put(Registration.DecoyEntity.get(),
+                DecoyEntity.createAttributes().build());
     }
 
     private void registerChunkLoaders(RegisterTicketControllersEvent event) {
@@ -91,7 +99,11 @@ public class JustDireThings {
                 Registration.VoidshiftWand.get(),
                 Registration.EclipsegateWand.get(),
                 Registration.PortalGun.get(),
-                Registration.PortalGunV2.get()
+                Registration.PortalGunV2.get(),
+                Registration.CelestigemBoots.get(),
+                Registration.CelestigemLeggings.get(),
+                Registration.CelestigemChestplate.get(),
+                Registration.CelestigemHelmet.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
