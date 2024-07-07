@@ -480,7 +480,7 @@ public class AbilityMethods {
             decoy.setOwnerUUID(player.getUUID());
             level.addFreshEntity(decoy);
             ToggleableTool.addCooldown(itemStack, Ability.DECOY, abilityParams.activeCooldown, true);
-            player.playNotifySound(SoundEvents.CONDUIT_ACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            player.playNotifySound(SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.PLAYERS, 1.0F, 1.0F);
             Helpers.damageTool(itemStack, player, Ability.DECOY);
 
         }
