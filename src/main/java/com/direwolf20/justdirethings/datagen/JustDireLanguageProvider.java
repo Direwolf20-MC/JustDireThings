@@ -249,6 +249,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.NEGATEFALLDAMAGE.getLocalization(), "Negate Fall Damage");
         add(Ability.DECOY.getLocalization(), "Decoy");
         add(Ability.NIGHTVISION.getLocalization(), "Night Vision");
+        add(Ability.DEATHPROTECTION.getLocalization(), "Death Protection");
+        add(Ability.DEBUFFREMOVER.getLocalization(), "Debuff Remover");
+        add(Ability.NOAI.getLocalization(), "Mental Obliteration");
+        add(Ability.FLIGHT.getLocalization(), "Flight");
+        add(Ability.LAVAIMMUNITY.getLocalization(), "Lava Immunity");
+        add(Ability.PHASE.getLocalization(), "Phase");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

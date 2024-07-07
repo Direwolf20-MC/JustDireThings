@@ -51,7 +51,7 @@ public enum Ability {
     GROUNDSTOMP(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::groundstomp, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/groundstomp.png")),
-    EXTINGUISH(SettingType.SLIDER, 25, 5000, UseType.PASSIVE_COOLDOWN, BindingType.CUSTOM_ONLY,
+    EXTINGUISH(SettingType.SLIDER, 25, 5000, UseType.PASSIVE_TICK_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::extinguish, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/extinguish.png")),
     STUPEFY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
@@ -64,7 +64,7 @@ public enum Ability {
             AbilityMethods::voidShift, true), //FE Per block traveled
     NEGATEFALLDAMAGE(SettingType.SLIDER, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     NIGHTVISION(SettingType.SLIDER, 1, 25, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
-    ELYTRA(SettingType.SLIDER, 1, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+    ELYTRA(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     DECOY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::decoy, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/decoy.png")),
@@ -77,7 +77,21 @@ public enum Ability {
             AbilityMethods::glowing, false),
     INSTABREAK(SettingType.TOGGLE, 2, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     ECLIPSEGATE(SettingType.TOGGLE, 1, 250, UseType.USE_ON, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::eclipseGate, false); //FE Per block Removed
+            AbilityMethods::eclipseGate, false), //FE Per block Removed
+    DEATHPROTECTION(SettingType.SLIDER, 25, 450000, UseType.PASSIVE_COOLDOWN, BindingType.CUSTOM_ONLY,
+            false,
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/deathprotection.png")),
+    DEBUFFREMOVER(SettingType.SLIDER, 25, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
+            AbilityMethods::debuffRemover, false,
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/debuffremover.png")),
+    NOAI(SettingType.SLIDER, 25, 100000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
+            AbilityMethods::noAI, false,
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/noai.png")),
+    FLIGHT(SettingType.SLIDER, 1, 100, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
+            AbilityMethods::flight, false),
+    LAVAIMMUNITY(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+    PHASE(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY);
+
 
     public enum SettingType {
         TOGGLE,
@@ -92,6 +106,7 @@ public enum Ability {
         PASSIVE,
         PASSIVE_TICK,
         PASSIVE_COOLDOWN,
+        PASSIVE_TICK_COOLDOWN
     }
 
     public enum BindingType {
@@ -135,6 +150,11 @@ public enum Ability {
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton) {
         this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
         this.action = action;
+    }
+
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, boolean renderButton, ResourceLocation cooldownIcon) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
+        this.cooldownIcon = cooldownIcon;
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton, ResourceLocation cooldownIcon) {

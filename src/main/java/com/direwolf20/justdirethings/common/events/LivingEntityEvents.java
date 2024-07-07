@@ -37,10 +37,21 @@ public class LivingEntityEvents {
         Entity target = e.getEntity();
         if (target instanceof Player player) {
             ItemStack chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
-            if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbility(chestplate, Ability.ELYTRA)) {
-                if (e.getSource().is(DamageTypes.FLY_INTO_WALL))
+            if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(chestplate, Ability.ELYTRA)) {
+                if (e.getSource().is(DamageTypes.FLY_INTO_WALL)) {
                     e.setInvulnerable(true);
-            } else if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
+                    Helpers.damageTool(chestplate, player, Ability.ELYTRA);
+                    return;
+                }
+            }
+            if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(chestplate, Ability.LAVAIMMUNITY)) {
+                if (e.getSource().is(DamageTypes.LAVA) || e.getSource().is(DamageTypes.IN_FIRE) || e.getSource().is(DamageTypes.ON_FIRE)) {
+                    e.setInvulnerable(true);
+                    Helpers.damageTool(chestplate, player, Ability.LAVAIMMUNITY);
+                    return;
+                }
+            }
+            if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
                 int activeCooldown = ToggleableTool.getCooldown(chestplate, Ability.INVULNERABILITY, true);
                 if (activeCooldown == -1) return;
                 player.playNotifySound(SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
@@ -180,6 +191,19 @@ public class LivingEntityEvents {
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
+            ItemStack chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
+            int currentCooldown = ToggleableTool.getAnyCooldown(chestplate, Ability.DEATHPROTECTION);
+            if (currentCooldown == -1) {
+                if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(chestplate, Ability.DEATHPROTECTION)) {
+                    AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.DEATHPROTECTION);
+                    ToggleableTool.addCooldown(chestplate, Ability.DEATHPROTECTION, abilityParams.cooldown, false);
+                    player.playNotifySound(SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    Helpers.damageTool(chestplate, player, Ability.DEATHPROTECTION);
+                    player.setHealth(10.0F);
+                    event.setCanceled(true);
+                    return;
+                }
+            }
             // Check player's inventory for the totem
             ItemStack totemStack = findTotem(player);
             if (!totemStack.isEmpty()) {

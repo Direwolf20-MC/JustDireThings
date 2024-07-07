@@ -15,6 +15,9 @@ public class EclipseAlloyHelmet extends BaseHelmet implements PoweredTool {
         registerAbility(Ability.MINDFOG);
         registerAbility(Ability.STUPEFY, new AbilityParams(1, 1, 1, 1, 100, 200));
         registerAbility(Ability.NIGHTVISION);
+        registerAbility(Ability.NOAI, new AbilityParams(1, 1, 1, 1, 0, 2400));
+        registerAbility(Ability.DEBUFFREMOVER, new AbilityParams(1, 1, 1, 1, 0, 400));
+
     }
 
     @Override

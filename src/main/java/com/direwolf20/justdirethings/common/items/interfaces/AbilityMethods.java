@@ -6,10 +6,12 @@ import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +20,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -388,9 +392,9 @@ public class AbilityMethods {
 
     public static boolean extinguish(Level level, Player player, ItemStack itemStack) {
         if (level.isClientSide) return false;
-        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.EXTINGUISH);
-        if (currentCooldown != -1) return false;
         if (player.isOnFire()) {
+            int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.EXTINGUISH);
+            if (currentCooldown != -1) return false;
             if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EXTINGUISH)) {
                 AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.EXTINGUISH);
                 ToggleableTool.addCooldown(itemStack, Ability.EXTINGUISH, abilityParams.cooldown, false);
@@ -487,10 +491,77 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean debuffRemover(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.DEBUFFREMOVER);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.DEBUFFREMOVER)) {
+            AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.DEBUFFREMOVER);
+            ToggleableTool.addCooldown(itemStack, Ability.DEBUFFREMOVER, abilityParams.cooldown, false);
+            player.playNotifySound(SoundEvents.WANDERING_TRADER_DRINK_MILK, SoundSource.PLAYERS, 1.0F, 1.0F);
+            List<Holder<MobEffect>> negativeEffects = new ArrayList<>();
+            for (Holder<MobEffect> mobEffect : player.getActiveEffectsMap().keySet()) {
+                if (mobEffect.value().getCategory() == MobEffectCategory.HARMFUL)
+                    negativeEffects.add(mobEffect);
+            }
+            for (Holder<MobEffect> mobEffectHolder : negativeEffects) {
+                if (toggleableTool.canUseAbilityAndDurability(itemStack, Ability.DEBUFFREMOVER)) {
+                    player.removeEffect(mobEffectHolder);
+                    Helpers.damageTool(itemStack, player, Ability.DEBUFFREMOVER);
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean noAI(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.NOAI);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.NOAI)) {
+            AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.NOAI);
+            ToggleableTool.addCooldown(itemStack, Ability.NOAI, abilityParams.cooldown, false);
+            int radius = 5;
+            AABB aabb = new AABB(player.getX() - radius, player.getY() - radius, player.getZ() - radius,
+                    player.getX() + radius, player.getY() + radius, player.getZ() + radius);
+
+            List<Mob> AIList = new ArrayList<>(level.getEntitiesOfClass(Mob.class, aabb, AbilityMethods::isValidNOAIEntity));
+
+            for (Mob mob : AIList) {
+                if (toggleableTool.canUseAbilityAndDurability(itemStack, Ability.NOAI)) {
+                    mob.setNoAi(true);
+                    ((ServerLevel) level).sendParticles(ParticleTypes.END_ROD, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
+                    ((ServerLevel) level).sendParticles(ParticleTypes.ENCHANT, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.5, 0.2, 0.5, 0);
+                    Helpers.damageTool(itemStack, player, Ability.NOAI);
+                }
+            }
+            player.playNotifySound(SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1F, 0.5F);
+            player.playNotifySound(SoundEvents.EVOKER_FANGS_ATTACK, SoundSource.PLAYERS, 1F, 0.5F);
+        }
+        return false;
+    }
+
+    public static boolean flight(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        if (player.getAbilities().flying)
+            Helpers.damageTool(itemStack, player, Ability.FLIGHT);
+        return false;
+    }
+
     public static boolean isValidStompEntity(Entity entity) {
         if (entity.isMultipartEntity())
             return false;
         if (entity instanceof PartEntity<?>)
+            return false;
+        return true;
+    }
+
+    public static boolean isValidNOAIEntity(Entity entity) {
+        if (entity.isMultipartEntity())
+            return false;
+        if (entity instanceof PartEntity<?>)
+            return false;
+        if (entity.getType().is(JustDireEntityTags.NO_AI_DENY))
             return false;
         return true;
     }

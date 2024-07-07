@@ -13,6 +13,9 @@ public class EclipseAlloyChestplate extends BaseChestplate implements PoweredToo
         registerAbility(Ability.INVULNERABILITY, new AbilityParams(1, 1, 1, 1, 200, 400));
         registerAbility(Ability.EXTINGUISH, new AbilityParams(1, 1, 1, 1, 0, 40));
         registerAbility(Ability.ELYTRA);
+        registerAbility(Ability.FLIGHT);
+        registerAbility(Ability.LAVAIMMUNITY);
+        registerAbility(Ability.DEATHPROTECTION, new AbilityParams(1, 1, 1, 1, 200, 60));
     }
 
     @Override
