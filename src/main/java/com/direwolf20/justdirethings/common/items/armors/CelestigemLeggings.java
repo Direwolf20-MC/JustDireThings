@@ -11,7 +11,7 @@ public class CelestigemLeggings extends BaseLeggings implements PoweredTool {
     public CelestigemLeggings() {
         super(ArmorTiers.CELESTIGEM, new Properties()
                 .fireResistant()
-                .durability(Type.BOOTS.getDurability(25)));
+                .durability(Type.LEGGINGS.getDurability(25)));
         registerAbility(Ability.RUNSPEED, new AbilityParams(1, 3, 1));
         registerAbility(Ability.WALKSPEED, new AbilityParams(1, 3, 1));
         registerAbility(Ability.SWIMSPEED, new AbilityParams(1, 3, 1));

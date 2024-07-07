@@ -103,7 +103,11 @@ public class JustDireThings {
                 Registration.CelestigemBoots.get(),
                 Registration.CelestigemLeggings.get(),
                 Registration.CelestigemChestplate.get(),
-                Registration.CelestigemHelmet.get()
+                Registration.CelestigemHelmet.get(),
+                Registration.EclipseAlloyBoots.get(),
+                Registration.EclipseAlloyLeggings.get(),
+                Registration.EclipseAlloyChestplate.get(),
+                Registration.EclipseAlloyHelmet.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {

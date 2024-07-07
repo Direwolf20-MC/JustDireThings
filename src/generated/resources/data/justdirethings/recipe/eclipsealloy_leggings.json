@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "f": {
+      "item": "justdirethings:eclipsealloy_ingot"
+    }
+  },
+  "pattern": [
+    "fff",
+    "f f",
+    "f f"
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:eclipsealloy_leggings"
+  }
+}

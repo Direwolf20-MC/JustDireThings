@@ -9,7 +9,7 @@ public class CelestigemChestplate extends BaseChestplate implements PoweredTool 
     public CelestigemChestplate() {
         super(ArmorTiers.CELESTIGEM, new Properties()
                 .fireResistant()
-                .durability(Type.BOOTS.getDurability(25)));
+                .durability(Type.CHESTPLATE.getDurability(25)));
         registerAbility(Ability.INVULNERABILITY, new AbilityParams(1, 1, 1, 1, 200, 600));
         registerAbility(Ability.EXTINGUISH, new AbilityParams(1, 1, 1, 1, 0, 100));
         registerAbility(Ability.ELYTRA);

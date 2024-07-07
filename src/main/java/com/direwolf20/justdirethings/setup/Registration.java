@@ -461,6 +461,10 @@ public class Registration {
     public static final DeferredHolder<Item, CelestigemLeggings> CelestigemLeggings = ARMORS.register("celestigem_leggings", CelestigemLeggings::new);
     public static final DeferredHolder<Item, CelestigemBoots> CelestigemBoots = ARMORS.register("celestigem_boots", CelestigemBoots::new);
 
+    public static final DeferredHolder<Item, EclipseAlloyHelmet> EclipseAlloyHelmet = ARMORS.register("eclipsealloy_helmet", EclipseAlloyHelmet::new);
+    public static final DeferredHolder<Item, EclipseAlloyChestplate> EclipseAlloyChestplate = ARMORS.register("eclipsealloy_chestplate", EclipseAlloyChestplate::new);
+    public static final DeferredHolder<Item, EclipseAlloyLeggings> EclipseAlloyLeggings = ARMORS.register("eclipsealloy_leggings", EclipseAlloyLeggings::new);
+    public static final DeferredHolder<Item, EclipseAlloyBoots> EclipseAlloyBoots = ARMORS.register("eclipsealloy_boots", EclipseAlloyBoots::new);
 
     //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",
