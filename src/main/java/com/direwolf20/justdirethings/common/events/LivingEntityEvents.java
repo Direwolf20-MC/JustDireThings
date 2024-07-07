@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +37,10 @@ public class LivingEntityEvents {
         Entity target = e.getEntity();
         if (target instanceof Player player) {
             ItemStack chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
-            if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
+            if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbility(chestplate, Ability.ELYTRA)) {
+                if (e.getSource().is(DamageTypes.FLY_INTO_WALL))
+                    e.setInvulnerable(true);
+            } else if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
                 int activeCooldown = ToggleableTool.getCooldown(chestplate, Ability.INVULNERABILITY, true);
                 if (activeCooldown == -1) return;
                 player.playNotifySound(SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
