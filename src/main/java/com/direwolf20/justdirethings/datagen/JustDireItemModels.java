@@ -2,9 +2,14 @@ package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
@@ -134,8 +139,27 @@ public class JustDireItemModels extends ItemModelProvider {
 
     public void registerArmors() {
         for (var armor : Registration.ARMORS.getEntries()) {
-            singleTexture(armor.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/" + armor.getId().getPath()));
+            //singleTexture(armor.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/" + armor.getId().getPath()));
+            armorWithTrim((ArmorItem) armor.get().asItem(), modLoc("item/" + armor.getId().getPath()));
         }
+    }
+
+    protected ItemModelBuilder generated(ItemLike itemLike, ResourceLocation texture) {
+        return withExistingParent(BuiltInRegistries.ITEM.getKey(itemLike.asItem()).getPath(), "item/generated").texture("layer0", texture);
+    }
+
+    protected ItemModelBuilder armorWithTrim(ArmorItem armorItem, ResourceLocation texture) {
+        ItemModelBuilder builder = generated(armorItem, texture);
+        for (ItemModelGenerators.TrimModelData trimModelData : ItemModelGenerators.GENERATED_TRIM_MODELS) {
+            String trimId = trimModelData.name(armorItem.getMaterial());
+            ItemModelBuilder override = withExistingParent(builder.getLocation().withSuffix("_" + trimId + "_trim").getPath(), "item/generated")
+                    .texture("layer0", texture)
+                    .texture("layer1", ResourceLocation.withDefaultNamespace("trims/items/" + armorItem.getType().getName() + "_trim_" + trimId));
+            builder.override()
+                    .predicate(ItemModelGenerators.TRIM_TYPE_PREDICATE_ID, trimModelData.itemModelIndex())
+                    .model(override);
+        }
+        return builder;
     }
 
     public void registerEnabledTextureItem(String path) {

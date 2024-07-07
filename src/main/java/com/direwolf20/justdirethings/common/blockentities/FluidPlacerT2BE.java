@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Comparator;
@@ -80,18 +81,18 @@ public class FluidPlacerT2BE extends FluidPlacerT1BE implements PoweredMachineBE
     }
 
     @Override
-    public List<BlockPos> findSpotsToPlace() {
+    public List<BlockPos> findSpotsToPlace(FakePlayer fakePlayer) {
         AABB area = getAABB(getBlockPos());
         return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
-                .filter(this::isBlockPosValid)
+                .filter(blockPos -> isBlockPosValid(blockPos, fakePlayer))
                 .map(BlockPos::immutable)
                 .sorted(Comparator.comparingDouble(x -> x.distSqr(getBlockPos())))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public boolean isBlockPosValid(BlockPos blockPos) {
-        if (!super.isBlockPosValid(blockPos))
+    public boolean isBlockPosValid(BlockPos blockPos, FakePlayer fakePlayer) {
+        if (!super.isBlockPosValid(blockPos, fakePlayer))
             return false; //Do the same checks as normal, then check the filters
         ItemStack blockItemStack = level.getBlockState(blockPos.relative(getDirectionValue())).getCloneItemStack(new BlockHitResult(Vec3.ZERO, getDirectionValue(), blockPos, false), level, blockPos, null);
         return isStackValidFilter(blockItemStack);

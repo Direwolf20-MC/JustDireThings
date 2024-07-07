@@ -30,6 +30,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.entity.PartEntity;
 
 import java.util.ArrayList;
@@ -261,6 +262,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         if (remoteSwapper == null) return;
         ServerLevel partnerLevel = getPartnerLevel();
         if (partnerLevel == null) return;
+        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
+        FakePlayer partnerFakePlayer = getFakePlayer(partnerLevel);
 
         if (swapBlocks)
             positions = findSpotsToSwap();
@@ -269,7 +272,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         if (positions.isEmpty() && entities.isEmpty())
             return;
         for (BlockPos blockPos : positions) {
-            swapBlock(blockPos, remoteSwapper, partnerLevel);
+            swapBlock(blockPos, remoteSwapper, partnerLevel, fakePlayer, partnerFakePlayer);
         }
         for (BlockPos thisPos : thisValidationList) {
             validateBlock((ServerLevel) level, thisPos);
@@ -337,10 +340,16 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         return true;
     }
 
-    public void swapBlock(BlockPos blockPos, BlockSwapperT1BE remoteSwapper, ServerLevel partnerLevel) {
+    public void swapBlock(BlockPos blockPos, BlockSwapperT1BE remoteSwapper, ServerLevel partnerLevel, FakePlayer fakePlayer, FakePlayer partnerFakePlayer) {
         BlockPos remoteSwapPos = remoteSwapper.getWorldPos(getRelativePos(blockPos));
 
         if (!isBlockPosValid(partnerLevel, remoteSwapPos)) return;
+
+        if (!canBreakAndPlaceAt(level, blockPos, fakePlayer))
+            return;
+        if (!canBreakAndPlaceAt(partnerLevel, remoteSwapPos, partnerFakePlayer))
+            return;
+
 
         BlockState thisBlock = level.getBlockState(blockPos);
         BlockState thatBlock = partnerLevel.getBlockState(remoteSwapPos);

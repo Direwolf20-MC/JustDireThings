@@ -135,6 +135,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
             return false;
         if (!level.mayInteract(fakePlayer, blockPos))
             return false;
+        if (!canBreakAndPlaceAt(level, blockPos, fakePlayer)) //TODO Break only once its working
+            return false;
         return true;
     }
 

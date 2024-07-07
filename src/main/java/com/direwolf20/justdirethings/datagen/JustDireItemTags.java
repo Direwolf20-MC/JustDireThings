@@ -89,21 +89,29 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.CelestigemBlock_ITEM.get())
                 .add(Registration.EclipseAlloyBlock_ITEM.get());
         tag(ItemTags.FOOT_ARMOR)
-                .add(Registration.FerricoreBoots.get());
+                .add(Registration.FerricoreBoots.get())
+                .add(Registration.BlazegoldBoots.get());
         tag(ItemTags.LEG_ARMOR)
-                .add(Registration.FerricoreLeggings.get());
+                .add(Registration.FerricoreLeggings.get())
+                .add(Registration.BlazegoldLeggings.get());
         tag(ItemTags.CHEST_ARMOR)
-                .add(Registration.FerricoreChestplate.get());
+                .add(Registration.FerricoreChestplate.get())
+                .add(Registration.BlazegoldChestplate.get());
         tag(ItemTags.HEAD_ARMOR)
-                .add(Registration.FerricoreHelmet.get());
+                .add(Registration.FerricoreHelmet.get())
+                .add(Registration.BlazegoldHelmet.get());
         tag(ItemTags.FOOT_ARMOR_ENCHANTABLE)
-                .add(Registration.FerricoreBoots.get());
+                .add(Registration.FerricoreBoots.get())
+                .add(Registration.BlazegoldBoots.get());
         tag(ItemTags.LEG_ARMOR_ENCHANTABLE)
-                .add(Registration.FerricoreLeggings.get());
+                .add(Registration.FerricoreLeggings.get())
+                .add(Registration.BlazegoldLeggings.get());
         tag(ItemTags.CHEST_ARMOR_ENCHANTABLE)
-                .add(Registration.FerricoreChestplate.get());
+                .add(Registration.FerricoreChestplate.get())
+                .add(Registration.BlazegoldChestplate.get());
         tag(ItemTags.HEAD_ARMOR_ENCHANTABLE)
-                .add(Registration.FerricoreHelmet.get());
+                .add(Registration.FerricoreHelmet.get())
+                .add(Registration.BlazegoldHelmet.get());
     }
 
     @Override

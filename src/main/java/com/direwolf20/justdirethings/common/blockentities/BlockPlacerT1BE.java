@@ -123,6 +123,8 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             return false;
         if (!level.getBlockState(blockPos).canBeReplaced())
             return false;
+        if (!canPlaceAt(level, blockPos, fakePlayer))
+            return false;
         return true;
     }
 

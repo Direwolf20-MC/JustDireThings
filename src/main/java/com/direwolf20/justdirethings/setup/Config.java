@@ -1,8 +1,12 @@
 package com.direwolf20.justdirethings.setup;
 
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Config {
     public static final ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
@@ -15,6 +19,9 @@ public class Config {
 
     public static final String CATEGORY_GENERAL = "general";
     public static ModConfigSpec.IntValue MINIMUM_MACHINE_TICK_SPEED;
+
+    public static final String CATEGORY_ABILITIES = "abilities";
+    public static Map<Ability, ModConfigSpec.BooleanValue> AVAILABLE_ABILITY_MAP = new HashMap<>();
 
     public static final String CATEGORY_GENERATOR_T1 = "generator_t1";
     public static ModConfigSpec.IntValue GENERATOR_T1_FE_PER_FUEL_TICK;
@@ -64,6 +71,7 @@ public class Config {
 
     private static void registerCommonConfigs(ModContainer container) {
         generalConfig();
+        abilityConfigs();
         generatorT1Config();
         generatorFluidT1Config();
         energyTransmitter();
@@ -91,6 +99,15 @@ public class Config {
         COMMON_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         MINIMUM_MACHINE_TICK_SPEED = COMMON_BUILDER.comment("The minimum tick speed machines can be set to. Defaults to 1, meaning every tick")
                 .defineInRange("minimum_machine_tick_speed", 1, 1, 100);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void abilityConfigs() {
+        COMMON_BUILDER.comment("Ability settings: For disabling certain abilities").push(CATEGORY_ABILITIES);
+        for (Ability ability : Ability.values()) {
+            AVAILABLE_ABILITY_MAP.put(ability, COMMON_BUILDER.comment(ability.getName())
+                    .define(ability.getName(), true));
+        }
         COMMON_BUILDER.pop();
     }
 

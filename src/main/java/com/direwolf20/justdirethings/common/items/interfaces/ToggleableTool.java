@@ -37,6 +37,7 @@ import static com.direwolf20.justdirethings.common.items.interfaces.AbilityMetho
 import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 
 public interface ToggleableTool extends ToggleableItem {
+    EnumSet<Ability> getAllAbilities();
     EnumSet<Ability> getAbilities();
 
     Map<Ability, AbilityParams> getAbilityParamsMap();
@@ -46,11 +47,11 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default void registerAbility(Ability ability) {
-        getAbilities().add(ability);
+        getAllAbilities().add(ability);
     }
 
     default void registerAbility(Ability ability, AbilityParams abilityParams) {
-        getAbilities().add(ability);
+        getAllAbilities().add(ability);
         getAbilityParamsMap().put(ability, abilityParams);
     }
 
@@ -79,7 +80,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getPassiveTickAbilities(ItemStack itemStack) {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if (ability.useType == Ability.UseType.PASSIVE_TICK && canUseAbility(itemStack, ability))
+            if ((ability.useType == Ability.UseType.PASSIVE_TICK || ability.useType == Ability.UseType.PASSIVE_COOLDOWN) && canUseAbility(itemStack, ability))
                 abilityList.add(ability);
         }
         return abilityList;
@@ -88,7 +89,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getCooldownAbilities() {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if (ability.useType == Ability.UseType.USE_COOLDOWN)
+            if (ability.useType == Ability.UseType.USE_COOLDOWN || ability.useType == Ability.UseType.PASSIVE_COOLDOWN)
                 abilityList.add(ability);
         }
         return abilityList;
@@ -100,7 +101,7 @@ public interface ToggleableTool extends ToggleableItem {
     default List<Ability> getAllPassiveAbilities() {
         List<Ability> abilityList = new ArrayList<>();
         for (Ability ability : getAbilities()) {
-            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK))
+            if ((ability.useType == Ability.UseType.PASSIVE || ability.useType == Ability.UseType.PASSIVE_TICK || ability.useType == Ability.UseType.PASSIVE_COOLDOWN))
                 abilityList.add(ability);
         }
         return abilityList;
@@ -179,7 +180,7 @@ public interface ToggleableTool extends ToggleableItem {
         for (BlockPos breakPos : breakBlockPositions) {
             if (testUseTool(pStack) < 0)
                 break;
-            int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pLevel.random, pPos);
+            int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pPos, pLevel.getBlockEntity(pPos), pEntityLiving, pStack);
             totalExp = totalExp + exp;
             Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, true, instaBreak));
         }
@@ -303,6 +304,7 @@ public interface ToggleableTool extends ToggleableItem {
                         );
                         abilityCooldowns.set(i, updatedCooldown);
                         player.playNotifySound(SoundEvents.CONDUIT_DEACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                        cooldownDataClear(itemStack, ability);
                     }
                 }
             } else {
@@ -320,6 +322,11 @@ public interface ToggleableTool extends ToggleableItem {
             itemStack.remove(JustDireDataComponents.ABILITY_COOLDOWNS);
         else
             itemStack.set(JustDireDataComponents.ABILITY_COOLDOWNS, abilityCooldowns);
+    }
+
+    static void cooldownDataClear(ItemStack itemStack, Ability ability) {
+        if (ability == Ability.STUPEFY)
+            AbilityMethods.clearStupefyTargets(itemStack);
     }
 
     static void addCooldown(ItemStack itemStack, Ability ability, int cooldown, boolean active) {

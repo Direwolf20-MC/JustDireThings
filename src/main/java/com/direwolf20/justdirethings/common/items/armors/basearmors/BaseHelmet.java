@@ -1,20 +1,27 @@
 package com.direwolf20.justdirethings.common.items.armors.basearmors;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
+import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -22,6 +29,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
@@ -34,8 +42,15 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
     }
 
     @Override
-    public EnumSet<Ability> getAbilities() {
+    public EnumSet<Ability> getAllAbilities() {
         return abilities;
+    }
+
+    @Override
+    public EnumSet<Ability> getAbilities() {
+        return abilities.stream()
+                .filter(ability -> Config.AVAILABLE_ABILITY_MAP.get(ability).get())
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Ability.class)));
     }
 
     @Override
@@ -59,6 +74,13 @@ public class BaseHelmet extends ArmorItem implements ToggleableTool, LeftClickab
         } else {
             appendToolEnabled(stack, tooltip);
             appendShiftForInfo(stack, tooltip);
+        }
+    }
+
+    @Override
+    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int itemSlot, boolean isSelected) {
+        if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.HEAD.getIndex() && (!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
+            armorTick(level, player, itemStack);
         }
     }
 

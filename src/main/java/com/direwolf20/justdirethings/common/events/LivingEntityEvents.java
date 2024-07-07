@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.AbilityMethods;
 import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -13,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -31,15 +34,15 @@ import java.util.Iterator;
 public class LivingEntityEvents {
 
     @SubscribeEvent
-    public static void blockDamage(LivingDamageEvent e) {
-        LivingEntity target = e.getEntity();
+    public static void blockDamage(EntityInvulnerabilityCheckEvent e) {
+        Entity target = e.getEntity();
         if (target instanceof Player player) {
             ItemStack chestplate = player.getItemBySlot(EquipmentSlot.CHEST);
             if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
                 int activeCooldown = ToggleableTool.getCooldown(chestplate, Ability.INVULNERABILITY, true);
                 if (activeCooldown == -1) return;
                 player.playNotifySound(SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
-                e.setCanceled(true);
+                e.setInvulnerable(true);
             }
         }
     }
@@ -50,11 +53,15 @@ public class LivingEntityEvents {
         LivingEntity target = e.getOriginalTarget();
         if (target instanceof Player player) {
             ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
-            if (helmet.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(helmet, Ability.MINDFOG)) {
-                double distance = source.position().distanceTo(target.position());
-                double defaultRange = source.getAttributes().hasAttribute(Attributes.FOLLOW_RANGE) ? source.getAttribute(Attributes.FOLLOW_RANGE).getValue() : 16;
-                if (distance > (defaultRange / 2))
+            if (helmet.getItem() instanceof ToggleableTool toggleableTool) {
+                if (toggleableTool.canUseAbilityAndDurability(helmet, Ability.STUPEFY) && ToggleableTool.getCooldown(helmet, Ability.STUPEFY, true) != -1 && AbilityMethods.getStupefyTargets(helmet).contains(source.getStringUUID())) {
                     e.setCanceled(true);
+                } else if (toggleableTool.canUseAbilityAndDurability(helmet, Ability.MINDFOG)) {
+                    double distance = source.position().distanceTo(target.position());
+                    double defaultRange = source.getAttributes().hasAttribute(Attributes.FOLLOW_RANGE) ? source.getAttribute(Attributes.FOLLOW_RANGE).getValue() : 16;
+                    if (distance > (defaultRange / 2))
+                        e.setCanceled(true);
+                }
             }
         }
     }
@@ -110,12 +117,12 @@ public class LivingEntityEvents {
             if (mainHand.getItem() instanceof ToggleableTool toggleableTool) {
                 if (toggleableTool.canUseAbility(mainHand, Ability.SMOKER)) {
                     Iterator<ItemEntity> iterator = event.getDrops().iterator();
-                    
+
                     while (iterator.hasNext()) {
                         ItemEntity itemEntity = iterator.next();
                         boolean[] dropSmoked = new boolean[1];
                         Helpers.smokeDrop((ServerLevel) player.level(), itemEntity, mainHand, event.getEntity(), dropSmoked);
-                        
+
                         if (dropSmoked[0]) {
                             ToggleableTool.smokerParticles((ServerLevel) player.level(), itemEntity.blockPosition(), itemEntity.getItem().getCount());
                         }
@@ -128,9 +135,9 @@ public class LivingEntityEvents {
                         while (iterator.hasNext()) {
                             ItemEntity itemEntity = iterator.next();
                             ItemStack stack = itemEntity.getItem();
-    
+
                             ItemStack leftover = Helpers.teleportDrop(stack, handler, mainHand, player);
-    
+
                             if (leftover.isEmpty()) {
                                 // If the stack is now empty, remove the ItemEntity from the collection
                                 iterator.remove(); // Optionally remove from your collection if it's being directly manipulated

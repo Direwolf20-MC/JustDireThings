@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.armors.basearmors;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
+import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
@@ -33,6 +34,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
@@ -47,8 +49,15 @@ public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickabl
     }
 
     @Override
-    public EnumSet<Ability> getAbilities() {
+    public EnumSet<Ability> getAllAbilities() {
         return abilities;
+    }
+
+    @Override
+    public EnumSet<Ability> getAbilities() {
+        return abilities.stream()
+                .filter(ability -> Config.AVAILABLE_ABILITY_MAP.get(ability).get())
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Ability.class)));
     }
 
     @Override
@@ -77,7 +86,7 @@ public class BaseBoots extends ArmorItem implements ToggleableTool, LeftClickabl
 
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.FEET.getIndex() && !getPassiveTickAbilities(itemStack).isEmpty() && entity instanceof Player player) {
+        if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.FEET.getIndex() && (!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
             armorTick(level, player, itemStack);
         }
     }
