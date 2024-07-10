@@ -1,8 +1,11 @@
 package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -64,7 +67,7 @@ public enum Ability {
             AbilityMethods::voidShift, true), //FE Per block traveled
     NEGATEFALLDAMAGE(SettingType.SLIDER, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     NIGHTVISION(SettingType.SLIDER, 1, 25, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
-    ELYTRA(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+    ELYTRA(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_ELYTRA),
     DECOY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::decoy, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/decoy.png")),
@@ -127,6 +130,7 @@ public enum Ability {
     final BindingType bindingType;
     final boolean renderButton;
     final UseType useType;
+    private Holder<Item> upgradeItem;
     // Dynamic parameter map
     private static final Map<Ability, AbilityParams> dynamicParams = new EnumMap<>(Ability.class);
     public AbilityAction action;  // Functional interface for action
@@ -148,6 +152,11 @@ public enum Ability {
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType) {
         this(settingType, durabilityCost, feCost, useType, bindingType, false);
+    }
+
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, Holder<Item> upgradeItem) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, false);
+        this.upgradeItem = upgradeItem;
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton) {
@@ -217,6 +226,14 @@ public enum Ability {
 
     public ResourceLocation getCooldownIcon() {
         return cooldownIcon;
+    }
+
+    public boolean requiresUpgrade() {
+        return upgradeItem != null;
+    }
+
+    public Holder<Item> getUpgradeItem() {
+        return upgradeItem;
     }
 
     @FunctionalInterface

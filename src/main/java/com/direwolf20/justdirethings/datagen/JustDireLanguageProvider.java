@@ -166,6 +166,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Coal_T3.get(), "Voidflame Coal");
         add(Registration.Coal_T4.get(), "Eclipse Ember");
 
+        //Upgrades
+        add(Registration.UPGRADE_BASE.get(), "Upgrade: Blank");
+        add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
+
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
@@ -206,6 +210,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.fillmode.all", "All");
         add("justdirethings.hint.dropinwater", "Drop in Water");
         add("justdirethings.decoy", "Decoy");
+        add("justdirethings.missingupgrade", "(Missing Upgrade)");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");

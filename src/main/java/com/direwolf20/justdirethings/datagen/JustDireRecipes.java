@@ -449,6 +449,22 @@ public class JustDireRecipes extends RecipeProvider {
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
                 .save(consumer);
 
+        //Upgrades
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_BASE.get())
+                .pattern(" f ")
+                .pattern("f f")
+                .pattern(" f ")
+                .define('f', Registration.FerricoreIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.UPGRADE_ELYTRA.get())
+                .requires(Registration.UPGRADE_BASE.get())
+                .requires(Items.ELYTRA)
+                .group("justdirethings")
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)

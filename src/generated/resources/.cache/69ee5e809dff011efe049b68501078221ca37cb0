@@ -1,4 +1,4 @@
-// 1.21	2024-07-07T14:11:37.5418144	Item Models: justdirethings
+// 1.21	2024-07-10T15:21:24.093014	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -295,4 +295,6 @@ c480174fc37e0c2922f662ad95745fb9d81af0c9 assets/justdirethings/models/item/unref
 499a7ebac41346662e121c02f9820ab8881142b2 assets/justdirethings/models/item/unrefined_t3_fluid_bucket.json
 449846a6c182d7e74ff3ae04edac02d93d9720f3 assets/justdirethings/models/item/unrefined_t4_fluid_bucket.json
 a958cc6f762e237e912a9d97949fcf924c2b844b assets/justdirethings/models/item/unstable_portal_fluid_bucket.json
+e624b05ce8029c62368e788813b1ab44a81234e4 assets/justdirethings/models/item/upgrade_blank.json
+3d1ae50ee19d1794cf690566d5f0315fd63e6392 assets/justdirethings/models/item/upgrade_elytra.json
 e25287d609bca6b8f5528ef11aabe3f67cdbdac8 assets/justdirethings/models/item/voidshift_wand.json

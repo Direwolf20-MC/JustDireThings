@@ -52,6 +52,8 @@ import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstableP
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
 import com.direwolf20.justdirethings.common.items.*;
+import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeBlank;
+import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeElytra;
 import com.direwolf20.justdirethings.common.items.armors.*;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.resources.*;
@@ -105,6 +107,7 @@ public class Registration {
     public static final DeferredRegister.Items BUCKET_ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items ARMORS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items UPGRADES = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MODID);
     private static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(Registries.MENU, MODID);
@@ -145,6 +148,7 @@ public class Registration {
         ARMORS.register(eventBus);
         SOUND_REGISTRY.register(eventBus);
         ATTRIBUTES.register(eventBus);
+        UPGRADES.register(eventBus);
 
         JustDireDataComponents.genAbilityData();
         JustDireDataComponents.COMPONENTS.register(eventBus);
@@ -471,6 +475,11 @@ public class Registration {
     public static final DeferredHolder<Item, EclipseAlloyChestplate> EclipseAlloyChestplate = ARMORS.register("eclipsealloy_chestplate", EclipseAlloyChestplate::new);
     public static final DeferredHolder<Item, EclipseAlloyLeggings> EclipseAlloyLeggings = ARMORS.register("eclipsealloy_leggings", EclipseAlloyLeggings::new);
     public static final DeferredHolder<Item, EclipseAlloyBoots> EclipseAlloyBoots = ARMORS.register("eclipsealloy_boots", EclipseAlloyBoots::new);
+
+    //Items - Ability Upgrades
+    public static final DeferredHolder<Item, UpgradeBlank> UPGRADE_BASE = UPGRADES.register("upgrade_blank", UpgradeBlank::new);
+    public static final DeferredHolder<Item, UpgradeElytra> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", UpgradeElytra::new);
+
 
     //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",
