@@ -438,7 +438,10 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean isBlockPosValid(ServerLevel serverLevel, BlockPos blockPos) {
-        if (serverLevel.getBlockState(blockPos).is(Tags.Blocks.RELOCATION_NOT_SUPPORTED) || serverLevel.getBlockState(blockPos).is(JustDireBlockTags.SWAPPERDENY))
+        BlockState blockState = level.getBlockState(blockPos);
+        if (blockState.is(Tags.Blocks.RELOCATION_NOT_SUPPORTED) || blockState.is(JustDireBlockTags.SWAPPERDENY))
+            return false;
+        if (blockState.getDestroySpeed(level, blockPos) < 0)
             return false;
         GlobalPos targetGlobalPos = GlobalPos.of(serverLevel.dimension(), blockPos);
         if (targetGlobalPos.equals(getGlobalPos()) || targetGlobalPos.equals(boundTo))
