@@ -26,6 +26,7 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
         tag(CREATURE_CATCHER_DENY).add(EntityType.ENDER_DRAGON);
         tag(NO_AI_DENY)
                 .add(EntityType.ENDER_DRAGON)
-                .add(EntityType.WITHER);
+                .add(EntityType.WITHER)
+                .add(EntityType.WARDEN);
     }
 }
