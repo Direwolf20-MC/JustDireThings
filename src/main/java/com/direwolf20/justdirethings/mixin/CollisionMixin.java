@@ -52,7 +52,7 @@ public interface CollisionMixin {
         double maxY = shape.max(Direction.Axis.Y);
         double minY = collisionBox.minY;
 
-        boolean isDifferenceLessThanPointTwo = Math.abs(maxY - minY) < 0.2;
+        boolean isDifferenceLessThanPointTwo = Math.abs(maxY - minY) < 0.75;
         return isDifferenceLessThanPointTwo; // Ignore vertical collisions
     }
 
