@@ -11,6 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +23,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -164,7 +167,7 @@ public interface ToggleableTool extends ToggleableItem {
                 float destroySpeedTarget = blockState.getDestroySpeed(pLevel, pos);
                 cumulativeDestroy = cumulativeDestroy + destroySpeedTarget;
             }
-            int rfCostInstaBreak = getInstantRFCost(cumulativeDestroy);
+            int rfCostInstaBreak = getInstantRFCost(cumulativeDestroy, pLevel, pStack);
             if (testUseTool(pStack, rfCostInstaBreak) > 0)
                 instaBreak = true;
         }
@@ -188,8 +191,17 @@ public interface ToggleableTool extends ToggleableItem {
             handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, breakBlockPositions, drops, pState, totalExp);
     }
 
-    static int getInstantRFCost(float cumulativeDestroy) {
-        return Math.max(Ability.INSTABREAK.getFeCost(), Ability.INSTABREAK.getFeCost() * (int) cumulativeDestroy);
+    static int getInstantRFCost(float cumulativeDestroy, Level level, ItemStack stack) {
+        int rfCost = Math.max(Ability.INSTABREAK.getFeCost(), Ability.INSTABREAK.getFeCost() * (int) cumulativeDestroy);
+        if (level.holder(Enchantments.EFFICIENCY).isPresent()) {
+            Holder<Enchantment> holder = level.holder(Enchantments.EFFICIENCY).get();
+            int efficiency = stack.getEnchantmentLevel(holder);
+            if (efficiency > 0) {
+                float discount = 0.1f * efficiency;
+                rfCost = (int) (rfCost * discount);
+            }
+        }
+        return rfCost;
     }
 
     static void smelterParticles(ServerLevel level, Set<BlockPos> oreBlocksList) {

@@ -81,7 +81,7 @@ public class PlayerEvents {
                     float destroySpeedTarget = blockState.getDestroySpeed(level, pos);
                     cumulativeDestroy = cumulativeDestroy + destroySpeedTarget;
                 }
-                rfCost = getInstantRFCost(cumulativeDestroy);
+                rfCost = getInstantRFCost(cumulativeDestroy, level, stack);
                 float modifier = ((float) breakBlockPositions.size() / radius) < 1 ? 1 : ((float) breakBlockPositions.size() / radius);
                 cumulativeDestroy = (cumulativeDestroy / breakBlockPositions.size()) * modifier; //Up to 3 times slower
                 float relative = originalDestroySpeed / cumulativeDestroy;
