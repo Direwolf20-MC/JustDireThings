@@ -16,7 +16,7 @@ public class EclipseAlloyLeggings extends BaseLeggings implements PoweredTool {
         registerAbility(Ability.WALKSPEED, new AbilityParams(1, 5, 1));
         registerAbility(Ability.SWIMSPEED, new AbilityParams(1, 5, 1));
         registerAbility(Ability.DECOY, new AbilityParams(1, 1, 1, 1, 200, 600));
-        //registerAbility(Ability.PHASE);
+        registerAbility(Ability.PHASE);
     }
 
     @Override

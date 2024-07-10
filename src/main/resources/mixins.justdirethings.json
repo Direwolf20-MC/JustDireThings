@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.justdirethings.refmap.json",
   "mixins": [
+    "CollisionMixin",
+    "EntityMixin"
   ],
   "client": [
     "LightTextureMixin"

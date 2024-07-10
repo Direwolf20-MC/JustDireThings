@@ -1,14 +1,23 @@
 package com.direwolf20.justdirethings.mixin;
 
-/*@Mixin(Entity.class)
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(Entity.class)
 public abstract class EntityMixin {
 
-    @Inject(method = "collide", at = @At("HEAD"), cancellable = true)
-    private void onCollide(Vec3 vec, CallbackInfoReturnable<Vec3> cir) {
-        Entity entity = (Entity) (Object) this;
-        if (entity instanceof Player player && shouldPassThroughWalls(player)) {
-            // Return the same vector, indicating no collision
-            cir.setReturnValue(vec);
+    @Inject(method = "isInWall", at = @At("HEAD"), cancellable = true)
+    private void onIsInWall(CallbackInfoReturnable<Boolean> cir) {
+        if ((Object) this instanceof Player player && shouldPassThroughWalls(player)) {
+            cir.setReturnValue(false);
         }
     }
 
@@ -19,4 +28,4 @@ public abstract class EntityMixin {
         }
         return false;
     }
-}*/
+}
