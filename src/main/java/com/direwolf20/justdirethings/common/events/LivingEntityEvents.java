@@ -63,7 +63,7 @@ public class LivingEntityEvents {
     @SubscribeEvent
     public static void changeTargets(LivingChangeTargetEvent e) {
         LivingEntity source = e.getEntity();
-        LivingEntity target = e.getOriginalTarget();
+        LivingEntity target = e.getOriginalAboutToBeSetTarget();
         if (target instanceof Player player) {
             ItemStack helmet = player.getItemBySlot(EquipmentSlot.HEAD);
             if (helmet.getItem() instanceof ToggleableTool toggleableTool) {
