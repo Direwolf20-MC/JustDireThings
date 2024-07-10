@@ -26,6 +26,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "noautoclick"));
     public static final TagKey<Block> SWAPPERDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "swapper_deny"));
     public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsegate_deny"));
+    public static final TagKey<Block> PHASEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "phase_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -111,6 +112,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .addTag(BlockTags.DOORS);
         tag(ECLISEGATEDENY)
                 .addTag(BlockTags.PORTALS);
+        tag(PHASEDENY)
+                .addTags(BlockTags.PORTALS)
+                .addTags(BlockTags.DRAGON_IMMUNE)
+                .add(Blocks.BEDROCK);
+
     }
 
     @Override

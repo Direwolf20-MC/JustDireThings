@@ -2,6 +2,8 @@ package com.direwolf20.justdirethings.mixin;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -9,6 +11,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockCollisions;
 import net.minecraft.world.level.CollisionGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,7 +40,7 @@ public interface CollisionMixin {
             Iterable<VoxelShape> originalBlockCollisions = getOriginalBlockCollisions(entity, collisionBox);
 
             List<VoxelShape> filteredBlockCollisions = StreamSupport.stream(originalBlockCollisions.spliterator(), false)
-                    .filter(shape -> isVerticalCollision(shape, collisionBox))
+                    .filter(shape -> isVerticalCollision(shape, collisionBox, player))
                     .collect(Collectors.toList());
 
             cir.setReturnValue(filteredBlockCollisions);
@@ -48,7 +52,12 @@ public interface CollisionMixin {
         return () -> new BlockCollisions<>((CollisionGetter) (Object) this, entity, collisionBox, false, (p_286215_, p_286216_) -> p_286216_);
     }
 
-    default boolean isVerticalCollision(VoxelShape shape, AABB collisionBox) {
+    default boolean isVerticalCollision(VoxelShape shape, AABB collisionBox, Player player) {
+        Level level = player.level();
+        BlockPos blockPos = new BlockPos((int) shape.min(Direction.Axis.X), (int) shape.min(Direction.Axis.Y), (int) shape.min(Direction.Axis.Z));
+        BlockState blockState = level.getBlockState(blockPos);
+        if (blockState.getDestroySpeed(level, blockPos) < 0 || blockState.is(JustDireBlockTags.PHASEDENY))
+            return true;
         double maxY = shape.max(Direction.Axis.Y);
         double minY = collisionBox.minY;
 
