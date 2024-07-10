@@ -19,6 +19,7 @@ import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.ModSetup;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.logging.LogUtils;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -28,6 +29,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -49,6 +51,7 @@ public class JustDireThings {
         modEventBus.addListener(PacketHandler::registerNetworking);
         modEventBus.addListener(this::registerChunkLoaders);
         modEventBus.addListener(this::registerEntityAttributes);
+        modEventBus.addListener(this::registerCustomAttributes);
         if (FMLLoader.getDist().isClient()) {
             modEventBus.addListener(ClientSetup::init);
         }
@@ -57,6 +60,11 @@ public class JustDireThings {
     private void registerEntityAttributes(EntityAttributeCreationEvent event) {
         event.put(Registration.DecoyEntity.get(),
                 DecoyEntity.createAttributes().build());
+    }
+
+    private void registerCustomAttributes(EntityAttributeModificationEvent event) {
+        event.add(EntityType.PLAYER,
+                Registration.PHASE);
     }
 
     private void registerChunkLoaders(RegisterTicketControllersEvent event) {
@@ -103,7 +111,11 @@ public class JustDireThings {
                 Registration.CelestigemBoots.get(),
                 Registration.CelestigemLeggings.get(),
                 Registration.CelestigemChestplate.get(),
-                Registration.CelestigemHelmet.get()
+                Registration.CelestigemHelmet.get(),
+                Registration.EclipseAlloyBoots.get(),
+                Registration.EclipseAlloyLeggings.get(),
+                Registration.EclipseAlloyChestplate.get(),
+                Registration.EclipseAlloyHelmet.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {

@@ -73,7 +73,7 @@ public class Helpers {
                 if (damageTool && destroySpeed != 0.0F) {
                     damageTool(pStack, pPlayer);
                     if (instaBreak) {
-                        damageTool(pStack, pPlayer, getInstantRFCost(destroySpeed));
+                        damageTool(pStack, pPlayer, getInstantRFCost(destroySpeed, level, pStack));
                     }
                 }
 

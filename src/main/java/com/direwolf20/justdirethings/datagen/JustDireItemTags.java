@@ -91,36 +91,43 @@ public class JustDireItemTags extends ItemTagsProvider {
         tag(ItemTags.FOOT_ARMOR)
                 .add(Registration.FerricoreBoots.get())
                 .add(Registration.BlazegoldBoots.get())
-                .add(Registration.CelestigemBoots.get());
+                .add(Registration.CelestigemBoots.get())
+                .add(Registration.EclipseAlloyBoots.get());
         tag(ItemTags.LEG_ARMOR)
                 .add(Registration.FerricoreLeggings.get())
                 .add(Registration.BlazegoldLeggings.get())
-                .add(Registration.CelestigemLeggings.get());
+                .add(Registration.CelestigemLeggings.get())
+                .add(Registration.EclipseAlloyLeggings.get());
         tag(ItemTags.CHEST_ARMOR)
                 .add(Registration.FerricoreChestplate.get())
                 .add(Registration.BlazegoldChestplate.get())
-                .add(Registration.CelestigemChestplate.get());
+                .add(Registration.CelestigemChestplate.get())
+                .add(Registration.EclipseAlloyChestplate.get());
         tag(ItemTags.HEAD_ARMOR)
                 .add(Registration.FerricoreHelmet.get())
                 .add(Registration.BlazegoldHelmet.get())
-                .add(Registration.CelestigemHelmet.get());
+                .add(Registration.CelestigemHelmet.get())
+                .add(Registration.EclipseAlloyHelmet.get());
         tag(ItemTags.FOOT_ARMOR_ENCHANTABLE)
                 .add(Registration.FerricoreBoots.get())
                 .add(Registration.BlazegoldBoots.get())
-                .add(Registration.CelestigemBoots.get());
-        ;
+                .add(Registration.CelestigemBoots.get())
+                .add(Registration.EclipseAlloyBoots.get());
         tag(ItemTags.LEG_ARMOR_ENCHANTABLE)
                 .add(Registration.FerricoreLeggings.get())
                 .add(Registration.BlazegoldLeggings.get())
-                .add(Registration.CelestigemLeggings.get());
+                .add(Registration.CelestigemLeggings.get())
+                .add(Registration.EclipseAlloyLeggings.get());
         tag(ItemTags.CHEST_ARMOR_ENCHANTABLE)
                 .add(Registration.FerricoreChestplate.get())
                 .add(Registration.BlazegoldChestplate.get())
-                .add(Registration.CelestigemChestplate.get());
+                .add(Registration.CelestigemChestplate.get())
+                .add(Registration.EclipseAlloyChestplate.get());
         tag(ItemTags.HEAD_ARMOR_ENCHANTABLE)
                 .add(Registration.FerricoreHelmet.get())
                 .add(Registration.BlazegoldHelmet.get())
-                .add(Registration.CelestigemHelmet.get());
+                .add(Registration.CelestigemHelmet.get())
+                .add(Registration.EclipseAlloyHelmet.get());
     }
 
     @Override

@@ -854,6 +854,39 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyBoots.get())
+                .pattern("f f")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', Registration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyLeggings.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("f f")
+                .define('f', Registration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyChestplate.get())
+                .pattern("f f")
+                .pattern("fff")
+                .pattern("fff")
+                .define('f', Registration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyHelmet.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', Registration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
+
 
 
         //Resource Conversions

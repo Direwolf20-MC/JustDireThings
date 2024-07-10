@@ -1,2 +1,4 @@
-// 1.21	2024-06-17T23:42:08.974676	Tags for minecraft:entity_type mod id justdirethings
+// 1.21	2024-07-10T14:07:37.9295749	Tags for minecraft:entity_type mod id justdirethings
 e00f2931577049b9a4400a87ed9c249373be376c data/justdirethings/tags/entity_type/creature_catcher_deny.json
+669025814936e708d42d9d0a5b88c11e62cf12ef data/justdirethings/tags/entity_type/no_ai_deny.json
+669025814936e708d42d9d0a5b88c11e62cf12ef data/justdirethings/tags/entity_type/no_earthquake.json

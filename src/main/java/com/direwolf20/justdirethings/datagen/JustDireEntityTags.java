@@ -19,9 +19,19 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
     }
 
     public static final TagKey<EntityType<?>> CREATURE_CATCHER_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "creature_catcher_deny"));
+    public static final TagKey<EntityType<?>> NO_AI_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_ai_deny"));
+    public static final TagKey<EntityType<?>> NO_EARTHQUAKE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_earthquake"));
 
     @Override
     public void addTags(HolderLookup.Provider lookupProvider) {
         tag(CREATURE_CATCHER_DENY).add(EntityType.ENDER_DRAGON);
+        tag(NO_AI_DENY)
+                .add(EntityType.ENDER_DRAGON)
+                .add(EntityType.WITHER)
+                .add(EntityType.WARDEN);
+        tag(NO_EARTHQUAKE)
+                .add(EntityType.ENDER_DRAGON)
+                .add(EntityType.WITHER)
+                .add(EntityType.WARDEN);
     }
 }

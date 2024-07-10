@@ -148,6 +148,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CelestigemChestplate.get(), "Celestigem Chestplate");
         add(Registration.CelestigemLeggings.get(), "Celestigem Leggings");
         add(Registration.CelestigemHelmet.get(), "Celestigem Helmet");
+        add(Registration.EclipseAlloyBoots.get(), "Eclipse Alloy Boots");
+        add(Registration.EclipseAlloyChestplate.get(), "Eclipse Alloy Chestplate");
+        add(Registration.EclipseAlloyLeggings.get(), "Eclipse Alloy Leggings");
+        add(Registration.EclipseAlloyHelmet.get(), "Eclipse Alloy Helmet");
 
         //Resources
         add(Registration.FerricoreIngot.get(), "Ferricore Ingot");
@@ -245,6 +249,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.NEGATEFALLDAMAGE.getLocalization(), "Negate Fall Damage");
         add(Ability.DECOY.getLocalization(), "Decoy");
         add(Ability.NIGHTVISION.getLocalization(), "Night Vision");
+        add(Ability.DEATHPROTECTION.getLocalization(), "Death Protection");
+        add(Ability.DEBUFFREMOVER.getLocalization(), "Debuff Remover");
+        add(Ability.NOAI.getLocalization(), "Mental Obliteration");
+        add(Ability.FLIGHT.getLocalization(), "Flight");
+        add(Ability.LAVAIMMUNITY.getLocalization(), "Lava Immunity");
+        add(Ability.PHASE.getLocalization(), "Phase");
+        add(Ability.EARTHQUAKE.getLocalization(), "Earthquake");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
