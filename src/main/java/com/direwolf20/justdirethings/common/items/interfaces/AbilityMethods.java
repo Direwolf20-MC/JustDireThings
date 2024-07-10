@@ -514,6 +514,32 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean earthquake(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.EARTHQUAKE);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EARTHQUAKE)) {
+            AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.EARTHQUAKE);
+            ToggleableTool.addCooldown(itemStack, Ability.EARTHQUAKE, abilityParams.activeCooldown, true);
+            player.playNotifySound(SoundEvents.MACE_SMASH_GROUND_HEAVY, SoundSource.PLAYERS, 1.0F, 0.5F);
+            int radius = 5;
+            AABB aabb = new AABB(player.getX() - radius, player.getY() - radius, player.getZ() - radius,
+                    player.getX() + radius, player.getY() + radius, player.getZ() + radius);
+
+            List<Mob> earthquakeList = new ArrayList<>(level.getEntitiesOfClass(Mob.class, aabb, AbilityMethods::isValidEarthquake));
+
+            for (Mob mob : earthquakeList) {
+                if (toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EARTHQUAKE)) {
+                    mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 3), mob);
+                    ((ServerLevel) level).sendParticles(ParticleTypes.END_ROD, mob.getX(), mob.getY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
+                    ((ServerLevel) level).sendParticles(ParticleTypes.ENCHANT, mob.getX(), mob.getY(), mob.getZ(), 20, 0.5, 0.2, 0.5, 0);
+                    Helpers.damageTool(itemStack, player, Ability.EARTHQUAKE);
+                }
+            }
+        }
+        return false;
+    }
+
     public static boolean noAI(Level level, Player player, ItemStack itemStack) {
         if (level.isClientSide) return false;
         int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.NOAI);
@@ -562,6 +588,18 @@ public class AbilityMethods {
         if (entity instanceof PartEntity<?>)
             return false;
         if (entity.getType().is(JustDireEntityTags.NO_AI_DENY))
+            return false;
+        return true;
+    }
+
+    public static boolean isValidEarthquake(Entity entity) {
+        if (!entity.onGround())
+            return false;
+        if (entity.isMultipartEntity())
+            return false;
+        if (entity instanceof PartEntity<?>)
+            return false;
+        if (entity.getType().is(JustDireEntityTags.NO_EARTHQUAKE))
             return false;
         return true;
     }

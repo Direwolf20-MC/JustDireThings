@@ -255,6 +255,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.FLIGHT.getLocalization(), "Flight");
         add(Ability.LAVAIMMUNITY.getLocalization(), "Lava Immunity");
         add(Ability.PHASE.getLocalization(), "Phase");
+        add(Ability.EARTHQUAKE.getLocalization(), "Earthquake");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

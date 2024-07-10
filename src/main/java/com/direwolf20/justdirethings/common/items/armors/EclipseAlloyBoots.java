@@ -16,6 +16,7 @@ public class EclipseAlloyBoots extends BaseBoots implements PoweredTool {
         registerAbility(Ability.JUMPBOOST, new AbilityParams(1, 5, 1, 5));
         registerAbility(Ability.GROUNDSTOMP, new AbilityParams(1, 5, 1, 5, 0, 200));
         registerAbility(Ability.NEGATEFALLDAMAGE);
+        registerAbility(Ability.EARTHQUAKE, new AbilityParams(1, 1, 1, 1, 200, 800));
     }
 
     @Override
