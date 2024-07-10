@@ -1,14 +1,11 @@
 package com.direwolf20.justdirethings.mixin;
 
-import com.direwolf20.justdirethings.common.items.interfaces.Ability;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockCollisions;
 import net.minecraft.world.level.CollisionGetter;
 import net.minecraft.world.level.Level;
@@ -66,9 +63,6 @@ public interface CollisionMixin {
     }
 
     default boolean shouldPassThroughWalls(Player player) {
-        ItemStack leggings = player.getItemBySlot(EquipmentSlot.LEGS);
-        if (leggings.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(leggings, Ability.PHASE))
-            return true;
-        return false;
+        return player.getAttributeValue(Registration.PHASE) > 0;
     }
 }

@@ -1,11 +1,8 @@
 package com.direwolf20.justdirethings.mixin;
 
-import com.direwolf20.justdirethings.common.items.interfaces.Ability;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,10 +19,6 @@ public abstract class EntityMixin {
     }
 
     private boolean shouldPassThroughWalls(Player player) {
-        ItemStack leggings = player.getItemBySlot(EquipmentSlot.LEGS);
-        if (leggings.getItem() instanceof ToggleableTool toggleableTool) {
-            return toggleableTool.canUseAbilityAndDurability(leggings, Ability.PHASE);
-        }
-        return false;
+        return player.getAttributeValue(Registration.PHASE) > 0;
     }
 }
