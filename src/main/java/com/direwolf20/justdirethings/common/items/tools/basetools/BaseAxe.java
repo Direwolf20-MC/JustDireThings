@@ -15,7 +15,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -93,18 +92,6 @@ public class BaseAxe extends AxeItem implements ToggleableTool, LeftClickableToo
             appendToolEnabled(stack, tooltip);
             appendShiftForInfo(stack, tooltip);
         }
-    }
-
-    /**
-     * Reduces the attack damage of a tool when unpowered
-     */
-    @Override
-    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        ItemAttributeModifiers itemAttributeModifiers = super.getDefaultAttributeModifiers(stack);
-        if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return itemAttributeModifiers;
-
-        return poweredTool.getPoweredAttributeModifiers(stack, itemAttributeModifiers);
     }
 
     @Override

@@ -1,16 +1,24 @@
 package com.direwolf20.justdirethings.common.events;
 
+import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.Set;
@@ -19,6 +27,28 @@ import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTo
 import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getToolValue;
 
 public class PlayerEvents {
+    public static final AttributeModifier stepHeight = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdirestepassist"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+    public static final AttributeModifier creativeFlight = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdireflight"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+    public static final AttributeModifier phase = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdirephase"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+
+    @SubscribeEvent
+    public static void ItemAttributes(ItemAttributeModifierEvent event) {
+        ItemStack itemStack = event.getItemStack();
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool) {
+            if (toggleableTool.canUseAbility(itemStack, Ability.STEPHEIGHT))
+                event.addModifier(Attributes.STEP_HEIGHT, stepHeight, EquipmentSlotGroup.FEET);
+            if (toggleableTool.canUseAbilityAndDurability(itemStack, Ability.FLIGHT))
+                event.addModifier(NeoForgeMod.CREATIVE_FLIGHT, creativeFlight, EquipmentSlotGroup.CHEST);
+            if (toggleableTool.canUseAbility(itemStack, Ability.PHASE))
+                event.addModifier(Registration.PHASE, phase, EquipmentSlotGroup.LEGS);
+        }
+        //A catch all for unpowered itemse
+        if (itemStack.getItem() instanceof PoweredTool poweredTool && PoweredItem.getAvailableEnergy(itemStack) < poweredTool.getBlockBreakFECost()) {
+            event.clearModifiers();
+        }
+    }
+
+
     @SubscribeEvent
     public static void BreakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();

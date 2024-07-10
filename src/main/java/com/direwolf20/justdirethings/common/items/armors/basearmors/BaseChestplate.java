@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.common.items.armors.basearmors;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.client.Minecraft;
@@ -9,22 +8,17 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,8 +33,6 @@ import java.util.stream.Collectors;
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class BaseChestplate extends ArmorItem implements ToggleableTool, LeftClickableTool {
-    public static final AttributeModifier creativeFlight = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdireflight"), 1.0, AttributeModifier.Operation.ADD_VALUE);
-
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 
@@ -89,18 +81,6 @@ public class BaseChestplate extends ArmorItem implements ToggleableTool, LeftCli
         if (itemSlot == Inventory.INVENTORY_SIZE + EquipmentSlot.CHEST.getIndex() && (!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
             armorTick(level, player, itemStack);
         }
-    }
-
-    @Override
-    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        ItemAttributeModifiers itemAttributeModifiers = super.getDefaultAttributeModifiers(stack);
-        if (canUseAbilityAndDurability(stack, Ability.FLIGHT))
-            itemAttributeModifiers = itemAttributeModifiers.withModifierAdded(NeoForgeMod.CREATIVE_FLIGHT, creativeFlight, EquipmentSlotGroup.CHEST);
-
-        if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return itemAttributeModifiers;
-
-        return poweredTool.getPoweredAttributeModifiers(stack, itemAttributeModifiers);
     }
 
     @Override

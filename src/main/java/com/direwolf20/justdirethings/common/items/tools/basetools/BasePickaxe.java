@@ -15,7 +15,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -57,17 +56,6 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
         return true;  //We handle damage in the BlockEvent.BreakEvent
     }
 
-    /*@Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
-        if (!player.level().isClientSide) {
-            BlockState blockState = player.level().getBlockState(pos);
-            if (itemstack.getItem() instanceof ToggleableTool toggleableTool && itemstack.isCorrectToolForDrops(blockState)) {
-                toggleableTool.mineBlocksAbility(itemstack, player.level(), pos, player);
-            }
-        }
-        return false;
-    }*/
-
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
         return hurtEnemyAbility(pStack, pTarget, pAttacker);
@@ -90,18 +78,6 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
             appendToolEnabled(stack, tooltip);
             appendShiftForInfo(stack, tooltip);
         }
-    }
-
-    /**
-     * Reduces the attack damage of a tool when unpowered
-     */
-    @Override
-    public ItemAttributeModifiers getDefaultAttributeModifiers(ItemStack stack) {
-        ItemAttributeModifiers itemAttributeModifiers = super.getDefaultAttributeModifiers(stack);
-        if (!(stack.getItem() instanceof PoweredTool poweredTool))
-            return itemAttributeModifiers;
-
-        return poweredTool.getPoweredAttributeModifiers(stack, itemAttributeModifiers);
     }
 
     @Override
