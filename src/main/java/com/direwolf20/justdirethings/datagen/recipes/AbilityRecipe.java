@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeBlank;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -13,6 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
@@ -43,7 +45,7 @@ public class AbilityRecipe implements SmithingRecipe {
         ItemStack upgrade = smithingRecipeInput.addition();
         if (isBaseIngredient(base)) {
             Ability ability = Ability.getAbilityFromUpgradeItem(upgrade.getItem());
-            if (ability != null && !ToggleableTool.hasUpgrade(base, ability)) {
+            if (ability != null && !ToggleableTool.hasUpgrade(base, ability) && Config.AVAILABLE_ABILITY_MAP.get(ability).get()) {
                 ItemStack itemstack1 = base.copyWithCount(1);
                 itemstack1.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
                 return itemstack1;
@@ -55,8 +57,11 @@ public class AbilityRecipe implements SmithingRecipe {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider provider) {
-        ItemStack itemstack = new ItemStack(Registration.CelestigemChestplate.get());
-        itemstack.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(Ability.ELYTRA), true);
+        ItemStack itemstack = new ItemStack(getBase().getItems()[0].getItem());
+        Ability ability = Ability.getAbilityFromUpgradeItem(getAddition().getItems()[0].getItem());
+        if (!Config.AVAILABLE_ABILITY_MAP.get(ability).get())
+            return new ItemStack(Items.AIR);
+        itemstack.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
 
         return itemstack;
     }
@@ -105,7 +110,8 @@ public class AbilityRecipe implements SmithingRecipe {
                 p_311734_ -> p_311734_.group(
                                 Ingredient.CODEC.fieldOf("template").forGetter(p_301070_ -> p_301070_.template),
                                 Ingredient.CODEC.fieldOf("base").forGetter(p_300969_ -> p_300969_.base),
-                                Ingredient.CODEC.fieldOf("addition").forGetter(p_300977_ -> p_300977_.addition))
+                                Ingredient.CODEC.fieldOf("addition").forGetter(p_300977_ -> p_300977_.addition)
+                        )
                         .apply(p_311734_, AbilityRecipe::new)
         );
 

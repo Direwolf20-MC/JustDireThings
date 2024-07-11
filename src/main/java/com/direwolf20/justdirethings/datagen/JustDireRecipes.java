@@ -2,6 +2,8 @@ package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipeBuilder;
 import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipeBuilder;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
@@ -12,11 +14,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
 
 public class JustDireRecipes extends RecipeProvider {
@@ -465,11 +469,6 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
-        AbilityRecipeBuilder.shapeless(Ingredient.of(Registration.UPGRADE_BASE.get()), Ingredient.of(Registration.CelestigemChestplate.get()), Ingredient.of(Registration.UPGRADE_ELYTRA.get()))
-                .group("justdirethings")
-                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
-                .save(consumer);
-
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
@@ -937,6 +936,28 @@ public class JustDireRecipes extends RecipeProvider {
                         .group("justdirethings")
                         .unlockedBy("has_" + sidedBlock.getId().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(sidedBlock.get()))
                         .save(consumer, sidedBlock.getId() + "_nbtclear");
+            }
+        }
+
+        registerUpgrades(consumer);
+    }
+
+    public void registerUpgrades(RecipeOutput consumer) {
+        for (var upgrade : Registration.UPGRADES.getEntries()) {
+            Ability ability = Ability.getAbilityFromUpgradeItem(upgrade.get());
+            if (ability != null) {
+                for (var armor : Registration.ARMORS.getEntries()) {
+                    Item armorItem = armor.get();
+                    if (armorItem instanceof ToggleableTool toggleableTool) {
+                        EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
+                        if (abilities.contains(ability)) {
+                            AbilityRecipeBuilder.shapeless(Ingredient.of(Registration.UPGRADE_BASE.get()), Ingredient.of(armor.get()), Ingredient.of(upgrade.get()))
+                                    .group("justdirethings")
+                                    .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                                    .save(consumer);
+                        }
+                    }
+                }
             }
         }
     }
