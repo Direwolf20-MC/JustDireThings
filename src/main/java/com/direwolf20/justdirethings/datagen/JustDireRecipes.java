@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
+import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipeBuilder;
 import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipeBuilder;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -461,6 +462,10 @@ public class JustDireRecipes extends RecipeProvider {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.UPGRADE_ELYTRA.get())
                 .requires(Registration.UPGRADE_BASE.get())
                 .requires(Items.ELYTRA)
+                .group("justdirethings")
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        AbilityRecipeBuilder.shapeless(Ingredient.of(Registration.UPGRADE_BASE.get()), Ingredient.of(Registration.CelestigemChestplate.get()), Ingredient.of(Registration.UPGRADE_ELYTRA.get()))
                 .group("justdirethings")
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);

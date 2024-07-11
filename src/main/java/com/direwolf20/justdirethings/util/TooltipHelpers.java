@@ -56,7 +56,7 @@ public class TooltipHelpers {
             NBTHelpers.BoundInventory boundInventory = ToggleableTool.getBoundInventory(stack);
             for (Ability ability : toggleableTool.getAbilities()) {
                 boolean active = ToggleableTool.getSetting(stack, ability.getName());
-                ChatFormatting chatFormatting = ChatFormatting.GRAY;
+                ChatFormatting chatFormatting = ChatFormatting.LIGHT_PURPLE;
                 if (!ToggleableTool.hasUpgrade(stack, ability)) {
                     tooltip.add(Component.translatable(ability.getLocalization()).append(Component.translatable("justdirethings.missingupgrade")).withStyle(chatFormatting));
                 } else {

@@ -236,6 +236,15 @@ public enum Ability {
         return upgradeItem;
     }
 
+    public static Ability getAbilityFromUpgradeItem(Item item) {
+        for (Ability ability : values()) {
+            if (ability.getUpgradeItem() != null && ability.getUpgradeItem().value() == item) {
+                return ability;
+            }
+        }
+        return null;
+    }
+
     @FunctionalInterface
     public interface AbilityAction {
         boolean execute(Level level, Player player, ItemStack itemStack);
