@@ -83,7 +83,7 @@ public enum Ability {
             AbilityMethods::eclipseGate, false), //FE Per block Removed
     DEATHPROTECTION(SettingType.SLIDER, 25, 450000, UseType.PASSIVE_COOLDOWN, BindingType.CUSTOM_ONLY,
             false,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/deathprotection.png")),
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/deathprotection.png"), Registration.UPGRADE_DEATHPROTECTION),
     DEBUFFREMOVER(SettingType.SLIDER, 25, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::debuffRemover, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/debuffremover.png")),
@@ -167,6 +167,12 @@ public enum Ability {
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, boolean renderButton, ResourceLocation cooldownIcon) {
         this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
         this.cooldownIcon = cooldownIcon;
+    }
+
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, boolean renderButton, ResourceLocation cooldownIcon, Holder<Item> upgradeItem) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
+        this.cooldownIcon = cooldownIcon;
+        this.upgradeItem = upgradeItem;
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton, ResourceLocation cooldownIcon) {

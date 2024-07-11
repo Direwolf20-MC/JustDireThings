@@ -173,6 +173,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TEMPLATE_ECLIPSEALLOY.get(), "Template: Eclipse Alloy");
         add(Registration.UPGRADE_BASE.get(), "Upgrade: Blank");
         add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
+        add(Registration.UPGRADE_DEATHPROTECTION.get(), "Upgrade: Death Protection");
 
 
         //Misc

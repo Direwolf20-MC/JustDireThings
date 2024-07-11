@@ -140,6 +140,7 @@
   "item.justdirethings.unrefined_t4_fluid_bucket": "Unrefined Eclipse Ember Fuel Bucket",
   "item.justdirethings.unstable_portal_fluid_bucket": "Unstable Portal Fluid Bucket",
   "item.justdirethings.upgrade_blank": "Upgrade: Blank",
+  "item.justdirethings.upgrade_deathprotection": "Upgrade: Death Protection",
   "item.justdirethings.upgrade_elytra": "Upgrade: Elytra",
   "item.justdirethings.voidshift_wand": "Voidshift Wand",
   "itemGroup.DeferredHolder{ResourceKey[minecraft:creative_mode_tab / justdirethings:justdirethings]}": "Just Dire Things",
