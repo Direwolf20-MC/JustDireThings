@@ -167,6 +167,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Coal_T4.get(), "Eclipse Ember");
 
         //Upgrades
+        add(Registration.TEMPLATE_FERRICORE.get(), "Template: Ferricore");
+        add(Registration.TEMPLATE_BLAZEGOLD.get(), "Template: Blazegold");
+        add(Registration.TEMPLATE_CELESTIGEM.get(), "Template: Celestigem");
+        add(Registration.TEMPLATE_ECLIPSEALLOY.get(), "Template: Eclipse Alloy");
         add(Registration.UPGRADE_BASE.get(), "Upgrade: Blank");
         add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
 

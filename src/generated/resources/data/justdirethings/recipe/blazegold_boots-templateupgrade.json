@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "justdirethings:blazegold_ingot"
+  },
+  "base": {
+    "item": "justdirethings:ferricore_boots"
+  },
+  "result": {
+    "count": 1,
+    "id": "justdirethings:blazegold_boots"
+  },
+  "template": {
+    "item": "justdirethings:template_blazegold"
+  }
+}

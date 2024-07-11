@@ -101,6 +101,11 @@ public class JustDireItemModels extends ItemModelProvider {
         getBuilder(Registration.CreatureCatcher.getId().getPath())
                 .parent(new ModelFile.UncheckedModelFile("builtin/entity"));
         singleTexture(Registration.MachineSettingsCopier.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/machine_settings_copier"));
+        singleTexture(Registration.TEMPLATE_FERRICORE.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_ferricore"));
+        singleTexture(Registration.TEMPLATE_BLAZEGOLD.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_blazegold"));
+        singleTexture(Registration.TEMPLATE_CELESTIGEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_celestigem"));
+        singleTexture(Registration.TEMPLATE_ECLIPSEALLOY.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_eclipsealloy"));
+
 
         //Tool Items
         registerTools();

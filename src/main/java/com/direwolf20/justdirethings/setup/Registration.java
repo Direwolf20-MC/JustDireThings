@@ -52,8 +52,7 @@ import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstableP
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
 import com.direwolf20.justdirethings.common.items.*;
-import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeBlank;
-import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeElytra;
+import com.direwolf20.justdirethings.common.items.abilityupgrades.*;
 import com.direwolf20.justdirethings.common.items.armors.*;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.resources.*;
@@ -480,6 +479,11 @@ public class Registration {
     public static final DeferredHolder<Item, EclipseAlloyBoots> EclipseAlloyBoots = ARMORS.register("eclipsealloy_boots", EclipseAlloyBoots::new);
 
     //Items - Ability Upgrades
+    public static final DeferredHolder<Item, TemplateFerricore> TEMPLATE_FERRICORE = ITEMS.register("template_ferricore", TemplateFerricore::new);
+    public static final DeferredHolder<Item, TemplateBlazeGold> TEMPLATE_BLAZEGOLD = ITEMS.register("template_blazegold", TemplateBlazeGold::new);
+    public static final DeferredHolder<Item, TemplateCelestigem> TEMPLATE_CELESTIGEM = ITEMS.register("template_celestigem", TemplateCelestigem::new);
+    public static final DeferredHolder<Item, TemplateEclipseAlloy> TEMPLATE_ECLIPSEALLOY = ITEMS.register("template_eclipsealloy", TemplateEclipseAlloy::new);
+
     public static final DeferredHolder<Item, UpgradeBlank> UPGRADE_BASE = UPGRADES.register("upgrade_blank", UpgradeBlank::new);
     public static final DeferredHolder<Item, UpgradeElytra> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", UpgradeElytra::new);
 

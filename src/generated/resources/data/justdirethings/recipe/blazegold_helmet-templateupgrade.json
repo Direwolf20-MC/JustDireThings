@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "justdirethings:blazegold_ingot"
+  },
+  "base": {
+    "item": "justdirethings:ferricore_helmet"
+  },
+  "result": {
+    "count": 1,
+    "id": "justdirethings:blazegold_helmet"
+  },
+  "template": {
+    "item": "justdirethings:template_blazegold"
+  }
+}
