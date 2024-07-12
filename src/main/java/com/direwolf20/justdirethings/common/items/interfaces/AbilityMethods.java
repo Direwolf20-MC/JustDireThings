@@ -137,7 +137,8 @@ public class AbilityMethods {
         ItemStack pStack = pContext.getItemInHand();
         Level level = pContext.getLevel();
         if (level.isClientSide) return true;
-        Set<BlockPos> posList = getEclipseGateBlocks(pContext);
+        int distance = ToggleableTool.getToolValue(pStack, Ability.ECLIPSEGATE.getName());
+        Set<BlockPos> posList = getEclipseGateBlocks(pContext, distance);
         boolean anyWorked = false;
         for (BlockPos blockPos : posList) {
             if (testUseTool(pStack, Ability.ECLIPSEGATE) < 0)
@@ -161,7 +162,7 @@ public class AbilityMethods {
         return false;
     }
 
-    public static Set<BlockPos> getEclipseGateBlocks(UseOnContext pContext) {
+    public static Set<BlockPos> getEclipseGateBlocks(UseOnContext pContext, int distance) {
         BlockPos clickedPos = pContext.getClickedPos();
         Direction direction = pContext.getClickedFace().getOpposite();
         BlockPos startPos = clickedPos.offset(
@@ -170,7 +171,7 @@ public class AbilityMethods {
                 direction.getAxis() == Direction.Axis.Z ? 0 : -1
         );
 
-        BlockPos endPos = clickedPos.relative(direction, 15).offset(
+        BlockPos endPos = clickedPos.relative(direction, distance - 1).offset(
                 direction.getAxis() == Direction.Axis.X ? 0 : 1,
                 direction.getAxis() == Direction.Axis.Y ? 0 : 1,
                 direction.getAxis() == Direction.Axis.Z ? 0 : 1
@@ -197,7 +198,6 @@ public class AbilityMethods {
     public static boolean voidShift(Level level, Player player, ItemStack itemStack) {
         if (level.isClientSide) return false;
         Vec3 shiftPosition = getShiftPosition(level, player, itemStack);
-        //System.out.println(shiftPosition);
         if (!shiftPosition.equals(Vec3.ZERO)) {
             int distanceTraveled = (int) player.position().distanceTo(shiftPosition);
             if (testUseTool(itemStack, Ability.VOIDSHIFT, distanceTraveled) < 0)
