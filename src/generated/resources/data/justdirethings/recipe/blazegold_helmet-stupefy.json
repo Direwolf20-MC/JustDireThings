@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_stupefy"
+  },
+  "base": {
+    "item": "justdirethings:blazegold_helmet"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

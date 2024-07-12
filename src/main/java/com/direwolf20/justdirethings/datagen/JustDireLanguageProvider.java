@@ -187,6 +187,14 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_JUMPBOOST.get(), "Upgrade: Jump Boost");
         add(Registration.UPGRADE_MINDFOG.get(), "Upgrade: Mind Fog");
         add(Registration.UPGRADE_INVULNERABILITY.get(), "Upgrade: Invulnerability");
+        add(Registration.UPGRADE_SMELTER.get(), "Upgrade: Smelter");
+        add(Registration.UPGRADE_SMOKER.get(), "Upgrade: Smoker");
+        add(Registration.UPGRADE_HAMMER.get(), "Upgrade: Hammer");
+        add(Registration.UPGRADE_CAUTERIZEWOUNDS.get(), "Upgrade: Cauterize Wounds");
+        add(Registration.UPGRADE_SWIMSPEED.get(), "Upgrade: Swim Speed");
+        add(Registration.UPGRADE_GROUNDSTOMP.get(), "Upgrade: Ground Stomp");
+        add(Registration.UPGRADE_EXTINGUISH.get(), "Upgrade: Extinguish");
+        add(Registration.UPGRADE_STUPEFY.get(), "Upgrade: Stupefy");
 
 
         //Misc

@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_smelter"
+  },
+  "base": {
+    "item": "justdirethings:blazegold_shovel"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_hammer"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_pickaxe"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

@@ -487,9 +487,9 @@ public class Registration {
     public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_ECLIPSEALLOY = ITEMS.register("template_eclipsealloy", UpgradeTemplate::new);
 
     public static final DeferredHolder<Item, UpgradeBlank> UPGRADE_BASE = UPGRADES.register("upgrade_blank", UpgradeBlank::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", Upgrade::new);
+
+
+    //Tier 1 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_MOBSCANNER = UPGRADES.register("upgrade_mobscanner", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_OREMINER = UPGRADES.register("upgrade_oreminer", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_ORESCANNER = UPGRADES.register("upgrade_orescanner", Upgrade::new);
@@ -504,6 +504,22 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_MINDFOG = UPGRADES.register("upgrade_mindfog", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_INVULNERABILITY = UPGRADES.register("upgrade_invulnerability", Upgrade::new);
 
+    //Tier 2 Abilities
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SMELTER = UPGRADES.register("upgrade_smelter", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SMOKER = UPGRADES.register("upgrade_smoker", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_HAMMER = UPGRADES.register("upgrade_hammer", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_CAUTERIZEWOUNDS = UPGRADES.register("upgrade_cauterizewounds", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SWIMSPEED = UPGRADES.register("upgrade_swimspeed", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_GROUNDSTOMP = UPGRADES.register("upgrade_groundstomp", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_EXTINGUISH = UPGRADES.register("upgrade_extinguish", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_STUPEFY = UPGRADES.register("upgrade_stupefy", Upgrade::new);
+
+    //Tier 3 Abilities
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", Upgrade::new);
+
+    //Tier 4 Abilities
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", Upgrade::new);
 
     //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",

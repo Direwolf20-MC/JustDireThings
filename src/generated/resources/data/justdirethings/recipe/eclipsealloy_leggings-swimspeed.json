@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_swimspeed"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_leggings"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}
