@@ -110,9 +110,12 @@ public class BaseShovel extends ShovelItem implements ToggleableTool, LeftClicka
         if (stack.getItem() instanceof PoweredTool poweredTool) {
             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
             if (energyStorage == null) return amount;
-            HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-            int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
-            double reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
+            double reductionFactor = 0;
+            if (entity != null) {
+                HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
+                reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
+            }
             int finalEnergyCost = (int) Math.max(0, amount - (amount * reductionFactor));
             energyStorage.extractEnergy(finalEnergyCost, false);
             return 0;
