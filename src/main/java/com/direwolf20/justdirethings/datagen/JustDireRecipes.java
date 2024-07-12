@@ -510,6 +510,16 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('e', Items.EMERALD)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_DEBUFFREMOVER.get())
+                .pattern("mem")
+                .pattern("fbf")
+                .pattern("mem")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.GOLDEN_APPLE)
+                .define('m', Items.MILK_BUCKET)
+                .define('e', Items.HONEY_BOTTLE)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)

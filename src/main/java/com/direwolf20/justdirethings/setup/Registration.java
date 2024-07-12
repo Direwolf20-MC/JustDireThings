@@ -487,6 +487,7 @@ public class Registration {
     public static final DeferredHolder<Item, UpgradeBlank> UPGRADE_BASE = UPGRADES.register("upgrade_blank", UpgradeBlank::new);
     public static final DeferredHolder<Item, UpgradeElytra> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", UpgradeElytra::new);
     public static final DeferredHolder<Item, UpgradeDeathProtection> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", UpgradeDeathProtection::new);
+    public static final DeferredHolder<Item, UpgradeDebuffRemover> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", UpgradeDebuffRemover::new);
 
 
     //Entities

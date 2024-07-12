@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "justdirethings:upgrade_blank"
+    },
+    "e": {
+      "item": "minecraft:honey_bottle"
+    },
+    "f": {
+      "item": "minecraft:golden_apple"
+    },
+    "m": {
+      "item": "minecraft:milk_bucket"
+    }
+  },
+  "pattern": [
+    "mem",
+    "fbf",
+    "mem"
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:upgrade_debuffremover"
+  }
+}

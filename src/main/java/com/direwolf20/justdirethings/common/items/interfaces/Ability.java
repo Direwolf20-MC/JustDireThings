@@ -86,7 +86,7 @@ public enum Ability {
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/deathprotection.png"), Registration.UPGRADE_DEATHPROTECTION),
     DEBUFFREMOVER(SettingType.SLIDER, 25, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::debuffRemover, false,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/debuffremover.png")),
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/debuffremover.png"), Registration.UPGRADE_DEBUFFREMOVER),
     EARTHQUAKE(SettingType.SLIDER, 25, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::earthquake, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/earthquake.png")),
@@ -179,6 +179,13 @@ public enum Ability {
         this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
         this.action = action;
         this.cooldownIcon = cooldownIcon;
+    }
+
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton, ResourceLocation cooldownIcon, Holder<Item> upgradeItem) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
+        this.action = action;
+        this.cooldownIcon = cooldownIcon;
+        this.upgradeItem = upgradeItem;
     }
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, UseOnAbilityAction useOnAction, boolean renderButton) {

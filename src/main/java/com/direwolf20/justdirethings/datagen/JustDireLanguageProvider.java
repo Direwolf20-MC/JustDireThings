@@ -174,6 +174,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_BASE.get(), "Upgrade: Blank");
         add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
         add(Registration.UPGRADE_DEATHPROTECTION.get(), "Upgrade: Death Protection");
+        add(Registration.UPGRADE_DEBUFFREMOVER.get(), "Upgrade: Debuff Remover");
 
 
         //Misc
