@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_lawnmower"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_paxel"
+  },
+  "template": []
+}

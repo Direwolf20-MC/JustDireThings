@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "justdirethings:celestigem"
+  },
+  "base": {
+    "item": "justdirethings:blazegold_pickaxe"
+  },
+  "result": {
+    "count": 1,
+    "id": "justdirethings:celestigem_pickaxe"
+  },
+  "template": {
+    "item": "justdirethings:template_celestigem"
+  }
+}

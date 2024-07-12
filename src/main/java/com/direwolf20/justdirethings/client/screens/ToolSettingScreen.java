@@ -86,6 +86,8 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         clearMaps();
         int counter = 0;
         for (Ability toolAbility : abilities) {
+            if (!ToggleableTool.hasUpgrade(tool, toolAbility))
+                continue;
             Button button = null;
             if (toolAbility.getSettingType() == Ability.SettingType.TOGGLE) {
                 boolean isActive = ToggleableTool.getSetting(tool, toolAbility.getName());

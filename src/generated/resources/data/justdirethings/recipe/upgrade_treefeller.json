@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "justdirethings:upgrade_blank"
+    },
+    "f": {
+      "item": "minecraft:diamond_axe"
+    }
+  },
+  "pattern": [
+    "   ",
+    "fbf",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:upgrade_treefeller"
+  }
+}

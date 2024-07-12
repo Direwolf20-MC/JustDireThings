@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_treefeller"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_axe"
+  },
+  "template": []
+}

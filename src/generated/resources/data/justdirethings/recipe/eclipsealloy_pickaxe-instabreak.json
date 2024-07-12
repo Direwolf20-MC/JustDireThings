@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_instabreak"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_pickaxe"
+  },
+  "template": []
+}

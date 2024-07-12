@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_walkspeed"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_leggings"
+  },
+  "template": []
+}

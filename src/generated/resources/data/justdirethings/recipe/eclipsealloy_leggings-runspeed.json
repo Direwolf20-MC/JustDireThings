@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_runspeed"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_leggings"
+  },
+  "template": []
+}

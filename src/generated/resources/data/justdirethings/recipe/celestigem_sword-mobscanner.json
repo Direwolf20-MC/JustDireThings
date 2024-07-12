@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_mobscanner"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_sword"
+  },
+  "template": []
+}

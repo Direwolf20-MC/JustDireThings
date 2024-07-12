@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "justdirethings:eclipsealloy_ingot"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_paxel"
+  },
+  "result": {
+    "count": 1,
+    "id": "justdirethings:eclipsealloy_paxel"
+  },
+  "template": {
+    "item": "justdirethings:template_eclipsealloy"
+  }
+}

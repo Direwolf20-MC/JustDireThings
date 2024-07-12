@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_noai"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_helmet"
+  },
+  "template": []
+}

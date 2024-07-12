@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_stepheight"
+  },
+  "base": {
+    "item": "justdirethings:blazegold_boots"
+  },
+  "template": []
+}

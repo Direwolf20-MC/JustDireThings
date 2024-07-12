@@ -101,11 +101,17 @@ public class JustDireItemModels extends ItemModelProvider {
         getBuilder(Registration.CreatureCatcher.getId().getPath())
                 .parent(new ModelFile.UncheckedModelFile("builtin/entity"));
         singleTexture(Registration.MachineSettingsCopier.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/machine_settings_copier"));
+        singleTexture(Registration.TEMPLATE_FERRICORE.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_ferricore"));
+        singleTexture(Registration.TEMPLATE_BLAZEGOLD.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_blazegold"));
+        singleTexture(Registration.TEMPLATE_CELESTIGEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_celestigem"));
+        singleTexture(Registration.TEMPLATE_ECLIPSEALLOY.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_eclipsealloy"));
+
 
         //Tool Items
         registerTools();
         registerArmors();
         buckets();
+        registerUpgrades();
 
         //Generators
         registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
@@ -134,6 +140,13 @@ public class JustDireItemModels extends ItemModelProvider {
     public void registerTools() {
         for (var tool : Registration.TOOLS.getEntries()) {
             registerEnabledTextureItem(tool.getId().getPath());
+        }
+    }
+
+    public void registerUpgrades() {
+        for (var upgrade : Registration.UPGRADES.getEntries()) {
+            String name = upgrade.getId().getPath().substring(upgrade.getId().getPath().indexOf("_") + 1);
+            singleTexture(upgrade.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/abilityupgrades/" + name));
         }
     }
 

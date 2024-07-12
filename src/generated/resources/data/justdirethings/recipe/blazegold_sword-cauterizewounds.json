@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_cauterizewounds"
+  },
+  "base": {
+    "item": "justdirethings:blazegold_sword"
+  },
+  "template": []
+}

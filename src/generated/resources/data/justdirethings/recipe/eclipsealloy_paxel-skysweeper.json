@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_skysweeper"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_paxel"
+  },
+  "template": []
+}

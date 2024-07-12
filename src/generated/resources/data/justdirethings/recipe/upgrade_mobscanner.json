@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "justdirethings:upgrade_blank"
+    },
+    "e": {
+      "item": "minecraft:spider_eye"
+    },
+    "f": {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+  "pattern": [
+    " e ",
+    "fbf",
+    " e "
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:upgrade_mobscanner"
+  }
+}

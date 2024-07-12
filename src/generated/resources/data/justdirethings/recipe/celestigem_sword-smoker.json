@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_smoker"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_sword"
+  },
+  "template": []
+}

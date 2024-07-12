@@ -111,7 +111,7 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default boolean canUseAbility(ItemStack itemStack, Ability toolAbility) {
-        return hasAbility(toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName());
+        return hasAbility(toolAbility) && hasUpgrade(itemStack, toolAbility) && getEnabled(itemStack) && getSetting(itemStack, toolAbility.getName());
     }
 
     default boolean canUseAbilityAndDurability(ItemStack itemStack, Ability toolAbility) {
@@ -457,7 +457,7 @@ public interface ToggleableTool extends ToggleableItem {
         if (!player.isShiftKeyDown()) return false;
         ItemStack pStack = pContext.getItemInHand();
         if (!(pStack.getItem() instanceof ToggleableTool toggleableTool)) return false;
-        if (!toggleableTool.hasAbility(Ability.DROPTELEPORT)) return false;
+        if (!toggleableTool.canUseAbility(pStack, Ability.DROPTELEPORT)) return false;
         Level pLevel = pContext.getLevel();
         BlockPos pPos = pContext.getClickedPos();
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
@@ -563,6 +563,11 @@ public interface ToggleableTool extends ToggleableItem {
     static boolean getSetting(ItemStack stack, String setting) {
         Ability toolAbility = Ability.byName(setting);
         return !stack.has(JustDireDataComponents.ABILITY_TOGGLES.get(toolAbility)) || stack.getOrDefault(JustDireDataComponents.ABILITY_TOGGLES.get(toolAbility), true); //Enabled by default
+    }
+
+    static boolean hasUpgrade(ItemStack stack, Ability ability) {
+        if (!ability.requiresUpgrade()) return true;
+        return stack.getOrDefault(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), false);
     }
 
     static void setRender(ItemStack stack, String setting, boolean value) {

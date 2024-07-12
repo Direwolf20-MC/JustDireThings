@@ -562,7 +562,7 @@ public class AbilityMethods {
                 }
             }
             player.playNotifySound(SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.PLAYERS, 1F, 0.5F);
-            player.playNotifySound(SoundEvents.EVOKER_FANGS_ATTACK, SoundSource.PLAYERS, 1F, 0.5F);
+            player.playNotifySound(SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.PLAYERS, 1F, 0.25F);
         }
         return false;
     }

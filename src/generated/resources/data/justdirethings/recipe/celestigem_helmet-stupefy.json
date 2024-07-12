@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_stupefy"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_helmet"
+  },
+  "template": []
+}

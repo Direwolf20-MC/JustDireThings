@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_dropteleport"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_axe"
+  },
+  "template": []
+}

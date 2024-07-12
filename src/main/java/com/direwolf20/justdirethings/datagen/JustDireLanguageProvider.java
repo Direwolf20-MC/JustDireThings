@@ -166,6 +166,49 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.Coal_T3.get(), "Voidflame Coal");
         add(Registration.Coal_T4.get(), "Eclipse Ember");
 
+        //Upgrades
+        add(Registration.TEMPLATE_FERRICORE.get(), "Template: Ferricore");
+        add(Registration.TEMPLATE_BLAZEGOLD.get(), "Template: Blazegold");
+        add(Registration.TEMPLATE_CELESTIGEM.get(), "Template: Celestigem");
+        add(Registration.TEMPLATE_ECLIPSEALLOY.get(), "Template: Eclipse Alloy");
+        add(Registration.UPGRADE_BASE.get(), "Upgrade: Blank");
+        add(Registration.UPGRADE_MOBSCANNER.get(), "Upgrade: Mob Scanner");
+        add(Registration.UPGRADE_OREMINER.get(), "Upgrade: Ore Miner");
+        add(Registration.UPGRADE_ORESCANNER.get(), "Upgrade: Ore Scanner");
+        add(Registration.UPGRADE_LAWNMOWER.get(), "Upgrade: Lawnmower");
+        add(Registration.UPGRADE_SKYSWEEPER.get(), "Upgrade: Skysweeper");
+        add(Registration.UPGRADE_TREEFELLER.get(), "Upgrade: Treefeller");
+        add(Registration.UPGRADE_LEAFBREAKER.get(), "Upgrade: Leafbreaker");
+        add(Registration.UPGRADE_RUNSPEED.get(), "Upgrade: Run Speed");
+        add(Registration.UPGRADE_WALKSPEED.get(), "Upgrade: Walk Speed");
+        add(Registration.UPGRADE_STEPHEIGHT.get(), "Upgrade: Step Assist");
+        add(Registration.UPGRADE_JUMPBOOST.get(), "Upgrade: Jump Boost");
+        add(Registration.UPGRADE_MINDFOG.get(), "Upgrade: Mind Fog");
+        add(Registration.UPGRADE_INVULNERABILITY.get(), "Upgrade: Invulnerability");
+        add(Registration.UPGRADE_SMELTER.get(), "Upgrade: Smelter");
+        add(Registration.UPGRADE_SMOKER.get(), "Upgrade: Smoker");
+        add(Registration.UPGRADE_HAMMER.get(), "Upgrade: Hammer");
+        add(Registration.UPGRADE_CAUTERIZEWOUNDS.get(), "Upgrade: Cauterize Wounds");
+        add(Registration.UPGRADE_SWIMSPEED.get(), "Upgrade: Swim Speed");
+        add(Registration.UPGRADE_GROUNDSTOMP.get(), "Upgrade: Ground Stomp");
+        add(Registration.UPGRADE_EXTINGUISH.get(), "Upgrade: Extinguish");
+        add(Registration.UPGRADE_STUPEFY.get(), "Upgrade: Stupefy");
+        add(Registration.UPGRADE_DROPTELEPORT.get(), "Upgrade: Drops Teleport");
+        add(Registration.UPGRADE_NEGATEFALLDAMAGE.get(), "Upgrade: Negate Fall Damage");
+        add(Registration.UPGRADE_NIGHTVISION.get(), "Upgrade: Night Vision");
+        add(Registration.UPGRADE_DECOY.get(), "Upgrade: Decoy");
+        add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
+        add(Registration.UPGRADE_DEBUFFREMOVER.get(), "Upgrade: Debuff Remover");
+        add(Registration.UPGRADE_DEATHPROTECTION.get(), "Upgrade: Death Protection");
+        add(Registration.UPGRADE_OREXRAY.get(), "Upgrade: Ore X-Ray");
+        add(Registration.UPGRADE_GLOWING.get(), "Upgrade: Mob X-Ray");
+        add(Registration.UPGRADE_INSTABREAK.get(), "Upgrade: Instant Break");
+        add(Registration.UPGRADE_EARTHQUAKE.get(), "Upgrade: Earthquake");
+        add(Registration.UPGRADE_NOAI.get(), "Upgrade: Mental Obliteration");
+        add(Registration.UPGRADE_FLIGHT.get(), "Upgrade: Flight");
+        add(Registration.UPGRADE_LAVAIMMUNITY.get(), "Upgrade: Lava Immunity");
+        add(Registration.UPGRADE_PHASE.get(), "Upgrade: Phase");
+
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");
@@ -206,6 +249,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.fillmode.all", "All");
         add("justdirethings.hint.dropinwater", "Drop in Water");
         add("justdirethings.decoy", "Decoy");
+        add("justdirethings.missingupgrade", "(Missing Upgrade)");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
