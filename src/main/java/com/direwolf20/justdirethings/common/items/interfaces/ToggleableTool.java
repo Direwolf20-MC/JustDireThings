@@ -457,7 +457,7 @@ public interface ToggleableTool extends ToggleableItem {
         if (!player.isShiftKeyDown()) return false;
         ItemStack pStack = pContext.getItemInHand();
         if (!(pStack.getItem() instanceof ToggleableTool toggleableTool)) return false;
-        if (!toggleableTool.hasAbility(Ability.DROPTELEPORT)) return false;
+        if (!toggleableTool.canUseAbility(pStack, Ability.DROPTELEPORT)) return false;
         Level pLevel = pContext.getLevel();
         BlockPos pPos = pContext.getClickedPos();
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);

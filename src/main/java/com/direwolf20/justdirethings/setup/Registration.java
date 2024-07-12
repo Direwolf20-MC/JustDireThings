@@ -516,6 +516,10 @@ public class Registration {
 
     //Tier 3 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_DROPTELEPORT = UPGRADES.register("upgrade_dropteleport", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_NEGATEFALLDAMAGE = UPGRADES.register("upgrade_negatefalldamage", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_NIGHTVISION = UPGRADES.register("upgrade_nightvision", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_DECOY = UPGRADES.register("upgrade_decoy", Upgrade::new);
 
     //Tier 4 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);

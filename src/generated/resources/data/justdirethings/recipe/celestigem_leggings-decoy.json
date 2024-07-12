@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_decoy"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_leggings"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

@@ -172,8 +172,6 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TEMPLATE_CELESTIGEM.get(), "Template: Celestigem");
         add(Registration.TEMPLATE_ECLIPSEALLOY.get(), "Template: Eclipse Alloy");
         add(Registration.UPGRADE_BASE.get(), "Upgrade: Blank");
-        add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
-        add(Registration.UPGRADE_DEATHPROTECTION.get(), "Upgrade: Death Protection");
         add(Registration.UPGRADE_MOBSCANNER.get(), "Upgrade: Mob Scanner");
         add(Registration.UPGRADE_OREMINER.get(), "Upgrade: Ore Miner");
         add(Registration.UPGRADE_ORESCANNER.get(), "Upgrade: Ore Scanner");
@@ -195,6 +193,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_GROUNDSTOMP.get(), "Upgrade: Ground Stomp");
         add(Registration.UPGRADE_EXTINGUISH.get(), "Upgrade: Extinguish");
         add(Registration.UPGRADE_STUPEFY.get(), "Upgrade: Stupefy");
+        add(Registration.UPGRADE_DROPTELEPORT.get(), "Upgrade: Drops Teleport");
+        add(Registration.UPGRADE_NEGATEFALLDAMAGE.get(), "Upgrade: Negate Fall Damage");
+        add(Registration.UPGRADE_NIGHTVISION.get(), "Upgrade: Night Vision");
+        add(Registration.UPGRADE_DECOY.get(), "Upgrade: Decoy");
+        add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
+        add(Registration.UPGRADE_DEBUFFREMOVER.get(), "Upgrade: Debuff Remover");
+        add(Registration.UPGRADE_DEATHPROTECTION.get(), "Upgrade: Death Protection");
 
 
         //Misc
