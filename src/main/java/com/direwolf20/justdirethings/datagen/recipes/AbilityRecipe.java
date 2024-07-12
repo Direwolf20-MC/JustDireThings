@@ -68,7 +68,7 @@ public class AbilityRecipe implements SmithingRecipe {
 
     @Override
     public boolean isTemplateIngredient(ItemStack stack) {
-        return stack.getItem() == Registration.UPGRADE_BASE.get();
+        return stack.isEmpty();
     }
 
     @Override

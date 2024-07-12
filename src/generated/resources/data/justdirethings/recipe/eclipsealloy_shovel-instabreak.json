@@ -6,7 +6,5 @@
   "base": {
     "item": "justdirethings:eclipsealloy_shovel"
   },
-  "template": {
-    "item": "justdirethings:upgrade_blank"
-  }
+  "template": []
 }

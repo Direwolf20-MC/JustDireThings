@@ -1429,7 +1429,7 @@ public class JustDireRecipes extends RecipeProvider {
                     if (armorItem instanceof ToggleableTool toggleableTool) {
                         EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
                         if (abilities.contains(ability)) {
-                            AbilityRecipeBuilder.shapeless(Ingredient.of(Registration.UPGRADE_BASE.get()), Ingredient.of(armor.get()), Ingredient.of(upgrade.get()))
+                            AbilityRecipeBuilder.shapeless(Ingredient.EMPTY, Ingredient.of(armor.get()), Ingredient.of(upgrade.get()))
                                     .group("justdirethings")
                                     .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                                     .save(consumer);
@@ -1441,7 +1441,7 @@ public class JustDireRecipes extends RecipeProvider {
                     if (toolItem instanceof ToggleableTool toggleableTool) {
                         EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
                         if (abilities.contains(ability)) {
-                            AbilityRecipeBuilder.shapeless(Ingredient.of(Registration.UPGRADE_BASE.get()), Ingredient.of(tool.get()), Ingredient.of(upgrade.get()))
+                            AbilityRecipeBuilder.shapeless(Ingredient.EMPTY, Ingredient.of(tool.get()), Ingredient.of(upgrade.get()))
                                     .group("justdirethings")
                                     .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                                     .save(consumer);

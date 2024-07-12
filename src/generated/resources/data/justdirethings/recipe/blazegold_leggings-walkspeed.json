@@ -6,7 +6,5 @@
   "base": {
     "item": "justdirethings:blazegold_leggings"
   },
-  "template": {
-    "item": "justdirethings:upgrade_blank"
-  }
+  "template": []
 }

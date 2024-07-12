@@ -6,7 +6,5 @@
   "base": {
     "item": "justdirethings:celestigem_axe"
   },
-  "template": {
-    "item": "justdirethings:upgrade_blank"
-  }
+  "template": []
 }

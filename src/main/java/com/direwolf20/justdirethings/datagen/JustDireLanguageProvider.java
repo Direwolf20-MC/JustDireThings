@@ -200,9 +200,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
         add(Registration.UPGRADE_DEBUFFREMOVER.get(), "Upgrade: Debuff Remover");
         add(Registration.UPGRADE_DEATHPROTECTION.get(), "Upgrade: Death Protection");
-
-        add(Registration.UPGRADE_OREXRAY.get(), "Upgrade: Ore X-ray");
-        add(Registration.UPGRADE_GLOWING.get(), "Upgrade: Glowing");
+        add(Registration.UPGRADE_OREXRAY.get(), "Upgrade: Ore X-Ray");
+        add(Registration.UPGRADE_GLOWING.get(), "Upgrade: Mob X-Ray");
         add(Registration.UPGRADE_INSTABREAK.get(), "Upgrade: Instant Break");
         add(Registration.UPGRADE_EARTHQUAKE.get(), "Upgrade: Earthquake");
         add(Registration.UPGRADE_NOAI.get(), "Upgrade: Mental Obliteration");

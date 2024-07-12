@@ -6,7 +6,5 @@
   "base": {
     "item": "justdirethings:ferricore_sword"
   },
-  "template": {
-    "item": "justdirethings:upgrade_blank"
-  }
+  "template": []
 }

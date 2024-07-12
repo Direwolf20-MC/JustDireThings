@@ -6,7 +6,5 @@
   "base": {
     "item": "justdirethings:blazegold_helmet"
   },
-  "template": {
-    "item": "justdirethings:upgrade_blank"
-  }
+  "template": []
 }

@@ -56,14 +56,14 @@ public class TooltipHelpers {
             NBTHelpers.BoundInventory boundInventory = ToggleableTool.getBoundInventory(stack);
             for (Ability ability : toggleableTool.getAbilities()) {
                 boolean active = ToggleableTool.getSetting(stack, ability.getName());
-                ChatFormatting chatFormatting = ChatFormatting.LIGHT_PURPLE;
+                ChatFormatting chatFormatting = ChatFormatting.GRAY;
                 if (!ToggleableTool.hasUpgrade(stack, ability)) {
                     tooltip.add(Component.translatable(ability.getLocalization()).append(Component.translatable("justdirethings.missingupgrade")).withStyle(chatFormatting));
                 } else {
                     chatFormatting = active ? ChatFormatting.GREEN : ChatFormatting.DARK_RED;
                     tooltip.add(Component.translatable(ability.getLocalization()).withStyle(chatFormatting));
                 }
-                if (ability.equals(Ability.DROPTELEPORT)) {
+                if (ability.equals(Ability.DROPTELEPORT) && ToggleableTool.hasUpgrade(stack, ability)) {
                     chatFormatting = ChatFormatting.DARK_PURPLE;
                     String dimString;
                     if (boundInventory == null) {
