@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_instabreak"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_shovel"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

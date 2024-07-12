@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:ender_eye"
+    },
+    "b": {
+      "item": "justdirethings:upgrade_blank"
+    },
+    "e": {
+      "item": "minecraft:calibrated_sculk_sensor"
+    },
+    "f": {
+      "item": "minecraft:sculk_shrieker"
+    }
+  },
+  "pattern": [
+    "aea",
+    "fbf",
+    "aea"
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:upgrade_orexray"
+  }
+}

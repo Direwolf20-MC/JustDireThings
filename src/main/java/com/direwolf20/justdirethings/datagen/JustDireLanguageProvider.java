@@ -201,6 +201,15 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_DEBUFFREMOVER.get(), "Upgrade: Debuff Remover");
         add(Registration.UPGRADE_DEATHPROTECTION.get(), "Upgrade: Death Protection");
 
+        add(Registration.UPGRADE_OREXRAY.get(), "Upgrade: Ore X-ray");
+        add(Registration.UPGRADE_GLOWING.get(), "Upgrade: Glowing");
+        add(Registration.UPGRADE_INSTABREAK.get(), "Upgrade: Instant Break");
+        add(Registration.UPGRADE_EARTHQUAKE.get(), "Upgrade: Earthquake");
+        add(Registration.UPGRADE_NOAI.get(), "Upgrade: Mental Obliteration");
+        add(Registration.UPGRADE_FLIGHT.get(), "Upgrade: Flight");
+        add(Registration.UPGRADE_LAVAIMMUNITY.get(), "Upgrade: Lava Immunity");
+        add(Registration.UPGRADE_PHASE.get(), "Upgrade: Phase");
+
 
         //Misc
         add("justdirethings.shiftmoreinfo", "Hold Shift for details");

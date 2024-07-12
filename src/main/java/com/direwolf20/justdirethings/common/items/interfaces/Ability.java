@@ -75,10 +75,10 @@ public enum Ability {
 
     //Tier 4
     OREXRAY(SettingType.TOGGLE, 100, 5000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::scanForOreXRAY, false),
+            AbilityMethods::scanForOreXRAY, false, Registration.UPGRADE_OREXRAY),
     GLOWING(SettingType.TOGGLE, 100, 5000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::glowing, false),
-    INSTABREAK(SettingType.TOGGLE, 2, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+            AbilityMethods::glowing, false, Registration.UPGRADE_GLOWING),
+    INSTABREAK(SettingType.TOGGLE, 2, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_INSTABREAK),
     ECLIPSEGATE(SettingType.TOGGLE, 1, 250, UseType.USE_ON, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::eclipseGate, false), //FE Per block Removed
     DEATHPROTECTION(SettingType.SLIDER, 25, 450000, UseType.PASSIVE_COOLDOWN, BindingType.CUSTOM_ONLY,
@@ -89,14 +89,14 @@ public enum Ability {
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/debuffremover.png"), Registration.UPGRADE_DEBUFFREMOVER),
     EARTHQUAKE(SettingType.SLIDER, 25, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::earthquake, false,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/earthquake.png")),
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/earthquake.png"), Registration.UPGRADE_EARTHQUAKE),
     NOAI(SettingType.SLIDER, 25, 100000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::noAI, false,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/noai.png")),
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/noai.png"), Registration.UPGRADE_NOAI),
     FLIGHT(SettingType.SLIDER, 1, 100, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
-            AbilityMethods::flight, false),
-    LAVAIMMUNITY(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
-    PHASE(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY);
+            AbilityMethods::flight, false, Registration.UPGRADE_FLIGHT),
+    LAVAIMMUNITY(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_LAVAIMMUNITY),
+    PHASE(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_PHASE);
 
 
     public enum SettingType {

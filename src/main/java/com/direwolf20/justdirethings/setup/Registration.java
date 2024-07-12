@@ -522,6 +522,14 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DECOY = UPGRADES.register("upgrade_decoy", Upgrade::new);
 
     //Tier 4 Abilities
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_OREXRAY = UPGRADES.register("upgrade_orexray", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_GLOWING = UPGRADES.register("upgrade_glowing", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_INSTABREAK = UPGRADES.register("upgrade_instabreak", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_EARTHQUAKE = UPGRADES.register("upgrade_earthquake", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_NOAI = UPGRADES.register("upgrade_noai", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_FLIGHT = UPGRADES.register("upgrade_flight", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LAVAIMMUNITY = UPGRADES.register("upgrade_lavaimmunity", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_PHASE = UPGRADES.register("upgrade_phase", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", Upgrade::new);
 
