@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_treefeller"
+  },
+  "base": {
+    "item": "justdirethings:ferricore_axe"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

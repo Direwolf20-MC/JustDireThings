@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_orescanner"
+  },
+  "base": {
+    "item": "justdirethings:blazegold_pickaxe"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_orescanner"
+  },
+  "base": {
+    "item": "justdirethings:ferricore_pickaxe"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

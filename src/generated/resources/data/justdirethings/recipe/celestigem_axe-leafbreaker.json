@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_leafbreaker"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_axe"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

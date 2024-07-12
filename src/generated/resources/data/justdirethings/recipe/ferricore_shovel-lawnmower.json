@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_lawnmower"
+  },
+  "base": {
+    "item": "justdirethings:ferricore_shovel"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

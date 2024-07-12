@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_mindfog"
+  },
+  "base": {
+    "item": "justdirethings:ferricore_helmet"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_mobscanner"
+  },
+  "base": {
+    "item": "justdirethings:blazegold_sword"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}

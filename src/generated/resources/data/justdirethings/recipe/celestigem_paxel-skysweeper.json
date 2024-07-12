@@ -1,0 +1,12 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_skysweeper"
+  },
+  "base": {
+    "item": "justdirethings:celestigem_paxel"
+  },
+  "template": {
+    "item": "justdirethings:upgrade_blank"
+  }
+}
