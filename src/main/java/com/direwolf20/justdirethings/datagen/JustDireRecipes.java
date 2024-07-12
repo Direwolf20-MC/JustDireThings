@@ -14,6 +14,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -518,6 +519,117 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('f', Items.GOLDEN_APPLE)
                 .define('m', Items.MILK_BUCKET)
                 .define('e', Items.HONEY_BOTTLE)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_MOBSCANNER.get())
+                .pattern(" e ")
+                .pattern("fbf")
+                .pattern(" e ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.AMETHYST_SHARD)
+                .define('e', Items.SPIDER_EYE)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_OREMINER.get())
+                .pattern("   ")
+                .pattern("fbf")
+                .pattern("   ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.IRON_PICKAXE)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_ORESCANNER.get())
+                .pattern(" e ")
+                .pattern("fbf")
+                .pattern(" e ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.AMETHYST_SHARD)
+                .define('e', Items.REDSTONE)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_LAWNMOWER.get())
+                .pattern("   ")
+                .pattern("fbf")
+                .pattern("   ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.SHORT_GRASS)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_SKYSWEEPER.get())
+                .pattern(" e ")
+                .pattern("fbf")
+                .pattern(" e ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.GRAVEL)
+                .define('e', Items.SAND)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_LEAFBREAKER.get())
+                .pattern("   ")
+                .pattern("fbf")
+                .pattern("   ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', ItemTags.LEAVES)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_RUNSPEED.get())
+                .pattern(" e ")
+                .pattern("fbf")
+                .pattern(" e ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.SUGAR)
+                .define('e', Items.POTATO)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_WALKSPEED.get())
+                .pattern(" e ")
+                .pattern("fbf")
+                .pattern(" e ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.SUGAR)
+                .define('e', Items.CARROT)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_STEPHEIGHT.get())
+                .pattern(" f ")
+                .pattern("fbf")
+                .pattern(" f ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.LADDER)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_JUMPBOOST.get())
+                .pattern("   ")
+                .pattern("fbf")
+                .pattern("   ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.PISTON)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_MINDFOG.get())
+                .pattern(" e ")
+                .pattern("fbf")
+                .pattern(" e ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.FERMENTED_SPIDER_EYE)
+                .define('e', Items.LAPIS_LAZULI)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_INVULNERABILITY.get())
+                .pattern(" e ")
+                .pattern("fbf")
+                .pattern(" e ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.DIAMOND_CHESTPLATE)
+                .define('e', Items.SHIELD)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_TREEFELLER.get())
+                .pattern("   ")
+                .pattern("fbf")
+                .pattern("   ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Items.DIAMOND_AXE)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
 
@@ -1127,6 +1239,18 @@ public class JustDireRecipes extends RecipeProvider {
                         EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
                         if (abilities.contains(ability)) {
                             AbilityRecipeBuilder.shapeless(Ingredient.of(Registration.UPGRADE_BASE.get()), Ingredient.of(armor.get()), Ingredient.of(upgrade.get()))
+                                    .group("justdirethings")
+                                    .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                                    .save(consumer);
+                        }
+                    }
+                }
+                for (var tool : Registration.TOOLS.getEntries()) {
+                    Item toolItem = tool.get();
+                    if (toolItem instanceof ToggleableTool toggleableTool) {
+                        EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
+                        if (abilities.contains(ability)) {
+                            AbilityRecipeBuilder.shapeless(Ingredient.of(Registration.UPGRADE_BASE.get()), Ingredient.of(tool.get()), Ingredient.of(upgrade.get()))
                                     .group("justdirethings")
                                     .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                                     .save(consumer);

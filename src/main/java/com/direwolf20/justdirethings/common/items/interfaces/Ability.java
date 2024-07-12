@@ -17,27 +17,27 @@ import java.util.Map;
 public enum Ability {
     //Tier 1
     MOBSCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::scanForMobScanner, false),
-    OREMINER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+            AbilityMethods::scanForMobScanner, false, Registration.UPGRADE_MOBSCANNER),
+    OREMINER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_OREMINER),
     ORESCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::scanForOreScanner, false),
+            AbilityMethods::scanForOreScanner, false, Registration.UPGRADE_ORESCANNER),
     LAWNMOWER(SettingType.TOGGLE, 1, 50, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::lawnmower, false),
-    SKYSWEEPER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
-    TREEFELLER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+            AbilityMethods::lawnmower, false, Registration.UPGRADE_LAWNMOWER),
+    SKYSWEEPER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SKYSWEEPER),
+    TREEFELLER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_TREEFELLER),
     LEAFBREAKER(SettingType.TOGGLE, 1, 50, UseType.USE_ON, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::leafbreaker, false),
+            AbilityMethods::leafbreaker, false, Registration.UPGRADE_LEAFBREAKER),
     RUNSPEED(SettingType.SLIDER, 1, 5, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
-            AbilityMethods::runSpeed, false),
+            AbilityMethods::runSpeed, false, Registration.UPGRADE_RUNSPEED),
     WALKSPEED(SettingType.SLIDER, 1, 5, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
-            AbilityMethods::walkSpeed, false),
-    STEPHEIGHT(SettingType.TOGGLE, 1, 5, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+            AbilityMethods::walkSpeed, false, Registration.UPGRADE_WALKSPEED),
+    STEPHEIGHT(SettingType.TOGGLE, 1, 5, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_STEPHEIGHT),
     JUMPBOOST(SettingType.SLIDER, 1, 5, UseType.PASSIVE, BindingType.CUSTOM_ONLY,
-            AbilityMethods::jumpBoost, false),
-    MINDFOG(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
+            AbilityMethods::jumpBoost, false, Registration.UPGRADE_JUMPBOOST),
+    MINDFOG(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_MINDFOG),
     INVULNERABILITY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::invulnerability, false,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/invulnerability.png")),
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/invulnerability.png"), Registration.UPGRADE_INVULNERABILITY),
 
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
@@ -164,6 +164,12 @@ public enum Ability {
         this.action = action;
     }
 
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, boolean renderButton, Holder<Item> upgradeItem) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
+        this.action = action;
+        this.upgradeItem = upgradeItem;
+    }
+
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, boolean renderButton, ResourceLocation cooldownIcon) {
         this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
         this.cooldownIcon = cooldownIcon;
@@ -191,6 +197,12 @@ public enum Ability {
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, UseOnAbilityAction useOnAction, boolean renderButton) {
         this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
         this.useOnAction = useOnAction;
+    }
+
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, UseOnAbilityAction useOnAction, boolean renderButton, Holder<Item> upgradeItem) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, renderButton);
+        this.useOnAction = useOnAction;
+        this.upgradeItem = upgradeItem;
     }
 
     public boolean hasDynamicParams(Ability toolAbility) {

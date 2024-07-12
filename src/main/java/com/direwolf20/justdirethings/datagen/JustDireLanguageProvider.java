@@ -174,7 +174,19 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_BASE.get(), "Upgrade: Blank");
         add(Registration.UPGRADE_ELYTRA.get(), "Upgrade: Elytra");
         add(Registration.UPGRADE_DEATHPROTECTION.get(), "Upgrade: Death Protection");
-        add(Registration.UPGRADE_DEBUFFREMOVER.get(), "Upgrade: Debuff Remover");
+        add(Registration.UPGRADE_MOBSCANNER.get(), "Upgrade: Mob Scanner");
+        add(Registration.UPGRADE_OREMINER.get(), "Upgrade: Ore Miner");
+        add(Registration.UPGRADE_ORESCANNER.get(), "Upgrade: Ore Scanner");
+        add(Registration.UPGRADE_LAWNMOWER.get(), "Upgrade: Lawnmower");
+        add(Registration.UPGRADE_SKYSWEEPER.get(), "Upgrade: Skysweeper");
+        add(Registration.UPGRADE_TREEFELLER.get(), "Upgrade: Treefeller");
+        add(Registration.UPGRADE_LEAFBREAKER.get(), "Upgrade: Leafbreaker");
+        add(Registration.UPGRADE_RUNSPEED.get(), "Upgrade: Run Speed");
+        add(Registration.UPGRADE_WALKSPEED.get(), "Upgrade: Walk Speed");
+        add(Registration.UPGRADE_STEPHEIGHT.get(), "Upgrade: Step Assist");
+        add(Registration.UPGRADE_JUMPBOOST.get(), "Upgrade: Jump Boost");
+        add(Registration.UPGRADE_MINDFOG.get(), "Upgrade: Mind Fog");
+        add(Registration.UPGRADE_INVULNERABILITY.get(), "Upgrade: Invulnerability");
 
 
         //Misc

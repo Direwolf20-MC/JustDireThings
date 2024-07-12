@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.datagen.recipes;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeBlank;
+import com.direwolf20.justdirethings.common.items.abilityupgrades.Upgrade;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
@@ -78,7 +78,7 @@ public class AbilityRecipe implements SmithingRecipe {
 
     @Override
     public boolean isAdditionIngredient(ItemStack stack) {
-        return stack.getItem() instanceof UpgradeBlank;
+        return stack.getItem() instanceof Upgrade;
     }
 
     public Ingredient getTemplate() {

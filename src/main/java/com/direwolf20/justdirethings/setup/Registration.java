@@ -490,6 +490,19 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_MOBSCANNER = UPGRADES.register("upgrade_mobscanner", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_OREMINER = UPGRADES.register("upgrade_oreminer", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_ORESCANNER = UPGRADES.register("upgrade_orescanner", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LAWNMOWER = UPGRADES.register("upgrade_lawnmower", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SKYSWEEPER = UPGRADES.register("upgrade_skysweeper", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_TREEFELLER = UPGRADES.register("upgrade_treefeller", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LEAFBREAKER = UPGRADES.register("upgrade_leafbreaker", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_RUNSPEED = UPGRADES.register("upgrade_runspeed", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_WALKSPEED = UPGRADES.register("upgrade_walkspeed", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_STEPHEIGHT = UPGRADES.register("upgrade_stepheight", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_JUMPBOOST = UPGRADES.register("upgrade_jumpboost", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_MINDFOG = UPGRADES.register("upgrade_mindfog", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_INVULNERABILITY = UPGRADES.register("upgrade_invulnerability", Upgrade::new);
 
 
     //Entities
