@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.util;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
@@ -13,7 +14,9 @@ import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
+import javax.annotation.Nullable;
 import java.util.OptionalInt;
+import java.util.function.Consumer;
 
 /**
  * This class completely and shamelessly stolen from Shadows from his mod Click Machine :)
@@ -28,6 +31,11 @@ public class UsefulFakePlayer extends FakePlayer {
 
     @Override
     public OptionalInt openMenu(MenuProvider p_9033_) {
+        return OptionalInt.empty();
+    }
+
+    @Override
+    public OptionalInt openMenu(@Nullable MenuProvider menu, @Nullable Consumer<RegistryFriendlyByteBuf> extraDataWriter) {
         return OptionalInt.empty();
     }
 
