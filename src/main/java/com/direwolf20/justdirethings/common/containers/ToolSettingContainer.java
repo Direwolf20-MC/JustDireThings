@@ -1,7 +1,6 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
-import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,6 +13,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.ComponentItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,7 @@ public class ToolSettingContainer extends BaseContainer {
     };
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public final List<Slot> dynamicSlots = new ArrayList<>();
+    public ComponentItemHandler componentItemHandler;
 
 
     public ToolSettingContainer(int windowId, Inventory playerInventory, Player player, FriendlyByteBuf extraData) {
@@ -86,16 +90,14 @@ public class ToolSettingContainer extends BaseContainer {
 
         addPlayerSlots(playerInventory, 8, 84);
 
-        if (player.getMainHandItem().getItem() instanceof BaseBow) { //TODO Not Bow Checks
-            addBowSlots(playerInventory);
-        }
+        refreshSlots(player.getMainHandItem());
     }
 
-    private void addBowSlots(Inventory playerInventory) {
-        for (int i = 0; i < 4; i++) { // Example slot count
+    private void addSelectedItemSlots() {
+        for (int i = 0; i < componentItemHandler.getSlots(); i++) { // Example slot count
             int x = 134 + (i % 2) * 18; // 2 slots per row
             int y = 66 - (i / 2) * 18; // 2 rows
-            Slot slot = new Slot(playerInventory, 41 + i, x, y) {
+            Slot slot = new SlotItemHandler(componentItemHandler, i, x, y) {
                 @Override
                 public boolean mayPlace(ItemStack stack) {
                     return true; // Define valid items for bow slots
@@ -113,11 +115,19 @@ public class ToolSettingContainer extends BaseContainer {
         dynamicSlots.clear();
     }
 
-    public void refreshSlots(Inventory playerInventory, boolean isBow) {
+    public void refreshSlots(ItemStack selectedStack) {
         clearDynamicSlots();
-        if (isBow) {
-            addBowSlots(playerInventory);
+        componentItemHandler = getItemSlots(selectedStack);
+        if (componentItemHandler != null) {
+            addSelectedItemSlots();
         }
+    }
+
+    public ComponentItemHandler getItemSlots(ItemStack itemStack) {
+        IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
+        if (itemHandler instanceof ComponentItemHandler componentItemHandler)
+            return componentItemHandler;
+        return null;
     }
 
     @Override

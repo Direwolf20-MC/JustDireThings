@@ -7,7 +7,6 @@ import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolLeftRightClickPayload;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
 import com.direwolf20.justdirethings.util.MiscTools;
@@ -263,7 +262,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         if (this.tool.getItem() instanceof ToggleableTool toggleableTool) {
             this.abilities = toggleableTool.getAbilities();
             refreshButtons();
-            refreshToolAndSlots(this.tool.getItem() instanceof BaseBow);
+            refreshToolAndSlots();
         }
     }
 
@@ -336,7 +335,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             toolSlot = hoveredSlot.getSlotIndex();
             this.abilities = toggleableTool.getAbilities();
             refreshButtons();
-            refreshToolAndSlots(hoveredSlot.getItem().getItem() instanceof BaseBow);
+            refreshToolAndSlots();
             return true;
         }
         if (btn == 1) {
@@ -375,8 +374,8 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         return (shownAbilityButton != null & leftRightClickButtons.containsKey(shownAbilityButton) && (leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 2 || (leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 0 && buttonToAbilityMap.get(shownAbilityButton).getBindingType() == Ability.BindingType.CUSTOM_ONLY)));
     }
 
-    public void refreshToolAndSlots(boolean isBow) {
-        this.container.refreshSlots(player.getInventory(), isBow);
+    public void refreshToolAndSlots() {
+        this.container.refreshSlots(tool);
     }
 
     public void updateRenderables() {
