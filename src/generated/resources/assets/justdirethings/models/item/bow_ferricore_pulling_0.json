@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "justdirethings:item/bow_ferricore_pulling_0"
+  }
+}

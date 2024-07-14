@@ -435,6 +435,8 @@ public class Registration {
     public static final DeferredHolder<Item, PortalGunV2> PortalGunV2 = ITEMS.register("portalgun_v2", PortalGunV2::new);
     public static final DeferredHolder<Item, FluidCanister> FluidCanister = ITEMS.register("fluid_canister", FluidCanister::new);
 
+    public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = ITEMS.register("bow_ferricore", FerricoreBow::new);
+
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);
     public static final DeferredHolder<Item, FerricorePickaxe> FerricorePickaxe = TOOLS.register("ferricore_pickaxe", FerricorePickaxe::new);

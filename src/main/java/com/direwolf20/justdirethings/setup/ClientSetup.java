@@ -65,6 +65,13 @@ public class ClientSetup {
                 registerEnabledToolTextures(tool.get());
             }
             registerEnabledToolTextures(Registration.Pocket_Generator.get());
+            ItemProperties.register(Registration.FerricoreBow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pull"), (stack, level, living, id) -> {
+                if (living == null || living.getUseItem() != stack) return 0.0F;
+                return (stack.getUseDuration(living) - living.getUseItemRemainingTicks()) / 20.0F;
+            });
+            ItemProperties.register(Registration.FerricoreBow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pulling"), (stack, level, living, id) -> {
+                return living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F;
+            });
         });
 
         event.enqueueWork(() -> {

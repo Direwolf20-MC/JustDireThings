@@ -1,4 +1,4 @@
-// 1.21	2024-07-12T13:31:50.9130118	Recipes
+// 1.21	2024-07-13T22:37:09.0005885	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancement/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancement/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancement/recipes/building_blocks/coal_t1_9x9.json
@@ -65,6 +65,7 @@ cbe7abad58a26096c28c7dda23c8e2ac3c31ff84 data/justdirethings/advancement/recipes
 ff51dd19aa923ceef6dd93c0c68b4a4015616c0d data/justdirethings/advancement/recipes/misc/blockswappert1_nbtclear.json
 11577a056715b2aab8edef856b5ac3a7235c63ff data/justdirethings/advancement/recipes/misc/blockswappert2.json
 8c9215d274a763f0595ada0f0d32623621cbd236 data/justdirethings/advancement/recipes/misc/blockswappert2_nbtclear.json
+f9af05827a45227f8ecaf7ab7c5cb6c33757856c data/justdirethings/advancement/recipes/misc/bow_ferricore.json
 facc977582da23ff77c6d600f1ddf4a5619a3b8b data/justdirethings/advancement/recipes/misc/celestigem_axe-dropteleport.json
 e7ae3d4a0acfb332620b4b4deae6023fa2ac7a16 data/justdirethings/advancement/recipes/misc/celestigem_axe-leafbreaker.json
 3837fb88487ddfcf3aab823eb677b2f55890e9e8 data/justdirethings/advancement/recipes/misc/celestigem_axe-smelter.json
@@ -396,6 +397,7 @@ e71a5453a95afdf23b4dc76f43dc1825688304f0 data/justdirethings/recipe/blockswapper
 a68a58d7dea49f693e7aeee917748821f547678c data/justdirethings/recipe/blockswappert1_nbtclear.json
 7891ff83c80dcc6a87e3f3c75f1a6e6a33500791 data/justdirethings/recipe/blockswappert2.json
 cd4e382c951ad18e87ed60b02bbcdca7c8b3428c data/justdirethings/recipe/blockswappert2_nbtclear.json
+8d6b41806eb7a510467a84b54b81ae466a992d06 data/justdirethings/recipe/bow_ferricore.json
 45606568eb2f1cee22209939e6dbf8c280fa32ec data/justdirethings/recipe/celestigem_9x9.json
 31346611e00f2e84282431a49b102466a68d80ac data/justdirethings/recipe/celestigem_axe-dropteleport.json
 a0191aea32bc3cba4fe280a04a728e4094b5a3c9 data/justdirethings/recipe/celestigem_axe-leafbreaker.json
