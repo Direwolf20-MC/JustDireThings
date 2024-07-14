@@ -1,4 +1,4 @@
-// 1.21	2024-07-13T22:37:09.0005885	Recipes
+// 1.21	2024-07-14T14:22:22.4608266	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancement/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancement/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancement/recipes/building_blocks/coal_t1_9x9.json
@@ -276,6 +276,7 @@ d028ad197c2078a4c30eafcbde2282aff17f1df1 data/justdirethings/advancement/recipes
 f921713cd6dfa2ad74a0b7144f7778c2fe33bc72 data/justdirethings/advancement/recipes/misc/portalgun_v2.json
 c811419aba5aeaf1be214e7f29492a7ccb300ddd data/justdirethings/advancement/recipes/misc/portal_fluid_block-goospread.json
 075b4ae60ab2407d2a269b31ff02d616e3a05b8c data/justdirethings/advancement/recipes/misc/portal_fluid_catalyst.json
+efcb7e9b73477c46c7879c2ac796df94e425bb42 data/justdirethings/advancement/recipes/misc/potion_canister.json
 07b1a4924e292b7ff05f6970dbb6c122d97e4733 data/justdirethings/advancement/recipes/misc/raw_blazegold_ore-goospread.json
 0f9ae2682efa8db5a4bd465a530a9e684a6e9204 data/justdirethings/advancement/recipes/misc/raw_celestigem_ore-goospread.json
 26c33626e210dc1273e70de125161a5c4241c80f data/justdirethings/advancement/recipes/misc/raw_coal_t1_ore-goospread.json
@@ -615,6 +616,7 @@ cc73b7c24448814a0e8663c8065a6625cbd30072 data/justdirethings/recipe/pocket_gener
 4ed1bcc18461694ef969bb8820a6a4433cec054f data/justdirethings/recipe/portalgun_v2.json
 881053ecbb4f27590666128cfd52f2c212cf6a37 data/justdirethings/recipe/portal_fluid_block-goospread.json
 bfbb6edc2d58058295bf9820c54548e29b680213 data/justdirethings/recipe/portal_fluid_catalyst.json
+9e725a528a3a52bff1437c03fb6df325f81df93c data/justdirethings/recipe/potion_canister.json
 eae8e163cc91b472df0cb3a1642c715f1489ac2f data/justdirethings/recipe/raw_blazegold_ore-goospread.json
 5fd2b53807cb641060f53ff2ce532bd266845396 data/justdirethings/recipe/raw_celestigem_ore-goospread.json
 95fabaca8b664281ab488b243e4a4bcc1d01cced data/justdirethings/recipe/raw_coal_t1_ore-goospread.json

@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
+import com.direwolf20.justdirethings.common.items.PotionCanister;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.FriendlyByteBuf;
@@ -100,7 +101,7 @@ public class ToolSettingContainer extends BaseContainer {
             Slot slot = new SlotItemHandler(componentItemHandler, i, x, y) {
                 @Override
                 public boolean mayPlace(ItemStack stack) {
-                    return true; // Define valid items for bow slots
+                    return stack.getItem() instanceof PotionCanister; // Define valid items for bow slots
                 }
             };
             this.addSlot(slot);

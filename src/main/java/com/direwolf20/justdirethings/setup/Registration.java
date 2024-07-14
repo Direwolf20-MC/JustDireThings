@@ -434,7 +434,7 @@ public class Registration {
     public static final DeferredHolder<Item, PortalGun> PortalGun = ITEMS.register("portalgun", PortalGun::new);
     public static final DeferredHolder<Item, PortalGunV2> PortalGunV2 = ITEMS.register("portalgun_v2", PortalGunV2::new);
     public static final DeferredHolder<Item, FluidCanister> FluidCanister = ITEMS.register("fluid_canister", FluidCanister::new);
-
+    public static final DeferredHolder<Item, PotionCanister> PotionCanister = ITEMS.register("potion_canister", PotionCanister::new);
     public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = ITEMS.register("bow_ferricore", FerricoreBow::new);
 
     //Items - Tools
@@ -616,6 +616,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(FluidCollectorT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<FluidCollectorT2Container>> FluidCollectorT2_Container = CONTAINERS.register("fluidcollectort2_container",
             () -> IMenuTypeExtension.create(FluidCollectorT2Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<PotionCanisterContainer>> PotionCanister_Container = CONTAINERS.register("potioncanister_container",
+            () -> IMenuTypeExtension.create((windowId, inv, data) -> new PotionCanisterContainer(windowId, inv, inv.player, data)));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(

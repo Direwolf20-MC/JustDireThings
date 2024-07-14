@@ -24,6 +24,7 @@ import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
+import com.direwolf20.justdirethings.common.items.PotionCanister;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import net.minecraft.client.color.item.ItemColors;
@@ -77,6 +78,11 @@ public class ClientSetup {
         event.enqueueWork(() -> {
             ItemProperties.register(Registration.FluidCanister.get(),
                     ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
+        });
+
+        event.enqueueWork(() -> {
+            ItemProperties.register(Registration.PotionCanister.get(),
+                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "potion_fullness"), (stack, level, living, id) -> PotionCanister.getFullness(stack));
         });
 
         event.enqueueWork(() -> {
@@ -164,6 +170,7 @@ public class ClientSetup {
         event.register(Registration.FluidPlacerT2_Container.get(), FluidPlacerT2Screen::new);
         event.register(Registration.FluidCollectorT1_Container.get(), FluidCollectorT1Screen::new);
         event.register(Registration.FluidCollectorT2_Container.get(), FluidCollectorT2Screen::new);
+        event.register(Registration.PotionCanister_Container.get(), PotionCanisterScreen::new);
     }
 
     @SubscribeEvent
@@ -211,5 +218,12 @@ public class ClientSetup {
             }
             return 0xFFFFFFFF;
         }, Registration.FluidCanister.get());
+
+        colors.register((stack, index) -> {
+            if (index == 1 && stack.getItem() instanceof PotionCanister) {
+                return PotionCanister.getPotionColor(stack);
+            }
+            return 0xFFFFFFFF;
+        }, Registration.PotionCanister.get());
     }
 }
