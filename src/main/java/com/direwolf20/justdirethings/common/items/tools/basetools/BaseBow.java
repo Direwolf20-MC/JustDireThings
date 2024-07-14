@@ -1,5 +1,7 @@
 package com.direwolf20.justdirethings.common.items.tools.basetools;
 
+import com.direwolf20.justdirethings.common.entities.JustDireArrow;
+import com.direwolf20.justdirethings.common.items.PotionCanister;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.client.Minecraft;
@@ -12,16 +14,17 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.ComponentItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -49,6 +52,32 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }
         return super.use(level, player, hand);
+    }
+
+    protected Projectile createProjectile(Level level, LivingEntity livingEntity, ItemStack itemStack, ItemStack stack, boolean crit) {
+        ArrowItem arrowitem = stack.getItem() instanceof ArrowItem arrowitem1 ? arrowitem1 : (ArrowItem) Items.ARROW;
+        if (arrowitem.equals(Items.ARROW)) {
+            JustDireArrow justDireArrow = new JustDireArrow(level, livingEntity, stack, itemStack);
+            if (crit) {
+                justDireArrow.setCritArrow(true);
+            }
+
+            IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
+            if (itemHandler instanceof ComponentItemHandler componentItemHandler) {
+                ItemStack potionCanister = componentItemHandler.getStackInSlot(0);
+                if (potionCanister.getItem() instanceof PotionCanister) {
+                    PotionContents potionContents = PotionCanister.getPotionContents(potionCanister);
+                    if (!potionContents.equals(PotionContents.EMPTY)) {
+                        justDireArrow.setPotionContents(potionContents);
+                        PotionCanister.reducePotionAmount(potionCanister, 25);
+                        componentItemHandler.setStackInSlot(0, potionCanister);
+                    }
+                }
+            }
+
+            return customArrow(justDireArrow, stack, itemStack);
+        }
+        return super.createProjectile(level, livingEntity, itemStack, stack, crit);
     }
 
     @Override

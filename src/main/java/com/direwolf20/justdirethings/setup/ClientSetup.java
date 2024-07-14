@@ -9,10 +9,7 @@ import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBloc
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier3;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier4;
 import com.direwolf20.justdirethings.client.entitymodels.PortalProjectileModel;
-import com.direwolf20.justdirethings.client.entityrenders.CreatureCatcherEntityRender;
-import com.direwolf20.justdirethings.client.entityrenders.DecoyEntityRender;
-import com.direwolf20.justdirethings.client.entityrenders.PortalEntityRender;
-import com.direwolf20.justdirethings.client.entityrenders.PortalProjectileRender;
+import com.direwolf20.justdirethings.client.entityrenders.*;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
@@ -197,6 +194,7 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.PortalEntity.get(), PortalEntityRender::new);
         event.registerEntityRenderer(Registration.PortalProjectile.get(), PortalProjectileRender::new);
         event.registerEntityRenderer(Registration.DecoyEntity.get(), DecoyEntityRender::new);
+        event.registerEntityRenderer(Registration.JustDireArrow.get(), JustDireArrowRenderer::new);
     }
 
     @SubscribeEvent

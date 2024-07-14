@@ -19,10 +19,7 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
 import com.direwolf20.justdirethings.common.capabilities.*;
 import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
-import com.direwolf20.justdirethings.common.entities.DecoyEntity;
-import com.direwolf20.justdirethings.common.entities.PortalEntity;
-import com.direwolf20.justdirethings.common.entities.PortalProjectile;
+import com.direwolf20.justdirethings.common.entities.*;
 import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
 import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluid;
 import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluidBlock;
@@ -542,6 +539,13 @@ public class Registration {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("creature_catcher"));
+    public static final DeferredHolder<EntityType<?>, EntityType<JustDireArrow>> JustDireArrow = ENTITY_TYPES.register("justdirearrow",
+            () -> EntityType.Builder.<JustDireArrow>of(JustDireArrow::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .eyeHeight(0.13F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20)
+                    .build("justdirearrow"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<PortalProjectile>> PortalProjectile = ENTITY_TYPES.register("portal_projectile",
             () -> EntityType.Builder.<PortalProjectile>of(PortalProjectile::new, MobCategory.MISC)
