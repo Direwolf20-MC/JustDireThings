@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
+import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,6 +15,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ToolSettingContainer extends BaseContainer {
     public Player playerEntity;
     public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET = ResourceLocation.parse("item/empty_armor_slot_helmet");
@@ -25,6 +29,7 @@ public class ToolSettingContainer extends BaseContainer {
             EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET
     };
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+    public final List<Slot> dynamicSlots = new ArrayList<>();
 
 
     public ToolSettingContainer(int windowId, Inventory playerInventory, Player player, FriendlyByteBuf extraData) {
@@ -80,6 +85,39 @@ public class ToolSettingContainer extends BaseContainer {
         });
 
         addPlayerSlots(playerInventory, 8, 84);
+
+        if (player.getMainHandItem().getItem() instanceof BaseBow) { //TODO Not Bow Checks
+            addBowSlots(playerInventory);
+        }
+    }
+
+    private void addBowSlots(Inventory playerInventory) {
+        for (int i = 0; i < 4; i++) { // Example slot count
+            int x = 134 + (i % 2) * 18; // 2 slots per row
+            int y = 66 - (i / 2) * 18; // 2 rows
+            Slot slot = new Slot(playerInventory, 41 + i, x, y) {
+                @Override
+                public boolean mayPlace(ItemStack stack) {
+                    return true; // Define valid items for bow slots
+                }
+            };
+            this.addSlot(slot);
+            dynamicSlots.add(slot);
+        }
+    }
+
+    public void clearDynamicSlots() {
+        for (Slot slot : dynamicSlots) {
+            this.slots.remove(slot);
+        }
+        dynamicSlots.clear();
+    }
+
+    public void refreshSlots(Inventory playerInventory, boolean isBow) {
+        clearDynamicSlots();
+        if (isBow) {
+            addBowSlots(playerInventory);
+        }
     }
 
     @Override
