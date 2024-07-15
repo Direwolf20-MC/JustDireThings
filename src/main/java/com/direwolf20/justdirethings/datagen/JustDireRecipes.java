@@ -832,6 +832,24 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('a', Items.SHULKER_SHELL)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_SPLASH.get())
+                .pattern("p p")
+                .pattern("gbg")
+                .pattern("p p")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.GLASS_BOTTLE)
+                .define('p', Items.GUNPOWDER)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_LINGERING.get())
+                .pattern("p p")
+                .pattern("gbg")
+                .pattern("p p")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.GLASS_BOTTLE)
+                .define('p', Items.DRAGON_BREATH)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
@@ -1460,6 +1478,18 @@ public class JustDireRecipes extends RecipeProvider {
                         EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
                         if (abilities.contains(ability)) {
                             AbilityRecipeBuilder.shapeless(Ingredient.EMPTY, Ingredient.of(tool.get()), Ingredient.of(upgrade.get()))
+                                    .group("justdirethings")
+                                    .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                                    .save(consumer);
+                        }
+                    }
+                }
+                for (var bow : Registration.BOWS.getEntries()) {
+                    Item bowItem = bow.get();
+                    if (bowItem instanceof ToggleableTool toggleableTool) {
+                        EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
+                        if (abilities.contains(ability)) {
+                            AbilityRecipeBuilder.shapeless(Ingredient.EMPTY, Ingredient.of(bow.get()), Ingredient.of(upgrade.get()))
                                     .group("justdirethings")
                                     .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                                     .save(consumer);

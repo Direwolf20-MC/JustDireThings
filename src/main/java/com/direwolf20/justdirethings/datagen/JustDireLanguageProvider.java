@@ -210,6 +210,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_FLIGHT.get(), "Upgrade: Flight");
         add(Registration.UPGRADE_LAVAIMMUNITY.get(), "Upgrade: Lava Immunity");
         add(Registration.UPGRADE_PHASE.get(), "Upgrade: Phase");
+        add(Registration.UPGRADE_SPLASH.get(), "Upgrade: Splash");
+        add(Registration.UPGRADE_LINGERING.get(), "Upgrade: Lingering");
 
 
         //Misc
@@ -302,6 +304,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.LAVAIMMUNITY.getLocalization(), "Lava Immunity");
         add(Ability.PHASE.getLocalization(), "Phase");
         add(Ability.EARTHQUAKE.getLocalization(), "Earthquake");
+        add(Ability.SPLASH.getLocalization(), "Splash");
+        add(Ability.LINGERING.getLocalization(), "Lingering");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

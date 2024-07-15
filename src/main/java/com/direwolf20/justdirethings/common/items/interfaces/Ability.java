@@ -60,6 +60,7 @@ public enum Ability {
     STUPEFY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::stupefy, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/stupefy.png"), Registration.UPGRADE_STUPEFY),
+    SPLASH(SettingType.TOGGLE, 1, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SPLASH),
 
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_DROPTELEPORT),
@@ -71,6 +72,7 @@ public enum Ability {
     DECOY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::decoy, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/decoy.png"), Registration.UPGRADE_DECOY),
+    LINGERING(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_LINGERING),
 
 
     //Tier 4

@@ -82,13 +82,14 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
         int maxMB = PotionCanister.getMaxMB(), height = 70;
         if (maxMB > 0) {
             int remaining = (PotionCanister.getPotionAmount(potionCanister) * height) / maxMB;
-            renderFluid(guiGraphics, getGuiLeft() + offset + 1, getGuiTop() + 5 + 72 - 1, 16, remaining, PotionCanister.getPotionContents(potionCanister));
+            renderFluid(guiGraphics, getGuiLeft() + offset + 1, getGuiTop() + 5 + 72 - 1, 16, remaining, potionCanister);
         }
         guiGraphics.blit(FLUIDBAR, getGuiLeft() + offset, getGuiTop() + 5, 18, 0, 18, 72, 36, 72);
     }
 
-    public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int width, int height, PotionContents potionContents) {
-        if (potionContents.equals(PotionContents.EMPTY)) return;
+    public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int width, int height, ItemStack potionCanister) {
+        PotionContents potionContents = PotionCanister.getPotionContents(potionCanister);
+        if (potionContents.equals(PotionContents.EMPTY) || PotionCanister.getPotionAmount(potionCanister) <= 0) return;
         ResourceLocation fluidStill = IClientFluidTypeExtensions.of(Fluids.WATER).getStillTexture();
         TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
         int fluidColor = potionContents.getColor();

@@ -86,11 +86,17 @@ public class PotionCanister extends Item {
     }
 
     public static void addPotionAmount(ItemStack itemStack, int amt) {
-        itemStack.set(JustDireDataComponents.POTION_AMOUNT, Math.min(getMaxMB(), getPotionAmount(itemStack) + amt));
+        setPotionAmount(itemStack, getPotionAmount(itemStack) + amt);
+    }
+
+    public static void setPotionAmount(ItemStack itemStack, int amt) {
+        itemStack.set(JustDireDataComponents.POTION_AMOUNT, Math.max(0, Math.min(getMaxMB(), amt)));
+        if (getPotionAmount(itemStack) == 0)
+            setPotionContents(itemStack, PotionContents.EMPTY);
     }
 
     public static void reducePotionAmount(ItemStack itemStack, int amt) {
-        itemStack.set(JustDireDataComponents.POTION_AMOUNT, Math.max(0, getPotionAmount(itemStack) - amt));
+        setPotionAmount(itemStack, getPotionAmount(itemStack) - amt);
     }
 
     public static int getFullness(ItemStack itemStack) {

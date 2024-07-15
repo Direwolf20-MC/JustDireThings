@@ -27,6 +27,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -195,6 +196,7 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.PortalProjectile.get(), PortalProjectileRender::new);
         event.registerEntityRenderer(Registration.DecoyEntity.get(), DecoyEntityRender::new);
         event.registerEntityRenderer(Registration.JustDireArrow.get(), JustDireArrowRenderer::new);
+        event.registerEntityRenderer(Registration.JustDireAreaEffectCloud.get(), NoopRenderer::new);
     }
 
     @SubscribeEvent

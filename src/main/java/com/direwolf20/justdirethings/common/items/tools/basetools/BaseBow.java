@@ -68,8 +68,20 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
                 if (potionCanister.getItem() instanceof PotionCanister) {
                     PotionContents potionContents = PotionCanister.getPotionContents(potionCanister);
                     if (!potionContents.equals(PotionContents.EMPTY)) {
-                        justDireArrow.setPotionContents(potionContents);
-                        PotionCanister.reducePotionAmount(potionCanister, 25);
+                        int potionAmt = PotionCanister.getPotionAmount(potionCanister);
+                        if (potionAmt >= 25) {
+                            justDireArrow.setPotionContents(potionContents);
+                            potionAmt = potionAmt - 25;
+                        }
+                        if (potionAmt >= 25 && canUseAbilityAndDurability(itemStack, Ability.SPLASH)) {
+                            justDireArrow.setSplash(true);
+                            potionAmt = potionAmt - 25;
+                        }
+                        if (potionAmt >= 50 && canUseAbilityAndDurability(itemStack, Ability.LINGERING)) {
+                            justDireArrow.setLingering(true);
+                            potionAmt = potionAmt - 50;
+                        }
+                        PotionCanister.setPotionAmount(potionCanister, potionAmt);
                         componentItemHandler.setStackInSlot(0, potionCanister);
                     }
                 }

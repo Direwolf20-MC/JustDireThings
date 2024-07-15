@@ -105,6 +105,7 @@ public class Registration {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items BUCKET_ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items BOWS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items ARMORS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items UPGRADES = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
@@ -139,6 +140,7 @@ public class Registration {
         ITEMS.register(eventBus);
         BUCKET_ITEMS.register(eventBus);
         TOOLS.register(eventBus);
+        BOWS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);
         CONTAINERS.register(eventBus);
         ATTACHMENT_TYPES.register(eventBus);
@@ -432,7 +434,7 @@ public class Registration {
     public static final DeferredHolder<Item, PortalGunV2> PortalGunV2 = ITEMS.register("portalgun_v2", PortalGunV2::new);
     public static final DeferredHolder<Item, FluidCanister> FluidCanister = ITEMS.register("fluid_canister", FluidCanister::new);
     public static final DeferredHolder<Item, PotionCanister> PotionCanister = ITEMS.register("potion_canister", PotionCanister::new);
-    public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = ITEMS.register("bow_ferricore", FerricoreBow::new);
+    public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = BOWS.register("bow_ferricore", FerricoreBow::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);
@@ -512,6 +514,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_GROUNDSTOMP = UPGRADES.register("upgrade_groundstomp", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_EXTINGUISH = UPGRADES.register("upgrade_extinguish", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_STUPEFY = UPGRADES.register("upgrade_stupefy", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SPLASH = UPGRADES.register("upgrade_splash", Upgrade::new);
 
     //Tier 3 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", Upgrade::new);
@@ -519,6 +522,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_NEGATEFALLDAMAGE = UPGRADES.register("upgrade_negatefalldamage", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_NIGHTVISION = UPGRADES.register("upgrade_nightvision", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DECOY = UPGRADES.register("upgrade_decoy", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LINGERING = UPGRADES.register("upgrade_lingering", Upgrade::new);
 
     //Tier 4 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_OREXRAY = UPGRADES.register("upgrade_orexray", Upgrade::new);
@@ -566,6 +570,13 @@ public class Registration {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("decoy_entity"));
+    public static final DeferredHolder<EntityType<?>, EntityType<JustDireAreaEffectCloud>> JustDireAreaEffectCloud = ENTITY_TYPES.register("justdireareaeffectcloud",
+            () -> EntityType.Builder.<JustDireAreaEffectCloud>of(JustDireAreaEffectCloud::new, MobCategory.MISC)
+                    .fireImmune()
+                    .sized(6.0F, 0.5F)
+                    .clientTrackingRange(10)
+                    .updateInterval(Integer.MAX_VALUE)
+                    .build("justdireareaeffectcloud"));
 
     //Attributes
     public static final Holder<Attribute> PHASE = ATTRIBUTES.register("phase", () -> new RangedAttribute("justdirethings.phase", 0D, 0D, Double.MAX_VALUE).setSyncable(true));

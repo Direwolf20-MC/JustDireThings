@@ -107,7 +107,7 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.TEMPLATE_CELESTIGEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_celestigem"));
         singleTexture(Registration.TEMPLATE_ECLIPSEALLOY.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_eclipsealloy"));
 
-        registerBowModels(Registration.FerricoreBow.getId().getPath());
+        registerBowModels();
 
 
         //Tool Items
@@ -218,27 +218,30 @@ public class JustDireItemModels extends ItemModelProvider {
                 .end();
     }
 
-    private void registerBowModels(String bowName) {
-        // Base bow model
-        forBows(singleTexture(bowName, mcLoc("item/generated"), "layer0", modLoc("item/" + bowName)));
+    private void registerBowModels() {
+        for (var bow : Registration.BOWS.getEntries()) {
+            String bowName = bow.getId().getPath();
+            // Base bow model
+            forBows(singleTexture(bowName, mcLoc("item/generated"), "layer0", modLoc("item/" + bowName)));
 
-        // Pulling models
-        getBuilder(bowName + "_pulling_0")
-                .parent(getExistingFile(mcLoc("item/generated")))
-                .texture("layer0", modLoc("item/" + bowName + "_pulling_0"));
+            // Pulling models
+            getBuilder(bowName + "_pulling_0")
+                    .parent(getExistingFile(mcLoc("item/generated")))
+                    .texture("layer0", modLoc("item/" + bowName + "_pulling_0"));
 
-        getBuilder(bowName + "_pulling_1")
-                .parent(getExistingFile(mcLoc("item/generated")))
-                .texture("layer0", modLoc("item/" + bowName + "_pulling_1"));
+            getBuilder(bowName + "_pulling_1")
+                    .parent(getExistingFile(mcLoc("item/generated")))
+                    .texture("layer0", modLoc("item/" + bowName + "_pulling_1"));
 
-        getBuilder(bowName + "_pulling_2")
-                .parent(getExistingFile(mcLoc("item/generated")))
-                .texture("layer0", modLoc("item/" + bowName + "_pulling_2"));
+            getBuilder(bowName + "_pulling_2")
+                    .parent(getExistingFile(mcLoc("item/generated")))
+                    .texture("layer0", modLoc("item/" + bowName + "_pulling_2"));
 
-        // Overrides for pulling states
-        getBuilder(bowName)
-                .override().predicate(modLoc("pulling"), 1).model(getExistingFile(modLoc("item/" + bowName + "_pulling_0"))).end()
-                .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.65f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_1"))).end()
-                .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.9f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_2"))).end();
+            // Overrides for pulling states
+            getBuilder(bowName)
+                    .override().predicate(modLoc("pulling"), 1).model(getExistingFile(modLoc("item/" + bowName + "_pulling_0"))).end()
+                    .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.65f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_1"))).end()
+                    .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.9f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_2"))).end();
+        }
     }
 }

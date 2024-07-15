@@ -1,4 +1,4 @@
-// 1.21	2024-07-13T23:14:53.4885384	Item Models: justdirethings
+// 1.21	2024-07-14T21:57:22.5985573	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -322,6 +322,7 @@ e36a5b12a10638e9b4353f2391400d0749cef752 assets/justdirethings/models/item/upgra
 98c9e988bdfea8afdc4437d760d749c163193abe assets/justdirethings/models/item/upgrade_lavaimmunity.json
 4a65809bd35130f05e6bca7dfc3a12e09713527b assets/justdirethings/models/item/upgrade_lawnmower.json
 7a44a0ea9b5800d6ffec24a33ef358c6218a1a06 assets/justdirethings/models/item/upgrade_leafbreaker.json
+249dd0d48d8f11f064c4c63435f5f301ddb7e3bf assets/justdirethings/models/item/upgrade_lingering.json
 6e8978b3f2d09523a7941d0c53fc85549b37411e assets/justdirethings/models/item/upgrade_mindfog.json
 50e8efc0d4510389f52dbd56a7cc09562c0b88ed assets/justdirethings/models/item/upgrade_mobscanner.json
 aa6a66ecdeb641c5528b0a82a3c779b6c79a09a2 assets/justdirethings/models/item/upgrade_negatefalldamage.json
@@ -335,6 +336,7 @@ aadf21d06277e8de13affbbfa1dc4855e65a316f assets/justdirethings/models/item/upgra
 c8805c1aa983a5662c951ed8fd010369cafd6998 assets/justdirethings/models/item/upgrade_skysweeper.json
 116394bce0ad1a15591234e2af1ad39309cb5834 assets/justdirethings/models/item/upgrade_smelter.json
 8a6a7b5e47df73a83cc2b2f938e511eb039c9582 assets/justdirethings/models/item/upgrade_smoker.json
+4e249b1b15e154db80cf7c7928ad2544be5a703f assets/justdirethings/models/item/upgrade_splash.json
 55a39a5ef7936b09fa9a1ed13e4e295bdfea87a8 assets/justdirethings/models/item/upgrade_stepheight.json
 a3679c6341273d0028d1f6882e467e290189eb35 assets/justdirethings/models/item/upgrade_stupefy.json
 4ffbcc84de4cb0f90ffb2528180b00142f70af3d assets/justdirethings/models/item/upgrade_swimspeed.json
