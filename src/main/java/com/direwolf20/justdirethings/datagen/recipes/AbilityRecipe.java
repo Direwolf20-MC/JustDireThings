@@ -43,9 +43,9 @@ public class AbilityRecipe implements SmithingRecipe {
     public ItemStack assemble(SmithingRecipeInput smithingRecipeInput, HolderLookup.Provider provider) {
         ItemStack base = smithingRecipeInput.base();
         ItemStack upgrade = smithingRecipeInput.addition();
-        if (isBaseIngredient(base)) {
+        if (isBaseIngredient(base) && base.getItem() instanceof ToggleableTool toggleableTool) {
             Ability ability = Ability.getAbilityFromUpgradeItem(upgrade.getItem());
-            if (ability != null && !ToggleableTool.hasUpgrade(base, ability) && Config.AVAILABLE_ABILITY_MAP.get(ability).get()) {
+            if (ability != null && toggleableTool.hasAbility(ability) && !ToggleableTool.hasUpgrade(base, ability) && Config.AVAILABLE_ABILITY_MAP.get(ability).get()) {
                 ItemStack itemstack1 = base.copyWithCount(1);
                 itemstack1.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
                 return itemstack1;
