@@ -388,7 +388,7 @@ public interface ToggleableTool extends ToggleableItem {
         if (itemStack.getItem() instanceof LeftClickableTool)
             leftClickAbilities.addAll(LeftClickableTool.getLeftClickList(itemStack));
         for (Ability ability : getActiveAbilities(itemStack)) {
-            if ((rightClick && !leftClickAbilities.contains(ability)) || (!rightClick && leftClickAbilities.contains(ability))) {
+            if ((rightClick && LeftClickableTool.getBindingMode(itemStack, ability) == 0) || (!rightClick && leftClickAbilities.contains(ability))) {
                 if (ability.action != null) {
                     ability.action.execute(level, player, itemStack);
                 }
