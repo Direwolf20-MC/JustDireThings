@@ -37,7 +37,7 @@ public class AbilityRecipe implements SmithingRecipe {
     }
 
     public boolean matches(SmithingRecipeInput p_346082_, Level p_345460_) {
-        return this.base.test(p_346082_.base()) && this.addition.test(p_346082_.addition());
+        return this.template.test(p_346082_.template()) && this.base.test(p_346082_.base()) && this.addition.test(p_346082_.addition());
     }
 
     public ItemStack assemble(SmithingRecipeInput smithingRecipeInput, HolderLookup.Provider provider) {
