@@ -79,7 +79,8 @@ public class JustDireThings {
                 Registration.Pocket_Generator.get()
         );
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
-                Registration.FerricoreBow.get()
+                Registration.FerricoreBow.get(),
+                Registration.BlazegoldBow.get()
         );
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new PotionCanisterHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
                 Registration.PotionCanister.get()

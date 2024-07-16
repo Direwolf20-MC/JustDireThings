@@ -1,4 +1,4 @@
-// 1.21	2024-07-15T21:21:30.127492	Recipes
+// 1.21	2024-07-16T09:28:43.2948958	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancement/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancement/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancement/recipes/building_blocks/coal_t1_9x9.json
@@ -66,6 +66,7 @@ ff51dd19aa923ceef6dd93c0c68b4a4015616c0d data/justdirethings/advancement/recipes
 11577a056715b2aab8edef856b5ac3a7235c63ff data/justdirethings/advancement/recipes/misc/blockswappert2.json
 8c9215d274a763f0595ada0f0d32623621cbd236 data/justdirethings/advancement/recipes/misc/blockswappert2_nbtclear.json
 ce5d45ecdf78c5ca6a296a0888260f4827aaa4c6 data/justdirethings/advancement/recipes/misc/bow_blazegold-splash.json
+130ffc8c78a6ade81ceb91476c2ae3b560d57f46 data/justdirethings/advancement/recipes/misc/bow_blazegold-templateupgrade.json
 6e8bc80bceeecfad0f970c57cc5d838a10af4b46 data/justdirethings/advancement/recipes/misc/bow_blazegold.json
 f9af05827a45227f8ecaf7ab7c5cb6c33757856c data/justdirethings/advancement/recipes/misc/bow_ferricore.json
 facc977582da23ff77c6d600f1ddf4a5619a3b8b data/justdirethings/advancement/recipes/misc/celestigem_axe-dropteleport.json
@@ -403,6 +404,7 @@ a68a58d7dea49f693e7aeee917748821f547678c data/justdirethings/recipe/blockswapper
 7891ff83c80dcc6a87e3f3c75f1a6e6a33500791 data/justdirethings/recipe/blockswappert2.json
 cd4e382c951ad18e87ed60b02bbcdca7c8b3428c data/justdirethings/recipe/blockswappert2_nbtclear.json
 b86092e19c318c9b88fcc86ea7a0fe8a06f119a1 data/justdirethings/recipe/bow_blazegold-splash.json
+610421cae098c9ec01b4ac76d9e79d95eabcabd6 data/justdirethings/recipe/bow_blazegold-templateupgrade.json
 a45eea6c0d1899f7f607830af08538a63abfedd0 data/justdirethings/recipe/bow_blazegold.json
 8d6b41806eb7a510467a84b54b81ae466a992d06 data/justdirethings/recipe/bow_ferricore.json
 45606568eb2f1cee22209939e6dbf8c280fa32ec data/justdirethings/recipe/celestigem_9x9.json
