@@ -37,7 +37,7 @@ public class AbilityRecipe implements SmithingRecipe {
     }
 
     public boolean matches(SmithingRecipeInput p_346082_, Level p_345460_) {
-        return isTemplateIngredient(p_346082_.template()) && isBaseIngredient(p_346082_.base()) && isAdditionIngredient(p_346082_.addition());
+        return this.base.test(p_346082_.base()) && this.addition.test(p_346082_.addition());
     }
 
     public ItemStack assemble(SmithingRecipeInput smithingRecipeInput, HolderLookup.Provider provider) {
@@ -73,12 +73,12 @@ public class AbilityRecipe implements SmithingRecipe {
 
     @Override
     public boolean isBaseIngredient(ItemStack stack) {
-        return stack.getItem() instanceof ToggleableTool toggleableTool && getAddition().getItems()[0].getItem() instanceof Upgrade && toggleableTool.hasAbility(Ability.getAbilityFromUpgradeItem(getAddition().getItems()[0].getItem()));
+        return stack.getItem() instanceof ToggleableTool;
     }
 
     @Override
     public boolean isAdditionIngredient(ItemStack stack) {
-        return stack.getItem() instanceof Upgrade && getBase().getItems()[0].getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.getAbilityFromUpgradeItem(stack.getItem()));
+        return stack.getItem() instanceof Upgrade;
     }
 
     public Ingredient getTemplate() {
