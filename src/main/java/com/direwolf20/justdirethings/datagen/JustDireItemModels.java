@@ -222,20 +222,20 @@ public class JustDireItemModels extends ItemModelProvider {
         for (var bow : Registration.BOWS.getEntries()) {
             String bowName = bow.getId().getPath();
             // Base bow model
-            forBows(singleTexture(bowName, mcLoc("item/generated"), "layer0", modLoc("item/" + bowName)));
+            forBows(singleTexture(bowName, mcLoc("item/generated"), "layer0", modLoc("item/bows/" + bowName)));
 
             // Pulling models
             getBuilder(bowName + "_pulling_0")
                     .parent(getExistingFile(mcLoc("item/generated")))
-                    .texture("layer0", modLoc("item/" + bowName + "_pulling_0"));
+                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_0"));
 
             getBuilder(bowName + "_pulling_1")
                     .parent(getExistingFile(mcLoc("item/generated")))
-                    .texture("layer0", modLoc("item/" + bowName + "_pulling_1"));
+                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_1"));
 
             getBuilder(bowName + "_pulling_2")
                     .parent(getExistingFile(mcLoc("item/generated")))
-                    .texture("layer0", modLoc("item/" + bowName + "_pulling_2"));
+                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_2"));
 
             // Overrides for pulling states
             getBuilder(bowName)

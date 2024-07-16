@@ -24,6 +24,7 @@ import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.PotionCanister;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
+import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -64,13 +65,17 @@ public class ClientSetup {
                 registerEnabledToolTextures(tool.get());
             }
             registerEnabledToolTextures(Registration.Pocket_Generator.get());
-            ItemProperties.register(Registration.FerricoreBow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pull"), (stack, level, living, id) -> {
-                if (living == null || living.getUseItem() != stack) return 0.0F;
-                return (stack.getUseDuration(living) - living.getUseItemRemainingTicks()) / 20.0F;
-            });
-            ItemProperties.register(Registration.FerricoreBow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pulling"), (stack, level, living, id) -> {
-                return living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F;
-            });
+            for (var bow : Registration.BOWS.getEntries()) {
+                if (bow.get() instanceof BaseBow baseBow) {
+                    ItemProperties.register(bow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pull"), (stack, level, living, id) -> {
+                        if (living == null || living.getUseItem() != stack) return 0.0F;
+                        return (stack.getUseDuration(living) - living.getUseItemRemainingTicks()) / baseBow.getMaxDraw();
+                    });
+                    ItemProperties.register(bow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pulling"), (stack, level, living, id) -> {
+                        return living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F;
+                    });
+                }
+            }
         });
 
         event.enqueueWork(() -> {

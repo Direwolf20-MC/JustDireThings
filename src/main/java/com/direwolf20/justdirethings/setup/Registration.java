@@ -435,6 +435,7 @@ public class Registration {
     public static final DeferredHolder<Item, FluidCanister> FluidCanister = ITEMS.register("fluid_canister", FluidCanister::new);
     public static final DeferredHolder<Item, PotionCanister> PotionCanister = ITEMS.register("potion_canister", PotionCanister::new);
     public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = BOWS.register("bow_ferricore", FerricoreBow::new);
+    public static final DeferredHolder<Item, BlazegoldBow> BlazegoldBow = BOWS.register("bow_blazegold", BlazegoldBow::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);

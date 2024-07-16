@@ -1008,6 +1008,15 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldBow.get())
+                .pattern("sf ")
+                .pattern("s f")
+                .pattern("sf ")
+                .define('f', Registration.BlazegoldIngot.get())
+                .define('s', Items.STRING)
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldSword.get())
                 .pattern(" f ")

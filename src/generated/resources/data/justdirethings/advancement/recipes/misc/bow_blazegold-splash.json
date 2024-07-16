@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:bow_ferricore-lingering"
+        "recipe": "justdirethings:bow_blazegold-splash"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:bow_ferricore-lingering"
+      "justdirethings:bow_blazegold-splash"
     ]
   }
 }
