@@ -73,12 +73,12 @@ public class AbilityRecipe implements SmithingRecipe {
 
     @Override
     public boolean isBaseIngredient(ItemStack stack) {
-        return stack.getItem() instanceof ToggleableTool;
+        return stack.getItem() instanceof ToggleableTool toggleableTool && getAddition().getItems()[0].getItem() instanceof Upgrade && toggleableTool.hasAbility(Ability.getAbilityFromUpgradeItem(getAddition().getItems()[0].getItem()));
     }
 
     @Override
     public boolean isAdditionIngredient(ItemStack stack) {
-        return stack.getItem() instanceof Upgrade;
+        return stack.getItem() instanceof Upgrade && getBase().getItems()[0].getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.getAbilityFromUpgradeItem(stack.getItem()));
     }
 
     public Ingredient getTemplate() {
