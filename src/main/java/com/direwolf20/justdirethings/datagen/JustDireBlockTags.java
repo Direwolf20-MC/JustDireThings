@@ -114,8 +114,13 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .addTag(BlockTags.PORTALS);
         tag(PHASEDENY)
                 .addTags(BlockTags.PORTALS)
-                .addTags(BlockTags.DRAGON_IMMUNE)
-                .add(Blocks.BEDROCK);
+                .add(Blocks.BARRIER,
+                        Blocks.BEDROCK,
+                        Blocks.END_PORTAL,
+                        Blocks.END_PORTAL_FRAME,
+                        Blocks.END_GATEWAY,
+                        Blocks.STRUCTURE_BLOCK,
+                        Blocks.JIGSAW);
 
     }
 
