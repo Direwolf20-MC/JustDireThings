@@ -12,6 +12,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -74,28 +75,39 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
 
             IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
             if (itemHandler instanceof ComponentItemHandler componentItemHandler) {
-                ItemStack potionCanister = componentItemHandler.getStackInSlot(0);
-                if (potionCanister.getItem() instanceof PotionCanister) {
-                    PotionContents potionContents = PotionCanister.getPotionContents(potionCanister);
-                    if (!potionContents.equals(PotionContents.EMPTY)) {
+                PotionContents potionContents = PotionContents.EMPTY;
+                for (int slot = 0; slot < componentItemHandler.getSlots(); slot++) {
+                    ItemStack potionCanister = componentItemHandler.getStackInSlot(slot);
+                    if (potionCanister.getItem() instanceof PotionCanister) {
                         int potionAmt = PotionCanister.getPotionAmount(potionCanister);
-                        if (potionAmt >= 25 && Helpers.testUseTool(itemStack, getDurabilityUse(itemStack)) > 0) {
-                            justDireArrow.setPotionContents(potionContents);
-                            potionAmt = potionAmt - 25;
-                            Helpers.damageTool(itemStack, livingEntity, getDurabilityUse(itemStack));
+                        PotionContents slotPotionContents = PotionCanister.getPotionContents(potionCanister);
+                        if (!slotPotionContents.equals(PotionContents.EMPTY)) {
+                            int neededAmt = 25;
+                            if (canUseAbilityAndDurability(itemStack, Ability.SPLASH))
+                                neededAmt = neededAmt + 25;
+                            if (canUseAbilityAndDurability(itemStack, Ability.LINGERING))
+                                neededAmt = neededAmt + 50;
+                            if (potionAmt >= neededAmt) {
+                                for (MobEffectInstance mobEffectInstance : slotPotionContents.getAllEffects())
+                                    potionContents = potionContents.withEffectAdded(mobEffectInstance);
+                                PotionCanister.setPotionAmount(potionCanister, potionAmt - neededAmt);
+                                componentItemHandler.setStackInSlot(slot, potionCanister);
+                            }
                         }
-                        if (potionAmt >= 25 && canUseAbilityAndDurability(itemStack, Ability.SPLASH)) {
-                            justDireArrow.setSplash(true);
-                            potionAmt = potionAmt - 25;
-                            Helpers.damageTool(itemStack, livingEntity, Ability.SPLASH);
-                        }
-                        if (potionAmt >= 50 && canUseAbilityAndDurability(itemStack, Ability.LINGERING)) {
-                            justDireArrow.setLingering(true);
-                            potionAmt = potionAmt - 50;
-                            Helpers.damageTool(itemStack, livingEntity, Ability.LINGERING);
-                        }
-                        PotionCanister.setPotionAmount(potionCanister, potionAmt);
-                        componentItemHandler.setStackInSlot(0, potionCanister);
+                    }
+                }
+                if (!potionContents.equals(PotionContents.EMPTY)) {
+                    if (Helpers.testUseTool(itemStack, getDurabilityUse(itemStack)) > 0) {
+                        justDireArrow.setPotionContents(potionContents);
+                        Helpers.damageTool(itemStack, livingEntity, getDurabilityUse(itemStack));
+                    }
+                    if (canUseAbilityAndDurability(itemStack, Ability.SPLASH)) {
+                        justDireArrow.setSplash(true);
+                        Helpers.damageTool(itemStack, livingEntity, Ability.SPLASH);
+                    }
+                    if (canUseAbilityAndDurability(itemStack, Ability.LINGERING)) {
+                        justDireArrow.setLingering(true);
+                        Helpers.damageTool(itemStack, livingEntity, Ability.LINGERING);
                     }
                 }
             }
