@@ -79,9 +79,16 @@ public class JustDireThings {
                 Registration.Pocket_Generator.get()
         );
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
-                Registration.FerricoreBow.get(),
-                Registration.BlazegoldBow.get(),
+                Registration.FerricoreBow.get()
+        );
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 2),
+                Registration.BlazegoldBow.get()
+        );
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 3),
                 Registration.CelestigemBow.get()
+        );
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 4),
+                Registration.EclipseAlloyBow.get()
         );
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new PotionCanisterHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
                 Registration.PotionCanister.get()
@@ -126,7 +133,8 @@ public class JustDireThings {
                 Registration.EclipseAlloyLeggings.get(),
                 Registration.EclipseAlloyChestplate.get(),
                 Registration.EclipseAlloyHelmet.get(),
-                Registration.CelestigemBow.get()
+                Registration.CelestigemBow.get(),
+                Registration.EclipseAlloyBow.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {

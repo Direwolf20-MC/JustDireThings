@@ -138,6 +138,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FerricoreBow.get(), "Ferricore Bow");
         add(Registration.BlazegoldBow.get(), "Blazegold Bow");
         add(Registration.CelestigemBow.get(), "Celestigem Bow");
+        add(Registration.EclipseAlloyBow.get(), "Eclipse Alloy Bow");
 
         //Armors
         add(Registration.FerricoreBoots.get(), "Ferricore Boots");

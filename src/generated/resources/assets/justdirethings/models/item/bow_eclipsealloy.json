@@ -72,20 +72,20 @@
   },
   "overrides": [
     {
-      "model": "justdirethings:item/bow_blazegold_pulling_0",
+      "model": "justdirethings:item/bow_eclipsealloy_pulling_0",
       "predicate": {
         "justdirethings:pulling": 1.0
       }
     },
     {
-      "model": "justdirethings:item/bow_blazegold_pulling_1",
+      "model": "justdirethings:item/bow_eclipsealloy_pulling_1",
       "predicate": {
         "justdirethings:pull": 0.45,
         "justdirethings:pulling": 1.0
       }
     },
     {
-      "model": "justdirethings:item/bow_blazegold_pulling_2",
+      "model": "justdirethings:item/bow_eclipsealloy_pulling_2",
       "predicate": {
         "justdirethings:pull": 0.9,
         "justdirethings:pulling": 1.0
@@ -93,6 +93,6 @@
     }
   ],
   "textures": {
-    "layer0": "justdirethings:item/bows/bow_blazegold"
+    "layer0": "justdirethings:item/bows/bow_eclipsealloy"
   }
 }

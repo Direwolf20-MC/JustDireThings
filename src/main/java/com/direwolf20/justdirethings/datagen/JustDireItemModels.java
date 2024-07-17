@@ -240,7 +240,7 @@ public class JustDireItemModels extends ItemModelProvider {
             // Overrides for pulling states
             getBuilder(bowName)
                     .override().predicate(modLoc("pulling"), 1).model(getExistingFile(modLoc("item/" + bowName + "_pulling_0"))).end()
-                    .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.65f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_1"))).end()
+                    .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.45f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_1"))).end()
                     .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.9f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_2"))).end();
         }
     }

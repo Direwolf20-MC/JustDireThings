@@ -69,7 +69,8 @@ public class ClientSetup {
                 if (bow.get() instanceof BaseBow baseBow) {
                     ItemProperties.register(bow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pull"), (stack, level, living, id) -> {
                         if (living == null || living.getUseItem() != stack) return 0.0F;
-                        return (stack.getUseDuration(living) - living.getUseItemRemainingTicks()) / baseBow.getMaxDraw();
+                        System.out.println((stack.getUseDuration(living) - (living.getUseItemRemainingTicks() + (20 - baseBow.getMaxDraw()))) / baseBow.getMaxDraw());
+                        return (stack.getUseDuration(living) - (living.getUseItemRemainingTicks() + (20 - baseBow.getMaxDraw()))) / baseBow.getMaxDraw();
                     });
                     ItemProperties.register(bow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pulling"), (stack, level, living, id) -> {
                         return living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F;

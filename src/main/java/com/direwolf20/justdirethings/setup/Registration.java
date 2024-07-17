@@ -437,6 +437,7 @@ public class Registration {
     public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = BOWS.register("bow_ferricore", FerricoreBow::new);
     public static final DeferredHolder<Item, BlazegoldBow> BlazegoldBow = BOWS.register("bow_blazegold", BlazegoldBow::new);
     public static final DeferredHolder<Item, CelestigemBow> CelestigemBow = BOWS.register("bow_celestigem", CelestigemBow::new);
+    public static final DeferredHolder<Item, EclipseAlloyBow> EclipseAlloyBow = BOWS.register("bow_eclipsealloy", EclipseAlloyBow::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);

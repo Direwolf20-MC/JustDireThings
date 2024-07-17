@@ -80,7 +80,7 @@
     {
       "model": "justdirethings:item/bow_celestigem_pulling_1",
       "predicate": {
-        "justdirethings:pull": 0.65,
+        "justdirethings:pull": 0.45,
         "justdirethings:pulling": 1.0
       }
     },
