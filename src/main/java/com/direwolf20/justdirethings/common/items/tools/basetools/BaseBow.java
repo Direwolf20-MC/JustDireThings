@@ -70,7 +70,7 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             if (crit) {
                 justDireArrow.setCritArrow(true);
             }
-            if (!toggleableTool.getEnabled(itemStack))
+            if (!toggleableTool.getEnabled(itemStack) || noPotionAbilitiesActive(itemStack))
                 return customArrow(justDireArrow, stack, itemStack);
 
             IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
@@ -82,7 +82,9 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
                         int potionAmt = PotionCanister.getPotionAmount(potionCanister);
                         PotionContents slotPotionContents = PotionCanister.getPotionContents(potionCanister);
                         if (!slotPotionContents.equals(PotionContents.EMPTY)) {
-                            int neededAmt = 25;
+                            int neededAmt = 0;
+                            if (canUseAbilityAndDurability(itemStack, Ability.POTIONARROW))
+                                neededAmt = neededAmt + 25;
                             if (canUseAbilityAndDurability(itemStack, Ability.SPLASH))
                                 neededAmt = neededAmt + 25;
                             if (canUseAbilityAndDurability(itemStack, Ability.LINGERING))
@@ -97,9 +99,10 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
                     }
                 }
                 if (!potionContents.equals(PotionContents.EMPTY)) {
-                    if (Helpers.testUseTool(itemStack, getDurabilityUse(itemStack)) > 0) {
-                        justDireArrow.setPotionContents(potionContents);
-                        Helpers.damageTool(itemStack, livingEntity, getDurabilityUse(itemStack));
+                    justDireArrow.setPotionContents(potionContents);
+                    if (canUseAbilityAndDurability(itemStack, Ability.POTIONARROW)) {
+                        justDireArrow.setPotionArrow(true);
+                        Helpers.damageTool(itemStack, livingEntity, Ability.POTIONARROW);
                     }
                     if (canUseAbilityAndDurability(itemStack, Ability.SPLASH)) {
                         justDireArrow.setSplash(true);
@@ -115,6 +118,17 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             return customArrow(justDireArrow, stack, itemStack);
         }
         return super.createProjectile(level, livingEntity, itemStack, stack, crit);
+    }
+
+    public boolean noPotionAbilitiesActive(ItemStack itemStack) {
+        if (canUseAbilityAndDurability(itemStack, Ability.POTIONARROW))
+            return false;
+        if (canUseAbilityAndDurability(itemStack, Ability.SPLASH))
+            return false;
+        if (canUseAbilityAndDurability(itemStack, Ability.LINGERING))
+            return false;
+        return true;
+
     }
 
     @Override

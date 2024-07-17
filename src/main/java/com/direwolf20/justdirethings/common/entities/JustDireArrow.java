@@ -36,6 +36,7 @@ public class JustDireArrow extends AbstractArrow {
     private static final int EXPOSED_POTION_DECAY_TIME = 600;
     private static final int NO_EFFECT_COLOR = -1;
     private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_POTIONARROW = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_SPLASH = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_LINGERING = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final byte EVENT_POTION_PUFF = 0;
@@ -82,6 +83,10 @@ public class JustDireArrow extends AbstractArrow {
         this.setPotionContents(this.getPotionContents().withEffectAdded(effectInstance));
     }
 
+    public void setPotionArrow(boolean potionArrow) {
+        this.entityData.set(IS_POTIONARROW, potionArrow);
+    }
+
     public void setSplash(boolean splash) {
         this.entityData.set(IS_SPLASH, splash);
     }
@@ -94,6 +99,7 @@ public class JustDireArrow extends AbstractArrow {
     protected void defineSynchedData(SynchedEntityData.Builder p_326324_) {
         super.defineSynchedData(p_326324_);
         p_326324_.define(ID_EFFECT_COLOR, -1);
+        p_326324_.define(IS_POTIONARROW, false);
         p_326324_.define(IS_SPLASH, false);
         p_326324_.define(IS_LINGERING, false);
     }
@@ -244,6 +250,8 @@ public class JustDireArrow extends AbstractArrow {
     @Override
     protected void doPostHurtEffects(LivingEntity living) {
         super.doPostHurtEffects(living);
+        if (!this.entityData.get(IS_POTIONARROW))
+            return;
         Entity entity = this.getEffectSource();
         PotionContents potioncontents = this.getPotionContents();
         if (potioncontents.potion().isPresent()) {
@@ -304,6 +312,7 @@ public class JustDireArrow extends AbstractArrow {
     @Override
     public void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
+        pCompound.putBoolean("is_potionarrow", this.entityData.get(IS_POTIONARROW));
         pCompound.putBoolean("is_splash", this.entityData.get(IS_SPLASH));
         pCompound.putBoolean("is_lingering", this.entityData.get(IS_LINGERING));
     }
@@ -311,6 +320,7 @@ public class JustDireArrow extends AbstractArrow {
     @Override
     public void readAdditionalSaveData(CompoundTag pCompound) {
         super.readAdditionalSaveData(pCompound);
+        this.entityData.set(IS_POTIONARROW, pCompound.getBoolean("is_potionarrow"));
         this.entityData.set(IS_SPLASH, pCompound.getBoolean("is_splash"));
         this.entityData.set(IS_LINGERING, pCompound.getBoolean("is_lingering"));
     }

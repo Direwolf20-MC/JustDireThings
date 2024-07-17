@@ -507,6 +507,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_JUMPBOOST = UPGRADES.register("upgrade_jumpboost", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_MINDFOG = UPGRADES.register("upgrade_mindfog", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_INVULNERABILITY = UPGRADES.register("upgrade_invulnerability", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_POTIONARROW = UPGRADES.register("upgrade_potionarrow", Upgrade::new);
 
     //Tier 2 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_SMELTER = UPGRADES.register("upgrade_smelter", Upgrade::new);

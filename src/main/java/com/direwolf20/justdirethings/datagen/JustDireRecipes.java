@@ -850,6 +850,15 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('p', Items.DRAGON_BREATH)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_POTIONARROW.get())
+                .pattern("p p")
+                .pattern("gbg")
+                .pattern("p p")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.GLASS_BOTTLE)
+                .define('p', Items.NETHER_WART)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)

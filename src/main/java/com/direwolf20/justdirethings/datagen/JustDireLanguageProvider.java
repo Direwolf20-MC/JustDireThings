@@ -215,6 +215,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_PHASE.get(), "Upgrade: Phase");
         add(Registration.UPGRADE_SPLASH.get(), "Upgrade: Splash");
         add(Registration.UPGRADE_LINGERING.get(), "Upgrade: Lingering");
+        add(Registration.UPGRADE_POTIONARROW.get(), "Upgrade: Potion Arrow");
 
 
         //Misc
@@ -309,6 +310,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.EARTHQUAKE.getLocalization(), "Earthquake");
         add(Ability.SPLASH.getLocalization(), "Splash");
         add(Ability.LINGERING.getLocalization(), "Lingering");
+        add(Ability.POTIONARROW.getLocalization(), "Potion Arrow");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

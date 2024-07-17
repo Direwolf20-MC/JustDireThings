@@ -38,6 +38,7 @@ public enum Ability {
     INVULNERABILITY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::invulnerability, false,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/invulnerability.png"), Registration.UPGRADE_INVULNERABILITY),
+    POTIONARROW(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_POTIONARROW),
 
     //Tier 2
     SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SMELTER),

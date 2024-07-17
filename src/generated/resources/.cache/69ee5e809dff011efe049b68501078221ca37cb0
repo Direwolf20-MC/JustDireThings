@@ -1,4 +1,4 @@
-// 1.21	2024-07-16T22:15:59.6731707	Item Models: justdirethings
+// 1.21	2024-07-17T13:59:22.8774355	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -344,6 +344,7 @@ e05f51a3278a4d99e9cf666e1c268f1a40e0e714 assets/justdirethings/models/item/upgra
 b98360b3da42548b99efdb9d996a056f067b32b9 assets/justdirethings/models/item/upgrade_orescanner.json
 6455db183940ea29c5654d6201e1e9d0f4e17033 assets/justdirethings/models/item/upgrade_orexray.json
 aadf21d06277e8de13affbbfa1dc4855e65a316f assets/justdirethings/models/item/upgrade_phase.json
+97755b309142afecb59af2541d61446202193f14 assets/justdirethings/models/item/upgrade_potionarrow.json
 55796e92b1b9e0f291d32b59e18a358612fe6fe8 assets/justdirethings/models/item/upgrade_runspeed.json
 c8805c1aa983a5662c951ed8fd010369cafd6998 assets/justdirethings/models/item/upgrade_skysweeper.json
 116394bce0ad1a15591234e2af1ad39309cb5834 assets/justdirethings/models/item/upgrade_smelter.json
