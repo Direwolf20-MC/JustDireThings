@@ -44,6 +44,9 @@ public class ToolSettingContainer extends BaseContainer {
     public ToolSettingContainer(int windowId, Inventory playerInventory, Player player) {
         super(Registration.Tool_Settings_Container.get(), windowId);
         playerEntity = player;
+
+        addPlayerSlots(playerInventory, 8, 84);
+
         for (int k = 0; k < 4; ++k) {
             final EquipmentSlot equipmentslot = SLOT_IDS[k];
             this.addSlot(new Slot(playerInventory, 39 - k, 44 + k * 18, 66) {
@@ -89,8 +92,6 @@ public class ToolSettingContainer extends BaseContainer {
             }
         });
 
-        addPlayerSlots(playerInventory, 8, 84);
-
         refreshSlots(player.getMainHandItem());
     }
 
@@ -132,7 +133,36 @@ public class ToolSettingContainer extends BaseContainer {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        if (!dynamicSlots.isEmpty()) {
+            Slot slot = this.slots.get(index);
+            if (slot.hasItem()) {
+                ItemStack currentStack = slot.getItem();
+                if (index >= Inventory.INVENTORY_SIZE + 5) { //Dynamic Slots to Player Inventory
+                    if (!this.moveItemStackTo(currentStack, 0, Inventory.INVENTORY_SIZE, true)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                if (index < Inventory.INVENTORY_SIZE) { //Player Inventory to Dynamic Slots
+                    if (!this.moveItemStackTo(currentStack, Inventory.INVENTORY_SIZE + 5, Inventory.INVENTORY_SIZE + 5 + dynamicSlots.size(), false)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+
+                if (currentStack.isEmpty()) {
+                    slot.set(ItemStack.EMPTY);
+                } else {
+                    slot.setChanged();
+                }
+
+                if (currentStack.getCount() == itemstack.getCount()) {
+                    return ItemStack.EMPTY;
+                }
+
+                slot.onTake(playerIn, currentStack);
+            }
+        }
         return ItemStack.EMPTY;
     }
 
