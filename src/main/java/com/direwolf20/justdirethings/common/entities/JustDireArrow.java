@@ -258,6 +258,10 @@ public class JustDireArrow extends AbstractArrow {
         PotionContents potioncontents = this.getPotionContents();
         if (potioncontents.potion().isPresent()) {
             for (MobEffectInstance mobeffectinstance : potioncontents.potion().get().value().getEffects()) {
+                if (mobeffectinstance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL && getOwner() != null && living.is(getOwner()))
+                    continue;
+                if (mobeffectinstance.getEffect().value().getCategory() == MobEffectCategory.BENEFICIAL && getOwner() != null && !living.is(getOwner()))
+                    continue;
                 living.addEffect(
                         new MobEffectInstance(
                                 mobeffectinstance.getEffect(),
