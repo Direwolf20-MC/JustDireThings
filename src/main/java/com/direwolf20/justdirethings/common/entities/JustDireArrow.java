@@ -15,6 +15,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -22,10 +23,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.*;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,7 +37,10 @@ public class JustDireArrow extends AbstractArrow {
     private static final EntityDataAccessor<Boolean> IS_POTIONARROW = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_SPLASH = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_LINGERING = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final byte EVENT_POTION_PUFF = 0;
+
+    private LivingEntity targetEntity;
 
     public JustDireArrow(EntityType<? extends AbstractArrow> p_36858_, Level p_36859_) {
         super(p_36858_, p_36859_);
@@ -95,6 +96,10 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(IS_LINGERING, lingering);
     }
 
+    public void setHoming(boolean homing) {
+        this.entityData.set(IS_HOMING, homing);
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder p_326324_) {
         super.defineSynchedData(p_326324_);
@@ -102,11 +107,21 @@ public class JustDireArrow extends AbstractArrow {
         p_326324_.define(IS_POTIONARROW, false);
         p_326324_.define(IS_SPLASH, false);
         p_326324_.define(IS_LINGERING, false);
+        p_326324_.define(IS_HOMING, false);
     }
 
     @Override
     public void tick() {
         super.tick();
+        if (this.entityData.get(IS_HOMING) && !this.inGround) {
+            if (targetEntity == null || !targetEntity.isAlive()) {
+                targetEntity = this.findNearestEntity(5.0);
+            }
+
+            if (targetEntity != null) {
+                this.adjustCourseTowards(targetEntity);
+            }
+        }
         if (this.level().isClientSide) {
             if (this.inGround) {
                 if (this.inGroundTime % 5 == 0) {
@@ -115,10 +130,54 @@ public class JustDireArrow extends AbstractArrow {
             } else {
                 this.makeParticle(2);
             }
-        } else if (this.inGround && this.inGroundTime != 0 && !this.getPotionContents().equals(PotionContents.EMPTY) && this.inGroundTime >= 600) {
-            this.level().broadcastEntityEvent(this, (byte) 0);
-            this.setPickupItemStack(new ItemStack(Items.ARROW));
+        } else {
+            if (this.inGround && this.inGroundTime != 0 && !this.getPotionContents().equals(PotionContents.EMPTY) && this.inGroundTime >= 600) {
+                this.level().broadcastEntityEvent(this, (byte) 0);
+                this.setPickupItemStack(new ItemStack(Items.ARROW));
+            }
         }
+    }
+
+    @Nullable
+    private LivingEntity findNearestEntity(double radius) {
+        AABB searchArea = this.getBoundingBox().inflate(radius, radius / 2, radius);
+        List<Mob> entities = this.level().getEntitiesOfClass(Mob.class, searchArea);
+        LivingEntity nearestEntity = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (LivingEntity entity : entities) {
+            if (entity == this.getOwner() || !entity.isAlive()) {
+                continue;
+            }
+            double distance = this.distanceToSqr(entity);
+            if (distance < nearestDistance) {
+                nearestEntity = entity;
+                nearestDistance = distance;
+            }
+        }
+
+        return nearestEntity;
+    }
+
+    private void adjustCourseTowards(LivingEntity target) {
+        Vec3 arrowPosition = this.position();
+        Vec3 targetCenterPosition = target.getBoundingBox().getCenter();
+        Vec3 direction = targetCenterPosition.subtract(arrowPosition).normalize();
+
+        // Update the arrow's motion
+        this.setDeltaMovement(direction.scale(this.getDeltaMovement().length()));
+
+        // Update the arrow's rotation to point towards the target
+        double dx = direction.x;
+        double dy = direction.y;
+        double dz = direction.z;
+        double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+        this.setYRot((float) (Math.atan2(dx, dz) * (180D / Math.PI)));
+        this.setXRot((float) (Math.atan2(dy, horizontalDistance) * (180D / Math.PI)));
+
+        // Ensure the previous rotation values are updated to avoid visual glitches
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
     }
 
     private void makeParticle(int particleAmount) {
@@ -321,6 +380,7 @@ public class JustDireArrow extends AbstractArrow {
         pCompound.putBoolean("is_potionarrow", this.entityData.get(IS_POTIONARROW));
         pCompound.putBoolean("is_splash", this.entityData.get(IS_SPLASH));
         pCompound.putBoolean("is_lingering", this.entityData.get(IS_LINGERING));
+        pCompound.putBoolean("is_homing", this.entityData.get(IS_HOMING));
     }
 
     @Override
@@ -329,5 +389,6 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(IS_POTIONARROW, pCompound.getBoolean("is_potionarrow"));
         this.entityData.set(IS_SPLASH, pCompound.getBoolean("is_splash"));
         this.entityData.set(IS_LINGERING, pCompound.getBoolean("is_lingering"));
+        this.entityData.set(IS_HOMING, pCompound.getBoolean("is_homing"));
     }
 }

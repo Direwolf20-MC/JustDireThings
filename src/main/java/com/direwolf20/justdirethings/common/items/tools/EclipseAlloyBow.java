@@ -11,6 +11,7 @@ public class EclipseAlloyBow extends BaseBow implements PoweredTool {
         registerAbility(Ability.POTIONARROW);
         registerAbility(Ability.SPLASH);
         registerAbility(Ability.LINGERING);
+        registerAbility(Ability.HOMING);
     }
 
     public float getMaxDraw() {

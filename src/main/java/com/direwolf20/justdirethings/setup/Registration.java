@@ -527,6 +527,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_NIGHTVISION = UPGRADES.register("upgrade_nightvision", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DECOY = UPGRADES.register("upgrade_decoy", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_LINGERING = UPGRADES.register("upgrade_lingering", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_HOMING = UPGRADES.register("upgrade_homing", Upgrade::new);
 
     //Tier 4 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_OREXRAY = UPGRADES.register("upgrade_orexray", Upgrade::new);

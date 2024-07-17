@@ -70,7 +70,15 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             if (crit) {
                 justDireArrow.setCritArrow(true);
             }
-            if (!toggleableTool.getEnabled(itemStack) || noPotionAbilitiesActive(itemStack))
+            if (!toggleableTool.getEnabled(itemStack))
+                return customArrow(justDireArrow, stack, itemStack);
+
+            if (canUseAbilityAndDurability(itemStack, Ability.HOMING)) {
+                justDireArrow.setHoming(true);
+                Helpers.damageTool(itemStack, livingEntity, Ability.HOMING);
+            }
+
+            if (noPotionAbilitiesActive(itemStack))
                 return customArrow(justDireArrow, stack, itemStack);
 
             IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);

@@ -1,4 +1,4 @@
-// 1.21	2024-07-17T13:59:22.8774355	Item Models: justdirethings
+// 1.21	2024-07-17T14:29:53.7347844	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -328,6 +328,7 @@ b533e1e35032807794b82b3cc4c06dab05f315c8 assets/justdirethings/models/item/upgra
 d0a015228bb70601e1d9fcebd981855e4d32510d assets/justdirethings/models/item/upgrade_glowing.json
 02ebac6270695b073219d973330f90947d3f4109 assets/justdirethings/models/item/upgrade_groundstomp.json
 85fd09f2b635554aef75c7af1d438946c818af83 assets/justdirethings/models/item/upgrade_hammer.json
+502d77218baed953186f0ba880960b7905fefa06 assets/justdirethings/models/item/upgrade_homing.json
 8e81bc8b08d93628e7140290396bbbb87363ea00 assets/justdirethings/models/item/upgrade_instabreak.json
 54624c940e93d1030448338af5f1ff9831df7122 assets/justdirethings/models/item/upgrade_invulnerability.json
 e36a5b12a10638e9b4353f2391400d0749cef752 assets/justdirethings/models/item/upgrade_jumpboost.json
