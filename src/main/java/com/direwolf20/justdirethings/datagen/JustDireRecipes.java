@@ -1021,6 +1021,19 @@ public class JustDireRecipes extends RecipeProvider {
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldBow.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
                 .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldBow.getId().getPath() + "-templateupgrade"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemBow.get())
+                .pattern("sf ")
+                .pattern("s f")
+                .pattern("sf ")
+                .define('f', Registration.Celestigem.get())
+                .define('s', Items.STRING)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldBow.get()),
+                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemBow.get())
+                .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemBow.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldSword.get())
                 .pattern(" f ")

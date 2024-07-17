@@ -80,7 +80,8 @@ public class JustDireThings {
         );
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
                 Registration.FerricoreBow.get(),
-                Registration.BlazegoldBow.get()
+                Registration.BlazegoldBow.get(),
+                Registration.CelestigemBow.get()
         );
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new PotionCanisterHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
                 Registration.PotionCanister.get()
@@ -124,7 +125,8 @@ public class JustDireThings {
                 Registration.EclipseAlloyBoots.get(),
                 Registration.EclipseAlloyLeggings.get(),
                 Registration.EclipseAlloyChestplate.get(),
-                Registration.EclipseAlloyHelmet.get()
+                Registration.EclipseAlloyHelmet.get(),
+                Registration.CelestigemBow.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {

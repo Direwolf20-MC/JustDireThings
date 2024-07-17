@@ -14,7 +14,7 @@ public class BlazegoldBow extends BaseBow {
     }
 
     public float getMaxDraw() {
-        return 15;
+        return 17;
     }
 
     @Override

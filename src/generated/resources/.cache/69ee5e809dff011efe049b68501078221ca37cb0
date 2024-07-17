@@ -1,4 +1,4 @@
-// 1.21	2024-07-15T21:21:30.1184835	Item Models: justdirethings
+// 1.21	2024-07-16T19:47:13.0251558	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -66,6 +66,10 @@ c4101226092599d1b82fb21047481f63530fe04b assets/justdirethings/models/item/block
 03912c4ecd5b5e4e9dce19559fe720f2ac02da41 assets/justdirethings/models/item/bow_blazegold_pulling_0.json
 b046926f73548872b45b59ef35263b191f37a836 assets/justdirethings/models/item/bow_blazegold_pulling_1.json
 6c824afe7e0c174c716fefd40c56316e9121cbd7 assets/justdirethings/models/item/bow_blazegold_pulling_2.json
+d1662b19976f94d6cbf7671b7e4c6514560f33c7 assets/justdirethings/models/item/bow_celestigem.json
+95890ed8a4a96469d311a00f76c4a52b2a8d8e9b assets/justdirethings/models/item/bow_celestigem_pulling_0.json
+d3e21d63ffb7b57284e1c3e0d645f40dedf6afd4 assets/justdirethings/models/item/bow_celestigem_pulling_1.json
+a2ae16e1f7c7192dbcb55951981d289468a67a6a assets/justdirethings/models/item/bow_celestigem_pulling_2.json
 5f3b76a34884edf87c2b023108891b47821dc925 assets/justdirethings/models/item/bow_ferricore.json
 f6a9fb5b20dcf88c8190eb274737d02ce96f638f assets/justdirethings/models/item/bow_ferricore_pulling_0.json
 121300601a6706a6a93069a83d8726b11e308586 assets/justdirethings/models/item/bow_ferricore_pulling_1.json

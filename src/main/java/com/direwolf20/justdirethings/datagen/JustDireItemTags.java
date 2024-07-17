@@ -129,7 +129,9 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.CelestigemHelmet.get())
                 .add(Registration.EclipseAlloyHelmet.get());
         tag(ItemTags.BOW_ENCHANTABLE)
-                .add(Registration.FerricoreBow.get());
+                .add(Registration.FerricoreBow.get())
+                .add(Registration.BlazegoldBow.get())
+                .add(Registration.CelestigemBow.get());
     }
 
     @Override

@@ -50,21 +50,27 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (level.isClientSide) return InteractionResultHolder.pass(player.getItemInHand(hand));
+        ItemStack stack = player.getItemInHand(hand);
+        if (level.isClientSide) return InteractionResultHolder.pass(stack);
         if (player.isShiftKeyDown()) {
             openSettings(player);
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }
+        if (stack.getItem() instanceof PoweredTool poweredTool && PoweredItem.getAvailableEnergy(stack) < poweredTool.getBlockBreakFECost())
+            return InteractionResultHolder.pass(stack);
         return super.use(level, player, hand);
     }
 
     protected Projectile createProjectile(Level level, LivingEntity livingEntity, ItemStack itemStack, ItemStack stack, boolean crit) {
         ArrowItem arrowitem = stack.getItem() instanceof ArrowItem arrowitem1 ? arrowitem1 : (ArrowItem) Items.ARROW;
+        ToggleableTool toggleableTool = (ToggleableTool) itemStack.getItem();
         if (arrowitem.equals(Items.ARROW)) {
             JustDireArrow justDireArrow = new JustDireArrow(level, livingEntity, stack, itemStack);
             if (crit) {
                 justDireArrow.setCritArrow(true);
             }
+            if (!toggleableTool.getEnabled(itemStack))
+                return customArrow(justDireArrow, stack, itemStack);
 
             IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
             if (itemHandler instanceof ComponentItemHandler componentItemHandler) {
@@ -73,17 +79,20 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
                     PotionContents potionContents = PotionCanister.getPotionContents(potionCanister);
                     if (!potionContents.equals(PotionContents.EMPTY)) {
                         int potionAmt = PotionCanister.getPotionAmount(potionCanister);
-                        if (potionAmt >= 25) {
+                        if (potionAmt >= 25 && Helpers.testUseTool(itemStack, getDurabilityUse(itemStack)) > 0) {
                             justDireArrow.setPotionContents(potionContents);
                             potionAmt = potionAmt - 25;
+                            Helpers.damageTool(itemStack, livingEntity, getDurabilityUse(itemStack));
                         }
                         if (potionAmt >= 25 && canUseAbilityAndDurability(itemStack, Ability.SPLASH)) {
                             justDireArrow.setSplash(true);
                             potionAmt = potionAmt - 25;
+                            Helpers.damageTool(itemStack, livingEntity, Ability.SPLASH);
                         }
                         if (potionAmt >= 50 && canUseAbilityAndDurability(itemStack, Ability.LINGERING)) {
                             justDireArrow.setLingering(true);
                             potionAmt = potionAmt - 50;
+                            Helpers.damageTool(itemStack, livingEntity, Ability.LINGERING);
                         }
                         PotionCanister.setPotionAmount(potionCanister, potionAmt);
                         componentItemHandler.setStackInSlot(0, potionCanister);
@@ -94,6 +103,11 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             return customArrow(justDireArrow, stack, itemStack);
         }
         return super.createProjectile(level, livingEntity, itemStack, stack, crit);
+    }
+
+    @Override
+    protected int getDurabilityUse(ItemStack itemStack) {
+        return this instanceof PoweredTool poweredTool ? poweredTool.getBlockBreakFECost() : 1;
     }
 
     @Override
