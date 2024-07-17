@@ -113,6 +113,7 @@ public class ToolSettingContainer extends BaseContainer {
     public void clearDynamicSlots() {
         for (Slot slot : dynamicSlots) {
             this.slots.remove(slot);
+            this.remoteSlots.remove(remoteSlots.size() - 1);
         }
         dynamicSlots.clear();
     }
