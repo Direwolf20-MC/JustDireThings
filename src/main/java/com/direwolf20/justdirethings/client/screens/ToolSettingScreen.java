@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolLeftRightClickPayload;
+import com.direwolf20.justdirethings.common.network.data.ToggleToolRefreshSlots;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
 import com.direwolf20.justdirethings.util.MiscTools;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -376,6 +377,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
 
     public void refreshToolAndSlots() {
         this.container.refreshSlots(tool);
+        PacketDistributor.sendToServer(new ToggleToolRefreshSlots(toolSlot));
     }
 
     public void updateRenderables() {
