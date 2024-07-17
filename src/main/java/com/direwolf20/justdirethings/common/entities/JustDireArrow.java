@@ -215,6 +215,8 @@ public class JustDireArrow extends AbstractArrow {
                             Holder<MobEffect> holder = mobeffectinstance.getEffect();
                             if (holder.value().getCategory() == MobEffectCategory.HARMFUL && getOwner() != null && livingentity.is(getOwner()))
                                 continue;
+                            if (holder.value().getCategory() == MobEffectCategory.BENEFICIAL && getOwner() != null && !livingentity.is(getOwner()))
+                                continue;
                             if (holder.value().isInstantenous()) {
                                 holder.value().applyInstantenousEffect(this, this.getOwner(), livingentity, mobeffectinstance.getAmplifier(), d1);
                             } else {

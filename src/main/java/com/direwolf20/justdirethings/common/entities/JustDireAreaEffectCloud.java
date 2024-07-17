@@ -237,6 +237,8 @@ public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
                                     for (MobEffectInstance mobeffectinstance : list) {
                                         if (mobeffectinstance.getEffect().value().getCategory() == MobEffectCategory.HARMFUL && getOwner() != null && livingentity.is(getOwner()))
                                             continue;
+                                        if (mobeffectinstance.getEffect().value().getCategory() == MobEffectCategory.BENEFICIAL && getOwner() != null && !livingentity.is(getOwner()))
+                                            continue;
                                         if (mobeffectinstance.getEffect().value().isInstantenous()) {
                                             mobeffectinstance.getEffect()
                                                     .value()
