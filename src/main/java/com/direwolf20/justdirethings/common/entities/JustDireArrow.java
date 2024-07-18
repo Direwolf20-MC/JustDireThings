@@ -38,6 +38,22 @@ public class JustDireArrow extends AbstractArrow {
     private static final EntityDataAccessor<Boolean> IS_SPLASH = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_LINGERING = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> ARROW_STATE = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> STATE_TICK_COUNTER = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
+
+    private enum ArrowState {
+        NORMAL,
+        SLOWING_DOWN,
+        STOPPED_AND_ROTATING,
+        RESUMING_FLIGHT
+    }
+
+    private ArrowState currentState = ArrowState.NORMAL;
+    private int stateTickCounter = 0;
+    private static int SLOW_DOWN_DURATION = 4; // 1 second at 20 ticks per second
+    private static int STOP_DURATION = 10; // 1 second stop duration
+    private static int RESUME_DURATION = 4; // 1 second resume duration
+
     private static final byte EVENT_POTION_PUFF = 0;
 
     private LivingEntity targetEntity;
@@ -108,19 +124,47 @@ public class JustDireArrow extends AbstractArrow {
         p_326324_.define(IS_SPLASH, false);
         p_326324_.define(IS_LINGERING, false);
         p_326324_.define(IS_HOMING, false);
+        p_326324_.define(ARROW_STATE, ArrowState.NORMAL.ordinal());
+        p_326324_.define(STATE_TICK_COUNTER, 0);
+    }
+
+    public void setData(EntityDataAccessor<Integer> entityDataAccessor, int value) {
+        if (!this.level().isClientSide)
+            this.entityData.set(entityDataAccessor, value);
+    }
+
+    public void setData(EntityDataAccessor<Boolean> entityDataAccessor, boolean value) {
+        if (!this.level().isClientSide)
+            this.entityData.set(entityDataAccessor, value);
     }
 
     @Override
     public void tick() {
         super.tick();
+        if (this.targetEntity != null && !this.targetEntity.isAlive()) {
+            this.discard();
+        }
         if (this.entityData.get(IS_HOMING) && !this.inGround) {
-            if (targetEntity == null || !targetEntity.isAlive()) {
-                targetEntity = this.findNearestEntity(5.0);
+            ArrowState currentState = ArrowState.values()[this.entityData.get(ARROW_STATE)];
+            int stateTickCounter = this.entityData.get(STATE_TICK_COUNTER);
+
+            switch (currentState) {
+                case NORMAL:
+                    handleNormalState(stateTickCounter);
+                    break;
+                case SLOWING_DOWN:
+                    handleSlowingDownState(stateTickCounter);
+                    break;
+                case STOPPED_AND_ROTATING:
+                    handleStoppedAndRotatingState(stateTickCounter);
+                    break;
+                case RESUMING_FLIGHT:
+                    handleResumingFlightState(stateTickCounter);
+                    break;
             }
 
-            if (targetEntity != null) {
-                this.adjustCourseTowards(targetEntity);
-            }
+            stateTickCounter++;
+            setData(STATE_TICK_COUNTER, stateTickCounter);
         }
         if (this.level().isClientSide) {
             if (this.inGround) {
@@ -128,12 +172,159 @@ public class JustDireArrow extends AbstractArrow {
                     this.makeParticle(1);
                 }
             } else {
-                this.makeParticle(2);
+                //this.makeParticle(2);
             }
         } else {
             if (this.inGround && this.inGroundTime != 0 && !this.getPotionContents().equals(PotionContents.EMPTY) && this.inGroundTime >= 600) {
                 this.level().broadcastEntityEvent(this, (byte) 0);
                 this.setPickupItemStack(new ItemStack(Items.ARROW));
+            }
+        }
+    }
+
+    private double calculateDotProduct(Vec3 vec1, Vec3 vec2) {
+        return vec1.normalize().dot(vec2.normalize());
+    }
+
+    private void handleNormalState(int stateTickCounter) {
+        if (this.tickCount % 2 == 0) {
+            if (targetEntity == null || !targetEntity.isAlive() || targetEntity.distanceTo(this) > 20.0) {
+                targetEntity = this.findNearestEntity(10.0);
+            }
+        }
+
+        if (targetEntity != null) {
+            Vec3 arrowPosition = this.position();
+            Vec3 targetPosition = targetEntity.getBoundingBox().getCenter();
+            Vec3 directionToTarget = targetPosition.subtract(arrowPosition).normalize();
+            Vec3 arrowDirection = this.getDeltaMovement().normalize();
+
+            double dotProduct = calculateDotProduct(arrowDirection, directionToTarget);
+            double distanceToTarget = this.position().distanceTo(targetPosition);
+
+            if (dotProduct >= 0.85 || distanceToTarget < 1.0) {
+                // If the arrow is already on a relatively close course or very close to the target, adjust course immediately
+                this.adjustCourseTowards(targetEntity);
+            } else {
+                // Perform the "stop and turn" action
+                setData(ARROW_STATE, ArrowState.SLOWING_DOWN.ordinal());
+                setData(STATE_TICK_COUNTER, 0);
+            }
+        }
+    }
+
+    private void handleSlowingDownState(int stateTickCounter) {
+        if (stateTickCounter < SLOW_DOWN_DURATION) {
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.5)); // Slow down gradually
+        } else {
+            setData(ARROW_STATE, ArrowState.STOPPED_AND_ROTATING.ordinal());
+            setData(STATE_TICK_COUNTER, 0);
+        }
+    }
+
+    private void handleStoppedAndRotatingState(int stateTickCounter) {
+        this.setDeltaMovement(Vec3.ZERO); // Stop the arrow
+
+        if (targetEntity != null && stateTickCounter != 0) {
+            Vec3 arrowPosition = this.position();
+            Vec3 targetCenterPosition = targetEntity.getBoundingBox().getCenter();
+            Vec3 direction = targetCenterPosition.subtract(arrowPosition).normalize();
+            // Gradually rotate towards the target
+            double dx = direction.x;
+            double dy = direction.y;
+            double dz = direction.z;
+            double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+            float targetYaw = (float) (Math.atan2(dx, dz) * (180D / Math.PI));
+            float targetPitch = (float) (Math.atan2(dy, horizontalDistance) * (180D / Math.PI));
+
+            float currentYaw = this.getYRot();
+            float currentPitch = this.getXRot();
+
+            float yawDifference = wrapDegrees(targetYaw - currentYaw);
+            float newYaw = currentYaw + yawDifference * 0.3f; // Smooth rotation factor
+
+            float pitchDifference = targetPitch - currentPitch;
+            float newPitch = currentPitch + pitchDifference * 0.3f; // Smooth rotation factor
+
+            /*if (level().isClientSide) {
+                System.out.println("Current Yaw: " + currentYaw + " Target Yaw: " + targetYaw + " -> New Yaw: " + newYaw + " | " + "Current Pitch: " + currentPitch + " Target Pitch: " + targetPitch + " -> New Pitch: " + newPitch);
+                System.out.println("Yaw Diff: " + yawDifference + " | Pitch Diff: " + pitchDifference);
+            }*/
+
+            this.yRotO = currentYaw;
+            this.xRotO = currentPitch;
+
+            this.setYRot(newYaw); // Smooth rotation
+            this.setXRot(newPitch);
+
+
+
+            /*Vec3 arrowPosition = this.position();
+            Vec3 targetCenterPosition = targetEntity.getBoundingBox().getCenter();
+            Vec3 direction = targetCenterPosition.subtract(arrowPosition).normalize();
+            // Gradually rotate towards the target
+            double dx = direction.x;
+            double dy = direction.y;
+            double dz = direction.z;
+            double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+            float targetYaw = (float) (Math.atan2(dx, dz) * (180D / Math.PI));
+            float targetPitch = (float) (Math.atan2(dy, horizontalDistance) * (180D / Math.PI));
+
+            float setY = this.getYRot() + (targetYaw - this.getYRot()) * 0.2f;
+            float setX = this.getXRot() + (targetPitch - this.getXRot()) * 0.2f;
+
+            if (level().isClientSide) {
+            System.out.println("Current Yaw: " + this.getYRot() + " Target Yaw: " + targetYaw + " -> New Yaw: " + setY + " | " + "Current Pitch: " + this.getXRot() + " Target Pitch: " + targetPitch + " -> New Pitch: " + setX);
+            System.out.println("Yaw Diff: " + (this.getYRot() - setY) + " | Pitch Diff: " + (this.getXRot() - setX));
+            }
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
+
+            this.setYRot(setY); // Smooth rotation
+            this.setXRot(setX);*/
+        }
+
+        if (stateTickCounter >= STOP_DURATION) {
+            setData(ARROW_STATE, ArrowState.RESUMING_FLIGHT.ordinal());
+            setData(STATE_TICK_COUNTER, 0);
+            if (targetEntity != null) {
+                this.adjustCourseTowards(targetEntity);
+            }
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.25));
+        }
+    }
+
+    @Override
+    public void setYRot(float yRot) {
+        if (yRot == 0f) return;
+        super.setYRot(yRot);
+    }
+
+    @Override
+    public void setXRot(float xRot) {
+        if (xRot == 0f) return;
+        super.setXRot(xRot);
+    }
+
+    private float wrapDegrees(float degrees) {
+        degrees = degrees % 360.0F;
+        if (degrees >= 180.0F) {
+            degrees -= 360.0F;
+        }
+        if (degrees < -180.0F) {
+            degrees += 360.0F;
+        }
+        return degrees;
+    }
+
+    private void handleResumingFlightState(int stateTickCounter) {
+        if (stateTickCounter < RESUME_DURATION) {
+            this.setDeltaMovement(this.getDeltaMovement().scale(1.5)); // Gradually speed up
+        } else {
+            this.setDeltaMovement(this.getDeltaMovement().scale(1.5)); // Gradually speed up
+            setData(STATE_TICK_COUNTER, 0);
+            if (targetEntity != null) {
+                this.adjustCourseTowards(targetEntity);
             }
         }
     }
@@ -381,6 +572,8 @@ public class JustDireArrow extends AbstractArrow {
         pCompound.putBoolean("is_splash", this.entityData.get(IS_SPLASH));
         pCompound.putBoolean("is_lingering", this.entityData.get(IS_LINGERING));
         pCompound.putBoolean("is_homing", this.entityData.get(IS_HOMING));
+        pCompound.putInt("arrow_state", this.entityData.get(ARROW_STATE));
+        pCompound.putInt("state_tick_counter", this.entityData.get(STATE_TICK_COUNTER));
     }
 
     @Override
@@ -390,5 +583,7 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(IS_SPLASH, pCompound.getBoolean("is_splash"));
         this.entityData.set(IS_LINGERING, pCompound.getBoolean("is_lingering"));
         this.entityData.set(IS_HOMING, pCompound.getBoolean("is_homing"));
+        this.entityData.set(ARROW_STATE, pCompound.getInt("arrow_state"));
+        this.entityData.set(STATE_TICK_COUNTER, pCompound.getInt("state_tick_counter"));
     }
 }
