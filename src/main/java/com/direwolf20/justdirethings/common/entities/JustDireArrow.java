@@ -38,6 +38,7 @@ public class JustDireArrow extends AbstractArrow {
     private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> ARROW_STATE = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> STATE_TICK_COUNTER = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> ORIGINAL_VELOCITY = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.FLOAT);
 
     private enum ArrowState {
         NORMAL,
@@ -46,8 +47,8 @@ public class JustDireArrow extends AbstractArrow {
         RESUMING_FLIGHT
     }
 
-    private static int SLOW_DOWN_DURATION = 4; // 1 second at 20 ticks per second
-    private static int STOP_DURATION = 10; // 1 second stop duration
+    private static final int SLOW_DOWN_DURATION = 4; // 1 second at 20 ticks per second
+    private static final int STOP_DURATION = 10; // 1 second stop duration
 
     private static final byte EVENT_POTION_PUFF = 0;
 
@@ -111,6 +112,10 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(IS_HOMING, homing);
     }
 
+    public float getOriginalVelocity() {
+        return this.entityData.get(ORIGINAL_VELOCITY);
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder p_326324_) {
         super.defineSynchedData(p_326324_);
@@ -121,6 +126,7 @@ public class JustDireArrow extends AbstractArrow {
         p_326324_.define(IS_HOMING, false);
         p_326324_.define(ARROW_STATE, ArrowState.NORMAL.ordinal());
         p_326324_.define(STATE_TICK_COUNTER, 0);
+        p_326324_.define(ORIGINAL_VELOCITY, 0f);
     }
 
     public void setData(EntityDataAccessor<Integer> entityDataAccessor, int value) {
@@ -136,6 +142,8 @@ public class JustDireArrow extends AbstractArrow {
     @Override
     public void tick() {
         super.tick();
+        if (!level().isClientSide && getOriginalVelocity() == 0f)
+            this.entityData.set(ORIGINAL_VELOCITY, (float) this.getDeltaMovement().length());
         if (this.targetEntity != null && !this.targetEntity.isAlive()) {
             this.discard();
         }
@@ -259,8 +267,12 @@ public class JustDireArrow extends AbstractArrow {
     }
 
     private void handleResumingFlightState(int stateTickCounter) {
-        this.setDeltaMovement(this.getDeltaMovement().scale(1.5)); // Gradually speed up
-        setData(STATE_TICK_COUNTER, 0);
+        if (this.getDeltaMovement().length() < getOriginalVelocity()) { //Cap the speed to the original velocity
+            this.setDeltaMovement(this.getDeltaMovement().scale(1.5)); // Gradually speed up
+        }
+        if (this.getDeltaMovement().length() > getOriginalVelocity()) { //Cap the speed to the original velocity
+            this.setDeltaMovement(this.getDeltaMovement().normalize().scale(getOriginalVelocity()));
+        }
         if (targetEntity != null) {
             this.adjustCourseTowards(targetEntity);
         }
@@ -534,6 +546,7 @@ public class JustDireArrow extends AbstractArrow {
         pCompound.putBoolean("is_homing", this.entityData.get(IS_HOMING));
         pCompound.putInt("arrow_state", this.entityData.get(ARROW_STATE));
         pCompound.putInt("state_tick_counter", this.entityData.get(STATE_TICK_COUNTER));
+        pCompound.putFloat("original_velocity", this.entityData.get(ORIGINAL_VELOCITY));
     }
 
     @Override
@@ -545,5 +558,6 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(IS_HOMING, pCompound.getBoolean("is_homing"));
         this.entityData.set(ARROW_STATE, pCompound.getInt("arrow_state"));
         this.entityData.set(STATE_TICK_COUNTER, pCompound.getInt("state_tick_counter"));
+        this.entityData.set(ORIGINAL_VELOCITY, pCompound.getFloat("original_velocity"));
     }
 }
