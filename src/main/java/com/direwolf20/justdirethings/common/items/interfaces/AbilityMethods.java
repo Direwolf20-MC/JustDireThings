@@ -567,6 +567,19 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean epicArrow(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.EPICARROW);
+        if (currentCooldown != -1) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EPICARROW) && !itemStack.getOrDefault(JustDireDataComponents.EPIC_ARROW, false)) {
+            itemStack.set(JustDireDataComponents.EPIC_ARROW, true);
+            player.playNotifySound(SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.PLAYERS, 1F, 0.5F);
+            Helpers.damageTool(itemStack, player, Ability.EPICARROW);
+            //player.playNotifySound(SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.PLAYERS, 1F, 0.25F);
+        }
+        return false;
+    }
+
     public static boolean flight(Level level, Player player, ItemStack itemStack) {
         if (level.isClientSide) return false;
         if (player.getAbilities().flying)

@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.tools.basetools;
 
 import com.direwolf20.justdirethings.common.entities.JustDireArrow;
 import com.direwolf20.justdirethings.common.items.PotionCanister;
+import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -26,6 +28,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ComponentItemHandler;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -62,6 +65,13 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
         return super.use(level, player, hand);
     }
 
+    @Override
+    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int itemSlot, boolean isSelected) {
+        if ((!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
+            ToggleableTool.tickCooldowns(level, itemStack, player);
+        }
+    }
+
     protected Projectile createProjectile(Level level, LivingEntity livingEntity, ItemStack itemStack, ItemStack stack, boolean crit) {
         ArrowItem arrowitem = stack.getItem() instanceof ArrowItem arrowitem1 ? arrowitem1 : (ArrowItem) Items.ARROW;
         ToggleableTool toggleableTool = (ToggleableTool) itemStack.getItem();
@@ -70,6 +80,14 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             if (crit) {
                 justDireArrow.setCritArrow(true);
             }
+            if (itemStack.getOrDefault(JustDireDataComponents.EPIC_ARROW, false)) {
+                justDireArrow.setEpicArrow(true);
+                justDireArrow.setBaseDamage(20d);
+                AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.EPICARROW);
+                ToggleableTool.addCooldown(itemStack, Ability.EPICARROW, abilityParams.cooldown, false);
+                itemStack.set(JustDireDataComponents.EPIC_ARROW, false);
+            }
+
             if (!toggleableTool.getEnabled(itemStack))
                 return customArrow(justDireArrow, stack, itemStack);
 
@@ -207,5 +225,10 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
 
     private boolean canAcceptEnchantments(Holder<Enchantment> enchantment) {
         return !enchantment.value().effects().has(EnchantmentEffectComponents.REPAIR_WITH_XP);
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
     }
 }

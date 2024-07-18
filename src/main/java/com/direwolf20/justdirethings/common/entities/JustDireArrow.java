@@ -9,6 +9,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -39,6 +42,8 @@ public class JustDireArrow extends AbstractArrow {
     private static final EntityDataAccessor<Integer> ARROW_STATE = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> STATE_TICK_COUNTER = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> ORIGINAL_VELOCITY = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> IS_EPIC_ARROW = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
+    //private static final EntityDataAccessor<Integer> TARGETS_HIT = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
 
     private enum ArrowState {
         NORMAL,
@@ -49,6 +54,7 @@ public class JustDireArrow extends AbstractArrow {
 
     private static final int SLOW_DOWN_DURATION = 4; // 1 second at 20 ticks per second
     private static final int STOP_DURATION = 10; // 1 second stop duration
+    private static final int MAX_TARGETS = 10;
 
     private static final byte EVENT_POTION_PUFF = 0;
 
@@ -116,6 +122,15 @@ public class JustDireArrow extends AbstractArrow {
         return this.entityData.get(ORIGINAL_VELOCITY);
     }
 
+    public void setEpicArrow(boolean isEpicArrow) {
+        this.entityData.set(IS_EPIC_ARROW, isEpicArrow);
+        this.setPierceLevel((byte) 5);
+    }
+
+    public boolean isEpic() {
+        return this.entityData.get(IS_EPIC_ARROW);
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder p_326324_) {
         super.defineSynchedData(p_326324_);
@@ -127,6 +142,8 @@ public class JustDireArrow extends AbstractArrow {
         p_326324_.define(ARROW_STATE, ArrowState.NORMAL.ordinal());
         p_326324_.define(STATE_TICK_COUNTER, 0);
         p_326324_.define(ORIGINAL_VELOCITY, 0f);
+        p_326324_.define(IS_EPIC_ARROW, false);
+        //p_326324_.define(TARGETS_HIT, 0);
     }
 
     public void setData(EntityDataAccessor<Integer> entityDataAccessor, int value) {
@@ -139,13 +156,26 @@ public class JustDireArrow extends AbstractArrow {
             this.entityData.set(entityDataAccessor, value);
     }
 
+    public double searchRadius() {
+        return isEpic() ? 20 : 10;
+    }
+
     @Override
     public void tick() {
         super.tick();
+        if (isEpic() && targetEntity != null && wasAlreadyHit(targetEntity)) {
+            targetEntity = this.findNearestEntity();
+        }
         if (!level().isClientSide && getOriginalVelocity() == 0f)
             this.entityData.set(ORIGINAL_VELOCITY, (float) this.getDeltaMovement().length());
         if (this.targetEntity != null && !this.targetEntity.isAlive()) {
-            this.discard();
+            if (!isEpic()) {
+                this.discard();
+            } else {
+                targetEntity = this.findNearestEntity();
+                if (targetEntity == null || !targetEntity.isAlive())
+                    this.discard();
+            }
         }
         if (this.entityData.get(IS_HOMING) && !this.inGround) {
             ArrowState currentState = ArrowState.values()[this.entityData.get(ARROW_STATE)];
@@ -190,10 +220,8 @@ public class JustDireArrow extends AbstractArrow {
     }
 
     private void handleNormalState(int stateTickCounter) {
-        if (this.tickCount % 2 == 0) {
-            if (targetEntity == null || !targetEntity.isAlive() || targetEntity.distanceTo(this) > 20.0) {
-                targetEntity = this.findNearestEntity(10.0);
-            }
+        if (targetEntity == null || !targetEntity.isAlive() || targetEntity.distanceTo(this) > 20.0) {
+            targetEntity = this.findNearestEntity();
         }
 
         if (targetEntity != null) {
@@ -261,6 +289,8 @@ public class JustDireArrow extends AbstractArrow {
             setData(STATE_TICK_COUNTER, 0);
             if (targetEntity != null) {
                 this.adjustCourseTowards(targetEntity);
+                if (this.getOwner() instanceof Player player)
+                    this.level().playSound(player, this.getX(), this.getY(), this.getZ(), SoundEvents.ENDER_DRAGON_FLAP, SoundSource.PLAYERS, 1.0F, 0.5F);
             }
             this.setDeltaMovement(this.getDeltaMovement().scale(0.25));
         }
@@ -302,14 +332,15 @@ public class JustDireArrow extends AbstractArrow {
     }
 
     @Nullable
-    private LivingEntity findNearestEntity(double radius) {
+    private LivingEntity findNearestEntity() {
+        double radius = searchRadius();
         AABB searchArea = this.getBoundingBox().inflate(radius, radius / 2, radius);
         List<Mob> entities = this.level().getEntitiesOfClass(Mob.class, searchArea);
         LivingEntity nearestEntity = null;
         double nearestDistance = Double.MAX_VALUE;
 
-        for (LivingEntity entity : entities) {
-            if (entity == this.getOwner() || !entity.isAlive()) {
+        for (Mob entity : entities) {
+            if (entity == this.getOwner() || !entity.isAlive() || wasAlreadyHit(entity)) {
                 continue;
             }
             double distance = this.distanceToSqr(entity);
@@ -320,6 +351,14 @@ public class JustDireArrow extends AbstractArrow {
         }
 
         return nearestEntity;
+    }
+
+    private boolean wasAlreadyHit(LivingEntity target) {
+        if (!isEpic())
+            return false;
+        if (this.piercingIgnoreEntityIds == null)
+            return false;
+        return this.piercingIgnoreEntityIds.contains(target.getId());
     }
 
     private void adjustCourseTowards(LivingEntity target) {
@@ -393,6 +432,10 @@ public class JustDireArrow extends AbstractArrow {
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
+        if (isEpic()) {
+            setData(ARROW_STATE, ArrowState.STOPPED_AND_ROTATING.ordinal());
+            setData(STATE_TICK_COUNTER, 0);
+        }
     }
 
     private void applyWater() {
@@ -547,6 +590,8 @@ public class JustDireArrow extends AbstractArrow {
         pCompound.putInt("arrow_state", this.entityData.get(ARROW_STATE));
         pCompound.putInt("state_tick_counter", this.entityData.get(STATE_TICK_COUNTER));
         pCompound.putFloat("original_velocity", this.entityData.get(ORIGINAL_VELOCITY));
+        pCompound.putBoolean("is_epic_arrow", this.entityData.get(IS_EPIC_ARROW));
+        //pCompound.putInt("targets_hit", this.entityData.get(TARGETS_HIT));
     }
 
     @Override
@@ -559,5 +604,7 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(ARROW_STATE, pCompound.getInt("arrow_state"));
         this.entityData.set(STATE_TICK_COUNTER, pCompound.getInt("state_tick_counter"));
         this.entityData.set(ORIGINAL_VELOCITY, pCompound.getFloat("original_velocity"));
+        this.entityData.set(IS_EPIC_ARROW, pCompound.getBoolean("is_epic_arrow"));
+        //this.entityData.set(TARGETS_HIT, pCompound.getInt("targets_hit"));
     }
 }

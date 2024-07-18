@@ -540,6 +540,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_PHASE = UPGRADES.register("upgrade_phase", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_EPICARROW = UPGRADES.register("upgrade_epicarrow", Upgrade::new);
 
     //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",

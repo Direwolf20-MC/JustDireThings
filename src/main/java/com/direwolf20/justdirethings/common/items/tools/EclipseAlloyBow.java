@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +13,7 @@ public class EclipseAlloyBow extends BaseBow implements PoweredTool {
         registerAbility(Ability.SPLASH);
         registerAbility(Ability.LINGERING);
         registerAbility(Ability.HOMING);
+        registerAbility(Ability.EPICARROW, new AbilityParams(1, 1, 1, 1, 200, 100));
     }
 
     public float getMaxDraw() {

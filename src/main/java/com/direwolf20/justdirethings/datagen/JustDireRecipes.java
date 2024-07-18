@@ -868,6 +868,16 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('p', Items.ENDER_EYE)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_EPICARROW.get())
+                .pattern("psp")
+                .pattern("gbg")
+                .pattern("psp")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.PHANTOM_MEMBRANE)
+                .define('p', Items.ENDER_EYE)
+                .define('s', Items.NETHER_STAR)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)

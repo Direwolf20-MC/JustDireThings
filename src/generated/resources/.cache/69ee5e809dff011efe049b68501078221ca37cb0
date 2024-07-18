@@ -1,4 +1,4 @@
-// 1.21	2024-07-17T14:29:53.7347844	Item Models: justdirethings
+// 1.21	2024-07-18T13:08:42.0924462	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -323,6 +323,7 @@ e624b05ce8029c62368e788813b1ab44a81234e4 assets/justdirethings/models/item/upgra
 b1df202371d17146164e70cb1929fe9bd2059e69 assets/justdirethings/models/item/upgrade_dropteleport.json
 499d58faa851574a88bde69eebcd1de2a6d7fb77 assets/justdirethings/models/item/upgrade_earthquake.json
 3d1ae50ee19d1794cf690566d5f0315fd63e6392 assets/justdirethings/models/item/upgrade_elytra.json
+083859a2eed1eb4dfb61f70ece7ba0c9e66b624c assets/justdirethings/models/item/upgrade_epicarrow.json
 1b9413a8afe1b37074cb3816d595d4b75add47f0 assets/justdirethings/models/item/upgrade_extinguish.json
 b533e1e35032807794b82b3cc4c06dab05f315c8 assets/justdirethings/models/item/upgrade_flight.json
 d0a015228bb70601e1d9fcebd981855e4d32510d assets/justdirethings/models/item/upgrade_glowing.json
