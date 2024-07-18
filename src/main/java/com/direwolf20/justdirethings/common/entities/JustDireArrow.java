@@ -31,8 +31,6 @@ import java.util.List;
 import static net.minecraft.world.entity.projectile.ThrownPotion.WATER_SENSITIVE_OR_ON_FIRE;
 
 public class JustDireArrow extends AbstractArrow {
-    private static final int EXPOSED_POTION_DECAY_TIME = 600;
-    private static final int NO_EFFECT_COLOR = -1;
     private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_POTIONARROW = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_SPLASH = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
@@ -48,11 +46,8 @@ public class JustDireArrow extends AbstractArrow {
         RESUMING_FLIGHT
     }
 
-    private ArrowState currentState = ArrowState.NORMAL;
-    private int stateTickCounter = 0;
     private static int SLOW_DOWN_DURATION = 4; // 1 second at 20 ticks per second
     private static int STOP_DURATION = 10; // 1 second stop duration
-    private static int RESUME_DURATION = 4; // 1 second resume duration
 
     private static final byte EVENT_POTION_PUFF = 0;
 
@@ -172,7 +167,7 @@ public class JustDireArrow extends AbstractArrow {
                     this.makeParticle(1);
                 }
             } else {
-                //this.makeParticle(2);
+                this.makeParticle(2);
             }
         } else {
             if (this.inGround && this.inGroundTime != 0 && !this.getPotionContents().equals(PotionContents.EMPTY) && this.inGroundTime >= 600) {
@@ -246,42 +241,11 @@ public class JustDireArrow extends AbstractArrow {
             float pitchDifference = targetPitch - currentPitch;
             float newPitch = currentPitch + pitchDifference * 0.3f; // Smooth rotation factor
 
-            /*if (level().isClientSide) {
-                System.out.println("Current Yaw: " + currentYaw + " Target Yaw: " + targetYaw + " -> New Yaw: " + newYaw + " | " + "Current Pitch: " + currentPitch + " Target Pitch: " + targetPitch + " -> New Pitch: " + newPitch);
-                System.out.println("Yaw Diff: " + yawDifference + " | Pitch Diff: " + pitchDifference);
-            }*/
-
             this.yRotO = currentYaw;
             this.xRotO = currentPitch;
 
             this.setYRot(newYaw); // Smooth rotation
             this.setXRot(newPitch);
-
-
-
-            /*Vec3 arrowPosition = this.position();
-            Vec3 targetCenterPosition = targetEntity.getBoundingBox().getCenter();
-            Vec3 direction = targetCenterPosition.subtract(arrowPosition).normalize();
-            // Gradually rotate towards the target
-            double dx = direction.x;
-            double dy = direction.y;
-            double dz = direction.z;
-            double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
-            float targetYaw = (float) (Math.atan2(dx, dz) * (180D / Math.PI));
-            float targetPitch = (float) (Math.atan2(dy, horizontalDistance) * (180D / Math.PI));
-
-            float setY = this.getYRot() + (targetYaw - this.getYRot()) * 0.2f;
-            float setX = this.getXRot() + (targetPitch - this.getXRot()) * 0.2f;
-
-            if (level().isClientSide) {
-            System.out.println("Current Yaw: " + this.getYRot() + " Target Yaw: " + targetYaw + " -> New Yaw: " + setY + " | " + "Current Pitch: " + this.getXRot() + " Target Pitch: " + targetPitch + " -> New Pitch: " + setX);
-            System.out.println("Yaw Diff: " + (this.getYRot() - setY) + " | Pitch Diff: " + (this.getXRot() - setX));
-            }
-            this.yRotO = this.getYRot();
-            this.xRotO = this.getXRot();
-
-            this.setYRot(setY); // Smooth rotation
-            this.setXRot(setX);*/
         }
 
         if (stateTickCounter >= STOP_DURATION) {
@@ -294,15 +258,23 @@ public class JustDireArrow extends AbstractArrow {
         }
     }
 
+    private void handleResumingFlightState(int stateTickCounter) {
+        this.setDeltaMovement(this.getDeltaMovement().scale(1.5)); // Gradually speed up
+        setData(STATE_TICK_COUNTER, 0);
+        if (targetEntity != null) {
+            this.adjustCourseTowards(targetEntity);
+        }
+    }
+
     @Override
     public void setYRot(float yRot) {
-        if (yRot == 0f) return;
+        if (yRot == 0f && getDeltaMovement().equals(Vec3.ZERO)) return;
         super.setYRot(yRot);
     }
 
     @Override
     public void setXRot(float xRot) {
-        if (xRot == 0f) return;
+        if (xRot == 0f && getDeltaMovement().equals(Vec3.ZERO)) return;
         super.setXRot(xRot);
     }
 
@@ -315,18 +287,6 @@ public class JustDireArrow extends AbstractArrow {
             degrees += 360.0F;
         }
         return degrees;
-    }
-
-    private void handleResumingFlightState(int stateTickCounter) {
-        if (stateTickCounter < RESUME_DURATION) {
-            this.setDeltaMovement(this.getDeltaMovement().scale(1.5)); // Gradually speed up
-        } else {
-            this.setDeltaMovement(this.getDeltaMovement().scale(1.5)); // Gradually speed up
-            setData(STATE_TICK_COUNTER, 0);
-            if (targetEntity != null) {
-                this.adjustCourseTowards(targetEntity);
-            }
-        }
     }
 
     @Nullable
