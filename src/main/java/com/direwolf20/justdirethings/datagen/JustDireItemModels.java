@@ -93,11 +93,11 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.PolymorphicCatalyst.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/polymorphic_catalyst"));
         singleTexture(Registration.PortalFluidCatalyst.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/portal_fluid_catalyst"));
 
-        singleTexture(Registration.FerricoreWrench.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/ferricore_wrench"));
+        singleTexture(Registration.FerricoreWrench.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/ferricore_wrench"));
         singleTexture(Registration.TotemOfDeathRecall.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/totem_of_death_recall"));
-        singleTexture(Registration.BlazejetWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/blazejet_wand"));
-        singleTexture(Registration.VoidshiftWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/voidshift_wand"));
-        singleTexture(Registration.EclipsegateWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/eclipsegate_wand"));
+        singleTexture(Registration.BlazejetWand.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/blazejet_wand"));
+        singleTexture(Registration.VoidshiftWand.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/voidshift_wand"));
+        singleTexture(Registration.EclipsegateWand.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/eclipsegate_wand"));
         //singleTexture(Registration.CreatureCatcher.getId().getPath() + "_base", mcLoc("item/generated"), "layer0", modLoc("item/creaturecatcher"));
         getBuilder(Registration.CreatureCatcher.getId().getPath())
                 .parent(new ModelFile.UncheckedModelFile("builtin/entity"));
