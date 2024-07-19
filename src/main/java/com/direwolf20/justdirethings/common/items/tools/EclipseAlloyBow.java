@@ -13,7 +13,7 @@ public class EclipseAlloyBow extends BaseBow implements PoweredTool {
         registerAbility(Ability.SPLASH);
         registerAbility(Ability.LINGERING);
         registerAbility(Ability.HOMING);
-        registerAbility(Ability.EPICARROW, new AbilityParams(1, 1, 1, 1, 200, 100));
+        registerAbility(Ability.EPICARROW, new AbilityParams(1, 1, 1, 1, 200, 2400));
         registerAbility(Ability.PHASE);
     }
 
