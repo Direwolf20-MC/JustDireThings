@@ -11,6 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
@@ -81,6 +82,24 @@ public class TooltipHelpers {
 
     public static void appendShiftForInfo(ItemStack stack, List<Component> tooltip) {
         tooltip.add(Component.translatable("justdirethings.shiftmoreinfo").withStyle(ChatFormatting.GRAY));
+    }
+
+    public static void appendUpgradeDetails(ItemStack stack, List<Component> tooltip) {
+        Ability ability = Ability.getAbilityFromUpgradeItem(stack.getItem());
+        if (ability == null) return;
+
+        String detailTextKey = "justdirethings." + ability.getName() + ".detailtext";
+        String flavorTextKey = "justdirethings." + ability.getName() + ".flavortext";
+
+        MutableComponent detailTextComponent = Component.translatable(detailTextKey);
+        if (!detailTextComponent.getString().equals(detailTextKey)) {
+            tooltip.add(detailTextComponent.withStyle(ChatFormatting.GREEN));
+        }
+
+        MutableComponent flavorTextComponent = Component.translatable(flavorTextKey);
+        if (!flavorTextComponent.getString().equals(flavorTextKey)) {
+            tooltip.add(flavorTextComponent.withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
+        }
     }
 
     public static void appendGeneratorDetails(ItemStack stack, List<Component> tooltip) {
