@@ -103,7 +103,8 @@ public class PortalEntity extends Entity {
         if (isAdvanced && expirationTime > 0) {
             expirationTime = expirationTime - 1;
             if (expirationTime == 0) {
-                getLinkedPortal().setDying();
+                if (getLinkedPortal() != null)
+                    getLinkedPortal().setDying();
                 setDying();
             }
         }
