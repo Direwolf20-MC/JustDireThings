@@ -42,7 +42,8 @@ public interface LeftClickableTool {
         Set<Ability> abilities = new HashSet<>();
         List<String> abilitiesList = stack.getOrDefault(JustDireDataComponents.LEFT_CLICK_ABILITIES, new ArrayList<>());
         for (String abilityName : abilitiesList) {
-            abilities.add(Ability.byName(abilityName));
+            if (getBindingMode(stack, Ability.byName(abilityName)) == 1)
+                abilities.add(Ability.byName(abilityName));
         }
         return abilities;
     }

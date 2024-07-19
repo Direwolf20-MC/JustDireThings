@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolLeftRightClickPayload;
+import com.direwolf20.justdirethings.common.network.data.ToggleToolRefreshSlots;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
 import com.direwolf20.justdirethings.util.MiscTools;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -35,6 +36,7 @@ import java.util.*;
 
 public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContainer> {
     private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/settings.png");
+    protected final ResourceLocation JUSTSLOT = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/justslot.png");
 
     protected final ToolSettingContainer container;
     Player player;
@@ -261,6 +263,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         if (this.tool.getItem() instanceof ToggleableTool toggleableTool) {
             this.abilities = toggleableTool.getAbilities();
             refreshButtons();
+            refreshToolAndSlots();
         }
     }
 
@@ -277,6 +280,9 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         guiGraphics.blit(GUI, relX, relY, 0, 0, this.imageWidth, this.imageHeight);
         if (renderablesChanged)
             updateRenderables();
+        for (Slot slot : container.dynamicSlots) {
+            guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
+        }
     }
 
     @Override
@@ -330,6 +336,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             toolSlot = hoveredSlot.getSlotIndex();
             this.abilities = toggleableTool.getAbilities();
             refreshButtons();
+            refreshToolAndSlots();
             return true;
         }
         if (btn == 1) {
@@ -366,6 +373,11 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
 
     public boolean showCustomBinding() {
         return (shownAbilityButton != null & leftRightClickButtons.containsKey(shownAbilityButton) && (leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 2 || (leftRightClickButtons.get(shownAbilityButton).getTexturePosition() == 0 && buttonToAbilityMap.get(shownAbilityButton).getBindingType() == Ability.BindingType.CUSTOM_ONLY)));
+    }
+
+    public void refreshToolAndSlots() {
+        this.container.refreshSlots(tool);
+        PacketDistributor.sendToServer(new ToggleToolRefreshSlots(toolSlot));
     }
 
     public void updateRenderables() {

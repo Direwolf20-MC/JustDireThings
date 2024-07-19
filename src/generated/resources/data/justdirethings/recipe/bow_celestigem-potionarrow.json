@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_potionarrow"
+  },
+  "base": {
+    "item": "justdirethings:bow_celestigem"
+  },
+  "template": []
+}

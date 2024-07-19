@@ -1,4 +1,4 @@
-// 1.21	2024-07-07T14:11:37.5398139	JustDireThings Item Tags
+// 1.21	2024-07-16T22:02:06.8205993	JustDireThings Item Tags
 c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/c/tags/item/gems.json
 55719b9c6f0430ad38bf081d697aa5406cc27cfb data/c/tags/item/ingots.json
 9171911801c408201b64d8d6b0f5818f194267e9 data/c/tags/item/raw_materials.json
@@ -10,6 +10,7 @@ c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/c/tags/item/gems.json
 efe9e0caf089100a228c46379f3aa70d7f602ddc data/justdirethings/tags/item/deny_fuel_canister.json
 1c8b03c523f967d55db17d349712035ad95cb1cd data/minecraft/tags/item/axes.json
 873813c87b7f12c654fdc3272d5a65755a12146d data/minecraft/tags/item/chest_armor.json
+df583c4c20b6f03190c318d05e4b82c6efefc317 data/minecraft/tags/item/enchantable/bow.json
 873813c87b7f12c654fdc3272d5a65755a12146d data/minecraft/tags/item/enchantable/chest_armor.json
 1444b93d482e0d4d54dea0df60bf7fd79c9eb91b data/minecraft/tags/item/enchantable/foot_armor.json
 a2ccb7bf5acb9f4504091c19b5a5e3b79587f7db data/minecraft/tags/item/enchantable/head_armor.json

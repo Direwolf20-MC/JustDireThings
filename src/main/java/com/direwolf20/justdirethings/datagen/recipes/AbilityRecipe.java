@@ -37,15 +37,15 @@ public class AbilityRecipe implements SmithingRecipe {
     }
 
     public boolean matches(SmithingRecipeInput p_346082_, Level p_345460_) {
-        return isTemplateIngredient(p_346082_.template()) && isBaseIngredient(p_346082_.base()) && isAdditionIngredient(p_346082_.addition());
+        return this.template.test(p_346082_.template()) && this.base.test(p_346082_.base()) && this.addition.test(p_346082_.addition());
     }
 
     public ItemStack assemble(SmithingRecipeInput smithingRecipeInput, HolderLookup.Provider provider) {
         ItemStack base = smithingRecipeInput.base();
         ItemStack upgrade = smithingRecipeInput.addition();
-        if (isBaseIngredient(base)) {
+        if (isBaseIngredient(base) && base.getItem() instanceof ToggleableTool toggleableTool) {
             Ability ability = Ability.getAbilityFromUpgradeItem(upgrade.getItem());
-            if (ability != null && !ToggleableTool.hasUpgrade(base, ability) && Config.AVAILABLE_ABILITY_MAP.get(ability).get()) {
+            if (ability != null && toggleableTool.hasAbility(ability) && !ToggleableTool.hasUpgrade(base, ability) && Config.AVAILABLE_ABILITY_MAP.get(ability).get()) {
                 ItemStack itemstack1 = base.copyWithCount(1);
                 itemstack1.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
                 return itemstack1;

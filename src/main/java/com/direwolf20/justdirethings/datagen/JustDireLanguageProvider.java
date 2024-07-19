@@ -109,6 +109,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.PortalGun.get(), "Portal Gun");
         add(Registration.PortalGunV2.get(), "Advanced Portal Gun");
         add(Registration.FluidCanister.get(), "Fluid Canister");
+        add(Registration.PotionCanister.get(), "Potion Canister");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -134,6 +135,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CelestigemPaxel.get(), "Celestigem Paxel");
         add(Registration.EclipseAlloyPaxel.get(), "Eclipse Alloy Paxel");
         add(Registration.FerricoreWrench.get(), "Ferricore Wrench");
+        add(Registration.FerricoreBow.get(), "Ferricore Bow");
+        add(Registration.BlazegoldBow.get(), "Blazegold Bow");
+        add(Registration.CelestigemBow.get(), "Celestigem Bow");
+        add(Registration.EclipseAlloyBow.get(), "Eclipse Alloy Bow");
 
         //Armors
         add(Registration.FerricoreBoots.get(), "Ferricore Boots");
@@ -208,6 +213,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_FLIGHT.get(), "Upgrade: Flight");
         add(Registration.UPGRADE_LAVAIMMUNITY.get(), "Upgrade: Lava Immunity");
         add(Registration.UPGRADE_PHASE.get(), "Upgrade: Phase");
+        add(Registration.UPGRADE_SPLASH.get(), "Upgrade: Splash");
+        add(Registration.UPGRADE_LINGERING.get(), "Upgrade: Lingering");
+        add(Registration.UPGRADE_POTIONARROW.get(), "Upgrade: Potion Arrow");
+        add(Registration.UPGRADE_HOMING.get(), "Upgrade: Homing Arrow");
+        add(Registration.UPGRADE_EPICARROW.get(), "Upgrade: Yondu Arrow");
 
 
         //Misc
@@ -300,6 +310,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.LAVAIMMUNITY.getLocalization(), "Lava Immunity");
         add(Ability.PHASE.getLocalization(), "Phase");
         add(Ability.EARTHQUAKE.getLocalization(), "Earthquake");
+        add(Ability.SPLASH.getLocalization(), "Splash");
+        add(Ability.LINGERING.getLocalization(), "Lingering");
+        add(Ability.POTIONARROW.getLocalization(), "Potion Arrow");
+        add(Ability.HOMING.getLocalization(), "Homing Arrow");
+        add(Ability.EPICARROW.getLocalization(), "Yondu Arrow");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

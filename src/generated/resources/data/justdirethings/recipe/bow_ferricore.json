@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "f": {
+      "item": "justdirethings:ferricore_ingot"
+    },
+    "s": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "sf ",
+    "s f",
+    "sf "
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:bow_ferricore"
+  }
+}

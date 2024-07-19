@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
+import com.direwolf20.justdirethings.common.items.PotionCanister;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,6 +14,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.ComponentItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.SlotItemHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ToolSettingContainer extends BaseContainer {
     public Player playerEntity;
@@ -25,6 +33,8 @@ public class ToolSettingContainer extends BaseContainer {
             EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET
     };
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+    public final List<Slot> dynamicSlots = new ArrayList<>();
+    public ComponentItemHandler componentItemHandler;
 
 
     public ToolSettingContainer(int windowId, Inventory playerInventory, Player player, FriendlyByteBuf extraData) {
@@ -34,6 +44,9 @@ public class ToolSettingContainer extends BaseContainer {
     public ToolSettingContainer(int windowId, Inventory playerInventory, Player player) {
         super(Registration.Tool_Settings_Container.get(), windowId);
         playerEntity = player;
+
+        addPlayerSlots(playerInventory, 8, 84);
+
         for (int k = 0; k < 4; ++k) {
             final EquipmentSlot equipmentslot = SLOT_IDS[k];
             this.addSlot(new Slot(playerInventory, 39 - k, 44 + k * 18, 66) {
@@ -79,11 +92,78 @@ public class ToolSettingContainer extends BaseContainer {
             }
         });
 
-        addPlayerSlots(playerInventory, 8, 84);
+        refreshSlots(player.getMainHandItem());
+    }
+
+    private void addSelectedItemSlots() {
+        for (int i = 0; i < componentItemHandler.getSlots(); i++) { // Example slot count
+            int x = 134 + (i % 2) * 18; // 2 slots per row
+            int y = 66 - (i / 2) * 18; // 2 rows
+            Slot slot = new SlotItemHandler(componentItemHandler, i, x, y) {
+                @Override
+                public boolean mayPlace(ItemStack stack) {
+                    return stack.getItem() instanceof PotionCanister; // Define valid items for bow slots
+                }
+            };
+            this.addSlot(slot);
+            dynamicSlots.add(slot);
+        }
+    }
+
+    public void clearDynamicSlots() {
+        for (Slot slot : dynamicSlots) {
+            this.slots.remove(slot);
+            this.remoteSlots.remove(remoteSlots.size() - 1);
+        }
+        dynamicSlots.clear();
+    }
+
+    public void refreshSlots(ItemStack selectedStack) {
+        clearDynamicSlots();
+        componentItemHandler = getItemSlots(selectedStack);
+        if (componentItemHandler != null) {
+            addSelectedItemSlots();
+        }
+    }
+
+    public ComponentItemHandler getItemSlots(ItemStack itemStack) {
+        IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
+        if (itemHandler instanceof ComponentItemHandler componentItemHandler)
+            return componentItemHandler;
+        return null;
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        if (!dynamicSlots.isEmpty()) {
+            Slot slot = this.slots.get(index);
+            if (slot.hasItem()) {
+                ItemStack currentStack = slot.getItem();
+                if (index >= Inventory.INVENTORY_SIZE + 5) { //Dynamic Slots to Player Inventory
+                    if (!this.moveItemStackTo(currentStack, 0, Inventory.INVENTORY_SIZE, true)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                if (index < Inventory.INVENTORY_SIZE) { //Player Inventory to Dynamic Slots
+                    if (!this.moveItemStackTo(currentStack, Inventory.INVENTORY_SIZE + 5, Inventory.INVENTORY_SIZE + 5 + dynamicSlots.size(), false)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+
+                if (currentStack.isEmpty()) {
+                    slot.set(ItemStack.EMPTY);
+                } else {
+                    slot.setChanged();
+                }
+
+                if (currentStack.getCount() == itemstack.getCount()) {
+                    return ItemStack.EMPTY;
+                }
+
+                slot.onTake(playerIn, currentStack);
+            }
+        }
         return ItemStack.EMPTY;
     }
 

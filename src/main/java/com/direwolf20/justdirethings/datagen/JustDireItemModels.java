@@ -8,6 +8,7 @@ import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -106,6 +107,8 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.TEMPLATE_CELESTIGEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_celestigem"));
         singleTexture(Registration.TEMPLATE_ECLIPSEALLOY.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_eclipsealloy"));
 
+        registerBowModels();
+
 
         //Tool Items
         registerTools();
@@ -187,5 +190,58 @@ public class JustDireItemModels extends ItemModelProvider {
                 .predicate(ResourceLocation.fromNamespaceAndPath("justdirethings", "enabled"), 1.0F) // Using custom property
                 .model(singleTexture(path + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
                 .end();
+    }
+
+    private ItemModelBuilder forBows(ItemModelBuilder builder) {
+        return builder
+                .transforms()
+                .transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND)
+                .rotation(-80, 260, -40)
+                .translation(-1.0f, -2.0f, 2.5f)
+                .scale(0.9f, 0.9f, 0.9f)
+                .end()
+                .transform(ItemDisplayContext.THIRD_PERSON_LEFT_HAND)
+                .rotation(-80, -280, 40)
+                .translation(-1.0f, -2.0f, 2.5f)
+                .scale(0.9f, 0.9f, 0.9f)
+                .end()
+                .transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND)
+                .rotation(0, -90, 25)
+                .translation(1.13f, 3.2f, 1.13f)
+                .scale(0.68f, 0.68f, 0.68f)
+                .end()
+                .transform(ItemDisplayContext.FIRST_PERSON_LEFT_HAND)
+                .rotation(0, 90, -25)
+                .translation(1.13f, 3.2f, 1.13f)
+                .scale(0.68f, 0.68f, 0.68f)
+                .end()
+                .end();
+    }
+
+    private void registerBowModels() {
+        for (var bow : Registration.BOWS.getEntries()) {
+            String bowName = bow.getId().getPath();
+            // Base bow model
+            forBows(singleTexture(bowName, mcLoc("item/generated"), "layer0", modLoc("item/bows/" + bowName)));
+
+            // Pulling models
+            getBuilder(bowName + "_pulling_0")
+                    .parent(getExistingFile(mcLoc("item/generated")))
+                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_0"));
+
+            getBuilder(bowName + "_pulling_1")
+                    .parent(getExistingFile(mcLoc("item/generated")))
+                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_1"));
+
+            getBuilder(bowName + "_pulling_2")
+                    .parent(getExistingFile(mcLoc("item/generated")))
+                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_2"));
+
+            // Overrides for pulling states
+            getBuilder(bowName)
+                    .override().predicate(modLoc("pulling"), 1).model(getExistingFile(modLoc("item/" + bowName + "_pulling_0"))).end()
+                    .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.45f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_1"))).end()
+                    .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.9f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_2"))).end();
+        }
     }
 }

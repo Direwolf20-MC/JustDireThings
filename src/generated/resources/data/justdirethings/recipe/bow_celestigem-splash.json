@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_splash"
+  },
+  "base": {
+    "item": "justdirethings:bow_celestigem"
+  },
+  "template": []
+}

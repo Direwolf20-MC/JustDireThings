@@ -9,10 +9,7 @@ import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBloc
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier3;
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier4;
 import com.direwolf20.justdirethings.client.entitymodels.PortalProjectileModel;
-import com.direwolf20.justdirethings.client.entityrenders.CreatureCatcherEntityRender;
-import com.direwolf20.justdirethings.client.entityrenders.DecoyEntityRender;
-import com.direwolf20.justdirethings.client.entityrenders.PortalEntityRender;
-import com.direwolf20.justdirethings.client.entityrenders.PortalProjectileRender;
+import com.direwolf20.justdirethings.client.entityrenders.*;
 import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
@@ -24,11 +21,14 @@ import com.direwolf20.justdirethings.client.screens.*;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
+import com.direwolf20.justdirethings.common.items.PotionCanister;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
+import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -65,11 +65,27 @@ public class ClientSetup {
                 registerEnabledToolTextures(tool.get());
             }
             registerEnabledToolTextures(Registration.Pocket_Generator.get());
+            for (var bow : Registration.BOWS.getEntries()) {
+                if (bow.get() instanceof BaseBow baseBow) {
+                    ItemProperties.register(bow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pull"), (stack, level, living, id) -> {
+                        if (living == null || living.getUseItem() != stack) return 0.0F;
+                        return (stack.getUseDuration(living) - (living.getUseItemRemainingTicks() + (20 - baseBow.getMaxDraw()))) / baseBow.getMaxDraw();
+                    });
+                    ItemProperties.register(bow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pulling"), (stack, level, living, id) -> {
+                        return living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F;
+                    });
+                }
+            }
         });
 
         event.enqueueWork(() -> {
             ItemProperties.register(Registration.FluidCanister.get(),
                     ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
+        });
+
+        event.enqueueWork(() -> {
+            ItemProperties.register(Registration.PotionCanister.get(),
+                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "potion_fullness"), (stack, level, living, id) -> PotionCanister.getFullness(stack));
         });
 
         event.enqueueWork(() -> {
@@ -157,6 +173,7 @@ public class ClientSetup {
         event.register(Registration.FluidPlacerT2_Container.get(), FluidPlacerT2Screen::new);
         event.register(Registration.FluidCollectorT1_Container.get(), FluidCollectorT1Screen::new);
         event.register(Registration.FluidCollectorT2_Container.get(), FluidCollectorT2Screen::new);
+        event.register(Registration.PotionCanister_Container.get(), PotionCanisterScreen::new);
     }
 
     @SubscribeEvent
@@ -183,6 +200,8 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.PortalEntity.get(), PortalEntityRender::new);
         event.registerEntityRenderer(Registration.PortalProjectile.get(), PortalProjectileRender::new);
         event.registerEntityRenderer(Registration.DecoyEntity.get(), DecoyEntityRender::new);
+        event.registerEntityRenderer(Registration.JustDireArrow.get(), JustDireArrowRenderer::new);
+        event.registerEntityRenderer(Registration.JustDireAreaEffectCloud.get(), NoopRenderer::new);
     }
 
     @SubscribeEvent
@@ -204,5 +223,12 @@ public class ClientSetup {
             }
             return 0xFFFFFFFF;
         }, Registration.FluidCanister.get());
+
+        colors.register((stack, index) -> {
+            if (index == 1 && stack.getItem() instanceof PotionCanister) {
+                return PotionCanister.getPotionColor(stack);
+            }
+            return 0xFFFFFFFF;
+        }, Registration.PotionCanister.get());
     }
 }

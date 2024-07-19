@@ -32,6 +32,7 @@ public class PacketHandler {
         registrar.playToServer(ToggleToolLeftRightClickPayload.TYPE, ToggleToolLeftRightClickPayload.STREAM_CODEC, ToggleToolLeftRightClickPacket.get()::handle);
         registrar.playToServer(ToggleToolPayload.TYPE, ToggleToolPayload.STREAM_CODEC, ToggleToolPacket.get()::handle);
         registrar.playToServer(ToggleToolSlotPayload.TYPE, ToggleToolSlotPayload.STREAM_CODEC, ToggleToolSlotPacket.get()::handle);
+        registrar.playToServer(ToggleToolRefreshSlots.TYPE, ToggleToolRefreshSlots.STREAM_CODEC, ToggleToolRefreshSlotsPacket.get()::handle);
 
         //Going to Client
         registrar.playToClient(ClientSoundPayload.TYPE, ClientSoundPayload.STREAM_CODEC, ClientSoundPacket.get()::handle);

@@ -375,6 +375,15 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.PotionCanister.get())
+                .pattern(" i ")
+                .pattern("igi")
+                .pattern(" i ")
+                .define('i', Registration.FerricoreIngot.get())
+                .define('g', Items.GLASS_BOTTLE)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.Pocket_Generator.get())
                 .pattern("iri")
                 .pattern("cfc")
@@ -823,6 +832,52 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('a', Items.SHULKER_SHELL)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_SPLASH.get())
+                .pattern("p p")
+                .pattern("gbg")
+                .pattern("p p")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.GLASS_BOTTLE)
+                .define('p', Items.GUNPOWDER)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_LINGERING.get())
+                .pattern("p p")
+                .pattern("gbg")
+                .pattern("p p")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.GLASS_BOTTLE)
+                .define('p', Items.DRAGON_BREATH)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_POTIONARROW.get())
+                .pattern("p p")
+                .pattern("gbg")
+                .pattern("p p")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.GLASS_BOTTLE)
+                .define('p', Items.NETHER_WART)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_HOMING.get())
+                .pattern("p p")
+                .pattern("gbg")
+                .pattern("p p")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.TARGET)
+                .define('p', Items.ENDER_EYE)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_EPICARROW.get())
+                .pattern("psp")
+                .pattern("gbg")
+                .pattern("psp")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Items.PHANTOM_MEMBRANE)
+                .define('p', Items.ENDER_EYE)
+                .define('s', Items.NETHER_STAR)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
 
         //GooSpread Recipes
         GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
@@ -972,6 +1027,54 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreBow.get())
+                .pattern("sf ")
+                .pattern("s f")
+                .pattern("sf ")
+                .define('f', Registration.FerricoreIngot.get())
+                .define('s', Items.STRING)
+                .group("justdirethings")
+                .unlockedBy("has_ferricore_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.FerricoreIngot.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldBow.get())
+                .pattern("sf ")
+                .pattern("s f")
+                .pattern("sf ")
+                .define('f', Registration.BlazegoldIngot.get())
+                .define('s', Items.STRING)
+                .group("justdirethings")
+                .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
+                .save(consumer);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreBow.get()),
+                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldBow.get())
+                .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldBow.getId().getPath() + "-templateupgrade"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemBow.get())
+                .pattern("sf ")
+                .pattern("s f")
+                .pattern("sf ")
+                .define('f', Registration.Celestigem.get())
+                .define('s', Items.STRING)
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
+                .save(consumer);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldBow.get()),
+                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemBow.get())
+                .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemBow.getId().getPath() + "-templateupgrade"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyBow.get())
+                .pattern("sf ")
+                .pattern("s f")
+                .pattern("sf ")
+                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('s', Items.STRING)
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemBow.get()),
+                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyBow.get())
+                .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyBow.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldSword.get())
                 .pattern(" f ")
@@ -1442,6 +1545,18 @@ public class JustDireRecipes extends RecipeProvider {
                         EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
                         if (abilities.contains(ability)) {
                             AbilityRecipeBuilder.shapeless(Ingredient.EMPTY, Ingredient.of(tool.get()), Ingredient.of(upgrade.get()))
+                                    .group("justdirethings")
+                                    .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                                    .save(consumer);
+                        }
+                    }
+                }
+                for (var bow : Registration.BOWS.getEntries()) {
+                    Item bowItem = bow.get();
+                    if (bowItem instanceof ToggleableTool toggleableTool) {
+                        EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
+                        if (abilities.contains(ability)) {
+                            AbilityRecipeBuilder.shapeless(Ingredient.EMPTY, Ingredient.of(bow.get()), Ingredient.of(upgrade.get()))
                                     .group("justdirethings")
                                     .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                                     .save(consumer);

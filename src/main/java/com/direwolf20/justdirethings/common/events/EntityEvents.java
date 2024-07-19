@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.events;
 
+import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
@@ -7,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -31,6 +34,13 @@ public class EntityEvents {
     }
 
     static Map<FluidInputs, BlockState> fluidCraftCache = new HashMap<>();
+
+    @SubscribeEvent
+    public static void livingUseItem(LivingEntityUseItemEvent.Start event) {
+        if (event.getEntity() instanceof Player && event.getItem().getItem() instanceof BaseBow baseBow) {
+            event.setDuration(event.getDuration() - (20 - (int) baseBow.getMaxDraw()));
+        }
+    }
 
     @SubscribeEvent
     public static void entityTick(EntityTickEvent.Post e) {

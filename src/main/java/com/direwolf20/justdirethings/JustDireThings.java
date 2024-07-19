@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
 import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
+import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
@@ -32,6 +33,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.items.ComponentItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.slf4j.Logger;
 
@@ -76,6 +78,21 @@ public class JustDireThings {
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new DataComponentHandler(itemStack, 1),
                 Registration.Pocket_Generator.get()
         );
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
+                Registration.FerricoreBow.get()
+        );
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 2),
+                Registration.BlazegoldBow.get()
+        );
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 3),
+                Registration.CelestigemBow.get()
+        );
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 4),
+                Registration.EclipseAlloyBow.get()
+        );
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new PotionCanisterHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
+                Registration.PotionCanister.get()
+        );
         event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
                     int capacity = 1000000; //Default
                     if (itemStack.getItem() instanceof PoweredItem poweredItem) {
@@ -115,7 +132,9 @@ public class JustDireThings {
                 Registration.EclipseAlloyBoots.get(),
                 Registration.EclipseAlloyLeggings.get(),
                 Registration.EclipseAlloyChestplate.get(),
-                Registration.EclipseAlloyHelmet.get()
+                Registration.EclipseAlloyHelmet.get(),
+                Registration.CelestigemBow.get(),
+                Registration.EclipseAlloyBow.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {

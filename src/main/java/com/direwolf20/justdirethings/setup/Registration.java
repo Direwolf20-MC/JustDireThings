@@ -19,10 +19,7 @@ import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier4;
 import com.direwolf20.justdirethings.common.capabilities.*;
 import com.direwolf20.justdirethings.common.containers.*;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
-import com.direwolf20.justdirethings.common.entities.DecoyEntity;
-import com.direwolf20.justdirethings.common.entities.PortalEntity;
-import com.direwolf20.justdirethings.common.entities.PortalProjectile;
+import com.direwolf20.justdirethings.common.entities.*;
 import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
 import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluid;
 import com.direwolf20.justdirethings.common.fluids.polymorphicfluid.PolymorphicFluidBlock;
@@ -108,6 +105,7 @@ public class Registration {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items BUCKET_ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items TOOLS = DeferredRegister.createItems(MODID);
+    public static final DeferredRegister.Items BOWS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items ARMORS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister.Items UPGRADES = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, MODID);
@@ -142,6 +140,7 @@ public class Registration {
         ITEMS.register(eventBus);
         BUCKET_ITEMS.register(eventBus);
         TOOLS.register(eventBus);
+        BOWS.register(eventBus);
         BLOCK_ENTITIES.register(eventBus);
         CONTAINERS.register(eventBus);
         ATTACHMENT_TYPES.register(eventBus);
@@ -434,6 +433,11 @@ public class Registration {
     public static final DeferredHolder<Item, PortalGun> PortalGun = ITEMS.register("portalgun", PortalGun::new);
     public static final DeferredHolder<Item, PortalGunV2> PortalGunV2 = ITEMS.register("portalgun_v2", PortalGunV2::new);
     public static final DeferredHolder<Item, FluidCanister> FluidCanister = ITEMS.register("fluid_canister", FluidCanister::new);
+    public static final DeferredHolder<Item, PotionCanister> PotionCanister = ITEMS.register("potion_canister", PotionCanister::new);
+    public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = BOWS.register("bow_ferricore", FerricoreBow::new);
+    public static final DeferredHolder<Item, BlazegoldBow> BlazegoldBow = BOWS.register("bow_blazegold", BlazegoldBow::new);
+    public static final DeferredHolder<Item, CelestigemBow> CelestigemBow = BOWS.register("bow_celestigem", CelestigemBow::new);
+    public static final DeferredHolder<Item, EclipseAlloyBow> EclipseAlloyBow = BOWS.register("bow_eclipsealloy", EclipseAlloyBow::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);
@@ -503,6 +507,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_JUMPBOOST = UPGRADES.register("upgrade_jumpboost", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_MINDFOG = UPGRADES.register("upgrade_mindfog", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_INVULNERABILITY = UPGRADES.register("upgrade_invulnerability", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_POTIONARROW = UPGRADES.register("upgrade_potionarrow", Upgrade::new);
 
     //Tier 2 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_SMELTER = UPGRADES.register("upgrade_smelter", Upgrade::new);
@@ -513,6 +518,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_GROUNDSTOMP = UPGRADES.register("upgrade_groundstomp", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_EXTINGUISH = UPGRADES.register("upgrade_extinguish", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_STUPEFY = UPGRADES.register("upgrade_stupefy", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SPLASH = UPGRADES.register("upgrade_splash", Upgrade::new);
 
     //Tier 3 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", Upgrade::new);
@@ -520,6 +526,8 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_NEGATEFALLDAMAGE = UPGRADES.register("upgrade_negatefalldamage", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_NIGHTVISION = UPGRADES.register("upgrade_nightvision", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DECOY = UPGRADES.register("upgrade_decoy", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LINGERING = UPGRADES.register("upgrade_lingering", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_HOMING = UPGRADES.register("upgrade_homing", Upgrade::new);
 
     //Tier 4 Abilities
     public static final DeferredHolder<Item, Upgrade> UPGRADE_OREXRAY = UPGRADES.register("upgrade_orexray", Upgrade::new);
@@ -532,6 +540,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_PHASE = UPGRADES.register("upgrade_phase", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_EPICARROW = UPGRADES.register("upgrade_epicarrow", Upgrade::new);
 
     //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",
@@ -540,6 +549,13 @@ public class Registration {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("creature_catcher"));
+    public static final DeferredHolder<EntityType<?>, EntityType<JustDireArrow>> JustDireArrow = ENTITY_TYPES.register("justdirearrow",
+            () -> EntityType.Builder.<JustDireArrow>of(JustDireArrow::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .eyeHeight(0.13F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20)
+                    .build("justdirearrow"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<PortalProjectile>> PortalProjectile = ENTITY_TYPES.register("portal_projectile",
             () -> EntityType.Builder.<PortalProjectile>of(PortalProjectile::new, MobCategory.MISC)
@@ -560,6 +576,13 @@ public class Registration {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("decoy_entity"));
+    public static final DeferredHolder<EntityType<?>, EntityType<JustDireAreaEffectCloud>> JustDireAreaEffectCloud = ENTITY_TYPES.register("justdireareaeffectcloud",
+            () -> EntityType.Builder.<JustDireAreaEffectCloud>of(JustDireAreaEffectCloud::new, MobCategory.MISC)
+                    .fireImmune()
+                    .sized(6.0F, 0.5F)
+                    .clientTrackingRange(10)
+                    .updateInterval(Integer.MAX_VALUE)
+                    .build("justdireareaeffectcloud"));
 
     //Attributes
     public static final Holder<Attribute> PHASE = ATTRIBUTES.register("phase", () -> new RangedAttribute("justdirethings.phase", 0D, 0D, Double.MAX_VALUE).setSyncable(true));
@@ -614,6 +637,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(FluidCollectorT1Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<FluidCollectorT2Container>> FluidCollectorT2_Container = CONTAINERS.register("fluidcollectort2_container",
             () -> IMenuTypeExtension.create(FluidCollectorT2Container::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<PotionCanisterContainer>> PotionCanister_Container = CONTAINERS.register("potioncanister_container",
+            () -> IMenuTypeExtension.create((windowId, inv, data) -> new PotionCanisterContainer(windowId, inv, inv.player, data)));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(

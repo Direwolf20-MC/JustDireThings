@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": {
+      "item": "justdirethings:upgrade_blank"
+    },
+    "g": {
+      "item": "minecraft:target"
+    },
+    "p": {
+      "item": "minecraft:ender_eye"
+    }
+  },
+  "pattern": [
+    "p p",
+    "gbg",
+    "p p"
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:upgrade_homing"
+  }
+}
