@@ -11,6 +11,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -57,6 +58,8 @@ public class JustDireArrow extends AbstractArrow {
     private static final int MAX_TARGETS = 10;
 
     private static final byte EVENT_POTION_PUFF = 0;
+
+    private boolean canHitMobs = true;
 
     private LivingEntity targetEntity;
 
@@ -174,9 +177,25 @@ public class JustDireArrow extends AbstractArrow {
     }
 
     @Override
+    protected EntityHitResult findHitEntity(Vec3 startVec, Vec3 endVec) {
+        if (!canHitMobs)
+            return null;
+        return super.findHitEntity(startVec, endVec);
+    }
+
+    @Override
     public void tick() {
         if (isPhase()) {
             this.noPhysics = true;
+        } else {
+            this.noPhysics = false;
+        }
+        if (this.isPhase() && !level().isClientSide) {
+            if (tickCount >= 200) {
+                this.discard();
+                return;
+            }
+            canHitMobs = true;
             // Handle entity collisions manually
             Vec3 vec32 = this.position();
             Vec3 vec33 = vec32.add(getDeltaMovement());
@@ -184,15 +203,10 @@ public class JustDireArrow extends AbstractArrow {
             if (entityhitresult != null) {
                 this.onHit(entityhitresult);
             }
-        } else {
-            this.noPhysics = false;
+            canHitMobs = false;
         }
         super.tick();
-        if (isPhase() && tickCount >= 200) {
-            System.out.println("Too Old!");
-            this.discard();
-            return;
-        }
+
         if (isEpic() && targetEntity != null && wasAlreadyHit(targetEntity)) {
             targetEntity = this.findNearestEntity();
         }
@@ -203,12 +217,18 @@ public class JustDireArrow extends AbstractArrow {
                 this.discard();
             } else {
                 targetEntity = this.findNearestEntity();
-                if (targetEntity == null || !targetEntity.isAlive())
+                if (targetEntity == null || !targetEntity.isAlive()) {
                     this.discard();
+                }
             }
         }
+
         if (this.entityData.get(IS_HOMING) && !this.inGround) {
             ArrowState currentState = ArrowState.values()[this.entityData.get(ARROW_STATE)];
+            if (currentState != ArrowState.NORMAL && targetEntity == null && tickCount > 5) {
+                this.discard();
+                return;
+            }
             int stateTickCounter = this.entityData.get(STATE_TICK_COUNTER);
 
             switch (currentState) {
@@ -304,7 +324,7 @@ public class JustDireArrow extends AbstractArrow {
             float yawDifference = wrapDegrees(targetYaw - currentYaw);
             float newYaw = currentYaw + yawDifference * 0.3f; // Smooth rotation factor
 
-            float pitchDifference = targetPitch - currentPitch;
+            float pitchDifference = wrapDegrees(targetPitch - currentPitch);
             float newPitch = currentPitch + pitchDifference * 0.3f; // Smooth rotation factor
 
             this.yRotO = currentYaw;
@@ -341,6 +361,11 @@ public class JustDireArrow extends AbstractArrow {
     @Override
     public void setYRot(float yRot) {
         if (yRot == 0f && getDeltaMovement().equals(Vec3.ZERO)) return;
+        if (isPhase()) {
+            Vec3 delta = getDeltaMovement();
+            if (yRot == (float) (Mth.atan2(-delta.x, -delta.z) * 180.0F / (float) Math.PI))
+                return;
+        }
         super.setYRot(yRot);
     }
 
@@ -397,10 +422,9 @@ public class JustDireArrow extends AbstractArrow {
         Vec3 direction = targetCenterPosition.subtract(arrowPosition).normalize();
 
         // Update the arrow's motion
-        if (this.getDeltaMovement().equals(Vec3.ZERO) && !level().isClientSide) {
-            System.out.println("Too Slow!");
+        if (this.getDeltaMovement().equals(Vec3.ZERO))
             this.setDeltaMovement(direction.scale(0.1f));
-        } else
+        else
             this.setDeltaMovement(direction.scale(this.getDeltaMovement().length()));
 
         // Update the arrow's rotation to point towards the target
