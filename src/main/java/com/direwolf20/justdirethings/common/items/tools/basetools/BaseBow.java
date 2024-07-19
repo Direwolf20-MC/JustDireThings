@@ -91,6 +91,11 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             if (!toggleableTool.getEnabled(itemStack))
                 return customArrow(justDireArrow, stack, itemStack);
 
+            if (canUseAbilityAndDurability(itemStack, Ability.PHASE)) {
+                justDireArrow.setPhase(true);
+                Helpers.damageTool(itemStack, livingEntity, Ability.PHASE);
+            }
+
             if (canUseAbilityAndDurability(itemStack, Ability.HOMING)) {
                 justDireArrow.setHoming(true);
                 Helpers.damageTool(itemStack, livingEntity, Ability.HOMING);

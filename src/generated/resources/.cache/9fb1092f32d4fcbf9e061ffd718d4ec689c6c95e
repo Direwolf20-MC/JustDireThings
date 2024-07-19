@@ -1,4 +1,4 @@
-// 1.21	2024-07-18T14:12:19.6502277	Recipes
+// 1.21	2024-07-18T22:07:07.4375558	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancement/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancement/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancement/recipes/building_blocks/coal_t1_9x9.json
@@ -78,6 +78,7 @@ b15d7408de935e5e545bad77669e11dd945d637b data/justdirethings/advancement/recipes
 0987afff850407895ce8c3fe2e87e5221d69314c data/justdirethings/advancement/recipes/misc/bow_eclipsealloy-epicarrow.json
 fd323bd078d37b3fd8859d7947a53c8b0a26994e data/justdirethings/advancement/recipes/misc/bow_eclipsealloy-homing.json
 9ca93fb1879176cea933b0f6b17ad4d45a3789fb data/justdirethings/advancement/recipes/misc/bow_eclipsealloy-lingering.json
+10553f2833b651731d46d3bac3787637301a80de data/justdirethings/advancement/recipes/misc/bow_eclipsealloy-phase.json
 62a952abcefa5a40d1aef410950f8bcae1023863 data/justdirethings/advancement/recipes/misc/bow_eclipsealloy-potionarrow.json
 0a6a6f1a0e58d37251ce80b74d3cd0668be08c6d data/justdirethings/advancement/recipes/misc/bow_eclipsealloy-splash.json
 d279093ed9ce64cd654927348b368e3548b0ff59 data/justdirethings/advancement/recipes/misc/bow_eclipsealloy-templateupgrade.json
@@ -434,6 +435,7 @@ a095430e183413e1aa0b4c554311069fe95e807f data/justdirethings/recipe/bow_celestig
 3c74018f9b8104df54b738e20028e3baa44f6960 data/justdirethings/recipe/bow_eclipsealloy-epicarrow.json
 38ae7af89495910b131dfd96e8f3aef349849265 data/justdirethings/recipe/bow_eclipsealloy-homing.json
 216f2301e8dd53b54a08d4ce2c751b5e74f29079 data/justdirethings/recipe/bow_eclipsealloy-lingering.json
+f333716944fb829303b665265a50e9f1c3d650a1 data/justdirethings/recipe/bow_eclipsealloy-phase.json
 45e80ee4576d21413992b5ec7fc5c62f9687544a data/justdirethings/recipe/bow_eclipsealloy-potionarrow.json
 eb83cea47699d2c414a805c7517de8618b9a9ece data/justdirethings/recipe/bow_eclipsealloy-splash.json
 d535a28de20127787c1cf57a8c6dd524420eca45 data/justdirethings/recipe/bow_eclipsealloy-templateupgrade.json

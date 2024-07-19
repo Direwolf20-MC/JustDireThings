@@ -43,7 +43,7 @@ public class JustDireArrow extends AbstractArrow {
     private static final EntityDataAccessor<Integer> STATE_TICK_COUNTER = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> ORIGINAL_VELOCITY = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> IS_EPIC_ARROW = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
-    //private static final EntityDataAccessor<Integer> TARGETS_HIT = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_PHASE = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
 
     private enum ArrowState {
         NORMAL,
@@ -118,6 +118,14 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(IS_HOMING, homing);
     }
 
+    public void setPhase(boolean phase) {
+        this.entityData.set(IS_PHASE, phase);
+    }
+
+    public boolean isPhase() {
+        return this.entityData.get(IS_PHASE);
+    }
+
     public float getOriginalVelocity() {
         return this.entityData.get(ORIGINAL_VELOCITY);
     }
@@ -143,7 +151,7 @@ public class JustDireArrow extends AbstractArrow {
         p_326324_.define(STATE_TICK_COUNTER, 0);
         p_326324_.define(ORIGINAL_VELOCITY, 0f);
         p_326324_.define(IS_EPIC_ARROW, false);
-        //p_326324_.define(TARGETS_HIT, 0);
+        p_326324_.define(IS_PHASE, false);
     }
 
     public void setData(EntityDataAccessor<Integer> entityDataAccessor, int value) {
@@ -161,8 +169,30 @@ public class JustDireArrow extends AbstractArrow {
     }
 
     @Override
+    public void setDeltaMovement(Vec3 deltaMovement) {
+        super.setDeltaMovement(deltaMovement);
+    }
+
+    @Override
     public void tick() {
+        if (isPhase()) {
+            this.noPhysics = true;
+            // Handle entity collisions manually
+            Vec3 vec32 = this.position();
+            Vec3 vec33 = vec32.add(getDeltaMovement());
+            EntityHitResult entityhitresult = this.findHitEntity(vec32, vec33);
+            if (entityhitresult != null) {
+                this.onHit(entityhitresult);
+            }
+        } else {
+            this.noPhysics = false;
+        }
         super.tick();
+        if (isPhase() && tickCount >= 200) {
+            System.out.println("Too Old!");
+            this.discard();
+            return;
+        }
         if (isEpic() && targetEntity != null && wasAlreadyHit(targetEntity)) {
             targetEntity = this.findNearestEntity();
         }
@@ -367,7 +397,11 @@ public class JustDireArrow extends AbstractArrow {
         Vec3 direction = targetCenterPosition.subtract(arrowPosition).normalize();
 
         // Update the arrow's motion
-        this.setDeltaMovement(direction.scale(this.getDeltaMovement().length()));
+        if (this.getDeltaMovement().equals(Vec3.ZERO) && !level().isClientSide) {
+            System.out.println("Too Slow!");
+            this.setDeltaMovement(direction.scale(0.1f));
+        } else
+            this.setDeltaMovement(direction.scale(this.getDeltaMovement().length()));
 
         // Update the arrow's rotation to point towards the target
         double dx = direction.x;
@@ -406,6 +440,9 @@ public class JustDireArrow extends AbstractArrow {
 
     @Override
     protected void onHit(HitResult result) {
+        HitResult.Type hitresult$type = result.getType();
+        if (isPhase() && hitresult$type == HitResult.Type.BLOCK)
+            return;
         super.onHit(result);
         PotionContents potioncontents = getPotionContents();
         if (potioncontents.is(Potions.WATER)) {
@@ -427,6 +464,10 @@ public class JustDireArrow extends AbstractArrow {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
+    }
+
+    public boolean isCurrentlyGlowing() {
+        return isPhase();
     }
 
     @Override
@@ -591,7 +632,7 @@ public class JustDireArrow extends AbstractArrow {
         pCompound.putInt("state_tick_counter", this.entityData.get(STATE_TICK_COUNTER));
         pCompound.putFloat("original_velocity", this.entityData.get(ORIGINAL_VELOCITY));
         pCompound.putBoolean("is_epic_arrow", this.entityData.get(IS_EPIC_ARROW));
-        //pCompound.putInt("targets_hit", this.entityData.get(TARGETS_HIT));
+        pCompound.putBoolean("is_phase", this.entityData.get(IS_PHASE));
     }
 
     @Override
@@ -605,6 +646,6 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(STATE_TICK_COUNTER, pCompound.getInt("state_tick_counter"));
         this.entityData.set(ORIGINAL_VELOCITY, pCompound.getFloat("original_velocity"));
         this.entityData.set(IS_EPIC_ARROW, pCompound.getBoolean("is_epic_arrow"));
-        //this.entityData.set(TARGETS_HIT, pCompound.getInt("targets_hit"));
+        this.entityData.set(IS_PHASE, pCompound.getBoolean("is_phase"));
     }
 }
