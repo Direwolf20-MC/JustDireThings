@@ -145,8 +145,9 @@ public class PortalProjectile extends Projectile {
         Level level = this.level();
         MinecraftServer server = level.getServer();
         if (server == null) return;
+        if (getOwner() == null) return;
         if (!level.isClientSide) {
-            PortalEntity source = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, true);
+            PortalEntity source = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, true, getOwner().getUUID());
             if (direction.getAxis() != Direction.Axis.Y) {
                 y = y - 1.5;
                 BlockState belowState = level.getBlockState(hitPos.relative(direction).below());
@@ -171,7 +172,7 @@ public class PortalProjectile extends Projectile {
 
             ServerLevel boundLevel = server.getLevel(portalDestination.globalVec3().dimension());
             if (boundLevel == null) return;
-            PortalEntity destination = new PortalEntity(boundLevel, portalDestination.direction(), portalDestination.direction().getAxis(), portalGunUUID, !isPrimaryType, true);
+            PortalEntity destination = new PortalEntity(boundLevel, portalDestination.direction(), portalDestination.direction().getAxis(), portalGunUUID, !isPrimaryType, true, getOwner().getUUID());
             destination.setPos(portalDestination.globalVec3().position());
             destination.refreshDimensions();
             AABB destinationBoundingBox = destination.getBoundingBox();
@@ -194,8 +195,9 @@ public class PortalProjectile extends Projectile {
         Level level = this.level();
         MinecraftServer server = level.getServer();
         if (server == null) return;
+        if (getOwner() == null) return;
         if (!level.isClientSide) {
-            PortalEntity portal = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, false);
+            PortalEntity portal = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, false, getOwner().getUUID());
             if (direction.getAxis() != Direction.Axis.Y) {
                 y = y - 1.5;
                 BlockState belowState = level.getBlockState(hitPos.relative(direction).below());

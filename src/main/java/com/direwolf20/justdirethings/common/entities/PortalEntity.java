@@ -23,6 +23,7 @@ import net.neoforged.neoforge.entity.PartEntity;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class PortalEntity extends Entity {
@@ -38,6 +39,8 @@ public class PortalEntity extends Entity {
     public final Map<UUID, Vec3> entityLastLastPosition = new HashMap<>();
     public int expirationTime = -99;
     public int deathCounter = 0;
+    @Nullable
+    private UUID ownerUUID;
 
     private static final EntityDataAccessor<Byte> DIRECTION = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
     private static final EntityDataAccessor<Byte> ALIGNMENT = SynchedEntityData.defineId(PortalEntity.class, EntityDataSerializers.BYTE);
@@ -48,7 +51,7 @@ public class PortalEntity extends Entity {
         super(entityType, world);
     }
 
-    public PortalEntity(Level world, Direction direction, Direction.Axis axis, UUID portalGunUUID, boolean isPrimary, boolean isAdvanced) {
+    public PortalEntity(Level world, Direction direction, Direction.Axis axis, UUID portalGunUUID, boolean isPrimary, boolean isAdvanced, UUID owner) {
         this(Registration.PortalEntity.get(), world);
         this.entityData.set(DIRECTION, (byte) direction.ordinal());
         this.portalGunUUID = portalGunUUID;
@@ -57,6 +60,17 @@ public class PortalEntity extends Entity {
         this.isAdvanced = isAdvanced;
         if (isAdvanced)
             expirationTime = 100;
+        setOwner(owner);
+    }
+
+    public void setOwner(UUID owner) {
+        if (owner != null) {
+            this.ownerUUID = owner;
+        }
+    }
+
+    public UUID getOwner() {
+        return ownerUUID;
     }
 
     public UUID getPortalGunUUID() {
@@ -189,6 +203,9 @@ public class PortalEntity extends Entity {
             portalGunUUID = compound.getUUID("portalGunUUID");
         if (compound.hasUUID("linkedPortalUUID"))
             linkedPortalUUID = compound.getUUID("linkedPortalUUID");
+        if (compound.hasUUID("Owner")) {
+            this.ownerUUID = compound.getUUID("Owner");
+        }
     }
 
     @Override
@@ -203,6 +220,9 @@ public class PortalEntity extends Entity {
         }
         if (this.linkedPortalUUID != null) {
             compound.putUUID("linkedPortalUUID", this.linkedPortalUUID);
+        }
+        if (this.ownerUUID != null) {
+            compound.putUUID("Owner", this.ownerUUID);
         }
     }
 

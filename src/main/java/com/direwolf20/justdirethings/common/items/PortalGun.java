@@ -50,16 +50,16 @@ public class PortalGun extends BasePoweredItem implements PoweredItem {
             if (!player.isShiftKeyDown())
                 spawnProjectile(level, player, itemStack, false);
             else
-                closeMyPortals((ServerLevel) level, itemStack);
+                closeMyPortals((ServerLevel) level, itemStack, player);
         }
         return InteractionResultHolder.fail(itemStack);
     }
 
-    public static void closeMyPortals(ServerLevel level, ItemStack itemStack) {
+    public static void closeMyPortals(ServerLevel level, ItemStack itemStack, Player player) {
         UUID portalGunUUID = getUUID(itemStack);
         MinecraftServer server = level.getServer();
         for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
+            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getOwner() == player.getUUID() || k.getPortalGunUUID().equals(portalGunUUID));
 
             for (PortalEntity entity : customEntities) {
                 entity.setDying();
