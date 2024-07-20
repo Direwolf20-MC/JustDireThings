@@ -281,6 +281,16 @@ public class ToggleButtonFactory {
         return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, BIND_BUTTON, BIND_LOCALIZATION, startingValue, onPress);
     }
 
+    /** Require Equipped button **/
+    private static final List<TextureLocalization> REQUIRE_EQUIPPED_TEXTURES = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/requireequipped.png"), Component.translatable("justdirethings.screen.requireequipped")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/notreequireequipped.png"), Component.translatable("justdirethings.screen.notrequireequipped"))
+    );
+
+    public static ToggleButton REQUIRE_EQUIPPED_BUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, REQUIRE_EQUIPPED_TEXTURES, startingValue, onPress);
+    }
+
     /** Hide Render button **/
     private static final ResourceLocation HIDE_RENDER_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
     private static final Component HIDE_RENDER_LOCALIZATION = Component.translatable("justdirethings.screen.showrender");

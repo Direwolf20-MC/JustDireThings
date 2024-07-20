@@ -351,7 +351,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.fillmode.all", "All");
         add("justdirethings.hint.dropinwater", "Drop in Water");
         add("justdirethings.decoy", "Decoy");
-        add("justdirethings.missingupgrade", "(Missing Upgrade)");
+        add("justdirethings.missingupgrade", " (Missing Upgrade)");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -462,6 +462,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.showrender", "Show Render");
         add("justdirethings.screen.burnspeedmultiplier", "Burn Speed Multiplier: %s");
         add("justdirethings.screen.click-hold", "Hold Click");
+        add("justdirethings.screen.requireequipped", "Activate if Equipped");
+        add("justdirethings.screen.notrequireequipped", "Activate from Inventory");
         add("justdirethings.screen.click-hold-for", "Hold Click For (ticks)");
         add("justdirethings.screen.inv-normal", "Inventory Slots");
         add("justdirethings.screen.inv-armor", "Armor Slots");

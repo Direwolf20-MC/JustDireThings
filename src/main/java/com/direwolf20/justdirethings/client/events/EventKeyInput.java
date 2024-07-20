@@ -104,7 +104,7 @@ public class EventKeyInput {
     }
 
     private static void activateAbilities(ItemStack itemStack, int key, ToggleableTool toggleableTool, Player player, int invSlot, boolean isMouse) {
-        List<Ability> abilities = LeftClickableTool.getCustomBindingListFor(itemStack, key, isMouse);
+        List<Ability> abilities = LeftClickableTool.getCustomBindingListFor(itemStack, key, isMouse, player);
         if (!abilities.isEmpty()) {
             //Do them client side and Server side, since some abilities (like ore scanner) are client side activated.
             toggleableTool.useAbility(player.level(), player, itemStack, key, isMouse);

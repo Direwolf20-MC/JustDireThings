@@ -77,11 +77,15 @@ public interface LeftClickableTool {
         return stack.getOrDefault(JustDireDataComponents.ABILITY_BINDINGS, new ArrayList<>());
     }
 
-    static List<Ability> getCustomBindingListFor(ItemStack stack, int key, boolean isMouse) {
+    static List<Ability> getCustomBindingListFor(ItemStack stack, int key, boolean isMouse, Player player) {
         List<Ability> returnSet = new ArrayList<>();
         List<ToolRecords.AbilityBinding> abilityBindings = getCustomBindingList(stack);
+        boolean isEquipped = ToggleableTool.isItemEquipped(stack, player);
         returnSet.addAll(
-                abilityBindings.stream().filter(k -> k.isMouse() == isMouse && k.key() == key && stack.get(JustDireDataComponents.ABILITY_BINDING_MODES.get(Ability.byName(k.abilityName()))) == 2)
+                abilityBindings.stream().filter(k -> k.isMouse() == isMouse &&
+                                k.key() == key &&
+                                stack.get(JustDireDataComponents.ABILITY_BINDING_MODES.get(Ability.byName(k.abilityName()))) == 2 &&
+                                (!k.requireEquipped() || isEquipped))
                         .map(ToolRecords.AbilityBinding::abilityName)
                         .map(Ability::byName)
                         .toList()

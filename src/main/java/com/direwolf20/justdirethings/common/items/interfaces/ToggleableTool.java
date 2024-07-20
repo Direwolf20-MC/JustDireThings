@@ -3,6 +3,10 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
+import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseBoots;
+import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseChestplate;
+import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseHelmet;
+import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseLeggings;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -19,6 +23,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -354,11 +359,23 @@ public interface ToggleableTool extends ToggleableItem {
         itemStack.set(JustDireDataComponents.ABILITY_COOLDOWNS, abilityCooldowns);
     }
 
+    static boolean isItemEquipped(ItemStack itemStack, Player player) {
+        if (itemStack.getItem() instanceof BaseBoots)
+            return ItemStack.isSameItemSameComponents(itemStack, player.getItemBySlot(EquipmentSlot.FEET));
+        if (itemStack.getItem() instanceof BaseLeggings)
+            return ItemStack.isSameItemSameComponents(itemStack, player.getItemBySlot(EquipmentSlot.LEGS));
+        if (itemStack.getItem() instanceof BaseChestplate)
+            return ItemStack.isSameItemSameComponents(itemStack, player.getItemBySlot(EquipmentSlot.CHEST));
+        if (itemStack.getItem() instanceof BaseHelmet)
+            return ItemStack.isSameItemSameComponents(itemStack, player.getItemBySlot(EquipmentSlot.HEAD));
+        return ItemStack.isSameItemSameComponents(itemStack, player.getItemInHand(InteractionHand.MAIN_HAND)) || ItemStack.isSameItemSameComponents(itemStack, player.getItemInHand(InteractionHand.OFF_HAND));
+    }
+
     default boolean useAbility(Level level, Player player, ItemStack itemStack, int keyCode, boolean isMouse) {
         boolean anyRan = false;
         Set<Ability> customBindAbilities = new HashSet<>();
         if (itemStack.getItem() instanceof LeftClickableTool)
-            customBindAbilities.addAll(LeftClickableTool.getCustomBindingListFor(itemStack, keyCode, isMouse));
+            customBindAbilities.addAll(LeftClickableTool.getCustomBindingListFor(itemStack, keyCode, isMouse, player));
         for (Ability ability : getActiveAbilities(itemStack)) {
             if (customBindAbilities.contains(ability)) {
                 if (ability.action != null) {
@@ -412,7 +429,7 @@ public interface ToggleableTool extends ToggleableItem {
         boolean anyRan = false;
         Set<Ability> customBindAbilities = new HashSet<>();
         if (itemStack.getItem() instanceof LeftClickableTool)
-            customBindAbilities.addAll(LeftClickableTool.getCustomBindingListFor(itemStack, keyCode, isMouse));
+            customBindAbilities.addAll(LeftClickableTool.getCustomBindingListFor(itemStack, keyCode, isMouse, pContext.getPlayer()));
         for (Ability ability : getUseOnAbilities(itemStack)) {
             if (customBindAbilities.contains(ability)) {
                 if (ability.useOnAction != null) {

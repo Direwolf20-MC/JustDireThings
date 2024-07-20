@@ -30,12 +30,13 @@ public class ToolRecords {
         );
     }
 
-    public record AbilityBinding(String abilityName, int key, boolean isMouse) {
+    public record AbilityBinding(String abilityName, int key, boolean isMouse, boolean requireEquipped) {
         public static final Codec<AbilityBinding> CODEC = RecordCodecBuilder.create(
                 cooldownInstance -> cooldownInstance.group(
                                 Codec.STRING.fieldOf("ability_name").forGetter(AbilityBinding::abilityName),
                                 Codec.INT.fieldOf("key").forGetter(AbilityBinding::key),
-                                Codec.BOOL.fieldOf("is_mouse").forGetter(AbilityBinding::isMouse)
+                                Codec.BOOL.fieldOf("is_mouse").forGetter(AbilityBinding::isMouse),
+                                Codec.BOOL.fieldOf("require_equipped").forGetter(AbilityBinding::requireEquipped)
                         )
                         .apply(cooldownInstance, AbilityBinding::new)
         );
@@ -47,6 +48,8 @@ public class ToolRecords {
                 AbilityBinding::key,
                 ByteBufCodecs.BOOL,
                 AbilityBinding::isMouse,
+                ByteBufCodecs.BOOL,
+                AbilityBinding::requireEquipped,
                 AbilityBinding::new
         );
     }

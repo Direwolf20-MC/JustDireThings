@@ -12,7 +12,8 @@ public record ToggleToolLeftRightClickPayload(
         String abilityName,
         int button,
         int keyCode,
-        boolean isMouse
+        boolean isMouse,
+        boolean requireEquipped
 ) implements CustomPacketPayload {
     public static final Type<ToggleToolLeftRightClickPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tool_left_right_click_settings_packet"));
 
@@ -27,6 +28,7 @@ public record ToggleToolLeftRightClickPayload(
             ByteBufCodecs.INT, ToggleToolLeftRightClickPayload::button,
             ByteBufCodecs.INT, ToggleToolLeftRightClickPayload::keyCode,
             ByteBufCodecs.BOOL, ToggleToolLeftRightClickPayload::isMouse,
+            ByteBufCodecs.BOOL, ToggleToolLeftRightClickPayload::requireEquipped,
             ToggleToolLeftRightClickPayload::new
     );
 }

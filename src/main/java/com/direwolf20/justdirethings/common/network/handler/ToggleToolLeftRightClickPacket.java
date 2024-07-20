@@ -34,7 +34,7 @@ public class ToggleToolLeftRightClickPacket {
                     if (payload.keyCode() == -1)
                         LeftClickableTool.removeFromCustomBindingList(stack, ability);
                     else
-                        LeftClickableTool.addToCustomBindingList(stack, new ToolRecords.AbilityBinding(payload.abilityName(), payload.keyCode(), payload.isMouse()));
+                        LeftClickableTool.addToCustomBindingList(stack, new ToolRecords.AbilityBinding(payload.abilityName(), payload.keyCode(), payload.isMouse(), payload.requireEquipped()));
                 }
             }
         });
