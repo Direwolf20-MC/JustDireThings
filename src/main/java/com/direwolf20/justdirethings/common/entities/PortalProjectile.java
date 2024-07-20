@@ -20,6 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -95,13 +96,14 @@ public class PortalProjectile extends Projectile {
 
     }
 
-    protected PortalEntity findMatchingPortal(MinecraftServer server, boolean isPrimaryType) {
+    protected List<? extends PortalEntity> findMatchingPortal(MinecraftServer server, boolean isPrimaryType) {
+        List<PortalEntity> returnList = new ArrayList<>();
         for (ServerLevel serverLevel : server.getAllLevels()) {
             List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID) && k.getIsPrimary() == isPrimaryType);
             if (!customEntities.isEmpty())
-                return customEntities.getFirst();
+                returnList.addAll(customEntities);
         }
-        return null;
+        return returnList;
     }
 
     public void closeMyPortals(MinecraftServer server) {
@@ -115,16 +117,21 @@ public class PortalProjectile extends Projectile {
     }
 
     protected void clearMatchingPortal(MinecraftServer server) {
-        PortalEntity matchingPortal = findMatchingPortal(server, isPrimaryType);
-        if (matchingPortal != null)
-            matchingPortal.setDying();
+        List<? extends PortalEntity> matchingPortals = findMatchingPortal(server, isPrimaryType);
+        for (PortalEntity matchingPortal : matchingPortals) {
+            if (matchingPortal != null)
+                matchingPortal.setDying();
+        }
     }
 
     protected void linkPortals(MinecraftServer server, PortalEntity portal) {
-        PortalEntity matchingPortal = findMatchingPortal(server, !isPrimaryType);
-        if (matchingPortal != null) {
-            portal.setLinkedPortal(matchingPortal);
-            matchingPortal.setLinkedPortal(portal);
+        List<? extends PortalEntity> matchingPortals = findMatchingPortal(server, !isPrimaryType);
+        if (!matchingPortals.isEmpty()) {
+            PortalEntity matchingPortal = matchingPortals.getFirst();
+            if (matchingPortal != null) {
+                portal.setLinkedPortal(matchingPortal);
+                matchingPortal.setLinkedPortal(portal);
+            }
         }
     }
 
