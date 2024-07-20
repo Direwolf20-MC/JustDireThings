@@ -180,7 +180,10 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         }
         BlockBreakingProgress progress = blockBreakingTracker.compute(blockPos, (pos, oldProgress) -> {
             int updatedTicks = oldProgress == null ? 1 : oldProgress.ticks + 1;
-            return new BlockBreakingProgress(blockState, updatedTicks, oldProgress == null ? -1 : oldProgress.lastSentProgress, oldProgress.iterator, oldProgress.destroyProgress);
+            if (oldProgress == null)
+                return new BlockBreakingProgress(blockState, 1, -1, blockBreakingTracker.size() + generatePosHash(), getDestroyProgress(blockPos, tool, player, blockState));
+            else
+                return new BlockBreakingProgress(blockState, updatedTicks, oldProgress.lastSentProgress, oldProgress.iterator, oldProgress.destroyProgress);
         });
         float destroyProgress = progress.destroyProgress * progress.ticks;
         int currentProgress = (int) (destroyProgress * 10.0F);
