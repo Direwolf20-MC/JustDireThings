@@ -265,6 +265,12 @@ public class JustDireArrow extends AbstractArrow {
         }
     }
 
+    @Override
+    protected float getWaterInertia() {
+        if (isPhase()) return 1.0f;
+        return super.getWaterInertia();
+    }
+
     private double calculateDotProduct(Vec3 vec1, Vec3 vec2) {
         return vec1.normalize().dot(vec2.normalize());
     }
