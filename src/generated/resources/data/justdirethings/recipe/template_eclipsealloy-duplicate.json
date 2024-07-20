@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "justdirethings:template_eclipsealloy"
+    },
+    {
+      "item": "justdirethings:eclipsealloy_ingot"
+    },
+    {
+      "item": "justdirethings:eclipsealloy_ingot"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "id": "justdirethings:template_eclipsealloy"
+  }
+}

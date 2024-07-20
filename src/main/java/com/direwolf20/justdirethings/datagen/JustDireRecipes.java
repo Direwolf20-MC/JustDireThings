@@ -481,6 +481,11 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('f', Registration.FerricoreIngot.get())
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.TEMPLATE_FERRICORE.get(), 2)
+                .requires(Registration.TEMPLATE_FERRICORE.get())
+                .requires(Registration.FerricoreIngot.get(), 2)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer, Registration.TEMPLATE_FERRICORE.getId() + "-duplicate");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.TEMPLATE_BLAZEGOLD.get())
                 .pattern("f f")
                 .pattern("fbf")
@@ -489,6 +494,11 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('f', Registration.BlazegoldIngot.get())
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.TEMPLATE_BLAZEGOLD.get(), 2)
+                .requires(Registration.TEMPLATE_BLAZEGOLD.get())
+                .requires(Registration.BlazegoldIngot.get(), 2)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer, Registration.TEMPLATE_BLAZEGOLD.getId() + "-duplicate");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.TEMPLATE_CELESTIGEM.get())
                 .pattern("f f")
                 .pattern("fbf")
@@ -497,6 +507,11 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('f', Registration.Celestigem.get())
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.TEMPLATE_CELESTIGEM.get(), 2)
+                .requires(Registration.TEMPLATE_CELESTIGEM.get())
+                .requires(Registration.Celestigem.get(), 2)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer, Registration.TEMPLATE_CELESTIGEM.getId() + "-duplicate");
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.TEMPLATE_ECLIPSEALLOY.get())
                 .pattern("f f")
                 .pattern("fbf")
@@ -505,6 +520,11 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('f', Registration.EclipseAlloyIngot.get())
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.TEMPLATE_ECLIPSEALLOY.get(), 2)
+                .requires(Registration.TEMPLATE_ECLIPSEALLOY.get())
+                .requires(Registration.EclipseAlloyIngot.get(), 2)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer, Registration.TEMPLATE_ECLIPSEALLOY.getId() + "-duplicate");
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.UPGRADE_ELYTRA.get())
                 .requires(Registration.UPGRADE_BASE.get())
                 .requires(Items.ELYTRA)
