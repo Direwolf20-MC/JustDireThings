@@ -1,7 +1,13 @@
-// 1.21	2024-07-16T22:02:06.8205993	JustDireThings Item Tags
+// 1.21	2024-07-20T22:32:01.7690617	JustDireThings Item Tags
 c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/c/tags/item/gems.json
 55719b9c6f0430ad38bf081d697aa5406cc27cfb data/c/tags/item/ingots.json
+d7ad09b1e8fb0835b7f14f744fa7866dd3521c60 data/c/tags/item/ingots/blazegold.json
+83c72da5b589b1fbbf817b5a70a6701e79ed6400 data/c/tags/item/ingots/eclipsealloy.json
+7b6e54a6f070fe5920ed5b782c02d0f1a552e7f0 data/c/tags/item/ingots/ferricore.json
 9171911801c408201b64d8d6b0f5818f194267e9 data/c/tags/item/raw_materials.json
+8f409e7c4af9ad4f712c47dca67c5a35990128b4 data/c/tags/item/raw_materials/blazegold.json
+5fec8f33bedbc8d4ad810433334d09be1b142495 data/c/tags/item/raw_materials/eclipsealloy.json
+77a64d34066efb0fd114a507b86955e4dd278896 data/c/tags/item/raw_materials/ferricore.json
 455bada5b950203f61d1da4946e513ee909c6275 data/c/tags/item/storage_blocks.json
 2bb6f820084862dce0f4373f0f41c3baf4db6eba data/c/tags/item/tools/wrench.json
 2bb6f820084862dce0f4373f0f41c3baf4db6eba data/c/tags/item/wrenches.json

@@ -23,6 +23,13 @@ public class JustDireItemTags extends ItemTagsProvider {
 
     public static final TagKey<Item> WRENCHES = forgeTag("wrenches");
     public static final TagKey<Item> TOOLS_WRENCH = forgeTag("tools/wrench");
+    public static final TagKey<Item> RAW_FERRICORE = forgeTag("raw_materials/ferricore");
+    public static final TagKey<Item> RAW_BLAZEGOLD = forgeTag("raw_materials/blazegold");
+    public static final TagKey<Item> RAW_ECLIPSEALLOY = forgeTag("raw_materials/eclipsealloy");
+    public static final TagKey<Item> INGOT_FERRICORE = forgeTag("ingots/ferricore");
+    public static final TagKey<Item> INGOT_BLAZEGOLD = forgeTag("ingots/blazegold");
+    public static final TagKey<Item> INGOT_ECLIPSEALLOY = forgeTag("ingots/eclipsealloy");
+
 
     private static TagKey<Item> forgeTag(String name) {
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
@@ -133,6 +140,18 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.BlazegoldBow.get())
                 .add(Registration.CelestigemBow.get())
                 .add(Registration.EclipseAlloyBow.get());
+        tag(RAW_FERRICORE)
+                .add(Registration.RawFerricore.get());
+        tag(RAW_BLAZEGOLD)
+                .add(Registration.RawBlazegold.get());
+        tag(RAW_ECLIPSEALLOY)
+                .add(Registration.RawEclipseAlloy.get());
+        tag(INGOT_FERRICORE)
+                .add(Registration.FerricoreIngot.get());
+        tag(INGOT_BLAZEGOLD)
+                .add(Registration.BlazegoldIngot.get());
+        tag(INGOT_ECLIPSEALLOY)
+                .add(Registration.EclipseAlloyIngot.get());
     }
 
     @Override
