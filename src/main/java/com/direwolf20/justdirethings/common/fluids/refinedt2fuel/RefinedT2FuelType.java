@@ -1,19 +1,11 @@
 package com.direwolf20.justdirethings.common.fluids.refinedt2fuel;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.FluidType;
-
-import java.util.function.Consumer;
-
-import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
 public class RefinedT2FuelType extends FluidType {
     public RefinedT2FuelType() {
@@ -26,45 +18,5 @@ public class RefinedT2FuelType extends FluidType {
     @Override
     public boolean canConvertToSource(FluidState state, LevelReader reader, BlockPos pos) {
         return false;
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-        consumer.accept(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.parse("textures/misc/underwater.png"),
-                    FLUID_STILL = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_source"),
-                    FLUID_FLOW = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_flowing"),
-                    FLUID_OVERLAY = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_overlay");
-
-            @Override
-            public ResourceLocation getStillTexture() {
-                return FLUID_STILL;
-            }
-
-            @Override
-            public ResourceLocation getFlowingTexture() {
-                return FLUID_FLOW;
-            }
-
-            @Override
-            public ResourceLocation getOverlayTexture() {
-                return FLUID_OVERLAY;
-            }
-
-            @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF8B0000;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF8B0000;
-            }
-        });
     }
 }

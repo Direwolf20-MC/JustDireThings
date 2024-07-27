@@ -1,27 +1,19 @@
 package com.direwolf20.justdirethings.common.fluids.unstableportalfluid;
 
 import com.direwolf20.justdirethings.datagen.JustDireBiomeTags;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.SoundActions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
-
-import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
 public class UnstablePortalFluidType extends FluidType {
     public UnstablePortalFluidType() {
@@ -47,45 +39,5 @@ public class UnstablePortalFluidType extends FluidType {
     @Override
     public boolean canConvertToSource(FluidState state, LevelReader reader, BlockPos pos) {
         return false;
-    }
-
-    @Override
-    public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-        consumer.accept(new IClientFluidTypeExtensions() {
-            private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.parse("textures/misc/underwater.png"),
-                    UNSTABLE_PORTALFLUID_STILL = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_source"),
-                    UNSTABLE_PORTALFLUID_FLOW = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_flowing"),
-                    UNSTABLE_PORTALFLUID_OVERLAY = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_overlay");
-
-            @Override
-            public ResourceLocation getStillTexture() {
-                return UNSTABLE_PORTALFLUID_STILL;
-            }
-
-            @Override
-            public ResourceLocation getFlowingTexture() {
-                return UNSTABLE_PORTALFLUID_FLOW;
-            }
-
-            @Override
-            public ResourceLocation getOverlayTexture() {
-                return UNSTABLE_PORTALFLUID_OVERLAY;
-            }
-
-            @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF9400D3;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF9400D3;
-            }
-        });
     }
 }
