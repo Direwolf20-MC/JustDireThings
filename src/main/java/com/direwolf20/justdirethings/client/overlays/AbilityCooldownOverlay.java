@@ -26,6 +26,8 @@ public class AbilityCooldownOverlay implements LayeredDraw.Layer {
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
         Minecraft mc = Minecraft.getInstance();
+        // Check if GUI should be hidden
+        if (mc.options.hideGui) return;
         Player player = mc.player;
         if (player == null) return;
         int screenWidth = guiGraphics.guiWidth();
