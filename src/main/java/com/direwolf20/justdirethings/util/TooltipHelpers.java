@@ -1,7 +1,6 @@
 package com.direwolf20.justdirethings.util;
 
 import com.direwolf20.justdirethings.client.KeyBindings;
-import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
@@ -14,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.ComponentItemHandler;
 
 import java.util.List;
 
@@ -103,7 +103,7 @@ public class TooltipHelpers {
     }
 
     public static void appendGeneratorDetails(ItemStack stack, List<Component> tooltip) {
-        DataComponentHandler handler = new DataComponentHandler(stack, 1);
+        ComponentItemHandler handler = new ComponentItemHandler(stack, JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1);
         ItemStack fuelStack = handler.getStackInSlot(0);
         if (Screen.hasShiftDown()) {
             tooltip.add(Component.translatable("justdirethings.pocketgeneratorburntime", stack.getOrDefault(JustDireDataComponents.POCKETGEN_COUNTER, 0), stack.getOrDefault(JustDireDataComponents.POCKETGEN_MAXBURN, 0)).withStyle(ChatFormatting.DARK_RED));

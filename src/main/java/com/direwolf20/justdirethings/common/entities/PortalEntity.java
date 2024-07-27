@@ -227,8 +227,8 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    public void onAddedToWorld() {
-        super.onAddedToWorld();
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
         if (!level().isClientSide) {
             ServerLevel serverLevel = (ServerLevel) this.level();
             ChunkPos chunkPos = new ChunkPos(this.blockPosition());

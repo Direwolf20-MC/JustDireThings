@@ -3,7 +3,6 @@ package com.direwolf20.justdirethings.common.items;
 import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.containers.PocketGeneratorContainer;
-import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
@@ -22,6 +21,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.ComponentItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -100,7 +100,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
     }
 
     private boolean initBurn(ItemStack itemStack) {
-        DataComponentHandler handler = new DataComponentHandler(itemStack, 1);
+        ComponentItemHandler handler = new ComponentItemHandler(itemStack, JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1);
         ItemStack fuelStack = handler.getStackInSlot(0);
 
         int burnTime = fuelStack.getBurnTime(RecipeType.SMELTING);

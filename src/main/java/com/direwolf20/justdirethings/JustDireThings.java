@@ -7,7 +7,6 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
-import com.direwolf20.justdirethings.common.containers.handlers.DataComponentHandler;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
@@ -75,7 +74,7 @@ public class JustDireThings {
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         //Items
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new DataComponentHandler(itemStack, 1),
+        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1),
                 Registration.Pocket_Generator.get()
         );
         event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
