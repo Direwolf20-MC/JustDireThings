@@ -183,6 +183,10 @@ public class JustDireArrow extends AbstractArrow {
         return super.findHitEntity(startVec, endVec);
     }
 
+    public void setTargetEntity(LivingEntity targetEntity) {
+        this.targetEntity = targetEntity;
+    }
+
     @Override
     public void tick() {
         if (isPhase()) {

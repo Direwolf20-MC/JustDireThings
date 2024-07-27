@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -23,7 +24,11 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ComponentItemHandler;
@@ -99,6 +104,9 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             if (canUseAbilityAndDurability(itemStack, Ability.HOMING)) {
                 justDireArrow.setHoming(true);
                 Helpers.damageTool(itemStack, livingEntity, Ability.HOMING);
+                LivingEntity aimedAtEntity = findAimedAtEntity(livingEntity);
+                if (aimedAtEntity != null)
+                    justDireArrow.setTargetEntity(aimedAtEntity);
             }
 
             if (noPotionAbilitiesActive(itemStack))
@@ -149,6 +157,49 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             return customArrow(justDireArrow, stack, itemStack);
         }
         return super.createProjectile(level, livingEntity, itemStack, stack, crit);
+    }
+
+    public LivingEntity findAimedAtEntity(LivingEntity livingEntity) {
+        double range = 50;
+        Vec3 startVec = livingEntity.getEyePosition(1.0F);
+        Vec3 lookVec = livingEntity.getViewVector(1.0F);
+        Vec3 endVec = startVec.add(lookVec.scale(range));
+
+        // Perform the ray trace
+        HitResult hitResult = livingEntity.level().clip(new ClipContext(startVec, endVec, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, livingEntity));
+
+        if (hitResult.getType() != HitResult.Type.MISS) {
+            endVec = hitResult.getLocation();
+        }
+
+        AABB boundingBox = new AABB(startVec, endVec).inflate(1.0D);
+        List<Entity> entities = livingEntity.level().getEntities(livingEntity, boundingBox, EntitySelector.LIVING_ENTITY_STILL_ALIVE);
+
+        LivingEntity closestEntity = null;
+        double closestDistance = range * range;
+
+        for (Entity entity : entities) {
+            if (entity instanceof LivingEntity livingEntity1) {
+                AABB entityBoundingBox = entity.getBoundingBox().inflate(entity.getPickRadius());
+                Vec3 entityHitVec = entityBoundingBox.clip(startVec, endVec).orElse(null);
+
+                if (entityBoundingBox.contains(startVec)) {
+                    if (closestDistance >= 0.0D) {
+                        closestEntity = livingEntity1;
+                        closestDistance = 0.0D;
+                    }
+                } else if (entityHitVec != null) {
+                    double distanceToHit = startVec.distanceToSqr(entityHitVec);
+
+                    if (distanceToHit < closestDistance) {
+                        closestEntity = livingEntity1;
+                        closestDistance = distanceToHit;
+                    }
+                }
+            }
+        }
+        System.out.println(closestEntity);
+        return closestEntity;
     }
 
     public boolean noPotionAbilitiesActive(ItemStack itemStack) {
