@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_hammer"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_hoe"
+  },
+  "template": []
+}

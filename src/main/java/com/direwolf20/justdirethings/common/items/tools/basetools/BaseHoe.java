@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items.tools.basetools;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
+import com.direwolf20.justdirethings.util.MiningCollect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
@@ -46,10 +48,27 @@ public class BaseHoe extends HoeItem implements ToggleableTool, LeftClickableToo
     public InteractionResult useOn(UseOnContext pContext) {
         if (bindDrops(pContext))
             return InteractionResult.SUCCESS;
-        InteractionResult interactionResult = super.useOn(pContext);
-        bindSoil(pContext);
-        useOnAbility(pContext);
-        return interactionResult;
+        ItemStack useStack = pContext.getItemInHand();
+        Player player = pContext.getPlayer();
+        Level level = pContext.getLevel();
+        if (player != null && useStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbility(useStack, Ability.HAMMER)) {
+            List<BlockPos> affectedBlocks = MiningCollect.collect(player, pContext.getClickedPos(), ToggleableTool.getTargetLookDirection(player), player.level(), ToggleableTool.getToolValue(useStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, useStack);
+            for (BlockPos blockPos : affectedBlocks) {
+                BlockState oldState = level.getBlockState(blockPos);
+                UseOnContext useOnContext = new UseOnContext(pContext.getLevel(), player, pContext.getHand(), useStack, new BlockHitResult(blockPos.getCenter(), pContext.getClickedFace(), blockPos, pContext.isInside()));
+                super.useOn(useOnContext);
+                bindSoil(useOnContext);
+                if (!level.isClientSide)
+                    level.sendBlockUpdated(blockPos, oldState, level.getBlockState(blockPos), 3);
+            }
+            useOnAbility(pContext);
+            return InteractionResult.PASS;
+        } else {
+            InteractionResult interactionResult = super.useOn(pContext);
+            bindSoil(pContext);
+            useOnAbility(pContext);
+            return interactionResult;
+        }
     }
 
     @Override

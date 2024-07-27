@@ -498,7 +498,7 @@ public interface ToggleableTool extends ToggleableItem {
             if (blockState.getBlock() instanceof GooSoilBase) {
                 if (heldItem.getItem() instanceof ToggleableTool toggleableTool) {
                     if (toggleableTool.canUseAbility(heldItem, Ability.DROPTELEPORT)) {
-                        if (Helpers.testUseTool(heldItem, Ability.DROPTELEPORT, 10) > 0) {
+                        if (Helpers.testUseTool(heldItem, Ability.DROPTELEPORT) > 0) {
                             NBTHelpers.BoundInventory boundInventory = ToggleableTool.getBoundInventory(heldItem);
                             if (boundInventory != null) {
                                 BlockEntity blockEntity = pLevel.getBlockEntity(clickedPos);
@@ -506,7 +506,7 @@ public interface ToggleableTool extends ToggleableItem {
                                     gooSoilBE.bindInventory(boundInventory);
                                     pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundInventory.globalPos().dimension().location().getPath()), "[" + boundInventory.globalPos().pos().toShortString() + "]"), true);
                                     player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
-                                    Helpers.damageTool(heldItem, player, Ability.DROPTELEPORT, 10);
+                                    Helpers.damageTool(heldItem, player, Ability.DROPTELEPORT);
                                     bindingSuccess = true;
                                 }
                             }

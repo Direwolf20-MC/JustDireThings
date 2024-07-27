@@ -1,13 +1,18 @@
 package com.direwolf20.justdirethings.util;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.items.tools.basetools.BaseHoe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +46,7 @@ public class MiningCollect {
         BlockPos startPos = startBlock;
 
         if (range == 1) {
-            if (!isValid(player, startBlock, world, tool))
+            if (!isValid(player, startBlock, world, tool, side))
                 return coordinates;
 
             coordinates.add(startBlock);
@@ -80,16 +85,22 @@ public class MiningCollect {
         return BlockPos
                 .betweenClosedStream(topLeft, bottomRight)
                 .map(BlockPos::immutable)
-                .filter(e -> isValid(player, e, world, tool))
+                .filter(e -> isValid(player, e, world, tool, side))
                 .collect(Collectors.toList());
     }
 
-    private static boolean isValid(LivingEntity player, BlockPos pos, Level level, ItemStack tool) {
+    private static boolean isValid(LivingEntity player, BlockPos pos, Level level, ItemStack tool, Direction side) {
         BlockState blockState = level.getBlockState(pos);
         if (blockState.isAir())
             return false;
         if (level.getBlockEntity(pos) != null)
             return false;
+        if (tool.getItem() instanceof BaseHoe && player instanceof Player player1) {
+            UseOnContext useOnContext = new UseOnContext(level, player1, InteractionHand.MAIN_HAND, tool, new BlockHitResult(pos.getCenter(), side, pos, false));
+            BlockState toolModifiedState = level.getBlockState(pos).getToolModifiedState(useOnContext, net.neoforged.neoforge.common.ItemAbilities.HOE_TILL, true);
+            if (toolModifiedState != null)
+                return true;
+        }
         if (!tool.isCorrectToolForDrops(blockState))
             return false;
         return true;
