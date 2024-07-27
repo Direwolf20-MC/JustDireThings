@@ -198,7 +198,6 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
                 }
             }
         }
-        System.out.println(closestEntity);
         return closestEntity;
     }
 
