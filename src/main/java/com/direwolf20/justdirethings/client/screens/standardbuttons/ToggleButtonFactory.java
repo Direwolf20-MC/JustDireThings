@@ -292,13 +292,13 @@ public class ToggleButtonFactory {
     }
 
     /** Hostile Only button **/
-    private static final List<TextureLocalization> HOSTILE_ONLY_TEXTURES = List.of(
+    private static final List<TextureLocalization> HOMING_TARGET_TEXTURES = List.of(
             new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/mobscanner.png"), Component.translatable("justdirethings.screen.target-hostile")),
             new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/entity-all.png"), Component.translatable("justdirethings.screen.target-living"))
     );
 
-    public static ToggleButton HOSTILE_ONLY_BUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
-        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HOSTILE_ONLY_TEXTURES, startingValue, onPress);
+    public static ToggleButton HOMING_TARGET_BUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HOMING_TARGET_TEXTURES, startingValue, onPress);
     }
 
     private static final List<TextureLocalization> HIDE_RENDER_BUTTON = List.of(

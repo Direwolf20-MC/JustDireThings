@@ -74,7 +74,7 @@ public enum Ability {
             AbilityMethods::decoy, CustomSettingType.NONE,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/decoy.png"), Registration.UPGRADE_DECOY),
     LINGERING(SettingType.TOGGLE, 50, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_LINGERING),
-    HOMING(SettingType.TOGGLE, 50, 2000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_HOMING),
+    HOMING(SettingType.TOGGLE, 50, 2000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.TARGET, Registration.UPGRADE_HOMING),
 
 
     //Tier 4
@@ -169,6 +169,11 @@ public enum Ability {
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, Holder<Item> upgradeItem) {
         this(settingType, durabilityCost, feCost, useType, bindingType, CustomSettingType.NONE);
+        this.upgradeItem = upgradeItem;
+    }
+
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, CustomSettingType customSettingType, Holder<Item> upgradeItem) {
+        this(settingType, durabilityCost, feCost, useType, bindingType, customSettingType);
         this.upgradeItem = upgradeItem;
     }
 

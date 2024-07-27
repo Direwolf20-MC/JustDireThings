@@ -20,6 +20,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -40,6 +42,7 @@ public class JustDireArrow extends AbstractArrow {
     private static final EntityDataAccessor<Boolean> IS_SPLASH = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_LINGERING = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> HOSTILE_ONLY = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> ARROW_STATE = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> STATE_TICK_COUNTER = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> ORIGINAL_VELOCITY = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.FLOAT);
@@ -142,6 +145,14 @@ public class JustDireArrow extends AbstractArrow {
         return this.entityData.get(IS_EPIC_ARROW);
     }
 
+    public void setHostileOnly(boolean hostileOnly) {
+        this.entityData.set(HOSTILE_ONLY, hostileOnly);
+    }
+
+    public boolean getHostileOnly() {
+        return this.entityData.get(HOSTILE_ONLY);
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder p_326324_) {
         super.defineSynchedData(p_326324_);
@@ -155,6 +166,17 @@ public class JustDireArrow extends AbstractArrow {
         p_326324_.define(ORIGINAL_VELOCITY, 0f);
         p_326324_.define(IS_EPIC_ARROW, false);
         p_326324_.define(IS_PHASE, false);
+        p_326324_.define(HOSTILE_ONLY, true);
+    }
+
+    public static boolean isHostileEntity(LivingEntity entity) {
+        if (entity instanceof Monster) {
+            return true;
+        }
+        if (entity instanceof ZombifiedPiglin) {
+            return ((ZombifiedPiglin) entity).isAngry();
+        }
+        return false;
     }
 
     public void setData(EntityDataAccessor<Integer> entityDataAccessor, int value) {
@@ -407,6 +429,9 @@ public class JustDireArrow extends AbstractArrow {
         for (Mob entity : entities) {
             if (entity == this.getOwner() || !entity.isAlive() || wasAlreadyHit(entity)) {
                 continue;
+            }
+            if (getHostileOnly() && !isHostileEntity(entity)) {
+                continue;  // Skip non-hostile entities if onlyHostile is true
             }
             double distance = this.distanceToSqr(entity);
             if (distance < nearestDistance) {

@@ -197,12 +197,17 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
             }
             if (button != null && toolAbility.hasCustomSetting()) {
                 Ability.CustomSettingType customSettingType = toolAbility.getCustomSetting();
+                int value = ToggleableTool.getCustomSetting(tool, toolAbility.getName());
                 if (customSettingType == Ability.CustomSettingType.RENDER) {
-                    int renderActive = ToggleableTool.getCustomSetting(tool, toolAbility.getName());
-                    ToggleButton hideRenderButton = ToggleButtonFactory.HIDE_RENDER_ABILITY_BUTTON(buttonsStartX + 143, buttonsStartY, renderActive, (clicked) -> {
+                    ToggleButton hideRenderButton = ToggleButtonFactory.HIDE_RENDER_ABILITY_BUTTON(buttonsStartX + 143, buttonsStartY, value, (clicked) -> {
                         toggleRender(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition());
                     });
                     this.customSettingsButtons.put(button, hideRenderButton);
+                } else if (customSettingType == Ability.CustomSettingType.TARGET) {
+                    ToggleButton targetButton = ToggleButtonFactory.HOMING_TARGET_BUTTON(buttonsStartX + 143, buttonsStartY, value, (clicked) -> {
+                        toggleRender(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition());
+                    });
+                    this.customSettingsButtons.put(button, targetButton);
                 }
             }
             if (button != null)
@@ -257,7 +262,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         super.renderTooltip(pGuiGraphics, pX, pY);
         for (Renderable renderable : this.renderables) {
-            if (renderable instanceof ToggleButton button && showCustomBinding() && !button.getLocalization(pX, pY).equals(Component.empty()) && !requireEquippedButtons.containsValue(button)) { //2 is custom
+            if (renderable instanceof ToggleButton button && showCustomBinding() && !button.getLocalization(pX, pY).equals(Component.empty()) && !requireEquippedButtons.containsValue(button) && !customSettingsButtons.containsValue(button)) { //2 is custom
                 if (bindingMap.get(button) == null) {
                     pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(button.getLocalization(), Component.translatable("justdirethings.unbound-screen"))), pX, pY);
                 } else {
