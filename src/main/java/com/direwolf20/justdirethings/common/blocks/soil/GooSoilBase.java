@@ -152,6 +152,19 @@ public class GooSoilBase extends FarmBlock {
                 pLevel.destroyBlock(cropPos, false);
                 pLevel.setBlockAndUpdate(cropPos, placeState);
             }
+        } else if (crop.is(Blocks.NETHER_WART) && crop.getValue(NetherWartBlock.AGE) == NetherWartBlock.MAX_AGE) {
+            BlockState placeState = Blocks.AIR.defaultBlockState();
+            BlockEntity blockEntity = pLevel.getBlockEntity(cropPos);
+            drops.addAll(Block.getDrops(crop, pLevel, cropPos, blockEntity));
+            for (ItemStack drop : drops) {
+                if (drop.getItem() instanceof BlockItem blockItem) {
+                    placeState = blockItem.getBlock().defaultBlockState();
+                    drop.shrink(1);
+                    break;
+                }
+            }
+            pLevel.destroyBlock(cropPos, false);
+            pLevel.setBlockAndUpdate(cropPos, placeState);
         } else if (crop.is(Blocks.SUGAR_CANE) || crop.is(Blocks.CACTUS) || crop.is(Blocks.BAMBOO)) {
             List<BlockPos> posToCheck = new ArrayList<>();
             for (int i = 0; i < 10; i++) { //In case it grew a lot since last check
@@ -195,7 +208,7 @@ public class GooSoilBase extends FarmBlock {
     public static void autoHarvest(ServerLevel pLevel, BlockPos pPos) {
         BlockPos cropPos = pPos.above();
         BlockState crop = pLevel.getBlockState(cropPos);
-        if (crop.getBlock() instanceof CropBlock) {
+        if (crop.getBlock() instanceof CropBlock || crop.is(Blocks.NETHER_WART)) {
             List<ItemStack> drops = harvestCrop(pLevel, cropPos, crop);
             if (!drops.isEmpty()) {
                 teleportDrops(pLevel, pPos, drops, cropPos);
