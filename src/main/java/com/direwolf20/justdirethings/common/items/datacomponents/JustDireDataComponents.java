@@ -72,7 +72,7 @@ public class JustDireDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<CustomData>> CUSTOM_DATA_1 = COMPONENTS.register("custom_data_1", () -> DataComponentType.<CustomData>builder().persistent(CustomData.CODEC).networkSynchronized(CustomData.STREAM_CODEC).build());
 
     public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>>> ABILITY_TOGGLES = new HashMap<>();
-    public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>>> ABILITY_RENDER_TOGGLES = new HashMap<>();
+    public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Integer>>> ABILITY_CUSTOM_SETTINGS = new HashMap<>();
     public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>>> ABILITY_UPGRADE_INSTALLS = new HashMap<>();
     public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Integer>>> ABILITY_VALUES = new HashMap<>();
     public static final Map<Ability, DeferredHolder<DataComponentType<?>, DataComponentType<Integer>>> ABILITY_BINDING_MODES = new HashMap<>();
@@ -85,9 +85,9 @@ public class JustDireDataComponents {
             ABILITY_TOGGLES.put(ability, ABILITY_TOGGLE);
             ABILITY_VALUES.put(ability, ABILITY_VALUE);
             ABILITY_BINDING_MODES.put(ability, ABILITY_BINDING_MODE);
-            if (ability.hasRenderButton()) {
-                DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ABILITY_RENDER = COMPONENTS.register(ability.getName() + "_render", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL.orElse(true)).networkSynchronized(ByteBufCodecs.BOOL).build());
-                ABILITY_RENDER_TOGGLES.put(ability, ABILITY_RENDER);
+            if (ability.hasCustomSetting()) {
+                DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> ABILITY_CUSTOM_SETTING = COMPONENTS.register(ability.getName() + "_custom_setting", () -> DataComponentType.<Integer>builder().persistent(Codec.INT.orElse(0)).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+                ABILITY_CUSTOM_SETTINGS.put(ability, ABILITY_CUSTOM_SETTING);
             }
             if (ability.requiresUpgrade()) {
                 DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> ABILITY_UPGRADE_INSTALLED = COMPONENTS.register(ability.getName() + "_upgrade_installed", () -> DataComponentType.<Boolean>builder().persistent(Codec.BOOL.orElse(true)).networkSynchronized(ByteBufCodecs.BOOL).build());

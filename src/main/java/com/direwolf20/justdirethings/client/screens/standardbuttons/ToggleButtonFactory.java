@@ -291,12 +291,23 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, REQUIRE_EQUIPPED_TEXTURES, startingValue, onPress);
     }
 
-    /** Hide Render button **/
-    private static final ResourceLocation HIDE_RENDER_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
-    private static final Component HIDE_RENDER_LOCALIZATION = Component.translatable("justdirethings.screen.showrender");
+    /** Hostile Only button **/
+    private static final List<TextureLocalization> HOSTILE_ONLY_TEXTURES = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/mobscanner.png"), Component.translatable("justdirethings.screen.target-hostile")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/entity-all.png"), Component.translatable("justdirethings.screen.target-living"))
+    );
 
-    public static GrayscaleButton HIDE_RENDER_ABILITY_BUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
-        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HIDE_RENDER_BUTTON, HIDE_RENDER_LOCALIZATION, startingValue, onPress);
+    public static ToggleButton HOSTILE_ONLY_BUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HOSTILE_ONLY_TEXTURES, startingValue, onPress);
+    }
+
+    private static final List<TextureLocalization> HIDE_RENDER_BUTTON = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png"), Component.translatable("justdirethings.screen.showrender")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/decoy.png"), Component.translatable("justdirethings.screen.hiderender"))
+    );
+
+    public static ToggleButton HIDE_RENDER_ABILITY_BUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HIDE_RENDER_BUTTON, startingValue, onPress);
     }
 
     private static final ResourceLocation COPY_AREA_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/area.png");
