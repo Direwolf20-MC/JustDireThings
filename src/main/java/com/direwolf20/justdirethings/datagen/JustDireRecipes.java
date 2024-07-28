@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipeBuilder;
 import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipeBuilder;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
+import com.direwolf20.justdirethings.datagen.recipes.PaxelRecipeBuilder;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -1207,17 +1208,11 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
                 .save(consumer);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemPaxel.get())
-                .pattern("ahp")
-                .pattern(" s ")
-                .pattern(" s ")
-                .define('a', Registration.CelestigemAxe.get())
-                .define('h', Registration.CelestigemShovel.get())
-                .define('p', Registration.CelestigemPickaxe.get())
-                .define('s', Items.STICK)
-                .group("justdirethings")
+        PaxelRecipeBuilder.shapeless(Ingredient.of(Registration.CelestigemPickaxe.get()), Ingredient.of(Registration.CelestigemAxe.get()),
+                        Ingredient.of(Registration.CelestigemShovel.get()), Registration.CelestigemPaxel.get())
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
-                .save(consumer);
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemPaxel.getId().getPath()));
+
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldSword.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemSword.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
@@ -1284,17 +1279,10 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyPaxel.get())
-                .pattern("ahp")
-                .pattern(" s ")
-                .pattern(" s ")
-                .define('a', Registration.EclipseAlloyAxe.get())
-                .define('h', Registration.EclipseAlloyShovel.get())
-                .define('p', Registration.EclipseAlloyPickaxe.get())
-                .define('s', Items.STICK)
-                .group("justdirethings")
+        PaxelRecipeBuilder.shapeless(Ingredient.of(Registration.EclipseAlloyPickaxe.get()), Ingredient.of(Registration.EclipseAlloyAxe.get()),
+                        Ingredient.of(Registration.EclipseAlloyShovel.get()), Registration.EclipseAlloyPaxel.get())
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
-                .save(consumer);
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyPaxel.getId().getPath()));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemSword.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloySword.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))

@@ -1,28 +1,16 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "group": "justdirethings",
-  "key": {
-    "a": {
-      "item": "justdirethings:celestigem_axe"
-    },
-    "h": {
-      "item": "justdirethings:celestigem_shovel"
-    },
-    "p": {
-      "item": "justdirethings:celestigem_pickaxe"
-    },
-    "s": {
-      "item": "minecraft:stick"
-    }
+  "type": "justdirethings:paxel",
+  "addition": {
+    "item": "justdirethings:celestigem_shovel"
   },
-  "pattern": [
-    "ahp",
-    " s ",
-    " s "
-  ],
+  "base": {
+    "item": "justdirethings:celestigem_axe"
+  },
   "result": {
     "count": 1,
     "id": "justdirethings:celestigem_paxel"
+  },
+  "template": {
+    "item": "justdirethings:celestigem_pickaxe"
   }
 }

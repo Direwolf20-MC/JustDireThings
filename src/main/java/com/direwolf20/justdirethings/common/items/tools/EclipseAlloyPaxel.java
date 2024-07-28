@@ -3,7 +3,7 @@ package com.direwolf20.justdirethings.common.items.tools;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
-import com.direwolf20.justdirethings.common.items.tools.basetools.BasePickaxe;
+import com.direwolf20.justdirethings.common.items.tools.basetools.BasePaxel;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbility;
 
-public class EclipseAlloyPaxel extends BasePickaxe implements PoweredTool {
+public class EclipseAlloyPaxel extends BasePaxel implements PoweredTool {
     public EclipseAlloyPaxel() {
         super(GooTier.ECLIPSEALLOY, new Properties()
                 .attributes(PickaxeItem.createAttributes(GooTier.ECLIPSEALLOY, 1.0F, -2.8F))

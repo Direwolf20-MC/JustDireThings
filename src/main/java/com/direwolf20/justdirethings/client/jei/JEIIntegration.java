@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipe;
 import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.PaxelRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -91,6 +92,7 @@ public class JEIIntegration implements IModPlugin {
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
         IExtendableSmithingRecipeCategory smithingCategory = registration.getSmithingCategory();
         smithingCategory.addExtension(AbilityRecipe.class, new AbilityRecipeCategory());
+        smithingCategory.addExtension(PaxelRecipe.class, new PaxelRecipeCategory());
     }
 
     @Override
