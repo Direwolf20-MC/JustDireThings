@@ -46,10 +46,10 @@ public class GooSoilBase extends FarmBlock {
     @Override
     public TriState canSustainPlant(BlockState state, BlockGetter level, BlockPos soilPosition, Direction facing, BlockState plant) {
         if (facing != Direction.UP) return TriState.FALSE;
-        if (plant.getBlock() == Blocks.CACTUS)
+        if (plant.getBlock() instanceof CactusBlock)
             return TriState.TRUE;
 
-        if (plant.getBlock() == Blocks.SUGAR_CANE)
+        if (plant.getBlock() instanceof SugarCaneBlock)
             return TriState.TRUE;
 
         if (plant.getBlock() == Blocks.BAMBOO || plant.getBlock() == Blocks.BAMBOO_SAPLING)
@@ -118,7 +118,7 @@ public class GooSoilBase extends FarmBlock {
             if (j < 3) {
                 crop1 = crop.setValue(SweetBerryBushBlock.AGE, j + 1);
             }
-        } else if (crop.is(Blocks.SUGAR_CANE) || crop.is(Blocks.CACTUS)) { //Bamboo is weird, Cactus and Sugarcane are at least consistent
+        } else if (crop.getBlock() instanceof SugarCaneBlock || crop.getBlock() instanceof CactusBlock) { //Bamboo is weird, Cactus and Sugarcane are at least consistent
             BlockPos blockpos = cropPos.above();
             int j = crop.getValue(AGE);
             if (j == 15) {
@@ -165,7 +165,7 @@ public class GooSoilBase extends FarmBlock {
             }
             pLevel.destroyBlock(cropPos, false);
             pLevel.setBlockAndUpdate(cropPos, placeState);
-        } else if (crop.is(Blocks.SUGAR_CANE) || crop.is(Blocks.CACTUS) || crop.is(Blocks.BAMBOO)) {
+        } else if (crop.getBlock() instanceof SugarCaneBlock || crop.getBlock() instanceof CactusBlock || crop.is(Blocks.BAMBOO)) {
             List<BlockPos> posToCheck = new ArrayList<>();
             for (int i = 0; i < 10; i++) { //In case it grew a lot since last check
                 BlockPos pos = cropPos.above(i);
@@ -214,7 +214,7 @@ public class GooSoilBase extends FarmBlock {
                 teleportDrops(pLevel, pPos, drops, cropPos);
                 dropDrops(pLevel, drops, cropPos);
             }
-        } else if (crop.is(Blocks.SUGAR_CANE) || crop.is(Blocks.CACTUS) || crop.is(Blocks.BAMBOO)) {
+        } else if (crop.getBlock() instanceof SugarCaneBlock || crop.getBlock() instanceof CactusBlock || crop.is(Blocks.BAMBOO)) {
             BlockPos secondPos = cropPos.above();
             BlockState secondState = pLevel.getBlockState(secondPos);
             if (secondState.is(crop.getBlock())) {
