@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -199,6 +200,11 @@ public class AbilityMethods {
         if (level.isClientSide) return false;
         Vec3 shiftPosition = getShiftPosition(level, player, itemStack);
         if (!shiftPosition.equals(Vec3.ZERO)) {
+            WorldBorder worldBorder = level.getWorldBorder();
+            if (!worldBorder.isWithinBounds(shiftPosition)) {
+                // Notify player or take any other action if the position is outside the world border
+                return false;
+            }
             int distanceTraveled = (int) player.position().distanceTo(shiftPosition);
             if (testUseTool(itemStack, Ability.VOIDSHIFT, distanceTraveled) < 0)
                 return false;
