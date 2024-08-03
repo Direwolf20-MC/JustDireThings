@@ -26,6 +26,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -183,8 +184,23 @@ public class LivingEntityEvents {
         Map<EquipmentSlot, ArmorHurtEvent.ArmorEntry> armorEntries = event.getArmorMap();
         for (Map.Entry<EquipmentSlot, ArmorHurtEvent.ArmorEntry> entry : armorEntries.entrySet()) {
             if (entry.getKey() == EquipmentSlot.MAINHAND || entry.getKey() == EquipmentSlot.OFFHAND) continue;
-            if (entry.getValue().armorItemStack.getItem() instanceof PoweredItem)
+            ItemStack armorItemStack = entry.getValue().armorItemStack;
+            if (armorItemStack.getItem() instanceof PoweredItem) {
                 entry.getValue().newDamage = entry.getValue().originalDamage * 100;
+                continue;
+            } //No need for below checks for powered items, as those don't break :)
+            if (armorItemStack.getItem() instanceof ToggleableTool toggleableTool && event.getEntity() instanceof Player player) {
+                float newDmg = armorItemStack.getDamageValue() + entry.getValue().originalDamage;
+                if (newDmg >= armorItemStack.getMaxDamage()) {
+                    EnumSet<Ability> abilities = toggleableTool.getAbilities();
+                    for (Ability ability : abilities) {
+                        if (ToggleableTool.hasUpgrade(armorItemStack, ability) && ability.requiresUpgrade()) {
+                            ItemStack upgradeStack = new ItemStack(ability.getUpgradeItem());
+                            player.drop(upgradeStack, true);
+                        }
+                    }
+                }
+            }
         }
     }
 

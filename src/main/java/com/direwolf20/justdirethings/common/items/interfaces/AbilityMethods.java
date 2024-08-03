@@ -575,7 +575,6 @@ public class AbilityMethods {
             itemStack.set(JustDireDataComponents.EPIC_ARROW, true);
             player.playNotifySound(SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.PLAYERS, 1F, 0.5F);
             Helpers.damageTool(itemStack, player, Ability.EPICARROW);
-            //player.playNotifySound(SoundEvents.SCULK_SHRIEKER_SHRIEK, SoundSource.PLAYERS, 1F, 0.25F);
         }
         return false;
     }

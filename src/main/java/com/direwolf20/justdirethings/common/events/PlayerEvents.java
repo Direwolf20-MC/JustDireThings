@@ -19,8 +19,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerDestroyItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getInstantRFCost;
@@ -30,6 +32,20 @@ public class PlayerEvents {
     public static final AttributeModifier stepHeight = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdirestepassist"), 1.0, AttributeModifier.Operation.ADD_VALUE);
     public static final AttributeModifier creativeFlight = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdireflight"), 1.0, AttributeModifier.Operation.ADD_VALUE);
     public static final AttributeModifier phase = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdirephase"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+
+    @SubscribeEvent
+    public static void PlayerDestroyItem(PlayerDestroyItemEvent event) {
+        ItemStack itemStack = event.getOriginal();
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool) {
+            EnumSet<Ability> abilities = toggleableTool.getAbilities();
+            for (Ability ability : abilities) {
+                if (ToggleableTool.hasUpgrade(itemStack, ability) && ability.requiresUpgrade()) {
+                    ItemStack upgradeStack = new ItemStack(ability.getUpgradeItem());
+                    event.getEntity().drop(upgradeStack, true);
+                }
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void ItemAttributes(ItemAttributeModifierEvent event) {

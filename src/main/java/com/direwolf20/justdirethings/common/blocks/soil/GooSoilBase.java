@@ -61,21 +61,6 @@ public class GooSoilBase extends FarmBlock {
         if (plant.getBlock() instanceof BushBlock)
             return TriState.TRUE;
 
-
-        //if (plantable instanceof BushBlock)
-        //    return true; //Bushes?
-
-        /*if (net.neoforged.neoforge.common.PlantType.NETHER.equals(type)) {
-            return true; //Netherwart
-        } else if (net.neoforged.neoforge.common.PlantType.CROP.equals(type)) {
-            return true; //Wheat
-        } else if (net.neoforged.neoforge.common.PlantType.CAVE.equals(type)) {
-            return false; //Mushrooms
-        } else if (net.neoforged.neoforge.common.PlantType.PLAINS.equals(type)) {
-            return false; //Saplings / Flowers -- Vanilla this is apparently true - who knew!?
-        } else if (net.neoforged.neoforge.common.PlantType.WATER.equals(type)) {
-            return (blockState.is(Blocks.WATER) || blockState.getBlock() instanceof IceBlock) && level.getFluidState(pos.relative(facing)).isEmpty();
-        }*/
         return TriState.DEFAULT;
     }
 

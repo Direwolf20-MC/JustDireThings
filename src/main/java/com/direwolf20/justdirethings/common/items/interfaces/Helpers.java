@@ -87,7 +87,10 @@ public class Helpers {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
             stack.hurtAndBreak(poweredTool.getBlockBreakFECost(), player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
+            ItemStack cloneStack = stack.copy();
             stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
+            if (stack.isEmpty() && !cloneStack.isEmpty() && player instanceof Player player1)
+                net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem(player1, cloneStack, InteractionHand.MAIN_HAND);
         }
     }
 
@@ -95,7 +98,10 @@ public class Helpers {
         if (stack.getItem() instanceof PoweredItem poweredTool) {
             stack.hurtAndBreak(amount, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
+            ItemStack cloneStack = stack.copy();
             stack.hurtAndBreak(amount, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
+            if (stack.isEmpty() && !cloneStack.isEmpty() && player instanceof Player player1)
+                net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem(player1, cloneStack, InteractionHand.MAIN_HAND);
         }
     }
 
@@ -103,7 +109,10 @@ public class Helpers {
         if (stack.getItem() instanceof PoweredItem) {
             stack.hurtAndBreak(ability.getFeCost(), player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
+            ItemStack cloneStack = stack.copy();
             stack.hurtAndBreak(ability.getDurabilityCost(), player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
+            if (stack.isEmpty() && !cloneStack.isEmpty() && player instanceof Player player1)
+                net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem(player1, cloneStack, InteractionHand.MAIN_HAND);
         }
     }
 
@@ -111,7 +120,10 @@ public class Helpers {
         if (stack.getItem() instanceof PoweredItem) {
             stack.hurtAndBreak(ability.getFeCost() * multiplier, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
+            ItemStack cloneStack = stack.copy();
             stack.hurtAndBreak(ability.getDurabilityCost() * multiplier, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
+            if (stack.isEmpty() && !cloneStack.isEmpty() && player instanceof Player player1)
+                net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem(player1, cloneStack, InteractionHand.MAIN_HAND);
         }
     }
 
