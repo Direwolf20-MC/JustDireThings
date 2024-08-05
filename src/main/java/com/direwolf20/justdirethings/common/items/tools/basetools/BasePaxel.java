@@ -59,9 +59,7 @@ public class BasePaxel extends BasePickaxe {
 
         //Shovel
         BlockState blockstate = level.getBlockState(blockpos);
-        if (context.getClickedFace() == Direction.DOWN) {
-            return InteractionResult.PASS;
-        } else {
+        if (context.getClickedFace() != Direction.DOWN) {
             BlockState blockstate1 = blockstate.getToolModifiedState(context, net.neoforged.neoforge.common.ItemAbilities.SHOVEL_FLATTEN, false);
             BlockState blockstate2 = null;
             if (blockstate1 != null && level.getBlockState(blockpos.above()).isAir()) {

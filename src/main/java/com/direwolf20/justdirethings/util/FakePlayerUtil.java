@@ -91,15 +91,17 @@ public class FakePlayerUtil {
     public static void setupFakePlayerForUse(UsefulFakePlayer player, BlockPos pos, Direction direction, ItemStack toHold, boolean sneaking) {
         player.getInventory().items.set(player.getInventory().selected, toHold);
         float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
-        player.setXRot(xRot);
-        player.setYRot(direction.toYRot());
+        //player.setXRot(xRot);
+        //player.setYRot(direction.toYRot());
+        player.absRotateTo(direction.toYRot(), xRot);
         player.setYHeadRot(direction.toYRot());
+        player.yHeadRotO = direction.toYRot();
         Direction.Axis a = direction.getAxis();
         Direction.AxisDirection ad = direction.getAxisDirection();
         double x = a == Direction.Axis.X ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double y = a == Direction.Axis.Y ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
-        player.setPos(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
+        player.absMoveTo(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
         if (!toHold.isEmpty())
             addAttributes(player, toHold, EquipmentSlot.MAINHAND);
         player.setShiftKeyDown(sneaking);
