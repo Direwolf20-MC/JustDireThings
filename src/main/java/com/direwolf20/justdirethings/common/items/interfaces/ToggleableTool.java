@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseChestpla
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseHelmet;
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseLeggings;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -141,11 +143,20 @@ public interface ToggleableTool extends ToggleableItem {
 
     default Set<BlockPos> getBreakBlockPositions(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving, BlockState pState) {
         Set<BlockPos> breakBlockPositions = new HashSet<>();
+        int maxBreak = 64;
+        if (pStack.getItem() instanceof TieredItem tieredItem) {
+            if (tieredItem.getTier().equals(GooTier.BLAZEGOLD))
+                maxBreak = 128;
+            else if (tieredItem.getTier().equals(GooTier.CELESTIGEM))
+                maxBreak = 192;
+            else if (tieredItem.getTier().equals(GooTier.ECLIPSEALLOY))
+                maxBreak = 256;
+        }
         if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2));
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2));
         }
         if (canUseAbility(pStack, Ability.TREEFELLER) && logCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, 64, 2));
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2));
         }
         if (canUseAbility(pStack, Ability.HAMMER)) {
             breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
@@ -156,7 +167,7 @@ public interface ToggleableTool extends ToggleableItem {
             for (BlockPos blockPos : breakBlockPositions) {
                 BlockState blockState = pLevel.getBlockState(blockPos);
                 if (fallingBlockCondition.test(blockState))
-                    newPos.addAll(findLikeBlocks(pLevel, blockState, blockPos, Direction.UP, 64, 2));
+                    newPos.addAll(findLikeBlocks(pLevel, blockState, blockPos, Direction.UP, maxBreak, 2));
             }
             breakBlockPositions.addAll(newPos);
         }

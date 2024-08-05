@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -117,7 +119,16 @@ public class AbilityMethods {
         LivingEntity pEntityLiving = pContext.getPlayer();
 
         if (pState.getTags().anyMatch(tag -> tag.equals(BlockTags.LEAVES))) {
-            Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, 64, 2);
+            int maxBreak = 64;
+            if (pStack.getItem() instanceof TieredItem tieredItem) {
+                if (tieredItem.getTier().equals(GooTier.BLAZEGOLD))
+                    maxBreak = 128;
+                else if (tieredItem.getTier().equals(GooTier.CELESTIGEM))
+                    maxBreak = 192;
+                else if (tieredItem.getTier().equals(GooTier.ECLIPSEALLOY))
+                    maxBreak = 256;
+            }
+            Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2);
             List<ItemStack> drops = new ArrayList<>();
             for (BlockPos breakPos : alsoBreakSet) {
                 if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
