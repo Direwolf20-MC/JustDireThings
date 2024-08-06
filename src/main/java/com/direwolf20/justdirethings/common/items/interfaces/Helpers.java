@@ -56,18 +56,17 @@ public class Helpers {
     public static List<ItemStack> breakBlocks(Level level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool, boolean instaBreak) {
         List<ItemStack> drops = new ArrayList<>();
         if (pPlayer instanceof Player player) {
-            //BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, level.getBlockState(pos), player);
-            //if (NeoForge.EVENT_BUS.post(event).isCanceled()) return drops;
-
             BlockState state = level.getBlockState(pos);
             BlockEntity blockEntity = level.getBlockEntity(pos);
             //This is how vanilla does it?
             float destroySpeed = state.getDestroySpeed(level, pos);
+            BlockState removedBlockState =
+                    state.getBlock().playerWillDestroy(level, pos, state, player);
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
                 if (level instanceof ServerLevel serverLevel)
                     drops.addAll(Block.getDrops(state, serverLevel, pos, blockEntity, pPlayer, pStack));
-                state.getBlock().destroy(level, pos, state);
+                state.getBlock().destroy(level, pos, removedBlockState);
                 player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
                 player.causeFoodExhaustion(0.005F);
                 if (damageTool && destroySpeed != 0.0F) {
