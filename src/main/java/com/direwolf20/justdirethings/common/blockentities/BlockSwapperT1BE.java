@@ -374,9 +374,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         level.removeBlockEntity(blockPos); //Calling this prevents chests from dropping their contents
         partnerLevel.removeBlockEntity(remoteSwapPos); //Calling this prevents chests from dropping their contents
 
-        //BlockState adjustedthisBlock = Block.updateFromNeighbourShapes(thisBlock, partnerLevel, remoteSwapPos); //Ensure double chests are placed as single chests if only 1 chest available in copy/paste, for example, or fixes fences
         boolean placedThat = partnerLevel.setBlock(remoteSwapPos, thisBlock, 51); //16 + 32 + 3 -- Validate blocks after this methods done
-        if (placedThat) {
+        if (placedThat || partnerLevel.getBlockState(remoteSwapPos).equals(thisBlock)) {
             if (!thisNBT.isEmpty()) {
                 BlockEntity newBE = partnerLevel.getBlockEntity(remoteSwapPos);
                 if (newBE != null) {
@@ -388,12 +387,10 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 }
             }
         }
-        //if (!thisBlock.isAir())
         thatValidationList.add(remoteSwapPos);
 
-        //BlockState adjustedthatBlock = Block.updateFromNeighbourShapes(thatBlock, level, blockPos); //Ensure double chests are placed as single chests if only 1 chest available in copy/paste, for example, or fixes fences
         boolean placedThis = level.setBlock(blockPos, thatBlock, 51); //16 + 32 + 3 -- Validate blocks after this methods done
-        if (placedThis) {
+        if (placedThis || level.getBlockState(blockPos).equals(thatBlock)) {
             if (!thatNBT.isEmpty()) {
                 BlockEntity newBE = level.getBlockEntity(blockPos);
                 if (newBE != null) {
@@ -405,7 +402,6 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 }
             }
         }
-        //if (!thatBlock.isAir())
         thisValidationList.add(blockPos);
 
         teleportParticles((ServerLevel) level, blockPos);
