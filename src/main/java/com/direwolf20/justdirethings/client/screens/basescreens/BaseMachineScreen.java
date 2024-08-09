@@ -277,7 +277,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
 
     public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int width, int height) {
         FluidStack fluidStack = container.getFluidStack();
-        if (fluidStack.isEmpty()) return;
+        if (fluidStack.isEmpty() || height <= 0) return;
 
         Fluid fluid = fluidStack.getFluid();
         ResourceLocation fluidStill = IClientFluidTypeExtensions.of(fluid).getStillTexture();
