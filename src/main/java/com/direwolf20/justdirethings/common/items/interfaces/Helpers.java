@@ -33,8 +33,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -64,8 +66,23 @@ public class Helpers {
                     state.getBlock().playerWillDestroy(level, pos, state, player);
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
-                if (level instanceof ServerLevel serverLevel)
-                    drops.addAll(Block.getDrops(state, serverLevel, pos, blockEntity, pPlayer, pStack));
+                if (level instanceof ServerLevel serverLevel) {
+                    //drops.addAll(Block.getDrops(state, serverLevel, pos, blockEntity, pPlayer, pStack));
+                    // Capture block drops into a list of ItemEntities
+                    List<ItemEntity> newDrops = Block.getDrops(state, serverLevel, pos, blockEntity, pPlayer, pStack)
+                            .stream()
+                            .map(stack -> new ItemEntity(serverLevel, pos.getX(), pos.getY(), pos.getZ(), stack))
+                            .collect(Collectors.toList());
+
+                    BlockDropsEvent event = new BlockDropsEvent(serverLevel, pos, state, blockEntity, newDrops, player, pStack);
+                    NeoForge.EVENT_BUS.post(event);
+                    if (!event.isCanceled()) {
+                        // Convert back to ItemStacks if needed (for further processing)
+                        for (ItemEntity drop : newDrops) {
+                            drops.add(drop.getItem());
+                        }
+                    }
+                }
                 state.getBlock().destroy(level, pos, removedBlockState);
                 player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
                 player.causeFoodExhaustion(0.005F);
