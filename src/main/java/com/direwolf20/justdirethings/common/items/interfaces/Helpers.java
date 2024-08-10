@@ -37,6 +37,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -59,6 +60,11 @@ public class Helpers {
         List<ItemStack> drops = new ArrayList<>();
         if (pPlayer instanceof Player player) {
             BlockState state = level.getBlockState(pos);
+            if (level instanceof ServerLevel serverLevel) {
+                BlockEvent.BreakEvent breakEvent = new BlockEvent.BreakEvent(serverLevel, pos, state, player);
+                if (NeoForge.EVENT_BUS.post(breakEvent).isCanceled())
+                    return drops;
+            }
             BlockEntity blockEntity = level.getBlockEntity(pos);
             //This is how vanilla does it?
             float destroySpeed = state.getDestroySpeed(level, pos);
@@ -74,9 +80,9 @@ public class Helpers {
                             .map(stack -> new ItemEntity(serverLevel, pos.getX(), pos.getY(), pos.getZ(), stack))
                             .collect(Collectors.toList());
 
-                    BlockDropsEvent event = new BlockDropsEvent(serverLevel, pos, state, blockEntity, newDrops, player, pStack);
-                    NeoForge.EVENT_BUS.post(event);
-                    if (!event.isCanceled()) {
+                    BlockDropsEvent dropsEvent = new BlockDropsEvent(serverLevel, pos, state, blockEntity, newDrops, player, pStack);
+                    NeoForge.EVENT_BUS.post(dropsEvent);
+                    if (!dropsEvent.isCanceled()) {
                         // Convert back to ItemStacks if needed (for further processing)
                         for (ItemEntity drop : newDrops) {
                             drops.add(drop.getItem());

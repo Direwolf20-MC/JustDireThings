@@ -15,6 +15,8 @@ import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.event.level.BlockEvent;
 
 public class BlockEvents {
+    public static boolean alreadyBreaking = false;
+
     @SubscribeEvent
     public static void BlockToolModificationEvent(BlockEvent.BlockToolModificationEvent event) {
         ItemStack heldItem = event.getHeldItemStack();
@@ -42,8 +44,10 @@ public class BlockEvents {
     @SubscribeEvent
     public static void BlockBreakEvent(BlockEvent.BreakEvent event) {
         ItemStack itemStack = event.getPlayer().getMainHandItem();
-        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.isCorrectToolForDrops(event.getState())) {
+        if (!alreadyBreaking && itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.isCorrectToolForDrops(event.getState())) {
+            alreadyBreaking = true;
             toggleableTool.mineBlocksAbility(itemStack, event.getPlayer().level(), event.getPos(), event.getPlayer());
+            alreadyBreaking = false;
         }
     }
 }
