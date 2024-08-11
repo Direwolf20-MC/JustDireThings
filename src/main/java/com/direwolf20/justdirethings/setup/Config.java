@@ -20,6 +20,9 @@ public class Config {
     public static final String CATEGORY_GENERAL = "general";
     public static ModConfigSpec.IntValue MINIMUM_MACHINE_TICK_SPEED;
 
+    public static final String CATEGORY_GOO = "goo";
+    public static ModConfigSpec.BooleanValue GOO_CAN_DIE;
+
     public static final String CATEGORY_ABILITIES = "abilities";
     public static Map<Ability, ModConfigSpec.BooleanValue> AVAILABLE_ABILITY_MAP = new HashMap<>();
 
@@ -71,6 +74,7 @@ public class Config {
 
     private static void registerCommonConfigs(ModContainer container) {
         generalConfig();
+        gooConfig();
         abilityConfigs();
         generatorT1Config();
         generatorFluidT1Config();
@@ -96,6 +100,13 @@ public class Config {
     }
 
     private static void generalConfig() {
+        COMMON_BUILDER.comment("Goo settings").push(CATEGORY_GOO);
+        GOO_CAN_DIE = COMMON_BUILDER.comment("Can goo randomly die, needing to be revived by right clicking with an item?")
+                .define("goo_can_die", true);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void gooConfig() {
         COMMON_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         MINIMUM_MACHINE_TICK_SPEED = COMMON_BUILDER.comment("The minimum tick speed machines can be set to. Defaults to 1, meaning every tick")
                 .defineInRange("minimum_machine_tick_speed", 1, 1, 100);

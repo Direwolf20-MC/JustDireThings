@@ -1,17 +1,20 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
+import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.ModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Objects;
 
@@ -25,10 +28,14 @@ public class JustDireBlockStates extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        simpleBlock(Registration.GooBlock_Tier1.get(), models().cubeAll(Registration.GooBlock_Tier1_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier1.get())).renderType("cutout"));
-        simpleBlock(Registration.GooBlock_Tier2.get(), models().cubeAll(Registration.GooBlock_Tier2_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier2.get())).renderType("cutout"));
-        simpleBlock(Registration.GooBlock_Tier3.get(), models().cubeAll(Registration.GooBlock_Tier3_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier3.get())).renderType("cutout"));
-        simpleBlock(Registration.GooBlock_Tier4.get(), models().cubeAll(Registration.GooBlock_Tier4_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier4.get())).renderType("cutout"));
+        gooBlocks(Registration.GooBlock_Tier1);
+        gooBlocks(Registration.GooBlock_Tier2);
+        gooBlocks(Registration.GooBlock_Tier3);
+        gooBlocks(Registration.GooBlock_Tier4);
+        //simpleBlock(Registration.GooBlock_Tier1.get(), models().cubeAll(Registration.GooBlock_Tier1_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier1.get())).renderType("cutout"));
+        //simpleBlock(Registration.GooBlock_Tier2.get(), models().cubeAll(Registration.GooBlock_Tier2_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier2.get())).renderType("cutout"));
+        //simpleBlock(Registration.GooBlock_Tier3.get(), models().cubeAll(Registration.GooBlock_Tier3_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier3.get())).renderType("cutout"));
+        //simpleBlock(Registration.GooBlock_Tier4.get(), models().cubeAll(Registration.GooBlock_Tier4_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier4.get())).renderType("cutout"));
         simpleBlock(Registration.FerricoreBlock.get(), models().cubeAll(Registration.FerricoreBlock_ITEM.getId().getPath(), blockTexture(Registration.FerricoreBlock.get())));
         simpleBlock(Registration.BlazeGoldBlock.get(), models().cubeAll(Registration.BlazeGoldBlock_ITEM.getId().getPath(), blockTexture(Registration.BlazeGoldBlock.get())));
         simpleBlock(Registration.CelestigemBlock.get(), models().cubeAll(Registration.CelestigemBlock_ITEM.getId().getPath(), blockTexture(Registration.CelestigemBlock.get())));
@@ -51,6 +58,16 @@ public class JustDireBlockStates extends BlockStateProvider {
         sidedBlocks();
         sidedNonRotating();
         fluidBlocks();
+    }
+
+    private void gooBlocks(DeferredHolder<Block, ? extends GooBlock_Base> block) {
+        getVariantBuilder(block.get()).forAllStates(state -> {
+            boolean alive = state.getValue(GooBlock_Base.ALIVE);
+            String texturePath = alive ? block.getId().getPath() : block.getId().getPath() + "_dead";
+            return ConfiguredModel.builder()
+                    .modelFile(models().cubeAll(texturePath, modLoc("block/" + texturePath)))
+                    .build();
+        });
     }
 
     private void fluidBlocks() {

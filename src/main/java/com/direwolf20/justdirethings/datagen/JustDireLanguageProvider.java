@@ -22,9 +22,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.GooSoil_Tier3.get(), "VoidShimmer Soil");
         add(Registration.GooSoil_Tier4.get(), "Shadowpulse Soil");
         add(Registration.GooBlock_Tier1.get(), "Primogel Goo");
+        add(Registration.GooBlock_Tier1.get() + "_dead", "Exhausted Primogel Goo");
         add(Registration.GooBlock_Tier2.get(), "Blazebloom Goo");
+        add(Registration.GooBlock_Tier2.get() + "_dead", "Exhausted Blazebloom Goo");
         add(Registration.GooBlock_Tier3.get(), "VoidShimmer Goo");
+        add(Registration.GooBlock_Tier3.get() + "_dead", "Exhausted VoidShimmer Goo");
         add(Registration.GooBlock_Tier4.get(), "Shadowpulse Goo");
+        add(Registration.GooBlock_Tier4.get() + "_dead", "Exhausted Shadowpulse Goo");
         add(Registration.ItemCollector.get(), "Item Collector");
         add(Registration.BlockBreakerT1.get(), "Simple Block Breaker");
         add(Registration.BlockBreakerT2.get(), "Advanced Block Breaker");

@@ -1,4 +1,8 @@
 {
+  "Block{justdirethings:gooblock_tier1}_dead": "Exhausted Primogel Goo",
+  "Block{justdirethings:gooblock_tier2}_dead": "Exhausted Blazebloom Goo",
+  "Block{justdirethings:gooblock_tier3}_dead": "Exhausted VoidShimmer Goo",
+  "Block{justdirethings:gooblock_tier4}_dead": "Exhausted Shadowpulse Goo",
   "block.justdirethings.blazegold_block": "Blazegold Block",
   "block.justdirethings.blockbreakert1": "Simple Block Breaker",
   "block.justdirethings.blockbreakert2": "Advanced Block Breaker",
