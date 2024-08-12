@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.client.particles.gooexplodeparticle.GooExplodeParticleData;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -25,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Random;
+
+import static com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base.ALIVE;
 
 public class GooBlockBE_Base extends BlockEntity {
     public final Map<Direction, Integer> sidedCounters = new Object2IntOpenHashMap<>();
@@ -102,7 +105,7 @@ public class GooBlockBE_Base extends BlockEntity {
             GooSpreadRecipe gooSpreadRecipe = findRecipe(getBlockPos().relative(direction));
             int sideCounter = sidedCounters.get(direction);
             if (gooSpreadRecipe != null) {
-                if (sideCounter == -1) { //Valid Recipe and not running yet
+                if (sideCounter == -1 && this.getBlockState().getValue(ALIVE)) { //Valid Recipe and not running yet
                     sideCounter = gooSpreadRecipe.getCraftingDuration();
                     updateSideCounter(direction, sideCounter);
                     sidedDurations.put(direction, sideCounter);
@@ -130,6 +133,21 @@ public class GooBlockBE_Base extends BlockEntity {
         updateSideCounter(direction, -1);
         sidedDurations.put(direction, -1);
         level.playSound(null, getBlockPos(), SoundEvents.SCULK_BLOCK_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+        killGoo();
+    }
+
+    private void killGoo() {
+        if (!Config.GOO_CAN_DIE.get()) return;
+        if (level != null && !level.isClientSide) {
+            BlockState state = this.getBlockState();
+
+            // Ensure the block is currently alive and perform the 10% chance check
+            if (state.getValue(ALIVE) && level.random.nextFloat() < 0.1f) {
+                // Update the block state to dead
+                level.setBlock(worldPosition, state.setValue(ALIVE, false), 3);
+                level.playSound(null, getBlockPos(), SoundEvents.VEX_DEATH, SoundSource.BLOCKS, 1.0F, 0.25F);
+            }
+        }
     }
 
     @Nullable

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "justdirethings:block/gooblock_tier2"
+    "all": "justdirethings:block/gooblock_tier1_dead"
   }
 }

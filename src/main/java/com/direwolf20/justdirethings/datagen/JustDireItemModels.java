@@ -29,10 +29,10 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.GooSoil_Tier2.getId().getPath(), modLoc("block/goosoil_tier2"));
         withExistingParent(Registration.GooSoil_Tier3.getId().getPath(), modLoc("block/goosoil_tier3"));
         withExistingParent(Registration.GooSoil_Tier4.getId().getPath(), modLoc("block/goosoil_tier4"));
-        withExistingParent(Registration.GooBlock_Tier1_ITEM.getId().getPath(), modLoc("block/gooblock_tier1"));
-        withExistingParent(Registration.GooBlock_Tier2_ITEM.getId().getPath(), modLoc("block/gooblock_tier2"));
-        withExistingParent(Registration.GooBlock_Tier3_ITEM.getId().getPath(), modLoc("block/gooblock_tier3"));
-        withExistingParent(Registration.GooBlock_Tier4_ITEM.getId().getPath(), modLoc("block/gooblock_tier4"));
+        withExistingParent(Registration.GooBlock_Tier1_ITEM.getId().getPath(), modLoc("block/gooblock_tier1_dead"));
+        withExistingParent(Registration.GooBlock_Tier2_ITEM.getId().getPath(), modLoc("block/gooblock_tier2_dead"));
+        withExistingParent(Registration.GooBlock_Tier3_ITEM.getId().getPath(), modLoc("block/gooblock_tier3_dead"));
+        withExistingParent(Registration.GooBlock_Tier4_ITEM.getId().getPath(), modLoc("block/gooblock_tier4_dead"));
         withExistingParent(Registration.FerricoreBlock_ITEM.getId().getPath(), modLoc("block/ferricore_block"));
         withExistingParent(Registration.RawFerricoreOre_ITEM.getId().getPath(), modLoc("block/raw_ferricore_ore"));
         withExistingParent(Registration.BlazeGoldBlock_ITEM.getId().getPath(), modLoc("block/blazegold_block"));

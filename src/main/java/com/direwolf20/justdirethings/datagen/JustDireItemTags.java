@@ -38,6 +38,10 @@ public class JustDireItemTags extends ItemTagsProvider {
     public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "deny_fuel_canister"));
     public static final TagKey<Item> AUTO_SMELT_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "auto_smelt_deny"));
     public static final TagKey<Item> AUTO_SMOKE_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "auto_smoke_deny"));
+    public static final TagKey<Item> GOO_REVIVE_TIER_1 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_1"));
+    public static final TagKey<Item> GOO_REVIVE_TIER_2 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_2"));
+    public static final TagKey<Item> GOO_REVIVE_TIER_3 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_3"));
+    public static final TagKey<Item> GOO_REVIVE_TIER_4 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_4"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -152,6 +156,18 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.BlazegoldIngot.get());
         tag(INGOT_ECLIPSEALLOY)
                 .add(Registration.EclipseAlloyIngot.get());
+        tag(GOO_REVIVE_TIER_1)
+                .add(Items.SUGAR)
+                .add(Items.ROTTEN_FLESH);
+        tag(GOO_REVIVE_TIER_2)
+                .add(Items.NETHER_WART)
+                .add(Items.BLAZE_POWDER);
+        tag(GOO_REVIVE_TIER_3)
+                .add(Items.CHORUS_FRUIT)
+                .add(Items.ENDER_PEARL);
+        tag(GOO_REVIVE_TIER_4)
+                .add(Items.SCULK)
+                .add(Items.SCULK_CATALYST);
     }
 
     @Override
