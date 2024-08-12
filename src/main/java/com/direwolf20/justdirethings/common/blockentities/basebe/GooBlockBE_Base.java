@@ -145,8 +145,7 @@ public class GooBlockBE_Base extends BlockEntity {
             if (state.getValue(ALIVE) && level.random.nextFloat() < 1f) {
                 // Update the block state to dead
                 level.setBlock(worldPosition, state.setValue(ALIVE, false), 3);
-                level.playSound(null, getBlockPos(), SoundEvents.SLIME_DEATH, SoundSource.BLOCKS, 1.0F, 1.0F);
-
+                level.playSound(null, getBlockPos(), SoundEvents.VEX_DEATH, SoundSource.BLOCKS, 1.0F, 0.25F);
             }
         }
     }

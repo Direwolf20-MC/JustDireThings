@@ -4,32 +4,51 @@ import com.direwolf20.justdirethings.client.renderers.DireModelBlockRenderer;
 import com.direwolf20.justdirethings.client.renderers.DireVertexConsumer;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
+import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
+import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
 import java.util.BitSet;
 import java.util.List;
 
+import static net.minecraft.client.renderer.entity.ItemRenderer.getFoilBufferDirect;
+
 public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEntityRenderer<T> {
     private final static float percentageDivisor = (float) 100 / GooPatternBlock.GOOSTAGE.getPossibleValues().size();
+    private ItemStack cachedItemStack = ItemStack.EMPTY;
+    private int currentItemIndex = 0;
+    private long lastChangeTime = 0;
 
     public GooBlockRender_Base(BlockEntityRendererProvider.Context p_173636_) {
 
@@ -37,12 +56,188 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
 
     @Override
     public void render(T blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
+        BlockState blockState = blockentity.getBlockState();
+
+        // If the block is dead, render a floating item
+        if (!blockState.getValue(GooBlock_Base.ALIVE)) {
+            renderFloatingItem(blockentity, matrixStackIn, bufferIn, partialTicks, combinedLightsIn);
+        }
+
         for (Direction direction : Direction.values()) {
             int remainingTicks = blockentity.getRemainingTimeFor(direction);
             if (remainingTicks > 0) {
                 int maxTicks = blockentity.getCraftingDuration(direction);
                 renderTextures(direction, blockentity.getLevel(), blockentity.getBlockPos(), matrixStackIn, bufferIn, combinedOverlayIn, remainingTicks, maxTicks, blockentity.getBlockState(), blockentity);
             }
+        }
+    }
+
+    private ItemStack getNextItemFromTag(int tier) {
+        TagKey<Item> tag = switch (tier) {
+            case 1 -> JustDireItemTags.GOO_REVIVE_TIER_1;
+            case 2 -> JustDireItemTags.GOO_REVIVE_TIER_2;
+            case 3 -> JustDireItemTags.GOO_REVIVE_TIER_3;
+            case 4 -> JustDireItemTags.GOO_REVIVE_TIER_4;
+            default -> null;  // Handle unexpected tiers
+        };
+        if (tag == null)
+            return ItemStack.EMPTY;
+        List<Holder<Item>> items = BuiltInRegistries.ITEM.getTag(tag).stream().flatMap(h -> h.stream()).toList();
+        if (items.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        // Get the current item and increment the index
+        ItemStack nextItem = new ItemStack(items.get(currentItemIndex).value());
+
+        // Cycle to the next item in the list, wrapping around if necessary
+        currentItemIndex = (currentItemIndex + 1) % items.size();
+
+        return nextItem;
+    }
+
+    /*private void renderFloatingItem(T blockentity, PoseStack matrixStackIn, MultiBufferSource bufferIn, float partialTicks, int combinedLightsIn) {
+        long currentTime = System.currentTimeMillis();
+
+        // Check if enough time has passed to change the item
+        if (cachedItemStack.isEmpty() || currentTime - lastChangeTime > 1800) {
+            cachedItemStack = getNextItemFromTag(blockentity.getTier());
+            lastChangeTime = currentTime;
+        }
+
+        if (!cachedItemStack.isEmpty()) {
+            matrixStackIn.pushPose();
+
+            // Use continuous time calculation for smooth yOffset
+            double timeInSeconds = currentTime / 1000.0; // Convert current time to seconds
+            double yOffset = Math.sin(timeInSeconds * Math.PI / 5.0) * 0.2;  // Adjust the period with Math.PI / 5.0 for a smooth effect
+
+            Vec3 itemPos = new Vec3(0.5, 1.25 + yOffset, 0.5);
+
+            matrixStackIn.translate(itemPos.x, itemPos.y, itemPos.z);
+            matrixStackIn.scale(0.4f, 0.4f, 0.4f); // Scale down the item
+
+            // Rotate slowly
+            matrixStackIn.mulPose(Axis.YP.rotationDegrees((currentTime % 3600L) / 10.0f));
+
+            // Render the item
+            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+            itemRenderer.renderStatic(cachedItemStack, ItemDisplayContext.GROUND, combinedLightsIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, blockentity.getLevel(), 0);
+
+            matrixStackIn.popPose();
+
+            // Spawn particles to simulate fading away
+            //blockentity.getLevel().addParticle(ParticleTypes.SMOKE, itemPos.x, itemPos.y, itemPos.z, 0, 0.01, 0);
+        }
+    }*/
+
+    private void renderFloatingItem(T blockentity, PoseStack matrixStackIn, MultiBufferSource bufferIn, float partialTicks, int combinedLightsIn) {
+        long currentTime = System.currentTimeMillis();
+        long cycleDuration = 3600; // Full cycle duration in milliseconds (fade in + fade out)
+
+        // Calculate the elapsed time within the current cycle
+        long elapsedTime = (currentTime - lastChangeTime) % cycleDuration;
+
+        // Using cosine to start fade-in from 0% transparency
+        float fadeFactor = (float) (0.5 - 0.5 * Math.cos((2 * Math.PI * elapsedTime) / cycleDuration)); // Oscillates between 0 and 1
+
+        // Change the item at the start of a new cycle when the previous cycle completes
+        if (elapsedTime < 50 && currentTime - lastChangeTime >= cycleDuration) {
+            cachedItemStack = getNextItemFromTag(blockentity.getTier());
+            lastChangeTime = currentTime; // Reset the cycle timer
+        }
+
+        if (!cachedItemStack.isEmpty()) {
+            for (Direction direction : Direction.values()) {
+                matrixStackIn.pushPose();
+
+                // Calculate the position based on the direction
+                Vec3 itemPos = getOffsetPositionForSide(direction);
+
+                // Translate to the calculated position
+                matrixStackIn.translate(itemPos.x, itemPos.y, itemPos.z);
+
+                // Rotate the item to face the correct direction
+                applyRotationForSide(matrixStackIn, direction);
+
+                matrixStackIn.scale(0.6f, 0.6f, 0.6f); // Scale down the item
+
+                // Render the item
+                ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+                BakedModel bakedmodel = itemRenderer.getModel(cachedItemStack, blockentity.getLevel(), null, 0);
+                this.renderTransparentItemStack(cachedItemStack, ItemDisplayContext.GROUND, false, matrixStackIn, bufferIn, combinedLightsIn, OverlayTexture.NO_OVERLAY, bakedmodel, fadeFactor);
+                matrixStackIn.popPose();
+            }
+        }
+    }
+
+    public void renderTransparentItemStack(
+            ItemStack itemStack,
+            ItemDisplayContext displayContext,
+            boolean leftHand,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int combinedLight,
+            int combinedOverlay,
+            BakedModel p_model,
+            float fadeFactor
+    ) {
+        if (!itemStack.isEmpty()) {
+            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+            poseStack.pushPose();
+            boolean flag = displayContext == ItemDisplayContext.GUI || displayContext == ItemDisplayContext.GROUND || displayContext == ItemDisplayContext.FIXED;
+            boolean isBlockItem = itemStack.getItem() instanceof BlockItem;
+
+            p_model = net.neoforged.neoforge.client.ClientHooks.handleCameraTransforms(poseStack, p_model, displayContext, leftHand);
+            poseStack.translate(-0.5F, -0.5F, -0.5F);
+            if (!p_model.isCustomRenderer() && (!itemStack.is(Items.TRIDENT) || flag)) {
+                boolean flag1;
+                if (displayContext != ItemDisplayContext.GUI && !displayContext.firstPerson() && itemStack.getItem() instanceof BlockItem blockitem) {
+                    Block block = blockitem.getBlock();
+                    flag1 = !(block instanceof HalfTransparentBlock) && !(block instanceof StainedGlassPaneBlock);
+                } else {
+                    flag1 = true;
+                }
+
+                for (var model : p_model.getRenderPasses(itemStack, flag1)) {
+                    for (var rendertype : model.getRenderTypes(itemStack, flag1)) {
+                        RenderType renderTypeToUse = isBlockItem ? RenderType.translucent() : rendertype;
+
+                        VertexConsumer originalVertexconsumer = getFoilBufferDirect(buffer, renderTypeToUse, true, itemStack.hasFoil());
+                        VertexConsumer vertexConsumer = new DireVertexConsumer(originalVertexconsumer, fadeFactor);
+
+                        itemRenderer.renderModelLists(model, itemStack, combinedLight, combinedOverlay, poseStack, vertexConsumer);
+                    }
+                }
+            } else {
+                net.neoforged.neoforge.client.extensions.common.IClientItemExtensions.of(itemStack).getCustomRenderer().renderByItem(itemStack, displayContext, poseStack, buffer, combinedLight, combinedOverlay);
+            }
+
+            poseStack.popPose();
+        }
+    }
+
+    private Vec3 getOffsetPositionForSide(Direction direction) {
+        // The offset distance from the face of the block
+        double offset = 0.025;
+
+        return switch (direction) {
+            case UP -> new Vec3(0.5, 1.0 + offset, 0.5);
+            case DOWN -> new Vec3(0.5, -offset, 0.5);
+            case NORTH -> new Vec3(0.5, 0.5, -offset);
+            case SOUTH -> new Vec3(0.5, 0.5, 1.0 + offset);
+            case WEST -> new Vec3(-offset, 0.5, 0.5);
+            case EAST -> new Vec3(1.0 + offset, 0.5, 0.5);
+        };
+    }
+
+    private void applyRotationForSide(PoseStack matrixStackIn, Direction direction) {
+        switch (direction) {
+            case UP -> matrixStackIn.mulPose(Axis.XP.rotationDegrees(90));
+            case DOWN -> matrixStackIn.mulPose(Axis.XN.rotationDegrees(90));
+            case NORTH -> matrixStackIn.mulPose(Axis.YP.rotationDegrees(180));
+            case SOUTH -> matrixStackIn.mulPose(Axis.YN.rotationDegrees(0));
+            case WEST -> matrixStackIn.mulPose(Axis.YP.rotationDegrees(90));
+            case EAST -> matrixStackIn.mulPose(Axis.YP.rotationDegrees(-90));
         }
     }
 

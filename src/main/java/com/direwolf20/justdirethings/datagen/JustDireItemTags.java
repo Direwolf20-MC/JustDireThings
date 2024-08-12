@@ -158,13 +158,13 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.EclipseAlloyIngot.get());
         tag(GOO_REVIVE_TIER_1)
                 .add(Items.SUGAR)
-                .add(Items.WHEAT);
+                .add(Items.ROTTEN_FLESH);
         tag(GOO_REVIVE_TIER_2)
                 .add(Items.NETHER_WART)
                 .add(Items.BLAZE_POWDER);
         tag(GOO_REVIVE_TIER_3)
                 .add(Items.CHORUS_FRUIT)
-                .add(Items.DRAGON_BREATH);
+                .add(Items.ENDER_PEARL);
         tag(GOO_REVIVE_TIER_4)
                 .add(Items.SCULK)
                 .add(Items.SCULK_VEIN);
