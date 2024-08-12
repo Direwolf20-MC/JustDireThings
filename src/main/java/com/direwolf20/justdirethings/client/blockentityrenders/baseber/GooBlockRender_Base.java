@@ -95,41 +95,6 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         return nextItem;
     }
 
-    /*private void renderFloatingItem(T blockentity, PoseStack matrixStackIn, MultiBufferSource bufferIn, float partialTicks, int combinedLightsIn) {
-        long currentTime = System.currentTimeMillis();
-
-        // Check if enough time has passed to change the item
-        if (cachedItemStack.isEmpty() || currentTime - lastChangeTime > 1800) {
-            cachedItemStack = getNextItemFromTag(blockentity.getTier());
-            lastChangeTime = currentTime;
-        }
-
-        if (!cachedItemStack.isEmpty()) {
-            matrixStackIn.pushPose();
-
-            // Use continuous time calculation for smooth yOffset
-            double timeInSeconds = currentTime / 1000.0; // Convert current time to seconds
-            double yOffset = Math.sin(timeInSeconds * Math.PI / 5.0) * 0.2;  // Adjust the period with Math.PI / 5.0 for a smooth effect
-
-            Vec3 itemPos = new Vec3(0.5, 1.25 + yOffset, 0.5);
-
-            matrixStackIn.translate(itemPos.x, itemPos.y, itemPos.z);
-            matrixStackIn.scale(0.4f, 0.4f, 0.4f); // Scale down the item
-
-            // Rotate slowly
-            matrixStackIn.mulPose(Axis.YP.rotationDegrees((currentTime % 3600L) / 10.0f));
-
-            // Render the item
-            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            itemRenderer.renderStatic(cachedItemStack, ItemDisplayContext.GROUND, combinedLightsIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn, blockentity.getLevel(), 0);
-
-            matrixStackIn.popPose();
-
-            // Spawn particles to simulate fading away
-            //blockentity.getLevel().addParticle(ParticleTypes.SMOKE, itemPos.x, itemPos.y, itemPos.z, 0, 0.01, 0);
-        }
-    }*/
-
     private void renderFloatingItem(T blockentity, PoseStack matrixStackIn, MultiBufferSource bufferIn, float partialTicks, int combinedLightsIn) {
         long currentTime = System.currentTimeMillis();
         long cycleDuration = 3600; // Full cycle duration in milliseconds (fade in + fade out)

@@ -56,10 +56,10 @@ public class GooBlock_Base extends Block implements EntityBlock {
                     serverLevel.playSound(
                             null,  // No specific player, plays for all nearby
                             pos,  // Position of the sound
-                            SoundEvents.EXPERIENCE_ORB_PICKUP,  // Sound event (you can choose a different one)
+                            SoundEvents.SCULK_BLOCK_SPREAD,  // Sound event (you can choose a different one)
                             SoundSource.BLOCKS,  // Sound category
                             1.0f,  // Volume
-                            1.0f   // Pitch
+                            0.5f   // Pitch
                     );
                 }
 
