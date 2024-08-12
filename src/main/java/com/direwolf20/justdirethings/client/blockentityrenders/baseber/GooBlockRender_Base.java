@@ -116,7 +116,8 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
                 matrixStackIn.pushPose();
 
                 // Calculate the position based on the direction
-                Vec3 itemPos = getOffsetPositionForSide(direction);
+                boolean isBlockItem = cachedItemStack.getItem() instanceof BlockItem;
+                Vec3 itemPos = getOffsetPositionForSide(direction, isBlockItem);
 
                 // Translate to the calculated position
                 matrixStackIn.translate(itemPos.x, itemPos.y, itemPos.z);
@@ -129,7 +130,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
                 // Render the item
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 BakedModel bakedmodel = itemRenderer.getModel(cachedItemStack, blockentity.getLevel(), null, 0);
-                this.renderTransparentItemStack(cachedItemStack, ItemDisplayContext.GROUND, false, matrixStackIn, bufferIn, combinedLightsIn, OverlayTexture.NO_OVERLAY, bakedmodel, fadeFactor);
+                this.renderTransparentItemStack(cachedItemStack, ItemDisplayContext.GROUND, false, matrixStackIn, bufferIn, combinedLightsIn, OverlayTexture.NO_OVERLAY, bakedmodel, 1f);
                 matrixStackIn.popPose();
             }
         }
@@ -181,17 +182,19 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         }
     }
 
-    private Vec3 getOffsetPositionForSide(Direction direction) {
+    private Vec3 getOffsetPositionForSide(Direction direction, boolean isBlockItem) {
         // The offset distance from the face of the block
         double offset = 0.025;
 
+        double nudge = isBlockItem ? 0.10 : 0.05; // Additional nudge to counter rotation effects
+
         return switch (direction) {
-            case UP -> new Vec3(0.5, 1.0 + offset, 0.5);
-            case DOWN -> new Vec3(0.5, -offset, 0.5);
-            case NORTH -> new Vec3(0.5, 0.5, -offset);
-            case SOUTH -> new Vec3(0.5, 0.5, 1.0 + offset);
-            case WEST -> new Vec3(-offset, 0.5, 0.5);
-            case EAST -> new Vec3(1.0 + offset, 0.5, 0.5);
+            case UP -> new Vec3(0.5, 1.0 + offset, 0.5 - nudge);
+            case DOWN -> new Vec3(0.5, 0.0 - offset, 0.5 + nudge);
+            case NORTH -> new Vec3(0.5, 0.5 - nudge, 0.0 - offset);
+            case SOUTH -> new Vec3(0.5, 0.5 - nudge, 1.0 + offset);
+            case WEST -> new Vec3(0.0 - offset, 0.5 - nudge, 0.5);
+            case EAST -> new Vec3(1.0 + offset, 0.5 - nudge, 0.5);
         };
     }
 

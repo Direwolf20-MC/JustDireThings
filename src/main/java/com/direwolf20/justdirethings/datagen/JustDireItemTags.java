@@ -167,7 +167,7 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Items.ENDER_PEARL);
         tag(GOO_REVIVE_TIER_4)
                 .add(Items.SCULK)
-                .add(Items.SCULK_VEIN);
+                .add(Items.SCULK_CATALYST);
     }
 
     @Override
