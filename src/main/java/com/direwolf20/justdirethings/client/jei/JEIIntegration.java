@@ -15,6 +15,7 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.recipe.IRecipeManager;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.extensions.vanilla.smithing.IExtendableSmithingRecipeCategory;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -71,6 +72,7 @@ public class JEIIntegration implements IModPlugin {
                 new GooSpreadRecipeCategory(guiHelper),
                 new FluidDropRecipeCategory(guiHelper)
         );
+        registration.addRecipeCategories(new OreToResourceCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -86,6 +88,14 @@ public class JEIIntegration implements IModPlugin {
                 .stream().map(RecipeHolder::value).collect(Collectors.toList());
 
         registration.addRecipes(FluidDropRecipeCategory.TYPE, fluidDropRecipes);
+
+        //Ore to Resources
+        registration.addRecipes(new RecipeType<>(OreToResourceCategory.UID, OreToResourceRecipe.class),
+                List.of(new OreToResourceRecipe(Registration.RawFerricoreOre.get(), new ItemStack(Registration.RawFerricore)),
+                        new OreToResourceRecipe(Registration.RawBlazegoldOre.get(), new ItemStack(Registration.RawBlazegold)),
+                        new OreToResourceRecipe(Registration.RawCelestigemOre.get(), new ItemStack(Registration.Celestigem)),
+                        new OreToResourceRecipe(Registration.RawEclipseAlloyOre.get(), new ItemStack(Registration.RawEclipseAlloy))));
+
     }
 
     @Override

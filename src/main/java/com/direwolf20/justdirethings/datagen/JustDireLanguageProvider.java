@@ -493,6 +493,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //Recipes
         add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");
+        add("justdirethings.oretoresource.title", "Ores to Resources");
         add("justdirethings.fluiddroprecipe.title", "Fluid Drop Recipes");
 
     }
