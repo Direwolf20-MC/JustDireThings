@@ -130,7 +130,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
                 // Render the item
                 ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
                 BakedModel bakedmodel = itemRenderer.getModel(cachedItemStack, blockentity.getLevel(), null, 0);
-                this.renderTransparentItemStack(cachedItemStack, ItemDisplayContext.GROUND, false, matrixStackIn, bufferIn, combinedLightsIn, OverlayTexture.NO_OVERLAY, bakedmodel, 1f);
+                this.renderTransparentItemStack(cachedItemStack, ItemDisplayContext.GROUND, false, matrixStackIn, bufferIn, combinedLightsIn, OverlayTexture.NO_OVERLAY, bakedmodel, fadeFactor);
                 matrixStackIn.popPose();
             }
         }

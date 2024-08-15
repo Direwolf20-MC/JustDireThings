@@ -325,6 +325,7 @@
   "justdirethings.potionarrow.detailtext": "Insert a Potion Canister to apply effects to enemies",
   "justdirethings.potionarrow.flavortext": "Like Vanilla, without inventory issues...",
   "justdirethings.presshotkey": "<Press %s>",
+  "justdirethings.requiresfeeding": "Click on the block with its food to activate it",
   "justdirethings.runspeed.detailtext": "Run Faster",
   "justdirethings.screen.add_favorite": "Add Favorite",
   "justdirethings.screen.allowlist": "Allow List",

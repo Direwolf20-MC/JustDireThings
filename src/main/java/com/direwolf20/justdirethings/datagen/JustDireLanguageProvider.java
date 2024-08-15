@@ -356,6 +356,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.hint.dropinwater", "Drop in Water");
         add("justdirethings.decoy", "Decoy");
         add("justdirethings.missingupgrade", " (Missing Upgrade)");
+        add("justdirethings.requiresfeeding", "Click on the block with its food to activate it");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
