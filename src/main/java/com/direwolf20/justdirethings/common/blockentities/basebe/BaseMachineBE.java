@@ -104,10 +104,12 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     protected boolean canPlaceAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
-        if (EventHooks.onBlockPlace(fakePlayer, BlockSnapshot.create(level.dimension(), level, blockPos.below()), Direction.UP))
-            return false;
-        ; //FTB Chunk Protection, etc
-        return true;
+        ChunkPos chunkPos = new ChunkPos(blockPos);
+        if (chunkTestCache.containsKey(chunkPos))
+            return chunkTestCache.get(chunkPos);
+        boolean canPlace = !EventHooks.onBlockPlace(fakePlayer, BlockSnapshot.create(level.dimension(), level, blockPos.below()), Direction.UP);
+        chunkTestCache.put(chunkPos, canPlace);
+        return canPlace;
     }
 
     protected boolean canBreakAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
