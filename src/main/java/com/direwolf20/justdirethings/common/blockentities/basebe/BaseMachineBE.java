@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import com.mojang.authlib.GameProfile;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -17,6 +18,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,6 +29,7 @@ import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class BaseMachineBE extends BlockEntity {
@@ -39,6 +42,7 @@ public class BaseMachineBE extends BlockEntity {
     protected int tickSpeed = 20;
     protected int operationTicks = -1;
     protected UsefulFakePlayer usefulFakePlayer;
+    protected final Map<ChunkPos, Boolean> chunkTestCache = new Object2BooleanOpenHashMap<>();
 
     public BaseMachineBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -49,8 +53,13 @@ public class BaseMachineBE extends BlockEntity {
 
     public void tickServer() {
         handleTicks();
+        clearProtectionCache();
         if (this instanceof RedstoneControlledBE redstoneControlledBE)
             redstoneControlledBE.evaluateRedstone();
+    }
+
+    public void clearProtectionCache() {
+        chunkTestCache.clear();
     }
 
     public void handleTicks() {
@@ -110,7 +119,12 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     protected boolean canBreakAndPlaceAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
-        return canBreakAt(level, blockPos, fakePlayer) && canPlaceAt(level, blockPos, fakePlayer);
+        ChunkPos chunkPos = new ChunkPos(blockPos);
+        if (chunkTestCache.containsKey(chunkPos))
+            return chunkTestCache.get(chunkPos);
+        boolean canBreak = canBreakAt(level, blockPos, fakePlayer) && canPlaceAt(level, blockPos, fakePlayer);
+        chunkTestCache.put(chunkPos, canBreak);
+        return canBreak;
     }
 
     protected FakePlayer getFakePlayer(ServerLevel level) {

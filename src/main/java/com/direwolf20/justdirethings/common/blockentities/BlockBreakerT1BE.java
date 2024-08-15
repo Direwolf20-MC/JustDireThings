@@ -125,13 +125,14 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean isBlockValid(FakePlayer fakePlayer, BlockPos blockPos) {
-        if (level.getBlockState(blockPos).isAir())
+        BlockState blockState = level.getBlockState(blockPos);
+        if (blockState.isAir())
             return false;
         if (blockPos.equals(getBlockPos()))
             return false;
         if (blockBreakingTracker.containsKey(blockPos))
             return false;
-        if (level.getBlockState(blockPos).getDestroySpeed(level, blockPos) < 0)
+        if (blockState.getDestroySpeed(level, blockPos) < 0)
             return false;
         if (!level.mayInteract(fakePlayer, blockPos))
             return false;

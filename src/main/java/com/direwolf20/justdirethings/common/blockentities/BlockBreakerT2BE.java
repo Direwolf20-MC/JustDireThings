@@ -23,9 +23,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
     public FilterData filterData = new FilterData(false, false, 0);
@@ -97,11 +97,25 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     @Override
     public List<BlockPos> findBlocksToMine(FakePlayer fakePlayer) {
         AABB area = getAABB(getBlockPos());
-        return BlockPos.betweenClosedStream((int) area.minX, (int) area.minY, (int) area.minZ, (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1)
-                .filter(blockPos -> isBlockValid(fakePlayer, blockPos))
-                .map(BlockPos::immutable)
-                .sorted(Comparator.comparingDouble(x -> x.distSqr(getBlockPos())))
-                .collect(Collectors.toList());
+        List<BlockPos> blockPositions = new ArrayList<>();
+        BlockPos originPos = getBlockPos();
+
+        // Use BlockPos.betweenClosed() to get a stream of positions within the area
+        Iterable<BlockPos> positions = BlockPos.betweenClosed(
+                (int) area.minX, (int) area.minY, (int) area.minZ,
+                (int) area.maxX - 1, (int) area.maxY - 1, (int) area.maxZ - 1
+        );
+
+        // Iterate through the positions
+        for (BlockPos blockPos : positions) {
+            if (isBlockValid(fakePlayer, blockPos)) {
+                blockPositions.add(blockPos.immutable());
+            }
+        }
+
+        // Sort the positions based on distance from the origin position
+        blockPositions.sort(Comparator.comparingDouble(pos -> pos.distSqr(originPos)));
+        return blockPositions;
     }
 
     public boolean isBlockValid(FakePlayer fakePlayer, BlockPos blockPos) {
