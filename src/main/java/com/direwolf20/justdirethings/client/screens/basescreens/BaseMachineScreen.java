@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
+import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.containers.slots.FilterBasicSlot;
 import com.direwolf20.justdirethings.common.network.data.*;
 import com.direwolf20.justdirethings.util.MagicHelpers;
@@ -35,6 +36,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -233,6 +236,35 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         }
     }
 
+    protected void drawSlot(GuiGraphics guiGraphics, Slot slot) {
+        if (slot instanceof SlotItemHandler slotItemHandler) {
+            if (slotItemHandler.getItemHandler() instanceof FilterBasicHandler)
+                drawFilterSlot(guiGraphics, slot);
+            else if (slotItemHandler.getItemHandler() instanceof InvWrapper)
+                drawInventorySlot(guiGraphics, slot);
+            else
+                drawMachineSlot(guiGraphics, slot);
+        } else {
+            drawBasicSlot(guiGraphics, slot);
+        }
+    }
+
+    protected void drawFilterSlot(GuiGraphics guiGraphics, Slot slot) {
+        guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
+    }
+
+    protected void drawMachineSlot(GuiGraphics guiGraphics, Slot slot) {
+        guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
+    }
+
+    protected void drawInventorySlot(GuiGraphics guiGraphics, Slot slot) {
+        guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
+    }
+
+    protected void drawBasicSlot(GuiGraphics guiGraphics, Slot slot) {
+        guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
+    }
+
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         int relX = (this.width - this.imageWidth) / 2;
@@ -243,7 +275,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         guiGraphics.blitSprite(SOCIALBACKGROUND, topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight);
         guiGraphics.blitSprite(SOCIALBACKGROUND, relX, relY + 83 - 8, this.imageWidth, this.imageHeight - 73); //Inventory Section
         for (Slot slot : container.slots) {
-            guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
+            drawSlot(guiGraphics, slot);
         }
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
             guiGraphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset(), topSectionTop + 5, 0, 0, 18, 72, 36, 72);

@@ -5,8 +5,10 @@ import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButton
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.containers.BlockBreakerT2Container;
 import com.direwolf20.justdirethings.common.network.data.DirectionSettingPayload;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class BlockBreakerT2Screen extends BaseMachineScreen<BlockBreakerT2Container> {
@@ -27,5 +29,10 @@ public class BlockBreakerT2Screen extends BaseMachineScreen<BlockBreakerT2Contai
             direction = ((ToggleButton) b).getTexturePosition();
             PacketDistributor.sendToServer(new DirectionSettingPayload(direction));
         }));
+    }
+
+    @Override
+    protected void drawMachineSlot(GuiGraphics guiGraphics, Slot slot) {
+        guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 18, 0, 18, 18);
     }
 }
