@@ -14,9 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -121,12 +119,6 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
     public boolean isValidEntity(Entity entity) {
         if (!super.isValidEntity(entity))
             return false; //Do the same checks as normal, then check the filters
-        Item eggItem = SpawnEggItem.byId(entity.getType());
-        ItemStack eggItemStack;
-        if (eggItem == null)
-            eggItemStack = ItemStack.EMPTY;
-        else
-            eggItemStack = new ItemStack(eggItem);
-        return isStackValidFilter(eggItemStack);
+        return isEntityValidFilter(entity, this.level);
     }
 }

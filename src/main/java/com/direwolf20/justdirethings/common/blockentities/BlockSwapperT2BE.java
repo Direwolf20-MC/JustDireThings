@@ -10,9 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -173,12 +171,6 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
             return false;
         if (isInBothAreas(entity.position()))
             return false;
-        Item eggItem = SpawnEggItem.byId(entity.getType());
-        ItemStack eggItemStack;
-        if (eggItem == null)
-            eggItemStack = ItemStack.EMPTY;
-        else
-            eggItemStack = new ItemStack(eggItem);
-        return isStackValidFilter(eggItemStack);
+        return isEntityValidFilter(entity, this.level);
     }
 }

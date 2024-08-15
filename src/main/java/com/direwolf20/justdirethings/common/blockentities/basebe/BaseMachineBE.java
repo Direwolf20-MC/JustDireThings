@@ -181,8 +181,10 @@ public class BaseMachineBE extends BlockEntity {
     @Override
     public void setChanged() {
         super.setChanged();
-        if (this instanceof FilterableBE filterableBE)
+        if (this instanceof FilterableBE filterableBE) {
             filterableBE.getFilterData().filterCache.clear();
+            filterableBE.getFilterData().entityCache.clear();
+        }
     }
 
     public AreaAffectingData getDefaultAreaData() {
