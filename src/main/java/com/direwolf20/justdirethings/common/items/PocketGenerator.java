@@ -8,7 +8,6 @@ import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -134,8 +133,8 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) {
+        Level level = context.level();
+        if (level == null) {
             return;
         }
         appendFEText(stack, tooltip);

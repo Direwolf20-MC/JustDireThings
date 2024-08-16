@@ -2,7 +2,6 @@ package com.direwolf20.justdirethings.common.items.tools.basetools;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -64,8 +63,8 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) {
+        Level level = context.level();
+        if (level == null) {
             return;
         }
 

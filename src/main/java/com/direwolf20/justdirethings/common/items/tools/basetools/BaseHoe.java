@@ -3,7 +3,6 @@ package com.direwolf20.justdirethings.common.items.tools.basetools;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MiningCollect;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -84,8 +83,8 @@ public class BaseHoe extends HoeItem implements ToggleableTool, LeftClickableToo
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, context, tooltip, flagIn);
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) {
+        Level level = context.level();
+        if (level == null) {
             return;
         }
 
