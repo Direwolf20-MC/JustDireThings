@@ -68,8 +68,7 @@ public class Helpers {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             //This is how vanilla does it?
             float destroySpeed = state.getDestroySpeed(level, pos);
-            BlockState removedBlockState =
-                    state.getBlock().playerWillDestroy(level, pos, state, player);
+            BlockState removedBlockState = state.getBlock().playerWillDestroy(level, pos, state, player);
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
                 if (level instanceof ServerLevel serverLevel) {
@@ -87,6 +86,8 @@ public class Helpers {
                         for (ItemEntity drop : newDrops) {
                             drops.add(drop.getItem());
                         }
+                        // Always pass false for the dropXP (last) param to spawnAfterBreak since we handle XP.
+                        state.spawnAfterBreak(serverLevel, pos, pStack, false);
                     }
                 }
                 state.getBlock().destroy(level, pos, removedBlockState);
