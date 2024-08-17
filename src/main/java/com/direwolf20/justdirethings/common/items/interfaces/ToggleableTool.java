@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 import com.direwolf20.justdirethings.common.blockentities.GooSoilBE;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilBase;
 import com.direwolf20.justdirethings.common.containers.ToolSettingContainer;
+import com.direwolf20.justdirethings.common.events.BlockEvents;
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseBoots;
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseChestplate;
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseHelmet;
@@ -192,7 +193,6 @@ public interface ToggleableTool extends ToggleableItem {
 
     default void mineBlocksAbility(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving) {
         BlockState pState = pLevel.getBlockState(pPos);
-        List<ItemStack> drops = new ArrayList<>();
         int totalExp = 0;
         Set<BlockPos> breakBlockPositions = getBreakBlockPositions(pStack, pLevel, pPos, pEntityLiving, pState);
         boolean instaBreak = canInstaBreak(pStack, pLevel, breakBlockPositions);
@@ -201,10 +201,12 @@ public interface ToggleableTool extends ToggleableItem {
                 break;
             int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pPos, pLevel.getBlockEntity(pPos), pEntityLiving, pStack);
             totalExp = totalExp + exp;
-            Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, true, instaBreak));
+            breakBlocksNew(pLevel, breakPos, pEntityLiving, pStack, true, instaBreak);
         }
-        if (!pLevel.isClientSide)
-            handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, breakBlockPositions, drops, pState, totalExp);
+        if (!pLevel.isClientSide) {
+            handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, breakBlockPositions, BlockEvents.drops, pState, totalExp);
+            BlockEvents.drops.clear();
+        }
     }
 
     static int getInstantRFCost(float cumulativeDestroy, Level level, ItemStack stack) {

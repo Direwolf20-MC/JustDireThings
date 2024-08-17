@@ -10,9 +10,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -24,19 +24,21 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.level.block.GameMasterBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -56,7 +58,58 @@ public class Helpers {
         level.destroyBlock(pos, true);
     }
 
-    public static List<ItemStack> breakBlocks(Level level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool, boolean instaBreak) {
+    public static void breakBlocksNew(Level level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool, boolean instaBreak) {
+        if (pPlayer instanceof ServerPlayer player && level instanceof ServerLevel serverLevel) {
+            BlockState state = level.getBlockState(pos);
+            GameType type = player.getAbilities().instabuild ? GameType.CREATIVE : GameType.SURVIVAL;
+            BlockEvent.BreakEvent exp = CommonHooks.fireBlockBreak(serverLevel, type, player, pos, state);
+            if (exp.isCanceled()) {
+                return;
+            }
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            Block block = state.getBlock();
+            //This is how vanilla does it? With assistance from Shadows!
+            if (block instanceof GameMasterBlock && !player.canUseGameMasterBlocks()) {
+                level.sendBlockUpdated(pos, state, state, 3);
+                return;
+            }
+            if (player.blockActionRestricted(level, pos, type)) {
+                return;
+            }
+            float destroySpeed = state.getDestroySpeed(level, pos);
+            BlockState removedBlockState = state.getBlock().playerWillDestroy(level, pos, state, player);
+            if (player.getAbilities().instabuild) {
+                removeBlock(serverLevel, player, pos, removedBlockState, false);
+                return;
+            }
+            ItemStack toolCopy = pStack.copy();
+            boolean canHarvest = removedBlockState.canHarvestBlock(level, pos, player);
+            //pStack.mineBlock(level, removedBlockState, pos, player); Removed because I handle this below, and its only ever called from MY tools
+            boolean removed = removeBlock(serverLevel, player, pos, removedBlockState, canHarvest);
+            if (canHarvest && removed) {
+                block.playerDestroy(level, player, pos, removedBlockState, blockEntity, toolCopy);
+            }
+            if (damageTool && destroySpeed != 0.0F) {
+                damageTool(pStack, pPlayer);
+                if (instaBreak) {
+                    damageTool(pStack, pPlayer, getInstantRFCost(destroySpeed, level, pStack));
+                }
+            }
+            if (pStack.isEmpty() && !toolCopy.isEmpty()) {
+                EventHooks.onPlayerDestroyItem(player, toolCopy, InteractionHand.MAIN_HAND);
+            }
+        }
+    }
+
+    public static boolean removeBlock(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, boolean canHarvest) {
+        boolean removed = state.onDestroyedByPlayer(level, pos, player, canHarvest, level.getFluidState(pos));
+        if (removed) {
+            state.getBlock().destroy(level, pos, state);
+        }
+        return removed;
+    }
+
+    /*public static List<ItemStack> breakBlocks(Level level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool, boolean instaBreak) {
         List<ItemStack> drops = new ArrayList<>();
         if (pPlayer instanceof Player player) {
             BlockState state = level.getBlockState(pos);
@@ -103,7 +156,7 @@ public class Helpers {
             }
         }
         return new ArrayList<>();
-    }
+    }*/
 
     public static void damageTool(ItemStack stack, LivingEntity player) {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
@@ -266,7 +319,7 @@ public class Helpers {
         RegistryAccess registryAccess = level.registryAccess();
         RecipeManager recipeManager = level.getRecipeManager();
         didISmoke[0] = false;
-        
+
         // Check if there's a smoking recipe for the drop
         Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(drop.getItem()), level);
 
@@ -275,8 +328,8 @@ public class Helpers {
             ItemStack smokedResults = smokingRecipe.get().value().getResultItem(registryAccess);
 
             if (!smokedResults.isEmpty() && (testUseTool(tool, Ability.SMOKER, drop.getItem().getCount()) >= 0)) {
-            	didISmoke[0] = true;
-            	smokedResults.setCount(drop.getItem().getCount()); // Assume all items in the stack are smoked
+                didISmoke[0] = true;
+                smokedResults.setCount(drop.getItem().getCount()); // Assume all items in the stack are smoked
                 // If the smoking result is valid, replace the original drop with the smoked result
                 drop.setItem(smokedResults.copy());
                 if (!tool.isEmpty())

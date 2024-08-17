@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 import com.direwolf20.justdirethings.client.renderactions.ThingFinder;
 import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
+import com.direwolf20.justdirethings.common.events.BlockEvents;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
@@ -129,17 +130,20 @@ public class AbilityMethods {
                     maxBreak = 256;
             }
             Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2);
-            List<ItemStack> drops = new ArrayList<>();
+            BlockEvents.alreadyBreaking = true;
             for (BlockPos breakPos : alsoBreakSet) {
                 if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
                     break;
-                Helpers.combineDrops(drops, breakBlocks(pLevel, breakPos, pEntityLiving, pStack, false, false));
+                breakBlocksNew(pLevel, breakPos, pEntityLiving, pStack, false, false);
                 pLevel.sendBlockUpdated(breakPos, pState, pLevel.getBlockState(breakPos), 3); // I have NO IDEA why this is necessary
                 if (Math.random() < 0.1) //10% chance to damage tool
                     damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
             }
-            if (!pLevel.isClientSide)
-                handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, alsoBreakSet, drops, pState, 0);
+            BlockEvents.alreadyBreaking = false;
+            if (!pLevel.isClientSide) {
+                handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, alsoBreakSet, BlockEvents.drops, pState, 0);
+                BlockEvents.drops.clear();
+            }
             return true;
         }
         return false;
