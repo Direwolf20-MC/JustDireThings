@@ -72,7 +72,6 @@ public class Helpers {
             boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
             if (removed) {
                 if (level instanceof ServerLevel serverLevel) {
-                    //drops.addAll(Block.getDrops(state, serverLevel, pos, blockEntity, pPlayer, pStack));
                     // Capture block drops into a list of ItemEntities
                     List<ItemEntity> newDrops = Block.getDrops(state, serverLevel, pos, blockEntity, pPlayer, pStack)
                             .stream()

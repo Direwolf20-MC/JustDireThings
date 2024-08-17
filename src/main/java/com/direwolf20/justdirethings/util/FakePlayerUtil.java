@@ -152,7 +152,7 @@ public class FakePlayerUtil {
         if (!oldStack.isEmpty())
             removeAttributes(player, oldStack, EquipmentSlot.MAINHAND);
         player.getInventory().items.set(player.getInventory().selected, ItemStack.EMPTY);
-        //if (!player.getInventory().isEmpty()) player.getInventory().dropAll(); //Disabed for now, since I have no plans to give these players anything besides a mainhand
+        if (!player.getInventory().isEmpty()) player.getInventory().dropAll(); //Handles bucket stacks, for example
         player.setShiftKeyDown(false);
         player.setReach(player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE));
     }
