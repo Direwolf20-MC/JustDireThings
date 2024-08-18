@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
+import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
@@ -73,7 +75,16 @@ public class LivingEntityEvents {
                 } else if (toggleableTool.canUseAbilityAndDurability(helmet, Ability.MINDFOG)) {
                     double distance = source.position().distanceTo(target.position());
                     double defaultRange = source.getAttributes().hasAttribute(Attributes.FOLLOW_RANGE) ? source.getAttribute(Attributes.FOLLOW_RANGE).getValue() : 16;
-                    if (distance > (defaultRange / 2))
+                    int denominator = 2;
+                    if (helmet.getItem() instanceof ArmorItem armorItem) {
+                        if (armorItem.getMaterial().equals(ArmorTiers.BLAZEGOLD))
+                            denominator = 3;
+                        else if (armorItem.getMaterial().equals(ArmorTiers.CELESTIGEM))
+                            denominator = 4;
+                        else if (armorItem.getMaterial().equals(ArmorTiers.ECLIPSEALLOY))
+                            denominator = 5;
+                    }
+                    if (distance > (defaultRange / denominator))
                         e.setCanceled(true);
                 }
             }

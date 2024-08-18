@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "This passive ability will make you harder to detect. Mobs won't be able to detect you as easily, and you can get closer to them before they start to agro on you."
+      "text": "This passive ability will make you harder to detect. Mobs won't be able to detect you as easily, and you can get closer to them before they start to agro on you.$(br2)Higher tiers of armor will make this ability even more effective."
     },
     {
       "type": "patchouli:crafting",
