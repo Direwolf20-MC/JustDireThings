@@ -1,6 +1,6 @@
 {
   "name": "Homing",
-  "sortnum": 30,
+  "sortnum": 1,
   "category": "justdirethings:upgrades",
   "icon": "justdirethings:upgrade_homing",
   "pages": [

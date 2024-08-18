@@ -1,6 +1,6 @@
 {
   "name": "Drop Teleport",
-  "sortnum": 25,
+  "sortnum": 1,
   "category": "justdirethings:upgrades",
   "icon": "justdirethings:upgrade_dropteleport",
   "pages": [

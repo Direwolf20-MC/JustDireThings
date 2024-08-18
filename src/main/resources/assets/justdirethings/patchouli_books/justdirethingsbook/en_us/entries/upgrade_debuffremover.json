@@ -1,6 +1,6 @@
 {
   "name": "Debuff Remover",
-  "sortnum": 40,
+  "sortnum": 1,
   "category": "justdirethings:upgrades",
   "icon": "justdirethings:upgrade_debuffremover",
   "pages": [
