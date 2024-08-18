@@ -7,9 +7,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 import javax.annotation.Nullable;
 
@@ -39,5 +44,25 @@ public class PlayerAccessor extends BaseMachineBlock {
     @Override
     public boolean isValidBE(BlockEntity blockEntity) {
         return blockEntity instanceof PlayerAccessorBE;
+    }
+
+    //Override BaseMachineBlock being rotatable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState();
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state;
+    }
+
+    @Override
+    public BlockState direRotate(BlockState blockState, LevelAccessor level, BlockPos pos, Rotation direction) {
+        return blockState;
     }
 }

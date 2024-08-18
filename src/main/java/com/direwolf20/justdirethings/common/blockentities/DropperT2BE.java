@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, PoweredMachineBE, FilterableBE {
     public FilterData filterData = new FilterData();
-    public AreaAffectingData areaAffectingData = new AreaAffectingData();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING));
     public final PoweredMachineContainerData poweredMachineData;
     public List<ItemStack> filteredList;
 

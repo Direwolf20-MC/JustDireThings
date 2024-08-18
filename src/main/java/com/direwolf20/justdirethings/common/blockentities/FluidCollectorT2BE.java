@@ -12,6 +12,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class FluidCollectorT2BE extends FluidCollectorT1BE implements PoweredMachineBE, AreaAffectingBE, FilterableBE {
     public FilterData filterData = new FilterData();
-    public AreaAffectingData areaAffectingData = new AreaAffectingData();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING));
     public final PoweredMachineContainerData poweredMachineData;
 
     public FluidCollectorT2BE(BlockPos pPos, BlockState pBlockState) {

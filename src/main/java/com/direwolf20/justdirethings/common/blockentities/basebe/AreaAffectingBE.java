@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
@@ -25,6 +26,26 @@ public interface AreaAffectingBE {
         if (getAreaAffectingData().zRadius != Math.floor(getAreaAffectingData().zRadius))
             zOffset = zOffset + 0.75;
         return new AABB(relativePos.getX() + xOffset, relativePos.getY() + yOffset, relativePos.getZ() + zOffset, relativePos.getX() + xOffset + (getAreaAffectingData().xRadius != Math.floor(getAreaAffectingData().xRadius) ? 0.5 : 1), relativePos.getY() + yOffset + (getAreaAffectingData().yRadius != Math.floor(getAreaAffectingData().yRadius) ? 0.5 : 1), relativePos.getZ() + zOffset + (getAreaAffectingData().zRadius != Math.floor(getAreaAffectingData().zRadius) ? 0.5 : 1));
+    }
+
+    default AreaAffectingData getDefaultAreaData() {
+        return new AreaAffectingData();
+    }
+
+    default AreaAffectingData getDefaultAreaData(Direction facing) {
+        return new AreaAffectingData(facing);
+    }
+
+    default void handleRotate(Direction oldDirection, Direction newDirection) {
+        if (oldDirection == newDirection)
+            return;
+        AreaAffectingData areaAffectingData = getAreaAffectingData();
+        AreaAffectingData defaultData = getDefaultAreaData(oldDirection);
+        defaultData.renderArea = areaAffectingData.renderArea; //Still rotate if the renderArea's don't match
+        if (!areaAffectingData.equals(defaultData))
+            return;
+        AreaAffectingData newAreaData = new AreaAffectingData(newDirection);
+        setAreaSettings(newAreaData.xRadius, newAreaData.yRadius, newAreaData.zRadius, newAreaData.xOffset, newAreaData.yOffset, newAreaData.zOffset, areaAffectingData.renderArea);
     }
 
     default AABB getAABB(BlockPos relativePos) {

@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMachineBE {
-    public AreaAffectingData areaAffectingData = new AreaAffectingData();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING));
     public final PoweredMachineContainerData poweredMachineData;
 
     public SensorT2BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {

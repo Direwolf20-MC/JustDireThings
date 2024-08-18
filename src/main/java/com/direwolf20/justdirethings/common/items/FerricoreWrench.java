@@ -1,11 +1,11 @@
 package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.blockentities.BlockSwapperT1BE;
+import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -17,9 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.Property;
 
 import java.util.List;
 
@@ -41,15 +40,16 @@ public class FerricoreWrench extends Item {
         if (!player.isShiftKeyDown() && specialBlockHandling(level, player, pos, state, itemstack))
             return InteractionResult.SUCCESS;
         if (!level.isClientSide) {
-            for (Property<?> prop : state.getProperties()) {
-                if (prop instanceof DirectionProperty && prop.getName().equals("facing")) {
-                    // Rotate the block using the improved logic.
-                    BlockState rotatedState = rotateBlock(state, (DirectionProperty) prop, state.getValue(prop));
-                    level.setBlock(pos, rotatedState, 3);
-                    level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    return InteractionResult.SUCCESS;
-                }
-            }
+            BlockState rotatedState;
+            if (state.getBlock() instanceof BaseMachineBlock baseMachineBlock)
+                rotatedState = baseMachineBlock.direRotate(state, level, pos, Rotation.CLOCKWISE_90);
+            else
+                rotatedState = state.rotate(level, pos, Rotation.CLOCKWISE_90);
+            if (rotatedState.equals(state))
+                return InteractionResult.PASS;
+            level.setBlock(pos, rotatedState, 3);
+            level.playSound(null, pos, SoundEvents.ITEM_FRAME_ROTATE_ITEM, SoundSource.BLOCKS, 1.0F, 1.0F);
+            return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
@@ -81,14 +81,6 @@ public class FerricoreWrench extends Item {
 
     public boolean isFoil(ItemStack pStack) {
         return getBoundTo(pStack) != null;
-    }
-
-    private BlockState rotateBlock(BlockState state, DirectionProperty prop, Comparable<?> currentValue) {
-        List<Direction> directions = prop.getPossibleValues().stream().toList();
-        int currentDirectionIndex = directions.indexOf(currentValue);
-        int nextDirectionIndex = (currentDirectionIndex + 1) % directions.size();
-        Direction nextDirection = directions.get(nextDirectionIndex);
-        return state.setValue(prop, nextDirection);
     }
 
     public static GlobalPos getBoundTo(ItemStack stack) {

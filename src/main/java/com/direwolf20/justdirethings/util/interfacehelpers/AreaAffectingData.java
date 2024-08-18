@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.util.interfacehelpers;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 
 import java.util.Objects;
@@ -12,6 +13,12 @@ public class AreaAffectingData {
 
     public AreaAffectingData() {
 
+    }
+
+    public AreaAffectingData(Direction facing) {
+        xOffset = facing.getNormal().getX();
+        yOffset = facing.getNormal().getY();
+        zOffset = facing.getNormal().getZ();
     }
 
     public AreaAffectingData(double xRadius, double yRadius, double zRadius, int xOffset, int yOffset, int zOffset) {

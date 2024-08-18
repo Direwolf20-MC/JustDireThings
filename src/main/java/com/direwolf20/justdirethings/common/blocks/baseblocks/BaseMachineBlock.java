@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.blocks.baseblocks;
 
+import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.items.FerricoreWrench;
@@ -15,14 +16,20 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
@@ -143,5 +150,39 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
         }
 
         return drops;
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite());
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.FACING);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.FACING, rotation.rotate(state.getValue(BlockStateProperties.FACING)));
+    }
+
+    public BlockState direRotate(BlockState blockState, LevelAccessor level, BlockPos pos, Rotation direction) {
+        BlockState newState = direRotate(blockState, direction);
+        if (level.getBlockEntity(pos) instanceof AreaAffectingBE areaAffectingBE) {
+            areaAffectingBE.handleRotate(blockState.getValue(BlockStateProperties.FACING), newState.getValue(BlockStateProperties.FACING));
+        }
+        return newState;
+    }
+
+    public BlockState direRotate(BlockState state, Rotation rotation) {
+        DirectionProperty prop = BlockStateProperties.FACING;
+        Comparable<?> currentValue = state.getValue(prop);
+        List<Direction> directions = prop.getPossibleValues().stream().toList();
+        int currentDirectionIndex = directions.indexOf(currentValue);
+        int nextDirectionIndex = (currentDirectionIndex + 1) % directions.size();
+        Direction nextDirection = directions.get(nextDirectionIndex);
+        return state.setValue(prop, nextDirection);
+
     }
 }

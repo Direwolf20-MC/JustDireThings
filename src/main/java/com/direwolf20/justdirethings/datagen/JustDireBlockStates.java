@@ -32,15 +32,10 @@ public class JustDireBlockStates extends BlockStateProvider {
         gooBlocks(Registration.GooBlock_Tier2);
         gooBlocks(Registration.GooBlock_Tier3);
         gooBlocks(Registration.GooBlock_Tier4);
-        //simpleBlock(Registration.GooBlock_Tier1.get(), models().cubeAll(Registration.GooBlock_Tier1_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier1.get())).renderType("cutout"));
-        //simpleBlock(Registration.GooBlock_Tier2.get(), models().cubeAll(Registration.GooBlock_Tier2_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier2.get())).renderType("cutout"));
-        //simpleBlock(Registration.GooBlock_Tier3.get(), models().cubeAll(Registration.GooBlock_Tier3_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier3.get())).renderType("cutout"));
-        //simpleBlock(Registration.GooBlock_Tier4.get(), models().cubeAll(Registration.GooBlock_Tier4_ITEM.getId().getPath(), blockTexture(Registration.GooBlock_Tier4.get())).renderType("cutout"));
         simpleBlock(Registration.FerricoreBlock.get(), models().cubeAll(Registration.FerricoreBlock_ITEM.getId().getPath(), blockTexture(Registration.FerricoreBlock.get())));
         simpleBlock(Registration.BlazeGoldBlock.get(), models().cubeAll(Registration.BlazeGoldBlock_ITEM.getId().getPath(), blockTexture(Registration.BlazeGoldBlock.get())));
         simpleBlock(Registration.CelestigemBlock.get(), models().cubeAll(Registration.CelestigemBlock_ITEM.getId().getPath(), blockTexture(Registration.CelestigemBlock.get())));
         simpleBlock(Registration.EclipseAlloyBlock.get(), models().cubeAll(Registration.EclipseAlloyBlock_ITEM.getId().getPath(), blockTexture(Registration.EclipseAlloyBlock.get())));
-        //simpleBlock(Registration.GeneratorT1.get(), models().cubeAll(Registration.GeneratorT1.getId().getPath(), blockTexture(Registration.GeneratorT1.get())));
         simpleBlock(Registration.CoalBlock_T1.get(), models().cubeAll(Registration.CoalBlock_T1.getId().getPath(), blockTexture(Registration.CoalBlock_T1.get())));
         simpleBlock(Registration.CoalBlock_T2.get(), models().cubeAll(Registration.CoalBlock_T2.getId().getPath(), blockTexture(Registration.CoalBlock_T2.get())));
         simpleBlock(Registration.CoalBlock_T3.get(), models().cubeAll(Registration.CoalBlock_T3.getId().getPath(), blockTexture(Registration.CoalBlock_T3.get())));
@@ -48,15 +43,10 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.PlayerAccessor.get(), models().cubeAll(Registration.PlayerAccessor.getId().getPath(), blockTexture(Registration.PlayerAccessor.get())));
         simpleBlock(Registration.EclipseGateBlock.get(), models().cubeAll(Registration.EclipseGateBlock.getId().getPath(), blockTexture(Registration.EclipseGateBlock.get())).renderType("cutout"));
 
-        //Fluids
-        //simpleBlock(Registration.PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
-        //simpleBlock(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get(), models().getBuilder(Registration.UNSTABLE_PORTAL_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
-        //simpleBlock(Registration.POLYMORPHIC_FLUID_BLOCK.get(), models().getBuilder(Registration.POLYMORPHIC_FLUID_BLOCK.getId().getPath()).texture("particle", new ResourceLocation(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
-
         patternBlock();
         soilBlocks();
         sidedBlocks();
-        sidedNonRotating();
+        //sidedNonRotating();
         fluidBlocks();
     }
 
