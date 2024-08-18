@@ -54,10 +54,6 @@ public class Helpers {
     public static final Predicate<BlockState> fallingBlockCondition = s -> s.getBlock() instanceof FallingBlock;
     public static final Predicate<BlockState> logCondition = s -> s.is(BlockTags.LOGS);
 
-    public static void breakBlocks(ServerLevel level, BlockPos pos) {
-        level.destroyBlock(pos, true);
-    }
-
     public static void breakBlocksNew(Level level, BlockPos pos, LivingEntity pPlayer, ItemStack pStack, boolean damageTool, boolean instaBreak) {
         if (pPlayer instanceof ServerPlayer player && level instanceof ServerLevel serverLevel) {
             BlockState state = level.getBlockState(pos);
@@ -87,7 +83,7 @@ public class Helpers {
             //pStack.mineBlock(level, removedBlockState, pos, player); Removed because I handle this below, and its only ever called from MY tools
             boolean removed = removeBlock(serverLevel, player, pos, removedBlockState, canHarvest);
             if (canHarvest && removed) {
-                block.playerDestroy(level, player, pos, removedBlockState, blockEntity, toolCopy);
+                block.playerDestroy(level, player, pos, removedBlockState, blockEntity, pStack);
             }
             if (damageTool && destroySpeed != 0.0F) {
                 damageTool(pStack, pPlayer);

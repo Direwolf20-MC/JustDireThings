@@ -20,6 +20,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -178,8 +179,9 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public InteractionResult clickBlock(ItemStack itemStack, UsefulFakePlayer fakePlayer, BlockPos blockPos) {
         Direction placing = Direction.values()[direction];
         FakePlayerUtil.setupFakePlayerForUse(fakePlayer, blockPos, placing, itemStack, sneaking);
-        if (showFakePlayer && level instanceof ServerLevel serverLevel && !itemStack.isEmpty()) {
-            fakePlayer.drawParticles(serverLevel, itemStack);
+        if (showFakePlayer && level instanceof ServerLevel serverLevel) {
+            ItemStack showStack = itemStack.isEmpty() ? new ItemStack(Items.COBBLESTONE) : itemStack;
+            fakePlayer.drawParticles(serverLevel, showStack);
         }
         FakePlayerUtil.FakePlayerResult fakePlayerResult = new FakePlayerUtil.FakePlayerResult(InteractionResult.FAIL, itemStack);
         if (!level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.BLOCK)) {

@@ -157,6 +157,10 @@ dependencies {
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
     runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
 
+    //Patchouli
+    compileOnly "vazkii.patchouli:Patchouli:${patchouli_version}:api"
+    runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
+
     // NeoForge
     //compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     //runtimeOnly "dev.emi:emi-neoforge:${emi_version}"

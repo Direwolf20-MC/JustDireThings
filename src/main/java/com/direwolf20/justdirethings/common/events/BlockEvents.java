@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.events;
 
-import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
+import com.direwolf20.justdirethings.common.items.interfaces.AbilityMethods;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.items.tools.BlazegoldHoe;
@@ -8,9 +8,14 @@ import com.direwolf20.justdirethings.common.items.tools.CelestigemHoe;
 import com.direwolf20.justdirethings.common.items.tools.EclipseAlloyHoe;
 import com.direwolf20.justdirethings.common.items.tools.FerricoreHoe;
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -22,7 +27,7 @@ import java.util.List;
 
 public class BlockEvents {
     public static boolean alreadyBreaking = false;
-    public static final List<ItemStack> drops = new ArrayList<>();
+    public static BlockPos spawnDropsAtPos = BlockPos.ZERO;
 
     @SubscribeEvent
     public static void BlockToolModificationEvent(BlockEvent.BlockToolModificationEvent event) {
@@ -62,12 +67,18 @@ public class BlockEvents {
     @SubscribeEvent
     public static void BlockDrops(BlockDropsEvent event) {
         ItemStack itemStack = event.getTool();
-        if (alreadyBreaking && itemStack.getItem() instanceof ToggleableTool toggleableTool) {
+        Entity breaker = event.getBreaker();
+        ServerLevel serverLevel = event.getLevel();
+        BlockPos breakPos = event.getPos();
+        BlockEntity blockEntity = event.getBlockEntity();
+        if (alreadyBreaking && itemStack.getItem() instanceof ToggleableTool toggleableTool && breaker instanceof Player player) {
             List<ItemStack> newDrops = new ArrayList<>();
             for (ItemEntity drop : event.getDrops()) {
                 newDrops.add(drop.getItem());
             }
-            Helpers.combineDrops(drops, newDrops);
+            int exp = event.getState().getExpDrop(serverLevel, breakPos, blockEntity, breaker, itemStack);
+            BlockPos spawnAt = spawnDropsAtPos == null || spawnDropsAtPos.equals(BlockPos.ZERO) ? player.blockPosition() : spawnDropsAtPos;
+            AbilityMethods.handleDrops(itemStack, serverLevel, spawnAt, player, breakPos, newDrops, event.getState(), exp);
             event.getState().spawnAfterBreak(event.getLevel(), event.getPos(), itemStack, false);
             event.setCanceled(true);
         }
