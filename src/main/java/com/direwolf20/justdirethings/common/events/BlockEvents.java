@@ -68,10 +68,10 @@ public class BlockEvents {
     public static void BlockDrops(BlockDropsEvent event) {
         ItemStack itemStack = event.getTool();
         Entity breaker = event.getBreaker();
-        ServerLevel serverLevel = event.getLevel();
-        BlockPos breakPos = event.getPos();
-        BlockEntity blockEntity = event.getBlockEntity();
         if (alreadyBreaking && itemStack.getItem() instanceof ToggleableTool toggleableTool && breaker instanceof Player player) {
+            ServerLevel serverLevel = event.getLevel();
+            BlockPos breakPos = event.getPos();
+            BlockEntity blockEntity = event.getBlockEntity();
             List<ItemStack> newDrops = new ArrayList<>();
             for (ItemEntity drop : event.getDrops()) {
                 newDrops.add(drop.getItem());
