@@ -44,7 +44,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.direwolf20.justdirethings.common.items.interfaces.AbilityMethods.handleDrops;
 import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 
 public interface ToggleableTool extends ToggleableItem {
@@ -193,20 +192,15 @@ public interface ToggleableTool extends ToggleableItem {
 
     default void mineBlocksAbility(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving) {
         BlockState pState = pLevel.getBlockState(pPos);
-        int totalExp = 0;
         Set<BlockPos> breakBlockPositions = getBreakBlockPositions(pStack, pLevel, pPos, pEntityLiving, pState);
         boolean instaBreak = canInstaBreak(pStack, pLevel, breakBlockPositions);
+        BlockEvents.spawnDropsAtPos = pPos;
         for (BlockPos breakPos : breakBlockPositions) {
             if (testUseTool(pStack) < 0)
                 break;
-            int exp = pLevel.getBlockState(breakPos).getExpDrop(pLevel, pPos, pLevel.getBlockEntity(pPos), pEntityLiving, pStack);
-            totalExp = totalExp + exp;
             breakBlocksNew(pLevel, breakPos, pEntityLiving, pStack, true, instaBreak);
         }
-        if (!pLevel.isClientSide) {
-            handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, breakBlockPositions, BlockEvents.drops, pState, totalExp);
-            BlockEvents.drops.clear();
-        }
+        BlockEvents.spawnDropsAtPos = BlockPos.ZERO;
     }
 
     static int getInstantRFCost(float cumulativeDestroy, Level level, ItemStack stack) {

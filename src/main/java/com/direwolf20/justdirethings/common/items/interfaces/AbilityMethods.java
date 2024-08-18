@@ -50,10 +50,7 @@ import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
@@ -131,6 +128,7 @@ public class AbilityMethods {
             }
             Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2);
             BlockEvents.alreadyBreaking = true;
+            BlockEvents.spawnDropsAtPos = pPos;
             for (BlockPos breakPos : alsoBreakSet) {
                 if (testUseTool(pStack, Ability.LEAFBREAKER) < 0)
                     break;
@@ -140,10 +138,7 @@ public class AbilityMethods {
                     damageTool(pStack, pEntityLiving, Ability.LEAFBREAKER);
             }
             BlockEvents.alreadyBreaking = false;
-            if (!pLevel.isClientSide) {
-                handleDrops(pStack, (ServerLevel) pLevel, pPos, pEntityLiving, alsoBreakSet, BlockEvents.drops, pState, 0);
-                BlockEvents.drops.clear();
-            }
+            BlockEvents.spawnDropsAtPos = BlockPos.ZERO;
             return true;
         }
         return false;
@@ -347,6 +342,13 @@ public class AbilityMethods {
         }
         return false;
     }
+
+    public static void handleDrops(ItemStack pStack, ServerLevel serverLevel, BlockPos pPos, LivingEntity pEntityLiving, BlockPos breakBlockPosition, List<ItemStack> drops, BlockState pState, int totalExp) {
+        Set<BlockPos> positions = new HashSet<>();
+        positions.add(breakBlockPosition);
+        handleDrops(pStack, serverLevel, pPos, pEntityLiving, positions, drops, pState, totalExp);
+    }
+
 
     public static void handleDrops(ItemStack pStack, ServerLevel serverLevel, BlockPos pPos, LivingEntity pEntityLiving, Set<BlockPos> breakBlockPositions, List<ItemStack> drops, BlockState pState, int totalExp) {
         if (pStack.getItem() instanceof ToggleableTool toggleableTool) {
