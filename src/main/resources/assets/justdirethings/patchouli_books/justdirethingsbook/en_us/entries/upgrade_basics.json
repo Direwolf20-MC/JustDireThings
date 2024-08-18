@@ -26,7 +26,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Right click the ability to access it's options screen. For $(l)active$() abilities, you can specify which hotkey (or mouse click) activates them.$(br2)For passive abilities, the hotkey assignment will toggle it on or off when that hotkey is pressed."
+      "text": "Right click the ability to access it's options screen. For $(l)active$() abilities, you can specify which hotkey (or mouse click) activates them.$(br2)For passive abilities, the hotkey assignment will toggle it on or off when that hotkey is pressed.$(br2)Abilities can be activated or toggled even if the item isn't equipped! But first, toggle the 'activate if equipped' button to 'activate from inventory'"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "This means that you can activate the 'air burst' ability, or 'ore scanner' ability, even if the wand or pickaxe isn't in your hand.  As long as its *somewhere* in your inventory, you can use these abilities.$(br2)Curios support is planned for some items."
     },
     {
       "type": "patchouli:text",
