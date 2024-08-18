@@ -1,0 +1,17 @@
+{
+  "name": "Death Protection",
+  "sortnum": 39,
+  "category": "justdirethings:upgrades",
+  "icon": "justdirethings:upgrade_deathprotection",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Secure yourself against fatal damage with the Death Protection upgrade. It grants a one-time protection from what would be a fatal blow, with a long cooldown after use.$(br2)Requires a very large amount of forge energy, and has a very long cooldown."
+    },
+    {
+      "type": "patchouli:crafting",
+      "title": "Death Protection Crafting",
+      "recipe": "justdirethings:upgrade_deathprotection"
+    }
+  ]
+}
