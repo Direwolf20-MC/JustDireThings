@@ -124,6 +124,16 @@ public class ToggleButtonFactory {
         return new NumberButton(x, y, 24, 12, value, min, 1200, ticksButtonLocalization, onPress);
     }
 
+    private static Component pickupDelayButtonLocalization = Component.translatable("justdirethings.screen.pickupdelay");
+
+    public static NumberButton PICKUPDELAYBUTTON(int x, int y, int value, Button.OnPress onPress) {
+        return new NumberButton(x, y, 24, 12, value, 0, 1200, pickupDelayButtonLocalization, onPress);
+    }
+
+    public static NumberButton PICKUPDELAYBUTTON(int x, int y, int value, int min, Button.OnPress onPress) {
+        return new NumberButton(x, y, 24, 12, value, min, 1200, pickupDelayButtonLocalization, onPress);
+    }
+
     /** LEFT or RIGHT Click Button **/
     private static final List<TextureLocalization> LEFT_RIGHT_CLICK_TEXTURES = List.of(
             new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/click-right.png"), Component.translatable("justdirethings.screen.click-right")),

@@ -20,7 +20,7 @@ public class DropperSettingPacket {
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof DropperT1BE dropperT1BE) {
-                dropperT1BE.setDropperSettings(payload.dropCount());
+                dropperT1BE.setDropperSettings(payload.dropCount(), payload.pickupDelay());
             }
         });
     }

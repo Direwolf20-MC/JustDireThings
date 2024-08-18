@@ -24,6 +24,7 @@ import java.util.List;
 public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     public int dropCount = 1;
+    public int pickupDelay = 0;
     public List<Integer> slotsToDropList = new ArrayList<>();
 
     public DropperT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
@@ -35,8 +36,9 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
         this(Registration.DropperT1BE.get(), pPos, pBlockState);
     }
 
-    public void setDropperSettings(int dropCount) {
+    public void setDropperSettings(int dropCount, int pickupDelay) {
         this.dropCount = dropCount;
+        this.pickupDelay = pickupDelay;
         markDirtyClient();
     }
 
@@ -117,6 +119,7 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
                 (double) direction.getStepY() * speed,
                 (double) direction.getStepZ() * speed
         );
+        itementity.setPickUpDelay(pickupDelay);
         level.addFreshEntity(itementity);
     }
 
@@ -137,6 +140,8 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
             return false;
         if (dropCount != 1)
             return false;
+        if (pickupDelay != 0)
+            return false;
         return true;
     }
 
@@ -144,11 +149,13 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
         tag.putInt("dropCount", dropCount);
+        tag.putInt("pickupDelay", pickupDelay);
     }
 
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.loadAdditional(tag, provider);
         this.dropCount = tag.getInt("dropCount");
+        this.pickupDelay = tag.getInt("pickupDelay");
     }
 }

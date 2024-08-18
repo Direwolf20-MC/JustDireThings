@@ -438,6 +438,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.filter-block", "Filter: Block");
         add("justdirethings.screen.filter-item", "Filter: Item");
         add("justdirethings.screen.tickspeed", "Speed (Ticks)");
+        add("justdirethings.screen.pickupdelay", "Pickup Delay (Ticks)");
         add("justdirethings.screen.click-right", "Right Click");
         add("justdirethings.screen.click-left", "Left Click");
         add("justdirethings.screen.click-custom", "Custom Binding");

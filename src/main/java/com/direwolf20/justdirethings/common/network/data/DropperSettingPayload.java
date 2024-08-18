@@ -8,7 +8,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record DropperSettingPayload(
-        int dropCount
+        int dropCount,
+        int pickupDelay
 ) implements CustomPacketPayload {
     public static final Type<DropperSettingPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dropper_setting_packet"));
 
@@ -19,6 +20,7 @@ public record DropperSettingPayload(
 
     public static final StreamCodec<FriendlyByteBuf, DropperSettingPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, DropperSettingPayload::dropCount,
+            ByteBufCodecs.INT, DropperSettingPayload::pickupDelay,
             DropperSettingPayload::new
     );
 }
