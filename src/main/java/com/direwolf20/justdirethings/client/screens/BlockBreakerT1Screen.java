@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class BlockBreakerT1Screen extends BaseMachineScreen<BlockBreakerT1Container> {
     public BlockBreakerT1Screen(BlockBreakerT1Container container, Inventory inv, Component name) {
@@ -36,6 +37,10 @@ public class BlockBreakerT1Screen extends BaseMachineScreen<BlockBreakerT1Contai
 
     @Override
     protected void drawMachineSlot(GuiGraphics guiGraphics, Slot slot) {
-        guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 18, 0, 18, 18);
+        ItemStack itemStack = slot.getItem();
+        if (itemStack.isEmpty())
+            guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 18, 0, 18, 18);
+        else
+            super.drawMachineSlot(guiGraphics, slot);
     }
 }
