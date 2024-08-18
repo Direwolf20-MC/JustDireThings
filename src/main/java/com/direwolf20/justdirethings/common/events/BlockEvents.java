@@ -15,7 +15,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -71,14 +70,12 @@ public class BlockEvents {
         if (alreadyBreaking && itemStack.getItem() instanceof ToggleableTool toggleableTool && breaker instanceof Player player) {
             ServerLevel serverLevel = event.getLevel();
             BlockPos breakPos = event.getPos();
-            BlockEntity blockEntity = event.getBlockEntity();
             List<ItemStack> newDrops = new ArrayList<>();
             for (ItemEntity drop : event.getDrops()) {
                 newDrops.add(drop.getItem());
             }
-            int exp = event.getState().getExpDrop(serverLevel, breakPos, blockEntity, breaker, itemStack);
             BlockPos spawnAt = spawnDropsAtPos == null || spawnDropsAtPos.equals(BlockPos.ZERO) ? player.blockPosition() : spawnDropsAtPos;
-            AbilityMethods.handleDrops(itemStack, serverLevel, spawnAt, player, breakPos, newDrops, event.getState(), exp);
+            AbilityMethods.handleDrops(itemStack, serverLevel, spawnAt, player, breakPos, newDrops, event.getState(), event.getDroppedExperience());
             event.getState().spawnAfterBreak(event.getLevel(), event.getPos(), itemStack, false);
             event.setCanceled(true);
         }
