@@ -106,7 +106,10 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         ItemStack tool = getTool();
         FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         clearTrackerIfNeeded(tool, fakePlayer);
-        if (tool.isEmpty()) return;
+        if (tool.isEmpty()) {
+            getRedstoneControlData().pulsed = false;
+            return;
+        }
         if (isActiveRedstone() && canRun() && blockBreakingTracker.isEmpty()) {
             List<BlockPos> blocksToMine = findBlocksToMine(fakePlayer);
             for (BlockPos blockPos : blocksToMine) {
