@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-11T14:45:13.7848538	Item Models: justdirethings
+// 1.21.1	2024-08-19T00:00:06.2881543	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -310,6 +310,10 @@ a5cb1a907f54e259523e8a93f7aa56b1da6bcc6e assets/justdirethings/models/item/senso
 44aacc94c634ef9db87fd8392ccac2a81c3f4d5d assets/justdirethings/models/item/template_celestigem.json
 32eea376ef9d77229d40d9b023289ebfddd9a229 assets/justdirethings/models/item/template_eclipsealloy.json
 b1610e7cddca03930af9e0189d74cddc92f1316d assets/justdirethings/models/item/template_ferricore.json
+193663f2e7e71d6bfc848e6da1ac1c1269f6b732 assets/justdirethings/models/item/time_crystal.json
+4ae892d65df31c717c3053b7e5e63f9435e18bf4 assets/justdirethings/models/item/time_crystal_block.json
+13409da380114f62a0137ce9755f63fe5f756551 assets/justdirethings/models/item/time_crystal_budding_block.json
+cfd2784f583dd77e664f561d3e9e79f7ede18dc0 assets/justdirethings/models/item/time_crystal_cluster.json
 cb3be9b73e78631097a0854d5da4a7c87cbe94a1 assets/justdirethings/models/item/totem_of_death_recall.json
 c480174fc37e0c2922f662ad95745fb9d81af0c9 assets/justdirethings/models/item/unrefined_t2_fluid_bucket.json
 499a7ebac41346662e121c02f9820ab8881142b2 assets/justdirethings/models/item/unrefined_t3_fluid_bucket.json

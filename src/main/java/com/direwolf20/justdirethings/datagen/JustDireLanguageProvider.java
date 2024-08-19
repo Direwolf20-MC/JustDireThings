@@ -51,6 +51,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FluidPlacerT2.get(), "Advanced Fluid Placer");
         add(Registration.FluidCollectorT1.get(), "Simple Fluid Collector");
         add(Registration.FluidCollectorT2.get(), "Advanced Fluid Collector");
+        add(Registration.TimeCrystalBlock.get(), "Time Crystal Block");
+        add(Registration.TimeCrystalBuddingBlock.get(), "Budding Time Crystal Block");
+        add(Registration.TimeCrystalCluster.get(), "Time Crystal Cluster");
+        add(Registration.TimeCrystalCluster_Small.get(), "Small Time Crystal Block");
+        add(Registration.TimeCrystalCluster_Medium.get(), "Medium Time Crystal Block");
+        add(Registration.TimeCrystalCluster_Large.get(), "Large Time Crystal Block");
 
         //Fluids
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
@@ -100,6 +106,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CoalBlock_T4.get(), "Eclipse Ember Block");
         add(Registration.PolymorphicCatalyst.get(), "Polymorphic Catalyst");
         add(Registration.PortalFluidCatalyst.get(), "Portal Fluid Catalyst");
+        add(Registration.TimeCrystal.get(), "Time Crystal");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");

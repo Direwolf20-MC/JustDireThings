@@ -60,6 +60,12 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.FluidPlacerT2.get());
         dropSelf(Registration.FluidCollectorT1.get());
         dropSelf(Registration.FluidCollectorT2.get());
+        dropSelf(Registration.TimeCrystalBlock.get());
+        dropOther(Registration.TimeCrystalCluster.get(), Registration.TimeCrystal.get());
+        dropOther(Registration.TimeCrystalBuddingBlock.get(), Registration.TimeCrystalBlock.get());
+        add(Registration.TimeCrystalCluster_Small.get(), noDrop());
+        add(Registration.TimeCrystalCluster_Medium.get(), noDrop());
+        add(Registration.TimeCrystalCluster_Large.get(), noDrop());
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(
