@@ -36,6 +36,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     public SENSE_TARGET sense_target = SENSE_TARGET.BLOCK;
     public boolean emitRedstone = false;
     public boolean strongSignal = false;
+    public boolean newlyLoaded = true;
     public Map<Integer, Map<Property<?>, Comparable<?>>> blockStateProperties = new HashMap<>();
     public final Map<BlockState, Boolean> blockStateFilterCache = new Object2BooleanOpenHashMap<>();
     public int senseAmount = 0;
@@ -194,6 +195,13 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     @Override
     public void tickServer() {
         super.tickServer();
+        if (newlyLoaded && level != null) {
+            for (Direction direction : Direction.values()) {
+                level.neighborChanged(getBlockPos().relative(direction), this.getBlockState().getBlock(), getBlockPos());
+                level.updateNeighborsAtExceptFromFacing(getBlockPos().relative(direction), this.getBlockState().getBlock(), direction.getOpposite());
+            }
+            newlyLoaded = false;
+        }
         sense();
     }
 
@@ -202,7 +210,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     public void setRedstone(boolean emit, boolean strong) {
-        if (emit != emitRedstone || strong != strongSignal) {
+        if (emit != emitRedstone || strong != strongSignal || newlyLoaded) {
             emitRedstone = emit;
             strongSignal = strong;
             for (Direction direction : Direction.values()) {

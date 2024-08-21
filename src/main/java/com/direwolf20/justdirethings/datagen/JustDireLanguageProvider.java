@@ -54,9 +54,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TimeCrystalBlock.get(), "Time Crystal Block");
         add(Registration.TimeCrystalBuddingBlock.get(), "Budding Time Crystal Block");
         add(Registration.TimeCrystalCluster.get(), "Time Crystal Cluster");
-        add(Registration.TimeCrystalCluster_Small.get(), "Small Time Crystal Block");
-        add(Registration.TimeCrystalCluster_Medium.get(), "Medium Time Crystal Block");
-        add(Registration.TimeCrystalCluster_Large.get(), "Large Time Crystal Block");
+        add(Registration.TimeCrystalCluster_Small.get(), "Small Time Crystal Cluster");
+        add(Registration.TimeCrystalCluster_Medium.get(), "Medium Time Crystal Cluster");
+        add(Registration.TimeCrystalCluster_Large.get(), "Large Time Crystal Cluster");
 
         //Fluids
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");

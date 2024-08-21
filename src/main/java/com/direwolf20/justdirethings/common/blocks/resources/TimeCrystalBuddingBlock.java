@@ -45,22 +45,33 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
         int stage = blockState.getValue(STAGE);
         int newStage = stage == 3 ? 0 : stage + 1;
 
-        level.setBlockAndUpdate(blockPos, blockState.setValue(STAGE, newStage));
+        advance(level, blockState, blockPos, newStage);
 
         return InteractionResult.SUCCESS;
     }
 
-    public boolean canAdvanceTo1(Level level, BlockState state) {
+    public int canAdvanceTo(Level level, BlockState state) {
         int stage = state.getValue(STAGE);
-        return stage == 0 && level.dimension() == Level.OVERWORLD;
+        if (stage == 0 && (level.dimension() != Level.NETHER && level.dimension() != Level.END))
+            return 1;
+        if (stage == 1 && level.dimension() == Level.NETHER)
+            return 2;
+        if (stage == 2 && level.dimension() == Level.END)
+            return 3;
+        return -1;
+    }
+
+    public void advance(Level level, BlockState state, BlockPos pos, int advanceTo) {
+        level.setBlockAndUpdate(pos, state.setValue(STAGE, advanceTo));
+        level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 1.0F, 0.25F);
     }
 
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         int stage = state.getValue(STAGE);
-        if (canAdvanceTo1(level, state)) {
-            level.setBlockAndUpdate(pos, state.setValue(STAGE, 1));
-            level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 1.0F, 0.25F);
+        int advanceTo = canAdvanceTo(level, state);
+        if (advanceTo != -1) {
+            advance(level, state, pos, advanceTo);
         }
         if (stage != 3) return;
         if (random.nextInt(5) == 0) {
@@ -111,10 +122,20 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
         double d2 = (double) pos.getZ() + 0.5;
 
         float r, g, b;
-        if (canAdvanceTo1(level, state)) {
+        int advanceTo = canAdvanceTo(level, state);
+        if (advanceTo == -1) return;
+        if (advanceTo == 1) {
             r = 0.25f;
             g = 0.55f;
             b = 1f;
+        } else if (advanceTo == 2) {
+            r = 1.0f;
+            g = 0.33f;
+            b = 0.0f;
+        } else if (advanceTo == 3) {
+            r = 0.4f;
+            g = 1.00f;
+            b = 0.5f;
         } else {
             return;
         }

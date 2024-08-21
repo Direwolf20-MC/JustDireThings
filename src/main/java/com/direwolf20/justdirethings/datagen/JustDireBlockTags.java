@@ -124,6 +124,14 @@ public class JustDireBlockTags extends BlockTagsProvider {
                         Blocks.END_GATEWAY,
                         Blocks.STRUCTURE_BLOCK,
                         Blocks.JIGSAW);
+        tag(Tags.Blocks.BUDDING_BLOCKS)
+                .add(Registration.TimeCrystalBuddingBlock.get());
+        tag(Tags.Blocks.BUDS)
+                .add(Registration.TimeCrystalCluster_Small.get())
+                .add(Registration.TimeCrystalCluster_Medium.get())
+                .add(Registration.TimeCrystalCluster_Large.get());
+        tag(Tags.Blocks.CLUSTERS)
+                .add(Registration.TimeCrystalCluster.get());
 
     }
 
