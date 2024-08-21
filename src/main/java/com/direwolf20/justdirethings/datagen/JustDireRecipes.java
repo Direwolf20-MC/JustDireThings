@@ -953,6 +953,14 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
                 .save(consumer);
+        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"), Blocks.BUDDING_AMETHYST.defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"));
+        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"), Registration.TimeCrystalBlock.get().defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"));
 
         //FluidDrop Recipes
         FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.PolymorphicCatalyst.get())
@@ -1507,6 +1515,7 @@ public class JustDireRecipes extends RecipeProvider {
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T2.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T2.get(), Registration.Coal_T2.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T2.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T3.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T3.get(), Registration.Coal_T3.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T3.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T4.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T4.get(), Registration.Coal_T4.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T4.getId().toString() + "_9x9", "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.TimeCrystal.get(), RecipeCategory.BUILDING_BLOCKS, Registration.TimeCrystalBlock.get(), Registration.TimeCrystal.getId().toString() + "_9x9", "justdirethings", Registration.TimeCrystalBlock.getId().toString() + "_9x9", "justdirethings");
 
         //NBT Clear
         for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
