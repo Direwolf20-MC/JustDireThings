@@ -367,6 +367,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.decoy", "Decoy");
         add("justdirethings.missingupgrade", " (Missing Upgrade)");
         add("justdirethings.requiresfeeding", "Click on the block with its food to activate it");
+        add("justdirethings.timecrystaltooltip", "Wibbly Wobbly");
+        add("justdirethings.timecrystaltooltiptwo", "Timey Wimey");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
