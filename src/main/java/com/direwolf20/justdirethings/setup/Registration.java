@@ -36,6 +36,9 @@ import com.direwolf20.justdirethings.common.fluids.refinedt3fuel.RefinedT3FuelTy
 import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4Fuel;
 import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4FuelBlock;
 import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4FuelType;
+import com.direwolf20.justdirethings.common.fluids.timefluid.TimeFluid;
+import com.direwolf20.justdirethings.common.fluids.timefluid.TimeFluidBlock;
+import com.direwolf20.justdirethings.common.fluids.timefluid.TimeFluidType;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2Fuel;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelBlock;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelType;
@@ -212,6 +215,18 @@ public class Registration {
             PortalFluidBlock::new);
     public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = BUCKET_ITEMS.register("portal_fluid_bucket",
             () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Time Fluid
+    public static final DeferredHolder<FluidType, FluidType> TIME_FLUID_TYPE = FLUID_TYPES.register("time_fluid_type",
+            TimeFluidType::new);
+    public static final DeferredHolder<Fluid, TimeFluid> TIME_FLUID_FLOWING = FLUIDS.register("time_fluid_flowing",
+            TimeFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, TimeFluid> TIME_FLUID_SOURCE = FLUIDS.register("time_fluid_source",
+            TimeFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> TIME_FLUID_BLOCK = FLUID_BLOCKS.register("time_fluid_block",
+            TimeFluidBlock::new);
+    public static final DeferredHolder<Item, BucketItem> TIME_FLUID_BUCKET = BUCKET_ITEMS.register("time_fluid_bucket",
+            () -> new BucketItem(Registration.TIME_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     //Unstable Portal Fluid
     public static final DeferredHolder<FluidType, FluidType> UNSTABLE_PORTAL_FLUID_TYPE = FLUID_TYPES.register("unstable_portal_fluid_type",

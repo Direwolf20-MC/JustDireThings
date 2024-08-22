@@ -86,6 +86,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.REFINED_T4_FLUID_BLOCK.get(), "Eclipse Ember Fuel");
         add(Registration.REFINED_T4_FLUID_BUCKET.get(), "Eclipse Ember Fuel Bucket");
         add("fluid_type.justdirethings.refined_t4_fluid_type", "Eclipse Ember Fuel");
+        add(Registration.TIME_FLUID_BLOCK.get(), "Time Fluid");
+        add(Registration.TIME_FLUID_BUCKET.get(), "Time Fluid Bucket");
+        add("fluid_type.justdirethings.time_fluid_type", "Time Fluid");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
