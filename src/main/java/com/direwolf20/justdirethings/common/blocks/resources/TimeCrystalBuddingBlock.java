@@ -8,8 +8,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AmethystClusterBlock;
@@ -20,7 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.Random;
 
@@ -37,7 +34,7 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
                 .strength(1.5F));
     }
 
-    @Override
+    /*@Override
     public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult hit) {
         if (level.isClientSide)
             return InteractionResult.SUCCESS;
@@ -48,7 +45,7 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
         advance(level, blockState, blockPos, newStage);
 
         return InteractionResult.SUCCESS;
-    }
+    }*/
 
     public int canAdvanceTo(Level level, BlockState state) {
         int stage = state.getValue(STAGE);
