@@ -14,6 +14,7 @@ import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
+import com.direwolf20.justdirethings.client.itemcustomrenders.FluidbarDecorator;
 import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
 import com.direwolf20.justdirethings.client.renderers.JustDireItemRenderer;
 import com.direwolf20.justdirethings.client.renderers.RenderHelpers;
@@ -189,6 +190,11 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
+    public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
+        event.register(Registration.TimeWand.get(), new FluidbarDecorator());
+    }
+
+    @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         //Register Block Entity Renders
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier1.get(), GooBlockRender_Tier1::new);
@@ -214,6 +220,7 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.DecoyEntity.get(), DecoyEntityRender::new);
         event.registerEntityRenderer(Registration.JustDireArrow.get(), JustDireArrowRenderer::new);
         event.registerEntityRenderer(Registration.JustDireAreaEffectCloud.get(), NoopRenderer::new);
+        event.registerEntityRenderer(Registration.TimeWandEntity.get(), TimeWandEntityRender::new);
     }
 
     @SubscribeEvent

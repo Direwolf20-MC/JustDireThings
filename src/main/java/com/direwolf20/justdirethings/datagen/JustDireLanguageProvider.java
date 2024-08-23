@@ -124,6 +124,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.PortalGunV2.get(), "Advanced Portal Gun");
         add(Registration.FluidCanister.get(), "Fluid Canister");
         add(Registration.PotionCanister.get(), "Potion Canister");
+        add(Registration.TimeWand.get(), "Time Wand");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -341,7 +342,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.portalfluidamt", "Portal Fluid: %s / %s");
+        add("justdirethings.timefluidamt", "Time Fluid: %s / %s");
         add("justdirethings.lowportalfluid", "Insufficient Portal Fluid");
+        add("justdirethings.lowtimefluid", "Insufficient Time Fluid");
         add("justdirethings.boundto", "Bound to: %s:%s");
         add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");
@@ -504,6 +507,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //Entities
         add("entity.justdirethings.decoy_entity", "Decoy Entity");
+        add("entity.justdirethings.time_wand_entity", "Time Wand Entity");
 
         //Recipes
         add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");

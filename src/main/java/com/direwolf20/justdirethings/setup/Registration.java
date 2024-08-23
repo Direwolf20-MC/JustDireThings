@@ -486,6 +486,7 @@ public class Registration {
     public static final DeferredHolder<Item, BlazegoldBow> BlazegoldBow = BOWS.register("bow_blazegold", BlazegoldBow::new);
     public static final DeferredHolder<Item, CelestigemBow> CelestigemBow = BOWS.register("bow_celestigem", CelestigemBow::new);
     public static final DeferredHolder<Item, EclipseAlloyBow> EclipseAlloyBow = BOWS.register("bow_eclipsealloy", EclipseAlloyBow::new);
+    public static final DeferredHolder<Item, TimeWand> TimeWand = ITEMS.register("time_wand", TimeWand::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);
@@ -631,6 +632,12 @@ public class Registration {
                     .clientTrackingRange(10)
                     .updateInterval(Integer.MAX_VALUE)
                     .build("justdireareaeffectcloud"));
+    public static final DeferredHolder<EntityType<?>, EntityType<TimeWandEntity>> TimeWandEntity = ENTITY_TYPES.register("time_wand_entity",
+            () -> EntityType.Builder.<TimeWandEntity>of(TimeWandEntity::new, MobCategory.MISC)
+                    .sized(1F, 1F)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("time_wand_entity"));
 
     //Attributes
     public static final Holder<Attribute> PHASE = ATTRIBUTES.register("phase", () -> new RangedAttribute("justdirethings.phase", 0D, 0D, Double.MAX_VALUE).setSyncable(true));

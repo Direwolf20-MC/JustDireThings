@@ -425,6 +425,16 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.TimeWand.get())
+                .pattern(" bt")
+                .pattern(" ib")
+                .pattern("i  ")
+                .define('i', Registration.FerricoreIngot.get())
+                .define('b', Registration.BlazegoldIngot.get())
+                .define('t', Registration.TimeCrystal.get())
+                .group("justdirethings")
+                .unlockedBy("has_time_crystal", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TimeCrystal.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CreatureCatcher.get())
                 .pattern(" b ")
                 .pattern("beb")

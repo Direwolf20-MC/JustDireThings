@@ -1,15 +1,21 @@
 package com.direwolf20.justdirethings.util;
 
 import com.mojang.math.Axis;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
@@ -20,6 +26,25 @@ import java.util.List;
 import java.util.Optional;
 
 public class MiscTools {
+    public static void doExtraTicks(ServerLevel serverLevel, BlockPos blockPos, double rate) {
+        BlockState blockState = serverLevel.getBlockState(blockPos);
+        BlockEntity blockEntity = serverLevel.getBlockEntity(blockPos);
+        if (blockEntity == null && !blockState.isRandomlyTicking())
+            return;
+        for (int i = 0; i < rate; i++) {
+            if (blockEntity != null) {
+                BlockEntityTicker<BlockEntity> ticker = blockEntity.getBlockState().getTicker(serverLevel, (BlockEntityType<BlockEntity>) blockEntity.getType());
+                if (ticker != null) {
+                    ticker.tick(serverLevel, blockPos, blockEntity.getBlockState(), blockEntity);
+                }
+            } else if (blockState.isRandomlyTicking()) {
+                if (serverLevel.random.nextInt(1365) == 0) { //Average Random Tick Rate
+                    blockState.randomTick(serverLevel, blockPos, serverLevel.random);
+                }
+            }
+        }
+    }
+
     //Thanks Soaryn!
     @NotNull
     public static BlockHitResult getHitResult(Player player) {
