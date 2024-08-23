@@ -545,7 +545,7 @@ public class ClientSetup {
 
             @Override
             public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0x3300FF00;
+                return 0x7700FF00;
             }
         }, Registration.TIME_FLUID_TYPE.get());
     }

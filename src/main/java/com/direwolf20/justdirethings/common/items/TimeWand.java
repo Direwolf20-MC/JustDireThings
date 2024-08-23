@@ -70,8 +70,9 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
             setRate = timeWandEntity.getTickSpeed() + 1;
             if (setRate > 8) //Config?
                 return false;
-            int cost = calculateFluidCost(player, setRate);
-            int feCost = calculateFECost(player, setRate);
+            float accelRate = TimeWandEntity.calculateAccelRate(setRate);
+            int cost = calculateFluidCost(player, (int) accelRate);
+            int feCost = calculateFECost(player, (int) accelRate);
             if (hasResources(player, itemStack, feCost, cost)) {
                 timeWandEntity.setTickSpeed(setRate);
                 int timeExisted = timeWandEntity.getTotalTime() - timeWandEntity.getRemainingTime();
@@ -83,8 +84,9 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
                 return true;
             }
         } else {
-            int cost = calculateFluidCost(player, setRate);
-            int feCost = calculateFECost(player, setRate);
+            float accelRate = TimeWandEntity.calculateAccelRate(setRate);
+            int cost = calculateFluidCost(player, (int) accelRate);
+            int feCost = calculateFECost(player, (int) accelRate);
             if (hasResources(player, itemStack, feCost, cost)) {
                 TimeWandEntity timeWandEntity = new TimeWandEntity(level, blockPos);
                 level.addFreshEntity(timeWandEntity);
@@ -118,11 +120,11 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
 
     public static int calculateFluidCost(Player player, int setRate) {
         if (player.isCreative()) return 0;
-        return setRate * getMBPerRate();
+        return (int) (setRate * getMBPerRate());
     }
 
-    public static int getMBPerRate() {
-        return 1; //TODO Config and Balance
+    public static float getMBPerRate() {
+        return 0.5f; //TODO Config and Balance
     }
 
     public static int getFEPerRate() {

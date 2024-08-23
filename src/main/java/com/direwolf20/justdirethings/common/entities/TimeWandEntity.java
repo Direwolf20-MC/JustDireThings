@@ -74,7 +74,11 @@ public class TimeWandEntity extends Entity {
     }
 
     public float getAccelerationRate() {
-        return (float) Math.pow(2, getTickSpeed());
+        return calculateAccelRate(getTickSpeed());
+    }
+
+    public static float calculateAccelRate(int speed) {
+        return (float) Math.pow(2, speed);
     }
 
     public void setTickSpeed(int tickSpeed) {

@@ -95,7 +95,7 @@ public class DecoyEntity extends LivingEntity {
 
     @Override
     public Iterable<ItemStack> getArmorSlots() {
-        return NonNullList.withSize(4, ItemStack.EMPTY); //TODO Validate
+        return NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
     @Override
