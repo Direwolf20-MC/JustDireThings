@@ -101,6 +101,7 @@ public enum Ability {
             AbilityMethods::flight, CustomSettingType.NONE, Registration.UPGRADE_FLIGHT),
     LAVAIMMUNITY(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_LAVAIMMUNITY),
     PHASE(SettingType.SLIDER, 1, 50000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_PHASE),
+    TIMEPROTECTION(SettingType.SLIDER, 1, 5000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_TIMEPROTECTION),
     EPICARROW(SettingType.SLIDER, 25, 100000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::epicArrow, CustomSettingType.NONE,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/epicarrow.png"), Registration.UPGRADE_EPICARROW);

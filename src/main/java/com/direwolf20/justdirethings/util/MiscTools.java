@@ -49,9 +49,11 @@ public class MiscTools {
     public static boolean isValidTickAccelBlock(ServerLevel serverLevel, BlockState blockState, BlockEntity blockEntity) {
         if (blockEntity == null && !blockState.isRandomlyTicking())
             return false;
-        BlockEntityTicker<BlockEntity> ticker = blockEntity.getBlockState().getTicker(serverLevel, (BlockEntityType<BlockEntity>) blockEntity.getType());
-        if (ticker == null)
-            return false;
+        if (blockEntity != null) {
+            BlockEntityTicker<BlockEntity> ticker = blockEntity.getBlockState().getTicker(serverLevel, (BlockEntityType<BlockEntity>) blockEntity.getType());
+            if (ticker == null)
+                return false;
+        }
         if (blockState.is(JustDireBlockTags.TICK_SPEED_DENY))
             return false;
         return true;

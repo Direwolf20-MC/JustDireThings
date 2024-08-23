@@ -1,0 +1,10 @@
+{
+  "type": "justdirethings:ability",
+  "addition": {
+    "item": "justdirethings:upgrade_time_protection"
+  },
+  "base": {
+    "item": "justdirethings:eclipsealloy_chestplate"
+  },
+  "template": []
+}

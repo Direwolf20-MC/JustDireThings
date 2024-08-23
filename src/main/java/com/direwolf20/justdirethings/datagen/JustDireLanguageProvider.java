@@ -233,6 +233,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_POTIONARROW.get(), "Upgrade: Potion Arrow");
         add(Registration.UPGRADE_HOMING.get(), "Upgrade: Homing Arrow");
         add(Registration.UPGRADE_EPICARROW.get(), "Upgrade: Yondu Arrow");
+        add(Registration.UPGRADE_TIMEPROTECTION.get(), "Upgrade: Time Protection");
 
         //Upgrade Text
         add("justdirethings." + Ability.MOBSCANNER.getName() + ".detailtext", "Show the location of nearby mobs");
@@ -325,6 +326,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //add("justdirethings." + Ability.RUNSPEED.getName() + ".flavortext", "");
         add("justdirethings." + Ability.EPICARROW.getName() + ".detailtext", "Arrows can hit multiple targets");
         add("justdirethings." + Ability.EPICARROW.getName() + ".flavortext", "I'm Mary Poppins Ya'll");
+        add("justdirethings." + Ability.TIMEPROTECTION.getName() + ".detailtext", "Protection from Time Altering Effects");
+        //add("justdirethings." + Ability.RUNSPEED.getName() + ".flavortext", "");
 
 
         //Misc
@@ -427,6 +430,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.POTIONARROW.getLocalization(), "Potion Arrow");
         add(Ability.HOMING.getLocalization(), "Homing Arrow");
         add(Ability.EPICARROW.getLocalization(), "Yondu Arrow");
+        add(Ability.TIMEPROTECTION.getLocalization(), "Time Protection");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

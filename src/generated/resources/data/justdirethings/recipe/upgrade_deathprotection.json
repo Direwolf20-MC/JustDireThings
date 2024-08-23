@@ -10,12 +10,15 @@
     },
     "f": {
       "item": "minecraft:totem_of_undying"
+    },
+    "t": {
+      "item": "justdirethings:time_crystal"
     }
   },
   "pattern": [
-    " e ",
+    "tet",
     "fbf",
-    " e "
+    "tet"
   ],
   "result": {
     "count": 1,
