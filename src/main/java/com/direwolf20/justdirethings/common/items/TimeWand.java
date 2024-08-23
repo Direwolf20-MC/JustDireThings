@@ -8,10 +8,12 @@ import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MagicHelpers;
+import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -60,7 +62,7 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
         if (level.isClientSide) return false;
         BlockState blockState = level.getBlockState(blockPos);
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
-        if (blockEntity == null && !blockState.isRandomlyTicking())
+        if (!MiscTools.isValidTickAccelBlock((ServerLevel) level, blockState, blockEntity))
             return false;
 
         int setRate = 1;
@@ -101,14 +103,15 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
     }
 
     public boolean hasResources(Player player, ItemStack itemStack, int feCost, int fluidCost) {
+        float failurePitch = 0.5F; // G# - lower pitch for failure sound
         if (!FluidContainingItem.hasEnoughFluid(itemStack, fluidCost)) {
             player.displayClientMessage(Component.translatable("justdirethings.lowportalfluid"), true);
-            player.playNotifySound(SoundEvents.VAULT_INSERT_ITEM_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            player.playNotifySound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), SoundSource.PLAYERS, 1.0F, failurePitch);
             return false;
         }
         if (!PoweredItem.hasEnoughEnergy(itemStack, feCost)) {
             player.displayClientMessage(Component.translatable("justdirethings.lowenergy"), true);
-            player.playNotifySound(SoundEvents.VAULT_INSERT_ITEM_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            player.playNotifySound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), SoundSource.PLAYERS, 1.0F, failurePitch);
             return false;
         }
         return true;

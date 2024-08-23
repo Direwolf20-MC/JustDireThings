@@ -27,6 +27,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> SWAPPERDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "swapper_deny"));
     public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsegate_deny"));
     public static final TagKey<Block> PHASEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "phase_deny"));
+    public static final TagKey<Block> TICK_SPEED_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tick_speed_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -131,6 +132,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.TimeCrystalCluster_Large.get());
         tag(Tags.Blocks.CLUSTERS)
                 .add(Registration.TimeCrystalCluster.get());
+        tag(TICK_SPEED_DENY);
 
     }
 

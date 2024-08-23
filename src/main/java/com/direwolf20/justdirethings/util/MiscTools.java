@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.util;
 
+import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,7 +30,7 @@ public class MiscTools {
     public static void doExtraTicks(ServerLevel serverLevel, BlockPos blockPos, double rate) {
         BlockState blockState = serverLevel.getBlockState(blockPos);
         BlockEntity blockEntity = serverLevel.getBlockEntity(blockPos);
-        if (blockEntity == null && !blockState.isRandomlyTicking())
+        if (!isValidTickAccelBlock(serverLevel, blockState, blockEntity))
             return;
         for (int i = 0; i < rate; i++) {
             if (blockEntity != null) {
@@ -43,6 +44,17 @@ public class MiscTools {
                 }
             }
         }
+    }
+
+    public static boolean isValidTickAccelBlock(ServerLevel serverLevel, BlockState blockState, BlockEntity blockEntity) {
+        if (blockEntity == null && !blockState.isRandomlyTicking())
+            return false;
+        BlockEntityTicker<BlockEntity> ticker = blockEntity.getBlockState().getTicker(serverLevel, (BlockEntityType<BlockEntity>) blockEntity.getType());
+        if (ticker == null)
+            return false;
+        if (blockState.is(JustDireBlockTags.TICK_SPEED_DENY))
+            return false;
+        return true;
     }
 
     //Thanks Soaryn!
