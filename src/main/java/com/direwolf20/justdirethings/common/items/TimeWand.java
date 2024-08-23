@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.fluids.timefluid.TimeFluidBlock;
 import com.direwolf20.justdirethings.common.items.interfaces.BasePoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.FluidContainingItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import net.minecraft.ChatFormatting;
@@ -124,11 +125,11 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
     }
 
     public static float getMBPerRate() {
-        return 0.5f; //TODO Config and Balance
+        return Config.TIMEWAND_FLUID_COST.get().floatValue();
     }
 
     public static int getFEPerRate() {
-        return 100; //TODO Config and Balance
+        return Config.TIMEWAND_RF_COST.get();
     }
 
     public static boolean pickupFluid(Level level, Player player, ItemStack itemStack, BlockHitResult blockhitresult) {
@@ -172,7 +173,7 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
 
     @Override
     public int getMaxEnergy() {
-        return 100000;
+        return Config.TIME_WAND_RF_CAPACITY.get();
     }
 
     @Override
