@@ -29,7 +29,6 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
     public TimeCrystalBuddingBlock() {
         super(Properties.of()
                 .sound(SoundType.AMETHYST)
-                .requiresCorrectToolForDrops()
                 .randomTicks()
                 .strength(1.5F));
     }

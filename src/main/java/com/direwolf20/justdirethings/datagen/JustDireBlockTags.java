@@ -78,8 +78,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.FluidCollectorT1.get())
                 .add(Registration.FluidCollectorT2.get())
                 .add(Registration.TimeCrystalCluster.get())
-                .add(Registration.TimeCrystalBlock.get())
-                .add(Registration.TimeCrystalBuddingBlock.get());
+                .add(Registration.TimeCrystalBlock.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
