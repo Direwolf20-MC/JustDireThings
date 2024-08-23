@@ -95,7 +95,7 @@ public class TimeWandEntity extends Entity {
 
     public void addTime(int moreTime) {
         this.entityData.set(REMAINING_TIME, getRemainingTime() + moreTime);
-        this.entityData.set(TOTAL_TIME, getTotalTime() + moreTime);
+        //this.entityData.set(TOTAL_TIME, getTotalTime() + moreTime);
     }
 
     @Override
