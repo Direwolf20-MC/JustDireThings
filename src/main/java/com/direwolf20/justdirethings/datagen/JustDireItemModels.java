@@ -110,7 +110,7 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.TEMPLATE_BLAZEGOLD.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_blazegold"));
         singleTexture(Registration.TEMPLATE_CELESTIGEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_celestigem"));
         singleTexture(Registration.TEMPLATE_ECLIPSEALLOY.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_eclipsealloy"));
-        singleTexture(Registration.TimeWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/timewand"));
+        singleTexture(Registration.TimeWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/time_wand"));
 
         registerBowModels();
 

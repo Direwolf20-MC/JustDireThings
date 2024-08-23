@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-23T15:39:16.9065027	Item Models: justdirethings
+// 1.21.1	2024-08-23T16:02:46.8856682	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -315,7 +315,7 @@ b1610e7cddca03930af9e0189d74cddc92f1316d assets/justdirethings/models/item/templ
 13409da380114f62a0137ce9755f63fe5f756551 assets/justdirethings/models/item/time_crystal_budding_block.json
 cfd2784f583dd77e664f561d3e9e79f7ede18dc0 assets/justdirethings/models/item/time_crystal_cluster.json
 c14cfbe6d071e26ceab3e384905da634b4309ba1 assets/justdirethings/models/item/time_fluid_bucket.json
-99e849e3c30f0062447320dcd595ccb32d7334d6 assets/justdirethings/models/item/time_wand.json
+2b69103add231fa43efafb33e305e4f9171dbaec assets/justdirethings/models/item/time_wand.json
 cb3be9b73e78631097a0854d5da4a7c87cbe94a1 assets/justdirethings/models/item/totem_of_death_recall.json
 c480174fc37e0c2922f662ad95745fb9d81af0c9 assets/justdirethings/models/item/unrefined_t2_fluid_bucket.json
 499a7ebac41346662e121c02f9820ab8881142b2 assets/justdirethings/models/item/unrefined_t3_fluid_bucket.json
