@@ -27,6 +27,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> SWAPPERDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "swapper_deny"));
     public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsegate_deny"));
     public static final TagKey<Block> PHASEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "phase_deny"));
+    public static final TagKey<Block> TICK_SPEED_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tick_speed_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -76,7 +77,9 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.FluidPlacerT1.get())
                 .add(Registration.FluidPlacerT2.get())
                 .add(Registration.FluidCollectorT1.get())
-                .add(Registration.FluidCollectorT2.get());
+                .add(Registration.FluidCollectorT2.get())
+                .add(Registration.TimeCrystalCluster.get())
+                .add(Registration.TimeCrystalBlock.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
@@ -121,6 +124,15 @@ public class JustDireBlockTags extends BlockTagsProvider {
                         Blocks.END_GATEWAY,
                         Blocks.STRUCTURE_BLOCK,
                         Blocks.JIGSAW);
+        tag(Tags.Blocks.BUDDING_BLOCKS)
+                .add(Registration.TimeCrystalBuddingBlock.get());
+        tag(Tags.Blocks.BUDS)
+                .add(Registration.TimeCrystalCluster_Small.get())
+                .add(Registration.TimeCrystalCluster_Medium.get())
+                .add(Registration.TimeCrystalCluster_Large.get());
+        tag(Tags.Blocks.CLUSTERS)
+                .add(Registration.TimeCrystalCluster.get());
+        tag(TICK_SPEED_DENY);
 
     }
 

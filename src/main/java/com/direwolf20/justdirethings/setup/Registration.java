@@ -36,6 +36,9 @@ import com.direwolf20.justdirethings.common.fluids.refinedt3fuel.RefinedT3FuelTy
 import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4Fuel;
 import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4FuelBlock;
 import com.direwolf20.justdirethings.common.fluids.refinedt4fuel.RefinedT4FuelType;
+import com.direwolf20.justdirethings.common.fluids.timefluid.TimeFluid;
+import com.direwolf20.justdirethings.common.fluids.timefluid.TimeFluidBlock;
+import com.direwolf20.justdirethings.common.fluids.timefluid.TimeFluidType;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2Fuel;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelBlock;
 import com.direwolf20.justdirethings.common.fluids.unrefinedt2fuel.UnrefinedT2FuelType;
@@ -78,8 +81,11 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -209,6 +215,18 @@ public class Registration {
             PortalFluidBlock::new);
     public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = BUCKET_ITEMS.register("portal_fluid_bucket",
             () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //Time Fluid
+    public static final DeferredHolder<FluidType, FluidType> TIME_FLUID_TYPE = FLUID_TYPES.register("time_fluid_type",
+            TimeFluidType::new);
+    public static final DeferredHolder<Fluid, TimeFluid> TIME_FLUID_FLOWING = FLUIDS.register("time_fluid_flowing",
+            TimeFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, TimeFluid> TIME_FLUID_SOURCE = FLUIDS.register("time_fluid_source",
+            TimeFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> TIME_FLUID_BLOCK = FLUID_BLOCKS.register("time_fluid_block",
+            TimeFluidBlock::new);
+    public static final DeferredHolder<Item, BucketItem> TIME_FLUID_BUCKET = BUCKET_ITEMS.register("time_fluid_bucket",
+            () -> new BucketItem(Registration.TIME_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     //Unstable Portal Fluid
     public static final DeferredHolder<FluidType, FluidType> UNSTABLE_PORTAL_FLUID_TYPE = FLUID_TYPES.register("unstable_portal_fluid_type",
@@ -358,6 +376,32 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> RawCoal_T3_ITEM = ITEMS.register("raw_coal_t3_ore", () -> new BlockItem(RawCoal_T3.get(), new Item.Properties()));
     public static final DeferredHolder<Block, RawCoal_T4> RawCoal_T4 = BLOCKS.register("raw_coal_t4_ore", RawCoal_T4::new);
     public static final DeferredHolder<Item, BlockItem> RawCoal_T4_ITEM = ITEMS.register("raw_coal_t4_ore", () -> new BlockItem(RawCoal_T4.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, TimeCrystalBlock> TimeCrystalBlock = BLOCKS.register("time_crystal_block", TimeCrystalBlock::new);
+    public static final DeferredHolder<Item, BlockItem> TimeCrystalBlock_ITEM = ITEMS.register("time_crystal_block", () -> new BlockItem(TimeCrystalBlock.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, TimeCrystalBuddingBlock> TimeCrystalBuddingBlock = BLOCKS.register("time_crystal_budding_block", TimeCrystalBuddingBlock::new);
+    public static final DeferredHolder<Item, BlockItem> TimeCrystalBuddingBlock_ITEM = ITEMS.register("time_crystal_budding_block", () -> new BlockItem(TimeCrystalBuddingBlock.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster = BLOCKS.register("time_crystal_cluster", () -> new TimeCrystalCluster(
+            7.0F,
+            3.0F,
+            BlockBehaviour.Properties.of()
+                    .forceSolidOn()
+                    .noOcclusion()
+                    .sound(SoundType.AMETHYST_CLUSTER)
+                    .strength(1.5F)
+                    .lightLevel(p_152632_ -> 5)
+                    .pushReaction(PushReaction.DESTROY)
+    ));
+    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Small = BLOCKS.register("time_crystal_cluster_small", () -> new TimeCrystalCluster(
+            3.0F, 4.0F, BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.SMALL_AMETHYST_BUD).lightLevel(p_187409_ -> 1)
+    ));
+    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Medium = BLOCKS.register("time_crystal_cluster_medium", () -> new TimeCrystalCluster(
+            4.0F, 3.0F, BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.MEDIUM_AMETHYST_BUD).lightLevel(p_152617_ -> 2)
+    ));
+    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Large = BLOCKS.register("time_crystal_cluster_large", () -> new TimeCrystalCluster(
+            5.0F, 3.0F, BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.LARGE_AMETHYST_BUD).lightLevel(p_152629_ -> 4)
+    ));
+
+
 
     //Blocks Consolidated Resources
     public static final DeferredHolder<Block, FerricoreBlock> FerricoreBlock = BLOCKS.register("ferricore_block", FerricoreBlock::new);
@@ -422,6 +466,7 @@ public class Registration {
     public static final DeferredHolder<Item, Coal_T4> Coal_T4 = ITEMS.register("coal_t4", Coal_T4::new);
     public static final DeferredHolder<Item, PolymorphicCatalyst> PolymorphicCatalyst = ITEMS.register("polymorphic_catalyst", PolymorphicCatalyst::new);
     public static final DeferredHolder<Item, PortalFluidCatalyst> PortalFluidCatalyst = ITEMS.register("portal_fluid_catalyst", PortalFluidCatalyst::new);
+    public static final DeferredHolder<Item, TimeCrystal> TimeCrystal = ITEMS.register("time_crystal", TimeCrystal::new);
 
     //Items
     public static final DeferredHolder<Item, FuelCanister> Fuel_Canister = ITEMS.register("fuel_canister", FuelCanister::new);
@@ -431,6 +476,7 @@ public class Registration {
     public static final DeferredHolder<Item, BlazejetWand> BlazejetWand = ITEMS.register("blazejet_wand", BlazejetWand::new);
     public static final DeferredHolder<Item, VoidshiftWand> VoidshiftWand = ITEMS.register("voidshift_wand", VoidshiftWand::new);
     public static final DeferredHolder<Item, EclipsegateWand> EclipsegateWand = ITEMS.register("eclipsegate_wand", EclipsegateWand::new);
+    public static final DeferredHolder<Item, TimeWand> TimeWand = ITEMS.register("time_wand", TimeWand::new);
     public static final DeferredHolder<Item, CreatureCatcher> CreatureCatcher = ITEMS.register("creaturecatcher", CreatureCatcher::new);
     public static final DeferredHolder<Item, MachineSettingsCopier> MachineSettingsCopier = ITEMS.register("machinesettingscopier", MachineSettingsCopier::new);
     public static final DeferredHolder<Item, PortalGun> PortalGun = ITEMS.register("portalgun", PortalGun::new);
@@ -544,6 +590,7 @@ public class Registration {
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", Upgrade::new);
     public static final DeferredHolder<Item, Upgrade> UPGRADE_EPICARROW = UPGRADES.register("upgrade_epicarrow", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_TIMEPROTECTION = UPGRADES.register("upgrade_time_protection", Upgrade::new);
 
     //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",
@@ -586,6 +633,12 @@ public class Registration {
                     .clientTrackingRange(10)
                     .updateInterval(Integer.MAX_VALUE)
                     .build("justdireareaeffectcloud"));
+    public static final DeferredHolder<EntityType<?>, EntityType<TimeWandEntity>> TimeWandEntity = ENTITY_TYPES.register("time_wand_entity",
+            () -> EntityType.Builder.<TimeWandEntity>of(TimeWandEntity::new, MobCategory.MISC)
+                    .sized(1F, 1F)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("time_wand_entity"));
 
     //Attributes
     public static final Holder<Attribute> PHASE = ATTRIBUTES.register("phase", () -> new RangedAttribute("justdirethings.phase", 0D, 0D, Double.MAX_VALUE).setSyncable(true));

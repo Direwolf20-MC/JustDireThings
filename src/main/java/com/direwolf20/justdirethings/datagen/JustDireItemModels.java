@@ -70,6 +70,9 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.FluidPlacerT2_ITEM.getId().getPath(), modLoc("block/fluidplacert2"));
         withExistingParent(Registration.FluidCollectorT1_ITEM.getId().getPath(), modLoc("block/fluidcollectort1"));
         withExistingParent(Registration.FluidCollectorT2_ITEM.getId().getPath(), modLoc("block/fluidcollectort2"));
+        withExistingParent(Registration.TimeCrystalBlock.getId().getPath(), modLoc("block/time_crystal_block"));
+        withExistingParent(Registration.TimeCrystalBuddingBlock.getId().getPath(), modLoc("block/time_crystal_budding_block_state_0"));
+        withExistingParent(Registration.TimeCrystalCluster.getId().getPath(), modLoc("block/time_crystal_cluster"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));
@@ -92,6 +95,7 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.Coal_T4.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/coal_t4"));
         singleTexture(Registration.PolymorphicCatalyst.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/polymorphic_catalyst"));
         singleTexture(Registration.PortalFluidCatalyst.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/portal_fluid_catalyst"));
+        singleTexture(Registration.TimeCrystal.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/time_crystal_shard"));
 
         singleTexture(Registration.FerricoreWrench.getId().getPath(), mcLoc("item/handheld"), "layer0", modLoc("item/ferricore_wrench"));
         singleTexture(Registration.TotemOfDeathRecall.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/totem_of_death_recall"));
@@ -106,6 +110,7 @@ public class JustDireItemModels extends ItemModelProvider {
         singleTexture(Registration.TEMPLATE_BLAZEGOLD.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_blazegold"));
         singleTexture(Registration.TEMPLATE_CELESTIGEM.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_celestigem"));
         singleTexture(Registration.TEMPLATE_ECLIPSEALLOY.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/template_eclipsealloy"));
+        singleTexture(Registration.TimeWand.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/timewand"));
 
         registerBowModels();
 

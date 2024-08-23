@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "render_type": "minecraft:solid",
+  "textures": {
+    "all": "justdirethings:block/time_crystal_budding_block_state_0"
+  }
+}

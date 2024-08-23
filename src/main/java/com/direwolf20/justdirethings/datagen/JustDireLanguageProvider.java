@@ -51,6 +51,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FluidPlacerT2.get(), "Advanced Fluid Placer");
         add(Registration.FluidCollectorT1.get(), "Simple Fluid Collector");
         add(Registration.FluidCollectorT2.get(), "Advanced Fluid Collector");
+        add(Registration.TimeCrystalBlock.get(), "Time Crystal Block");
+        add(Registration.TimeCrystalBuddingBlock.get(), "Budding Time Crystal Block");
+        add(Registration.TimeCrystalCluster.get(), "Time Crystal Cluster");
+        add(Registration.TimeCrystalCluster_Small.get(), "Small Time Crystal Cluster");
+        add(Registration.TimeCrystalCluster_Medium.get(), "Medium Time Crystal Cluster");
+        add(Registration.TimeCrystalCluster_Large.get(), "Large Time Crystal Cluster");
 
         //Fluids
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
@@ -80,6 +86,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.REFINED_T4_FLUID_BLOCK.get(), "Eclipse Ember Fuel");
         add(Registration.REFINED_T4_FLUID_BUCKET.get(), "Eclipse Ember Fuel Bucket");
         add("fluid_type.justdirethings.refined_t4_fluid_type", "Eclipse Ember Fuel");
+        add(Registration.TIME_FLUID_BLOCK.get(), "Time Fluid");
+        add(Registration.TIME_FLUID_BUCKET.get(), "Time Fluid Bucket");
+        add("fluid_type.justdirethings.time_fluid_type", "Time Fluid");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -100,6 +109,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CoalBlock_T4.get(), "Eclipse Ember Block");
         add(Registration.PolymorphicCatalyst.get(), "Polymorphic Catalyst");
         add(Registration.PortalFluidCatalyst.get(), "Portal Fluid Catalyst");
+        add(Registration.TimeCrystal.get(), "Time Crystal");
 
         //Items
         add(Registration.Fuel_Canister.get(), "Fuel Canister");
@@ -114,6 +124,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.PortalGunV2.get(), "Advanced Portal Gun");
         add(Registration.FluidCanister.get(), "Fluid Canister");
         add(Registration.PotionCanister.get(), "Potion Canister");
+        add(Registration.TimeWand.get(), "Time Wand");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -222,6 +233,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_POTIONARROW.get(), "Upgrade: Potion Arrow");
         add(Registration.UPGRADE_HOMING.get(), "Upgrade: Homing Arrow");
         add(Registration.UPGRADE_EPICARROW.get(), "Upgrade: Yondu Arrow");
+        add(Registration.UPGRADE_TIMEPROTECTION.get(), "Upgrade: Time Protection");
 
         //Upgrade Text
         add("justdirethings." + Ability.MOBSCANNER.getName() + ".detailtext", "Show the location of nearby mobs");
@@ -314,6 +326,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //add("justdirethings." + Ability.RUNSPEED.getName() + ".flavortext", "");
         add("justdirethings." + Ability.EPICARROW.getName() + ".detailtext", "Arrows can hit multiple targets");
         add("justdirethings." + Ability.EPICARROW.getName() + ".flavortext", "I'm Mary Poppins Ya'll");
+        add("justdirethings." + Ability.TIMEPROTECTION.getName() + ".detailtext", "Protection from Time Altering Effects");
+        //add("justdirethings." + Ability.RUNSPEED.getName() + ".flavortext", "");
 
 
         //Misc
@@ -331,7 +345,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.pocketgeneratornofuel", "Fuel Empty");
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.portalfluidamt", "Portal Fluid: %s / %s");
+        add("justdirethings.timefluidamt", "Time Fluid: %s / %s");
         add("justdirethings.lowportalfluid", "Insufficient Portal Fluid");
+        add("justdirethings.lowtimefluid", "Insufficient Time Fluid");
         add("justdirethings.boundto", "Bound to: %s:%s");
         add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");
@@ -357,6 +373,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.decoy", "Decoy");
         add("justdirethings.missingupgrade", " (Missing Upgrade)");
         add("justdirethings.requiresfeeding", "Click on the block with its food to activate it");
+        add("justdirethings.timecrystaltooltip", "Wibbly Wobbly");
+        add("justdirethings.timecrystaltooltiptwo", "Timey Wimey");
 
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
@@ -412,6 +430,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.POTIONARROW.getLocalization(), "Potion Arrow");
         add(Ability.HOMING.getLocalization(), "Homing Arrow");
         add(Ability.EPICARROW.getLocalization(), "Yondu Arrow");
+        add(Ability.TIMEPROTECTION.getLocalization(), "Time Protection");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
@@ -492,6 +511,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
 
         //Entities
         add("entity.justdirethings.decoy_entity", "Decoy Entity");
+        add("entity.justdirethings.time_wand_entity", "Time Wand Entity");
 
         //Recipes
         add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");

@@ -11,6 +11,7 @@ import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHa
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
+import com.direwolf20.justdirethings.common.items.TimeWand;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
@@ -133,7 +134,8 @@ public class JustDireThings {
                 Registration.EclipseAlloyChestplate.get(),
                 Registration.EclipseAlloyHelmet.get(),
                 Registration.CelestigemBow.get(),
-                Registration.EclipseAlloyBow.get()
+                Registration.EclipseAlloyBow.get(),
+                Registration.TimeWand.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
@@ -151,13 +153,28 @@ public class JustDireThings {
 
                         };
                     }
+                    if (itemStack.getItem() instanceof TimeWand timeWand) {
+                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, timeWand.getMaxMB()) {
+                            @Override
+                            public boolean isFluidValid(int tank, FluidStack stack) {
+                                return stack.is(Registration.TIME_FLUID_TYPE.get());
+                            }
+
+                            @Override
+                            public boolean canFillFluidType(FluidStack fluid) {
+                                return fluid.is(Registration.TIME_FLUID_TYPE.get());
+                            }
+
+                        };
+                    }
                     if (itemStack.getItem() instanceof FluidCanister fluidCanister) {
                         return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, fluidCanister.getMaxMB());
                     }
                     return null;
                 },
                 Registration.PortalGunV2.get(),
-                Registration.FluidCanister.get()
+                Registration.FluidCanister.get(),
+                Registration.TimeWand.get()
         );
 
         //Blocks

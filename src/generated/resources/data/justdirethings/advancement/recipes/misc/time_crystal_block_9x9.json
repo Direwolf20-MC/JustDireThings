@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:time_crystal_block_9x9"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_time_crystal_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "justdirethings:time_crystal_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_time_crystal_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:time_crystal_block_9x9"
+    ]
+  }
+}

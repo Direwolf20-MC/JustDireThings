@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "justdirethings",
+  "key": {
+    "#": {
+      "item": "justdirethings:time_crystal"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:time_crystal_block"
+  }
+}

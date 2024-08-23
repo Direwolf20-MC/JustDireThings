@@ -36,6 +36,8 @@
     "justdirethings:fluidplacert1",
     "justdirethings:fluidplacert2",
     "justdirethings:fluidcollectort1",
-    "justdirethings:fluidcollectort2"
+    "justdirethings:fluidcollectort2",
+    "justdirethings:time_crystal_cluster",
+    "justdirethings:time_crystal_block"
   ]
 }

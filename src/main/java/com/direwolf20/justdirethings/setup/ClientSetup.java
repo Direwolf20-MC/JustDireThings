@@ -14,6 +14,7 @@ import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
+import com.direwolf20.justdirethings.client.itemcustomrenders.FluidbarDecorator;
 import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
 import com.direwolf20.justdirethings.client.renderers.JustDireItemRenderer;
 import com.direwolf20.justdirethings.client.renderers.RenderHelpers;
@@ -105,6 +106,8 @@ public class ClientSetup {
 
         ItemBlockRenderTypes.setRenderLayer(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(Registration.UNSTABLE_PORTAL_FLUID_FLOWING.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.TIME_FLUID_SOURCE.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(Registration.TIME_FLUID_FLOWING.get(), RenderType.translucent());
     }
 
     @SubscribeEvent
@@ -187,6 +190,11 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
+    public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
+        event.register(Registration.TimeWand.get(), new FluidbarDecorator());
+    }
+
+    @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         //Register Block Entity Renders
         event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier1.get(), GooBlockRender_Tier1::new);
@@ -212,6 +220,7 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.DecoyEntity.get(), DecoyEntityRender::new);
         event.registerEntityRenderer(Registration.JustDireArrow.get(), JustDireArrowRenderer::new);
         event.registerEntityRenderer(Registration.JustDireAreaEffectCloud.get(), NoopRenderer::new);
+        event.registerEntityRenderer(Registration.TimeWandEntity.get(), TimeWandEntityRender::new);
     }
 
     @SubscribeEvent
@@ -508,6 +517,37 @@ public class ClientSetup {
                 return 0xFF36484A;
             }
         }, Registration.UNREFINED_T4_FLUID_TYPE.get());
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return WATER_STILL;
+            }
+
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return WATER_FLOW;
+            }
+
+            @Override
+            public ResourceLocation getOverlayTexture() {
+                return WATER_OVERLAY;
+            }
+
+            @Override
+            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+                return UNDERWATER_LOCATION;
+            }
+
+            @Override
+            public int getTintColor() {
+                return 0x3300FF00;
+            }
+
+            @Override
+            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+                return 0x7700FF00;
+            }
+        }, Registration.TIME_FLUID_TYPE.get());
     }
 
     @SubscribeEvent

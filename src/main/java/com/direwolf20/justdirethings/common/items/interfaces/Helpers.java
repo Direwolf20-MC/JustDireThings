@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getInstantRFCost;
 
 public class Helpers {
-    public static final Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES);
+    public static final Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES) || s.is(Tags.Blocks.CLUSTERS);
     public static final Predicate<BlockState> fallingBlockCondition = s -> s.getBlock() instanceof FallingBlock;
     public static final Predicate<BlockState> logCondition = s -> s.is(BlockTags.LOGS);
 

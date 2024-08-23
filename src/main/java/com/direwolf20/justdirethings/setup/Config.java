@@ -49,6 +49,11 @@ public class Config {
     public static ModConfigSpec.IntValue PORTAL_GUN_V2_RF_CAPACITY;
     public static ModConfigSpec.IntValue PORTAL_GUN_V2_RF_COST;
 
+    public static final String CATEGORY_TIME_WAND = "time_wand";
+    public static ModConfigSpec.IntValue TIME_WAND_RF_CAPACITY;
+    public static ModConfigSpec.IntValue TIMEWAND_RF_COST;
+    public static ModConfigSpec.DoubleValue TIMEWAND_FLUID_COST;
+
 
     public static final String ENERGY_TRANSMITTER_T1 = "energy_transmitter_t1";
     public static ModConfigSpec.DoubleValue ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK;
@@ -82,6 +87,7 @@ public class Config {
         fuelCanisterConfig();
         pocketGeneratorConfig();
         portalGunConfig();
+        timeWandConfig();
         container.registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
     }
 
@@ -194,6 +200,17 @@ public class Config {
         PORTAL_GUN_V2_RF_COST = COMMON_BUILDER.comment("The Forge Energy cost to fire the Portal Gun (V2) projectile")
                 .defineInRange("portal_gun_v2_rf_cost", 5000, 1, Integer.MAX_VALUE);
 
+        COMMON_BUILDER.pop();
+    }
+
+    private static void timeWandConfig() {
+        COMMON_BUILDER.comment("Time Wand").push(CATEGORY_TIME_WAND);
+        TIME_WAND_RF_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Forge Energy the Time Wand can hold in its buffer")
+                .defineInRange("time_wand_rf_capacity", 100000, 1, Integer.MAX_VALUE);
+        TIMEWAND_RF_COST = COMMON_BUILDER.comment("The Forge Energy cost to use the Time wand. This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in FE cost.")
+                .defineInRange("time_wand_rf_cost", 100, 0, Integer.MAX_VALUE);
+        TIMEWAND_FLUID_COST = COMMON_BUILDER.comment("The Time Fluid cost to use the time wand.  This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in Time Fluid.")
+                .defineInRange("time_wand_fluid_cost", 0.5, 0, Double.MAX_VALUE);
         COMMON_BUILDER.pop();
     }
 }

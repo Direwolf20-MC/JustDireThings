@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": {
+      "item": "justdirethings:blazegold_ingot"
+    },
+    "i": {
+      "item": "justdirethings:ferricore_ingot"
+    },
+    "t": {
+      "item": "justdirethings:time_crystal"
+    }
+  },
+  "pattern": [
+    " bt",
+    " ib",
+    "i  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:time_wand"
+  }
+}

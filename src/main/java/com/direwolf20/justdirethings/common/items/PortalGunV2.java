@@ -56,16 +56,6 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        /*level.playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.SNOWBALL_THROW,
-                SoundSource.NEUTRAL,
-                0.5F,
-                0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
-        );*/
         BlockHitResult blockhitresult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
         if (blockhitresult.getType() == HitResult.Type.BLOCK) {
             if (pickupFluid(level, player, itemStack, blockhitresult))

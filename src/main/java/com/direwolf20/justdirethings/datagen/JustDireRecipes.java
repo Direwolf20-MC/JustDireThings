@@ -425,6 +425,16 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.TimeWand.get())
+                .pattern(" bt")
+                .pattern(" ib")
+                .pattern("i  ")
+                .define('i', Registration.FerricoreIngot.get())
+                .define('b', Registration.BlazegoldIngot.get())
+                .define('t', Registration.TimeCrystal.get())
+                .group("justdirethings")
+                .unlockedBy("has_time_crystal", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TimeCrystal.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CreatureCatcher.get())
                 .pattern(" b ")
                 .pattern("beb")
@@ -533,12 +543,13 @@ public class JustDireRecipes extends RecipeProvider {
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_DEATHPROTECTION.get())
-                .pattern(" e ")
+                .pattern("tet")
                 .pattern("fbf")
-                .pattern(" e ")
+                .pattern("tet")
                 .define('b', Registration.UPGRADE_BASE.get())
                 .define('f', Items.TOTEM_OF_UNDYING)
                 .define('e', Items.EMERALD)
+                .define('t', Registration.TimeCrystal.get())
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_DEBUFFREMOVER.get())
@@ -800,7 +811,7 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('b', Registration.UPGRADE_BASE.get())
                 .define('f', Items.NETHERITE_PICKAXE)
                 .define('e', Items.NETHER_STAR)
-                .define('a', Items.TNT)
+                .define('a', Registration.TimeCrystal.get())
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_EARTHQUAKE.get())
@@ -818,7 +829,7 @@ public class JustDireRecipes extends RecipeProvider {
                 .pattern("fbf")
                 .pattern("aea")
                 .define('b', Registration.UPGRADE_BASE.get())
-                .define('f', Items.SHULKER_SHELL)
+                .define('f', Registration.TimeCrystal.get())
                 .define('e', Items.END_ROD)
                 .define('a', Items.CALIBRATED_SCULK_SENSOR)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
@@ -851,6 +862,15 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('f', Items.DRAGON_BREATH)
                 .define('e', Items.PHANTOM_MEMBRANE)
                 .define('a', Items.SHULKER_SHELL)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_TIMEPROTECTION.get())
+                .pattern(" s ")
+                .pattern("fbf")
+                .pattern(" s ")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('f', Registration.TimeCrystal.get())
+                .define('s', Items.SHIELD)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_SPLASH.get())
@@ -953,6 +973,14 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
                 .save(consumer);
+        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"), Blocks.BUDDING_AMETHYST.defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"));
+        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"), Registration.TimeCrystalBlock.get().defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
+                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"));
 
         //FluidDrop Recipes
         FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.PolymorphicCatalyst.get())
@@ -974,6 +1002,10 @@ public class JustDireRecipes extends RecipeProvider {
         FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t4_fluid"), Registration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T4.get())
                 .group("justdirethings")
                 .unlockedBy("has_coal_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Coal_T4.get()))
+                .save(consumer);
+        FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "time_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.TIME_FLUID_BLOCK.get().defaultBlockState(), Registration.TimeCrystal.get())
+                .group("justdirethings")
+                .unlockedBy("has_time_crystal", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TimeCrystal.get()))
                 .save(consumer);
 
         //Smelting
@@ -1507,6 +1539,7 @@ public class JustDireRecipes extends RecipeProvider {
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T2.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T2.get(), Registration.Coal_T2.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T2.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T3.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T3.get(), Registration.Coal_T3.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T3.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T4.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T4.get(), Registration.Coal_T4.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T4.getId().toString() + "_9x9", "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.TimeCrystal.get(), RecipeCategory.BUILDING_BLOCKS, Registration.TimeCrystalBlock.get(), Registration.TimeCrystal.getId().toString() + "_9x9", "justdirethings", Registration.TimeCrystalBlock.getId().toString() + "_9x9", "justdirethings");
 
         //NBT Clear
         for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
