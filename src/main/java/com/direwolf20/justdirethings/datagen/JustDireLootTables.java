@@ -5,12 +5,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -70,9 +66,9 @@ public class JustDireLootTables extends VanillaBlockLoot {
         add(Registration.TimeCrystalCluster_Small.get(), noDrop());
         add(Registration.TimeCrystalCluster_Medium.get(), noDrop());
         add(Registration.TimeCrystalCluster_Large.get(), noDrop());
-
+        add(Registration.TimeCrystalBuddingBlock.get(), noDrop());
         //Time Crystal
-        add(Registration.TimeCrystalBuddingBlock.get(), LootTable.lootTable()
+        /*add(Registration.TimeCrystalBuddingBlock.get(), LootTable.lootTable()
                 .withPool(LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(1))
                         .add(LootItem.lootTableItem(Registration.TimeCrystal.get())
@@ -80,7 +76,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
                                 .when(ExplosionCondition.survivesExplosion())
                         )
                 )
-        );
+        );*/
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(
