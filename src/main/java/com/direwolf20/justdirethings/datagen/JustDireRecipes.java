@@ -320,6 +320,17 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.ParadoxMachine.get())
+                .pattern("fdf")
+                .pattern("dod")
+                .pattern("frf")
+                .define('o', Registration.TimeCrystalBlock.get())
+                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('d', Registration.TimeCrystal.get())
+                .define('r', Registration.TIME_FLUID_BUCKET.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
 
         //Resource
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, Registration.PolymorphicCatalyst.get(), 4)

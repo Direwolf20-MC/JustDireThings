@@ -240,7 +240,8 @@ public class JustDireThings {
                 Registration.DropperT2.get(),
                 Registration.BlockSwapperT2.get(),
                 Registration.FluidPlacerT2.get(),
-                Registration.FluidCollectorT2.get()
+                Registration.FluidCollectorT2.get(),
+                Registration.ParadoxMachine.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -270,7 +271,8 @@ public class JustDireThings {
                 Registration.FluidPlacerT1.get(),
                 Registration.FluidPlacerT2.get(),
                 Registration.FluidCollectorT1.get(),
-                Registration.FluidCollectorT2.get()
+                Registration.FluidCollectorT2.get(),
+                Registration.ParadoxMachine.get()
         );
         event.registerBlock(Capabilities.FluidHandler.BLOCK,
                 (level, pos, state, be, side) -> {
