@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -168,6 +169,14 @@ public class ParadoxMachineBER extends AreaAffectingBER {
             entityModel.prepareMobModel(entity, f4, f8, partialTicks);
             entityModel.setupAnim(entity, f4, f8, f7, f2, f5);
             entityModel.renderToBuffer(matrixStackIn, vertexconsumer, combinedLightsIn, overlayCoords, packedARGB);
+
+            // Render all layers, including armor, with the appropriate transparency
+            for (RenderLayer<?, ?> layer : livingRenderer.layers) {
+                // Use the layer's render method to ensure proper rendering
+                @SuppressWarnings("unchecked")
+                RenderLayer<LivingEntity, EntityModel<LivingEntity>> castedLayer = (RenderLayer<LivingEntity, EntityModel<LivingEntity>>) layer;
+                castedLayer.render(matrixStackIn, bufferIn, combinedLightsIn, entity, f4, f8, partialTicks, f7, f2, f5);
+            }
         }
     }
 
@@ -176,16 +185,6 @@ public class ParadoxMachineBER extends AreaAffectingBER {
             pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - pRotationYaw));
         }
     }
-
-    /*protected static void setupRotationsEntity(LivingEntity entity, PoseStack matrixStackIn, float partialTicks) {
-        float rotationYaw = Mth.lerp(partialTicks, entity.yBodyRotO, entity.yBodyRot);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(-rotationYaw));  // Inverted rotation might cause upside-down rendering
-        matrixStackIn.mulPose(Axis.ZP.rotationDegrees(180.0F));  // Flip if entities appear upside down
-
-        // Translate the entity back up by one block
-        matrixStackIn.translate(0.0, -1.5, 0.0);  // Adjust the Y translation to correct position
-
-    }*/
 
     protected static void scaleEntity(LivingEntity entity, PoseStack matrixStackIn) {
         float scale = 1F; // Adjust scale if needed
