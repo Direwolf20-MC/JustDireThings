@@ -777,4 +777,10 @@ public class Registration {
                     return new JustDireFluidTank(fluidMachineBE.getMaxMB(), fluidstack -> fluidstack.getFluid() instanceof RefinedFuel);
                 return new JustDireFluidTank(0);
             }).build());
+    public static final Supplier<AttachmentType<JustDireFluidTank>> PARADOX_FLUID_HANDLER = ATTACHMENT_TYPES.register(
+            "paradox_fluid_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof FluidMachineBE fluidMachineBE)
+                    return new JustDireFluidTank(fluidMachineBE.getMaxMB(), fluidstack -> fluidstack.getFluid() instanceof TimeFluid);
+                return new JustDireFluidTank(0);
+            }).build());
 }

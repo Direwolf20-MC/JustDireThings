@@ -51,7 +51,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     @Override
     public JustDireFluidTank getFluidTank() {
-        return getData(Registration.MACHINE_FLUID_HANDLER);
+        return getData(Registration.PARADOX_FLUID_HANDLER);
     }
 
     @Override
