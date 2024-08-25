@@ -35,10 +35,7 @@ import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE, AreaAffectingBE, FilterableBE, RedstoneControlledBE, FluidMachineBE {
@@ -317,6 +314,15 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         EntityType<?> entityType = EntityType.byString(entityData.getString("id")).orElse(null);
         if (entityType == null) {
             return null; // Return null if the entity type is invalid
+        }
+
+        if (entityData.contains("UUID")) {
+            UUID entityUUID = entityData.getUUID("UUID");
+            Entity existingEntity = ((ServerLevel) level).getEntity(entityUUID);
+            if (existingEntity != null) {
+                // Skip restoring the entity as it already exists
+                return null;
+            }
         }
 
         // Create the entity instance
