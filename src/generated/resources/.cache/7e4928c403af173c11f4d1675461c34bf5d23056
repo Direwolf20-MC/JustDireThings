@@ -1,5 +1,6 @@
-// 1.21.1	2024-08-23T12:36:14.7031491	Tags for minecraft:entity_type mod id justdirethings
+// 1.21.1	2024-08-25T13:15:11.7468831	Tags for minecraft:entity_type mod id justdirethings
 ecb2f0a5a9c8b872f8478e9a6b4850948c3eb8d1 data/c/tags/entity_type/teleporting_not_supported.json
 e00f2931577049b9a4400a87ed9c249373be376c data/justdirethings/tags/entity_type/creature_catcher_deny.json
 669025814936e708d42d9d0a5b88c11e62cf12ef data/justdirethings/tags/entity_type/no_ai_deny.json
 669025814936e708d42d9d0a5b88c11e62cf12ef data/justdirethings/tags/entity_type/no_earthquake.json
+ecb2f0a5a9c8b872f8478e9a6b4850948c3eb8d1 data/justdirethings/tags/entity_type/paradox_deny.json

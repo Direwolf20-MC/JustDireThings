@@ -506,6 +506,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.stay_open", "Stay Open");
         add("justdirethings.screen.save_close", "Save and Close");
         add("justdirethings.screen.cancel", "Cancel");
+        add("justdirethings.screen.snapshotarea", "Snapshot Area");
+        add("justdirethings.screen.renderparadox", "Render Paradox");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

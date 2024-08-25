@@ -28,6 +28,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsegate_deny"));
     public static final TagKey<Block> PHASEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "phase_deny"));
     public static final TagKey<Block> TICK_SPEED_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tick_speed_deny"));
+    public static final TagKey<Block> PARADOX_ALLOW = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_allow"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -134,6 +135,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
         tag(Tags.Blocks.CLUSTERS)
                 .add(Registration.TimeCrystalCluster.get());
         tag(TICK_SPEED_DENY);
+        tag(PARADOX_ALLOW)
+                .addTag(Tags.Blocks.ORES);
 
     }
 
