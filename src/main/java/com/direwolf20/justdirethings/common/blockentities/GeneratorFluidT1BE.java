@@ -1,13 +1,10 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
-import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
-import com.direwolf20.justdirethings.common.items.FuelCanister;
-import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -15,10 +12,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -169,7 +164,7 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
         for (Direction direction : Direction.values()) {
             IEnergyStorage iEnergyStorage = getHandler(direction);
             if (iEnergyStorage == null) continue;
-            int amtFit = iEnergyStorage.receiveEnergy(getFEOutputPerTick(), true);
+            int amtFit = iEnergyStorage.receiveEnergy(getFEOutputPerTick() * 10, true);
             if (amtFit <= 0) continue;
             int extractAmt = extractEnergy(amtFit, false);
             iEnergyStorage.receiveEnergy(extractAmt, false);

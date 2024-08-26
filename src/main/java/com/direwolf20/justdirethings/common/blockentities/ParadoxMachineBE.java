@@ -61,6 +61,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public int targetType = 0;
     public boolean isRunning = false;
     public int timeRunning = 0;
+    public int fePerTick = 0;
+    public int fluidPerTick = 0;
     public Map<BlockPos, BlockState> restoringBlocks = new HashMap<>();
     public List<Vec3> restoringEntites = new ArrayList<>();
     private final static Random random = new Random();
@@ -92,8 +94,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         float r, g, b;
         r = 0.4f;
         g = 1.00f;
-        b = 0.5f;
-        //for (int i = 0; i < 3; i++) {
+        b = 0.39f;
+
         // Helper method to generate random positions outside the block (either -0.5 to 0 or 1 to 1.5)
         double offsetX = random.nextBoolean() ? -0.5 + random.nextDouble() * 0.5 : 1.0 + random.nextDouble() * 0.5;
         double offsetY = random.nextBoolean() ? -0.5 + random.nextDouble() * 0.5 : 1.0 + random.nextDouble() * 0.5;
@@ -105,9 +107,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         double startZ = d2 - 0.5 + offsetZ;
 
         float randomPartSize = 0.05f + (0.025f - 0.05f) * random.nextFloat();
-        GlitterParticleData data = GlitterParticleData.playerparticle("glitter", d0, d1, d2, randomPartSize, r, g, b, 0.75f, 120, false);
+        GlitterParticleData data = GlitterParticleData.playerparticle("glitter", d0, d1, d2, randomPartSize, r, g, b, 1f, 120, false);
         level.addParticle(data, startX, startY, startZ, 0.00025, 0.00025f, 0.00025);
-        //}
     }
 
     @Override
@@ -117,7 +118,11 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     }
 
     public int getRunTime() {
-        return 600;
+        if (!isRunning) {
+            System.out.println("Not Running");
+            return 300;
+        }
+        return (restoringBlocks.size() + restoringEntites.size()) * 10;
     }
 
     public void receiveRunTime(int runtime) {
@@ -133,6 +138,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             restoringEntites = new ArrayList<>(getEntitiesFromNBT().keySet());
             if (restoringBlocks.isEmpty() && restoringEntites.isEmpty()) return;
             isRunning = true;
+            fePerTick = getEnergyCostPerTick(getEnergyCost(restoringBlocks.size(), restoringEntites.size()));
+            fluidPerTick = getFluidCostPerTick(getFluidCost(restoringBlocks.size(), restoringEntites.size()));
             markDirtyClient();
         }
     }
@@ -150,19 +157,41 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             if (timeRunning % 100 == 0 && !(timeRunning >= getRunTime())) {
                 level.playSound(null, getBlockPos(), SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.25F, 0.25F);
             }
-            timeRunning++;
+            if (extractFluid(fluidPerTick) == fluidPerTick && extractEnergy(fePerTick, false) == fePerTick) {
+                timeRunning++;
+            } else {
+                stopRunning(false);
+                return;
+            }
         }
         if (timeRunning >= getRunTime()) {
-            UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
-            restoreBlocks(fakePlayer);
-            restoreEntities(fakePlayer);
-            postRun();
-            timeRunning = 0;
-            isRunning = false;
-            restoringBlocks.clear();
-            restoringEntites.clear();
-            markDirtyClient();
+            stopRunning(true);
         }
+    }
+
+    public void stopRunning(boolean success) {
+        if (success) {
+            int finalFluidCost = getFluidCost(restoringBlocks.size(), restoringEntites.size()) - (fluidPerTick * getRunTime());
+            int finalEnergyCost = getEnergyCost(restoringBlocks.size(), restoringEntites.size()) - (fePerTick * getRunTime());
+            if (extractFluid(finalFluidCost) == finalFluidCost && extractEnergy(finalEnergyCost, false) == finalEnergyCost) {
+                UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
+                restoreBlocks(fakePlayer);
+                restoreEntities(fakePlayer);
+                postRun();
+                level.playSound(null, getBlockPos(), SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.BLOCKS, 0.5F, 0.25F);
+            } else {
+                level.playSound(null, getBlockPos(), SoundEvents.CONDUIT_DEACTIVATE, SoundSource.BLOCKS, 0.5F, 0.25F);
+            }
+        } else {
+            level.playSound(null, getBlockPos(), SoundEvents.CONDUIT_DEACTIVATE, SoundSource.BLOCKS, 0.5F, 0.25F);
+        }
+        timeRunning = 0;
+        isRunning = false;
+        restoringBlocks.clear();
+        restoringEntites.clear();
+        fePerTick = 0;
+        fluidPerTick = 0;
+        markDirtyClient();
     }
 
     public boolean canPlace(FakePlayer fakePlayer, BlockPos blockPos) {
@@ -276,15 +305,19 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     @Override
     public int getStandardEnergyCost() {
-        return 5000;
+        return 250000;
     }
 
     public int getBlockEnergyCost() {
-        return 5000; //TODO Balance and Config
+        return 250000; //TODO Balance and Config
     }
 
     public int getEntityEnergyCost() {
-        return 5000; //TODO Balance and Config
+        return 250000; //TODO Balance and Config
+    }
+
+    public int getEnergyCostPerTick(int cost) {
+        return (int) Math.floor((double) cost / getRunTime());
     }
 
     public int getEnergyCost(int blocks, int entities) {
@@ -320,7 +353,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public boolean canParadox() {
         if (!hasSnapshotData())
             return false;
-        return hasEnoughPower(getEnergyCost(getSavedBlocksCount(), getSavedEntitiesCount())) && hasEnoughFluid(getFluidCost(getSavedBlocksCount(), getSavedEntitiesCount()));
+        return true;
     }
 
     public boolean hasEnoughFluid(int fluidCost) {
@@ -328,8 +361,12 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         return extractedStack.getAmount() == fluidCost;
     }
 
-    public void extractFluid(int fluidCost) {
-        getFluidTank().drain(fluidCost, IFluidHandler.FluidAction.EXECUTE);
+    public int extractFluid(int fluidCost) {
+        return getFluidTank().drain(fluidCost, IFluidHandler.FluidAction.EXECUTE).getAmount();
+    }
+
+    public int getFluidCostPerTick(int totalFluidCost) {
+        return (int) Math.floor((double) totalFluidCost / getRunTime());
     }
 
     public int getFluidCost(int blocks, int entities) {
@@ -339,17 +376,15 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     }
 
     public int getBlockFluidCost() {
-        return 1; //TODO Balance and Config
+        return 50; //TODO Balance and Config
     }
 
     public int getEntityFluidCost() {
-        return 1; //TODO Balance and Config
+        return 50; //TODO Balance and Config
     }
 
     public void postRun() {
         if (numBlocks == -1 || numEntities == -1) return;
-        extractEnergy(getEnergyCost(numBlocks, numEntities), false);
-        extractFluid(getFluidCost(numBlocks, numEntities));
         numBlocks = -1;
         numEntities = -1;
     }
@@ -422,11 +457,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         if (entityData.contains("UUID")) {
             UUID entityUUID = entityData.getUUID("UUID");
             if (level.isClientSide) {
-                /*Entity existingEntity = Minecraft.getInstance().level.getEntity(entityUUID);
-                if (existingEntity != null) {
-                    // Skip restoring the entity as it already exists on the client
-                    return null;
-                }*/
+
             } else {
                 Entity existingEntity = ((ServerLevel) level).getEntity(entityUUID);
                 if (existingEntity != null) {
@@ -568,6 +599,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         tag.putInt("targetType", targetType);
         tag.putBoolean("isRunning", isRunning);
         tag.putInt("timeRunning", timeRunning);
+        tag.putInt("fePerTick", fePerTick);
+        tag.putInt("fluidPerTick", fluidPerTick);
 
         // Save restoringBlocks map
         ListTag restoringBlocksList = new ListTag();
