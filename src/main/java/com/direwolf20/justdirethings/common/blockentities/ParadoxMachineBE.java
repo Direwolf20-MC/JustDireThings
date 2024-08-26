@@ -1,9 +1,11 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
+import com.direwolf20.justdirethings.client.particles.glitterparticle.GlitterParticleData;
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
+import com.direwolf20.justdirethings.common.network.data.ParadoxSyncPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -12,13 +14,18 @@ import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,6 +41,7 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,6 +59,11 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public int numEntities = -1;
     public boolean renderParadox = false;
     public int targetType = 0;
+    public boolean isRunning = false;
+    public int timeRunning = 0;
+    public Map<BlockPos, BlockState> restoringBlocks = new HashMap<>();
+    public List<Vec3> restoringEntites = new ArrayList<>();
+    private final static Random random = new Random();
 
     public ParadoxMachineBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ParadoxMachineBE.get(), pPos, pBlockState);
@@ -60,6 +73,41 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     @Override
     public void tickClient() {
+        if (isRunning) {
+            if (level == null) return;
+            timeRunning++;
+            for (Map.Entry<BlockPos, BlockState> entry : restoringBlocks.entrySet()) {
+                drawRestoringParticles(entry.getKey().getCenter());
+            }
+            for (Vec3 vec3 : restoringEntites) {
+                drawRestoringParticles(vec3);
+            }
+        }
+    }
+
+    public void drawRestoringParticles(Vec3 vec3) {
+        double d0 = vec3.x;
+        double d1 = vec3.y;
+        double d2 = vec3.z;
+        float r, g, b;
+        r = 0.4f;
+        g = 1.00f;
+        b = 0.5f;
+        //for (int i = 0; i < 3; i++) {
+        // Helper method to generate random positions outside the block (either -0.5 to 0 or 1 to 1.5)
+        double offsetX = random.nextBoolean() ? -0.5 + random.nextDouble() * 0.5 : 1.0 + random.nextDouble() * 0.5;
+        double offsetY = random.nextBoolean() ? -0.5 + random.nextDouble() * 0.5 : 1.0 + random.nextDouble() * 0.5;
+        double offsetZ = random.nextBoolean() ? -0.5 + random.nextDouble() * 0.5 : 1.0 + random.nextDouble() * 0.5;
+
+        // Calculate the start position with the random offsets
+        double startX = d0 - 0.5 + offsetX;
+        double startY = d1 - 0.5 + offsetY;
+        double startZ = d2 - 0.5 + offsetZ;
+
+        float randomPartSize = 0.05f + (0.025f - 0.05f) * random.nextFloat();
+        GlitterParticleData data = GlitterParticleData.playerparticle("glitter", d0, d1, d2, randomPartSize, r, g, b, 0.75f, 120, false);
+        level.addParticle(data, startX, startY, startZ, 0.00025, 0.00025f, 0.00025);
+        //}
     }
 
     @Override
@@ -68,17 +116,53 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         doParadox();
     }
 
-    public void doParadox() {
+    public int getRunTime() {
+        return 600;
+    }
+
+    public void receiveRunTime(int runtime) {
+        this.timeRunning = runtime;
+    }
+
+    public void startParadox() {
         if (!(isActiveRedstone() && canRun())) return;
         if (!canParadox()) return;
-        if (level == null) return;
+        if (!isRunning) {
+            UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
+            restoringBlocks = testRestoreBlocks(fakePlayer);
+            restoringEntites = new ArrayList<>(getEntitiesFromNBT().keySet());
+            if (restoringBlocks.isEmpty() && restoringEntites.isEmpty()) return;
+            isRunning = true;
+            markDirtyClient();
+        }
+    }
 
-        UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
-        if (targetType == 0 || targetType == 1)
+    public void doParadox() {
+        if (level == null) return;
+        startParadox();
+
+        if (!isRunning) {
+            return;
+        } else {
+            if (timeRunning % 20 == 0 && !(timeRunning >= getRunTime())) {
+                PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunk(getBlockPos()).getPos(), new ParadoxSyncPayload(getBlockPos(), timeRunning));
+            }
+            if (timeRunning % 100 == 0 && !(timeRunning >= getRunTime())) {
+                level.playSound(null, getBlockPos(), SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.25F, 0.25F);
+            }
+            timeRunning++;
+        }
+        if (timeRunning >= getRunTime()) {
+            UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
             restoreBlocks(fakePlayer);
-        if (targetType == 0 || targetType == 2)
             restoreEntities(fakePlayer);
-        postRun();
+            postRun();
+            timeRunning = 0;
+            isRunning = false;
+            restoringBlocks.clear();
+            restoringEntites.clear();
+            markDirtyClient();
+        }
     }
 
     public boolean canPlace(FakePlayer fakePlayer, BlockPos blockPos) {
@@ -91,11 +175,25 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         return true;
     }
 
-    private void restoreBlocks(FakePlayer fakePlayer) {
+    private Map<BlockPos, BlockState> testRestoreBlocks(FakePlayer fakePlayer) {
         Map<BlockPos, BlockState> blocksToRestore = getBlocksFromNBT();
-        int restoredCount = 0;
+        Map<BlockPos, BlockState> returnMap = new HashMap<>();
 
         for (Map.Entry<BlockPos, BlockState> entry : blocksToRestore.entrySet()) {
+            BlockPos blockPos = entry.getKey();
+            BlockState blockState = entry.getValue();
+            if (!canPlace(fakePlayer, blockPos))
+                continue;
+            returnMap.put(blockPos, blockState);
+        }
+        return returnMap;
+    }
+
+    private void restoreBlocks(FakePlayer fakePlayer) {
+        //Map<BlockPos, BlockState> blocksToRestore = getBlocksFromNBT();
+        int restoredCount = 0;
+
+        for (Map.Entry<BlockPos, BlockState> entry : restoringBlocks.entrySet()) {
             BlockPos blockPos = entry.getKey();
             BlockState blockState = entry.getValue();
             if (!canPlace(fakePlayer, blockPos))
@@ -114,6 +212,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
         for (Map.Entry<Vec3, LivingEntity> entry : entitiesToRestore.entrySet()) {
             Vec3 entityPos = entry.getKey();
+            if (!restoringEntites.contains(entityPos))
+                continue;
             LivingEntity entity = entry.getValue();
 
             // Place the entity in the world
@@ -266,7 +366,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public Map<BlockPos, BlockState> getBlocksFromNBT() {
         BlockPos machinePos = getBlockPos();
         Map<BlockPos, BlockState> blockMap = new HashMap<>();
-        if (!snapshotData.contains("blocks")) {
+        if (targetType == 2 || !snapshotData.contains("blocks")) {
             return blockMap; // Return empty list if no block data is found
         }
 
@@ -286,7 +386,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public Map<Vec3, LivingEntity> getEntitiesFromNBT() {
         BlockPos machinePos = getBlockPos();
         Map<Vec3, LivingEntity> entityMap = new HashMap<>();
-        if (!snapshotData.contains("entities")) {
+        if (targetType == 1 || !snapshotData.contains("entities")) {
             return entityMap; // Return empty list if no entity data is found
         }
 
@@ -448,11 +548,44 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     }
 
     @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+        if (level.isClientSide && isRunning && !pkt.getTag().getBoolean("isRunning")) {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.level != null) {
+                // Stop the specific sound using SoundManager
+                mc.getSoundManager().stop(SoundEvents.PORTAL_AMBIENT.getLocation(), SoundSource.BLOCKS);
+            }
+        }
+        super.onDataPacket(net, pkt, lookupProvider);
+
+    }
+
+    @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
         tag.put("snapshotData", snapshotData);
         tag.putBoolean("renderParadox", renderParadox);
         tag.putInt("targetType", targetType);
+        tag.putBoolean("isRunning", isRunning);
+        tag.putInt("timeRunning", timeRunning);
+
+        // Save restoringBlocks map
+        ListTag restoringBlocksList = new ListTag();
+        for (Map.Entry<BlockPos, BlockState> entry : restoringBlocks.entrySet()) {
+            CompoundTag blockData = new CompoundTag();
+            blockData.put("pos", NbtUtils.writeBlockPos(entry.getKey())); // Write BlockPos
+            blockData.put("state", NbtUtils.writeBlockState(entry.getValue())); // Write BlockState
+            restoringBlocksList.add(blockData);
+        }
+        tag.put("restoringBlocks", restoringBlocksList);
+
+        // Save restoringEntities list
+        ListTag restoringEntitiesList = new ListTag();
+        for (Vec3 vec : restoringEntites) {
+            CompoundTag entityData = NBTHelpers.vec3ToNBT(vec);
+            restoringEntitiesList.add(entityData);
+        }
+        tag.put("restoringEntities", restoringEntitiesList);
     }
 
     @Override
@@ -464,5 +597,33 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             renderParadox = tag.getBoolean("renderParadox");
         if (tag.contains("targetType"))
             targetType = tag.getInt("targetType");
+        if (tag.contains("isRunning"))
+            isRunning = tag.getBoolean("isRunning");
+        if (tag.contains("timeRunning"))
+            timeRunning = tag.getInt("timeRunning");
+
+        // Load restoringBlocks map
+        restoringBlocks.clear();
+        if (tag.contains("restoringBlocks")) {
+            ListTag restoringBlocksList = tag.getList("restoringBlocks", 10); // 10 indicates a CompoundTag
+            for (int i = 0; i < restoringBlocksList.size(); i++) {
+                CompoundTag blockData = restoringBlocksList.getCompound(i);
+                BlockPos pos = NbtUtils.readBlockPos(blockData, "pos").orElse(null);
+                if (pos == null) continue;
+                BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), blockData.getCompound("state"));
+                restoringBlocks.put(pos, state);
+            }
+        }
+
+        // Load restoringEntities list
+        restoringEntites.clear();
+        if (tag.contains("restoringEntities")) {
+            ListTag restoringEntitiesList = tag.getList("restoringEntities", 10); // 10 indicates a CompoundTag
+            for (int i = 0; i < restoringEntitiesList.size(); i++) {
+                CompoundTag entityData = restoringEntitiesList.getCompound(i);
+                Vec3 vec = NBTHelpers.nbtToVec3(entityData);
+                restoringEntites.add(vec);
+            }
+        }
     }
 }

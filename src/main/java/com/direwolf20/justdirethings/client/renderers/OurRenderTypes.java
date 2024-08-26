@@ -88,7 +88,7 @@ public class OurRenderTypes extends RenderType {
                             .setLightmapState(NO_LIGHTMAP)
                             .createCompositeState(false));
 
-    public static RenderType RenderBlockFade = create("RenderBlockFade",
+    public static final RenderType RenderBlockFade = create("RenderBlockFade",
             DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
             RenderType.CompositeState.builder()
                     .setShaderState(RenderStateShard.RENDERTYPE_SOLID_SHADER)
@@ -101,7 +101,7 @@ public class OurRenderTypes extends RenderType {
                     .setWriteMaskState(COLOR_DEPTH_WRITE)
                     .createCompositeState(false));
 
-    public static RenderType RenderBlockFadeNoCull = create("GadgetRenderBlockFadeNoCull",
+    public static final RenderType RenderBlockFadeNoCull = create("GadgetRenderBlockFadeNoCull",
             DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
             RenderType.CompositeState.builder()
                     .setShaderState(RenderStateShard.RENDERTYPE_SOLID_SHADER)
@@ -118,7 +118,7 @@ public class OurRenderTypes extends RenderType {
         super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
     }
 
-    public static void updateRenders() { //Only used when testing
+    /*public static void updateRenders() { //Only used when testing
         RenderBlockFade = create("GadgetRenderBlockFade",
                 DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
                 RenderType.CompositeState.builder()
@@ -130,7 +130,7 @@ public class OurRenderTypes extends RenderType {
                         .setDepthTestState(LEQUAL_DEPTH_TEST)
                         .setCullState(CULL)
                         .setWriteMaskState(COLOR_DEPTH_WRITE)
-                        .createCompositeState(false));
+                        .createCompositeState(true));
         RenderBlockFadeNoCull = create("RenderBlockFadeNoCull",
                 DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false, false,
                 RenderType.CompositeState.builder()
@@ -143,17 +143,5 @@ public class OurRenderTypes extends RenderType {
                         .setCullState(CULL)
                         .setWriteMaskState(COLOR_WRITE)
                         .createCompositeState(false));
-        /*TRANSPARENT_BOX = create("transparent_box",
-                DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256, true, true,
-                RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)  // Use the translucent shader
-                        .setLayeringState(VIEW_OFFSET_Z_LAYERING)  // View offset Z layering
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)  // Enable translucent transparency
-                        .setTextureState(NO_TEXTURE)  // No texture state
-                        .setDepthTestState(LEQUAL_DEPTH_TEST)  // Depth test state
-                        .setCullState(NO_CULL)  // No cull state
-                        .setLightmapState(NO_LIGHTMAP)  // No lightmap state
-                        .setWriteMaskState(COLOR_WRITE)  // Only write color
-                        .createCompositeState(true));  // Enable sort on transparency*/
-    }
+    }*/
 }

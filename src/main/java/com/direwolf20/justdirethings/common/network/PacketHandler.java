@@ -38,5 +38,6 @@ public class PacketHandler {
 
         //Going to Client
         registrar.playToClient(ClientSoundPayload.TYPE, ClientSoundPayload.STREAM_CODEC, ClientSoundPacket.get()::handle);
+        registrar.playToClient(ParadoxSyncPayload.TYPE, ParadoxSyncPayload.STREAM_CODEC, ParadoxSyncPacket.get()::handle);
     }
 }

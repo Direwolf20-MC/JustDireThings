@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,23 +46,32 @@ public class ParadoxMachineBER extends AreaAffectingBER {
         super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
         if (!(blockentity instanceof ParadoxMachineBE paradoxMachineBE)) return;
         // Render blocks
+        if (paradoxMachineBE.isRunning) {
+            int targetType = paradoxMachineBE.targetType;
+            float alpha = Mth.clamp(0.05f + (paradoxMachineBE.timeRunning / (float) paradoxMachineBE.getRunTime()) * 0.95f, 0.05f, 1.0f);
+            int intAlpha = (int) (alpha * 255);
+            if (targetType == 0 || targetType == 1)
+                renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, alpha, paradoxMachineBE.restoringBlocks);
+            if (targetType == 0 || targetType == 2)
+                renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, intAlpha);
+        } else {
         if (paradoxMachineBE.renderParadox) {
             int targetType = paradoxMachineBE.targetType;
             if (targetType == 0 || targetType == 1)
-                renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
+                renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, 0.5f, paradoxMachineBE.getBlocksFromNBT());
             if (targetType == 0 || targetType == 2)
-                renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
+                renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, 175);
+        }
         }
     }
 
-    private void renderBlocks(ParadoxMachineBE paradoxMachineBE, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
+    private void renderBlocks(ParadoxMachineBE paradoxMachineBE, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn, float alpha, Map<BlockPos, BlockState> blocksToRestore) {
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
         Level level = paradoxMachineBE.getLevel();
         if (level == null) return;
         BlockColors blockColors = Minecraft.getInstance().getBlockColors();
         ModelBlockRenderer modelBlockRenderer = new ModelBlockRenderer(blockColors);
         BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
-        Map<BlockPos, BlockState> blocksToRestore = paradoxMachineBE.getBlocksFromNBT();
 
         for (Map.Entry<BlockPos, BlockState> entry : blocksToRestore.entrySet()) {
             BlockPos blockPos = entry.getKey();
@@ -85,7 +93,7 @@ public class ParadoxMachineBER extends AreaAffectingBER {
 
             // Render the block as semi-transparent
             VertexConsumer builder = renderState.isSolidRender(level, blockPos) ? bufferIn.getBuffer(OurRenderTypes.RenderBlockFade) : bufferIn.getBuffer(OurRenderTypes.RenderBlockFadeNoCull);
-            DireVertexConsumer direVertexConsumer = new DireVertexConsumer(builder, 0.5f);
+            DireVertexConsumer direVertexConsumer = new DireVertexConsumer(builder, alpha);
 
             ModelBlockRenderer.AmbientOcclusionFace modelblockrenderer$ambientocclusionface = new ModelBlockRenderer.AmbientOcclusionFace();
             for (Direction direction : Direction.values()) {
@@ -115,12 +123,14 @@ public class ParadoxMachineBER extends AreaAffectingBER {
         }
     }
 
-    private void renderEntities(ParadoxMachineBE paradoxMachineBE, PoseStack matrixStackIn, MultiBufferSource bufferIn, float partialTicks, int combinedLightsIn) {
+    private void renderEntities(ParadoxMachineBE paradoxMachineBE, PoseStack matrixStackIn, MultiBufferSource bufferIn, float partialTicks, int combinedLightsIn, int alpha) {
         Level level = paradoxMachineBE.getLevel();
         if (level == null) return;
 
         for (Map.Entry<Vec3, LivingEntity> entry : paradoxMachineBE.getEntitiesFromNBT().entrySet()) {
             Vec3 entityPos = entry.getKey();
+            if (paradoxMachineBE.isRunning && !paradoxMachineBE.restoringEntites.contains(entityPos))
+                continue;
             LivingEntity entity = entry.getValue();
 
             // Apply transformations and translate to entity position
@@ -130,13 +140,13 @@ public class ParadoxMachineBER extends AreaAffectingBER {
                     entityPos.z - paradoxMachineBE.getBlockPos().getZ());
 
             // Render the entity with transparency
-            renderTransparentEntity(matrixStackIn, bufferIn, entity, partialTicks, combinedLightsIn);
+            renderTransparentEntity(matrixStackIn, bufferIn, entity, partialTicks, combinedLightsIn, alpha);
 
             matrixStackIn.popPose();
         }
     }
 
-    private void renderTransparentEntity(PoseStack matrixStackIn, MultiBufferSource bufferIn, LivingEntity entity, float partialTicks, int combinedLightsIn) {
+    private void renderTransparentEntity(PoseStack matrixStackIn, MultiBufferSource bufferIn, LivingEntity entity, float partialTicks, int combinedLightsIn, int alpha) {
         EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         EntityRenderer<? super LivingEntity> renderer = renderManager.getRenderer(entity);
 
@@ -159,8 +169,8 @@ public class ParadoxMachineBER extends AreaAffectingBER {
         float f8 = 0.0F;
         float f4 = 0.0F;
 
-        // Set transparency level (50% transparent)
-        int packedARGB = (175 << 24) | (255 << 16) | (255 << 8) | 255;
+        // Set transparency
+        int packedARGB = (alpha << 24) | (255 << 16) | (255 << 8) | 255;
 
         // Render entity model with transparency
         if (renderer instanceof LivingEntityRenderer<?, ?> livingRenderer) {
@@ -173,12 +183,13 @@ public class ParadoxMachineBER extends AreaAffectingBER {
             entityModel.renderToBuffer(matrixStackIn, vertexconsumer, combinedLightsIn, overlayCoords, packedARGB);
 
             // Render all layers, including armor, with the appropriate transparency
-            for (RenderLayer<?, ?> layer : livingRenderer.layers) {
+            //Commented out until i can get it transparent
+            /*for (RenderLayer<?, ?> layer : livingRenderer.layers) {
                 // Use the layer's render method to ensure proper rendering
                 @SuppressWarnings("unchecked")
                 RenderLayer<LivingEntity, EntityModel<LivingEntity>> castedLayer = (RenderLayer<LivingEntity, EntityModel<LivingEntity>>) layer;
                 castedLayer.render(matrixStackIn, bufferIn, combinedLightsIn, entity, f4, f8, partialTicks, f7, f2, f5);
-            }
+            }*/
         }
     }
 
