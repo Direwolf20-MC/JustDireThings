@@ -50,6 +50,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public int numBlocks = -1;
     public int numEntities = -1;
     public boolean renderParadox = false;
+    public int targetType = 0;
 
     public ParadoxMachineBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ParadoxMachineBE.get(), pPos, pBlockState);
@@ -73,8 +74,10 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         if (level == null) return;
 
         UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
-        restoreBlocks(fakePlayer);
-        restoreEntities(fakePlayer);
+        if (targetType == 0 || targetType == 1)
+            restoreBlocks(fakePlayer);
+        if (targetType == 0 || targetType == 2)
+            restoreEntities(fakePlayer);
         postRun();
     }
 
@@ -318,10 +321,18 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
         if (entityData.contains("UUID")) {
             UUID entityUUID = entityData.getUUID("UUID");
-            Entity existingEntity = ((ServerLevel) level).getEntity(entityUUID);
-            if (existingEntity != null) {
-                // Skip restoring the entity as it already exists
-                return null;
+            if (level.isClientSide) {
+                /*Entity existingEntity = Minecraft.getInstance().level.getEntity(entityUUID);
+                if (existingEntity != null) {
+                    // Skip restoring the entity as it already exists on the client
+                    return null;
+                }*/
+            } else {
+                Entity existingEntity = ((ServerLevel) level).getEntity(entityUUID);
+                if (existingEntity != null) {
+                    // Skip restoring the entity as it already exists
+                    return null;
+                }
             }
         }
 
@@ -338,8 +349,9 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         return (LivingEntity) entity; // Return the restored LivingEntity
     }
 
-    public void setRenderParadox(boolean render) {
-        renderParadox = render;
+    public void setRenderParadox(boolean render, int targetType) {
+        this.renderParadox = render;
+        this.targetType = targetType;
         markDirtyClient();
     }
 
@@ -440,6 +452,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         super.saveAdditional(tag, provider);
         tag.put("snapshotData", snapshotData);
         tag.putBoolean("renderParadox", renderParadox);
+        tag.putInt("targetType", targetType);
     }
 
     @Override
@@ -449,5 +462,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             snapshotData = tag.getCompound("snapshotData");
         if (tag.contains("renderParadox"))
             renderParadox = tag.getBoolean("renderParadox");
+        if (tag.contains("targetType"))
+            targetType = tag.getInt("targetType");
     }
 }

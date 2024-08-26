@@ -201,6 +201,17 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SENSOR_TARGET_TEXTURES, startingValue, onPress);
     }
 
+    /** Paradox Target Button **/
+    private static final List<TextureLocalization> PARADOX_TARGET_TEXTURES = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/target-both.png"), Component.translatable("justdirethings.screen.paradoxall")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/filter-block.png"), Component.translatable("justdirethings.screen.paradoxblock")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/passivemob.png"), Component.translatable("justdirethings.screen.paradoxentity"))
+    );
+
+    public static ToggleButton PARADOXTARGETBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, PARADOX_TARGET_TEXTURES, startingValue, onPress);
+    }
+
     /** Strong or Weak Redstone **/
     private static final List<TextureLocalization> STRONG_WEAK_REDSTONE_TEXTURES = List.of(
             new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/redstonelow.png"), Component.translatable("justdirethings.screen.redstone-weak")),

@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.client.screens;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
+import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ParadoxMachineBE;
 import com.direwolf20.justdirethings.common.containers.ParadoxMachineContainer;
 import com.direwolf20.justdirethings.common.network.data.ParadoxMachineSnapshotPayload;
@@ -13,10 +14,12 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContainer> {
     private boolean renderParadox = false;
+    private int targetType = 0;
     public ParadoxMachineScreen(ParadoxMachineContainer container, Inventory inv, Component name) {
         super(container, inv, name);
         if (container.baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE) {
             renderParadox = paradoxMachineBE.renderParadox;
+            targetType = paradoxMachineBE.targetType;
         }
     }
 
@@ -25,6 +28,7 @@ public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContai
         super.init();
         addSnapshotButton();
         addRenderButton();
+        addTargetButton();
     }
 
     @Override
@@ -43,7 +47,20 @@ public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContai
         addRenderableWidget(ToggleButtonFactory.RENDERPARADOXBUTTON(getGuiLeft() + 98, topSectionTop + 62, renderParadox, b -> {
             renderParadox = !renderParadox;
             ((GrayscaleButton) b).toggleActive();
-            PacketDistributor.sendToServer(new ParadoxRenderPayload(renderParadox));
+            saveSettings();
         }));
+    }
+
+    public void addTargetButton() {
+        addRenderableWidget(ToggleButtonFactory.PARADOXTARGETBUTTON(getGuiLeft() + 56, topSectionTop + 38, targetType, b -> {
+            targetType = ((ToggleButton) b).getTexturePosition();
+            saveSettings();
+        }));
+    }
+
+    @Override
+    public void saveSettings() {
+        super.saveSettings();
+        PacketDistributor.sendToServer(new ParadoxRenderPayload(renderParadox, targetType));
     }
 }

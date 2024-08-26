@@ -508,6 +508,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.cancel", "Cancel");
         add("justdirethings.screen.snapshotarea", "Snapshot Area");
         add("justdirethings.screen.renderparadox", "Render Paradox");
+        add("justdirethings.screen.paradoxentity", "Revert Entities");
+        add("justdirethings.screen.paradoxblock", "Revert Blocks");
+        add("justdirethings.screen.paradoxall", "Revert Blocks and Entities");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

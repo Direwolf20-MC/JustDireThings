@@ -46,11 +46,13 @@ public class ParadoxMachineBER extends AreaAffectingBER {
     public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
         super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
         if (!(blockentity instanceof ParadoxMachineBE paradoxMachineBE)) return;
-
         // Render blocks
         if (paradoxMachineBE.renderParadox) {
-            renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
-            renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
+            int targetType = paradoxMachineBE.targetType;
+            if (targetType == 0 || targetType == 1)
+                renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
+            if (targetType == 0 || targetType == 2)
+                renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
         }
     }
 

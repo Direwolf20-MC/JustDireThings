@@ -20,7 +20,7 @@ public class ParadoxRenderPacket {
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE) {
-                paradoxMachineBE.setRenderParadox(payload.renderParadox());
+                paradoxMachineBE.setRenderParadox(payload.renderParadox(), payload.targetType());
             }
         });
     }

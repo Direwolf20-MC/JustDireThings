@@ -8,7 +8,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record ParadoxRenderPayload(
-        boolean renderParadox
+        boolean renderParadox,
+        int targetType
 ) implements CustomPacketPayload {
     public static final Type<ParadoxRenderPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_render"));
 
@@ -19,6 +20,7 @@ public record ParadoxRenderPayload(
 
     public static final StreamCodec<FriendlyByteBuf, ParadoxRenderPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, ParadoxRenderPayload::renderParadox,
+            ByteBufCodecs.INT, ParadoxRenderPayload::targetType,
             ParadoxRenderPayload::new
     );
 }
