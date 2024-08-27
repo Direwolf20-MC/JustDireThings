@@ -4,7 +4,6 @@ import com.direwolf20.justdirethings.client.particles.glitterparticle.GlitterPar
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
-import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.network.data.ParadoxSyncPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -12,7 +11,6 @@ import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
-import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -46,9 +44,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE, AreaAffectingBE, FilterableBE, RedstoneControlledBE, FluidMachineBE {
+public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE, AreaAffectingBE, RedstoneControlledBE, FluidMachineBE {
     public RedstoneControlData redstoneControlData = getDefaultRedstoneData();
-    public FilterData filterData = new FilterData();
     public final FluidContainerData fluidContainerData;
     public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING));
     public final PoweredMachineContainerData poweredMachineData;
@@ -140,6 +137,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             isRunning = true;
             fePerTick = getEnergyCostPerTick(getEnergyCost(restoringBlocks.size(), restoringEntites.size()));
             fluidPerTick = getFluidCostPerTick(getFluidCost(restoringBlocks.size(), restoringEntites.size()));
+            level.playSound(null, getBlockPos(), SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.25F, 0.25F);
             markDirtyClient();
         }
     }
@@ -352,16 +350,6 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         return areaAffectingData;
     }
 
-    @Override
-    public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
-    }
-
-    @Override
-    public FilterData getFilterData() {
-        return filterData;
-    }
-
     public void setAreaOnly(double x, double y, double z) {
         getAreaAffectingData().xRadius = Math.max(0, Math.min(x, maxRadius));
         getAreaAffectingData().yRadius = Math.max(0, Math.min(y, maxRadius));
@@ -373,6 +361,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     public boolean canParadox() {
         if (!hasSnapshotData())
+            return false;
+        if (getFluidTank().isEmpty())
             return false;
         return true;
     }
@@ -583,7 +573,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             return false;
         if (entity instanceof Player)
             return false;
-        return isEntityValidFilter(entity, this.level);
+        return true;
     }
 
     // Helper methods to write lists to NBT
