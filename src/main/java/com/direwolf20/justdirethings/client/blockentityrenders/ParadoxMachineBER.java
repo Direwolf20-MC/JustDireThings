@@ -47,13 +47,10 @@ public class ParadoxMachineBER extends AreaAffectingBER {
         if (!(blockentity instanceof ParadoxMachineBE paradoxMachineBE)) return;
         // Render blocks
         if (paradoxMachineBE.isRunning) {
-            int targetType = paradoxMachineBE.targetType;
             float alpha = Mth.clamp(0.05f + (paradoxMachineBE.timeRunning / (float) paradoxMachineBE.getRunTime()) * 0.95f, 0.05f, 1.0f);
             int intAlpha = (int) (alpha * 255);
-            if (targetType == 0 || targetType == 1)
-                renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, alpha, paradoxMachineBE.restoringBlocks);
-            if (targetType == 0 || targetType == 2)
-                renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, intAlpha);
+            renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, alpha, paradoxMachineBE.restoringBlocks);
+            renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, intAlpha);
         } else {
         if (paradoxMachineBE.renderParadox) {
             int targetType = paradoxMachineBE.targetType;
