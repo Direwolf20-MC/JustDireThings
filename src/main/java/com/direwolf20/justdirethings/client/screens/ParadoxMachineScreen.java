@@ -5,12 +5,20 @@ import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButton
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.ToggleButton;
 import com.direwolf20.justdirethings.common.blockentities.ParadoxMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
+import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.containers.ParadoxMachineContainer;
 import com.direwolf20.justdirethings.common.network.data.ParadoxMachineSnapshotPayload;
 import com.direwolf20.justdirethings.common.network.data.ParadoxRenderPayload;
+import com.direwolf20.justdirethings.util.MagicHelpers;
+import com.direwolf20.justdirethings.util.MiscTools;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.Arrays;
 
 public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContainer> {
     private boolean renderParadox = false;
@@ -62,5 +70,47 @@ public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContai
     public void saveSettings() {
         super.saveSettings();
         PacketDistributor.sendToServer(new ParadoxRenderPayload(renderParadox, targetType));
+    }
+
+    @Override
+    public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        if (baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE && baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
+            if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
+                int totalBlocks = paradoxMachineBE.testRestoreBlocks().size();
+                int totalEntities = paradoxMachineBE.getEntitiesFromNBT().size();
+                int totalCostEnergy = paradoxMachineBE.getEnergyCost(totalBlocks, totalEntities);
+                if (hasShiftDown())
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.energy", MagicHelpers.formatted(this.container.getEnergy()), MagicHelpers.formatted(poweredMachineBE.getMaxEnergy())),
+                            Component.translatable("justdirethings.screen.paradoxenergycost", MagicHelpers.formatted(totalCostEnergy))
+                    )), pX, pY);
+                else
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(this.container.getEnergy()), MagicHelpers.withSuffix(poweredMachineBE.getMaxEnergy())),
+                            Component.translatable("justdirethings.screen.paradoxenergycost", MagicHelpers.withSuffix(totalCostEnergy))
+                    )), pX, pY);
+            }
+        }
+    }
+
+    @Override
+    public void fluidBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        if (baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE && baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
+            if (MiscTools.inBounds(topSectionLeft + getFluidBarOffset(), topSectionTop + 5, 18, 72, pX, pY)) {
+                int totalBlocks = paradoxMachineBE.testRestoreBlocks().size();
+                int totalEntities = paradoxMachineBE.getEntitiesFromNBT().size();
+                int totalCostFluid = paradoxMachineBE.getFluidCost(totalBlocks, totalEntities);
+                if (hasShiftDown())
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.fluid", this.container.getFluidStack().getHoverName(), MagicHelpers.formatted(this.container.getFluidAmount()), MagicHelpers.formatted(fluidMachineBE.getMaxMB())),
+                            Component.translatable("justdirethings.screen.paradoxfluidcost", MagicHelpers.formatted(totalCostFluid))
+                    )), pX, pY);
+                else
+                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                            Component.translatable("justdirethings.screen.fluid", this.container.getFluidStack().getHoverName(), MagicHelpers.withSuffix(this.container.getFluidAmount()), MagicHelpers.withSuffix(fluidMachineBE.getMaxMB())),
+                            Component.translatable("justdirethings.screen.paradoxfluidcost", MagicHelpers.withSuffix(totalCostFluid))
+                    )), pX, pY);
+            }
+        }
     }
 }

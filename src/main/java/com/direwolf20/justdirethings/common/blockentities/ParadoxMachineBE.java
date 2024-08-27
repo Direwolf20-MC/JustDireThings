@@ -218,6 +218,27 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         return returnMap;
     }
 
+    //The below two are for client side checking - skips the fake player checks
+    public boolean canPlace(BlockPos blockPos) {
+        if (!level.getBlockState(blockPos).canBeReplaced())
+            return false;
+        return true;
+    }
+
+    public Map<BlockPos, BlockState> testRestoreBlocks() {
+        Map<BlockPos, BlockState> blocksToRestore = getBlocksFromNBT();
+        Map<BlockPos, BlockState> returnMap = new HashMap<>();
+
+        for (Map.Entry<BlockPos, BlockState> entry : blocksToRestore.entrySet()) {
+            BlockPos blockPos = entry.getKey();
+            BlockState blockState = entry.getValue();
+            if (!canPlace(blockPos))
+                continue;
+            returnMap.put(blockPos, blockState);
+        }
+        return returnMap;
+    }
+
     private void restoreBlocks(FakePlayer fakePlayer) {
         //Map<BlockPos, BlockState> blocksToRestore = getBlocksFromNBT();
         int restoredCount = 0;
