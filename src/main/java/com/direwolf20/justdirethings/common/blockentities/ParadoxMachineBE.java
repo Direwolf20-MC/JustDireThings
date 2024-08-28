@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.network.data.ParadoxSyncPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -116,8 +117,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     public int getRunTime() {
         if (!isRunning) {
-            System.out.println("Not Running");
-            return 300;
+            return 300; //Should technically never happen
         }
         return (restoringBlocks.size() + restoringEntites.size()) * 10;
     }
@@ -137,7 +137,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             isRunning = true;
             fePerTick = getEnergyCostPerTick(getEnergyCost(restoringBlocks.size(), restoringEntites.size()));
             fluidPerTick = getFluidCostPerTick(getFluidCost(restoringBlocks.size(), restoringEntites.size()));
-            level.playSound(null, getBlockPos(), SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.25F, 0.25F);
+            level.playSound(null, getBlockPos(), SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, 0.25F);
             markDirtyClient();
         }
     }
@@ -153,7 +153,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
                 PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, level.getChunk(getBlockPos()).getPos(), new ParadoxSyncPayload(getBlockPos(), timeRunning));
             }
             if (timeRunning % 100 == 0 && !(timeRunning >= getRunTime())) {
-                level.playSound(null, getBlockPos(), SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.25F, 0.25F);
+                level.playSound(null, getBlockPos(), SoundEvents.PORTAL_AMBIENT, SoundSource.BLOCKS, 0.5F, 0.25F);
             }
             if (extractFluid(fluidPerTick) == fluidPerTick && extractEnergy(fePerTick, false) == fePerTick) {
                 timeRunning++;
@@ -279,7 +279,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     @Override
     public int getMaxMB() {
-        return 16000;
+        return Config.PARADOX_TOTAL_FLUID_CAPACITY.get();
     }
 
     @Override
@@ -319,20 +319,20 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     @Override
     public int getMaxEnergy() {
-        return 10000000;
+        return Config.PARADOX_TOTAL_RF_CAPACITY.get();
     }
 
     @Override
     public int getStandardEnergyCost() {
-        return 250000;
+        return getBlockEnergyCost();
     }
 
     public int getBlockEnergyCost() {
-        return 250000; //TODO Balance and Config
+        return Config.PARADOX_RF_PER_BLOCK.get();
     }
 
     public int getEntityEnergyCost() {
-        return 250000; //TODO Balance and Config
+        return Config.PARADOX_RF_PER_ENTITY.get();
     }
 
     public int getEnergyCostPerTick(int cost) {
@@ -387,11 +387,11 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     }
 
     public int getBlockFluidCost() {
-        return 50; //TODO Balance and Config
+        return Config.PARADOX_FLUID_PER_BLOCK.get();
     }
 
     public int getEntityFluidCost() {
-        return 50; //TODO Balance and Config
+        return Config.PARADOX_FLUID_PER_ENTITY.get();
     }
 
     public void postRun() {
