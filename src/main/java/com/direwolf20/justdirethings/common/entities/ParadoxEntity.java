@@ -1,14 +1,19 @@
 package com.direwolf20.justdirethings.common.entities;
 
+import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticleData;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class ParadoxEntity extends Entity {
     private static final EntityDataAccessor<Integer> REQUIRED_CONSUMPTION = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
@@ -27,6 +32,14 @@ public class ParadoxEntity extends Entity {
     public void tick() {
         super.tick();
         if (!level().isClientSide) {
+            float val = random.nextFloat();
+            //if (val < 0.99) return;
+            Vec3 targetVec = position().add(0, 0.5, 0);
+            ParadoxParticleData data = new ParadoxParticleData(new ItemStack(Items.COBBLESTONE), targetVec.x, targetVec.y, targetVec.z, 1);
+            double d0 = targetVec.x() - 2;
+            double d1 = targetVec.y() + 1.5;
+            double d2 = targetVec.z() + 2;
+            ((ServerLevel) level()).sendParticles(data, d0, d1, d2, 1, 0, 0, 0, 0);
         }
     }
 

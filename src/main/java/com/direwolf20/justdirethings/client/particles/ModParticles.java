@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.client.particles.alwaysvisibleparticle.Alwa
 import com.direwolf20.justdirethings.client.particles.glitterparticle.GlitterParticleType;
 import com.direwolf20.justdirethings.client.particles.gooexplodeparticle.GooExplodeParticleType;
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleType;
+import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticleType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -17,4 +18,5 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, ItemFlowParticleType> ITEMFLOWPARTICLE = PARTICLE_TYPES.register("itemflowparticle", () -> new ItemFlowParticleType(false));
     public static final DeferredHolder<ParticleType<?>, AlwaysVisibleParticleType> ALWAYSVISIBLEPARTICLE = PARTICLE_TYPES.register("alwaysvisibleparticle", () -> new AlwaysVisibleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, GlitterParticleType> GLITTERPARTICLE = PARTICLE_TYPES.register("glitter", () -> new GlitterParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, ParadoxParticleType> PARADOXPARTICLE = PARTICLE_TYPES.register("paradox", () -> new ParadoxParticleType(false));
 }

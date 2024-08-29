@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.client.particles.alwaysvisibleparticle.Alwa
 import com.direwolf20.justdirethings.client.particles.glitterparticle.GlitterParticleType;
 import com.direwolf20.justdirethings.client.particles.gooexplodeparticle.GooExplodeParticle;
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticle;
+import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticle;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -20,5 +21,6 @@ public class ParticleRenderDispatcher {
         evt.registerSpecial(ModParticles.ITEMFLOWPARTICLE.get(), ItemFlowParticle.FACTORY);
         evt.registerSpecial(ModParticles.ALWAYSVISIBLEPARTICLE.get(), AlwaysVisibleParticle.FACTORY);
         evt.registerSpriteSet(ModParticles.GLITTERPARTICLE.get(), GlitterParticleType.FACTORY::new);
+        evt.registerSpecial(ModParticles.PARADOXPARTICLE.get(), ParadoxParticle.FACTORY);
     }
 }
