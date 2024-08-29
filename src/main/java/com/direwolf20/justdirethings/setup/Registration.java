@@ -642,6 +642,12 @@ public class Registration {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("time_wand_entity"));
+    public static final DeferredHolder<EntityType<?>, EntityType<ParadoxEntity>> ParadoxEntity = ENTITY_TYPES.register("paradox_entity",
+            () -> EntityType.Builder.<ParadoxEntity>of(ParadoxEntity::new, MobCategory.MISC)
+                    .sized(1F, 1F)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("paradox_entity"));
 
     //Attributes
     public static final Holder<Attribute> PHASE = ATTRIBUTES.register("phase", () -> new RangedAttribute("justdirethings.phase", 0D, 0D, Double.MAX_VALUE).setSyncable(true));

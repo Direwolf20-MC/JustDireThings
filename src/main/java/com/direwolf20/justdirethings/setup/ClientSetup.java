@@ -223,6 +223,7 @@ public class ClientSetup {
         event.registerEntityRenderer(Registration.JustDireArrow.get(), JustDireArrowRenderer::new);
         event.registerEntityRenderer(Registration.JustDireAreaEffectCloud.get(), NoopRenderer::new);
         event.registerEntityRenderer(Registration.TimeWandEntity.get(), TimeWandEntityRender::new);
+        event.registerEntityRenderer(Registration.ParadoxEntity.get(), ParadoxEntityRender::new);
     }
 
     @SubscribeEvent
