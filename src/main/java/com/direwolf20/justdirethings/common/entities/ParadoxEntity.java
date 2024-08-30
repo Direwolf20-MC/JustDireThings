@@ -36,7 +36,7 @@ public class ParadoxEntity extends Entity {
             //if (val < 0.99) return;
             Vec3 targetVec = position().add(0, 0.5, 0);
             ParadoxParticleData data = new ParadoxParticleData(new ItemStack(Items.COBBLESTONE), targetVec.x, targetVec.y, targetVec.z, 1, this.getUUID());
-            Vec3 sourceBlock = new BlockPos(-431, 69, 453).getCenter();
+            Vec3 sourceBlock = new BlockPos(-436, 65, 453).getCenter();
             double d0 = sourceBlock.x;
             double d1 = sourceBlock.y;
             double d2 = sourceBlock.z;

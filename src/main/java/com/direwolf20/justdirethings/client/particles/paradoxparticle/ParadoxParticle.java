@@ -125,33 +125,33 @@ public class ParadoxParticle extends BreakingItemParticle {
 
                 if (distanceToCenter > fixedTransitionDistance) {
                     // Increase the gravitational pull significantly to bring the particle closer quickly
-                    baseGravitationalPull = 30 * (distanceToCenter);
+                    baseGravitationalPull = 30 * distanceToCenter; // Faster pull for close particles
                 } else {
                     // Reduce the gravitational pull for more stable orbiting
-                    baseGravitationalPull = 6;
+                    baseGravitationalPull = 12;
                 }
 
                 // Gravitational pull increases as distance decreases, with a damping factor
-                double proximityFactor = 1 / (distanceToCenter + 2.5);  // Adding 0.5 to smooth the pull curve
+                double proximityFactor = 1 / (distanceToCenter + 2.5);  // Adjusted for stronger pull at closer distances
                 double adjustedGravitationalPull = gravitationalPull * proximityFactor * baseGravitationalPull;
 
                 // Cap the gravitational pull to prevent it from becoming too extreme
-                /*double maxGravitationalPull = 5;
+                /*double maxGravitationalPull = 20; // Higher cap to allow stronger pull
                 if (adjustedGravitationalPull > maxGravitationalPull) {
                     adjustedGravitationalPull = maxGravitationalPull;
                 }*/
 
                 // Decrease the radius over time, but not beyond the minimum distance
-                currentRadius -= adjustedGravitationalPull * 0.02;
+                currentRadius -= adjustedGravitationalPull * 0.04; // Increase inward speed for closer distances
                 if (currentRadius < minDistance) {
                     currentRadius = minDistance;  // Prevent getting too close to the center
                 }
 
                 // Angular velocity increases with gravitational pull and proximity, but apply a damping factor
-                angularVelocity += adjustedGravitationalPull * 0.0001;
+                angularVelocity += adjustedGravitationalPull * 0.0004; // Faster angular velocity change
 
                 // Cap the angular velocity to prevent it from getting too high
-                double maxAngularVelocity = 0.02;
+                double maxAngularVelocity = 0.04;
                 if (angularVelocity > maxAngularVelocity) {
                     angularVelocity = maxAngularVelocity;
                 }
@@ -175,10 +175,6 @@ public class ParadoxParticle extends BreakingItemParticle {
                 this.setPos(this.x, this.y, this.z);
             } else {
                 // Stop movement when the particle is within the stopThreshold
-                this.xd = 0;
-                this.yd = 0;
-                this.zd = 0;
-                this.angularVelocity = 0;  // Stop any further rotation
                 this.remove();
             }
         }
