@@ -6,7 +6,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.BreakingItemParticle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +54,7 @@ public class ParadoxParticle extends BreakingItemParticle {
         this.lifetime = (int) (initialRadius * 20 / gravitationalPull); // Adjust lifetime based on distance and pull
 
         if (this.sprite == null) {
-            this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Blocks.COBBLESTONE), world, (LivingEntity) null, 0).getParticleIcon());
+            this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Blocks.COBBLESTONE), world, null, 0).getParticleIcon());
         }
 
         this.scale(0.5f);
@@ -119,19 +118,28 @@ public class ParadoxParticle extends BreakingItemParticle {
             // Stop movement when the particle gets very close to the center
             double stopThreshold = 0.01;  // Distance threshold to stop the particle
             double minDistance = 0.005;   // Minimum allowed distance from the center to prevent overshooting
+            double fixedTransitionDistance = 2.0; // Fixed distance from the black hole to start orbiting
+
             if (distanceToCenter > stopThreshold) {
-                // Base gravitational pull factor that can be easily adjusted
-                double baseGravitationalPull = 12;
+                double baseGravitationalPull;
+
+                if (distanceToCenter > fixedTransitionDistance) {
+                    // Increase the gravitational pull significantly to bring the particle closer quickly
+                    baseGravitationalPull = 30 * (distanceToCenter);
+                } else {
+                    // Reduce the gravitational pull for more stable orbiting
+                    baseGravitationalPull = 6;
+                }
 
                 // Gravitational pull increases as distance decreases, with a damping factor
-                double proximityFactor = 1 / (distanceToCenter + 0.5);  // Adding 0.5 to smooth the pull curve
+                double proximityFactor = 1 / (distanceToCenter + 2.5);  // Adding 0.5 to smooth the pull curve
                 double adjustedGravitationalPull = gravitationalPull * proximityFactor * baseGravitationalPull;
 
                 // Cap the gravitational pull to prevent it from becoming too extreme
-                double maxGravitationalPull = 3;
+                /*double maxGravitationalPull = 5;
                 if (adjustedGravitationalPull > maxGravitationalPull) {
                     adjustedGravitationalPull = maxGravitationalPull;
-                }
+                }*/
 
                 // Decrease the radius over time, but not beyond the minimum distance
                 currentRadius -= adjustedGravitationalPull * 0.02;
@@ -143,7 +151,7 @@ public class ParadoxParticle extends BreakingItemParticle {
                 angularVelocity += adjustedGravitationalPull * 0.0001;
 
                 // Cap the angular velocity to prevent it from getting too high
-                double maxAngularVelocity = 0.002;
+                double maxAngularVelocity = 0.02;
                 if (angularVelocity > maxAngularVelocity) {
                     angularVelocity = maxAngularVelocity;
                 }
