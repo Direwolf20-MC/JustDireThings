@@ -69,17 +69,40 @@ public class ParadoxParticle extends BreakingItemParticle {
         if (this.age++ >= this.lifetime) {
             this.remove();
         } else {
+            // Calculate current distance to the black hole in all three dimensions
+            double dx = this.x - targetX;
+            double dy = this.y - targetY;
+            double dz = this.z - targetZ;
+            double distanceToCenter = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
             // Stop movement when the particle gets very close to the center
             double stopThreshold = 0.01;  // Distance threshold to stop the particle
-            if (currentRadius > stopThreshold) {
-                // Decrease the radius over time
-                currentRadius -= gravitationalPull * 0.015;  // Adjust the rate of inward movement based on gravitational pull
+            double minDistance = 0.005;   // Minimum allowed distance from the center to prevent overshooting
+            if (distanceToCenter > stopThreshold) {
+                // Base gravitational pull factor that can be easily adjusted
+                double baseGravitationalPull = 4;
 
-                // Increase angular velocity as it spirals inward
-                angularVelocity += gravitationalPull * 0.00005;  // Adjust the rate of rotation increase
+                // Gravitational pull increases as distance decreases, with a damping factor
+                double proximityFactor = 1 / (distanceToCenter + 0.5);  // Adding 0.5 to smooth the pull curve
+                double adjustedGravitationalPull = gravitationalPull * proximityFactor * baseGravitationalPull;
+
+                // Cap the gravitational pull to prevent it from becoming too extreme
+                double maxGravitationalPull = 6;
+                if (adjustedGravitationalPull > maxGravitationalPull) {
+                    adjustedGravitationalPull = maxGravitationalPull;
+                }
+
+                // Decrease the radius over time, but not beyond the minimum distance
+                currentRadius -= adjustedGravitationalPull * 0.03;
+                if (currentRadius < minDistance) {
+                    currentRadius = minDistance;  // Prevent getting too close to the center
+                }
+
+                // Angular velocity increases with gravitational pull and proximity, but apply a damping factor
+                angularVelocity += adjustedGravitationalPull * 0.000025;
 
                 // Cap the angular velocity to prevent it from getting too high
-                double maxAngularVelocity = 0.00075;  // Define a maximum angular velocity
+                double maxAngularVelocity = 0.00055;
                 if (angularVelocity > maxAngularVelocity) {
                     angularVelocity = maxAngularVelocity;
                 }
@@ -87,35 +110,17 @@ public class ParadoxParticle extends BreakingItemParticle {
                 // Update the current angle for this tick
                 currentAngle += angularVelocity;
 
-                // Calculate the current direction vector from the particle to the center of the black hole
-                double dx = this.x - targetX;
-                double dz = this.z - targetZ;
-
-                // Calculate the current distance to the center of the black hole
-                double distanceToCenter = Math.sqrt(dx * dx + dz * dz);
-
                 // Normalize the direction vector to get the unit direction
                 double directionX = dx / distanceToCenter;
+                double directionY = dy / distanceToCenter;
                 double directionZ = dz / distanceToCenter;
 
-                // Calculate the new X and Z positions based on the current radius and angle
+                // Calculate the new positions for X, Y, and Z based on current radius, angle, and direction
                 this.x = targetX + currentRadius * (Math.cos(currentAngle) * directionX - Math.sin(currentAngle) * directionZ);
                 this.z = targetZ + currentRadius * (Math.sin(currentAngle) * directionX + Math.cos(currentAngle) * directionZ);
 
-                // Adjust the Y position gradually towards the target
-                double deltaY = (targetY - this.y);
-                double smoothingFactor = 0.008;
-                double minYd = 0.0075;  // Minimum allowed yd value to prevent it from getting too small
-
-                if (Math.abs(deltaY) > 0.01) {
-                    this.yd = deltaY * smoothingFactor;
-                    if (Math.abs(this.yd) < minYd) {
-                        this.yd = Math.copySign(minYd, this.yd);  // Ensure yd doesn't get too small while maintaining direction
-                    }
-                    this.y += this.yd;
-                } else {
-                    this.y = targetY;  // Snap to the target Y-level once close enough
-                }
+                // Adjust the Y position proportionally to the gravitational pull and direction
+                this.y = targetY + currentRadius * directionY;  // Keep Y movement aligned with radial distance
 
                 // Apply the updated position
                 this.setPos(this.x, this.y, this.z);
@@ -125,6 +130,7 @@ public class ParadoxParticle extends BreakingItemParticle {
                 this.yd = 0;
                 this.zd = 0;
                 this.angularVelocity = 0;  // Stop any further rotation
+                this.remove();
             }
         }
     }
