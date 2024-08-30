@@ -9,6 +9,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -28,10 +30,12 @@ public class ParadoxEntity extends Entity {
     private static final EntityDataAccessor<Integer> REQUIRED_CONSUMPTION = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> CONSUMPTION = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> RADIUS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> SHRINK_SCALE = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.FLOAT);
 
     private final Map<BlockPos, Integer> blocksToAbsorb = new HashMap<>();
     private int maxRadius = 5;
-    private double itemSuckSpeed = 0.1;
+    private double itemSuckSpeed = 0.25;
+    private boolean collapsing = false;
 
     public ParadoxEntity(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
@@ -46,16 +50,24 @@ public class ParadoxEntity extends Entity {
     public void tick() {
         super.tick();
         this.maxRadius = 4;
-        itemSuckSpeed = 0.25;
         int currentRadius = getRadius();
         if (!level().isClientSide) {
+            if (collapsing) {
+                float scale = getShrinkScale() - 0.02f; // Decrease the scale over time
+                setShrinkScale(Math.max(scale, 0.0f)); // Ensure scale doesn't go below 0
+                if (getShrinkScale() <= 0.01f) {
+                    this.discard(); // Remove the entity once fully shrunk
+                }
+                return;
+            }
+
             handleBlockAbsorption(currentRadius);
             handleItemAbsorption(currentRadius);
         }
     }
 
     private void handleBlockAbsorption(int currentRadius) {
-        if (this.tickCount % 200 == 0 && currentRadius < maxRadius) {
+        if (this.tickCount % 20 == 0 && currentRadius < maxRadius) {
             currentRadius++;
             setRadius(currentRadius);
         }
@@ -112,7 +124,7 @@ public class ParadoxEntity extends Entity {
             item.setDeltaMovement(direction);
 
             // Check if the item is close enough to be voided
-            if (position().closerThan(item.position(), 0.25)) {
+            if (position().closerThan(item.position(), 0.125)) {
                 ItemStack itemStack = item.getItem();
                 if (itemStack.is(Registration.TimeCrystal.get()))
                     collapse();
@@ -122,7 +134,8 @@ public class ParadoxEntity extends Entity {
     }
 
     private void collapse() {
-        this.discard(); //Todo cool stuff
+        collapsing = true;
+        level().playSound(null, getX(), getY(), getZ(), SoundEvents.WITHER_AMBIENT, SoundSource.HOSTILE, 1.0f, 0.25f);
     }
 
     public boolean isBlockValid(BlockPos blockPos) {
@@ -143,6 +156,7 @@ public class ParadoxEntity extends Entity {
         builder.define(REQUIRED_CONSUMPTION, 100);
         builder.define(CONSUMPTION, 0);
         builder.define(RADIUS, 0);
+        builder.define(SHRINK_SCALE, 1.0f);
     }
 
     public int getRadius() {
@@ -151,6 +165,14 @@ public class ParadoxEntity extends Entity {
 
     public void setRadius(int radius) {
         this.entityData.set(RADIUS, radius);
+    }
+
+    public float getShrinkScale() {
+        return this.entityData.get(SHRINK_SCALE);
+    }
+
+    public void setShrinkScale(float scale) {
+        this.entityData.set(SHRINK_SCALE, scale);
     }
 
     public int getRequiredConsumption() {
