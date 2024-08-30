@@ -7,7 +7,6 @@ import com.direwolf20.justdirethings.common.entities.ParadoxEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -15,7 +14,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -70,33 +68,20 @@ public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
     public void render(ParadoxEntity paradoxEntity, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         matrixStackIn.pushPose();
 
-        // Rotate towards the player
-        Player player = Minecraft.getInstance().player;
-        Vec3 playerPos = player.getEyePosition(partialTicks);
-        Vec3 paradoxPos = paradoxEntity.position();
-
-        // Center the rotation and scaling on the entity's bounding box
-        //matrixStackIn.translate(0.5, paradoxEntity.getBbHeight() / 2, 0.5);
-
-        // Rotate towards the player
-        //float yaw = 180.0F - (float) Math.toDegrees(Math.atan2(playerPos.x - paradoxPos.x, playerPos.z - paradoxPos.z));
-        //matrixStackIn.mulPose(new Quaternionf().rotationAxis(Mth.DEG_TO_RAD * yaw, 0, 1, 0));
-
-        // Scale the core of the Paradox
-        //float scale = 0.5f + 0.1f * (float) Math.sin(paradoxEntity.tickCount / 10.0);
-        //matrixStackIn.scale(scale, scale, scale);
-
-        // Render the glowing core as a solid cube
-        //RenderHelpers.renderBoxSolid(matrixStackIn, matrixStackIn.last().pose(), bufferIn, paradoxEntity.getBoundingBox(), 1, 0, 0, 0.3f);
-
         matrixStackIn.pushPose();
+        // Calculate the current scale based on the interpolated radius
+        float currentRadius = paradoxEntity.getRadius() + 1;
+        if (paradoxEntity.getGrowthTicks() > 0) {
+            currentRadius = currentRadius + (Math.min(1.0f, (float) paradoxEntity.getGrowthTicks() / paradoxEntity.growthDuration));
+        }
+
         // Calculate the scale for pulsing
         matrixStackIn.translate(0, 0.5, 0);
         float pulseScale = 0.25f + 0.025f * (float) Math.sin((paradoxEntity.tickCount + partialTicks) / 10.0);
         float shrinkScale = paradoxEntity.getShrinkScale(); // Get the current shrink scale
         // Apply the scale transformation for pulsing
         matrixStackIn.scale(pulseScale * shrinkScale, pulseScale * shrinkScale, pulseScale * shrinkScale);
-        RenderHelpers.renderSphere(matrixStackIn, bufferIn, Color.BLACK, 0.25f * (float) Math.pow(paradoxEntity.getRadius() + 1, 1.25), packedLightIn);
+        RenderHelpers.renderSphere(matrixStackIn, bufferIn, Color.BLACK, 0.25f * (float) Math.pow(currentRadius, 1.25), packedLightIn);
         matrixStackIn.popPose();
 
         // Render the swirling effect

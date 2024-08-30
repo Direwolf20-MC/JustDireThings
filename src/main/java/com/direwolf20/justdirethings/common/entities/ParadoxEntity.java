@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -31,11 +32,15 @@ public class ParadoxEntity extends Entity {
     private static final EntityDataAccessor<Integer> CONSUMPTION = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> RADIUS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> SHRINK_SCALE = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> TARGET_RADIUS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> GROWTH_TICKS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
 
+    public int growthDuration = 60; // Time in ticks for a smooth growth
     private final Map<BlockPos, Integer> blocksToAbsorb = new HashMap<>();
     private int maxRadius = 5;
     private double itemSuckSpeed = 0.25;
     private boolean collapsing = false;
+    private int maxBlocksForPerf = 40;
 
     public ParadoxEntity(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
@@ -49,8 +54,10 @@ public class ParadoxEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        this.maxRadius = 4;
+        this.maxRadius = 8;
+        maxBlocksForPerf = 40;
         int currentRadius = getRadius();
+        int targetRadius = getTargetRadius();
         if (!level().isClientSide) {
             if (collapsing) {
                 float scale = getShrinkScale() - 0.02f; // Decrease the scale over time
@@ -61,17 +68,29 @@ public class ParadoxEntity extends Entity {
                 return;
             }
 
+            if (this.tickCount % 200 == 0 && currentRadius < maxRadius) {
+                targetRadius++;
+                setTargetRadius(targetRadius);
+            }
+
+            // Smoothly interpolate the radius
+            if (currentRadius < targetRadius) {
+                int growthTicks = getGrowthTicks();
+                growthTicks++;
+                setGrowthTicks(growthTicks);
+
+                if (growthTicks >= growthDuration) {
+                    setRadius(targetRadius);
+                    setGrowthTicks(0);
+                }
+            }
+
             handleBlockAbsorption(currentRadius);
             handleItemAbsorption(currentRadius);
         }
     }
 
     private void handleBlockAbsorption(int currentRadius) {
-        if (this.tickCount % 20 == 0 && currentRadius < maxRadius) {
-            currentRadius++;
-            setRadius(currentRadius);
-        }
-
         for (BlockPos pos : BlockPos.betweenClosed(getOnPos().offset(-currentRadius, -currentRadius, -currentRadius), getOnPos().offset(currentRadius, currentRadius, currentRadius))) {
             float rand = random.nextFloat();
             if (isBlockValid(pos) && rand < 0.0125f) {
@@ -90,18 +109,38 @@ public class ParadoxEntity extends Entity {
             }
             int timeLeft = entry.getValue() - 1;
 
+
             Vec3 targetVec = position().add(0, 0.5, 0);
             ItemStack blockStack = new ItemStack(level().getBlockState(pos).getBlock());
             if (blockStack.equals(ItemStack.EMPTY) || blockStack.getItem().equals(Items.AIR))
                 blockStack = new ItemStack(Items.STONE);
             ParadoxParticleData data = new ParadoxParticleData(blockStack, targetVec.x, targetVec.y, targetVec.z, 1, this.getUUID());
 
-            ((ServerLevel) level()).sendParticles(data, pos.getX(), pos.getY(), pos.getZ(), 1, random.nextDouble() - 0.5, random.nextDouble() - 0.5, random.nextDouble() - 0.5, 0.1);
+            Vec3 sourcePos = pos.getCenter();
+            double x = sourcePos.x + (random.nextDouble() - 0.5);
+            double y = sourcePos.y + (random.nextDouble() - 0.5);
+            double z = sourcePos.z + (random.nextDouble() - 0.5);
+            float spawnChance = 1;
+            if (blocksToAbsorb.size() > maxBlocksForPerf * 2)
+                spawnChance = 0.25f;
+            else if (blocksToAbsorb.size() > maxBlocksForPerf)
+                spawnChance = 0.50f;
+
+            if (random.nextFloat() < spawnChance)
+                ((ServerLevel) level()).sendParticles(data, x, y, z, 1, 0, 0, 0, 0.1);
 
             // Update the countdown
             if (timeLeft <= 0) {
-                for (int i = 0; i < 5; i++) {
-                    ((ServerLevel) level()).sendParticles(data, pos.getX(), pos.getY(), pos.getZ(), 10, random.nextDouble() - 0.5, random.nextDouble() - 0.5, random.nextDouble() - 0.5, 0.1);
+                int particles = 50;
+                if (blocksToAbsorb.size() > maxBlocksForPerf * 2)
+                    particles = 10;
+                else if (blocksToAbsorb.size() > maxBlocksForPerf)
+                    particles = 20;
+                for (int i = 0; i < particles; i++) {
+                    x = sourcePos.x + (random.nextDouble() - 0.5);
+                    y = sourcePos.y + (random.nextDouble() - 0.5);
+                    z = sourcePos.z + (random.nextDouble() - 0.5);
+                    ((ServerLevel) level()).sendParticles(data, x, y, z, 1, 0, 0, 0, 0.1);
                 }
 
                 // Set the block to air and safely remove from the map
@@ -148,6 +187,12 @@ public class ParadoxEntity extends Entity {
             return false;
         if (blockState.getDestroySpeed(level(), blockPos) < 0)
             return false;
+        if (blockState.getBlock() instanceof LiquidBlock liquidBlock) {
+            if (blockState.getFluidState().isSource())
+                return true;
+            else
+                return false;
+        }
         return true;
     }
 
@@ -157,6 +202,8 @@ public class ParadoxEntity extends Entity {
         builder.define(CONSUMPTION, 0);
         builder.define(RADIUS, 0);
         builder.define(SHRINK_SCALE, 1.0f);
+        builder.define(TARGET_RADIUS, 0);
+        builder.define(GROWTH_TICKS, 0);
     }
 
     public int getRadius() {
@@ -165,6 +212,23 @@ public class ParadoxEntity extends Entity {
 
     public void setRadius(int radius) {
         this.entityData.set(RADIUS, radius);
+    }
+
+    public int getGrowthTicks() {
+        return this.entityData.get(GROWTH_TICKS);
+    }
+
+    public void setGrowthTicks(int growthTicks) {
+        this.entityData.set(GROWTH_TICKS, growthTicks);
+    }
+
+    public int getTargetRadius() {
+        return this.entityData.get(TARGET_RADIUS);
+    }
+
+    public void setTargetRadius(int radius) {
+        this.entityData.set(TARGET_RADIUS, radius);
+        setGrowthTicks(0); // Reset growth ticks
     }
 
     public float getShrinkScale() {
@@ -201,11 +265,14 @@ public class ParadoxEntity extends Entity {
             this.entityData.set(REQUIRED_CONSUMPTION, compound.getInt("requiredConsumption"));
         if (compound.contains("consumed"))
             this.entityData.set(CONSUMPTION, compound.getInt("consumed"));
+        if (compound.contains("radius"))
+            this.entityData.set(RADIUS, compound.getInt("radius"));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putInt("requiredConsumption", getRequiredConsumption());
         compound.putInt("consumed", getConsumed());
+        compound.putInt("radius", getRadius());
     }
 }

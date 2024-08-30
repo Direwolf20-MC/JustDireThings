@@ -1,13 +1,20 @@
 package com.direwolf20.justdirethings.client.particles.paradoxparticle;
 
 
+import com.direwolf20.justdirethings.common.entities.ParadoxEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.BreakingItemParticle;
 import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -57,6 +64,17 @@ public class ParadoxParticle extends BreakingItemParticle {
             this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Blocks.COBBLESTONE), world, null, 0).getParticleIcon());
         }
 
+        BlockState blockState = level.getBlockState(new BlockPos((int) x, (int) y, (int) z));
+        if (blockState.getBlock() instanceof LiquidBlock liquidBlock) {
+            FluidStack fluidStack = new FluidStack(liquidBlock.fluid, 1000);
+            this.setSprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack)));
+            //this.setSprite(Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStack.getFluid().getAttributes().getStillTexture(fluidStack)));
+            int i = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
+            this.rCol *= (float) (i >> 16 & 255) / 255.0F;
+            this.gCol *= (float) (i >> 8 & 255) / 255.0F;
+            this.bCol *= (float) (i & 255) / 255.0F;
+        }
+
         this.scale(0.5f);
         this.lifetime = 600;
     }
@@ -66,10 +84,10 @@ public class ParadoxParticle extends BreakingItemParticle {
     }
 
     @Nullable
-    private Entity findEntityByUUID(ClientLevel world, UUID uuid) {
+    private ParadoxEntity findEntityByUUID(ClientLevel world, UUID uuid) {
         for (Entity entity : world.entitiesForRendering()) { // Iterating through all entities
-            if (entity.getUUID().equals(uuid)) {
-                return entity;
+            if (entity.getUUID().equals(uuid) && entity instanceof ParadoxEntity paradoxEntity) {
+                return paradoxEntity;
             }
         }
         return null; // Return null if no matching entity is found
@@ -93,8 +111,8 @@ public class ParadoxParticle extends BreakingItemParticle {
         this.yo = this.y;
         this.zo = this.z;
 
-        Entity entity = findEntityByUUID(level, paradox_uuid);
-        if (entity == null || dying) {
+        ParadoxEntity entity = findEntityByUUID(level, paradox_uuid);
+        if (entity == null || entity.getShrinkScale() < 1 || dying) {
             if (!dying) {
                 this.gravity = 0.04f; // Adjust gravity as needed
                 this.hasPhysics = true;
