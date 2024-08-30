@@ -52,7 +52,7 @@ public class ParadoxParticle extends BreakingItemParticle {
             this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Blocks.COBBLESTONE), world, (LivingEntity) null, 0).getParticleIcon());
         }
 
-        this.scale(0.2f);
+        this.scale(0.5f);
         this.lifetime = 600;
     }
 
@@ -80,29 +80,29 @@ public class ParadoxParticle extends BreakingItemParticle {
             double minDistance = 0.005;   // Minimum allowed distance from the center to prevent overshooting
             if (distanceToCenter > stopThreshold) {
                 // Base gravitational pull factor that can be easily adjusted
-                double baseGravitationalPull = 4;
+                double baseGravitationalPull = 12;
 
                 // Gravitational pull increases as distance decreases, with a damping factor
                 double proximityFactor = 1 / (distanceToCenter + 0.5);  // Adding 0.5 to smooth the pull curve
                 double adjustedGravitationalPull = gravitationalPull * proximityFactor * baseGravitationalPull;
 
                 // Cap the gravitational pull to prevent it from becoming too extreme
-                double maxGravitationalPull = 6;
+                double maxGravitationalPull = 3;
                 if (adjustedGravitationalPull > maxGravitationalPull) {
                     adjustedGravitationalPull = maxGravitationalPull;
                 }
 
                 // Decrease the radius over time, but not beyond the minimum distance
-                currentRadius -= adjustedGravitationalPull * 0.03;
+                currentRadius -= adjustedGravitationalPull * 0.02;
                 if (currentRadius < minDistance) {
                     currentRadius = minDistance;  // Prevent getting too close to the center
                 }
 
                 // Angular velocity increases with gravitational pull and proximity, but apply a damping factor
-                angularVelocity += adjustedGravitationalPull * 0.000025;
+                angularVelocity += adjustedGravitationalPull * 0.0001;
 
                 // Cap the angular velocity to prevent it from getting too high
-                double maxAngularVelocity = 0.00055;
+                double maxAngularVelocity = 0.002;
                 if (angularVelocity > maxAngularVelocity) {
                     angularVelocity = maxAngularVelocity;
                 }
@@ -120,7 +120,7 @@ public class ParadoxParticle extends BreakingItemParticle {
                 this.z = targetZ + currentRadius * (Math.sin(currentAngle) * directionX + Math.cos(currentAngle) * directionZ);
 
                 // Adjust the Y position proportionally to the gravitational pull and direction
-                this.y = targetY + currentRadius * directionY;  // Keep Y movement aligned with radial distance
+                this.y = targetY + currentRadius * directionY * 0.975;  // Keep Y movement aligned with radial distance
 
                 // Apply the updated position
                 this.setPos(this.x, this.y, this.z);

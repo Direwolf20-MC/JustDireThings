@@ -103,8 +103,8 @@ public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
 
         // Render the lightning arcs
         // Base colors for dark red and dark purple
-        Color baseRed = new Color(200, 0, 0, 255);   // Dark red
-        Color basePurple = new Color(75, 0, 130, 255); // Dark purple
+        Color baseRed = new Color(100, 0, 0, 255);   // Dark red
+        Color basePurple = new Color(75, 0, 0, 255); // Dark purple
 
         // Randomly interpolate between dark red and dark purple
         float mixRatio = random.nextFloat();
