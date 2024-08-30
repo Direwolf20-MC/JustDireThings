@@ -95,7 +95,7 @@ public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
         float pulseScale = 0.25f + 0.025f * (float) Math.sin((paradoxEntity.tickCount + partialTicks) / 10.0);
         // Apply the scale transformation for pulsing
         matrixStackIn.scale(pulseScale, pulseScale, pulseScale);
-        RenderHelpers.renderSphere(matrixStackIn, bufferIn, Color.BLACK, 0.25f, packedLightIn);
+        RenderHelpers.renderSphere(matrixStackIn, bufferIn, Color.BLACK, 0.25f * (float) Math.pow(paradoxEntity.getRadius() + 1, 1.25), packedLightIn);
         matrixStackIn.popPose();
 
         // Render the swirling effect
@@ -112,7 +112,7 @@ public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
         int green = (int) (baseRed.getGreen() * (1 - mixRatio) + basePurple.getGreen() * mixRatio);
         int blue = (int) (baseRed.getBlue() * (1 - mixRatio) + basePurple.getBlue() * mixRatio);
 
-        renderLightning2(paradoxEntity, matrixStackIn, bufferIn, packedLightIn, new Color(red, green, blue, 255), 0.025f, 1f, 20, 0.7f, 5, 0.25f, 5, true);
+        renderLightning2(paradoxEntity, matrixStackIn, bufferIn, packedLightIn, new Color(red, green, blue, 255), 0.025f, (float) Math.pow(paradoxEntity.getRadius() + 1, 1.25), 20, 0.7f, 5, 0.25f, 5, true);
 
         matrixStackIn.popPose();
 

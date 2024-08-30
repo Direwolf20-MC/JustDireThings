@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticleData;
+import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
@@ -23,8 +25,8 @@ import java.util.Map;
 public class ParadoxEntity extends Entity {
     private static final EntityDataAccessor<Integer> REQUIRED_CONSUMPTION = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> CONSUMPTION = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> RADIUS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
 
-    private int currentRadius = 0;
     private final Map<BlockPos, Integer> blocksToAbsorb = new HashMap<>();
     private int maxRadius = 5;
 
@@ -41,14 +43,16 @@ public class ParadoxEntity extends Entity {
     public void tick() {
         super.tick();
         this.maxRadius = 4;
+        int currentRadius = getRadius();
         if (!level().isClientSide) {
             // Every 100 ticks, expand the radius and add new blocks to absorb
             if (this.tickCount % 200 == 0 && currentRadius < maxRadius) {
                 currentRadius++;
+                setRadius(currentRadius);
             }
             for (BlockPos pos : BlockPos.betweenClosed(getOnPos().offset(-currentRadius, -currentRadius, -currentRadius), getOnPos().offset(currentRadius, currentRadius, currentRadius))) {
                 float rand = random.nextFloat();
-                if (!level().isEmptyBlock(pos) && !blocksToAbsorb.containsKey(pos) && rand < 0.0125f) {
+                if (isBlockValid(pos) && rand < 0.0125f) {
                     // Add block with a countdown between 40 and 80 ticks
                     blocksToAbsorb.put(new BlockPos(pos), 40 + random.nextInt(41));
                 }
@@ -98,10 +102,32 @@ public class ParadoxEntity extends Entity {
         }
     }
 
+    public boolean isBlockValid(BlockPos blockPos) {
+        BlockState blockState = level().getBlockState(blockPos);
+        if (blockState.isAir())
+            return false;
+        if (blockState.is(JustDireBlockTags.PARADOX_ABSORB_DENY))
+            return false;
+        if (blocksToAbsorb.containsKey(blockPos))
+            return false;
+        if (blockState.getDestroySpeed(level(), blockPos) < 0)
+            return false;
+        return true;
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(REQUIRED_CONSUMPTION, 100);
         builder.define(CONSUMPTION, 0);
+        builder.define(RADIUS, 0);
+    }
+
+    public int getRadius() {
+        return this.entityData.get(RADIUS);
+    }
+
+    public void setRadius(int radius) {
+        this.entityData.set(RADIUS, radius);
     }
 
     public int getRequiredConsumption() {

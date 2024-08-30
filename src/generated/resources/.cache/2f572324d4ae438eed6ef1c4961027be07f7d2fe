@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-25T12:44:38.6659819	JustDireThings Tags
+// 1.21.1	2024-08-30T12:59:31.563962	JustDireThings Tags
 3f1af1854f73f0ca55ec9d76439efe025d53baaf data/c/tags/block/budding_blocks.json
 f9398184c0216b0a1898a13ab326b459417ec790 data/c/tags/block/buds.json
 691444261459e5b538067e8cd03db2fbe1b3371d data/c/tags/block/clusters.json
@@ -7,6 +7,7 @@ f9398184c0216b0a1898a13ab326b459417ec790 data/c/tags/block/buds.json
 6b759feacfe6972f14253353017194b6d77858d7 data/justdirethings/tags/block/eclipsegate_deny.json
 29122bb6178e24ece33c1afc6d82c8e8e9ae4611 data/justdirethings/tags/block/lawnmowerable.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/block/noautoclick.json
+cfab2ab481bf476a645d326b87627918009b9e50 data/justdirethings/tags/block/paradox_absorb_deny.json
 517625696f89da7636e3126a405201cc977453f0 data/justdirethings/tags/block/paradox_allow.json
 fd8f34ea7c3f46b4031a8323009cfaffab88474e data/justdirethings/tags/block/phase_deny.json
 b73bf681aa4023a1ac69623485bbec13846a282a data/justdirethings/tags/block/swapper_deny.json
