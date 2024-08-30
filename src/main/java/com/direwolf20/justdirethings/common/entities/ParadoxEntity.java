@@ -13,11 +13,20 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ParadoxEntity extends Entity {
     private static final EntityDataAccessor<Integer> REQUIRED_CONSUMPTION = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> CONSUMPTION = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
+
+    private int currentRadius = 0;
+    private final Map<BlockPos, Integer> blocksToAbsorb = new HashMap<>();
+    private int maxRadius = 5;
 
     public ParadoxEntity(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
@@ -31,8 +40,53 @@ public class ParadoxEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
+        this.maxRadius = 4;
         if (!level().isClientSide) {
-            float val = random.nextFloat();
+            // Every 100 ticks, expand the radius and add new blocks to absorb
+            if (this.tickCount % 200 == 0 && currentRadius < maxRadius) {
+                currentRadius++;
+            }
+            for (BlockPos pos : BlockPos.betweenClosed(getOnPos().offset(-currentRadius, -currentRadius, -currentRadius), getOnPos().offset(currentRadius, currentRadius, currentRadius))) {
+                float rand = random.nextFloat();
+                if (!level().isEmptyBlock(pos) && !blocksToAbsorb.containsKey(pos) && rand < 0.0125f) {
+                    // Add block with a countdown between 40 and 80 ticks
+                    blocksToAbsorb.put(new BlockPos(pos), 40 + random.nextInt(41));
+                }
+            }
+            // Process blocks to absorb safely
+            Iterator<Map.Entry<BlockPos, Integer>> iterator = blocksToAbsorb.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<BlockPos, Integer> entry = iterator.next();
+                BlockPos pos = entry.getKey();
+                if (level().isEmptyBlock(pos)) {
+                    iterator.remove();
+                    continue;
+                }
+                int timeLeft = entry.getValue() - 1;
+
+                Vec3 targetVec = position().add(0, 0.5, 0);
+                ItemStack blockStack = new ItemStack(level().getBlockState(pos).getBlock());
+                if (blockStack.equals(ItemStack.EMPTY) || blockStack.getItem().equals(Items.AIR))
+                    blockStack = new ItemStack(Items.STONE);
+                ParadoxParticleData data = new ParadoxParticleData(blockStack, targetVec.x, targetVec.y, targetVec.z, 1, this.getUUID());
+
+                ((ServerLevel) level()).sendParticles(data, pos.getX(), pos.getY(), pos.getZ(), 1, random.nextDouble() - 0.5, random.nextDouble() - 0.5, random.nextDouble() - 0.5, 0.1);
+
+
+                // Update the countdown
+                if (timeLeft <= 0) {
+                    for (int i = 0; i < 5; i++) {
+                        ((ServerLevel) level()).sendParticles(data, pos.getX(), pos.getY(), pos.getZ(), 10, random.nextDouble() - 0.5, random.nextDouble() - 0.5, random.nextDouble() - 0.5, 0.1);
+                    }
+
+                    // Set the block to air and safely remove from the map
+                    level().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                    iterator.remove();
+                } else {
+                    entry.setValue(timeLeft);
+                }
+            }
+            /*float val = random.nextFloat();
             //if (val < 0.99) return;
             Vec3 targetVec = position().add(0, 0.5, 0);
             ParadoxParticleData data = new ParadoxParticleData(new ItemStack(Items.COBBLESTONE), targetVec.x, targetVec.y, targetVec.z, 1, this.getUUID());
@@ -40,7 +94,7 @@ public class ParadoxEntity extends Entity {
             double d0 = sourceBlock.x;
             double d1 = sourceBlock.y;
             double d2 = sourceBlock.z;
-            ((ServerLevel) level()).sendParticles(data, d0, d1, d2, 1, 0.25, 0.25, 0.25, 0);
+            ((ServerLevel) level()).sendParticles(data, d0, d1, d2, 1, 0.25, 0.25, 0.25, 0);*/
         }
     }
 
