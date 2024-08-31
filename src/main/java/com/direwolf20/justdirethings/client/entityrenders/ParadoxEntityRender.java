@@ -79,6 +79,7 @@ public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
         matrixStackIn.translate(0, 0.5, 0);
         float pulseScale = 0.25f + 0.025f * (float) Math.sin((paradoxEntity.tickCount + partialTicks) / 10.0);
         float shrinkScale = paradoxEntity.getShrinkScale(); // Get the current shrink scale
+
         // Apply the scale transformation for pulsing
         matrixStackIn.scale(pulseScale * shrinkScale, pulseScale * shrinkScale, pulseScale * shrinkScale);
         RenderHelpers.renderSphere(matrixStackIn, bufferIn, Color.BLACK, 0.25f * (float) Math.pow(currentRadius, 1.25), packedLightIn);

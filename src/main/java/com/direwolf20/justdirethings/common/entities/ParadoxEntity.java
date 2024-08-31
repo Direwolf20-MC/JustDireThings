@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.entities;
 import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -73,6 +74,10 @@ public class ParadoxEntity extends Entity {
                 setTargetRadius(targetRadius);
             }
 
+            if (tickCount == 1 || tickCount % 600 == 0)
+                level().playSound(null, getX(), getY(), getZ(), Registration.PARADOX_AMBIENT.get(), SoundSource.HOSTILE, 1F, 1f);
+
+
             // Smoothly interpolate the radius
             if (currentRadius < targetRadius) {
                 int growthTicks = getGrowthTicks();
@@ -87,6 +92,10 @@ public class ParadoxEntity extends Entity {
 
             handleBlockAbsorption(currentRadius);
             handleItemAbsorption(currentRadius);
+        } else {
+            if (getShrinkScale() < 1.0f) {
+                Minecraft.getInstance().getSoundManager().stop(Registration.PARADOX_AMBIENT.get().getLocation(), SoundSource.HOSTILE);
+            }
         }
     }
 
