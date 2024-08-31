@@ -36,12 +36,14 @@ public class ParadoxEntity extends Entity {
     private static final EntityDataAccessor<Integer> TARGET_RADIUS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> GROWTH_TICKS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
 
-    public int growthDuration = 60; // Time in ticks for a smooth growth
+    public int growthDuration = 100; // Time in ticks for a smooth growth
     private final Map<BlockPos, Integer> blocksToAbsorb = new HashMap<>();
-    private int maxRadius = 5;
+    private int maxRadius = 8;
     private double itemSuckSpeed = 0.25;
     private boolean collapsing = false;
     private int maxBlocksForPerf = 40;
+    public int radiusGrowthTime = 1200;
+    public int radiusGrowthTimer = 0;
 
     public ParadoxEntity(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
@@ -55,10 +57,9 @@ public class ParadoxEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        this.maxRadius = 8;
-        maxBlocksForPerf = 40;
         int currentRadius = getRadius();
         int targetRadius = getTargetRadius();
+        radiusGrowthTimer++;
         if (!level().isClientSide) {
             if (collapsing) {
                 float scale = getShrinkScale() - 0.02f; // Decrease the scale over time
@@ -69,17 +70,16 @@ public class ParadoxEntity extends Entity {
                 return;
             }
 
-            if (this.tickCount % 200 == 0 && currentRadius < maxRadius) {
+            if (tickCount == 1 || tickCount % 600 == 0)
+                level().playSound(null, getX(), getY(), getZ(), Registration.PARADOX_AMBIENT.get(), SoundSource.HOSTILE, 1F, 1f);
+
+            if (radiusGrowthTimer % radiusGrowthTime == 0 && currentRadius < maxRadius) {
                 targetRadius++;
                 setTargetRadius(targetRadius);
             }
 
-            if (tickCount == 1 || tickCount % 600 == 0)
-                level().playSound(null, getX(), getY(), getZ(), Registration.PARADOX_AMBIENT.get(), SoundSource.HOSTILE, 1F, 1f);
-
-
             // Smoothly interpolate the radius
-            if (currentRadius < targetRadius) {
+            if (currentRadius != targetRadius) {
                 int growthTicks = getGrowthTicks();
                 growthTicks++;
                 setGrowthTicks(growthTicks);
@@ -220,7 +220,7 @@ public class ParadoxEntity extends Entity {
     }
 
     public void setRadius(int radius) {
-        this.entityData.set(RADIUS, radius);
+        this.entityData.set(RADIUS, Math.min(radius, maxRadius));
     }
 
     public int getGrowthTicks() {
@@ -276,6 +276,10 @@ public class ParadoxEntity extends Entity {
             this.entityData.set(CONSUMPTION, compound.getInt("consumed"));
         if (compound.contains("radius"))
             this.entityData.set(RADIUS, compound.getInt("radius"));
+        if (compound.contains("targetRadius"))
+            this.entityData.set(TARGET_RADIUS, compound.getInt("targetRadius"));
+        if (compound.contains("radiusGrowthTimer"))
+            this.radiusGrowthTimer = compound.getInt("radiusGrowthTimer");
     }
 
     @Override
@@ -283,5 +287,7 @@ public class ParadoxEntity extends Entity {
         compound.putInt("requiredConsumption", getRequiredConsumption());
         compound.putInt("consumed", getConsumed());
         compound.putInt("radius", getRadius());
+        compound.putInt("targetRadius", getTargetRadius());
+        compound.putInt("radiusGrowthTimer", radiusGrowthTimer);
     }
 }
