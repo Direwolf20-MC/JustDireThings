@@ -1555,6 +1555,8 @@ public class JustDireRecipes extends RecipeProvider {
         //NBT Clear
         for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
+                if (sidedBlock.equals(Registration.ParadoxMachine))
+                    continue; //Skip paradox machine, no reseting paradox energy
                 ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, sidedBlock.get())
                         .requires(sidedBlock.get())
                         .group("justdirethings")

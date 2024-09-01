@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-25T12:11:24.2467279	Recipes
+// 1.21.1	2024-09-01T16:57:19.9701478	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancement/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancement/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancement/recipes/building_blocks/coal_t1_9x9.json
@@ -294,7 +294,6 @@ e10812b6725eb2ece42eaa4153f759a8b6c0afed data/justdirethings/advancement/recipes
 6c3ff48d510d379f907fd43b1da46f37e87f7b6a data/justdirethings/advancement/recipes/misc/itemcollector_nbtclear.json
 3c0f94c52d98fa71451b71aa1ad0b01e295712a0 data/justdirethings/advancement/recipes/misc/machinesettingscopier.json
 06e6fb482031e2c1e74984bae6d9a01a4cc62a43 data/justdirethings/advancement/recipes/misc/paradoxmachine.json
-0b2d2b1c1f57a46f4a85bc5fdfdbb5250d19519c data/justdirethings/advancement/recipes/misc/paradoxmachine_nbtclear.json
 dad2a7782e9a1e1d8e7099a6596640b309925ed9 data/justdirethings/advancement/recipes/misc/playeraccessor.json
 03992be4d27e423dcc303d757758251d64134ba3 data/justdirethings/advancement/recipes/misc/playeraccessor_nbtclear.json
 2cf19ff627966b28128eb42fd47c9b9e84bc43d8 data/justdirethings/advancement/recipes/misc/pocket_generator.json
@@ -674,7 +673,6 @@ e3990dbefb4f17cf3a84f6ef65168524adc0e543 data/justdirethings/recipe/gooblock_tie
 2827bca3da58aebda20b9fb5c572cb9252c40e7a data/justdirethings/recipe/itemcollector_nbtclear.json
 748448f660b8991e9407f8a14ab645234b91a398 data/justdirethings/recipe/machinesettingscopier.json
 de4d6dd744789b903d6828fec4ce5847a1dfef60 data/justdirethings/recipe/paradoxmachine.json
-9202e697e6daa2d99d88eea54d74e7fa4a579b58 data/justdirethings/recipe/paradoxmachine_nbtclear.json
 702cf6fc55598870be3558d1f103293b990bce7a data/justdirethings/recipe/playeraccessor.json
 67995b0eb9933b4c6fac1cf56d9c52480eb0b5d1 data/justdirethings/recipe/playeraccessor_nbtclear.json
 cc73b7c24448814a0e8663c8065a6625cbd30072 data/justdirethings/recipe/pocket_generator.json
