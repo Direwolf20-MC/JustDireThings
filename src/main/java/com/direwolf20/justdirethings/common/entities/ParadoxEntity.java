@@ -44,6 +44,7 @@ public class ParadoxEntity extends Entity {
     private int maxBlocksForPerf = 40;
     public int radiusGrowthTime = 1200;
     public int radiusGrowthTimer = 0;
+    public int maxRadiusGrowthTimer = 15000;
 
     public ParadoxEntity(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
@@ -59,7 +60,9 @@ public class ParadoxEntity extends Entity {
         super.tick();
         int currentRadius = getRadius();
         int targetRadius = getTargetRadius();
-        radiusGrowthTimer++;
+        radiusGrowthTime = 200;
+        maxRadiusGrowthTimer = 15000;
+        incRadiusGrowthTimer(1);
         if (!level().isClientSide) {
             if (collapsing) {
                 float scale = getShrinkScale() - 0.02f; // Decrease the scale over time
@@ -73,13 +76,16 @@ public class ParadoxEntity extends Entity {
             if (tickCount == 1 || tickCount % 600 == 0)
                 level().playSound(null, getX(), getY(), getZ(), Registration.PARADOX_AMBIENT.get(), SoundSource.HOSTILE, 1F, 1f);
 
-            if (radiusGrowthTimer % radiusGrowthTime == 0 && currentRadius < maxRadius) {
-                targetRadius++;
-                setTargetRadius(targetRadius);
+            // Calculate the exact target radius based on the growth timer
+            int calculatedTargetRadius = Math.min(maxRadius, Math.max(0, radiusGrowthTimer / radiusGrowthTime));
+
+            // Set the target radius if it differs from the current target radius
+            if (calculatedTargetRadius != targetRadius && getGrowthTicks() == 0) {
+                setTargetRadius(calculatedTargetRadius);
             }
 
             // Smoothly interpolate the radius
-            if (currentRadius != targetRadius) {
+            if (currentRadius != getTargetRadius()) {
                 int growthTicks = getGrowthTicks();
                 growthTicks++;
                 setGrowthTicks(growthTicks);
@@ -99,6 +105,14 @@ public class ParadoxEntity extends Entity {
         }
     }
 
+    public void incRadiusGrowthTimer(int value) {
+        radiusGrowthTimer = Math.min(maxRadiusGrowthTimer, radiusGrowthTimer + value);
+    }
+
+    public void decRadiusGrowthTimer(int value) {
+        radiusGrowthTimer = Math.max(0, radiusGrowthTimer - value);
+    }
+
     private void handleBlockAbsorption(int currentRadius) {
         for (BlockPos pos : BlockPos.betweenClosed(getOnPos().offset(-currentRadius, -currentRadius, -currentRadius), getOnPos().offset(currentRadius, currentRadius, currentRadius))) {
             float rand = random.nextFloat();
@@ -112,7 +126,8 @@ public class ParadoxEntity extends Entity {
         while (iterator.hasNext()) {
             Map.Entry<BlockPos, Integer> entry = iterator.next();
             BlockPos pos = entry.getKey();
-            if (level().isEmptyBlock(pos)) {
+            // Stop absorbing blocks that are no longer within the target radius
+            if (!isBlockWithinRadius(pos) || level().isEmptyBlock(pos)) {
                 iterator.remove();
                 continue;
             }
@@ -161,6 +176,10 @@ public class ParadoxEntity extends Entity {
         }
     }
 
+    public boolean isBlockWithinRadius(BlockPos pos) {
+        return pos.distSqr(getOnPos()) <= getTargetRadius() * getTargetRadius();
+    }
+
     private void handleItemAbsorption(int currentRadius) {
         List<ItemEntity> items = level().getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(currentRadius + 0.25f));
 
@@ -176,6 +195,10 @@ public class ParadoxEntity extends Entity {
                 ItemStack itemStack = item.getItem();
                 if (itemStack.is(Registration.TimeCrystal.get()))
                     collapse();
+                if (itemStack.is(Items.COBBLESTONE))
+                    incRadiusGrowthTimer(600);
+                if (itemStack.is(Items.SANDSTONE))
+                    decRadiusGrowthTimer(600);
                 item.discard(); // Remove the item from the world
             }
         }

@@ -40,8 +40,12 @@ public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
         matrixStackIn.pushPose();
         // Calculate the current scale based on the interpolated radius
         float currentRadius = paradoxEntity.getRadius() + 1;
+        float targetRadius = paradoxEntity.getTargetRadius() + 1;
+
         if (paradoxEntity.getGrowthTicks() > 0) {
-            currentRadius = currentRadius + (Math.min(1.0f, (float) paradoxEntity.getGrowthTicks() / paradoxEntity.growthDuration));
+            // Properly interpolate between the current and target radius
+            float growthProgress = (float) paradoxEntity.getGrowthTicks() / (float) paradoxEntity.growthDuration;
+            currentRadius = Mth.lerp(growthProgress, currentRadius, targetRadius);
         }
 
         // Calculate the scale for pulsing

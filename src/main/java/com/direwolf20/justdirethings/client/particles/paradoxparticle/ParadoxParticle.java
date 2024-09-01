@@ -32,6 +32,7 @@ public class ParadoxParticle extends BreakingItemParticle {
     private double gravitationalPull;  // Controls the speed of movement
     private UUID paradox_uuid;
     private boolean dying = false;
+    private final BlockPos sourcePos;
 
     public ParadoxParticle(ClientLevel world, double x, double y, double z, double targetX, double targetY, double targetZ, ItemStack itemStack, int gravitationalPull, UUID paradox_uuid) {
         super(world, x, y, z, itemStack);
@@ -63,8 +64,8 @@ public class ParadoxParticle extends BreakingItemParticle {
         if (this.sprite == null) {
             this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Blocks.COBBLESTONE), world, null, 0).getParticleIcon());
         }
-
-        BlockState blockState = level.getBlockState(new BlockPos((int) x, (int) y, (int) z));
+        this.sourcePos = new BlockPos((int) x, (int) y, (int) z);
+        BlockState blockState = level.getBlockState(sourcePos);
         if (blockState.getBlock() instanceof LiquidBlock liquidBlock) {
             FluidStack fluidStack = new FluidStack(liquidBlock.fluid, 1000);
             this.setSprite(Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(IClientFluidTypeExtensions.of(fluidStack.getFluid()).getStillTexture(fluidStack)));
@@ -81,6 +82,7 @@ public class ParadoxParticle extends BreakingItemParticle {
 
     public ParadoxParticle(ClientLevel world, double x, double y, double z, ItemStack itemStack) {
         super(world, x, y, z, itemStack);
+        this.sourcePos = new BlockPos((int) x, (int) y, (int) z);
     }
 
     @Nullable
@@ -112,7 +114,7 @@ public class ParadoxParticle extends BreakingItemParticle {
         this.zo = this.z;
 
         ParadoxEntity entity = findEntityByUUID(level, paradox_uuid);
-        if (entity == null || entity.getShrinkScale() < 1 || dying) {
+        if (entity == null || entity.getShrinkScale() < 1 || !entity.isBlockWithinRadius(sourcePos) || dying) {
             if (!dying) {
                 this.gravity = 0.04f; // Adjust gravity as needed
                 this.hasPhysics = true;
