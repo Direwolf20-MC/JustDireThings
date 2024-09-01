@@ -23,10 +23,9 @@ import java.util.UUID;
 public class ParadoxParticle extends BreakingItemParticle {
 
     private double targetX, targetY, targetZ;
-    Random random = new Random();
+    private static Random random = new Random();
     private double initialRadius;
     private double angularVelocity;
-    private double inwardSpeed;
     private double currentAngle;
     private double currentRadius;
     private double gravitationalPull;  // Controls the speed of movement
@@ -64,7 +63,7 @@ public class ParadoxParticle extends BreakingItemParticle {
         if (this.sprite == null) {
             this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Blocks.COBBLESTONE), world, null, 0).getParticleIcon());
         }
-        this.sourcePos = new BlockPos((int) x, (int) y, (int) z);
+        this.sourcePos = new BlockPos((int) Math.floor(x), (int) Math.floor(y), (int) Math.floor(z));
         BlockState blockState = level.getBlockState(sourcePos);
         if (blockState.getBlock() instanceof LiquidBlock liquidBlock) {
             FluidStack fluidStack = new FluidStack(liquidBlock.fluid, 1000);

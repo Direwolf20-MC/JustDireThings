@@ -20,9 +20,9 @@ import java.util.Random;
 
 public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
     private static final Random random = new Random();  // Use entity's tickCount to seed the randomness
-
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/vortex1.png");
 
+    private float savedPulseScale = -1;
 
     public ParadoxEntityRender(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -41,16 +41,25 @@ public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
         // Calculate the current scale based on the interpolated radius
         float currentRadius = paradoxEntity.getRadius() + 1;
         float targetRadius = paradoxEntity.getTargetRadius() + 1;
+        int pulseCycleDuration = 50; // Number of ticks for one full pulse cycle
+        float tickProgress = (paradoxEntity.tickCount + partialTicks) % pulseCycleDuration;
+        float pulsePhase = tickProgress / pulseCycleDuration;
 
+        // Use the phase to create a pulse effect that smoothly goes up and down
+        float pulseScale = 0.25f + 0.025f * (1 - Math.abs(2 * pulsePhase - 1));
         if (paradoxEntity.getGrowthTicks() > 0) {
+            if (savedPulseScale == -1)
+                savedPulseScale = pulseScale;
             // Properly interpolate between the current and target radius
             float growthProgress = (float) paradoxEntity.getGrowthTicks() / (float) paradoxEntity.growthDuration;
             currentRadius = Mth.lerp(growthProgress, currentRadius, targetRadius);
+        } else {
+            savedPulseScale = -1;
         }
-
+        if (savedPulseScale != -1)
+            pulseScale = savedPulseScale;
         // Calculate the scale for pulsing
         matrixStackIn.translate(0, 0.5, 0);
-        float pulseScale = 0.25f + 0.025f * (float) Math.sin((paradoxEntity.tickCount + partialTicks) / 10.0);
         float shrinkScale = paradoxEntity.getShrinkScale(); // Get the current shrink scale
 
         // Apply the scale transformation for pulsing

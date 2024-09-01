@@ -21,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class ParadoxEntity extends Entity {
     private static final EntityDataAccessor<Integer> TARGET_RADIUS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> GROWTH_TICKS = SynchedEntityData.defineId(ParadoxEntity.class, EntityDataSerializers.INT);
 
-    public int growthDuration = 100; // Time in ticks for a smooth growth
+    public int growthDuration = 50; // Time in ticks for a smooth growth
     private final Map<BlockPos, Integer> blocksToAbsorb = new HashMap<>();
     private int maxRadius = 8;
     private double itemSuckSpeed = 0.25;
@@ -61,7 +62,8 @@ public class ParadoxEntity extends Entity {
         int currentRadius = getRadius();
         int targetRadius = getTargetRadius();
         radiusGrowthTime = 200;
-        maxRadiusGrowthTimer = 15000;
+        growthDuration = 50;
+        maxRadiusGrowthTimer = radiusGrowthTime * maxRadius + radiusGrowthTime;
         incRadiusGrowthTimer(1);
         if (!level().isClientSide) {
             if (collapsing) {
@@ -177,7 +179,11 @@ public class ParadoxEntity extends Entity {
     }
 
     public boolean isBlockWithinRadius(BlockPos pos) {
-        return pos.distSqr(getOnPos()) <= getTargetRadius() * getTargetRadius();
+        BlockPos centerPos = getOnPos();
+        int radius = getTargetRadius();
+        AABB aabb = new AABB(centerPos.getX() - radius, centerPos.getY() - radius, centerPos.getZ() - radius, centerPos.getX() + radius + 1, centerPos.getY() + radius + 1, centerPos.getZ() + radius + 1);
+
+        return aabb.contains(pos.getX(), pos.getY(), pos.getZ());
     }
 
     private void handleItemAbsorption(int currentRadius) {
