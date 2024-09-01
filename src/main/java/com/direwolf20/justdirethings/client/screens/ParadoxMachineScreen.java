@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.client.screens;
 
+import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
@@ -15,12 +16,15 @@ import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContainer> {
+    protected static final ResourceLocation PARADOXBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/paradoxbar.png");
     private boolean renderParadox = false;
     private int targetType = 0;
     public ParadoxMachineScreen(ParadoxMachineContainer container, Inventory inv, Component name) {
@@ -76,11 +80,21 @@ public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContai
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
         if (baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE) {
-            guiGraphics.blit(POWERBAR, topSectionLeft + topSectionWidth - 18 - 5, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+            guiGraphics.blit(PARADOXBAR, topSectionLeft + topSectionWidth - 18 - 5, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
             float maxEnergy = paradoxMachineBE.getMaxParadoxEnergy(), height = 70;
-            if (maxEnergy > 0) {
+            if (maxEnergy > 0 && paradoxMachineBE.paradoxEnergy > 0) {
                 float remaining = (paradoxMachineBE.paradoxEnergy * height) / maxEnergy;
-                guiGraphics.blit(POWERBAR, topSectionLeft + topSectionWidth - 18 - 5 + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - (int) remaining, 19, 69 - remaining, 17, (int) remaining + 1, 36, 72);
+                // Calculate the color based on time for a rainbow effect
+                long time = System.currentTimeMillis();
+                int color = Color.HSBtoRGB((time % 10800L) / 10800.0f, 1.0f, 1.0f); // Adjust HSB values for different effects
+
+                int red = (color >> 16) & 0xFF;
+                int green = (color >> 8) & 0xFF;
+                int blue = color & 0xFF;
+
+                // Apply the rainbow color effect
+                guiGraphics.setColor(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f); // Normalize RGB values to 0-1 range
+                guiGraphics.blit(PARADOXBAR, topSectionLeft + topSectionWidth - 18 - 5 + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - (int) remaining, 19, 69 - remaining, 17, (int) remaining + 1, 36, 72);
             }
         }
     }
@@ -94,8 +108,10 @@ public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContai
     public void paradoxBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE) {
             if (MiscTools.inBounds(topSectionLeft + topSectionWidth - 18 - 5, topSectionTop + 5, 18, 72, pX, pY)) {
+                String energyFormatted = String.format("%.2f", paradoxMachineBE.paradoxEnergy);
+
                 pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
-                        Component.translatable("justdirethings.paradoxenergy", paradoxMachineBE.paradoxEnergy, paradoxMachineBE.getMaxParadoxEnergy())
+                        Component.translatable("justdirethings.paradoxenergy", energyFormatted, paradoxMachineBE.getMaxParadoxEnergy())
                 )), pX, pY);
             }
         }
