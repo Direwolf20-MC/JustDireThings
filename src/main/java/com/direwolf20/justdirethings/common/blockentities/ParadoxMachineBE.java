@@ -132,15 +132,15 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     }
 
     public float getParadoxEnergyPerBlock() {
-        return 0.35f; //TODO Config?
+        return Config.PARADOX_ENERGY_PER_BLOCK.get().floatValue();
     }
 
     public float getParadoxEnergyPerEntity() {
-        return 0.35f; //TODO Config?
+        return Config.PARADOX_ENERGY_PER_ENTITY.get().floatValue();
     }
 
     public float getMaxParadoxEnergy() {
-        return 100; //TODO Config?
+        return Config.PARADOX_ENERGY_MAX.get().floatValue();
     }
 
     public void addParadoxEnergy(float amt) {
