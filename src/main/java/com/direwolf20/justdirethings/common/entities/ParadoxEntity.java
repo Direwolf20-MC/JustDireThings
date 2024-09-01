@@ -39,16 +39,19 @@ public class ParadoxEntity extends Entity {
 
     public int growthDuration = 50; // Time in ticks for a smooth growth
     private final Map<BlockPos, Integer> blocksToAbsorb = new HashMap<>();
-    private int maxRadius = 8;
-    private double itemSuckSpeed = 0.25;
+    private int maxRadius = 12;
+    private double itemSuckSpeed = 0.5;
     private boolean collapsing = false;
     private int maxBlocksForPerf = 40;
     public int radiusGrowthTime = 1200;
     public int radiusGrowthTimer = 0;
-    public int maxRadiusGrowthTimer = 15000;
+    public int maxRadiusGrowthTimer;
+    public int growthPerBlock = 10;
+    public int growthPerItem = 10;
 
     public ParadoxEntity(EntityType<? extends Entity> entityType, Level level) {
         super(entityType, level);
+        maxRadiusGrowthTimer = radiusGrowthTime * maxRadius + radiusGrowthTime;
     }
 
     public ParadoxEntity(Level level, BlockPos blockPos) {
@@ -61,9 +64,6 @@ public class ParadoxEntity extends Entity {
         super.tick();
         int currentRadius = getRadius();
         int targetRadius = getTargetRadius();
-        radiusGrowthTime = 200;
-        growthDuration = 50;
-        maxRadiusGrowthTimer = radiusGrowthTime * maxRadius + radiusGrowthTime;
         incRadiusGrowthTimer(1);
         if (!level().isClientSide) {
             if (collapsing) {
@@ -117,6 +117,8 @@ public class ParadoxEntity extends Entity {
 
     private void handleBlockAbsorption(int currentRadius) {
         for (BlockPos pos : BlockPos.betweenClosed(getOnPos().offset(-currentRadius, -currentRadius, -currentRadius), getOnPos().offset(currentRadius, currentRadius, currentRadius))) {
+            //if (blocksToAbsorb.size() > maxBlocksForPerf * 4)
+            //    break;
             float rand = random.nextFloat();
             if (isBlockValid(pos) && rand < 0.0125f) {
                 // Add block with a countdown between 40 and 80 ticks
@@ -171,6 +173,7 @@ public class ParadoxEntity extends Entity {
 
                 // Set the block to air and safely remove from the map
                 level().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                incRadiusGrowthTimer(growthPerBlock);
                 iterator.remove();
             } else {
                 entry.setValue(timeLeft);
@@ -186,10 +189,20 @@ public class ParadoxEntity extends Entity {
         return aabb.contains(pos.getX(), pos.getY(), pos.getZ());
     }
 
+    private void handleItemsPostShrink(int targetRadius) {
+        List<ItemEntity> items = level().getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(getRadius() + 0.25f));
+        List<ItemEntity> newItems = level().getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(targetRadius + 0.25f));
+        for (ItemEntity item : items) {
+            if (!newItems.contains(item))
+                item.setNoGravity(false);
+        }
+    }
+
     private void handleItemAbsorption(int currentRadius) {
         List<ItemEntity> items = level().getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(currentRadius + 0.25f));
 
         for (ItemEntity item : items) {
+            if (collapsing) break;
             Vec3 itemPosition = item.position();
             Vec3 direction = position().subtract(itemPosition).normalize().scale(itemSuckSpeed);
             item.setNoGravity(true);
@@ -197,14 +210,13 @@ public class ParadoxEntity extends Entity {
             item.setDeltaMovement(direction);
 
             // Check if the item is close enough to be voided
-            if (position().closerThan(item.position(), 0.125)) {
+            if (position().closerThan(item.position(), 0.25)) {
                 ItemStack itemStack = item.getItem();
                 if (itemStack.is(Registration.TimeCrystal.get()))
                     collapse();
-                if (itemStack.is(Items.COBBLESTONE))
-                    incRadiusGrowthTimer(600);
-                if (itemStack.is(Items.SANDSTONE))
-                    decRadiusGrowthTimer(600);
+                else {
+                    incRadiusGrowthTimer(growthPerItem * itemStack.getCount());
+                }
                 item.discard(); // Remove the item from the world
             }
         }
@@ -212,6 +224,7 @@ public class ParadoxEntity extends Entity {
 
     private void collapse() {
         collapsing = true;
+        handleItemsPostShrink(0);
         level().playSound(null, getX(), getY(), getZ(), SoundEvents.WITHER_AMBIENT, SoundSource.HOSTILE, 1.0f, 0.25f);
     }
 

@@ -520,6 +520,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Entities
         add("entity.justdirethings.decoy_entity", "Decoy Entity");
         add("entity.justdirethings.time_wand_entity", "Time Wand Entity");
+        add("entity.justdirethings.paradox_entity", "Paradox");
 
         //Recipes
         add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");
