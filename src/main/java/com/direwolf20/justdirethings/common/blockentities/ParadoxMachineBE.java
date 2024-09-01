@@ -160,9 +160,16 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         resetParadoxEnergy();
     }
 
+    public boolean paradoxExists() {
+        if (level == null) return true;
+        List<ParadoxEntity> paradoxEntities = level.getEntitiesOfClass(ParadoxEntity.class, new AABB(getStartingPoint()));
+        return !paradoxEntities.isEmpty();
+    }
+
     public void startParadox() {
         if (!(isActiveRedstone() && canRun())) return;
         if (!canParadox()) return;
+        if (paradoxExists()) return;
         if (!isRunning) {
             UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
             restoringBlocks = testRestoreBlocks(fakePlayer);
