@@ -63,7 +63,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public int timeRunning = 0;
     public int fePerTick = 0;
     public int fluidPerTick = 0;
-    public int paradoxEnergy = 0;
+    public float paradoxEnergy = 0;
     public Map<BlockPos, BlockState> restoringBlocks = new HashMap<>();
     public List<Vec3> restoringEntites = new ArrayList<>();
     private final static Random random = new Random();
@@ -131,19 +131,19 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         this.timeRunning = runtime;
     }
 
-    public int getParadoxEnergyPerBlock() {
-        return 1; //TODO Config?
+    public float getParadoxEnergyPerBlock() {
+        return 0.35f; //TODO Config?
     }
 
-    public int getParadoxEnergyPerEntity() {
-        return 1; //TODO Config?
+    public float getParadoxEnergyPerEntity() {
+        return 0.35f; //TODO Config?
     }
 
-    public int getMaxParadoxEnergy() {
+    public float getMaxParadoxEnergy() {
         return 100; //TODO Config?
     }
 
-    public void addParadoxEnergy(int amt) {
+    public void addParadoxEnergy(float amt) {
         this.paradoxEnergy = Math.min(getMaxParadoxEnergy(), paradoxEnergy + amt);
         markDirtyClient();
     }
@@ -650,7 +650,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         tag.putInt("timeRunning", timeRunning);
         tag.putInt("fePerTick", fePerTick);
         tag.putInt("fluidPerTick", fluidPerTick);
-        tag.putInt("paradoxEnergy", paradoxEnergy);
+        tag.putFloat("paradoxEnergy", paradoxEnergy);
 
         // Save restoringBlocks map
         ListTag restoringBlocksList = new ListTag();
@@ -685,7 +685,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         if (tag.contains("timeRunning"))
             timeRunning = tag.getInt("timeRunning");
         if (tag.contains("paradoxEnergy"))
-            paradoxEnergy = tag.getInt("paradoxEnergy");
+            paradoxEnergy = tag.getFloat("paradoxEnergy");
 
         // Load restoringBlocks map
         restoringBlocks.clear();

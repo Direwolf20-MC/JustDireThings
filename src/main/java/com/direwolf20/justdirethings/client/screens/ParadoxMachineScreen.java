@@ -77,10 +77,10 @@ public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContai
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
         if (baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE) {
             guiGraphics.blit(POWERBAR, topSectionLeft + topSectionWidth - 18 - 5, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
-            int maxEnergy = paradoxMachineBE.getMaxParadoxEnergy(), height = 70;
+            float maxEnergy = paradoxMachineBE.getMaxParadoxEnergy(), height = 70;
             if (maxEnergy > 0) {
-                int remaining = (paradoxMachineBE.paradoxEnergy * height) / maxEnergy;
-                guiGraphics.blit(POWERBAR, topSectionLeft + topSectionWidth - 18 - 5 + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
+                float remaining = (paradoxMachineBE.paradoxEnergy * height) / maxEnergy;
+                guiGraphics.blit(POWERBAR, topSectionLeft + topSectionWidth - 18 - 5 + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - (int) remaining, 19, 69 - remaining, 17, (int) remaining + 1, 36, 72);
             }
         }
     }
