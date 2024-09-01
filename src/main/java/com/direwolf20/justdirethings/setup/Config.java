@@ -13,6 +13,8 @@ public class Config {
     public static final ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
 
+    public static ModConfigSpec COMMON_CONFIG;
+
     public static final String OVERLAY_POSITION = "overlay_position";
     public static ModConfigSpec.IntValue OVERLAY_X;
     public static ModConfigSpec.IntValue OVERLAY_Y;
@@ -100,7 +102,8 @@ public class Config {
         portalGunConfig();
         timeWandConfig();
         paradoxConfig();
-        container.registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
+        COMMON_CONFIG = COMMON_BUILDER.build();
+        container.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
     }
 
     private static void registerServerConfigs(ModContainer container) {
