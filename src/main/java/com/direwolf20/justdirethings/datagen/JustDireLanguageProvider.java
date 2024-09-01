@@ -347,6 +347,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.portalfluidamt", "Portal Fluid: %s / %s");
         add("justdirethings.timefluidamt", "Time Fluid: %s / %s");
+        add("justdirethings.paradoxenergy", "Paradox Energy: %s / %s");
         add("justdirethings.lowportalfluid", "Insufficient Portal Fluid");
         add("justdirethings.lowtimefluid", "Insufficient Time Fluid");
         add("justdirethings.boundto", "Bound to: %s:%s");

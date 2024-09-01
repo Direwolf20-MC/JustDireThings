@@ -73,6 +73,35 @@ public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContai
     }
 
     @Override
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
+        super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
+        if (baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE) {
+            guiGraphics.blit(POWERBAR, topSectionLeft + topSectionWidth - 18 - 5, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+            int maxEnergy = paradoxMachineBE.getMaxParadoxEnergy(), height = 70;
+            if (maxEnergy > 0) {
+                int remaining = (paradoxMachineBE.paradoxEnergy * height) / maxEnergy;
+                guiGraphics.blit(POWERBAR, topSectionLeft + topSectionWidth - 18 - 5 + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
+            }
+        }
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        super.renderTooltip(pGuiGraphics, pX, pY);
+        paradoxBarTooltip(pGuiGraphics, pX, pY);
+    }
+
+    public void paradoxBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        if (baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE) {
+            if (MiscTools.inBounds(topSectionLeft + topSectionWidth - 18 - 5, topSectionTop + 5, 18, 72, pX, pY)) {
+                pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
+                        Component.translatable("justdirethings.paradoxenergy", paradoxMachineBE.paradoxEnergy, paradoxMachineBE.getMaxParadoxEnergy())
+                )), pX, pY);
+            }
+        }
+    }
+
+    @Override
     public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
         if (baseMachineBE instanceof ParadoxMachineBE paradoxMachineBE && baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
             if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {

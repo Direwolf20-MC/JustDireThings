@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.client.particles.glitterparticle.GlitterPar
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
+import com.direwolf20.justdirethings.common.entities.ParadoxEntity;
 import com.direwolf20.justdirethings.common.network.data.ParadoxSyncPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
@@ -62,6 +63,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public int timeRunning = 0;
     public int fePerTick = 0;
     public int fluidPerTick = 0;
+    public int paradoxEnergy = 0;
     public Map<BlockPos, BlockState> restoringBlocks = new HashMap<>();
     public List<Vec3> restoringEntites = new ArrayList<>();
     private final static Random random = new Random();
@@ -114,6 +116,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public void tickServer() {
         super.tickServer();
         doParadox();
+        if (paradoxEnergy >= getMaxParadoxEnergy())
+            spawnParadox();
     }
 
     public int getRunTime() {
@@ -125,6 +129,35 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     public void receiveRunTime(int runtime) {
         this.timeRunning = runtime;
+    }
+
+    public int getParadoxEnergyPerBlock() {
+        return 1; //TODO Config?
+    }
+
+    public int getParadoxEnergyPerEntity() {
+        return 1; //TODO Config?
+    }
+
+    public int getMaxParadoxEnergy() {
+        return 100; //TODO Config?
+    }
+
+    public void addParadoxEnergy(int amt) {
+        this.paradoxEnergy = Math.min(getMaxParadoxEnergy(), paradoxEnergy + amt);
+        markDirtyClient();
+    }
+
+    public void resetParadoxEnergy() {
+        this.paradoxEnergy = 0;
+        markDirtyClient();
+    }
+
+    public void spawnParadox() {
+        if (level == null) return;
+        ParadoxEntity paradoxEntity = new ParadoxEntity(level, getStartingPoint());
+        level.addFreshEntity(paradoxEntity);
+        resetParadoxEnergy();
     }
 
     public void startParadox() {
@@ -175,7 +208,9 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             if (extractFluid(finalFluidCost) == finalFluidCost && extractEnergy(finalEnergyCost, false) == finalEnergyCost) {
                 UsefulFakePlayer fakePlayer = getUsefulFakePlayer((ServerLevel) level);
                 restoreBlocks(fakePlayer);
+                addParadoxEnergy(getParadoxEnergyPerBlock() * restoringBlocks.size());
                 restoreEntities(fakePlayer);
+                addParadoxEnergy(getParadoxEnergyPerEntity() * restoringEntites.size());
                 postRun();
                 level.playSound(null, getBlockPos(), SoundEvents.EVOKER_PREPARE_SUMMON, SoundSource.BLOCKS, 0.5F, 0.25F);
             } else {
@@ -615,6 +650,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         tag.putInt("timeRunning", timeRunning);
         tag.putInt("fePerTick", fePerTick);
         tag.putInt("fluidPerTick", fluidPerTick);
+        tag.putInt("paradoxEnergy", paradoxEnergy);
 
         // Save restoringBlocks map
         ListTag restoringBlocksList = new ListTag();
@@ -648,6 +684,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             isRunning = tag.getBoolean("isRunning");
         if (tag.contains("timeRunning"))
             timeRunning = tag.getInt("timeRunning");
+        if (tag.contains("paradoxEnergy"))
+            paradoxEnergy = tag.getInt("paradoxEnergy");
 
         // Load restoringBlocks map
         restoringBlocks.clear();
