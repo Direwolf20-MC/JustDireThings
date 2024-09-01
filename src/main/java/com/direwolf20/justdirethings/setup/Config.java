@@ -53,6 +53,7 @@ public class Config {
     public static ModConfigSpec.IntValue TIME_WAND_RF_CAPACITY;
     public static ModConfigSpec.IntValue TIMEWAND_RF_COST;
     public static ModConfigSpec.DoubleValue TIMEWAND_FLUID_COST;
+    public static ModConfigSpec.IntValue TIME_WAND_MAX_MULTIPLIER;
 
     public static final String CATEGORY_PARADOX_MACHINE = "paradox_machine";
     public static ModConfigSpec.IntValue PARADOX_TOTAL_FLUID_CAPACITY;
@@ -222,7 +223,14 @@ public class Config {
                 .defineInRange("time_wand_rf_cost", 100, 0, Integer.MAX_VALUE);
         TIMEWAND_FLUID_COST = COMMON_BUILDER.comment("The Time Fluid cost to use the time wand.  This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in Time Fluid.")
                 .defineInRange("time_wand_fluid_cost", 0.5, 0, Double.MAX_VALUE);
+        // TODO: Add validation that this is a power of two. I'm not sure exactly how to do that without copying and modifying a bunch of code from ModConfigSpec.
+        TIME_WAND_MAX_MULTIPLIER = COMMON_BUILDER.comment("The maximum speed multiplier that can be applied using a Time Wand. This value should be a power of two.")
+                .defineInRange("time_wand_max_multiplier", 256, 2, Integer.MAX_VALUE);
         COMMON_BUILDER.pop();
+    }
+
+    public static int logBase2(final int value) {
+        return (int) (Math.log(value) / Math.log(2));
     }
 
     private static void paradoxConfig() {
