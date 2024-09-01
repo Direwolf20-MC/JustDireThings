@@ -24,6 +24,8 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> NO_AI_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_ai_deny"));
     public static final TagKey<EntityType<?>> NO_EARTHQUAKE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_earthquake"));
     public static final TagKey<EntityType<?>> PARADOX_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_deny"));
+    public static final TagKey<EntityType<?>> PARADOX_ABSORB_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
+
 
     @Override
     public void addTags(HolderLookup.Provider lookupProvider) {
@@ -37,8 +39,13 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
                 .add(EntityType.WITHER)
                 .add(EntityType.WARDEN);
         tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)
-                .add(Registration.TimeWandEntity.get());
+                .add(Registration.TimeWandEntity.get())
+                .add(Registration.ParadoxEntity.get());
         tag(PARADOX_DENY)
-                .add(Registration.TimeWandEntity.get());
+                .add(Registration.TimeWandEntity.get())
+                .add(Registration.ParadoxEntity.get());
+        tag(PARADOX_ABSORB_DENY)
+                .add(Registration.TimeWandEntity.get())
+                .add(Registration.ParadoxEntity.get());
     }
 }

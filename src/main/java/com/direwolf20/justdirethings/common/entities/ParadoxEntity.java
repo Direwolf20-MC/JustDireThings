@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -14,7 +15,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -23,6 +26,8 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.entity.PartEntity;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -196,6 +201,28 @@ public class ParadoxEntity extends Entity {
             if (!newItems.contains(item))
                 item.setNoGravity(false);
         }
+
+        List<LivingEntity> livingEntities = level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(getRadius() + 0.25f));
+        List<LivingEntity> newLivingEntities = level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(targetRadius + 0.25f));
+
+        for (LivingEntity livingEntity : livingEntities) {
+            if (!newLivingEntities.contains(livingEntity))
+                livingEntity.setNoGravity(false);
+        }
+    }
+
+    private boolean isValidEntity(Entity entity) {
+        if (entity.isMultipartEntity())
+            return false;
+        if (entity instanceof PartEntity<?>)
+            return false;
+        if (entity instanceof Player)
+            return false;
+        if (entity.getType().is(JustDireEntityTags.PARADOX_ABSORB_DENY))
+            return false;
+        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
+            return false;
+        return true;
     }
 
     private void handleItemAbsorption(int currentRadius) {
@@ -218,6 +245,23 @@ public class ParadoxEntity extends Entity {
                     incRadiusGrowthTimer(growthPerItem * itemStack.getCount());
                 }
                 item.discard(); // Remove the item from the world
+            }
+        }
+        if (collapsing) return;
+        List<LivingEntity> livingEntities = level().getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(currentRadius + 0.25f));
+
+        for (LivingEntity livingEntity : livingEntities) {
+            if (!isValidEntity(livingEntity))
+                continue;
+            Vec3 position = livingEntity.position();
+            Vec3 direction = position().subtract(position).normalize().scale(itemSuckSpeed);
+            livingEntity.setNoGravity(true);
+            // Apply the calculated velocity to the item
+            livingEntity.setDeltaMovement(direction);
+
+            // Check if the item is close enough to be voided
+            if (position().closerThan(livingEntity.position(), 0.25)) {
+                livingEntity.discard(); // Remove the Mob from the world
             }
         }
     }
