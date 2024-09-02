@@ -28,6 +28,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsegate_deny"));
     public static final TagKey<Block> PHASEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "phase_deny"));
     public static final TagKey<Block> TICK_SPEED_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tick_speed_deny"));
+    public static final TagKey<Block> PARADOX_ALLOW = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_allow"));
+    public static final TagKey<Block> PARADOX_ABSORB_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -79,7 +81,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.FluidCollectorT1.get())
                 .add(Registration.FluidCollectorT2.get())
                 .add(Registration.TimeCrystalCluster.get())
-                .add(Registration.TimeCrystalBlock.get());
+                .add(Registration.TimeCrystalBlock.get())
+                .add(Registration.ParadoxMachine.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
@@ -133,6 +136,10 @@ public class JustDireBlockTags extends BlockTagsProvider {
         tag(Tags.Blocks.CLUSTERS)
                 .add(Registration.TimeCrystalCluster.get());
         tag(TICK_SPEED_DENY);
+        tag(PARADOX_ALLOW)
+                .addTag(Tags.Blocks.ORES);
+        tag(PARADOX_ABSORB_DENY)
+                .add(Blocks.BEDROCK);
 
     }
 

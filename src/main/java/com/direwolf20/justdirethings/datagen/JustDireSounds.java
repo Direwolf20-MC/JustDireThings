@@ -22,5 +22,23 @@ public class JustDireSounds extends SoundDefinitionsProvider {
                 .with(sound("minecraft:mob/endermen/portal"))
                 .subtitle("sound.justdirethings.portal_gun_close")
         );
+        add(Registration.PARADOX_AMBIENT, SoundDefinition.definition()
+                .with(sound("justdirethings:paradox_running", SoundDefinition.SoundType.SOUND)
+                        // Sets the volume. Also has a double counterpart.
+                        .volume(1f)
+                        // Sets the pitch. Also has a double counterpart.
+                        .pitch(1f)
+                        // Sets the weight.
+                        .weight(2)
+                        // Sets the attenuation distance.
+                        .attenuationDistance(16)
+                        // Enables streaming.
+                        // Also has a parameterless overload that defers to stream(true).
+                        .stream(true)
+                        // Enables preloading.
+                        // Also has a parameterless overload that defers to preload(true).
+                        .preload(true))
+                .subtitle("sound.justdirethings.paradox_ambient")
+        );
     }
 }

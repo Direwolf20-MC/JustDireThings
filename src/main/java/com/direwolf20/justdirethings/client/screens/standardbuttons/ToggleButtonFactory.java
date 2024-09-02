@@ -63,6 +63,13 @@ public class ToggleButtonFactory {
         return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, RENDER_AREA, RENDER_AREA_LOCALIZATION, startingValue, onPress);
     }
 
+    private static final ResourceLocation RENDER_PARADOX = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/showfakeplayer.png");
+    private static final Component RENDER_PARADOX_LOCALIZATION = Component.translatable("justdirethings.screen.renderparadox");
+
+    public static GrayscaleButton RENDERPARADOXBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, RENDER_PARADOX, RENDER_PARADOX_LOCALIZATION, startingValue, onPress);
+    }
+
     /** Direction Button **/
     private static final List<TextureLocalization> DIRECTION_TEXTURES = List.of(
             new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/direction-down.png"), Component.translatable("justdirethings.screen.direction-down")),
@@ -194,6 +201,17 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SENSOR_TARGET_TEXTURES, startingValue, onPress);
     }
 
+    /** Paradox Target Button **/
+    private static final List<TextureLocalization> PARADOX_TARGET_TEXTURES = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/target-both.png"), Component.translatable("justdirethings.screen.paradoxall")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/filter-block.png"), Component.translatable("justdirethings.screen.paradoxblock")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/passivemob.png"), Component.translatable("justdirethings.screen.paradoxentity"))
+    );
+
+    public static ToggleButton PARADOXTARGETBUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, PARADOX_TARGET_TEXTURES, startingValue, onPress);
+    }
+
     /** Strong or Weak Redstone **/
     private static final List<TextureLocalization> STRONG_WEAK_REDSTONE_TEXTURES = List.of(
             new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/redstonelow.png"), Component.translatable("justdirethings.screen.redstone-weak")),
@@ -318,6 +336,14 @@ public class ToggleButtonFactory {
 
     public static ToggleButton HIDE_RENDER_ABILITY_BUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HIDE_RENDER_BUTTON, startingValue, onPress);
+    }
+
+    private static final List<TextureLocalization> SNAPSHOT_AREA_BUTTON = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/positionswap.png"), Component.translatable("justdirethings.screen.snapshotarea"))
+    );
+
+    public static ToggleButton SNAPSHOT_AREA_BUTTON(int x, int y, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SNAPSHOT_AREA_BUTTON, 0, onPress);
     }
 
     private static final ResourceLocation COPY_AREA_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/area.png");

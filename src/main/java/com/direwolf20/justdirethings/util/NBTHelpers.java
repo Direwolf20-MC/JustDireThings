@@ -167,4 +167,19 @@ public class NBTHelpers {
         double z = tag.getDouble("vec3z");
         return new GlobalVec3(levelKey, new Vec3(x, y, z));
     }
+
+    public static CompoundTag vec3ToNBT(Vec3 vec3) {
+        CompoundTag tag = new CompoundTag();
+        tag.putDouble("vec3x", vec3.x);
+        tag.putDouble("vec3y", vec3.y);
+        tag.putDouble("vec3z", vec3.z);
+        return tag;
+    }
+
+    public static Vec3 nbtToVec3(CompoundTag tag) {
+        double x = tag.getDouble("vec3x");
+        double y = tag.getDouble("vec3y");
+        double z = tag.getDouble("vec3z");
+        return new Vec3(x, y, z);
+    }
 }

@@ -1,4 +1,15 @@
 {
+  "paradox_ambient": {
+    "sounds": [
+      {
+        "name": "justdirethings:paradox_running",
+        "preload": true,
+        "stream": true,
+        "weight": 2
+      }
+    ],
+    "subtitle": "sound.justdirethings.paradox_ambient"
+  },
   "portal_gun_close": {
     "sounds": [
       "mob/endermen/portal"

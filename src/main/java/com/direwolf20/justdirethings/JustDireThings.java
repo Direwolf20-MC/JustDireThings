@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings;
 
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
+import com.direwolf20.justdirethings.common.blockentities.ParadoxMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
@@ -240,7 +241,8 @@ public class JustDireThings {
                 Registration.DropperT2.get(),
                 Registration.BlockSwapperT2.get(),
                 Registration.FluidPlacerT2.get(),
-                Registration.FluidCollectorT2.get()
+                Registration.FluidCollectorT2.get(),
+                Registration.ParadoxMachine.get()
         );
         event.registerBlock(Capabilities.EnergyStorage.BLOCK,
                 (level, pos, state, be, side) -> {
@@ -280,6 +282,15 @@ public class JustDireThings {
                     return null;
                 },
                 Registration.GeneratorFluidT1.get()
+        );
+        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof ParadoxMachineBE) {
+                        return be.getData(Registration.PARADOX_FLUID_HANDLER);
+                    }
+                    return null;
+                },
+                Registration.ParadoxMachine.get()
         );
     }
 }

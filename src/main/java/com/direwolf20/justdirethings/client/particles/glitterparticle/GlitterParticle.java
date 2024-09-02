@@ -107,9 +107,7 @@ public class GlitterParticle extends TextureSheetParticle {
         BlockPos nextPos = new BlockPos((int) this.x + (int) moveX, (int) this.y + (int) moveY, (int) this.z + (int) moveZ);
 
         if (age > 40)
-            //if (world.getBlockState(nextPos).getBlock() == ModBlocks.RENDERBLOCK)
             this.hasPhysics = false;
-        //Perform the ACTUAL move of the particle.
         this.move(moveX, moveY, moveZ);
     }
 

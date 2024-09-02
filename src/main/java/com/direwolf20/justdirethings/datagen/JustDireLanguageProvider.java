@@ -57,6 +57,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TimeCrystalCluster_Small.get(), "Small Time Crystal Cluster");
         add(Registration.TimeCrystalCluster_Medium.get(), "Medium Time Crystal Cluster");
         add(Registration.TimeCrystalCluster_Large.get(), "Large Time Crystal Cluster");
+        add(Registration.ParadoxMachine.get(), "Paradox Machine");
 
         //Fluids
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
@@ -346,6 +347,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.portalfluidamt", "Portal Fluid: %s / %s");
         add("justdirethings.timefluidamt", "Time Fluid: %s / %s");
+        add("justdirethings.paradoxenergy", "Paradox Energy: %s / %s");
         add("justdirethings.lowportalfluid", "Insufficient Portal Fluid");
         add("justdirethings.lowtimefluid", "Insufficient Time Fluid");
         add("justdirethings.boundto", "Bound to: %s:%s");
@@ -505,6 +507,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.stay_open", "Stay Open");
         add("justdirethings.screen.save_close", "Save and Close");
         add("justdirethings.screen.cancel", "Cancel");
+        add("justdirethings.screen.snapshotarea", "Snapshot Area");
+        add("justdirethings.screen.renderparadox", "Render Paradox");
+        add("justdirethings.screen.paradoxentity", "Revert Entities");
+        add("justdirethings.screen.paradoxblock", "Revert Blocks");
+        add("justdirethings.screen.paradoxall", "Revert Blocks and Entities");
+        add("justdirethings.screen.paradoxenergycost", "Energy Cost: %s FE");
+        add("justdirethings.screen.paradoxfluidcost", "Fluid Cost: %s mb");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");
@@ -512,6 +521,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Entities
         add("entity.justdirethings.decoy_entity", "Decoy Entity");
         add("entity.justdirethings.time_wand_entity", "Time Wand Entity");
+        add("entity.justdirethings.paradox_entity", "Paradox");
 
         //Recipes
         add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");

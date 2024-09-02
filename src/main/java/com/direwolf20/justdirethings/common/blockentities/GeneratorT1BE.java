@@ -147,7 +147,7 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
         for (Direction direction : Direction.values()) {
             IEnergyStorage iEnergyStorage = getHandler(direction);
             if (iEnergyStorage == null) continue;
-            int amtFit = iEnergyStorage.receiveEnergy(getFEPerTick(), true);
+            int amtFit = iEnergyStorage.receiveEnergy(getFEPerTick() * 10, true);
             if (amtFit <= 0) continue;
             int extractAmt = extractEnergy(amtFit, false);
             iEnergyStorage.receiveEnergy(extractAmt, false);

@@ -54,6 +54,16 @@ public class Config {
     public static ModConfigSpec.IntValue TIMEWAND_RF_COST;
     public static ModConfigSpec.DoubleValue TIMEWAND_FLUID_COST;
 
+    public static final String CATEGORY_PARADOX_MACHINE = "paradox_machine";
+    public static ModConfigSpec.IntValue PARADOX_TOTAL_FLUID_CAPACITY;
+    public static ModConfigSpec.IntValue PARADOX_TOTAL_RF_CAPACITY;
+    public static ModConfigSpec.IntValue PARADOX_RF_PER_ENTITY;
+    public static ModConfigSpec.IntValue PARADOX_RF_PER_BLOCK;
+    public static ModConfigSpec.IntValue PARADOX_FLUID_PER_ENTITY;
+    public static ModConfigSpec.IntValue PARADOX_FLUID_PER_BLOCK;
+    public static ModConfigSpec.DoubleValue PARADOX_ENERGY_PER_BLOCK;
+    public static ModConfigSpec.DoubleValue PARADOX_ENERGY_PER_ENTITY;
+    public static ModConfigSpec.DoubleValue PARADOX_ENERGY_MAX;
 
     public static final String ENERGY_TRANSMITTER_T1 = "energy_transmitter_t1";
     public static ModConfigSpec.DoubleValue ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK;
@@ -88,6 +98,7 @@ public class Config {
         pocketGeneratorConfig();
         portalGunConfig();
         timeWandConfig();
+        paradoxConfig();
         container.registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
     }
 
@@ -211,6 +222,29 @@ public class Config {
                 .defineInRange("time_wand_rf_cost", 100, 0, Integer.MAX_VALUE);
         TIMEWAND_FLUID_COST = COMMON_BUILDER.comment("The Time Fluid cost to use the time wand.  This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in Time Fluid.")
                 .defineInRange("time_wand_fluid_cost", 0.5, 0, Double.MAX_VALUE);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void paradoxConfig() {
+        COMMON_BUILDER.comment("Paradox Machine").push(CATEGORY_PARADOX_MACHINE);
+        PARADOX_TOTAL_RF_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Forge Energy the Paradox Machine can hold in its buffer")
+                .defineInRange("paradox_rf_capacity", 10000000, 1, Integer.MAX_VALUE);
+        PARADOX_RF_PER_BLOCK = COMMON_BUILDER.comment("The Forge Energy cost to Restore 1 block with the Paradox Machine.  This value is multiplied by the number of blocks the machine is restoring.")
+                .defineInRange("paradox_rf_per_block", 250000, 0, Integer.MAX_VALUE);
+        PARADOX_RF_PER_ENTITY = COMMON_BUILDER.comment("The Forge Energy cost to Restore 1 entity with the Paradox Machine.  This value is multiplied by the number of entities the machine is restoring.")
+                .defineInRange("paradox_rf_per_entity", 250000, 0, Integer.MAX_VALUE);
+        PARADOX_TOTAL_FLUID_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Time Fluid the Paradox Machine can hold in its buffer")
+                .defineInRange("paradox_fluid_capacity", 16000, 1, Integer.MAX_VALUE);
+        PARADOX_FLUID_PER_BLOCK = COMMON_BUILDER.comment("The Time Fluid cost (in mb) to Restore 1 block with the Paradox Machine.  This value is multiplied by the number of blocks the machine is restoring.")
+                .defineInRange("paradox_fluid_per_block", 50, 0, Integer.MAX_VALUE);
+        PARADOX_FLUID_PER_ENTITY = COMMON_BUILDER.comment("The Time Fluid cost (in mb) to Restore 1 entity with the Paradox Machine.  This value is multiplied by the number of entities the machine is restoring.")
+                .defineInRange("paradox_fluid_per_entity", 50, 0, Integer.MAX_VALUE);
+        PARADOX_ENERGY_PER_BLOCK = COMMON_BUILDER.comment("The amount of Paradox Energy accumulated in the Paradox Machine when it restores a single block. This value is multiplied by the number of blocks the machine is restoring.")
+                .defineInRange("paradox_energy_per_block", 0.25, 0, Double.MAX_VALUE);
+        PARADOX_ENERGY_PER_ENTITY = COMMON_BUILDER.comment("The amount of Paradox Energy accumulated in the Paradox Machine when it restores a single entity. This value is multiplied by the number of blocks the machine is restoring.")
+                .defineInRange("paradox_energy_per_entity", 0.25, 0, Double.MAX_VALUE);
+        PARADOX_ENERGY_MAX = COMMON_BUILDER.comment("The maximum amount of Paradox Energy the Paradox Machine can hold in its buffer, before it spawns a Paradox!")
+                .defineInRange("paradox_energy_max", 100, 0, Double.MAX_VALUE);
         COMMON_BUILDER.pop();
     }
 }

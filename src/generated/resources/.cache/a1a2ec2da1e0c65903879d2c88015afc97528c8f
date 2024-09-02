@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-21T22:29:28.5138117	Block States: justdirethings
+// 1.21.1	2024-08-25T12:11:24.2422233	Block States: justdirethings
 e5976480ed9485e0bae43d4edde0c8aecaabe8a5 assets/justdirethings/blockstates/blazegold_block.json
 6580258682ab076313135ecb0c16dc2595a1a0df assets/justdirethings/blockstates/blockbreakert1.json
 0db1a53fd80ee5aed746843da439bd30b131ac55 assets/justdirethings/blockstates/blockbreakert2.json
@@ -31,6 +31,7 @@ eb64574ddf30848ca3e6290c1ebb8029f8513c15 assets/justdirethings/blockstates/goobl
 f221904a483d33a577cfa1060d4b8f9063e2812e assets/justdirethings/blockstates/goosoil_tier2.json
 d550876437faefc69e5ad8ef174f472d7f89369c assets/justdirethings/blockstates/goosoil_tier3.json
 9c77898649f8529c0343218f178d522014585e89 assets/justdirethings/blockstates/goosoil_tier4.json
+656ee182206c56461dc90f6d13082d6dfbab1298 assets/justdirethings/blockstates/paradoxmachine.json
 420242c724ce8c4dcadd2e61d8cef10cdaf261f6 assets/justdirethings/blockstates/playeraccessor.json
 b59fd6f494e8c21421ddf11d645c261348d7f3d6 assets/justdirethings/blockstates/polymorphic_fluid_block.json
 b835070706eeb4adab56dcfa8a411da6285b04bc assets/justdirethings/blockstates/portal_fluid_block.json
@@ -102,6 +103,7 @@ c90ce24d043ec38a46ebf2a3e90e37ae5672a837 assets/justdirethings/models/block/goos
 4e6ddba47a2ceb2876916550d64ab7bfe709f8eb assets/justdirethings/models/block/goosoil_tier3_moist.json
 dea2d948b32322a5aeb424c534c2a5ec2e952975 assets/justdirethings/models/block/goosoil_tier4.json
 543cb7bee8f16de42651f69263a2799b4ce54c15 assets/justdirethings/models/block/goosoil_tier4_moist.json
+2903e942696ee1ec912f4d23944c7f60671fe8dd assets/justdirethings/models/block/paradoxmachine.json
 afb260733f29a4754b2282eb26b78af1a2940bcd assets/justdirethings/models/block/playeraccessor.json
 4cbb3c8e0147ca797cb922394a58a3950e00ffef assets/justdirethings/models/block/polymorphic_fluid_block.json
 4cbb3c8e0147ca797cb922394a58a3950e00ffef assets/justdirethings/models/block/portal_fluid_block.json

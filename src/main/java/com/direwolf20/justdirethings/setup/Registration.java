@@ -138,6 +138,7 @@ public class Registration {
     public static final Supplier<SoundEvent> BEEP = SOUND_REGISTRY.register("beep", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "beep")));
     public static final Supplier<SoundEvent> PORTAL_GUN_CLOSE = SOUND_REGISTRY.register("portal_gun_close", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_close")));
     public static final Supplier<SoundEvent> PORTAL_GUN_OPEN = SOUND_REGISTRY.register("portal_gun_open", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_open")));
+    public static final Supplier<SoundEvent> PARADOX_AMBIENT = SOUND_REGISTRY.register("paradox_ambient", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_ambient")));
 
 
     public static void init(IEventBus eventBus) {
@@ -350,6 +351,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> FluidCollectorT1_ITEM = ITEMS.register("fluidcollectort1", () -> new BlockItem(FluidCollectorT1.get(), new Item.Properties()));
     public static final DeferredHolder<Block, FluidCollectorT2> FluidCollectorT2 = SIDEDBLOCKS.register("fluidcollectort2", FluidCollectorT2::new);
     public static final DeferredHolder<Item, BlockItem> FluidCollectorT2_ITEM = ITEMS.register("fluidcollectort2", () -> new BlockItem(FluidCollectorT2.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, ParadoxMachine> ParadoxMachine = SIDEDBLOCKS.register("paradoxmachine", ParadoxMachine::new);
+    public static final DeferredHolder<Item, BlockItem> ParadoxMachine_ITEM = ITEMS.register("paradoxmachine", () -> new BlockItem(ParadoxMachine.get(), new Item.Properties()));
 
     //Power Machines
     public static final DeferredHolder<Block, GeneratorT1> GeneratorT1 = BLOCKS.register("generatort1", GeneratorT1::new);
@@ -449,6 +452,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPlacerT2BE>> FluidPlacerT2BE = BLOCK_ENTITIES.register("fluidplacert2", () -> BlockEntityType.Builder.of(FluidPlacerT2BE::new, FluidPlacerT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT1BE>> FluidCollectorT1BE = BLOCK_ENTITIES.register("fluidcollectort1", () -> BlockEntityType.Builder.of(FluidCollectorT1BE::new, FluidCollectorT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT2BE>> FluidCollectorT2BE = BLOCK_ENTITIES.register("fluidcollectort2", () -> BlockEntityType.Builder.of(FluidCollectorT2BE::new, FluidCollectorT2.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ParadoxMachineBE>> ParadoxMachineBE = BLOCK_ENTITIES.register("paradoxmachine", () -> BlockEntityType.Builder.of(ParadoxMachineBE::new, ParadoxMachine.get()).build(null));
 
     //Items - Raw Resources
     public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
@@ -639,6 +643,12 @@ public class Registration {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("time_wand_entity"));
+    public static final DeferredHolder<EntityType<?>, EntityType<ParadoxEntity>> ParadoxEntity = ENTITY_TYPES.register("paradox_entity",
+            () -> EntityType.Builder.<ParadoxEntity>of(ParadoxEntity::new, MobCategory.MISC)
+                    .sized(1F, 1F)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("paradox_entity"));
 
     //Attributes
     public static final Holder<Attribute> PHASE = ATTRIBUTES.register("phase", () -> new RangedAttribute("justdirethings.phase", 0D, 0D, Double.MAX_VALUE).setSyncable(true));
@@ -695,6 +705,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(FluidCollectorT2Container::new));
     public static final DeferredHolder<MenuType<?>, MenuType<PotionCanisterContainer>> PotionCanister_Container = CONTAINERS.register("potioncanister_container",
             () -> IMenuTypeExtension.create((windowId, inv, data) -> new PotionCanisterContainer(windowId, inv, inv.player, data)));
+    public static final DeferredHolder<MenuType<?>, MenuType<ParadoxMachineContainer>> ParadoxMachine_Container = CONTAINERS.register("paradoxmachine_container",
+            () -> IMenuTypeExtension.create(ParadoxMachineContainer::new));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(
@@ -770,6 +782,12 @@ public class Registration {
             "generator_fluid_handler", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof FluidMachineBE fluidMachineBE)
                     return new JustDireFluidTank(fluidMachineBE.getMaxMB(), fluidstack -> fluidstack.getFluid() instanceof RefinedFuel);
+                return new JustDireFluidTank(0);
+            }).build());
+    public static final Supplier<AttachmentType<JustDireFluidTank>> PARADOX_FLUID_HANDLER = ATTACHMENT_TYPES.register(
+            "paradox_fluid_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof FluidMachineBE fluidMachineBE)
+                    return new JustDireFluidTank(fluidMachineBE.getMaxMB(), fluidstack -> fluidstack.getFluid() instanceof TimeFluid);
                 return new JustDireFluidTank(0);
             }).build());
 }
