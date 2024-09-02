@@ -100,7 +100,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.FerricoreBlock.get())
                 .add(Registration.BlazeGoldBlock.get())
                 .add(Registration.CelestigemBlock.get())
-                .add(Registration.EclipseAlloyBlock.get());
+                .add(Registration.EclipseAlloyBlock.get())
+                .add(Registration.CoalBlock_T1.get())
+                .add(Registration.CoalBlock_T2.get())
+                .add(Registration.CoalBlock_T3.get())
+                .add(Registration.CoalBlock_T4.get());
         tag(BlockTags.BAMBOO_PLANTABLE_ON)
                 .add(Registration.GooSoil_Tier1.get())
                 .add(Registration.GooSoil_Tier2.get())

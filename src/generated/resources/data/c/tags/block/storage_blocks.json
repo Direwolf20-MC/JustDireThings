@@ -3,6 +3,10 @@
     "justdirethings:ferricore_block",
     "justdirethings:blazegold_block",
     "justdirethings:celestigem_block",
-    "justdirethings:eclipsealloy_block"
+    "justdirethings:eclipsealloy_block",
+    "justdirethings:coalblock_t1",
+    "justdirethings:coalblock_t2",
+    "justdirethings:coalblock_t3",
+    "justdirethings:coalblock_t4"
   ]
 }

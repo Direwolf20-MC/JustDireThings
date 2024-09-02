@@ -30,6 +30,12 @@ public class JustDireItemTags extends ItemTagsProvider {
     public static final TagKey<Item> INGOT_BLAZEGOLD = forgeTag("ingots/blazegold");
     public static final TagKey<Item> INGOT_ECLIPSEALLOY = forgeTag("ingots/eclipsealloy");
 
+    public static final TagKey<Item> BOWS = forgeTag("tools/bow");
+    public static final TagKey<Item> RANGED_WEAPON = forgeTag("tools/ranged_weapon");
+    public static final TagKey<Item> MELEE_WEAPON = forgeTag("tools/melee_weapon");
+    public static final TagKey<Item> MINING_TOOL = forgeTag("tools/mining_tool");
+    public static final TagKey<Item> PAXEL = forgeTag("tools/paxel");
+
 
     private static TagKey<Item> forgeTag(String name) {
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
@@ -168,6 +174,34 @@ public class JustDireItemTags extends ItemTagsProvider {
         tag(GOO_REVIVE_TIER_4)
                 .add(Items.SCULK)
                 .add(Items.SCULK_CATALYST);
+        tag(BOWS)
+                .add(Registration.FerricoreBow.get())
+                .add(Registration.BlazegoldBow.get())
+                .add(Registration.CelestigemPickaxe.get())
+                .add(Registration.EclipseAlloyBow.get());
+        tag(RANGED_WEAPON)
+                .add(Registration.FerricoreBow.get())
+                .add(Registration.BlazegoldBow.get())
+                .add(Registration.CelestigemPickaxe.get())
+                .add(Registration.EclipseAlloyBow.get());
+        tag(MELEE_WEAPON)
+                .add(Registration.FerricoreSword.get())
+                .add(Registration.FerricoreAxe.get())
+                .add(Registration.BlazegoldSword.get())
+                .add(Registration.BlazegoldAxe.get())
+                .add(Registration.CelestigemSword.get())
+                .add(Registration.CelestigemAxe.get())
+                .add(Registration.EclipseAlloySword.get())
+                .add(Registration.EclipseAlloyAxe.get())
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
+        tag(MINING_TOOL)
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
+        tag(PAXEL)
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
+
     }
 
     @Override
