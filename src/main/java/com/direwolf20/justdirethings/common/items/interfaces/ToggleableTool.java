@@ -210,7 +210,7 @@ public interface ToggleableTool extends ToggleableItem {
             int efficiency = stack.getEnchantmentLevel(holder);
             if (efficiency > 0) {
                 float discount = 0.1f * efficiency;
-                rfCost = (int) (rfCost * discount);
+                rfCost = rfCost - (int) (rfCost * discount);
             }
         }
         return rfCost;
