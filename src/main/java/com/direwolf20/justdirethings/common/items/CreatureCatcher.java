@@ -20,8 +20,7 @@ import static com.direwolf20.justdirethings.common.items.datacomponents.JustDire
 
 public class CreatureCatcher extends Item {
     public CreatureCatcher() {
-        super(new Properties()
-                .stacksTo(1));
+        super(new Properties());
     }
 
     @Override
