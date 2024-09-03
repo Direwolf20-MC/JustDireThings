@@ -150,7 +150,7 @@ public class ParadoxMachineBER extends AreaAffectingBER {
 
         // Set up render type for transparency
         ResourceLocation resourceLocation = renderer.getTextureLocation(entity);
-        if (resourceLocation == null) return;
+        if (resourceLocation == null) return; //Caused soaryn to crash without this
         RenderType renderType = RenderType.itemEntityTranslucentCull(resourceLocation);
         VertexConsumer vertexconsumer = bufferIn.getBuffer(renderType);
 
