@@ -27,9 +27,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -528,10 +526,28 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         }
 
         // Load the entity data and set its position
-        entity.load(entityData);
+        CompoundTag santizedData = sanitizeEntityData(entityData);
+        entity.load(santizedData);
+        if (entity instanceof Mob mob && level instanceof ServerLevel serverLevel)
+            mob.finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.SPAWNER, null);
+
         entity.moveTo(worldPos.x, worldPos.y, worldPos.z, entity.getYRot(), entity.getXRot());
 
         return (LivingEntity) entity; // Return the restored LivingEntity
+    }
+
+    public CompoundTag sanitizeEntityData(CompoundTag entityData) {
+        CompoundTag compoundTag = new CompoundTag();
+        String[] fieldsToCopy = {"IsBaby", "UUID", "Health", "Motion", "Rotation", "Fire", "CustomName", "NoAI", "PersistenceRequired", "Silent",
+                "Color", "Sheared", "Variant", "FromBucket", "Age", "VillagerData", "Xp", "LastRestock", "RestocksToday", "Offers"};
+
+        // Iterate over the fields and copy them if they exist
+        for (String field : fieldsToCopy) {
+            if (entityData.contains(field)) {
+                compoundTag.put(field, entityData.get(field));
+            }
+        }
+        return compoundTag;
     }
 
     public void setRenderParadox(boolean render, int targetType) {
