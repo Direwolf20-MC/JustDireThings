@@ -38,6 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.entity.PartEntity;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -529,7 +530,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         CompoundTag santizedData = sanitizeEntityData(entityData);
         entity.load(santizedData);
         if (entity instanceof Mob mob && level instanceof ServerLevel serverLevel)
-            mob.finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.SPAWNER, null);
+            EventHooks.finalizeMobSpawn(mob, serverLevel, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.SPAWNER, null);
+        //mob.finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.SPAWNER, null);
 
         entity.moveTo(worldPos.x, worldPos.y, worldPos.z, entity.getYRot(), entity.getXRot());
 
@@ -539,7 +541,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public CompoundTag sanitizeEntityData(CompoundTag entityData) {
         CompoundTag compoundTag = new CompoundTag();
         String[] fieldsToCopy = {"IsBaby", "UUID", "Health", "Motion", "Rotation", "Fire", "CustomName", "NoAI", "PersistenceRequired", "Silent",
-                "Color", "Sheared", "Variant", "FromBucket", "Age", "VillagerData", "Xp", "LastRestock", "RestocksToday", "Offers"};
+                "Color", "Sheared", "Variant", "FromBucket", "Age", "VillagerData", "Xp",
+                "LastRestock", "RestocksToday", "Offers", "EggLayTime"};
 
         // Iterate over the fields and copy them if they exist
         for (String field : fieldsToCopy) {
