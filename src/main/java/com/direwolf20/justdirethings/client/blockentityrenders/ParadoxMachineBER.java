@@ -22,6 +22,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -148,7 +149,9 @@ public class ParadoxMachineBER extends AreaAffectingBER {
         EntityRenderer<? super LivingEntity> renderer = renderManager.getRenderer(entity);
 
         // Set up render type for transparency
-        RenderType renderType = RenderType.itemEntityTranslucentCull(renderer.getTextureLocation(entity));
+        ResourceLocation resourceLocation = renderer.getTextureLocation(entity);
+        if (resourceLocation == null) return;
+        RenderType renderType = RenderType.itemEntityTranslucentCull(resourceLocation);
         VertexConsumer vertexconsumer = bufferIn.getBuffer(renderType);
 
         // Calculate overlay and lighting
@@ -178,15 +181,6 @@ public class ParadoxMachineBER extends AreaAffectingBER {
             entityModel.prepareMobModel(entity, f4, f8, partialTicks);
             entityModel.setupAnim(entity, f4, f8, f7, f2, f5);
             entityModel.renderToBuffer(matrixStackIn, vertexconsumer, combinedLightsIn, overlayCoords, packedARGB);
-
-            // Render all layers, including armor, with the appropriate transparency
-            //Commented out until i can get it transparent
-            /*for (RenderLayer<?, ?> layer : livingRenderer.layers) {
-                // Use the layer's render method to ensure proper rendering
-                @SuppressWarnings("unchecked")
-                RenderLayer<LivingEntity, EntityModel<LivingEntity>> castedLayer = (RenderLayer<LivingEntity, EntityModel<LivingEntity>>) layer;
-                castedLayer.render(matrixStackIn, bufferIn, combinedLightsIn, entity, f4, f8, partialTicks, f7, f2, f5);
-            }*/
         }
     }
 
