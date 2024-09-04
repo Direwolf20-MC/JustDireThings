@@ -5,10 +5,10 @@ import com.mojang.logging.LogUtils;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
 
 public class Config {
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -232,6 +232,10 @@ public class Config {
                 .defineInRange("time_wand_fluid_cost", 0.5, 0, Double.MAX_VALUE);
         TIME_WAND_MAX_MULTIPLIER = COMMON_BUILDER.comment("The maximum speed multiplier that can be applied using a Time Wand. This value should be a power of two.")
                 .define("time_wand_max_multiplier", 256, value -> {
+                    if (value == null) {
+                        LOGGER.warn("time_wand_max_multiplier is null, creating a default entry in the config.");
+                        return false; // Return false to ensure the entry is created
+                    }
                     final boolean validPowerOfTwo = (int) Math.pow(2, logBase2((int) value)) == (int) value;
                     if (!validPowerOfTwo || (int) value < 2) {
                         LOGGER.error("Invalid time_wand_max_multiplier {}, must be power of 2 and >=2", value);
