@@ -1,0 +1,9 @@
+{
+  "processor": "com.direwolf20.justdirethings.util.ConfigValueComponentProcessor",
+  "components": [
+    {
+      "type": "patchouli:text",
+      "text": "#text"
+    }
+  ]
+}

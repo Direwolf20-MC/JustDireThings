@@ -71,7 +71,7 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
         if (existingEntity.isPresent()) {
             TimeWandEntity timeWandEntity = existingEntity.get();
             setRate = timeWandEntity.getTickSpeed() + 1;
-            if (setRate > 8) //Config?
+            if (setRate > Config.logBase2(Config.TIME_WAND_MAX_MULTIPLIER.get()))
                 return false;
             float accelRate = TimeWandEntity.calculateAccelRate(setRate);
             int cost = calculateFluidCost(player, (int) accelRate);

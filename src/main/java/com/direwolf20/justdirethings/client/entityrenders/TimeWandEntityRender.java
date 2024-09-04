@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.client.entityrenders;
 
 import com.direwolf20.justdirethings.client.renderers.RenderHelpers;
 import com.direwolf20.justdirethings.common.entities.TimeWandEntity;
+import com.direwolf20.justdirethings.setup.Config;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
@@ -25,7 +26,7 @@ public class TimeWandEntityRender extends EntityRenderer<TimeWandEntity> {
         matrixStackIn.pushPose();
 
         // Calculate the progress for tick rate and time remaining
-        float tickRateProgress = pEntity.getTickSpeed() / 8.0f; // Assuming max rate is 8
+        float tickRateProgress = pEntity.getTickSpeed() / (float) Config.logBase2(Config.TIME_WAND_MAX_MULTIPLIER.get());
         float timeProgress = (float) pEntity.getRemainingTime() / pEntity.getTotalTime(); // Assuming methods for total time
 
         // Render progress bars on all 6 sides of the block

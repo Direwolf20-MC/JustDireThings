@@ -1,17 +1,23 @@
 package com.direwolf20.justdirethings.setup;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.mojang.logging.LogUtils;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
 
 public class Config {
+    public static final Logger LOGGER = LogUtils.getLogger();
+
     public static final ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
+
+    public static ModConfigSpec COMMON_CONFIG;
 
     public static final String OVERLAY_POSITION = "overlay_position";
     public static ModConfigSpec.IntValue OVERLAY_X;
@@ -53,6 +59,7 @@ public class Config {
     public static ModConfigSpec.IntValue TIME_WAND_RF_CAPACITY;
     public static ModConfigSpec.IntValue TIMEWAND_RF_COST;
     public static ModConfigSpec.DoubleValue TIMEWAND_FLUID_COST;
+    public static ModConfigSpec.ConfigValue<Integer> TIME_WAND_MAX_MULTIPLIER;
 
     public static final String CATEGORY_PARADOX_MACHINE = "paradox_machine";
     public static ModConfigSpec.IntValue PARADOX_TOTAL_FLUID_CAPACITY;
@@ -99,7 +106,8 @@ public class Config {
         portalGunConfig();
         timeWandConfig();
         paradoxConfig();
-        container.registerConfig(ModConfig.Type.COMMON, COMMON_BUILDER.build());
+        COMMON_CONFIG = COMMON_BUILDER.build();
+        container.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
     }
 
     private static void registerServerConfigs(ModContainer container) {
@@ -222,7 +230,19 @@ public class Config {
                 .defineInRange("time_wand_rf_cost", 100, 0, Integer.MAX_VALUE);
         TIMEWAND_FLUID_COST = COMMON_BUILDER.comment("The Time Fluid cost to use the time wand.  This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in Time Fluid.")
                 .defineInRange("time_wand_fluid_cost", 0.5, 0, Double.MAX_VALUE);
+        TIME_WAND_MAX_MULTIPLIER = COMMON_BUILDER.comment("The maximum speed multiplier that can be applied using a Time Wand. This value should be a power of two.")
+                .define("time_wand_max_multiplier", 256, value -> {
+                    final boolean validPowerOfTwo = (int) Math.pow(2, logBase2((int) value)) == (int) value;
+                    if (!validPowerOfTwo || (int) value < 2) {
+                        LOGGER.error("Invalid time_wand_max_multiplier {}, must be power of 2 and >=2", value);
+                    }
+                    return validPowerOfTwo;
+                });
         COMMON_BUILDER.pop();
+    }
+
+    public static int logBase2(final int value) {
+        return (int) (Math.log(value) / Math.log(2));
     }
 
     private static void paradoxConfig() {
