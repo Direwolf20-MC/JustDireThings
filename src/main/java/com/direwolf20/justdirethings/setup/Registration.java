@@ -353,6 +353,9 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> FluidCollectorT2_ITEM = ITEMS.register("fluidcollectort2", () -> new BlockItem(FluidCollectorT2.get(), new Item.Properties()));
     public static final DeferredHolder<Block, ParadoxMachine> ParadoxMachine = SIDEDBLOCKS.register("paradoxmachine", ParadoxMachine::new);
     public static final DeferredHolder<Item, BlockItem> ParadoxMachine_ITEM = ITEMS.register("paradoxmachine", () -> new BlockItem(ParadoxMachine.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, InventoryHolder> InventoryHolder = BLOCKS.register("inventory_holder", InventoryHolder::new);
+    public static final DeferredHolder<Item, BlockItem> InventoryHolder_ITEM = ITEMS.register("inventory_holder", () -> new BlockItem(InventoryHolder.get(), new Item.Properties()));
+
 
     //Power Machines
     public static final DeferredHolder<Block, GeneratorT1> GeneratorT1 = BLOCKS.register("generatort1", GeneratorT1::new);
@@ -453,6 +456,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT1BE>> FluidCollectorT1BE = BLOCK_ENTITIES.register("fluidcollectort1", () -> BlockEntityType.Builder.of(FluidCollectorT1BE::new, FluidCollectorT1.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT2BE>> FluidCollectorT2BE = BLOCK_ENTITIES.register("fluidcollectort2", () -> BlockEntityType.Builder.of(FluidCollectorT2BE::new, FluidCollectorT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ParadoxMachineBE>> ParadoxMachineBE = BLOCK_ENTITIES.register("paradoxmachine", () -> BlockEntityType.Builder.of(ParadoxMachineBE::new, ParadoxMachine.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InventoryHolderBE>> InventoryHolderBE = BLOCK_ENTITIES.register("inventory_holder", () -> BlockEntityType.Builder.of(InventoryHolderBE::new, InventoryHolder.get()).build(null));
 
     //Items - Raw Resources
     public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
@@ -707,6 +711,8 @@ public class Registration {
             () -> IMenuTypeExtension.create((windowId, inv, data) -> new PotionCanisterContainer(windowId, inv, inv.player, data)));
     public static final DeferredHolder<MenuType<?>, MenuType<ParadoxMachineContainer>> ParadoxMachine_Container = CONTAINERS.register("paradoxmachine_container",
             () -> IMenuTypeExtension.create(ParadoxMachineContainer::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<InventoryHolderContainer>> InventoryHolder_Container = CONTAINERS.register("inventoryholder_container",
+            () -> IMenuTypeExtension.create(InventoryHolderContainer::new));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(

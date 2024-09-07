@@ -265,6 +265,10 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 0, 0, 18, 18);
     }
 
+    public void renderInventorySection(GuiGraphics guiGraphics, int relX, int relY) {
+        guiGraphics.blitSprite(SOCIALBACKGROUND, relX, relY + 83 - 8, this.imageWidth, this.imageHeight - 73); //Inventory Section
+    }
+
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         int relX = (this.width - this.imageWidth) / 2;
@@ -273,7 +277,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         guiGraphics.blitSprite(SOCIALBACKGROUND, topSectionLeft + 20, topSectionTop - 20, topSectionWidth - 40, 20);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         guiGraphics.blitSprite(SOCIALBACKGROUND, topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight);
-        guiGraphics.blitSprite(SOCIALBACKGROUND, relX, relY + 83 - 8, this.imageWidth, this.imageHeight - 73); //Inventory Section
+        renderInventorySection(guiGraphics, relX, relY);
         for (Slot slot : container.slots) {
             drawSlot(guiGraphics, slot);
         }

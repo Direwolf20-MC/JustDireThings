@@ -188,6 +188,7 @@ public class ClientSetup {
         event.register(Registration.FluidCollectorT2_Container.get(), FluidCollectorT2Screen::new);
         event.register(Registration.PotionCanister_Container.get(), PotionCanisterScreen::new);
         event.register(Registration.ParadoxMachine_Container.get(), ParadoxMachineScreen::new);
+        event.register(Registration.InventoryHolder_Container.get(), InventoryHolderScreen::new);
     }
 
     @SubscribeEvent

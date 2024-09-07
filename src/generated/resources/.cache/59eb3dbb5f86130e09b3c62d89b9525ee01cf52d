@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-25T12:11:24.2452257	Loot Tables
+// 1.21.1	2024-09-07T12:06:42.2583603	Loot Tables
 16a0ab61513717ab1cb8c1df9718722a643d9728 data/justdirethings/loot_table/blocks/blazegold_block.json
 b2953e2dcd4960e7f275bb42e4ad626219213fe1 data/justdirethings/loot_table/blocks/blockbreakert1.json
 bb65fdba3c1b14526a629aacb462661b5853008b data/justdirethings/loot_table/blocks/blockbreakert2.json
@@ -34,6 +34,7 @@ ec24d4e64ad8c73bb13ad3153e02193c0c4e286d data/justdirethings/loot_table/blocks/g
 dbc0b95e979a373cff9226804660f79e55dead0b data/justdirethings/loot_table/blocks/goosoil_tier2.json
 e5dc519a36800fe39f9b40f5e1d912d9df6f7c3b data/justdirethings/loot_table/blocks/goosoil_tier3.json
 7d4fef11b44bce90cb85c09d118d03c23521e5cb data/justdirethings/loot_table/blocks/goosoil_tier4.json
+749b820e9b4fdd786aa8178d7dbf768e033e0206 data/justdirethings/loot_table/blocks/inventory_holder.json
 ef34320ffe3a06c2453936f1b1e64b1d0a15236a data/justdirethings/loot_table/blocks/itemcollector.json
 6b7915b45c6c11b54c9b87c99d2fc57fcdf6c11b data/justdirethings/loot_table/blocks/paradoxmachine.json
 e6928ebd9466d9024405cfea4dc9fd49c4a1dc4f data/justdirethings/loot_table/blocks/playeraccessor.json

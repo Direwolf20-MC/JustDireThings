@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "justdirethings",
+  "ingredients": [
+    {
+      "item": "justdirethings:inventory_holder"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:inventory_holder"
+  }
+}

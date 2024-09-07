@@ -68,16 +68,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         add(Registration.TimeCrystalCluster_Large.get(), noDrop());
         add(Registration.TimeCrystalBuddingBlock.get(), noDrop());
         dropSelf(Registration.ParadoxMachine.get());
-        //Time Crystal
-        /*add(Registration.TimeCrystalBuddingBlock.get(), LootTable.lootTable()
-                .withPool(LootPool.lootPool()
-                        .setRolls(ConstantValue.exactly(1))
-                        .add(LootItem.lootTableItem(Registration.TimeCrystal.get())
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(3.0F)))
-                                .when(ExplosionCondition.survivesExplosion())
-                        )
-                )
-        );*/
+        dropSelf(Registration.InventoryHolder.get());
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(

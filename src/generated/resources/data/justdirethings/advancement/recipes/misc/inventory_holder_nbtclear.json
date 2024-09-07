@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_inventory_holder": {
+      "conditions": {
+        "items": [
+          {
+            "items": "justdirethings:inventory_holder"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:inventory_holder_nbtclear"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_inventory_holder"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:inventory_holder_nbtclear"
+    ]
+  }
+}

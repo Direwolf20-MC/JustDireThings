@@ -197,7 +197,8 @@ public class JustDireThings {
                 Registration.FluidPlacerT1.get(),
                 Registration.FluidPlacerT2.get(),
                 Registration.FluidCollectorT1.get(),
-                Registration.FluidCollectorT2.get()
+                Registration.FluidCollectorT2.get(),
+                Registration.InventoryHolder.get()
         );
         event.registerBlock(Capabilities.ItemHandler.BLOCK,
                 (level, pos, state, be, side) -> {

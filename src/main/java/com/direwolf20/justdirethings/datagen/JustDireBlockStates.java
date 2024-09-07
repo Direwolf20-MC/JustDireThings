@@ -45,7 +45,7 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.PlayerAccessor.get(), models().cubeAll(Registration.PlayerAccessor.getId().getPath(), blockTexture(Registration.PlayerAccessor.get())));
         simpleBlock(Registration.EclipseGateBlock.get(), models().cubeAll(Registration.EclipseGateBlock.getId().getPath(), blockTexture(Registration.EclipseGateBlock.get())).renderType("cutout"));
         simpleBlock(Registration.TimeCrystalBlock.get(), models().cubeAll(Registration.TimeCrystalBlock.getId().getPath(), blockTexture(Registration.TimeCrystalBlock.get())));
-        //simpleBlock(Registration.TimeCrystalBuddingBlock.get(), models().cubeAll(Registration.TimeCrystalBuddingBlock.getId().getPath(), blockTexture(Registration.TimeCrystalBuddingBlock.get())));
+        simpleBlock(Registration.InventoryHolder.get(), models().cubeAll(Registration.InventoryHolder.getId().getPath(), blockTexture(Registration.InventoryHolder.get())));
         timeCrystalCluster(Registration.TimeCrystalCluster_Small);
         timeCrystalCluster(Registration.TimeCrystalCluster_Medium);
         timeCrystalCluster(Registration.TimeCrystalCluster_Large);

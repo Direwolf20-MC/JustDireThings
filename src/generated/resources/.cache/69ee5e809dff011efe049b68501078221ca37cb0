@@ -1,4 +1,4 @@
-// 1.21.1	2024-08-25T12:11:24.2347167	Item Models: justdirethings
+// 1.21.1	2024-09-07T12:06:42.2473509	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -281,6 +281,7 @@ a48cecdb5ad78ee95ffb4e98458804d64cd1f608 assets/justdirethings/models/item/gooso
 d42f004ad7ff6b67416aa3265ce45f6c3ec717f4 assets/justdirethings/models/item/goosoil_tier2.json
 e4ec28bbb693fef607a9a59e130c9c741c2c4ec2 assets/justdirethings/models/item/goosoil_tier3.json
 ac932db480bd510a82b5f207cc05152877106e2e assets/justdirethings/models/item/goosoil_tier4.json
+913e08f666fffaf8a1801f9049ad8e63b3003391 assets/justdirethings/models/item/inventory_holder.json
 87ad4ff946b952807517ec6ef4b434215dc6fb51 assets/justdirethings/models/item/itemcollector.json
 19238cd33f307548ea99478a3b2e554a575d1a90 assets/justdirethings/models/item/machinesettingscopier.json
 93289cdb69e1b67bf43186e5ad12efafcb01149e assets/justdirethings/models/item/paradoxmachine.json
