@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
+import com.direwolf20.justdirethings.common.containers.slots.InventoryHolderSlot;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
@@ -16,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class InventoryHolderContainer extends BaseMachineContainer {
     public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET = ResourceLocation.parse("item/empty_armor_slot_helmet");
@@ -41,9 +41,9 @@ public class InventoryHolderContainer extends BaseMachineContainer {
 
     public void addMachineSlots() {
         machineHandler = baseMachineBE.getMachineHandler();
-        addSlotRange(machineHandler, 0, 8, 50, 9, 18); //Hotbar
-        addSlotBox(machineHandler, 9, 8, -8, 9, 18, 3, 18);
-        addArmorSlots(machineHandler, player, 36, 44, -28);
+        addMachineSlotRange(machineHandler, 0, 8, 50, 9, 18); //Hotbar
+        addMachineSlotBox(machineHandler, 9, 8, -8, 9, 18, 3, 18);
+        addMachineArmorSlots(machineHandler, player, 36, 44, -28);
     }
 
     @Override
@@ -68,10 +68,28 @@ public class InventoryHolderContainer extends BaseMachineContainer {
         addPlayerSlots(playerInventory, 8, 102);
     }
 
-    public void addArmorSlots(IItemHandler itemHandler, Player playerEntity, int index, int x, int y) {
+    //Overrides for custom slot
+    protected int addMachineSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
+        for (int i = 0; i < amount; i++) {
+            addSlot(new InventoryHolderSlot(handler, index, x, y));
+            x += dx;
+            index++;
+        }
+        return index;
+    }
+
+    protected int addMachineSlotBox(IItemHandler handler, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
+        for (int j = 0; j < verAmount; j++) {
+            index = addMachineSlotRange(handler, index, x, y, horAmount, dx);
+            y += dy;
+        }
+        return index;
+    }
+
+    public void addMachineArmorSlots(IItemHandler itemHandler, Player playerEntity, int index, int x, int y) {
         for (int k = 0; k < 4; ++k) {
             final EquipmentSlot equipmentslot = SLOT_IDS[k];
-            this.addSlot(new SlotItemHandler(itemHandler, index + k, x + k * 18, y) {
+            this.addSlot(new InventoryHolderSlot(itemHandler, index + k, x + k * 18, y) {
                 @Override
                 public int getMaxStackSize() {
                     return 1;
@@ -89,7 +107,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
             });
         }
 
-        this.addSlot(new SlotItemHandler(itemHandler, index + 4, x + 4 * 18, y) {
+        this.addSlot(new InventoryHolderSlot(itemHandler, index + 4, x + 4 * 18, y) {
             @Override
             public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
                 return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);

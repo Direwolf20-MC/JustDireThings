@@ -35,6 +35,7 @@ public class PacketHandler {
         registrar.playToServer(ToggleToolRefreshSlots.TYPE, ToggleToolRefreshSlots.STREAM_CODEC, ToggleToolRefreshSlotsPacket.get()::handle);
         registrar.playToServer(ParadoxMachineSnapshotPayload.TYPE, ParadoxMachineSnapshotPayload.STREAM_CODEC, ParadoxSnapshotPacket.get()::handle);
         registrar.playToServer(ParadoxRenderPayload.TYPE, ParadoxRenderPayload.STREAM_CODEC, ParadoxRenderPacket.get()::handle);
+        registrar.playToServer(InventoryHolderSaveSlotPayload.TYPE, InventoryHolderSaveSlotPayload.STREAM_CODEC, InventoryHolderSaveSlotPacket.get()::handle);
 
         //Going to Client
         registrar.playToClient(ClientSoundPayload.TYPE, ClientSoundPayload.STREAM_CODEC, ClientSoundPacket.get()::handle);
