@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class InventoryHolderBE extends BaseMachineBE {
     public InventoryHolderBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
+        MACHINE_SLOTS = 41; //Hotbar, Inventory, Armor, and Offhand
     }
 
     public InventoryHolderBE(BlockPos pPos, BlockState pBlockState) {

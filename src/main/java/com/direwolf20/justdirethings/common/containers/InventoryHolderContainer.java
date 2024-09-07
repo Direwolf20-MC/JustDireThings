@@ -59,6 +59,8 @@ public class InventoryHolderContainer extends BaseMachineContainer {
     @Override
     public void removed(Player playerIn) {
         super.removed(playerIn);
+        if (baseMachineBE != null)
+            baseMachineBE.markDirtyClient();
     }
 
     @Override

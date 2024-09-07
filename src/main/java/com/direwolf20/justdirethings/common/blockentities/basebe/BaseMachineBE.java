@@ -46,7 +46,6 @@ public class BaseMachineBE extends BlockEntity {
 
     public BaseMachineBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
-        MACHINE_SLOTS = 41; //Hotbar, Inventory, Armor, and Offhand
     }
 
     public void tickClient() {
