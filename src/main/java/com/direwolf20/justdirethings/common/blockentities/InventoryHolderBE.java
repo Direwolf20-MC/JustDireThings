@@ -130,7 +130,8 @@ public class InventoryHolderBE extends BaseMachineBE {
         compareCounts = tag.getBoolean("compareCounts");
         automatedFiltersOnly = tag.getBoolean("automatedFiltersOnly");
         automatedCompareCounts = tag.getBoolean("automatedCompareCounts");
-        renderPlayer = tag.getBoolean("renderPlayer");
+        if (tag.contains("renderPlayer"))
+            renderPlayer = tag.getBoolean("renderPlayer");
         if (tag.contains("renderedSlot"))
             renderedSlot = tag.getInt("renderedSlot");
         if (tag.contains("filteredItems")) {

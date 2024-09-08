@@ -14,6 +14,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
+import java.util.UUID;
+
 public class InventoryHolderBER extends AreaAffectingBER {
     public InventoryHolderBER(BlockEntityRendererProvider.Context context) {
 
@@ -49,8 +51,10 @@ public class InventoryHolderBER extends AreaAffectingBER {
     public AbstractClientPlayer createMockPlayer(InventoryHolderBE blockEntity) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.level == null) return null;
+        UUID placedByUUID = blockEntity.placedByUUID;
+        if (placedByUUID == null) return null;
         // Create a mock AbstractClientPlayer using the current level and a GameProfile
-        GameProfile gameProfile = new GameProfile(blockEntity.placedByUUID, "MockPlayer");
+        GameProfile gameProfile = new GameProfile(placedByUUID, "MockPlayer");
 
         // AbstractClientPlayer does not need the full connection setup like LocalPlayer
         return new AbstractClientPlayer(minecraft.level, gameProfile) {
