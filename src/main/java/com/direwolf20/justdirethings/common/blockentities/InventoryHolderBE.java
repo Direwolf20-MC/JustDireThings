@@ -105,7 +105,40 @@ public class InventoryHolderBE extends BaseMachineBE {
 
     @Override
     public boolean isDefaultSettings() {
+        if (compareNBT)
+            return false;
+        if (filtersOnly)
+            return false;
+        if (automatedFiltersOnly)
+            return false;
+        if (compareCounts)
+            return false;
+        if (automatedCompareCounts)
+            return false;
+        if (renderedSlot != 27)
+            return false;
+        for (int i = 0; i < filterBasicHandler.getSlots(); i++) {
+            if (!filterBasicHandler.getStackInSlot(i).isEmpty())
+                return false;
+        }
+        ItemStackHandler itemStackHandler = getMachineHandler();
+        for (int i = 0; i < itemStackHandler.getSlots(); i++) {
+            if (!itemStackHandler.getStackInSlot(i).isEmpty())
+                return false;
+        }
         return true;
+    }
+
+    public void saveInventory(CompoundTag tag, HolderLookup.Provider provider) {
+        tag.put("storedItems", getMachineHandler().serializeNBT(provider));
+    }
+
+    public void loadInventory(CompoundTag tag, HolderLookup.Provider provider) {
+        if (tag.contains("storedItems")) {
+            CompoundTag filteredItems = tag.getCompound("storedItems");
+            getMachineHandler().deserializeNBT(provider, filteredItems);
+            rebuildFilterCache();
+        }
     }
 
     @Override

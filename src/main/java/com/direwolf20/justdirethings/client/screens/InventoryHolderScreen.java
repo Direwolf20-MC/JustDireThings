@@ -127,13 +127,13 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
         // Draw red border if this is the selected slot (renderedSlot)
         if (slot.getSlotIndex() == renderedSlot && slot instanceof InventoryHolderSlot) {
             // Top border
-            guiGraphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y, 0xFFFF0000);
+            guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 1, 0xFFFF0000);
             // Bottom border
-            guiGraphics.fill(slot.x - 1, slot.y + 16, slot.x + 17, slot.y + 17, 0xFFFF0000);
+            guiGraphics.fill(slot.x, slot.y + 15, slot.x + 16, slot.y + 16, 0xFFFF0000);
             // Left border
-            guiGraphics.fill(slot.x - 1, slot.y - 1, slot.x, slot.y + 17, 0xFFFF0000);
+            guiGraphics.fill(slot.x, slot.y, slot.x + 1, slot.y + 16, 0xFFFF0000);
             // Right border
-            guiGraphics.fill(slot.x + 16, slot.y - 1, slot.x + 17, slot.y + 17, 0xFFFF0000);
+            guiGraphics.fill(slot.x + 15, slot.y, slot.x + 16, slot.y + 16, 0xFFFF0000);
         }
     }
 
