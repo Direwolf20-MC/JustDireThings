@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-01T16:57:19.9701478	Recipes
+// 1.21.1	2024-09-07T12:06:42.2598615	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancement/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancement/recipes/building_blocks/celestigem_9x9.json
 94b1a5fa365caea5ec90b525346091c5babe3068 data/justdirethings/advancement/recipes/building_blocks/coal_t1_9x9.json
@@ -290,6 +290,8 @@ cf4c8ec4d15c74eedcb190186c22deb10f488310 data/justdirethings/advancement/recipes
 14618bd6c1ceecf67c813fdc403ee01b972178f0 data/justdirethings/advancement/recipes/misc/gooblock_tier2.json
 f965796d5be85d63ad61a862e9e7819d4c6a8a68 data/justdirethings/advancement/recipes/misc/gooblock_tier3.json
 fdebc5b40b207807304f336cf17a8e3a43b01d66 data/justdirethings/advancement/recipes/misc/gooblock_tier4.json
+8c779d43a5c51115bf13c22fbd9c00230837fa05 data/justdirethings/advancement/recipes/misc/inventory_holder.json
+1b645d86c2a7c9b93dcffbbbbeecb83a8bcff955 data/justdirethings/advancement/recipes/misc/inventory_holder_nbtclear.json
 e10812b6725eb2ece42eaa4153f759a8b6c0afed data/justdirethings/advancement/recipes/misc/itemcollector.json
 6c3ff48d510d379f907fd43b1da46f37e87f7b6a data/justdirethings/advancement/recipes/misc/itemcollector_nbtclear.json
 3c0f94c52d98fa71451b71aa1ad0b01e295712a0 data/justdirethings/advancement/recipes/misc/machinesettingscopier.json
@@ -669,6 +671,8 @@ ad727ee779884e18264f5460103c78f8c0ac283a data/justdirethings/recipe/generatort1.
 b6bf47c9ad5cd5b8dd2436966c94ebea194bdfb9 data/justdirethings/recipe/gooblock_tier2.json
 115913ff475c95e246dad1785bb2a581182fa4a1 data/justdirethings/recipe/gooblock_tier3.json
 e3990dbefb4f17cf3a84f6ef65168524adc0e543 data/justdirethings/recipe/gooblock_tier4.json
+8dc38c0ef2cfa634588b26f958818640fee86232 data/justdirethings/recipe/inventory_holder.json
+441b9cbf896a63bda07b360d2a39658f69bf44ad data/justdirethings/recipe/inventory_holder_nbtclear.json
 4d63f24946629911b30e62e200beb6c75fd033ee data/justdirethings/recipe/itemcollector.json
 2827bca3da58aebda20b9fb5c572cb9252c40e7a data/justdirethings/recipe/itemcollector_nbtclear.json
 748448f660b8991e9407f8a14ab645234b91a398 data/justdirethings/recipe/machinesettingscopier.json

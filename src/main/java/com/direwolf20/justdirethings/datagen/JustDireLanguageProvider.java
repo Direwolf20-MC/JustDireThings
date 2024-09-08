@@ -58,6 +58,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TimeCrystalCluster_Medium.get(), "Medium Time Crystal Cluster");
         add(Registration.TimeCrystalCluster_Large.get(), "Large Time Crystal Cluster");
         add(Registration.ParadoxMachine.get(), "Paradox Machine");
+        add(Registration.InventoryHolder.get(), "Inventory Holder");
 
         //Fluids
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
@@ -447,8 +448,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.pulse", "Pulse");
         add("justdirethings.screen.allowlist", "Allow List");
         add("justdirethings.screen.denylist", "Deny List");
+        add("justdirethings.screen.filteronlytrue", "Filtered Items Only");
         add("justdirethings.screen.renderarea", "Render Area");
         add("justdirethings.screen.comparenbt", "Compare NBT");
+        add("justdirethings.screen.comparecounts", "Compare Stack Sizes");
         add("justdirethings.screen.direction-down", "Down");
         add("justdirethings.screen.direction-up", "Up");
         add("justdirethings.screen.direction-north", "North");
@@ -514,6 +517,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.paradoxall", "Revert Blocks and Entities");
         add("justdirethings.screen.paradoxenergycost", "Energy Cost: %s FE");
         add("justdirethings.screen.paradoxfluidcost", "Fluid Cost: %s mb");
+        add("justdirethings.screen.senditems", "Push Items");
+        add("justdirethings.screen.pullitems", "Pull Items");
+        add("justdirethings.screen.swapitems", "Swap Items");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

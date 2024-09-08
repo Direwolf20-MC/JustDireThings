@@ -49,11 +49,25 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, ALLOW_LIST_TEXTURES, startingValue, onPress);
     }
 
+    private static final ResourceLocation FILTER_ONLY = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png");
+    private static final Component FILTER_ONLY_LOCALIZATION = Component.translatable("justdirethings.screen.filteronlytrue");
+
+    public static GrayscaleButton FILTERONLYBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, FILTER_ONLY, FILTER_ONLY_LOCALIZATION, startingValue, onPress);
+    }
+
     private static final ResourceLocation COMPARE_NBT = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/matchnbttrue.png");
     private static final Component COMPARE_NBT_LOCALIZATION = Component.translatable("justdirethings.screen.comparenbt");
 
     public static GrayscaleButton COMPARENBTBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
         return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, COMPARE_NBT, COMPARE_NBT_LOCALIZATION, startingValue, onPress);
+    }
+
+    private static final ResourceLocation COMPARE_COUNTS = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/equals.png");
+    private static final Component COMPARE_COUNTS_LOCALIZATION = Component.translatable("justdirethings.screen.comparecounts");
+
+    public static GrayscaleButton COMPARECOUNTSBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, COMPARE_COUNTS, COMPARE_COUNTS_LOCALIZATION, startingValue, onPress);
     }
 
     private static final ResourceLocation RENDER_AREA = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/area.png");
@@ -344,6 +358,30 @@ public class ToggleButtonFactory {
 
     public static ToggleButton SNAPSHOT_AREA_BUTTON(int x, int y, Button.OnPress onPress) {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SNAPSHOT_AREA_BUTTON, 0, onPress);
+    }
+
+    private static final List<TextureLocalization> SEND_INV_BUTTON = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/senditems.png"), Component.translatable("justdirethings.screen.senditems"))
+    );
+
+    public static ToggleButton SEND_INV_BUTTON(int x, int y, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SEND_INV_BUTTON, 0, onPress);
+    }
+
+    private static final List<TextureLocalization> PULL_INV_BUTTON = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/pullitems.png"), Component.translatable("justdirethings.screen.pullitems"))
+    );
+
+    public static ToggleButton PULL_INV_BUTTON(int x, int y, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, PULL_INV_BUTTON, 0, onPress);
+    }
+
+    private static final List<TextureLocalization> SWAP_INV_BUTTON = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/swapitems.png"), Component.translatable("justdirethings.screen.swapitems"))
+    );
+
+    public static ToggleButton SWAP_INV_BUTTON(int x, int y, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SWAP_INV_BUTTON, 0, onPress);
     }
 
     private static final ResourceLocation COPY_AREA_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/area.png");
