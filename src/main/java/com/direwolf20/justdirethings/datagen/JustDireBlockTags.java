@@ -122,7 +122,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .addTag(BlockTags.PORTALS)
                 .addTag(BlockTags.DOORS);
         tag(ECLISEGATEDENY)
-                .addTag(BlockTags.PORTALS);
+                .addTag(BlockTags.PORTALS)
+                .addTag(BlockTags.DOORS);
         tag(PHASEDENY)
                 .addTags(BlockTags.PORTALS)
                 .add(Blocks.BARRIER,

@@ -1,5 +1,6 @@
 {
   "values": [
-    "#minecraft:portals"
+    "#minecraft:portals",
+    "#minecraft:doors"
   ]
 }
