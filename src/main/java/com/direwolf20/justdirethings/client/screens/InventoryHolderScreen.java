@@ -29,6 +29,8 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     private boolean compareCounts;
     private boolean automatedFiltersOnly;
     private boolean automatedCompareCounts;
+    private boolean renderPlayer;
+    private int renderedSlot;
 
     public InventoryHolderScreen(InventoryHolderContainer container, Inventory inv, Component name) {
         super(container, inv, name);
@@ -39,6 +41,8 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
             this.compareCounts = inventoryHolderBE.compareCounts;
             this.automatedFiltersOnly = inventoryHolderBE.automatedFiltersOnly;
             this.automatedCompareCounts = inventoryHolderBE.automatedCompareCounts;
+            this.renderPlayer = inventoryHolderBE.renderPlayer;
+            this.renderedSlot = inventoryHolderBE.renderedSlot;
         }
     }
 
@@ -84,6 +88,12 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
+
+        addRenderableWidget(ToggleButtonFactory.SHOWFAKEPLAYERBUTTON(getGuiLeft() + 8, topSectionTop + 4, renderPlayer, b -> {
+            renderPlayer = !renderPlayer;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
     }
 
     @Override
@@ -113,6 +123,18 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
         } else {
             super.renderSlot(guiGraphics, slot);
         }
+
+        // Draw red border if this is the selected slot (renderedSlot)
+        if (slot.getSlotIndex() == renderedSlot && slot instanceof InventoryHolderSlot) {
+            // Top border
+            guiGraphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y, 0xFFFF0000);
+            // Bottom border
+            guiGraphics.fill(slot.x - 1, slot.y + 16, slot.x + 17, slot.y + 17, 0xFFFF0000);
+            // Left border
+            guiGraphics.fill(slot.x - 1, slot.y - 1, slot.x, slot.y + 17, 0xFFFF0000);
+            // Right border
+            guiGraphics.fill(slot.x + 16, slot.y - 1, slot.x + 17, slot.y + 17, 0xFFFF0000);
+        }
     }
 
     @Override
@@ -129,7 +151,7 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new InventoryHolderSettingsPayload(compareNBT, filtersOnly, compareCounts, automatedFiltersOnly, automatedCompareCounts));
+        PacketDistributor.sendToServer(new InventoryHolderSettingsPayload(compareNBT, filtersOnly, compareCounts, automatedFiltersOnly, automatedCompareCounts, renderPlayer, renderedSlot));
     }
 
     public void renderInventorySection(GuiGraphics guiGraphics, int relX, int relY) {
@@ -139,9 +161,18 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     @Override
     public boolean mouseClicked(double x, double y, int btn) {
         if (btn == 0 && Screen.hasControlDown() && hoveredSlot != null && hoveredSlot instanceof InventoryHolderSlot) {
-            PacketDistributor.sendToServer(new InventoryHolderSaveSlotPayload(hoveredSlot.getSlotIndex()));
-            Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            return true;
+            if (Screen.hasShiftDown()) {
+                if (hoveredSlot.getSlotIndex() >= 27 && hoveredSlot.getSlotIndex() <= 35) {
+                    renderedSlot = hoveredSlot.getSlotIndex();
+                    saveSettings();
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            } else {
+                PacketDistributor.sendToServer(new InventoryHolderSaveSlotPayload(hoveredSlot.getSlotIndex()));
+                Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
         }
         return super.mouseClicked(x, y, btn);
     }

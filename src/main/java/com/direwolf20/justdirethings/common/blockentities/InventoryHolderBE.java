@@ -26,6 +26,8 @@ public class InventoryHolderBE extends BaseMachineBE {
     public boolean automatedFiltersOnly = false;
     public boolean compareCounts = false;
     public boolean automatedCompareCounts = false;
+    public int renderedSlot = 27;
+    public boolean renderPlayer = true;
     public InventoryHolderBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         MACHINE_SLOTS = 41; //Hotbar, Inventory, Armor, and Offhand
@@ -42,12 +44,14 @@ public class InventoryHolderBE extends BaseMachineBE {
         markDirtyClient();
     }
 
-    public void saveSettings(boolean compareNBT, boolean filtersOnly, boolean compareCounts, boolean automatedFiltersOnly, boolean automatedCompareCounts) {
+    public void saveSettings(boolean compareNBT, boolean filtersOnly, boolean compareCounts, boolean automatedFiltersOnly, boolean automatedCompareCounts, boolean renderPlayer, int renderedSlot) {
         this.compareNBT = compareNBT;
         this.filtersOnly = filtersOnly;
         this.compareCounts = compareCounts;
         this.automatedFiltersOnly = automatedFiltersOnly;
         this.automatedCompareCounts = automatedCompareCounts;
+        this.renderPlayer = renderPlayer;
+        this.renderedSlot = renderedSlot;
         markDirtyClient();
     }
 
@@ -112,6 +116,8 @@ public class InventoryHolderBE extends BaseMachineBE {
         tag.putBoolean("compareCounts", compareCounts);
         tag.putBoolean("automatedFiltersOnly", automatedFiltersOnly);
         tag.putBoolean("automatedCompareCounts", automatedCompareCounts);
+        tag.putBoolean("renderPlayer", renderPlayer);
+        tag.putInt("renderedSlot", renderedSlot);
         // Create a new CompoundTag to hold all saved items
         tag.put("filteredItems", filterBasicHandler.serializeNBT(provider));
     }
@@ -124,6 +130,9 @@ public class InventoryHolderBE extends BaseMachineBE {
         compareCounts = tag.getBoolean("compareCounts");
         automatedFiltersOnly = tag.getBoolean("automatedFiltersOnly");
         automatedCompareCounts = tag.getBoolean("automatedCompareCounts");
+        renderPlayer = tag.getBoolean("renderPlayer");
+        if (tag.contains("renderedSlot"))
+            renderedSlot = tag.getInt("renderedSlot");
         if (tag.contains("filteredItems")) {
             CompoundTag filteredItems = tag.getCompound("filteredItems");
             filterBasicHandler.deserializeNBT(provider, filteredItems);
