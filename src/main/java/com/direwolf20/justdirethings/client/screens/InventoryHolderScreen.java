@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.blockentities.InventoryHolderBE;
 import com.direwolf20.justdirethings.common.containers.InventoryHolderContainer;
 import com.direwolf20.justdirethings.common.containers.slots.InventoryHolderSlot;
+import com.direwolf20.justdirethings.common.network.data.InventoryHolderMoveItemsPayload;
 import com.direwolf20.justdirethings.common.network.data.InventoryHolderSaveSlotPayload;
 import com.direwolf20.justdirethings.common.network.data.InventoryHolderSettingsPayload;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -57,6 +58,15 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
             compareCounts = !compareCounts;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
+        }));
+        addRenderableWidget(ToggleButtonFactory.SEND_INV_BUTTON(getGuiLeft() + 26, topSectionTop + 132, b -> {
+            PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(0));
+        }));
+        addRenderableWidget(ToggleButtonFactory.PULL_INV_BUTTON(getGuiLeft() + 134, topSectionTop + 132, b -> {
+            PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(1));
+        }));
+        addRenderableWidget(ToggleButtonFactory.SWAP_INV_BUTTON(getGuiLeft() + 152, topSectionTop + 132, b -> {
+            PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(2));
         }));
     }
 

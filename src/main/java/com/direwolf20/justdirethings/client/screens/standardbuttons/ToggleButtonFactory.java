@@ -363,6 +363,30 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SNAPSHOT_AREA_BUTTON, 0, onPress);
     }
 
+    private static final List<TextureLocalization> SEND_INV_BUTTON = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/senditems.png"), Component.translatable("justdirethings.screen.senditems"))
+    );
+
+    public static ToggleButton SEND_INV_BUTTON(int x, int y, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SEND_INV_BUTTON, 0, onPress);
+    }
+
+    private static final List<TextureLocalization> PULL_INV_BUTTON = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/pullitems.png"), Component.translatable("justdirethings.screen.pullitems"))
+    );
+
+    public static ToggleButton PULL_INV_BUTTON(int x, int y, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, PULL_INV_BUTTON, 0, onPress);
+    }
+
+    private static final List<TextureLocalization> SWAP_INV_BUTTON = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/swapitems.png"), Component.translatable("justdirethings.screen.swapitems"))
+    );
+
+    public static ToggleButton SWAP_INV_BUTTON(int x, int y, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, SWAP_INV_BUTTON, 0, onPress);
+    }
+
     private static final ResourceLocation COPY_AREA_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/area.png");
     private static final Component COPY_AREA_LOCALIZATION = Component.translatable("justdirethings.screen.copy_area");
 

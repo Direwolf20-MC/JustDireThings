@@ -57,6 +57,57 @@ public class InventoryHolderContainer extends BaseMachineContainer {
         return stillValid(ContainerLevelAccess.create(player.level(), pos), player, Registration.InventoryHolder.get());
     }
 
+    public void sendAllItemsToMachine() {
+        for (int i = MACHINE_SLOTS; i < MACHINE_SLOTS + Inventory.INVENTORY_SIZE + 5; i++) {
+            quickMoveStack(this.player, i); // Move each stack from player's inventory to the machine
+        }
+    }
+
+    public void sendAllItemsToPlayer() {
+        // Loop over all the machine slots
+        for (int i = 0; i < MACHINE_SLOTS; i++) {
+            // Try to move each item from the machine slots to the player's inventory
+            quickMoveStack(this.player, i); // Move the item from machine slot to player's inventory
+        }
+    }
+
+    public void swapItems() {
+        // Loop through the player's inventory slots
+        for (int playerSlot = MACHINE_SLOTS; playerSlot < MACHINE_SLOTS + Inventory.INVENTORY_SIZE + 5; playerSlot++) {
+            Slot playerInventorySlot = this.slots.get(playerSlot);
+            ItemStack playerStack = playerInventorySlot.getItem(); // Get the item from the player's inventory slot
+
+            // Calculate the corresponding machine slot index
+            int machineSlot = playerSlot - MACHINE_SLOTS;
+            if (machineSlot >= MACHINE_SLOTS) {
+                // Out of bounds, skip
+                continue;
+            }
+
+            Slot machineInventorySlot = this.slots.get(machineSlot);
+            ItemStack machineStack = machineInventorySlot.getItem(); // Copy the Machine's Item Stack
+            if (playerStack.isEmpty() && machineStack.isEmpty()) continue;
+            ItemStack machineStackCopy = machineStack.copy();
+            ItemStack playerStackCopy = playerStack.copy();
+
+            // Try to insert the player's item into the machine
+            if (!playerStack.isEmpty()) {
+                machineInventorySlot.set(ItemStack.EMPTY); //Temporarily clear the Machine's Item Stack
+                if (moveItemStackTo(playerStack, machineSlot, machineSlot + 1, false) && playerStack.isEmpty()) { //Try to insert into the exact slot, ensure the whole thing fits
+                    // If the insertion was successful, swap the items
+                    playerInventorySlot.set(machineStackCopy); // Place the machine item in the player's slot
+                    machineInventorySlot.setChanged();
+                    playerInventorySlot.setChanged();
+                } else {
+                    machineInventorySlot.set(machineStackCopy); //Set the Machine Slot back
+                    playerInventorySlot.set(playerStackCopy); //Do this incase there was a partial insert above
+                }
+            } else if (!machineStack.isEmpty()) {
+                moveItemStackTo(machineStack, playerSlot, playerSlot + 1, false);
+            }
+        }
+    }
+
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -66,7 +117,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
             if (index < MACHINE_SLOTS) { //Machine Slots to Player Inventory
                 if (this.moveItemStackTo(currentStack, index + MACHINE_SLOTS, index + MACHINE_SLOTS + 1, false)) {
                     //No-Op
-                } else if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS, MACHINE_SLOTS + Inventory.INVENTORY_SIZE, true)) {
+                } else if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS, MACHINE_SLOTS + Inventory.INVENTORY_SIZE + 5, true)) {
                     return ItemStack.EMPTY;
                 }
             }

@@ -518,6 +518,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.paradoxall", "Revert Blocks and Entities");
         add("justdirethings.screen.paradoxenergycost", "Energy Cost: %s FE");
         add("justdirethings.screen.paradoxfluidcost", "Fluid Cost: %s mb");
+        add("justdirethings.screen.senditems", "Push Items");
+        add("justdirethings.screen.pullitems", "Pull Items");
+        add("justdirethings.screen.swapitems", "Swap Items");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");
