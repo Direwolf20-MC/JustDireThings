@@ -4,6 +4,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class PlayerHandler extends ItemStackHandler {
@@ -59,6 +61,8 @@ public class PlayerHandler extends ItemStackHandler {
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         if (isPlayerInvalid()) return ItemStack.EMPTY;
+        if (inventoryType == InventoryType.Armor && EnchantmentHelper.has(super.getStackInSlot(slot), EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE))
+            return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 

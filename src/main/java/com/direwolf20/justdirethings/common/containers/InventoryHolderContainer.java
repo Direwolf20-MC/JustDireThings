@@ -87,6 +87,9 @@ public class InventoryHolderContainer extends BaseMachineContainer {
             Slot machineInventorySlot = this.slots.get(machineSlot);
             ItemStack machineStack = machineInventorySlot.getItem(); // Copy the Machine's Item Stack
             if (playerStack.isEmpty() && machineStack.isEmpty()) continue;
+            if (playerSlot >= 77 && playerSlot <= 80 && EnchantmentHelper.has(playerStack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)) //Armor Slots
+                continue;
+
             ItemStack machineStackCopy = machineStack.copy();
             ItemStack playerStackCopy = playerStack.copy();
 
@@ -114,6 +117,9 @@ public class InventoryHolderContainer extends BaseMachineContainer {
         Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
             ItemStack currentStack = slot.getItem();
+            if (index >= 77 && index <= 80 && EnchantmentHelper.has(currentStack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)) { //Armor Slots
+                return ItemStack.EMPTY;
+            }
             if (index < MACHINE_SLOTS) { //Machine Slots to Player Inventory
                 if (this.moveItemStackTo(currentStack, index + MACHINE_SLOTS, index + MACHINE_SLOTS + 1, false)) {
                     //No-Op
