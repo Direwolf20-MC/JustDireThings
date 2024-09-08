@@ -172,7 +172,7 @@ public class FakePlayerUtil {
             }
             player.fakeupdateUsingItem(itemstack);
             int holdingFor = player.getTicksUsingItem();
-            System.out.println("Holding For: " + holdingFor);
+            //System.out.println("Holding For: " + holdingFor);
             if (holdingFor >= maxHold) {
                 player.releaseUsingItem();
                 return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
@@ -216,7 +216,7 @@ public class FakePlayerUtil {
             }
             player.fakeupdateUsingItem(itemstack);
             int holdingFor = player.getTicksUsingItem();
-            System.out.println("Holding For: " + holdingFor);
+            //System.out.println("Holding For: " + holdingFor);
             if (holdingFor >= maxHold) {
                 player.releaseUsingItem();
                 return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
