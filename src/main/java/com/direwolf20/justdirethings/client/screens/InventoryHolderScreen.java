@@ -26,6 +26,8 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     private boolean compareNBT;
     private boolean filtersOnly;
     private boolean compareCounts;
+    private boolean automatedFiltersOnly;
+    private boolean automatedCompareCounts;
 
     public InventoryHolderScreen(InventoryHolderContainer container, Inventory inv, Component name) {
         super(container, inv, name);
@@ -34,6 +36,8 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
             this.compareNBT = inventoryHolderBE.compareNBT;
             this.filtersOnly = inventoryHolderBE.filtersOnly;
             this.compareCounts = inventoryHolderBE.compareCounts;
+            this.automatedFiltersOnly = inventoryHolderBE.automatedFiltersOnly;
+            this.automatedCompareCounts = inventoryHolderBE.automatedCompareCounts;
         }
     }
 
@@ -47,6 +51,7 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
         super.init();
         addRenderableWidget(ToggleButtonFactory.FILTERONLYBUTTON(getGuiLeft() + 134, topSectionTop + 22, filtersOnly, b -> {
             filtersOnly = !filtersOnly;
+            ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
         addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(getGuiLeft() + 152, topSectionTop + 22, compareNBT, b -> {
@@ -54,7 +59,7 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.COMPARECOUNTSBUTTON(getGuiLeft() + 152, topSectionTop + 4, compareCounts, b -> {
+        addRenderableWidget(ToggleButtonFactory.COMPARECOUNTSBUTTON(getGuiLeft() + 134, topSectionTop + 4, compareCounts, b -> {
             compareCounts = !compareCounts;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
@@ -67,6 +72,16 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
         }));
         addRenderableWidget(ToggleButtonFactory.SWAP_INV_BUTTON(getGuiLeft() + 152, topSectionTop + 132, b -> {
             PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(2));
+        }));
+        addRenderableWidget(ToggleButtonFactory.FILTERONLYBUTTON(getGuiLeft() + 26, topSectionTop + 22, automatedFiltersOnly, b -> {
+            automatedFiltersOnly = !automatedFiltersOnly;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
+        addRenderableWidget(ToggleButtonFactory.COMPARECOUNTSBUTTON(getGuiLeft() + 26, topSectionTop + 4, automatedCompareCounts, b -> {
+            automatedCompareCounts = !automatedCompareCounts;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
         }));
     }
 
@@ -113,7 +128,7 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new InventoryHolderSettingsPayload(compareNBT, filtersOnly, compareCounts));
+        PacketDistributor.sendToServer(new InventoryHolderSettingsPayload(compareNBT, filtersOnly, compareCounts, automatedFiltersOnly, automatedCompareCounts));
     }
 
     public void renderInventorySection(GuiGraphics guiGraphics, int relX, int relY) {

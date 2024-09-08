@@ -49,14 +49,11 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, ALLOW_LIST_TEXTURES, startingValue, onPress);
     }
 
-    /** Filter Only Button **/
-    private static final List<TextureLocalization> FILTER_ONLY_TEXTURES = List.of(
-            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/allowlistfalse.png"), Component.translatable("justdirethings.screen.filteronlyfalse")),
-            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png"), Component.translatable("justdirethings.screen.filteronlytrue"))
-    );
+    private static final ResourceLocation FILTER_ONLY = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png");
+    private static final Component FILTER_ONLY_LOCALIZATION = Component.translatable("justdirethings.screen.filteronlytrue");
 
-    public static ToggleButton FILTERONLYBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
-        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, FILTER_ONLY_TEXTURES, startingValue, onPress);
+    public static GrayscaleButton FILTERONLYBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, FILTER_ONLY, FILTER_ONLY_LOCALIZATION, startingValue, onPress);
     }
 
     private static final ResourceLocation COMPARE_NBT = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/matchnbttrue.png");

@@ -10,7 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 public record InventoryHolderSettingsPayload(
         boolean compareNBT,
         boolean filtersOnly,
-        boolean compareCounts
+        boolean compareCounts,
+        boolean automatedFiltersOnly,
+        boolean automatedCompareCounts
 ) implements CustomPacketPayload {
     public static final Type<InventoryHolderSettingsPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "inventory_holder_settings"));
 
@@ -23,6 +25,8 @@ public record InventoryHolderSettingsPayload(
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::compareNBT,
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::filtersOnly,
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::compareCounts,
+            ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::automatedFiltersOnly,
+            ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::automatedCompareCounts,
             InventoryHolderSettingsPayload::new
     );
 }

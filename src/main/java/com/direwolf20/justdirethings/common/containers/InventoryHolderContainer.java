@@ -117,7 +117,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
             if (index < MACHINE_SLOTS) { //Machine Slots to Player Inventory
                 if (this.moveItemStackTo(currentStack, index + MACHINE_SLOTS, index + MACHINE_SLOTS + 1, false)) {
                     //No-Op
-                } else if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS, MACHINE_SLOTS + Inventory.INVENTORY_SIZE + 5, true)) {
+                } else if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS, MACHINE_SLOTS + Inventory.INVENTORY_SIZE + 4, true)) { //This is +4 to avoid going into offhand slot
                     return ItemStack.EMPTY;
                 }
             }

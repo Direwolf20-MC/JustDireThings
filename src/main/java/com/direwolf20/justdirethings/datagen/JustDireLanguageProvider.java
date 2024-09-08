@@ -448,8 +448,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.pulse", "Pulse");
         add("justdirethings.screen.allowlist", "Allow List");
         add("justdirethings.screen.denylist", "Deny List");
-        add("justdirethings.screen.filteronlyfalse", "Allow any slots");
-        add("justdirethings.screen.filteronlytrue", "Only Allow Filters");
+        add("justdirethings.screen.filteronlytrue", "Filtered Items Only");
         add("justdirethings.screen.renderarea", "Render Area");
         add("justdirethings.screen.comparenbt", "Compare NBT");
         add("justdirethings.screen.comparecounts", "Compare Stack Sizes");

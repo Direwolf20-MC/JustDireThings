@@ -729,6 +729,12 @@ public class Registration {
                     return new GeneratorItemHandler(baseMachineBE.MACHINE_SLOTS);
                 return new GeneratorItemHandler(1);
             }).build());
+    /*public static final Supplier<AttachmentType<InventoryHolderItemHandler>> INVENTORY_HOLDER_ITEM_HANDLER = ATTACHMENT_TYPES.register(
+            "inventory_holder_item_handler", () -> AttachmentType.serializable(holder -> {
+                if (holder instanceof InventoryHolderBE inventoryHolderBE)
+                    return new InventoryHolderItemHandler(inventoryHolderBE.MACHINE_SLOTS, inventoryHolderBE);
+                return new InventoryHolderItemHandler(1);
+            }).build());*/
     public static final Supplier<AttachmentType<GeneratorFluidItemHandler>> GENERATOR_FLUID_ITEM_HANDLER = ATTACHMENT_TYPES.register(
             "generator_fluid_item_handler", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof BaseMachineBE baseMachineBE)
