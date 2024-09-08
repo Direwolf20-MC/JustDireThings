@@ -13,8 +13,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class InventoryHolderBE extends BaseMachineBE {
     public FilterBasicHandler filterBasicHandler = new FilterBasicHandler(41);
+    public Map<ItemStackKey, List<Integer>> filteredCache = new HashMap<>();
     public boolean compareNBT = false;
     public boolean filtersOnly = false;
     public boolean automatedFiltersOnly = false;
@@ -32,6 +38,7 @@ public class InventoryHolderBE extends BaseMachineBE {
     public void addSavedItem(int slot) {
         ItemStack itemStack = getMachineHandler().getStackInSlot(slot).copy();
         filterBasicHandler.setStackInSlot(slot, itemStack);
+        rebuildFilterCache();
         markDirtyClient();
     }
 
@@ -42,6 +49,18 @@ public class InventoryHolderBE extends BaseMachineBE {
         this.automatedFiltersOnly = automatedFiltersOnly;
         this.automatedCompareCounts = automatedCompareCounts;
         markDirtyClient();
+    }
+
+    public void rebuildFilterCache() {
+        filteredCache.clear();
+        for (int i = 0; i < filterBasicHandler.getSlots(); i++) {
+            ItemStack stack = filterBasicHandler.getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            ItemStackKey key = new ItemStackKey(stack, compareNBT);
+            List<Integer> slotList = filteredCache.getOrDefault(key, new ArrayList<>());
+            slotList.add(i);
+            filteredCache.put(key, slotList);
+        }
     }
 
     public ItemStackHandler getInventoryHolderHandler() {
@@ -108,6 +127,7 @@ public class InventoryHolderBE extends BaseMachineBE {
         if (tag.contains("filteredItems")) {
             CompoundTag filteredItems = tag.getCompound("filteredItems");
             filterBasicHandler.deserializeNBT(provider, filteredItems);
+            rebuildFilterCache();
         }
     }
 }

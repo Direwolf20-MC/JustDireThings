@@ -1,10 +1,13 @@
 package com.direwolf20.justdirethings.common.capabilities;
 
 import com.direwolf20.justdirethings.common.blockentities.InventoryHolderBE;
+import com.direwolf20.justdirethings.util.ItemStackKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class InventoryHolderItemHandler extends ItemStackHandler {
     InventoryHolderBE inventoryHolderBE;
@@ -25,6 +28,19 @@ public class InventoryHolderItemHandler extends ItemStackHandler {
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        ItemStackKey key = new ItemStackKey(stack, inventoryHolderBE.compareNBT);
+        if (inventoryHolderBE.filteredCache.containsKey(key)) {
+            List<Integer> slotsList = inventoryHolderBE.filteredCache.get(key);
+            if (slotsList.contains(slot)) //Skip this if we're already inserting into a filtered slot
+                return insertItemProxy(slot, stack, simulate);
+            for (Integer i : slotsList) {
+                stack = insertItemProxy(i, stack, simulate);
+            }
+        }
+        return insertItemProxy(slot, stack, simulate);
+    }
+
+    public @NotNull ItemStack insertItemProxy(int slot, @NotNull ItemStack stack, boolean simulate) {
         if (stack.isEmpty())
             return ItemStack.EMPTY;
 
