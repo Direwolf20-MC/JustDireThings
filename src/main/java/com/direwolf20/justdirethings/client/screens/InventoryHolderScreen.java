@@ -69,10 +69,10 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.SEND_INV_BUTTON(getGuiLeft() + 26, topSectionTop + 132, b -> {
+        addRenderableWidget(ToggleButtonFactory.SEND_INV_BUTTON(getGuiLeft() + 134, topSectionTop + 132, b -> {
             PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(0));
         }));
-        addRenderableWidget(ToggleButtonFactory.PULL_INV_BUTTON(getGuiLeft() + 134, topSectionTop + 132, b -> {
+        addRenderableWidget(ToggleButtonFactory.PULL_INV_BUTTON(getGuiLeft() + 26, topSectionTop + 132, b -> {
             PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(1));
         }));
         addRenderableWidget(ToggleButtonFactory.SWAP_INV_BUTTON(getGuiLeft() + 152, topSectionTop + 132, b -> {
