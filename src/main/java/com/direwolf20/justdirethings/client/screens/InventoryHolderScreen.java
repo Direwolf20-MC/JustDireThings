@@ -1,10 +1,14 @@
 package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
+import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
+import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.blockentities.InventoryHolderBE;
 import com.direwolf20.justdirethings.common.containers.InventoryHolderContainer;
 import com.direwolf20.justdirethings.common.containers.slots.InventoryHolderSlot;
 import com.direwolf20.justdirethings.common.network.data.InventoryHolderSaveSlotPayload;
+import com.direwolf20.justdirethings.common.network.data.InventoryHolderSettingsPayload;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
@@ -17,12 +21,18 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderContainer> {
-    InventoryHolderBE inventoryHolderBE;
+    private InventoryHolderBE inventoryHolderBE;
+    private boolean compareNBT;
+    private boolean filtersOnly;
+    private boolean compareCounts;
 
     public InventoryHolderScreen(InventoryHolderContainer container, Inventory inv, Component name) {
         super(container, inv, name);
         if (container.baseMachineBE instanceof InventoryHolderBE inventoryHolderBE) {
             this.inventoryHolderBE = inventoryHolderBE;
+            this.compareNBT = inventoryHolderBE.compareNBT;
+            this.filtersOnly = inventoryHolderBE.filtersOnly;
+            this.compareCounts = inventoryHolderBE.compareCounts;
         }
     }
 
@@ -34,6 +44,20 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     @Override
     public void init() {
         super.init();
+        addRenderableWidget(ToggleButtonFactory.FILTERONLYBUTTON(getGuiLeft() + 134, topSectionTop + 22, filtersOnly, b -> {
+            filtersOnly = !filtersOnly;
+            saveSettings();
+        }));
+        addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(getGuiLeft() + 152, topSectionTop + 22, compareNBT, b -> {
+            compareNBT = !compareNBT;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
+        addRenderableWidget(ToggleButtonFactory.COMPARECOUNTSBUTTON(getGuiLeft() + 152, topSectionTop + 4, compareCounts, b -> {
+            compareCounts = !compareCounts;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
     }
 
     @Override
@@ -49,10 +73,17 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
 
     @Override
     protected void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && inventoryHolderBE.savedItemStacks.containsKey(slot.getSlotIndex())) {
-            ItemStack showStack = inventoryHolderBE.savedItemStacks.get(slot.getSlotIndex());
-            guiGraphics.renderFakeItem(showStack, slot.x, slot.y, 0);
+        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !inventoryHolderBE.filterBasicHandler.getStackInSlot(slot.getSlotIndex()).isEmpty()) {
+            ItemStack showStack = inventoryHolderBE.filterBasicHandler.getStackInSlot(slot.getSlotIndex());
+            RenderSystem.enableBlend(); // Enable blending
+            RenderSystem.defaultBlendFunc(); // Set default blend mode
+            guiGraphics.renderFakeItem(showStack, slot.x, slot.y);
+            guiGraphics.pose().pushPose();
+            guiGraphics.renderItemDecorations(Minecraft.getInstance().font, showStack, slot.x, slot.y);
+            guiGraphics.pose().translate(0, 0, -200); //This was needed to make Damage Bars transparent
             guiGraphics.fill(RenderType.guiGhostRecipeOverlay(), slot.x, slot.y, slot.x + 16, slot.y + 16, 0x80888888);
+            guiGraphics.pose().popPose();
+            RenderSystem.disableBlend();
         } else {
             super.renderSlot(guiGraphics, slot);
         }
@@ -61,8 +92,8 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
         Slot slot = this.hoveredSlot;
-        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && inventoryHolderBE.savedItemStacks.containsKey(slot.getSlotIndex())) {
-            ItemStack itemstack = inventoryHolderBE.savedItemStacks.get(slot.getSlotIndex());
+        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !inventoryHolderBE.filterBasicHandler.getStackInSlot(slot.getSlotIndex()).isEmpty()) {
+            ItemStack itemstack = inventoryHolderBE.filterBasicHandler.getStackInSlot(slot.getSlotIndex());
             guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, x, y);
         } else {
             super.renderTooltip(guiGraphics, x, y);
@@ -72,6 +103,7 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     @Override
     public void saveSettings() {
         super.saveSettings();
+        PacketDistributor.sendToServer(new InventoryHolderSettingsPayload(compareNBT, filtersOnly, compareCounts));
     }
 
     public void renderInventorySection(GuiGraphics guiGraphics, int relX, int relY) {

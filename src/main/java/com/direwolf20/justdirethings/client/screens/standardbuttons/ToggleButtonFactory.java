@@ -49,11 +49,28 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, ALLOW_LIST_TEXTURES, startingValue, onPress);
     }
 
+    /** Filter Only Button **/
+    private static final List<TextureLocalization> FILTER_ONLY_TEXTURES = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/allowlistfalse.png"), Component.translatable("justdirethings.screen.filteronlyfalse")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png"), Component.translatable("justdirethings.screen.filteronlytrue"))
+    );
+
+    public static ToggleButton FILTERONLYBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, FILTER_ONLY_TEXTURES, startingValue, onPress);
+    }
+
     private static final ResourceLocation COMPARE_NBT = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/matchnbttrue.png");
     private static final Component COMPARE_NBT_LOCALIZATION = Component.translatable("justdirethings.screen.comparenbt");
 
     public static GrayscaleButton COMPARENBTBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
         return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, COMPARE_NBT, COMPARE_NBT_LOCALIZATION, startingValue, onPress);
+    }
+
+    private static final ResourceLocation COMPARE_COUNTS = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/equals.png");
+    private static final Component COMPARE_COUNTS_LOCALIZATION = Component.translatable("justdirethings.screen.comparecounts");
+
+    public static GrayscaleButton COMPARECOUNTSBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, COMPARE_COUNTS, COMPARE_COUNTS_LOCALIZATION, startingValue, onPress);
     }
 
     private static final ResourceLocation RENDER_AREA = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/area.png");
