@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 public class InventoryHolderContainer extends BaseMachineContainer {
     public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET = ResourceLocation.parse("item/empty_armor_slot_helmet");
@@ -46,8 +47,8 @@ public class InventoryHolderContainer extends BaseMachineContainer {
 
     public void addMachineSlots() {
         machineHandler = baseMachineBE.getMachineHandler();
-        addMachineSlotRange(machineHandler, 0, 8, 50, 9, 18); //Hotbar
-        addMachineSlotBox(machineHandler, 9, 8, -8, 9, 18, 3, 18);
+        addMachineSlotBox(machineHandler, 0, 8, -8, 9, 18, 3, 18);
+        addMachineSlotRange(machineHandler, 27, 8, 50, 9, 18); //Hotbar
         addMachineArmorSlots(machineHandler, player, 36, 44, -28);
     }
 
@@ -63,12 +64,20 @@ public class InventoryHolderContainer extends BaseMachineContainer {
         if (slot.hasItem()) {
             ItemStack currentStack = slot.getItem();
             if (index < MACHINE_SLOTS) { //Machine Slots to Player Inventory
-                if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS, MACHINE_SLOTS + Inventory.INVENTORY_SIZE, true)) {
+                if (this.moveItemStackTo(currentStack, index + MACHINE_SLOTS, index + MACHINE_SLOTS + 1, false)) {
+                    //No-Op
+                } else if (!this.moveItemStackTo(currentStack, MACHINE_SLOTS, MACHINE_SLOTS + Inventory.INVENTORY_SIZE, true)) {
                     return ItemStack.EMPTY;
                 }
             }
             if (index >= MACHINE_SLOTS) { //Player Inventory to Machine Slots
-                if (!this.moveItemStackTo(currentStack, 0, MACHINE_SLOTS, false)) {
+                if (moveToFilteredSlot(currentStack)) {
+                    //No-Op
+                } else if (inventoryHolderBE.filtersOnly) {
+                    return ItemStack.EMPTY;
+                } else if (this.moveItemStackTo(currentStack, index - MACHINE_SLOTS, index - MACHINE_SLOTS + 1, false)) {
+                    //No-Op
+                } else if (!this.moveItemStackTo(currentStack, 0, MACHINE_SLOTS, false)) {
                     return ItemStack.EMPTY;
                 }
             }
@@ -97,12 +106,8 @@ public class InventoryHolderContainer extends BaseMachineContainer {
             ItemStack stack = filteredItems.getStackInSlot(i);
             if (stack.isEmpty()) continue;
             if (key.equals(new ItemStackKey(stack, inventoryHolderBE.compareNBT))) {
-                int amtNeeded = stack.getCount() - machineHandler.getStackInSlot(i).getCount();
-                ItemStack sendStack = currentStack.split(amtNeeded);
-                if (this.moveItemStackTo(sendStack, i, i + 1, false))
+                if (this.moveItemStackTo(currentStack, i, i + 1, false) && currentStack.isEmpty())
                     return true;
-                else
-                    currentStack.grow(sendStack.getCount());
             }
         }
         return false;
@@ -118,6 +123,15 @@ public class InventoryHolderContainer extends BaseMachineContainer {
     @Override
     protected void addPlayerSlots(Inventory playerInventory) {
         addPlayerSlots(playerInventory, 8, 102);
+    }
+
+    protected void addPlayerSlots(Inventory playerInventory, int inX, int inY) {
+        // Player inventory
+        addSlotBox(new InvWrapper(playerInventory), 9, inX, inY, 9, 18, 3, 18);
+
+        // Hotbar
+        inY += 58;
+        addSlotRange(new InvWrapper(playerInventory), 0, inX, inY, 9, 18);
     }
 
     //Overrides for custom slot
