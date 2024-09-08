@@ -12,6 +12,7 @@ import com.direwolf20.justdirethings.common.network.data.InventoryHolderSettings
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -137,7 +138,7 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
 
     @Override
     public boolean mouseClicked(double x, double y, int btn) {
-        if (btn == 1 && hoveredSlot != null && hoveredSlot instanceof InventoryHolderSlot) {
+        if (btn == 0 && Screen.hasControlDown() && hoveredSlot != null && hoveredSlot instanceof InventoryHolderSlot) {
             PacketDistributor.sendToServer(new InventoryHolderSaveSlotPayload(hoveredSlot.getSlotIndex()));
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
