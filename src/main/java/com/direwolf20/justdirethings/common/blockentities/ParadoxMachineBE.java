@@ -527,7 +527,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         }
 
         // Load the entity data and set its position
-        CompoundTag santizedData = sanitizeEntityData(entityData);
+        CompoundTag santizedData = Config.PARADOX_RESTRICTED_MOBS.get() ? sanitizeEntityData(entityData) : sanitizeEntityDataDeny(entityData);
         entity.load(santizedData);
         if (entity instanceof Mob mob && level instanceof ServerLevel serverLevel)
             EventHooks.finalizeMobSpawn(mob, serverLevel, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.SPAWNER, null);
@@ -548,6 +548,29 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         for (String field : fieldsToCopy) {
             if (entityData.contains(field)) {
                 compoundTag.put(field, entityData.get(field));
+            }
+        }
+        return compoundTag;
+    }
+
+    public CompoundTag sanitizeEntityDataDeny(CompoundTag entityData) {
+        CompoundTag compoundTag = new CompoundTag();
+        String[] fieldsToRemove = {"ArmorItems", "HandItems", "Items", "SaddleItem", "Inventory"};
+
+        // Iterate over the fields and copy them if they exist
+        for (String key : entityData.getAllKeys()) {
+            // If the key is NOT in the fieldsToRemove list, copy it to the sanitizedTag
+            boolean shouldRemove = false;
+            for (String field : fieldsToRemove) {
+                if (key.equals(field)) {
+                    shouldRemove = true;
+                    break;
+                }
+            }
+
+            if (!shouldRemove && entityData.get(key) != null) {
+                // Copy the data that is not in the fieldsToRemove list
+                compoundTag.put(key, entityData.get(key));
             }
         }
         return compoundTag;

@@ -71,6 +71,7 @@ public class Config {
     public static ModConfigSpec.DoubleValue PARADOX_ENERGY_PER_BLOCK;
     public static ModConfigSpec.DoubleValue PARADOX_ENERGY_PER_ENTITY;
     public static ModConfigSpec.DoubleValue PARADOX_ENERGY_MAX;
+    public static ModConfigSpec.BooleanValue PARADOX_RESTRICTED_MOBS;
 
     public static final String ENERGY_TRANSMITTER_T1 = "energy_transmitter_t1";
     public static ModConfigSpec.DoubleValue ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK;
@@ -269,6 +270,8 @@ public class Config {
                 .defineInRange("paradox_energy_per_entity", 0.25, 0, Double.MAX_VALUE);
         PARADOX_ENERGY_MAX = COMMON_BUILDER.comment("The maximum amount of Paradox Energy the Paradox Machine can hold in its buffer, before it spawns a Paradox!")
                 .defineInRange("paradox_energy_max", 100, 0, Double.MAX_VALUE);
+        PARADOX_RESTRICTED_MOBS = COMMON_BUILDER.comment("Use a more restrictive data filtering for mobs cloned by the paradox machine. When enabled, most modded mobs may not work very well.  When disabled, theres a small chance of item dupe bugs.  Recommended to leave this set to false, and add any mobs that allow dupes to the paradox machines deny entity tag.")
+                .define("paradox_restricted_mobs", false);
         COMMON_BUILDER.pop();
     }
 }
