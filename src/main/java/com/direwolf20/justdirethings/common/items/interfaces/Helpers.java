@@ -38,7 +38,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -91,9 +90,9 @@ public class Helpers {
                     damageTool(pStack, pPlayer, getInstantRFCost(destroySpeed, level, pStack));
                 }
             }
-            if (pStack.isEmpty() && !toolCopy.isEmpty()) {
+            /*if (pStack.isEmpty() && !toolCopy.isEmpty()) { //This is done in damageTool(Above) - so this was actually running twice...
                 EventHooks.onPlayerDestroyItem(player, toolCopy, InteractionHand.MAIN_HAND);
-            }
+            }*/
         }
     }
 
