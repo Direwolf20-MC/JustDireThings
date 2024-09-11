@@ -41,12 +41,17 @@ public class GooBlockBE_Base extends BlockEntity {
         }
     }
 
-    public void updateSideCounter(Direction direction, int newCounter) {
+    public boolean updateSideCounter(Direction direction, int newCounter) {
         int oldCounter = sidedCounters.get(direction);
         sidedCounters.put(direction, newCounter);
         if (oldCounter >= 0 && newCounter == -1 && level.isClientSide) {
             spawnParticles(direction);
         }
+        int duration = sidedDurations.get(direction);
+        if (newCounter <= 0 || duration <= 0)
+            return false;
+        // Every 3 seconds or so
+        return (newCounter % (60 * counterReducer())) == 0;
     }
 
     public int counterReducer() {
@@ -91,13 +96,17 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     public void tickCounters() {
+        boolean needsUpdate = false;
         for (Direction direction : Direction.values()) {
             int sideCounter = sidedCounters.get(direction);
             if (sideCounter > 0) {
                 sideCounter = Math.max(sideCounter - counterReducer(), 0);
-                updateSideCounter(direction, sideCounter);
+                if (updateSideCounter(direction, sideCounter))
+                    needsUpdate = true;
             }
         }
+        if (needsUpdate && !level.isClientSide)
+            markDirtyClient();
     }
 
     public void checkSides() {
@@ -107,8 +116,8 @@ public class GooBlockBE_Base extends BlockEntity {
             if (gooSpreadRecipe != null) {
                 if (sideCounter == -1 && this.getBlockState().getValue(ALIVE)) { //Valid Recipe and not running yet
                     sideCounter = gooSpreadRecipe.getCraftingDuration();
-                    updateSideCounter(direction, sideCounter);
                     sidedDurations.put(direction, sideCounter);
+                    updateSideCounter(direction, sideCounter);
                     markDirtyClient(); //Either way, update the client with the new sideCounters
                 } else if (sideCounter == 0) { //Craftings done!
                     setBlockToTarget(gooSpreadRecipe, direction);
@@ -234,6 +243,7 @@ public class GooBlockBE_Base extends BlockEntity {
 
     public void markDirtyClient() {
         this.setChanged();
+        System.out.println("Dirty!");
         if (this.getLevel() != null) {
             BlockState state = this.getLevel().getBlockState(this.getBlockPos());
             this.getLevel().sendBlockUpdated(this.getBlockPos(), state, state, 3);
