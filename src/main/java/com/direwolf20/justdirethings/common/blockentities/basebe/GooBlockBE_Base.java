@@ -243,7 +243,6 @@ public class GooBlockBE_Base extends BlockEntity {
 
     public void markDirtyClient() {
         this.setChanged();
-        System.out.println("Dirty!");
         if (this.getLevel() != null) {
             BlockState state = this.getLevel().getBlockState(this.getBlockPos());
             this.getLevel().sendBlockUpdated(this.getBlockPos(), state, state, 3);
