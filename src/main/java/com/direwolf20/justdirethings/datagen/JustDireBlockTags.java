@@ -96,7 +96,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.RawFerricoreOre.get())
                 .add(Registration.RawBlazegoldOre.get())
                 .add(Registration.RawCelestigemOre.get())
-                .add(Registration.RawEclipseAlloyOre.get());
+                .add(Registration.RawEclipseAlloyOre.get())
+                .add(Registration.RawCoal_T1.get())
+                .add(Registration.RawCoal_T2.get())
+                .add(Registration.RawCoal_T3.get())
+                .add(Registration.RawCoal_T4.get());
         tag(Tags.Blocks.STORAGE_BLOCKS)
                 .add(Registration.FerricoreBlock.get())
                 .add(Registration.BlazeGoldBlock.get())

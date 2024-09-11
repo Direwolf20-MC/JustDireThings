@@ -3,6 +3,10 @@
     "justdirethings:raw_ferricore_ore",
     "justdirethings:raw_blazegold_ore",
     "justdirethings:raw_celestigem_ore",
-    "justdirethings:raw_eclipsealloy_ore"
+    "justdirethings:raw_eclipsealloy_ore",
+    "justdirethings:raw_coal_t1_ore",
+    "justdirethings:raw_coal_t2_ore",
+    "justdirethings:raw_coal_t3_ore",
+    "justdirethings:raw_coal_t4_ore"
   ]
 }
