@@ -49,6 +49,20 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, ALLOW_LIST_TEXTURES, startingValue, onPress);
     }
 
+    private static final ResourceLocation STORE_EXP_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png");
+    private static final Component STORE_EXP_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.storeexp");
+
+    public static GrayscaleButton STOREEXPBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, STORE_EXP_BUTTON, STORE_EXP_BUTTON_LOCALIZATION, startingValue, onPress);
+    }
+
+    private static final ResourceLocation EXTRACT_EXP_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png");
+    private static final Component EXTRACT_EXP_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.retrieveexp");
+
+    public static GrayscaleButton EXTRACTEXPBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, EXTRACT_EXP_BUTTON, EXTRACT_EXP_BUTTON_LOCALIZATION, startingValue, onPress);
+    }
+
     private static final ResourceLocation FILTER_ONLY = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png");
     private static final Component FILTER_ONLY_LOCALIZATION = Component.translatable("justdirethings.screen.filteronlytrue");
 

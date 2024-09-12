@@ -521,6 +521,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.senditems", "Push Items");
         add("justdirethings.screen.pullitems", "Pull Items");
         add("justdirethings.screen.swapitems", "Swap Items");
+        add("justdirethings.screen.storeexp", "Store Exp");
+        add("justdirethings.screen.retrieveexp", "Retrieve Exp");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

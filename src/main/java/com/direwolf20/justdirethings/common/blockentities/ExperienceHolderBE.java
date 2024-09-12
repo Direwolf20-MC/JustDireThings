@@ -5,11 +5,14 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.ExperienceUtils;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +28,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     public FilterData filterData = new FilterData();
     public AreaAffectingData areaAffectingData = new AreaAffectingData();
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
+    public int exp;
 
     public ExperienceHolderBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ExperienceHolderBE.get(), pPos, pBlockState);
@@ -43,6 +47,70 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     @Override
     public AreaAffectingData getAreaAffectingData() {
         return areaAffectingData;
+    }
+
+    public void storeExp(Player player, int levelChange) {
+        if (levelChange == -1) {
+            // Move all experience from player
+            int totalExp = ExperienceUtils.getPlayerTotalExperience(player);
+            this.exp += totalExp;
+            player.giveExperiencePoints(-totalExp); // Removes all levels
+        } else if (levelChange > 0) {
+            // Handle fractional progress first, if the player is in the middle of a level
+            int expInCurrentLevel = (int) (player.experienceProgress * player.getXpNeededForNextLevel());
+
+            // If the player has partial progress within the current level, remove that first
+            if (expInCurrentLevel > 0) {
+                int expRemoved = ExperienceUtils.removePoints(player, expInCurrentLevel);
+                this.exp += expRemoved;
+                levelChange--;  // We've already removed part of a level
+            }
+
+            if (levelChange > 0) {
+                // Now remove the specified number of full levels
+                int expRemoved = ExperienceUtils.removeLevels(player, levelChange);
+                this.exp += expRemoved;
+            }
+        }
+
+        markDirtyClient();
+    }
+
+    public void extractExp(Player player, int levelChange) {
+        if (exp == 0) return;  // No experience in the block, exit early
+
+        if (levelChange == -1) {
+            // Move all experience from block to player
+            int expToGive = exp;
+            player.giveExperiencePoints(expToGive);
+            this.exp = 0;  // Remove all experience from the block
+        } else if (levelChange > 0) {
+            // Handle fractional progress first, if the player is in the middle of a level
+            if (roundUpToNextLevel(player))
+                levelChange--;
+
+            if (levelChange > 0 && this.exp > 0) {
+                // Give full levels based on the remaining levels requested
+                int expForNextLevels = ExperienceUtils.getTotalExperienceForLevel(player.experienceLevel + levelChange) - ExperienceUtils.getPlayerTotalExperience(player);
+                int expToGive = Math.min(this.exp, expForNextLevels);
+                player.giveExperiencePoints(expToGive);
+                this.exp -= expToGive;
+                roundUpToNextLevel(player); //Thanks Floating point math!!
+            }
+        }
+
+        markDirtyClient();
+    }
+
+    public boolean roundUpToNextLevel(Player player) {
+        int expInCurrentLevel = (int) (player.experienceProgress * player.getXpNeededForNextLevel());
+        if (expInCurrentLevel > 0) {
+            int expToGive = Math.min(exp, ExperienceUtils.getExpNeededForNextLevel(player));
+            player.giveExperiencePoints(expToGive);
+            this.exp -= expToGive;
+            return true;
+        }
+        return false;
     }
 
     public void tickClient() {
@@ -76,5 +144,17 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         for (Player player : entityList) {
 
         }
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
+        tag.putInt("exp", exp);
+    }
+
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
+        exp = tag.getInt("exp");
     }
 }
