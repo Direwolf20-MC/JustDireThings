@@ -355,6 +355,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> ParadoxMachine_ITEM = ITEMS.register("paradoxmachine", () -> new BlockItem(ParadoxMachine.get(), new Item.Properties()));
     public static final DeferredHolder<Block, InventoryHolder> InventoryHolder = BLOCKS.register("inventory_holder", InventoryHolder::new);
     public static final DeferredHolder<Item, BlockItem> InventoryHolder_ITEM = ITEMS.register("inventory_holder", () -> new BlockItem(InventoryHolder.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, ExperienceHolder> ExperienceHolder = BLOCKS.register("experienceholder", ExperienceHolder::new);
+    public static final DeferredHolder<Item, BlockItem> ExperienceHolder_ITEM = ITEMS.register("experienceholder", () -> new BlockItem(ExperienceHolder.get(), new Item.Properties()));
 
 
     //Power Machines
@@ -457,6 +459,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT2BE>> FluidCollectorT2BE = BLOCK_ENTITIES.register("fluidcollectort2", () -> BlockEntityType.Builder.of(FluidCollectorT2BE::new, FluidCollectorT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ParadoxMachineBE>> ParadoxMachineBE = BLOCK_ENTITIES.register("paradoxmachine", () -> BlockEntityType.Builder.of(ParadoxMachineBE::new, ParadoxMachine.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InventoryHolderBE>> InventoryHolderBE = BLOCK_ENTITIES.register("inventory_holder", () -> BlockEntityType.Builder.of(InventoryHolderBE::new, InventoryHolder.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExperienceHolderBE>> ExperienceHolderBE = BLOCK_ENTITIES.register("experienceholder", () -> BlockEntityType.Builder.of(ExperienceHolderBE::new, ExperienceHolder.get()).build(null));
 
     //Items - Raw Resources
     public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
@@ -713,6 +716,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(ParadoxMachineContainer::new));
     public static final DeferredHolder<MenuType<?>, MenuType<InventoryHolderContainer>> InventoryHolder_Container = CONTAINERS.register("inventoryholder_container",
             () -> IMenuTypeExtension.create(InventoryHolderContainer::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<ExperienceHolderContainer>> Experience_Holder_Container = CONTAINERS.register("experienceholder_container",
+            () -> IMenuTypeExtension.create(ExperienceHolderContainer::new));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(

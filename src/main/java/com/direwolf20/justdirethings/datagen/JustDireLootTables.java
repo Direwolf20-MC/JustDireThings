@@ -69,6 +69,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         add(Registration.TimeCrystalBuddingBlock.get(), noDrop());
         dropSelf(Registration.ParadoxMachine.get());
         dropSelf(Registration.InventoryHolder.get());
+        dropSelf(Registration.ExperienceHolder.get());
 
         //Raw Ores
         add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(

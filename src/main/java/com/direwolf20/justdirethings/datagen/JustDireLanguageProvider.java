@@ -59,6 +59,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TimeCrystalCluster_Large.get(), "Large Time Crystal Cluster");
         add(Registration.ParadoxMachine.get(), "Paradox Machine");
         add(Registration.InventoryHolder.get(), "Inventory Holder");
+        add(Registration.ExperienceHolder.get(), "Experience Holder");
 
         //Fluids
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");

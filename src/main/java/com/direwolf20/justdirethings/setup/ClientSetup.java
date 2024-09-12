@@ -189,6 +189,7 @@ public class ClientSetup {
         event.register(Registration.PotionCanister_Container.get(), PotionCanisterScreen::new);
         event.register(Registration.ParadoxMachine_Container.get(), ParadoxMachineScreen::new);
         event.register(Registration.InventoryHolder_Container.get(), InventoryHolderScreen::new);
+        event.register(Registration.Experience_Holder_Container.get(), ExperienceHolderScreen::new);
     }
 
     @SubscribeEvent
@@ -216,6 +217,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.FluidCollectorT2BE.get(), FluidCollectorT2BER::new);
         event.registerBlockEntityRenderer(Registration.ParadoxMachineBE.get(), ParadoxMachineBER::new);
         event.registerBlockEntityRenderer(Registration.InventoryHolderBE.get(), InventoryHolderBER::new);
+        event.registerBlockEntityRenderer(Registration.ExperienceHolderBE.get(), ExperienceHolderBER::new);
 
         //Entities
         event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);
