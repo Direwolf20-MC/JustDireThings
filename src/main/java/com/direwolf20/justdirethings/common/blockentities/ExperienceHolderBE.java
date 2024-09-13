@@ -6,6 +6,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.ExperienceUtils;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -28,8 +29,8 @@ import java.util.List;
 
 public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE, RedstoneControlledBE {
     public FilterData filterData = new FilterData();
-    public AreaAffectingData areaAffectingData = new AreaAffectingData();
-    public RedstoneControlData redstoneControlData = new RedstoneControlData();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
+    public RedstoneControlData redstoneControlData = getDefaultRedstoneData();
     public int exp;
     public int targetExp;
     private Player currentPlayer;
@@ -78,12 +79,16 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
                 int expRemoved = ExperienceUtils.removePoints(player, expInCurrentLevel);
                 this.exp += expRemoved;
                 levelChange--;  // We've already removed part of a level
+                if (player.experienceProgress > 0.0f && player.experienceProgress < 0.01f)
+                    player.experienceProgress = 0f;
             }
 
             if (levelChange > 0) {
                 // Now remove the specified number of full levels
                 int expRemoved = ExperienceUtils.removeLevels(player, levelChange);
                 this.exp += expRemoved;
+                if (player.experienceProgress > 0.0f && player.experienceProgress < 0.01f)
+                    player.experienceProgress = 0f;
             }
         }
 
@@ -168,7 +173,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
             doParticles(new ItemStack(Items.EXPERIENCE_BOTTLE), currentPlayer.getEyePosition().subtract(0, 0.25f, 0), false);
             if (exp == 0)
                 currentPlayer = null; //Clear current target if we run out of exp
-        } else if (currentLevel > targetExp || currentPlayer.experienceProgress > 0.001f) {
+        } else if (currentLevel > targetExp || currentPlayer.experienceProgress > 0.01f) {
             storeExp(currentPlayer, 1);
             doParticles(new ItemStack(Items.EXPERIENCE_BOTTLE), currentPlayer.getEyePosition().subtract(0, 0.25f, 0), true);
         } else
@@ -207,7 +212,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         for (Player player : entityList) {
             if (ownerOnly && !player.getUUID().equals(placedByUUID))
                 continue;
-            if (player.experienceLevel != targetExp || player.experienceProgress != 0.0f) {
+            if (player.experienceLevel != targetExp || player.experienceProgress > 0.01f) {
                 this.currentPlayer = player;
                 return;
             }
@@ -230,5 +235,30 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         targetExp = tag.getInt("targetExp");
         collectExp = tag.getBoolean("collectExp");
         ownerOnly = tag.getBoolean("ownerOnly");
+    }
+
+    @Override
+    public AreaAffectingData getDefaultAreaData(AreaAffectingBE areaAffectingBE) {
+        return areaAffectingBE.getDefaultAreaData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
+    }
+
+    @Override
+    public RedstoneControlData getDefaultRedstoneData() {
+        return new RedstoneControlData(MiscHelpers.RedstoneMode.PULSE);
+    }
+
+    @Override
+    public boolean isDefaultSettings() {
+        if (!super.isDefaultSettings())
+            return false;
+        if (exp != 0)
+            return false;
+        if (targetExp != 0)
+            return false;
+        if (collectExp)
+            return false;
+        if (ownerOnly)
+            return false;
+        return true;
     }
 }
