@@ -16,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -29,6 +30,8 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     public AreaAffectingData areaAffectingData = new AreaAffectingData();
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     public int exp;
+    public int targetExp;
+    private Player currentPlayer;
 
     public ExperienceHolderBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ExperienceHolderBE.get(), pPos, pBlockState);
@@ -47,6 +50,11 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     @Override
     public AreaAffectingData getAreaAffectingData() {
         return areaAffectingData;
+    }
+
+    public void changeSettings(int targetExp) {
+        this.targetExp = targetExp;
+        markDirtyClient();
     }
 
     public void storeExp(Player player, int levelChange) {
@@ -123,18 +131,44 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         handleExperience();
     }
 
-    public void doParticles(ItemStack itemStack, Vec3 sourcePos) {
+    public void doParticles(ItemStack itemStack, Vec3 sourcePos, boolean toBlock) {
         Direction direction = getBlockState().getValue(BlockStateProperties.FACING);
         BlockPos blockPos = getBlockPos();
-        ItemFlowParticleData data = new ItemFlowParticleData(itemStack, blockPos.getX() + 0.5f - (0.3 * direction.getStepX()), blockPos.getY() + 0.5f - (0.3 * direction.getStepY()), blockPos.getZ() + 0.5f - (0.3 * direction.getStepZ()), 5);
+        Vec3 baubleSpot = new Vec3(blockPos.getX() + 0.5f - (0.3 * direction.getStepX()), blockPos.getY() + 0.5f - (0.3 * direction.getStepY()), blockPos.getZ() + 0.5f - (0.3 * direction.getStepZ()));
         double d0 = sourcePos.x();
-        double d1 = sourcePos.y();
+        double d1 = sourcePos.y() - 0.25f;
         double d2 = sourcePos.z();
-        ((ServerLevel) level).sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
+        if (toBlock) {
+            ItemFlowParticleData data = new ItemFlowParticleData(itemStack, baubleSpot.x, baubleSpot.y, baubleSpot.z, 1);
+            ((ServerLevel) level).sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
+        } else {
+            ItemFlowParticleData data = new ItemFlowParticleData(itemStack, d0, d1, d2, 1);
+            ((ServerLevel) level).sendParticles(data, baubleSpot.x, baubleSpot.y, baubleSpot.z, 10, 0, 0, 0, 0);
+        }
     }
 
     private void handleExperience() {
-        if (!isActiveRedstone() || !canRun()) return;
+        //if (!isActiveRedstone() || !canRun()) return;
+        assert level != null;
+        if (isActiveRedstone() && canRun() && currentPlayer == null)
+            findTargetPlayer();
+
+        if (currentPlayer == null) return;
+
+        int currentLevel = currentPlayer.experienceLevel;
+        if (currentLevel < targetExp) {
+            extractExp(currentPlayer, 1);
+            doParticles(new ItemStack(Items.EXPERIENCE_BOTTLE), currentPlayer.getEyePosition(), false);
+            if (exp == 0)
+                currentPlayer = null; //Clear current target if we run out of exp
+        } else if (currentLevel > targetExp) {
+            storeExp(currentPlayer, 1);
+            doParticles(new ItemStack(Items.EXPERIENCE_BOTTLE), currentPlayer.getEyePosition(), true);
+        } else
+            currentPlayer = null;
+    }
+
+    private void findTargetPlayer() {
         assert level != null;
         AABB searchArea = getAABB(getBlockPos());
 
@@ -144,7 +178,10 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         if (entityList.isEmpty()) return;
 
         for (Player player : entityList) {
-
+            if (player.experienceLevel != targetExp) {
+                this.currentPlayer = player;
+                return;
+            }
         }
     }
 
@@ -152,11 +189,13 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
         tag.putInt("exp", exp);
+        tag.putInt("targetExp", targetExp);
     }
 
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.loadAdditional(tag, provider);
         exp = tag.getInt("exp");
+        targetExp = tag.getInt("targetExp");
     }
 }

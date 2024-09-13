@@ -39,6 +39,7 @@ public class PacketHandler {
         registrar.playToServer(InventoryHolderSettingsPayload.TYPE, InventoryHolderSettingsPayload.STREAM_CODEC, InventoryHolderSettingsPacket.get()::handle);
         registrar.playToServer(InventoryHolderMoveItemsPayload.TYPE, InventoryHolderMoveItemsPayload.STREAM_CODEC, InventoryHolderMoveItemsPacket.get()::handle);
         registrar.playToServer(ExperienceHolderPayload.TYPE, ExperienceHolderPayload.STREAM_CODEC, ExperienceHolderPacket.get()::handle);
+        registrar.playToServer(ExperienceHolderSettingsPayload.TYPE, ExperienceHolderSettingsPayload.STREAM_CODEC, ExperienceHolderSettingsPacket.get()::handle);
 
         //Going to Client
         registrar.playToClient(ClientSoundPayload.TYPE, ClientSoundPayload.STREAM_CODEC, ClientSoundPacket.get()::handle);

@@ -2,9 +2,11 @@ package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
+import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.common.blockentities.ExperienceHolderBE;
 import com.direwolf20.justdirethings.common.containers.ExperienceHolderContainer;
 import com.direwolf20.justdirethings.common.network.data.ExperienceHolderPayload;
+import com.direwolf20.justdirethings.common.network.data.ExperienceHolderSettingsPayload;
 import com.direwolf20.justdirethings.util.ExperienceUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,6 +18,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderContainer> {
     private ExperienceHolderBE experienceHolderBE;
     private int exp;
+    private int targetExp;
     private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     private static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
 
@@ -24,6 +27,7 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
         if (container.baseMachineBE instanceof ExperienceHolderBE experienceHolderBE) {
             this.experienceHolderBE = experienceHolderBE;
             this.exp = experienceHolderBE.exp;
+            this.targetExp = experienceHolderBE.targetExp;
         }
     }
 
@@ -45,6 +49,10 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
             else if (Screen.hasShiftDown())
                 amt = amt * 10;
             PacketDistributor.sendToServer(new ExperienceHolderPayload(false, amt));
+        }));
+        addRenderableWidget(ToggleButtonFactory.TARGETEXPBUTTON(topSectionLeft + (topSectionWidth / 2) - 15 - 42, topSectionTop + 64, targetExp, b -> {
+            targetExp = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
+            saveSettings();
         }));
     }
 
@@ -72,5 +80,11 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
         guiGraphics.drawString(font, s, j, k + 1, 0, false);
         guiGraphics.drawString(font, s, j, k - 1, 0, false);
         guiGraphics.drawString(font, s, j, k, 8453920, false);
+    }
+
+    @Override
+    public void saveSettings() {
+        super.saveSettings();
+        PacketDistributor.sendToServer(new ExperienceHolderSettingsPayload(targetExp));
     }
 }

@@ -159,6 +159,12 @@ public class ToggleButtonFactory {
         return new NumberButton(x, y, 24, 12, value, min, 1200, ticksButtonLocalization, onPress);
     }
 
+    private static Component targetExpLocalization = Component.translatable("justdirethings.screen.targetexp");
+
+    public static NumberButton TARGETEXPBUTTON(int x, int y, int value, Button.OnPress onPress) {
+        return new NumberButton(x, y, 24, 12, value, 0, 1000, targetExpLocalization, onPress);
+    }
+
     private static Component pickupDelayButtonLocalization = Component.translatable("justdirethings.screen.pickupdelay");
 
     public static NumberButton PICKUPDELAYBUTTON(int x, int y, int value, Button.OnPress onPress) {
