@@ -103,6 +103,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     }
 
     public boolean roundUpToNextLevel(Player player) {
+        if (this.exp <= 0) return false; // No experience available to round up
         int expInCurrentLevel = (int) (player.experienceProgress * player.getXpNeededForNextLevel());
         if (expInCurrentLevel > 0) {
             int expToGive = Math.min(exp, ExperienceUtils.getExpNeededForNextLevel(player));
