@@ -51,6 +51,9 @@ import com.direwolf20.justdirethings.common.fluids.unrefinedt4fuel.UnrefinedT4Fu
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluid;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
+import com.direwolf20.justdirethings.common.fluids.xpfluid.XPFluid;
+import com.direwolf20.justdirethings.common.fluids.xpfluid.XPFluidBlock;
+import com.direwolf20.justdirethings.common.fluids.xpfluid.XPFluidType;
 import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.abilityupgrades.Upgrade;
 import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeBlank;
@@ -313,6 +316,18 @@ public class Registration {
     public static final DeferredHolder<Item, BucketItem> REFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t4_fluid_bucket",
             () -> new BucketItem(Registration.REFINED_T4_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
+    //XP Fluid
+    public static final DeferredHolder<FluidType, FluidType> XP_FLUID_TYPE = FLUID_TYPES.register("xp_fluid_type",
+            XPFluidType::new);
+    public static final DeferredHolder<Fluid, XPFluid> XP_FLUID_FLOWING = FLUIDS.register("xp_fluid_flowing",
+            XPFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, XPFluid> XP_FLUID_SOURCE = FLUIDS.register("xp_fluid_source",
+            XPFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> XP_FLUID_BLOCK = FLUID_BLOCKS.register("xp_fluid_block",
+            XPFluidBlock::new);
+    public static final DeferredHolder<Item, BucketItem> XP_FLUID_BUCKET = BUCKET_ITEMS.register("xp_fluid_bucket",
+            () -> new BucketItem(Registration.XP_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
 
     //Machines
     public static final DeferredHolder<Block, ItemCollector> ItemCollector = BLOCKS.register("itemcollector", ItemCollector::new);
@@ -355,6 +370,8 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> ParadoxMachine_ITEM = ITEMS.register("paradoxmachine", () -> new BlockItem(ParadoxMachine.get(), new Item.Properties()));
     public static final DeferredHolder<Block, InventoryHolder> InventoryHolder = BLOCKS.register("inventory_holder", InventoryHolder::new);
     public static final DeferredHolder<Item, BlockItem> InventoryHolder_ITEM = ITEMS.register("inventory_holder", () -> new BlockItem(InventoryHolder.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, ExperienceHolder> ExperienceHolder = BLOCKS.register("experienceholder", ExperienceHolder::new);
+    public static final DeferredHolder<Item, BlockItem> ExperienceHolder_ITEM = ITEMS.register("experienceholder", () -> new BlockItem(ExperienceHolder.get(), new Item.Properties()));
 
 
     //Power Machines
@@ -457,6 +474,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidCollectorT2BE>> FluidCollectorT2BE = BLOCK_ENTITIES.register("fluidcollectort2", () -> BlockEntityType.Builder.of(FluidCollectorT2BE::new, FluidCollectorT2.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ParadoxMachineBE>> ParadoxMachineBE = BLOCK_ENTITIES.register("paradoxmachine", () -> BlockEntityType.Builder.of(ParadoxMachineBE::new, ParadoxMachine.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InventoryHolderBE>> InventoryHolderBE = BLOCK_ENTITIES.register("inventory_holder", () -> BlockEntityType.Builder.of(InventoryHolderBE::new, InventoryHolder.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExperienceHolderBE>> ExperienceHolderBE = BLOCK_ENTITIES.register("experienceholder", () -> BlockEntityType.Builder.of(ExperienceHolderBE::new, ExperienceHolder.get()).build(null));
 
     //Items - Raw Resources
     public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
@@ -713,6 +731,8 @@ public class Registration {
             () -> IMenuTypeExtension.create(ParadoxMachineContainer::new));
     public static final DeferredHolder<MenuType<?>, MenuType<InventoryHolderContainer>> InventoryHolder_Container = CONTAINERS.register("inventoryholder_container",
             () -> IMenuTypeExtension.create(InventoryHolderContainer::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<ExperienceHolderContainer>> Experience_Holder_Container = CONTAINERS.register("experienceholder_container",
+            () -> IMenuTypeExtension.create(ExperienceHolderContainer::new));
 
     //Data Attachments
     public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(

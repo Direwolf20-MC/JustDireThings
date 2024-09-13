@@ -59,6 +59,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TimeCrystalCluster_Large.get(), "Large Time Crystal Cluster");
         add(Registration.ParadoxMachine.get(), "Paradox Machine");
         add(Registration.InventoryHolder.get(), "Inventory Holder");
+        add(Registration.ExperienceHolder.get(), "Experience Holder");
 
         //Fluids
         add(Registration.PORTAL_FLUID_BLOCK.get(), "Portal Fluid");
@@ -91,6 +92,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TIME_FLUID_BLOCK.get(), "Time Fluid");
         add(Registration.TIME_FLUID_BUCKET.get(), "Time Fluid Bucket");
         add("fluid_type.justdirethings.time_fluid_type", "Time Fluid");
+        add(Registration.XP_FLUID_BLOCK.get(), "XP Fluid");
+        add(Registration.XP_FLUID_BUCKET.get(), "XP Fluid Bucket");
+        add("fluid_type.justdirethings.xp_fluid_type", "XP Fluid");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");
@@ -520,6 +524,13 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.senditems", "Push Items");
         add("justdirethings.screen.pullitems", "Pull Items");
         add("justdirethings.screen.swapitems", "Swap Items");
+        add("justdirethings.screen.storeexp", "Store Level");
+        add("justdirethings.screen.retrieveexp", "Retrieve Level");
+        add("justdirethings.screen.targetexp", "Target Level");
+        add("justdirethings.screen.owneronly", "Owner Only");
+        add("justdirethings.screen.collectexp", "Collect Experience");
+        add("justdirethings.screen.pushfluids", "Push Fluids");
+        add("justdirethings.screen.pullfluids", "Pull Fluids");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

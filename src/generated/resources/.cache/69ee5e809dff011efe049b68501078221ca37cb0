@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-07T12:06:42.2473509	Item Models: justdirethings
+// 1.21.1	2024-09-13T13:42:08.1493472	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -209,6 +209,7 @@ d3f356b071deedc9372ec13aa79b224a46327716 assets/justdirethings/models/item/eclip
 2f3ef44480cc3c82ab7af95cfee7d174dcfd1d30 assets/justdirethings/models/item/eclipsealloy_sword_active.json
 f60564d23035abd9c1d690f4622ea258afa92db1 assets/justdirethings/models/item/eclipsegate_wand.json
 acf1922ba0cd70df4e7ccf30684508a47ac1a14b assets/justdirethings/models/item/energytransmitter.json
+c6e8a590cc9e752378ffd172eadd9fcf6f6bb1ed assets/justdirethings/models/item/experienceholder.json
 eb052d000da5f8d7999360f7bbfe773aa23ce70d assets/justdirethings/models/item/ferricore_axe.json
 62a8f615d9bd8a95b2e7e21b8f6658454008fb54 assets/justdirethings/models/item/ferricore_axe_active.json
 6c85011e764ec697b9be64a2f7fc12ddacf56f74 assets/justdirethings/models/item/ferricore_block.json
@@ -367,3 +368,4 @@ a3679c6341273d0028d1f6882e467e290189eb35 assets/justdirethings/models/item/upgra
 0af186d271e80543d4bc2b38307337807c61af8d assets/justdirethings/models/item/upgrade_treefeller.json
 24c722112f9d85c53ea12020657451e156b57e1c assets/justdirethings/models/item/upgrade_walkspeed.json
 b713dac946a919bd3c78bdd84396c681905676bb assets/justdirethings/models/item/voidshift_wand.json
+a7b09b6500bbaed0170e4ebbf38cac862e0b2f20 assets/justdirethings/models/item/xp_fluid_bucket.json

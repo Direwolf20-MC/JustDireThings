@@ -1,16 +1,15 @@
 package com.direwolf20.justdirethings;
 
-import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
-import com.direwolf20.justdirethings.common.blockentities.InventoryHolderBE;
-import com.direwolf20.justdirethings.common.blockentities.ParadoxMachineBE;
-import com.direwolf20.justdirethings.common.blockentities.PlayerAccessorBE;
+import com.direwolf20.justdirethings.common.blockentities.*;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
+import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
+import com.direwolf20.justdirethings.common.fluids.xpfluid.XPFluid;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.TimeWand;
@@ -300,6 +299,15 @@ public class JustDireThings {
                     return null;
                 },
                 Registration.ParadoxMachine.get()
+        );
+        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+                (level, pos, state, be, side) -> {
+                    if (be instanceof ExperienceHolderBE experienceHolderBE) {
+                        return new ExperienceHolderFluidTank(experienceHolderBE, fluidstack -> fluidstack.getFluid() instanceof XPFluid); //TODO Tags?
+                    }
+                    return null;
+                },
+                Registration.ExperienceHolder.get()
         );
     }
 }

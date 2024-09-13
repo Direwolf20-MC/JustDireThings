@@ -189,6 +189,7 @@ public class ClientSetup {
         event.register(Registration.PotionCanister_Container.get(), PotionCanisterScreen::new);
         event.register(Registration.ParadoxMachine_Container.get(), ParadoxMachineScreen::new);
         event.register(Registration.InventoryHolder_Container.get(), InventoryHolderScreen::new);
+        event.register(Registration.Experience_Holder_Container.get(), ExperienceHolderScreen::new);
     }
 
     @SubscribeEvent
@@ -216,6 +217,7 @@ public class ClientSetup {
         event.registerBlockEntityRenderer(Registration.FluidCollectorT2BE.get(), FluidCollectorT2BER::new);
         event.registerBlockEntityRenderer(Registration.ParadoxMachineBE.get(), ParadoxMachineBER::new);
         event.registerBlockEntityRenderer(Registration.InventoryHolderBE.get(), InventoryHolderBER::new);
+        event.registerBlockEntityRenderer(Registration.ExperienceHolderBE.get(), ExperienceHolderBER::new);
 
         //Entities
         event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);
@@ -553,6 +555,37 @@ public class ClientSetup {
                 return 0x7700FF00;
             }
         }, Registration.TIME_FLUID_TYPE.get());
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return WATER_STILL;
+            }
+
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return WATER_FLOW;
+            }
+
+            @Override
+            public ResourceLocation getOverlayTexture() {
+                return WATER_OVERLAY;
+            }
+
+            @Override
+            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+                return UNDERWATER_LOCATION;
+            }
+
+            @Override
+            public int getTintColor() {
+                return 0xFF32CD32;
+            }
+
+            @Override
+            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
+                return 0xFF32CD32;
+            }
+        }, Registration.XP_FLUID_TYPE.get());
     }
 
     @SubscribeEvent

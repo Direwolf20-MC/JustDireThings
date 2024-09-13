@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
+import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import com.mojang.authlib.GameProfile;
@@ -211,12 +212,16 @@ public class BaseMachineBE extends BlockEntity {
         return new RedstoneControlData();
     }
 
+    public AreaAffectingData getDefaultAreaData(AreaAffectingBE areaAffectingBE) {
+        return areaAffectingBE.getDefaultAreaData(getBlockState().getValue(BlockStateProperties.FACING));
+    }
+
     public boolean isDefaultSettings() {
         if (tickSpeed != 20)
             return false;
         if (direction != 0)
             return false;
-        if (this instanceof AreaAffectingBE areaAffectingBE && !areaAffectingBE.getAreaAffectingData().equals(areaAffectingBE.getDefaultAreaData(getBlockState().getValue(BlockStateProperties.FACING))))
+        if (this instanceof AreaAffectingBE areaAffectingBE && !areaAffectingBE.getAreaAffectingData().equals(getDefaultAreaData(areaAffectingBE)))
             return false;
         if (this instanceof FilterableBE filterableBE && !filterableBE.getFilterData().equals(getDefaultFilterData()))
             return false;

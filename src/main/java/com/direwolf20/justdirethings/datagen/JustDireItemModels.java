@@ -75,6 +75,7 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.TimeCrystalCluster.getId().getPath(), modLoc("block/time_crystal_cluster"));
         withExistingParent(Registration.ParadoxMachine.getId().getPath(), modLoc("block/paradoxmachine"));
         withExistingParent(Registration.InventoryHolder.getId().getPath(), modLoc("block/inventory_holder"));
+        withExistingParent(Registration.ExperienceHolder_ITEM.getId().getPath(), modLoc("block/experienceholder"));
 
         //Item items
         singleTexture(Registration.Fuel_Canister.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/fuel_canister"));

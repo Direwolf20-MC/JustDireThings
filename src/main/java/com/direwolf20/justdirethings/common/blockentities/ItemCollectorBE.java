@@ -32,7 +32,7 @@ import static net.minecraft.world.entity.Entity.RemovalReason.DISCARDED;
 public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, AreaAffectingBE, RedstoneControlledBE {
     protected BlockCapabilityCache<IItemHandler, Direction> attachedInventory;
     public FilterData filterData = new FilterData();
-    public AreaAffectingData areaAffectingData = new AreaAffectingData();
+    public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
 
     public ItemCollectorBE(BlockPos pPos, BlockState pBlockState) {
@@ -125,5 +125,10 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
             );
         }
         return attachedInventory.getCapability();
+    }
+
+    @Override
+    public AreaAffectingData getDefaultAreaData(AreaAffectingBE areaAffectingBE) {
+        return areaAffectingBE.getDefaultAreaData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
     }
 }

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_blazegold_ingot": {
+    "has_experienceholder": {
       "conditions": {
         "items": [
           {
-            "items": "justdirethings:blazegold_ingot"
+            "items": "justdirethings:experienceholder"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:energytransmitter"
+        "recipe": "justdirethings:experienceholder_nbtclear"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_blazegold_ingot"
+      "has_experienceholder"
     ]
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:energytransmitter"
+      "justdirethings:experienceholder_nbtclear"
     ]
   }
 }

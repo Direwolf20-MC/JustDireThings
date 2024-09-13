@@ -49,6 +49,43 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, ALLOW_LIST_TEXTURES, startingValue, onPress);
     }
 
+    private static final List<TextureLocalization> PUSH_PULL_FLUIDS_TEXTURES = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/pullfluids.png"), Component.translatable("justdirethings.screen.pullfluids")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/pushfluids.png"), Component.translatable("justdirethings.screen.pushfluids"))
+    );
+
+    public static ToggleButton PUSHPULLFLUIDSBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, PUSH_PULL_FLUIDS_TEXTURES, startingValue, onPress);
+    }
+
+    private static final ResourceLocation STORE_EXP_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png");
+    private static final Component STORE_EXP_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.storeexp");
+
+    public static GrayscaleButton STOREEXPBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, STORE_EXP_BUTTON, STORE_EXP_BUTTON_LOCALIZATION, startingValue, onPress);
+    }
+
+    private static final ResourceLocation OWNER_ONLY_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/player.png");
+    private static final Component OWNER_ONLY_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.owneronly");
+
+    public static GrayscaleButton OWNERONLYBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, OWNER_ONLY_BUTTON, OWNER_ONLY_BUTTON_LOCALIZATION, startingValue, onPress);
+    }
+
+    private static final ResourceLocation COLLECT_EXP_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/mindfog.png");
+    private static final Component COLLECT_EXP_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.collectexp");
+
+    public static GrayscaleButton COLLECTEXPBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, COLLECT_EXP_BUTTON, COLLECT_EXP_BUTTON_LOCALIZATION, startingValue, onPress);
+    }
+
+    private static final ResourceLocation EXTRACT_EXP_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png");
+    private static final Component EXTRACT_EXP_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.retrieveexp");
+
+    public static GrayscaleButton EXTRACTEXPBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, EXTRACT_EXP_BUTTON, EXTRACT_EXP_BUTTON_LOCALIZATION, startingValue, onPress);
+    }
+
     private static final ResourceLocation FILTER_ONLY = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/allowlisttrue.png");
     private static final Component FILTER_ONLY_LOCALIZATION = Component.translatable("justdirethings.screen.filteronlytrue");
 
@@ -143,6 +180,12 @@ public class ToggleButtonFactory {
 
     public static NumberButton TICKSPEEDBUTTON(int x, int y, int value, int min, Button.OnPress onPress) {
         return new NumberButton(x, y, 24, 12, value, min, 1200, ticksButtonLocalization, onPress);
+    }
+
+    private static Component targetExpLocalization = Component.translatable("justdirethings.screen.targetexp");
+
+    public static NumberButton TARGETEXPBUTTON(int x, int y, int value, Button.OnPress onPress) {
+        return new NumberButton(x, y, 24, 12, value, 0, 1000, targetExpLocalization, onPress);
     }
 
     private static Component pickupDelayButtonLocalization = Component.translatable("justdirethings.screen.pickupdelay");

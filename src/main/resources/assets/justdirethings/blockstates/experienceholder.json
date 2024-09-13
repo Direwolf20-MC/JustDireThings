@@ -1,0 +1,37 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "justdirethings:block/experienceholder"
+    },
+    "facing=east": {
+      "model": "justdirethings:block/experienceholder",
+      "x": -90,
+      "y": 90,
+      "z": 0
+    },
+    "facing=north": {
+      "model": "justdirethings:block/experienceholder",
+      "x": -90,
+      "y": 0,
+      "z": 0
+    },
+    "facing=south": {
+      "model": "justdirethings:block/experienceholder",
+      "x": -90,
+      "y": 180,
+      "z": 0
+    },
+    "facing=west": {
+      "model": "justdirethings:block/experienceholder",
+      "x": -90,
+      "y": 270,
+      "z": 0
+    },
+    "facing=up": {
+      "model": "justdirethings:block/experienceholder",
+      "x": -180,
+      "y": 180,
+      "z": 180
+    }
+  }
+}
