@@ -63,13 +63,28 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         markDirtyClient();
     }
 
+    public int addExp(int addition) {
+        if (this.exp > Integer.MAX_VALUE - addition) {
+            // Prevent overflow by capping the experience at Integer.MAX_VALUE
+            int remainingExp = addition - (Integer.MAX_VALUE - this.exp);
+            this.exp = Integer.MAX_VALUE;
+            return remainingExp; //Return Remaining
+        } else {
+            // Safe to add the experience
+            this.exp += addition;
+            return 0;
+        }
+    }
+
     public void storeExp(Player player, int levelChange) {
         if (levelChange == -1) {
             // Move all experience from player
             int totalExp = ExperienceUtils.getPlayerTotalExperience(player);
-            this.exp += totalExp;
+            int remaining = addExp(totalExp);
             player.giveExperiencePoints(-totalExp); // Removes all levels
             player.giveExperienceLevels(-1); //Handles dangling Floating Point Math (RAGE!) Consider it a tax on storing exp :)
+            if (remaining > 0)
+                player.giveExperiencePoints(remaining);
         } else if (levelChange > 0) {
             // Handle fractional progress first, if the player is in the middle of a level
             int expInCurrentLevel = (int) (player.experienceProgress * player.getXpNeededForNextLevel());
@@ -77,15 +92,19 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
             // If the player has partial progress within the current level, remove that first
             if (player.experienceProgress > 0.0f) {
                 int expRemoved = ExperienceUtils.removePoints(player, expInCurrentLevel);
-                this.exp += expRemoved;
+                int remaining = addExp(expRemoved);
                 levelChange--;  // We've already removed part of a level
                 player.experienceProgress = 0f; //Clear the player's partial exp, to handle super low floating point values
+                if (remaining > 0)
+                    player.giveExperiencePoints(remaining);
             }
 
             if (levelChange > 0) {
                 // Now remove the specified number of full levels
                 int expRemoved = ExperienceUtils.removeLevels(player, levelChange);
-                this.exp += expRemoved;
+                int remaining = addExp(expRemoved);
+                if (remaining > 0)
+                    player.giveExperiencePoints(remaining);
             }
         }
 
@@ -190,7 +209,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
 
         for (ExperienceOrb experienceOrb : entityList) {
             int orbValue = experienceOrb.getValue();
-            this.exp += orbValue;
+            addExp(orbValue);
             doParticles(new ItemStack(Items.EXPERIENCE_BOTTLE), experienceOrb.position(), true);
             experienceOrb.discard();
         }

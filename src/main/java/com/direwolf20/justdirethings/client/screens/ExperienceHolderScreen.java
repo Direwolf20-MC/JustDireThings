@@ -39,7 +39,7 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.STOREEXPBUTTON(topSectionLeft + (topSectionWidth / 2) - 15 - 18, topSectionTop + 62, true, b -> {
+        addRenderableWidget(ToggleButtonFactory.STOREEXPBUTTON(topSectionLeft + (topSectionWidth / 2) + 15, topSectionTop + 62, true, b -> {
             int amt = 1;
             if (Screen.hasControlDown())
                 amt = -1;
@@ -47,7 +47,7 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
                 amt = amt * 10;
             PacketDistributor.sendToServer(new ExperienceHolderPayload(true, amt));
         }));
-        addRenderableWidget(ToggleButtonFactory.EXTRACTEXPBUTTON(topSectionLeft + (topSectionWidth / 2) + 15, topSectionTop + 62, true, b -> {
+        addRenderableWidget(ToggleButtonFactory.EXTRACTEXPBUTTON(topSectionLeft + (topSectionWidth / 2) - 15 - 18, topSectionTop + 62, true, b -> {
             int amt = 1;
             if (Screen.hasControlDown())
                 amt = -1;
