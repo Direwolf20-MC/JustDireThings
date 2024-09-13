@@ -60,7 +60,8 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         return areaAffectingData;
     }
 
-    public void changeSettings(int targetExp, boolean ownerOnly, boolean collectExp) {
+    public void changeSettings(Player player, int targetExp, boolean ownerOnly, boolean collectExp) {
+        if (this.ownerOnly && !player.getUUID().equals(placedByUUID)) return;
         this.targetExp = targetExp;
         this.ownerOnly = ownerOnly;
         this.collectExp = collectExp;
@@ -87,6 +88,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     }
 
     public void storeExp(Player player, int levelChange) {
+        if (ownerOnly && !player.getUUID().equals(placedByUUID)) return;
         if (levelChange == -1) {
             // Move all experience from player
             int totalExp = ExperienceUtils.getPlayerTotalExperience(player);
@@ -123,6 +125,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
 
     public void extractExp(Player player, int levelChange) {
         if (exp == 0) return;  // No experience in the block, exit early
+        if (ownerOnly && !player.getUUID().equals(placedByUUID)) return;
 
         if (levelChange == -1) {
             // Move all experience from block to player
@@ -194,12 +197,12 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         if (currentPlayer == null) return;
 
         int currentLevel = currentPlayer.experienceLevel;
-        if (currentLevel < targetExp) {
+        if (currentLevel < targetExp && exp > 0) {
             extractExp(currentPlayer, 1);
             doParticles(new ItemStack(Items.EXPERIENCE_BOTTLE), currentPlayer.getEyePosition().subtract(0, 0.25f, 0), false);
             if (exp == 0)
                 currentPlayer = null; //Clear current target if we run out of exp
-        } else if (currentLevel > targetExp || currentPlayer.experienceProgress > 0.01f) {
+        } else if (currentLevel > targetExp || (currentLevel == targetExp && currentPlayer.experienceProgress > 0.01f)) {
             storeExp(currentPlayer, 1);
             doParticles(new ItemStack(Items.EXPERIENCE_BOTTLE), currentPlayer.getEyePosition().subtract(0, 0.25f, 0), true);
         } else
