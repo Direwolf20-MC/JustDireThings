@@ -24,10 +24,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
 public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE, RedstoneControlledBE {
+    protected BlockCapabilityCache<IFluidHandler, Direction> attachedTank;
     public FilterData filterData = new FilterData();
     public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
     public RedstoneControlData redstoneControlData = getDefaultRedstoneData();
@@ -74,6 +78,12 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
             this.exp += addition;
             return 0;
         }
+    }
+
+    public int subExp(int subtraction) {
+        int amtToRemove = Math.min(exp, subtraction);
+        this.exp = this.exp - amtToRemove;
+        return subtraction - amtToRemove;
     }
 
     public void storeExp(Player player, int levelChange) {
@@ -233,6 +243,22 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
                 return;
             }
         }
+    }
+
+    private IFluidHandler getAttachedTank() {
+        if (attachedTank == null) {
+            assert this.level != null;
+            BlockState state = level.getBlockState(getBlockPos());
+            Direction facing = state.getValue(BlockStateProperties.FACING);
+            BlockPos inventoryPos = getBlockPos().relative(facing);
+            attachedTank = BlockCapabilityCache.create(
+                    Capabilities.FluidHandler.BLOCK, // capability to cache
+                    (ServerLevel) this.level, // level
+                    inventoryPos, // target position
+                    facing.getOpposite() // context (The side of the block we're trying to pull/push from?)
+            );
+        }
+        return attachedTank.getCapability();
     }
 
     @Override

@@ -49,6 +49,15 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, ALLOW_LIST_TEXTURES, startingValue, onPress);
     }
 
+    private static final List<TextureLocalization> PUSH_PULL_FLUIDS_TEXTURES = List.of(
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/pullfluids.png"), Component.translatable("justdirethings.screen.pullfluids")),
+            new TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/pushfluids.png"), Component.translatable("justdirethings.screen.pushfluids"))
+    );
+
+    public static ToggleButton PUSHPULLFLUIDSBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, PUSH_PULL_FLUIDS_TEXTURES, startingValue, onPress);
+    }
+
     private static final ResourceLocation STORE_EXP_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png");
     private static final Component STORE_EXP_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.storeexp");
 
