@@ -7,7 +7,6 @@ import com.direwolf20.justdirethings.common.containers.ExperienceHolderContainer
 import com.direwolf20.justdirethings.common.network.data.ExperienceHolderPayload;
 import com.direwolf20.justdirethings.util.ExperienceUtils;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +16,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderContainer> {
     private ExperienceHolderBE experienceHolderBE;
     private int exp;
-    private StringWidget expValue;
     private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     private static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
 
@@ -48,16 +46,6 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
                 amt = amt * 10;
             PacketDistributor.sendToServer(new ExperienceHolderPayload(false, amt));
         }));
-        expValue = new StringWidget(topSectionLeft + (topSectionWidth / 2) - 15, topSectionTop + 62 + (font.lineHeight / 2), 30, font.lineHeight, Component.literal(String.valueOf(ExperienceUtils.getLevelFromTotalExperience(experienceHolderBE.exp))), font);
-
-        addRenderableWidget(expValue);
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        updateDisplay();
-        renderXPAmount(guiGraphics, partialTick, mouseX, mouseY);
     }
 
     @Override
@@ -76,13 +64,13 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
         if (partialAmount > 0) {
             guiGraphics.blitSprite(EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, barX, barY, partialAmount, 5);
         }
-    }
-
-    public void renderXPAmount(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
-
-    }
-
-    private void updateDisplay() {
-        this.expValue.setMessage(Component.literal(String.valueOf(ExperienceUtils.getLevelFromTotalExperience(experienceHolderBE.exp))));
+        String s = String.valueOf(ExperienceUtils.getLevelFromTotalExperience(experienceHolderBE.exp));
+        int j = topSectionLeft + (topSectionWidth / 2) - font.width(s) / 2;
+        int k = topSectionTop + 62 + (font.lineHeight / 2);
+        guiGraphics.drawString(font, s, j + 1, k, 0, false);
+        guiGraphics.drawString(font, s, j - 1, k, 0, false);
+        guiGraphics.drawString(font, s, j, k + 1, 0, false);
+        guiGraphics.drawString(font, s, j, k - 1, 0, false);
+        guiGraphics.drawString(font, s, j, k, 8453920, false);
     }
 }
