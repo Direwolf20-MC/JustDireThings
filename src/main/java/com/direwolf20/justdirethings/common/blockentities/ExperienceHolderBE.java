@@ -79,16 +79,13 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
                 int expRemoved = ExperienceUtils.removePoints(player, expInCurrentLevel);
                 this.exp += expRemoved;
                 levelChange--;  // We've already removed part of a level
-                if (player.experienceProgress > 0.0f && player.experienceProgress < 0.01f)
-                    player.experienceProgress = 0f;
+                player.experienceProgress = 0f; //Clear the player's partial exp, to handle super low floating point values
             }
 
             if (levelChange > 0) {
                 // Now remove the specified number of full levels
                 int expRemoved = ExperienceUtils.removeLevels(player, levelChange);
                 this.exp += expRemoved;
-                if (player.experienceProgress > 0.0f && player.experienceProgress < 0.01f)
-                    player.experienceProgress = 0f;
             }
         }
 
