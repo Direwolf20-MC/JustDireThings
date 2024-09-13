@@ -55,6 +55,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
             int totalExp = ExperienceUtils.getPlayerTotalExperience(player);
             this.exp += totalExp;
             player.giveExperiencePoints(-totalExp); // Removes all levels
+            player.giveExperienceLevels(-1); //Handles dangling Floating Point Math (RAGE!) Consider it a tax on storing exp :)
         } else if (levelChange > 0) {
             // Handle fractional progress first, if the player is in the middle of a level
             int expInCurrentLevel = (int) (player.experienceProgress * player.getXpNeededForNextLevel());
