@@ -75,7 +75,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
             int expInCurrentLevel = (int) (player.experienceProgress * player.getXpNeededForNextLevel());
 
             // If the player has partial progress within the current level, remove that first
-            if (expInCurrentLevel > 0) {
+            if (player.experienceProgress > 0.0f) {
                 int expRemoved = ExperienceUtils.removePoints(player, expInCurrentLevel);
                 this.exp += expRemoved;
                 levelChange--;  // We've already removed part of a level
