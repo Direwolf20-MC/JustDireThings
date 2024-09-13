@@ -56,6 +56,20 @@ public class ToggleButtonFactory {
         return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, STORE_EXP_BUTTON, STORE_EXP_BUTTON_LOCALIZATION, startingValue, onPress);
     }
 
+    private static final ResourceLocation OWNER_ONLY_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/player.png");
+    private static final Component OWNER_ONLY_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.owneronly");
+
+    public static GrayscaleButton OWNERONLYBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, OWNER_ONLY_BUTTON, OWNER_ONLY_BUTTON_LOCALIZATION, startingValue, onPress);
+    }
+
+    private static final ResourceLocation COLLECT_EXP_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/mindfog.png");
+    private static final Component COLLECT_EXP_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.collectexp");
+
+    public static GrayscaleButton COLLECTEXPBUTTON(int x, int y, boolean startingValue, Button.OnPress onPress) {
+        return new GrayscaleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, COLLECT_EXP_BUTTON, COLLECT_EXP_BUTTON_LOCALIZATION, startingValue, onPress);
+    }
+
     private static final ResourceLocation EXTRACT_EXP_BUTTON = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png");
     private static final Component EXTRACT_EXP_BUTTON_LOCALIZATION = Component.translatable("justdirethings.screen.retrieveexp");
 

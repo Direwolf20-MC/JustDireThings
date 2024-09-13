@@ -524,6 +524,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.storeexp", "Store Level");
         add("justdirethings.screen.retrieveexp", "Retrieve Level");
         add("justdirethings.screen.targetexp", "Target Level");
+        add("justdirethings.screen.owneronly", "Owner Only");
+        add("justdirethings.screen.collectexp", "Collect Experience");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

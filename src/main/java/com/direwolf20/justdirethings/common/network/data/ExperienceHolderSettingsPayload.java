@@ -8,7 +8,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record ExperienceHolderSettingsPayload(
-        int targetExp
+        int targetExp,
+        boolean ownerOnly,
+        boolean collectExp
 ) implements CustomPacketPayload {
     public static final Type<ExperienceHolderSettingsPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "experience_holder_settings"));
 
@@ -19,6 +21,8 @@ public record ExperienceHolderSettingsPayload(
 
     public static final StreamCodec<FriendlyByteBuf, ExperienceHolderSettingsPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, ExperienceHolderSettingsPayload::targetExp,
+            ByteBufCodecs.BOOL, ExperienceHolderSettingsPayload::ownerOnly,
+            ByteBufCodecs.BOOL, ExperienceHolderSettingsPayload::collectExp,
             ExperienceHolderSettingsPayload::new
     );
 }

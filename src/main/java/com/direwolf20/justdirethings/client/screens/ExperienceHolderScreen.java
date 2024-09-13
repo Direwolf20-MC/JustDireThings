@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.client.screens;
 
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseMachineScreen;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
+import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.client.screens.widgets.NumberButton;
 import com.direwolf20.justdirethings.common.blockentities.ExperienceHolderBE;
 import com.direwolf20.justdirethings.common.containers.ExperienceHolderContainer;
@@ -19,6 +20,8 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
     private ExperienceHolderBE experienceHolderBE;
     private int exp;
     private int targetExp;
+    private boolean ownerOnly;
+    private boolean collectExp;
     private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     private static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
 
@@ -28,6 +31,8 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
             this.experienceHolderBE = experienceHolderBE;
             this.exp = experienceHolderBE.exp;
             this.targetExp = experienceHolderBE.targetExp;
+            this.ownerOnly = experienceHolderBE.ownerOnly;
+            this.collectExp = experienceHolderBE.collectExp;
         }
     }
 
@@ -52,6 +57,16 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
         }));
         addRenderableWidget(ToggleButtonFactory.TARGETEXPBUTTON(topSectionLeft + (topSectionWidth / 2) - 15 - 42, topSectionTop + 64, targetExp, b -> {
             targetExp = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
+            saveSettings();
+        }));
+        addRenderableWidget(ToggleButtonFactory.OWNERONLYBUTTON(topSectionLeft + (topSectionWidth / 2) - 15 - 60, topSectionTop + 62, ownerOnly, b -> {
+            ownerOnly = !ownerOnly;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
+        addRenderableWidget(ToggleButtonFactory.COLLECTEXPBUTTON(topSectionLeft + (topSectionWidth / 2) + 15, topSectionTop + 42, collectExp, b -> {
+            collectExp = !collectExp;
+            ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
     }
@@ -85,6 +100,6 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new ExperienceHolderSettingsPayload(targetExp));
+        PacketDistributor.sendToServer(new ExperienceHolderSettingsPayload(targetExp, ownerOnly, collectExp));
     }
 }
