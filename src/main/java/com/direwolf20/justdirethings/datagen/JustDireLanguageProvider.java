@@ -92,6 +92,9 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.TIME_FLUID_BLOCK.get(), "Time Fluid");
         add(Registration.TIME_FLUID_BUCKET.get(), "Time Fluid Bucket");
         add("fluid_type.justdirethings.time_fluid_type", "Time Fluid");
+        add(Registration.XP_FLUID_BLOCK.get(), "XP Fluid");
+        add(Registration.XP_FLUID_BUCKET.get(), "XP Fluid Bucket");
+        add("fluid_type.justdirethings.xp_fluid_type", "XP Fluid");
 
         //Resources
         add(Registration.FerricoreBlock.get(), "Ferricore Block");

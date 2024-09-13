@@ -51,6 +51,9 @@ import com.direwolf20.justdirethings.common.fluids.unrefinedt4fuel.UnrefinedT4Fu
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluid;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidBlock;
 import com.direwolf20.justdirethings.common.fluids.unstableportalfluid.UnstablePortalFluidType;
+import com.direwolf20.justdirethings.common.fluids.xpfluid.XPFluid;
+import com.direwolf20.justdirethings.common.fluids.xpfluid.XPFluidBlock;
+import com.direwolf20.justdirethings.common.fluids.xpfluid.XPFluidType;
 import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.abilityupgrades.Upgrade;
 import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeBlank;
@@ -312,6 +315,18 @@ public class Registration {
             RefinedT4FuelBlock::new);
     public static final DeferredHolder<Item, BucketItem> REFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t4_fluid_bucket",
             () -> new BucketItem(Registration.REFINED_T4_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    //XP Fluid
+    public static final DeferredHolder<FluidType, FluidType> XP_FLUID_TYPE = FLUID_TYPES.register("xp_fluid_type",
+            XPFluidType::new);
+    public static final DeferredHolder<Fluid, XPFluid> XP_FLUID_FLOWING = FLUIDS.register("xp_fluid_flowing",
+            XPFluid.Flowing::new);
+    public static final DeferredHolder<Fluid, XPFluid> XP_FLUID_SOURCE = FLUIDS.register("xp_fluid_source",
+            XPFluid.Source::new);
+    public static final DeferredHolder<Block, LiquidBlock> XP_FLUID_BLOCK = FLUID_BLOCKS.register("xp_fluid_block",
+            XPFluidBlock::new);
+    public static final DeferredHolder<Item, BucketItem> XP_FLUID_BUCKET = BUCKET_ITEMS.register("xp_fluid_bucket",
+            () -> new BucketItem(Registration.XP_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
 
     //Machines
