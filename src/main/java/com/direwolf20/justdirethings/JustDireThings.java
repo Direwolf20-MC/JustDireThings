@@ -9,13 +9,13 @@ import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
 import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
-import com.direwolf20.justdirethings.common.fluids.xpfluid.XPFluid;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.TimeWand;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
+import com.direwolf20.justdirethings.datagen.JustDireFluidTags;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.ModSetup;
@@ -303,7 +303,7 @@ public class JustDireThings {
         event.registerBlock(Capabilities.FluidHandler.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof ExperienceHolderBE experienceHolderBE) {
-                        return new ExperienceHolderFluidTank(experienceHolderBE, fluidstack -> fluidstack.getFluid() instanceof XPFluid); //TODO Tags?
+                        return new ExperienceHolderFluidTank(experienceHolderBE, fluidstack -> fluidstack.is(JustDireFluidTags.EXPERIENCE));
                     }
                     return null;
                 },

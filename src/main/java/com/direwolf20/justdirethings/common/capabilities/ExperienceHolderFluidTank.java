@@ -39,16 +39,10 @@ public class ExperienceHolderFluidTank extends FluidTank {
             if (fluid.isEmpty()) {
                 return Math.min(capacity, resource.getAmount() - resource.getAmount() % 20);
             }
-            if (!FluidStack.isSameFluidSameComponents(fluid, resource)) {
-                return 0;
-            }
             return Math.min(capacity - getFluidAmount() - ((capacity - getFluidAmount()) % 20), resource.getAmount() - resource.getAmount() % 20);
         }
         if (fluid.isEmpty()) {
             return resource.getAmount() - insertFluid(resource.getAmount());
-        }
-        if (!FluidStack.isSameFluidSameComponents(fluid, resource)) {
-            return 0;
         }
         int filled = resource.getAmount() - insertFluid(resource.getAmount());
         if (filled > 0)
