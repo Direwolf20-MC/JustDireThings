@@ -27,6 +27,8 @@ public class DataGenerators {
                 List.of(new LootTableProvider.SubProviderEntry(JustDireLootTables::new, LootContextParamSets.BLOCK)), event.getLookupProvider()));
         JustDireBlockTags blockTags = new JustDireBlockTags(packOutput, lookupProvider, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), blockTags);
+        JustDireFluidTags fluidTags = new JustDireFluidTags(packOutput, lookupProvider, event.getExistingFileHelper());
+        generator.addProvider(event.includeServer(), fluidTags);
         JustDireItemTags itemTags = new JustDireItemTags(packOutput, lookupProvider, blockTags, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), itemTags);
         JustDireDataMaps dataMaps = new JustDireDataMaps(packOutput, lookupProvider);
