@@ -201,6 +201,13 @@ public class JustDireItemTags extends ItemTagsProvider {
         tag(PAXEL)
                 .add(Registration.CelestigemPaxel.get())
                 .add(Registration.EclipseAlloyPaxel.get());
+        tag(ItemTags.CLUSTER_MAX_HARVESTABLES)
+                .add(Registration.FerricorePickaxe.get())
+                .add(Registration.BlazegoldPickaxe.get())
+                .add(Registration.CelestigemPickaxe.get())
+                .add(Registration.EclipseAlloyPickaxe.get())
+                .add(Registration.CelestigemPaxel.get())
+                .add(Registration.EclipseAlloyPaxel.get());
 
     }
 

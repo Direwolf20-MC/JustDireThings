@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-01T22:20:42.6020596	JustDireThings Item Tags
+// 1.21.1	2024-09-25T19:57:16.0643187	JustDireThings Item Tags
 c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/c/tags/item/gems.json
 55719b9c6f0430ad38bf081d697aa5406cc27cfb data/c/tags/item/ingots.json
 d7ad09b1e8fb0835b7f14f744fa7866dd3521c60 data/c/tags/item/ingots/blazegold.json
@@ -25,6 +25,7 @@ eeef6ccb8e598e021db2f245fbdff673e3106bf6 data/justdirethings/tags/item/goo_reviv
 76917a9392dc09a91e434edafbe257771ad2b621 data/justdirethings/tags/item/goo_revive_tier_4.json
 1c8b03c523f967d55db17d349712035ad95cb1cd data/minecraft/tags/item/axes.json
 873813c87b7f12c654fdc3272d5a65755a12146d data/minecraft/tags/item/chest_armor.json
+37c1e694624af60a6cd59abf99cd9ad69c0d16ca data/minecraft/tags/item/cluster_max_harvestables.json
 df583c4c20b6f03190c318d05e4b82c6efefc317 data/minecraft/tags/item/enchantable/bow.json
 873813c87b7f12c654fdc3272d5a65755a12146d data/minecraft/tags/item/enchantable/chest_armor.json
 1444b93d482e0d4d54dea0df60bf7fd79c9eb91b data/minecraft/tags/item/enchantable/foot_armor.json
