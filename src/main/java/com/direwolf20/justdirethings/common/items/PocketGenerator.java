@@ -36,7 +36,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (level.isClientSide()) return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
+        if (level.isClientSide()) return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 
         if (!player.isShiftKeyDown()) {
             player.openMenu(new SimpleMenuProvider(
@@ -44,7 +44,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
                 ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, itemstack);
             }));
         }
-        return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
     }
 
     @Override
