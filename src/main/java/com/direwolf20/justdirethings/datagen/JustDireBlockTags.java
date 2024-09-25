@@ -128,7 +128,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .addTag(BlockTags.DOORS);
         tag(ECLISEGATEDENY)
                 .addTag(BlockTags.PORTALS)
-                .addTag(BlockTags.DOORS);
+                .addTag(BlockTags.DOORS)
+                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("powah", "player_transmitters"));
         tag(PHASEDENY)
                 .addTags(BlockTags.PORTALS)
                 .add(Blocks.BARRIER,

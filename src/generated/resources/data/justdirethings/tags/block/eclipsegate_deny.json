@@ -1,6 +1,10 @@
 {
   "values": [
     "#minecraft:portals",
-    "#minecraft:doors"
+    "#minecraft:doors",
+    {
+      "id": "#powah:player_transmitters",
+      "required": false
+    }
   ]
 }
