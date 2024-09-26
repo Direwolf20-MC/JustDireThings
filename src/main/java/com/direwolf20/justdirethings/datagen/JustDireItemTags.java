@@ -48,6 +48,7 @@ public class JustDireItemTags extends ItemTagsProvider {
     public static final TagKey<Item> GOO_REVIVE_TIER_2 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_2"));
     public static final TagKey<Item> GOO_REVIVE_TIER_3 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_3"));
     public static final TagKey<Item> GOO_REVIVE_TIER_4 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_4"));
+    public static final TagKey<Item> PARADOX_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_deny"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -208,7 +209,8 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.EclipseAlloyPickaxe.get())
                 .add(Registration.CelestigemPaxel.get())
                 .add(Registration.EclipseAlloyPaxel.get());
-
+        tag(PARADOX_DENY)
+                .add(Items.BEDROCK);
     }
 
     @Override

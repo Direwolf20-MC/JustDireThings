@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.entities;
 import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticleData;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
+import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -211,6 +212,13 @@ public class ParadoxEntity extends Entity {
         }
     }
 
+    private boolean isValidItem(ItemEntity entity) {
+        ItemStack itemStack = entity.getItem();
+        if (itemStack.is(JustDireItemTags.PARADOX_DENY))
+            return false;
+        return true;
+    }
+
     private boolean isValidEntity(Entity entity) {
         if (entity.isMultipartEntity())
             return false;
@@ -229,6 +237,8 @@ public class ParadoxEntity extends Entity {
         List<ItemEntity> items = level().getEntitiesOfClass(ItemEntity.class, getBoundingBox().inflate(currentRadius + 0.25f));
 
         for (ItemEntity item : items) {
+            if (!isValidItem(item))
+                continue;
             if (collapsing) break;
             Vec3 itemPosition = item.position();
             Vec3 direction = position().subtract(itemPosition).normalize().scale(itemSuckSpeed);
