@@ -4,7 +4,6 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.systems.RenderSystem;
-import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -17,7 +16,6 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -44,7 +42,7 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe>
         slot = guiHelper.getSlotDrawable();
         icon = guiHelper.createDrawableItemStack(new ItemStack(Registration.GooBlock_Tier1.get()));
         localizedName = Component.translatable("justdirethings.goospreadrecipe.title");
-        this.arrow = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(ModIds.JEI_ID, "textures/jei/gui/gui_vanilla.png"), 82, 128, 24, 17);
+        this.arrow = guiHelper.getRecipeArrow();
     }
 
     @Override

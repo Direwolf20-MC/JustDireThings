@@ -3,7 +3,6 @@ package com.direwolf20.justdirethings.client.jei;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.systems.RenderSystem;
-import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -31,7 +30,7 @@ public class OreToResourceCategory implements IRecipeCategory<OreToResourceRecip
     public OreToResourceCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createBlankDrawable(120, 30);  // Adjust size as needed
         this.icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Registration.RawFerricoreOre.get()));
-        IDrawableStatic arrowDrawable = guiHelper.createDrawable(ResourceLocation.fromNamespaceAndPath(ModIds.JEI_ID, "textures/jei/gui/gui_vanilla.png"), 82, 128, 24, 17);
+        IDrawableStatic arrowDrawable = guiHelper.getRecipeArrow();
         this.animatedArrow = guiHelper.createAnimatedDrawable(arrowDrawable, 40, IDrawableAnimated.StartDirection.LEFT, false);  // 20 ticks duration, left-to-right animation, no looping
         this.pickaxeIcon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Items.IRON_PICKAXE));
     }
