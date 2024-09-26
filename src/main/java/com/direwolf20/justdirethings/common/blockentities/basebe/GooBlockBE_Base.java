@@ -151,7 +151,7 @@ public class GooBlockBE_Base extends BlockEntity {
             BlockState state = this.getBlockState();
 
             // Ensure the block is currently alive and perform the 10% chance check
-            if (state.getValue(ALIVE) && level.random.nextFloat() < 0.1f) {
+            if (state.getValue(ALIVE) && level.random.nextFloat() < Config.GOO_DEATH_CHANCE.get().floatValue()) {
                 // Update the block state to dead
                 level.setBlock(worldPosition, state.setValue(ALIVE, false), 3);
                 level.playSound(null, getBlockPos(), SoundEvents.VEX_DEATH, SoundSource.BLOCKS, 1.0F, 0.25F);

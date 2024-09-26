@@ -28,6 +28,7 @@ public class Config {
 
     public static final String CATEGORY_GOO = "goo";
     public static ModConfigSpec.BooleanValue GOO_CAN_DIE;
+    public static ModConfigSpec.DoubleValue GOO_DEATH_CHANCE;
 
     public static final String CATEGORY_ABILITIES = "abilities";
     public static Map<Ability, ModConfigSpec.BooleanValue> AVAILABLE_ABILITY_MAP = new HashMap<>();
@@ -129,6 +130,8 @@ public class Config {
         COMMON_BUILDER.comment("Goo settings").push(CATEGORY_GOO);
         GOO_CAN_DIE = COMMON_BUILDER.comment("Can goo randomly die, needing to be revived by right clicking with an item?")
                 .define("goo_can_die", true);
+        GOO_DEATH_CHANCE = COMMON_BUILDER.comment("The random chance that a goo block can 'die' when it finishes crafting. Set to 1.0 to guarantee it dies every time.  Default is 0.1, which is a 10% chance.")
+                .defineInRange("goo_death_chance", 0.1, 0.0, 1.0);
         COMMON_BUILDER.pop();
     }
 
