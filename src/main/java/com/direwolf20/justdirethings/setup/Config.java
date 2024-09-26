@@ -32,6 +32,10 @@ public class Config {
 
     public static final String CATEGORY_ABILITIES = "abilities";
     public static Map<Ability, ModConfigSpec.BooleanValue> AVAILABLE_ABILITY_MAP = new HashMap<>();
+    public static ModConfigSpec.IntValue TOOL_MAX_BREAK_FERRICORE;
+    public static ModConfigSpec.IntValue TOOL_MAX_BREAK_BLAZEGOLD;
+    public static ModConfigSpec.IntValue TOOL_MAX_BREAK_CELESTIGEM;
+    public static ModConfigSpec.IntValue TOOL_MAX_BREAK_ECLIPSEALLOY;
 
     public static final String CATEGORY_GENERATOR_T1 = "generator_t1";
     public static ModConfigSpec.IntValue GENERATOR_T1_FE_PER_FUEL_TICK;
@@ -148,6 +152,14 @@ public class Config {
             AVAILABLE_ABILITY_MAP.put(ability, COMMON_BUILDER.comment(ability.getName())
                     .define(ability.getName(), true));
         }
+        TOOL_MAX_BREAK_FERRICORE = COMMON_BUILDER.comment("The maximum number of blocks that a Ferricore tool can break as a result of abilities, such as ore miner or tree feller.")
+                .defineInRange("tool_max_break_ferricore", 64, 1, 2048);
+        TOOL_MAX_BREAK_BLAZEGOLD = COMMON_BUILDER.comment("The maximum number of blocks that a Blazegold tool can break as a result of abilities, such as ore miner or tree feller.")
+                .defineInRange("tool_max_break_blazegold", 128, 1, 2048);
+        TOOL_MAX_BREAK_CELESTIGEM = COMMON_BUILDER.comment("The maximum number of blocks that a Celestigem tool can break as a result of abilities, such as ore miner or tree feller.")
+                .defineInRange("tool_max_break_celestigem", 192, 1, 2048);
+        TOOL_MAX_BREAK_ECLIPSEALLOY = COMMON_BUILDER.comment("The maximum number of blocks that a Eclipse Alloy tool can break as a result of abilities, such as ore miner or tree feller.")
+                .defineInRange("tool_max_break_eclipsealloy", 256, 1, 2048);
         COMMON_BUILDER.pop();
     }
 

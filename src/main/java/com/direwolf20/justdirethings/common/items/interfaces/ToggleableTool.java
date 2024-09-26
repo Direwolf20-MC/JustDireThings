@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseHelmet;
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseLeggings;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MiningCollect;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -143,14 +144,14 @@ public interface ToggleableTool extends ToggleableItem {
 
     default Set<BlockPos> getBreakBlockPositions(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving, BlockState pState) {
         Set<BlockPos> breakBlockPositions = new HashSet<>();
-        int maxBreak = 64;
+        int maxBreak = Config.TOOL_MAX_BREAK_FERRICORE.get();
         if (pStack.getItem() instanceof TieredItem tieredItem) {
             if (tieredItem.getTier().equals(GooTier.BLAZEGOLD))
-                maxBreak = 128;
+                maxBreak = Config.TOOL_MAX_BREAK_BLAZEGOLD.get();
             else if (tieredItem.getTier().equals(GooTier.CELESTIGEM))
-                maxBreak = 192;
+                maxBreak = Config.TOOL_MAX_BREAK_CELESTIGEM.get();
             else if (tieredItem.getTier().equals(GooTier.ECLIPSEALLOY))
-                maxBreak = 256;
+                maxBreak = Config.TOOL_MAX_BREAK_ECLIPSEALLOY.get();
         }
         if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
             breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2));
