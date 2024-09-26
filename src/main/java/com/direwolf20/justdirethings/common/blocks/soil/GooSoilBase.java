@@ -98,7 +98,7 @@ public class GooSoilBase extends FarmBlock {
             if (k < 7) {
                 crop1 = crop.setValue(StemBlock.AGE, k + 1);
             }
-        } else if (crop.is(Blocks.SWEET_BERRY_BUSH)) {
+        } else if (crop.is(Blocks.SWEET_BERRY_BUSH) || crop.is(Blocks.NETHER_WART)) {
             int j = crop.getValue(SweetBerryBushBlock.AGE);
             if (j < 3) {
                 crop1 = crop.setValue(SweetBerryBushBlock.AGE, j + 1);
