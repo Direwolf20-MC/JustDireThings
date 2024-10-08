@@ -105,6 +105,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.CelestigemBlock.get(), "Celestigem Block");
         add(Registration.RawEclipseAlloyOre.get(), "Raw Eclipse Alloy Ore");
         add(Registration.EclipseAlloyBlock.get(), "Eclipse Alloy Block");
+        add(Registration.CharcoalBlock.get(), "Charcoal Block");
         add(Registration.RawCoal_T1.get(), "Raw Primal Coal");
         add(Registration.CoalBlock_T1.get(), "Primal Coal Block");
         add(Registration.RawCoal_T2.get(), "Raw Blaze Ember");

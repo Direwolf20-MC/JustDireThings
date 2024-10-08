@@ -39,6 +39,7 @@ public class JustDireBlockStates extends BlockStateProvider {
         simpleBlock(Registration.CelestigemBlock.get(), models().cubeAll(Registration.CelestigemBlock_ITEM.getId().getPath(), blockTexture(Registration.CelestigemBlock.get())));
         simpleBlock(Registration.EclipseAlloyBlock.get(), models().cubeAll(Registration.EclipseAlloyBlock_ITEM.getId().getPath(), blockTexture(Registration.EclipseAlloyBlock.get())));
         simpleBlock(Registration.CoalBlock_T1.get(), models().cubeAll(Registration.CoalBlock_T1.getId().getPath(), blockTexture(Registration.CoalBlock_T1.get())));
+        simpleBlock(Registration.CharcoalBlock.get(), models().cubeAll(Registration.CharcoalBlock.getId().getPath(), blockTexture(Registration.CharcoalBlock.get())));
         simpleBlock(Registration.CoalBlock_T2.get(), models().cubeAll(Registration.CoalBlock_T2.getId().getPath(), blockTexture(Registration.CoalBlock_T2.get())));
         simpleBlock(Registration.CoalBlock_T3.get(), models().cubeAll(Registration.CoalBlock_T3.getId().getPath(), blockTexture(Registration.CoalBlock_T3.get())));
         simpleBlock(Registration.CoalBlock_T4.get(), models().cubeAll(Registration.CoalBlock_T4.getId().getPath(), blockTexture(Registration.CoalBlock_T4.get())));

@@ -29,6 +29,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.BlazeGoldBlock.get());
         dropSelf(Registration.CelestigemBlock.get());
         dropSelf(Registration.EclipseAlloyBlock.get());
+        dropSelf(Registration.CharcoalBlock.get());
         dropSelf(Registration.CoalBlock_T1.get());
         dropSelf(Registration.CoalBlock_T2.get());
         dropSelf(Registration.CoalBlock_T3.get());

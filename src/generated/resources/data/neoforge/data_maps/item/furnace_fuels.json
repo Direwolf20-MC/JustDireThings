@@ -1,5 +1,8 @@
 {
   "values": {
+    "justdirethings:charcoal": {
+      "burn_time": 16000
+    },
     "justdirethings:coal_t1": {
       "burn_time": 4800
     },

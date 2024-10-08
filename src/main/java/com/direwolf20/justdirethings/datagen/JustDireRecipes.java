@@ -1574,6 +1574,7 @@ public class JustDireRecipes extends RecipeProvider {
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T3.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T3.get(), Registration.Coal_T3.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T3.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.Coal_T4.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T4.get(), Registration.Coal_T4.getId().toString() + "_9x9", "justdirethings", Registration.CoalBlock_T4.getId().toString() + "_9x9", "justdirethings");
         nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Registration.TimeCrystal.get(), RecipeCategory.BUILDING_BLOCKS, Registration.TimeCrystalBlock.get(), Registration.TimeCrystal.getId().toString() + "_9x9", "justdirethings", Registration.TimeCrystalBlock.getId().toString() + "_9x9", "justdirethings");
+        nineBlockStorageRecipes(consumer, RecipeCategory.MISC, Items.CHARCOAL, RecipeCategory.BUILDING_BLOCKS, Registration.CharcoalBlock.get(), Registration.CharcoalBlock_ITEM.getId().toString() + "_9x9", "justdirethings", Registration.CharcoalBlock.getId().toString() + "_block_9x9", "justdirethings");
 
         //NBT Clear
         for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {

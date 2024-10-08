@@ -1,9 +1,10 @@
-// 1.21.1	2024-09-25T19:23:13.1913351	JustDireThings Tags
+// 1.21.1	2024-10-08T15:55:42.543432	JustDireThings Tags
 3f1af1854f73f0ca55ec9d76439efe025d53baaf data/c/tags/block/budding_blocks.json
 f9398184c0216b0a1898a13ab326b459417ec790 data/c/tags/block/buds.json
 691444261459e5b538067e8cd03db2fbe1b3371d data/c/tags/block/clusters.json
 d884d1dce575fffc46df4fe1c0b035f58f0281f1 data/c/tags/block/ores.json
 d80ee8fbbba39b68c0348573ea5e6a823e37c3c2 data/c/tags/block/storage_blocks.json
+5f1e660bc9c2edfefb9b5e0ee9b34fd54e814ffc data/c/tags/block/storage_blocks/charcoal.json
 b36284c186a0e7e752bdfecb976f356f6abe3bd7 data/justdirethings/tags/block/eclipsegate_deny.json
 29122bb6178e24ece33c1afc6d82c8e8e9ae4611 data/justdirethings/tags/block/lawnmowerable.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/block/noautoclick.json

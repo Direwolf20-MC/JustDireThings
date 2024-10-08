@@ -157,7 +157,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .addTag(Tags.Blocks.ORES);
         tag(PARADOX_ABSORB_DENY)
                 .add(Blocks.BEDROCK);
-
+        tag(CHARCOAL)
+                .add(Registration.CharcoalBlock.get());
     }
 
     @Override
