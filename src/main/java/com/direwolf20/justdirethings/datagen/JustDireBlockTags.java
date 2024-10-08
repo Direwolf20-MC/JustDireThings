@@ -30,6 +30,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> TICK_SPEED_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tick_speed_deny"));
     public static final TagKey<Block> PARADOX_ALLOW = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_allow"));
     public static final TagKey<Block> PARADOX_ABSORB_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
+    public static final TagKey<Block> CHARCOAL = forgeTag("storage_blocks/charcoal");
+
+    private static TagKey<Block> forgeTag(String name) {
+        return BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
+    }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {

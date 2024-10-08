@@ -4,10 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
-import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipeBuilder;
-import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipeBuilder;
-import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
-import com.direwolf20.justdirethings.datagen.recipes.PaxelRecipeBuilder;
+import com.direwolf20.justdirethings.datagen.recipes.*;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -21,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.crafting.BlockTagIngredient;
 
 import java.util.EnumSet;
 import java.util.concurrent.CompletableFuture;
@@ -974,6 +972,11 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
+        GooSpreadRecipeTagBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), new BlockTagIngredient(JustDireBlockTags.CHARCOAL), Registration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
+                .group("justdirethings")
+                .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
+                .save(consumer);
+
         GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t2"), Registration.CoalBlock_T1.get().defaultBlockState(), Registration.RawCoal_T2.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))

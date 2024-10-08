@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.client.particles.gooexplodeparticle.GooExplodeParticleData;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeTag;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -18,12 +19,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -32,6 +35,10 @@ import static com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Bas
 public class GooBlockBE_Base extends BlockEntity {
     public final Map<Direction, Integer> sidedCounters = new Object2IntOpenHashMap<>();
     public final Map<Direction, Integer> sidedDurations = new Object2IntOpenHashMap<>();
+
+    //Cache so we don't have to iterate recipes every time
+    public final Map<BlockState, BlockState> outputCache = new HashMap<>();
+    public final Map<BlockState, Integer> durationCache = new Object2IntOpenHashMap<>();
 
     public GooBlockBE_Base(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -110,17 +117,20 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     public void checkSides() {
+        if (level == null) return;
         for (Direction direction : Direction.values()) {
-            GooSpreadRecipe gooSpreadRecipe = findRecipe(getBlockPos().relative(direction));
+            BlockState input = level.getBlockState(getBlockPos().relative(direction));
+            BlockState output = findOutput(input);
+            int duration = findDuration(input);
             int sideCounter = sidedCounters.get(direction);
-            if (gooSpreadRecipe != null) {
+            if (!output.isAir()) {
                 if (sideCounter == -1 && this.getBlockState().getValue(ALIVE)) { //Valid Recipe and not running yet
-                    sideCounter = gooSpreadRecipe.getCraftingDuration();
+                    sideCounter = duration;
                     sidedDurations.put(direction, sideCounter);
                     updateSideCounter(direction, sideCounter);
                     markDirtyClient(); //Either way, update the client with the new sideCounters
                 } else if (sideCounter == 0) { //Craftings done!
-                    setBlockToTarget(gooSpreadRecipe, direction);
+                    setBlockToTarget(output, direction);
                     markDirtyClient(); //Either way, update the client with the new sideCounters
                 }
             } else { //If the recipe is null, it means this isn't a valid input block (or its already been converted!)
@@ -134,11 +144,11 @@ public class GooBlockBE_Base extends BlockEntity {
         }
     }
 
-    public void setBlockToTarget(GooSpreadRecipe gooSpreadRecipe, Direction direction) {
-        if (gooSpreadRecipe.getOutput().hasProperty(BlockStateProperties.FACING))
-            level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput().setValue(BlockStateProperties.FACING, direction));
+    public void setBlockToTarget(BlockState output, Direction direction) {
+        if (output.hasProperty(BlockStateProperties.FACING))
+            level.setBlockAndUpdate(getBlockPos().relative(direction), output.setValue(BlockStateProperties.FACING, direction));
         else
-            level.setBlockAndUpdate(getBlockPos().relative(direction), gooSpreadRecipe.getOutput());
+            level.setBlockAndUpdate(getBlockPos().relative(direction), output);
         updateSideCounter(direction, -1);
         sidedDurations.put(direction, -1);
         level.playSound(null, getBlockPos(), SoundEvents.SCULK_BLOCK_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -159,14 +169,56 @@ public class GooBlockBE_Base extends BlockEntity {
         }
     }
 
+    public BlockState findOutput(BlockState input) {
+        if (!outputCache.containsKey(input))
+            populateCaches(input);
+        return outputCache.get(input);
+    }
+
+    public int findDuration(BlockState input) {
+        if (!durationCache.containsKey(input))
+            populateCaches(input);
+        return durationCache.get(input);
+    }
+
+    public void populateCaches(BlockState input) {
+        BlockState output = Blocks.AIR.defaultBlockState();
+        int duration = -1;
+        GooSpreadRecipe gooSpreadRecipe = findRecipe(input);
+        if (gooSpreadRecipe != null) {
+            output = gooSpreadRecipe.getOutput();
+            duration = gooSpreadRecipe.getCraftingDuration();
+        } else {
+            GooSpreadRecipeTag gooSpreadRecipeTag = findRecipeTag(input);
+            if (gooSpreadRecipeTag != null) {
+                output = gooSpreadRecipeTag.getOutput();
+                duration = gooSpreadRecipeTag.getCraftingDuration();
+            }
+        }
+        outputCache.put(input, output);
+        durationCache.put(input, duration);
+    }
+
     @Nullable
-    private GooSpreadRecipe findRecipe(BlockPos coords) {
-        BlockState state = getLevel().getBlockState(coords);
+    private GooSpreadRecipe findRecipe(BlockState state) {
         RecipeManager recipeManager = getLevel().getRecipeManager();
 
         for (RecipeHolder<?> recipe : recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE.get())) {
-            if (recipe.value() instanceof GooSpreadRecipe gooSpreadRecipe && gooSpreadRecipe.matches(getLevel(), coords, this, state)) {
+            if (recipe.value() instanceof GooSpreadRecipe gooSpreadRecipe && gooSpreadRecipe.matches(this, state)) {
                 return gooSpreadRecipe;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    private GooSpreadRecipeTag findRecipeTag(BlockState state) {
+        RecipeManager recipeManager = getLevel().getRecipeManager();
+
+        for (RecipeHolder<?> recipe : recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get())) {
+            if (recipe.value() instanceof GooSpreadRecipeTag gooSpreadRecipeTag && gooSpreadRecipeTag.matches(this, state)) {
+                return gooSpreadRecipeTag;
             }
         }
 
