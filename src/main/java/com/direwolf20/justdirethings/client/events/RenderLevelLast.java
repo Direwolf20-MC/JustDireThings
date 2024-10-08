@@ -30,7 +30,7 @@ public class RenderLevelLast {
         }
         if (heldItemOff.getItem() instanceof ToggleableTool toggleableTool) {
             ThingFinder.render(evt, player, heldItemOff);
-            if (toggleableTool.canUseAbilityAndDurability(heldItemOff, Ability.VOIDSHIFT) && ToggleableTool.getCustomSetting(heldItemMain, Ability.VOIDSHIFT.getName()) == 0)
+            if (toggleableTool.canUseAbilityAndDurability(heldItemOff, Ability.VOIDSHIFT) && ToggleableTool.getCustomSetting(heldItemOff, Ability.VOIDSHIFT.getName()) == 0)
                 MiscRenders.renderTransparentPlayer(evt, player, heldItemOff);
         }
     }
