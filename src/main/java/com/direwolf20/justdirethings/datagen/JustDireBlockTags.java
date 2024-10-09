@@ -89,7 +89,8 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.TimeCrystalBlock.get())
                 .add(Registration.ParadoxMachine.get())
                 .add(Registration.InventoryHolder.get())
-                .add(Registration.ExperienceHolder.get());
+                .add(Registration.ExperienceHolder.get())
+                .add(Registration.CharcoalBlock.get());
         tag(LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
