@@ -1,13 +1,18 @@
 package com.direwolf20.justdirethings.client.renderers.shader;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.ShaderMods;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.Util;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceProvider;
+import org.joml.Math;
+import org.joml.Matrix4f;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -28,8 +33,17 @@ public class DireRenderTypes extends RenderType {
 		Map<String, ShaderRenderType> map = new HashMap<>();
 		map.put("portal_entity", new ShaderRenderType("portal_entity", DefaultVertexFormat.POSITION_TEX, (textures, renderType) -> {
 			CompositeState compState = CompositeState.builder()
-					.setShaderState(renderType.shaderState)
+					.setShaderState(new ShaderStateShard(() -> ShaderMods.usingShaders() ? GameRenderer.getPositionTexShader() : renderType.shader))
 					.setTextureState(new FixedMultiTextureStateShard(textures))
+					.setTexturingState(new TexturingStateShard("movement", () -> {
+						if (ShaderMods.usingShaders()) {
+							setupMovement();
+						}
+					}, () -> {
+						if (ShaderMods.usingShaders()) {
+							RenderSystem.resetTextureMatrix();
+						}
+					}))
 					.createCompositeState(false);
 			return create(renderType.formattedName(), renderType.format, VertexFormat.Mode.QUADS, 256, false, false, compState);
 		}));
@@ -37,6 +51,15 @@ public class DireRenderTypes extends RenderType {
 		//noinspection Java9CollectionFactory TODO remove when you have more shaders
 		return Collections.unmodifiableMap(map);
 	});
+
+	private static void setupMovement() {
+		long time = (long)((double)Util.getMillis() * 8.0);
+		float horizontal = (time % 110000L) / 110000.0F;
+		float vertical = (time % 60000L) / 60000.0F;
+		Matrix4f transformation = new Matrix4f().setTranslation(-horizontal, vertical, 0.0F);
+		transformation.rotateZ(Math.sin((float) Util.getMillis() / 2000.0f) / 18).scale(1.2f);
+		RenderSystem.setTextureMatrix(transformation);
+	}
 
 	public static Map<String, ShaderRenderType> getRenderTypes() {
 		return RENDER_TYPES;
@@ -54,7 +77,6 @@ public class DireRenderTypes extends RenderType {
 	public static class ShaderRenderType {
 		private final String name;
 		public ShaderInstance shader;
-		private final ShaderStateShard shaderState = new ShaderStateShard(() -> shader);
 		private final VertexFormat format;
 		private final BiFunction<List<ShaderTexture>, ShaderRenderType, RenderType> builder;
 		private final ResourceLocation shaderLocation;
