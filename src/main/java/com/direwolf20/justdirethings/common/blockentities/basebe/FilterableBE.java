@@ -37,7 +37,9 @@ public interface FilterableBE {
     default void loadFilterSettings(CompoundTag tag) {
         getFilterData().allowlist = tag.getBoolean("allowlist");
         getFilterData().compareNBT = tag.getBoolean("compareNBT");
-        getFilterData().blockItemFilter = tag.getInt("blockitemfilter");
+        int blockItemFilter = tag.getInt("blockitemfilter");
+        if (blockItemFilter != -1 && getFilterData().blockItemFilter != -1)
+            getFilterData().blockItemFilter = blockItemFilter;
     }
 
     default void setFilterSettings(FilterData filterData) {
