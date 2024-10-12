@@ -394,11 +394,20 @@ public interface ToggleableTool extends ToggleableItem {
         if (!level.isClientSide) {
             for (Ability ability : getAllPassiveAbilities()) {
                 if (customBindAbilities.contains(ability)) {
-                    if (ability.settingType == Ability.SettingType.CYCLE)
-                        ToggleableTool.cycleSetting(itemStack, ability.getName());
-                    else
+                    if (ability.settingType == Ability.SettingType.CYCLE) {
+                        String abilityName = ability.getName();
+                        ToggleableTool.cycleSetting(itemStack, abilityName);
+                        boolean is_enabled = ToggleableTool.getSetting(itemStack, abilityName);
+                        if (is_enabled) {
+                            int currentValue = getToolValue(itemStack, abilityName);
+                            player.displayClientMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization() + "_" + currentValue), Component.translatable("justdirethings.enabled")), true);
+                        } else {
+                            player.displayClientMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization()), Component.translatable("justdirethings.disabled")), true);
+                        }
+                    } else {
                         ToggleableTool.toggleSetting(itemStack, ability.getName());
-                    player.displayClientMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization()), ToggleableTool.getSetting(itemStack, ability.getName()) ? Component.translatable("justdirethings.enabled") : Component.translatable("justdirethings.disabled")), true);
+                        player.displayClientMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization()), ToggleableTool.getSetting(itemStack, ability.getName()) ? Component.translatable("justdirethings.enabled") : Component.translatable("justdirethings.disabled")), true);
+                    }
                 }
             }
         }
