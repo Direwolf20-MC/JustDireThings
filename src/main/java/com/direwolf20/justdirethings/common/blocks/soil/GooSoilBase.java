@@ -120,9 +120,65 @@ public class GooSoilBase extends FarmBlock {
         }
     }
 
+    public static List<ItemStack> harvestStemCrop(ServerLevel pLevel, BlockPos cropPos, BlockState crop) {
+        List<ItemStack> drops = new ArrayList<>();
+        if (crop.getBlock() instanceof AttachedStemBlock attachedStemBlock) {
+            for (Direction direction : Direction.values()) {
+                BlockPos testPos = cropPos.relative(direction);
+                BlockState fruitState = pLevel.getBlockState(testPos);
+                if (fruitState.is(attachedStemBlock.fruit)) {
+                    BlockEntity blockEntity = pLevel.getBlockEntity(cropPos);
+                    drops.addAll(Block.getDrops(fruitState, pLevel, testPos, blockEntity));
+                    pLevel.destroyBlock(testPos, false);
+                }
+            }
+        }
+        return drops;
+    }
+
+    public static List<ItemStack> harvest2TallCrop(ServerLevel pLevel, BlockPos cropPos, BlockState crop) {
+        List<ItemStack> drops = new ArrayList<>();
+        if (crop.getBlock() instanceof SugarCaneBlock || crop.getBlock() instanceof CactusBlock || crop.is(Blocks.BAMBOO)) {
+            List<BlockPos> posToCheck = new ArrayList<>();
+            for (int i = 0; i < 10; i++) { //In case it grew a lot since last check
+                BlockPos pos = cropPos.above(i);
+                if (pLevel.getBlockState(pos).is(crop.getBlock()))
+                    posToCheck.add(pos);
+                else
+                    break;
+            }
+            for (int i = posToCheck.size() - 1; i >= 0; i--) {
+                BlockPos clearPos = posToCheck.get(i);
+                BlockEntity blockEntity = pLevel.getBlockEntity(clearPos);
+                drops.addAll(Block.getDrops(pLevel.getBlockState(clearPos), pLevel, clearPos, blockEntity));
+                pLevel.destroyBlock(clearPos, false);
+            }
+        }
+        return drops;
+    }
+
     public static List<ItemStack> harvestCrop(ServerLevel pLevel, BlockPos cropPos, BlockState crop) {
         List<ItemStack> drops = new ArrayList<>();
-        if (crop.getBlock() instanceof CropBlock cropBlock) {
+        if (crop.getBlock() instanceof BushBlock) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(cropPos);
+            List<ItemStack> potentialDrops = Block.getDrops(crop, pLevel, cropPos, blockEntity);
+            if (potentialDrops.isEmpty())
+                return drops;
+            if (potentialDrops.size() > 1 || potentialDrops.get(0).getCount() > 1) {
+                BlockState placeState = Blocks.AIR.defaultBlockState();
+                drops.addAll(potentialDrops);
+                for (ItemStack drop : drops) {
+                    if (drop.getItem() instanceof BlockItem blockItem) {
+                        placeState = blockItem.getBlock().defaultBlockState();
+                        drop.shrink(1);
+                        break;
+                    }
+                }
+                pLevel.destroyBlock(cropPos, false);
+                pLevel.setBlockAndUpdate(cropPos, placeState);
+            }
+        }
+        /*if (crop.getBlock() instanceof CropBlock cropBlock) {
             if (cropBlock.isMaxAge(crop)) {
                 BlockState placeState = Blocks.AIR.defaultBlockState();
                 BlockEntity blockEntity = pLevel.getBlockEntity(cropPos);
@@ -165,7 +221,7 @@ public class GooSoilBase extends FarmBlock {
                 drops.addAll(Block.getDrops(pLevel.getBlockState(clearPos), pLevel, clearPos, blockEntity));
                 pLevel.destroyBlock(clearPos, false);
             }
-        }
+        }*/
 
         return drops;
     }
@@ -193,17 +249,27 @@ public class GooSoilBase extends FarmBlock {
     public static void autoHarvest(ServerLevel pLevel, BlockPos pPos) {
         BlockPos cropPos = pPos.above();
         BlockState crop = pLevel.getBlockState(cropPos);
-        if (crop.getBlock() instanceof CropBlock || crop.is(Blocks.NETHER_WART)) {
-            List<ItemStack> drops = harvestCrop(pLevel, cropPos, crop);
-            if (!drops.isEmpty()) {
-                teleportDrops(pLevel, pPos, drops, cropPos);
-                dropDrops(pLevel, drops, cropPos);
+        if (crop.getBlock() instanceof BushBlock) {
+            if (crop.getBlock() instanceof AttachedStemBlock) {
+                List<ItemStack> drops = harvestStemCrop(pLevel, cropPos, crop);
+                if (!drops.isEmpty()) {
+                    teleportDrops(pLevel, pPos, drops, cropPos);
+                    dropDrops(pLevel, drops, cropPos);
+                }
+            } else if (crop.getBlock() instanceof StemBlock) {
+                //No-Op - Stem Blocks are fully grown without an attached fruit, so ignore them
+            } else {
+                List<ItemStack> drops = harvestCrop(pLevel, cropPos, crop);
+                if (!drops.isEmpty()) {
+                    teleportDrops(pLevel, pPos, drops, cropPos);
+                    dropDrops(pLevel, drops, cropPos);
+                }
             }
         } else if (crop.getBlock() instanceof SugarCaneBlock || crop.getBlock() instanceof CactusBlock || crop.is(Blocks.BAMBOO)) {
             BlockPos secondPos = cropPos.above();
             BlockState secondState = pLevel.getBlockState(secondPos);
             if (secondState.is(crop.getBlock())) {
-                List<ItemStack> drops = harvestCrop(pLevel, secondPos, secondState);
+                List<ItemStack> drops = harvest2TallCrop(pLevel, secondPos, secondState);
                 if (!drops.isEmpty()) {
                     teleportDrops(pLevel, pPos, drops, secondPos);
                     dropDrops(pLevel, drops, secondPos);
