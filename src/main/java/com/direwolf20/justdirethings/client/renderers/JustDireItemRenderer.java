@@ -38,12 +38,20 @@ public class JustDireItemRenderer extends BlockEntityWithoutLevelRenderer {
             ItemRenderer irenderer = Minecraft.getInstance().getItemRenderer();
             BakedModel base = irenderer.getItemModelShaper().getModelManager().getModel(CREATURE_CATCHER_BASE);
             pPoseStack.pushPose();
-            if (pDisplayContext != ItemDisplayContext.GUI) { //Ground?
-                pPoseStack.translate(0.2, 0.5, 0.5);
-                float scale = 0.4F;
-                pPoseStack.scale(scale, scale, scale);
-                pPoseStack.translate(0F, 0F, 0F);
-                pPoseStack.mulPose(Axis.YP.rotationDegrees(45));
+            if (pDisplayContext != ItemDisplayContext.GUI) { //Ground/Hand/etc?
+                if (pDisplayContext == ItemDisplayContext.FIXED) {
+                    pPoseStack.translate(0.0, 0.0, 0.5);
+                    float scale = 1F;
+                    pPoseStack.scale(scale, scale, scale);
+                    //pPoseStack.translate(-0.2F, -0.5F, 0F);
+                    pPoseStack.mulPose(Axis.XN.rotationDegrees(90));
+                } else {
+                    pPoseStack.translate(0.2, 0.5, 0.5);
+                    float scale = 0.4F;
+                    pPoseStack.scale(scale, scale, scale);
+                    pPoseStack.translate(0F, 0F, 0F);
+                    pPoseStack.mulPose(Axis.YP.rotationDegrees(45));
+                }
             } else { //GUI?
                 pPoseStack.translate(0.95F, 0.25F, 0);
                 pPoseStack.mulPose(Axis.XP.rotationDegrees(30));
@@ -81,11 +89,12 @@ public class JustDireItemRenderer extends BlockEntityWithoutLevelRenderer {
 
 
         if (type == ItemDisplayContext.FIXED) {
+            matrix.translate(0.0, 0.0, -0.125);
             //matrix.translate(0, -0.5, 0);
             //matrix.translate(0, 1.45, 0);
             matrix.mulPose(Axis.XN.rotationDegrees(90));
             matrix.mulPose(Axis.YN.rotationDegrees(180));
-            matrix.scale(scale, scale, scale);
+            matrix.scale(scale * 2, scale * 2, scale * 2);
         } else if (type == ItemDisplayContext.GUI) {
             //matrix.translate(0, -0.25, 0);
             matrix.translate(0, -entityHeight / 2 * scale * 2, 0); // Centering entity vertically
