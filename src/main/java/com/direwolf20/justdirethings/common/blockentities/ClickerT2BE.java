@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
@@ -97,7 +98,10 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
     public boolean isBlockPosValid(FakePlayer fakePlayer, BlockPos blockPos) {
         if (!super.isBlockPosValid(fakePlayer, blockPos))
             return false; //Do the same checks as normal, then check the filters
-        ItemStack blockItemStack = level.getBlockState(blockPos).getCloneItemStack(new BlockHitResult(Vec3.ZERO, getDirectionValue(), blockPos, false), level, blockPos, fakePlayer);
+        BlockState blockState = level.getBlockState(blockPos);
+        if ((blockState.getBlock() instanceof LiquidBlock liquidBlock))
+            return isStackValidFilter(liquidBlock);
+        ItemStack blockItemStack = blockState.getCloneItemStack(new BlockHitResult(Vec3.ZERO, getDirectionValue(), blockPos, false), level, blockPos, fakePlayer);
         return isStackValidFilter(blockItemStack);
     }
 
