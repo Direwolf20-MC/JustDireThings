@@ -155,10 +155,10 @@ public interface ToggleableTool extends ToggleableItem {
                 maxBreak = Config.TOOL_MAX_BREAK_ECLIPSEALLOY.get();
         }
         if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2));
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, maxBreak, 2));
         }
         if (canUseAbility(pStack, Ability.TREEFELLER) && logCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
-            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2));
+            breakBlockPositions.addAll(findLikeBlocks(pLevel, pState, pPos, maxBreak, 2));
         }
         if (canUseAbility(pStack, Ability.HAMMER)) {
             breakBlockPositions.addAll(MiningCollect.collect(pEntityLiving, pPos, getTargetLookDirection(pEntityLiving), pLevel, getToolValue(pStack, Ability.HAMMER.getName()), MiningCollect.SizeMode.AUTO, pStack));
@@ -167,9 +167,9 @@ public interface ToggleableTool extends ToggleableItem {
         if (canUseAbility(pStack, Ability.SKYSWEEPER) && pStack.isCorrectToolForDrops(pState)) {
             Set<BlockPos> newPos = new HashSet<>();
             for (BlockPos blockPos : breakBlockPositions) {
-                BlockState blockState = pLevel.getBlockState(blockPos);
+                BlockState blockState = pLevel.getBlockState(blockPos.above());
                 if (fallingBlockCondition.test(blockState))
-                    newPos.addAll(findLikeBlocks(pLevel, blockState, blockPos, Direction.UP, maxBreak, 2));
+                    newPos.addAll(findBlocksSkyfall(pLevel, blockPos.above(), maxBreak, Direction.UP, maxBreak));
             }
             breakBlockPositions.addAll(newPos);
         }

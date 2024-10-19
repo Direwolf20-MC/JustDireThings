@@ -380,11 +380,8 @@ public class Helpers {
         drops.addAll(leftovers);
     }
 
-    public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, Direction direction, int maxBreak, int range) {
-        if (direction == null)
-            return findBlocks(pLevel, pState, pPos, maxBreak, range);
-        else
-            return findBlocks(pLevel, pState, pPos, maxBreak, direction, maxBreak);
+    public static Set<BlockPos> findLikeBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, int range) {
+        return findBlocks(pLevel, pState, pPos, maxBreak, range);
     }
 
     /**
@@ -424,14 +421,14 @@ public class Helpers {
     /**
      * Looks in a specified direction for similar blocks - used by shovels to clear all like blocks above them
      */
-    private static Set<BlockPos> findBlocks(Level pLevel, BlockState pState, BlockPos pPos, int maxBreak, Direction direction, int range) {
+    public static Set<BlockPos> findBlocksSkyfall(Level pLevel, BlockPos pPos, int maxBreak, Direction direction, int range) {
         Set<BlockPos> foundBlocks = new HashSet<>(); //The matching Blocks
         foundBlocks.add(pPos); //Obviously the block we broke is included in the return!
 
         for (int i = 1; i < range; i++) {
             BlockPos posToCheck = pPos.relative(direction, i); //The next blockPos to check
             BlockState blockState = pLevel.getBlockState(posToCheck);
-            if (blockState.is(pState.getBlock())) {
+            if (fallingBlockCondition.test(blockState)) {
                 foundBlocks.add(posToCheck);
             } else {
                 break;

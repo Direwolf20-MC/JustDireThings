@@ -126,7 +126,7 @@ public class AbilityMethods {
                 else if (tieredItem.getTier().equals(GooTier.ECLIPSEALLOY))
                     maxBreak = 256;
             }
-            Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, null, maxBreak, 2);
+            Set<BlockPos> alsoBreakSet = findLikeBlocks(pLevel, pState, pPos, maxBreak, 2);
             BlockEvents.alreadyBreaking = true;
             BlockEvents.spawnDropsAtPos = pPos;
             for (BlockPos breakPos : alsoBreakSet) {
