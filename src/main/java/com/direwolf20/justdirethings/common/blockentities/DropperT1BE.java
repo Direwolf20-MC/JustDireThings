@@ -86,6 +86,23 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
         return true;
     }
 
+    @Override
+    public boolean isActiveRedstone() {
+        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.IGNORED))
+            return true;
+        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.LOW))
+            return !getRedstoneControlData().receivingRedstone;
+        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.HIGH))
+            return getRedstoneControlData().receivingRedstone;
+        if (getRedstoneControlData().redstoneMode.equals(MiscHelpers.RedstoneMode.PULSE) && getRedstoneControlData().pulsed) {
+            getRedstoneControlData().pulsed = false;
+            if (slotsToDropList.isEmpty())
+                operationTicks = 0; //Because of how this machine works, we force Operation Ticks to 0 on pulse
+            return true;
+        }
+        return false;
+    }
+
     public void doDrop() {
         if (clearTrackerIfNeeded()) {
             slotsToDropList.clear();
