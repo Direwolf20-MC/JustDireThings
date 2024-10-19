@@ -108,7 +108,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
             if (respectPickupDelay && itemEntity.hasPickUpDelay())
                 continue;
             ItemStack stack = itemEntity.getItem();
-            if (!isStackValidFilter(stack)) continue;
+            if (stack.isEmpty() || !isStackValidFilter(stack)) continue;
             ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, stack, false);
             if (leftover.isEmpty()) {
                 // If the stack is now empty, remove the ItemEntity from the collection
