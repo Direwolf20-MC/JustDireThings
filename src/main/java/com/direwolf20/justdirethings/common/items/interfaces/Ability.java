@@ -64,7 +64,7 @@ public enum Ability {
     SPLASH(SettingType.TOGGLE, 20, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SPLASH),
 
     //Tier 3
-    DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_DROPTELEPORT),
+    DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.RENDER, Registration.UPGRADE_DROPTELEPORT),
     VOIDSHIFT(SettingType.SLIDER, 1, 50, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::voidShift, CustomSettingType.RENDER), //FE Per block traveled
     NEGATEFALLDAMAGE(SettingType.SLIDER, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_NEGATEFALLDAMAGE),

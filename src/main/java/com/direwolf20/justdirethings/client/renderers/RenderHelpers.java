@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
@@ -165,6 +166,42 @@ public class RenderHelpers {
         double zEnd = pos.getZ() + 1.0015;
 
         renderBoxSolid(pose.last(), matrix, buffer, x, y, z, xEnd, yEnd, zEnd, r, g, b, alpha);
+    }
+
+    public static void renderFaceSolid(PoseStack pose, Matrix4f matrix, MultiBufferSource buffer, BlockPos pos, Direction direction, float r, float g, float b, float alpha) {
+        double x = pos.getX() - 0.001;
+        double y = pos.getY() - 0.001;
+        double z = pos.getZ() - 0.001;
+        double xEnd = pos.getX() + 1.0015;
+        double yEnd = pos.getY() + 1.0015;
+        double zEnd = pos.getZ() + 1.0015;
+
+        switch (direction) {
+            case DOWN:
+                // Draw on the bottom face (y = pos.getY())
+                renderBoxSolid(pose.last(), matrix, buffer, x, y - 0.001, z, xEnd, y, zEnd, r, g, b, alpha);
+                break;
+            case UP:
+                // Draw on the top face (y = pos.getY() + 1)
+                renderBoxSolid(pose.last(), matrix, buffer, x, yEnd, z, xEnd, yEnd + 0.0015, zEnd, r, g, b, alpha);
+                break;
+            case NORTH:
+                // Draw on the north face (z = pos.getZ())
+                renderBoxSolid(pose.last(), matrix, buffer, x, y, z - 0.001, xEnd, yEnd, z, r, g, b, alpha);
+                break;
+            case SOUTH:
+                // Draw on the south face (z = pos.getZ() + 1)
+                renderBoxSolid(pose.last(), matrix, buffer, x, y, zEnd, xEnd, yEnd, zEnd + 0.0015, r, g, b, alpha);
+                break;
+            case WEST:
+                // Draw on the west face (x = pos.getX())
+                renderBoxSolid(pose.last(), matrix, buffer, x - 0.001, y, z, x, yEnd, zEnd, r, g, b, alpha);
+                break;
+            case EAST:
+                // Draw on the east face (x = pos.getX() + 1)
+                renderBoxSolid(pose.last(), matrix, buffer, xEnd, y, z, xEnd + 0.0015, yEnd, zEnd, r, g, b, alpha);
+                break;
+        }
     }
 
     public static void renderBoxSolid(PoseStack pose, Matrix4f matrix, MultiBufferSource buffer, AABB aabb, float r, float g, float b, float alpha) {
