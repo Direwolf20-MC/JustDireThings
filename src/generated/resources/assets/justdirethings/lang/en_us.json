@@ -418,6 +418,7 @@
   "justdirethings.screen.renderarea": "Render Area",
   "justdirethings.screen.renderparadox": "Render Paradox",
   "justdirethings.screen.requireequipped": "Activate if Equipped",
+  "justdirethings.screen.respectpickupdelay": "Respect Item Pickup Delay",
   "justdirethings.screen.retrieveexp": "Retrieve Level",
   "justdirethings.screen.rightclicksettings": "Right Click for Settings",
   "justdirethings.screen.save_close": "Save and Close",

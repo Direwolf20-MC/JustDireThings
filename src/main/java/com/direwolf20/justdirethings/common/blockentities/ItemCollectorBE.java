@@ -12,6 +12,8 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +36,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     public FilterData filterData = new FilterData();
     public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
+    public boolean respectPickupDelay = false;
 
     public ItemCollectorBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ItemCollectorBE.get(), pPos, pBlockState);
@@ -67,6 +70,11 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
         findItemsAndStore();
     }
 
+    public void setSettings(boolean respectPickupDelay) {
+        this.respectPickupDelay = respectPickupDelay;
+        markDirtyClient();
+    }
+
     @Override
     public FilterBasicHandler getFilterHandler() {
         return getData(Registration.HANDLER_BASIC_FILTER);
@@ -97,6 +105,8 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
         if (handler == null) return;
 
         for (ItemEntity itemEntity : entityList) {
+            if (respectPickupDelay && itemEntity.hasPickUpDelay())
+                continue;
             ItemStack stack = itemEntity.getItem();
             if (!isStackValidFilter(stack)) continue;
             ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, stack, false);
@@ -130,5 +140,17 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     @Override
     public AreaAffectingData getDefaultAreaData(AreaAffectingBE areaAffectingBE) {
         return areaAffectingBE.getDefaultAreaData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
+        tag.putBoolean("respectPickupDelay", respectPickupDelay);
+    }
+
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.loadAdditional(tag, provider);
+        respectPickupDelay = tag.getBoolean("respectPickupDelay");
     }
 }

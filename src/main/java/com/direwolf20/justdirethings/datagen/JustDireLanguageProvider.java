@@ -533,6 +533,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.collectexp", "Collect Experience");
         add("justdirethings.screen.pushfluids", "Push Fluids");
         add("justdirethings.screen.pullfluids", "Pull Fluids");
+        add("justdirethings.screen.respectpickupdelay", "Respect Item Pickup Delay");
 
         //Buttons
         //add("justdirethings.buttons.save", "Save");

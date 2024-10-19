@@ -41,6 +41,7 @@ public class PacketHandler {
         registrar.playToServer(ExperienceHolderPayload.TYPE, ExperienceHolderPayload.STREAM_CODEC, ExperienceHolderPacket.get()::handle);
         registrar.playToServer(ExperienceHolderSettingsPayload.TYPE, ExperienceHolderSettingsPayload.STREAM_CODEC, ExperienceHolderSettingsPacket.get()::handle);
         registrar.playToServer(ToolSettingsGUIPayload.TYPE, ToolSettingsGUIPayload.STREAM_CODEC, ToolSettingsGUIPacket.get()::handle);
+        registrar.playToServer(ItemCollectorSettingsPayload.TYPE, ItemCollectorSettingsPayload.STREAM_CODEC, ItemCollectorSettingsPacket.get()::handle);
 
         //Going to Client
         registrar.playToClient(ClientSoundPayload.TYPE, ClientSoundPayload.STREAM_CODEC, ClientSoundPacket.get()::handle);
