@@ -10,7 +10,9 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +28,22 @@ public class FerricoreWrench extends Item {
     public FerricoreWrench() {
         super(new Properties()
                 .stacksTo(1));
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        if (level.isClientSide() || !player.isShiftKeyDown())
+            return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
+
+        GlobalPos boundPos = getBoundTo(itemstack);
+        if (boundPos == null)
+            return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
+        removeBoundTo(itemstack);
+        player.displayClientMessage(Component.translatable("justdirethings.bindremoved"), true);
+        player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
+
+        return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
     }
 
     @Override
