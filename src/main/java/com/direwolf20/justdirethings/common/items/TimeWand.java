@@ -32,6 +32,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -48,6 +49,8 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
+        if (!Config.TIME_WAND_FAKE_PLAYER_ALLOWED.get() && player instanceof FakePlayer)
+            return InteractionResultHolder.fail(itemStack);
         BlockHitResult blockhitresult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
         if (blockhitresult.getType() == HitResult.Type.BLOCK) {
             if (pickupFluid(level, player, itemStack, blockhitresult))

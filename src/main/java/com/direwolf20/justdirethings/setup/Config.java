@@ -65,6 +65,7 @@ public class Config {
     public static ModConfigSpec.IntValue TIMEWAND_RF_COST;
     public static ModConfigSpec.DoubleValue TIMEWAND_FLUID_COST;
     public static ModConfigSpec.ConfigValue<Integer> TIME_WAND_MAX_MULTIPLIER;
+    public static ModConfigSpec.BooleanValue TIME_WAND_FAKE_PLAYER_ALLOWED;
 
     public static final String CATEGORY_PARADOX_MACHINE = "paradox_machine";
     public static ModConfigSpec.IntValue PARADOX_TOTAL_FLUID_CAPACITY;
@@ -258,6 +259,8 @@ public class Config {
                     }
                     return validPowerOfTwo;
                 });
+        TIME_WAND_FAKE_PLAYER_ALLOWED = COMMON_BUILDER.comment("Can fake players use the Time Wand (Like in the clickers)?")
+                .define("time_wand_fake_player_allowed", true);
         COMMON_BUILDER.pop();
     }
 

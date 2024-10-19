@@ -42,6 +42,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -485,7 +486,7 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default boolean bindDrops(UseOnContext pContext) {
-        if (pContext.getLevel().isClientSide) return false;
+        if (pContext.getLevel().isClientSide) return true;
         Player player = pContext.getPlayer();
         if (player == null) return false;
         if (!player.isShiftKeyDown()) return false;
@@ -498,9 +499,17 @@ public interface ToggleableTool extends ToggleableItem {
         if (blockEntity == null) return false;
         IItemHandler handler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK, pPos, pContext.getClickedFace());
         if (handler == null) return false;
-        setBoundInventory(pStack, new NBTHelpers.BoundInventory(GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace()));
-        pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
-        player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
+        NBTHelpers.BoundInventory boundInventory = ToggleableTool.getBoundInventory(pStack);
+        NBTHelpers.BoundInventory newBind = new NBTHelpers.BoundInventory(GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace());
+        if (boundInventory != null && boundInventory.equals(newBind)) {
+            removeBoundInventory(pStack);
+            pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.bindremoved"), true);
+            player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
+        } else {
+            setBoundInventory(pStack, newBind);
+            pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
+            player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
+        }
         return true;
     }
 
@@ -578,6 +587,11 @@ public interface ToggleableTool extends ToggleableItem {
         stack.set(JustDireDataComponents.BOUND_INVENTORY, boundInventory);
     }
 
+    static void removeBoundInventory(ItemStack stack) {
+        stack.remove(JustDireDataComponents.BOUND_INVENTORY);
+    }
+
+    @Nullable
     static NBTHelpers.BoundInventory getBoundInventory(ItemStack stack) {
         return stack.getOrDefault(JustDireDataComponents.BOUND_INVENTORY, null);
     }
