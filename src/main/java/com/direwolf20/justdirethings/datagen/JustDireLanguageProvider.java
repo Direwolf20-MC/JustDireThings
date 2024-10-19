@@ -387,6 +387,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         //Keys
         add("justdirethings.key.category", "Just Dire Things");
         add("justdirethings.key.toggle_tool", "Toggle Tool Abilities");
+        add("justdirethings.key.toolUI", "Open Tool Settings UI");
 
         //Abilities
         add(Ability.MOBSCANNER.getLocalization(), "Mob Scanner");

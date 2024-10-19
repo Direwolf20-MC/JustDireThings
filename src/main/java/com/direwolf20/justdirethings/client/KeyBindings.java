@@ -26,16 +26,24 @@ import java.util.List;
 public class KeyBindings {
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyBindings.class);
     private static final KeyConflictContextGadget CONFLICT_CONTEXT_GADGET = new KeyConflictContextGadget();
+    private static final KeyConflictContextConfigScreen CONFLICT_CONTEXT_CONFIG = new KeyConflictContextConfigScreen();
 
     private static final List<KeyMapping> keyMappings = new ArrayList<>();
 
     public static KeyMapping toggleTool = createBinding("toggle_tool", GLFW.GLFW_KEY_V);
+    public static KeyMapping toolUI = createBindingGUI("toolUI", -1);
     /*public static KeyMapping undo = createBinding("undo", GLFW.GLFW_KEY_U);
     public static KeyMapping anchor = createBinding("anchor", GLFW.GLFW_KEY_H);
     public static KeyMapping range = createBinding("range", GLFW.GLFW_KEY_R);*/
 
     private static KeyMapping createBinding(String name, int key) {
         KeyMapping keyBinding = new KeyMapping(getKey(name), CONFLICT_CONTEXT_GADGET, InputConstants.Type.KEYSYM.getOrCreate(key), getKey("category"));
+        keyMappings.add(keyBinding);
+        return keyBinding;
+    }
+
+    private static KeyMapping createBindingGUI(String name, int key) {
+        KeyMapping keyBinding = new KeyMapping(getKey(name), CONFLICT_CONTEXT_CONFIG, InputConstants.Type.KEYSYM.getOrCreate(key), getKey("category"));
         keyMappings.add(keyBinding);
         return keyBinding;
     }
@@ -62,6 +70,19 @@ public class KeyBindings {
             Player player = Minecraft.getInstance().player;
             return !KeyConflictContext.GUI.isActive() && player != null
                     && ((!ToggleableItem.getToggleableItem(player).isEmpty()) || (!PortalGunV2.getPortalGunv2(player).isEmpty()));
+        }
+
+        @Override
+        public boolean conflicts(IKeyConflictContext other) {
+            return other == this || other == KeyConflictContext.IN_GAME;
+        }
+    }
+
+    public static class KeyConflictContextConfigScreen implements IKeyConflictContext {
+        @Override
+        public boolean isActive() {
+            Player player = Minecraft.getInstance().player;
+            return !KeyConflictContext.GUI.isActive() && player != null;
         }
 
         @Override

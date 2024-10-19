@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.direwolf20.justdirethings.common.network.data.LeftClickPayload;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolPayload;
+import com.direwolf20.justdirethings.common.network.data.ToolSettingsGUIPayload;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -40,6 +41,10 @@ public class EventKeyInput {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null)
             return;
+
+        if (KeyBindings.toolUI.consumeClick()) {
+            PacketDistributor.sendToServer(new ToolSettingsGUIPayload());
+        }
 
         KeyMapping keyMapping = KeyBindings.toggleTool;
         ItemStack portalGun = PortalGunV2.getPortalGunv2(mc.player);

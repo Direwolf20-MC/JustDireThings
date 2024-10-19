@@ -40,7 +40,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
 
     protected final ToolSettingContainer container;
     Player player;
-    protected ItemStack tool;
+    protected ItemStack tool = ItemStack.EMPTY;
     private EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     int buttonsStartX = getGuiLeft() + 5;
     int buttonsStartY = getGuiTop() + 15;
