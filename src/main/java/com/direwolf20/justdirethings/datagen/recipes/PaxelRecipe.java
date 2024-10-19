@@ -10,14 +10,23 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BaseShovel;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class PaxelRecipe implements SmithingRecipe {
@@ -53,6 +62,9 @@ public class PaxelRecipe implements SmithingRecipe {
                 if (ToggleableTool.hasUpgrade(pickaxe, ability))
                     result.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
             }
+
+            Optional<? extends ItemEnchantments> enchantments = pickaxe.getComponentsPatch().get(DataComponents.ENCHANTMENTS);
+
         } else {
             return ItemStack.EMPTY;
         }
@@ -72,6 +84,38 @@ public class PaxelRecipe implements SmithingRecipe {
         } else {
             return ItemStack.EMPTY;
         }
+
+        // Transfer and combine enchantments from pickaxe, axe, and shovel
+        ItemEnchantments pickaxeEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(pickaxe);
+        ItemEnchantments axeEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(axe);
+        ItemEnchantments shovelEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(shovel);
+
+        // Apply combined enchantments to the result
+        EnchantmentHelper.updateEnchantments(result, enchantments -> {
+            // A set to store the already applied enchantments for compatibility checks
+            Set<Holder<Enchantment>> appliedEnchantments = new HashSet<>();
+
+            // Helper function to check and add enchantments while ensuring compatibility
+            BiConsumer<ItemEnchantments, String> addEnchantments = (itemEnchantments, toolName) -> {
+                itemEnchantments.entrySet().forEach(entry -> {
+                    Holder<Enchantment> enchantment = entry.getKey();
+                    int level = entry.getIntValue();
+
+                    // Ensure the enchantment is compatible with already applied enchantments
+                    if (appliedEnchantments.stream().allMatch(existing -> Enchantment.areCompatible(existing, enchantment))) {
+                        enchantments.set(enchantment, level); // Add the enchantment to the result
+                        appliedEnchantments.add(enchantment); // Track the added enchantment
+                    } else {
+                        System.out.println("Skipping incompatible enchantment from " + toolName + ": " + enchantment);
+                    }
+                });
+            };
+
+            // Add enchantments from each tool with compatibility checks
+            addEnchantments.accept(pickaxeEnchantments, "pickaxe");
+            addEnchantments.accept(axeEnchantments, "axe");
+            addEnchantments.accept(shovelEnchantments, "shovel");
+        });
 
         return result;
     }
