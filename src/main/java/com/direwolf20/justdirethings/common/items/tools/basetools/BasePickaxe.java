@@ -44,7 +44,7 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
-        if (bindDrops(pContext))
+        if (pContext.getPlayer().isShiftKeyDown() && bindDrops(pContext))
             return InteractionResult.SUCCESS;
         useOnAbility(pContext);
         return super.useOn(pContext);
