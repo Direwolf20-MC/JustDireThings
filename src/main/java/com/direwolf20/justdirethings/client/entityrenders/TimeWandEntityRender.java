@@ -10,6 +10,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
@@ -23,6 +24,9 @@ public class TimeWandEntityRender extends EntityRenderer<TimeWandEntity> {
 
     @Override
     public void render(TimeWandEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int pPackedLight) {
+        BlockPos blockPos = pEntity.blockPosition();
+        if (pEntity.level().getBlockState(blockPos).isAir())
+            return;
         matrixStackIn.pushPose();
 
         // Calculate the progress for tick rate and time remaining
