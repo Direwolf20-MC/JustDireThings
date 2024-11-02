@@ -424,7 +424,7 @@ public class AbilityMethods {
 
     public static boolean extinguish(Level level, Player player, ItemStack itemStack) {
         if (level.isClientSide) return false;
-        if (player.isOnFire()) {
+        if (player.isOnFire() && ((ServerPlayer) player).gameMode.isSurvival()) {
             int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.EXTINGUISH);
             if (currentCooldown != -1) return false;
             if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EXTINGUISH)) {
