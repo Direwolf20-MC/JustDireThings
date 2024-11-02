@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.common.items.interfaces.FluidContainingItem;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -47,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FluidCanister extends Item {
+public class FluidCanister extends Item implements FluidContainingItem {
     public enum FillMode {
         NONE("none"),
         JDTONLY("jdtonly"),
