@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.fluids.portalfluid.PortalFluidBlock;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.BasePoweredItem;
+import com.direwolf20.justdirethings.common.items.interfaces.FluidContainingItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
+public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidContainingItem {
     public static final int MAX_FAVORITES = 12;
     public static final int maxMB = 8000;
 

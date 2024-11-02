@@ -195,6 +195,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
         event.register(Registration.TimeWand.get(), new FluidbarDecorator());
+        event.register(Registration.PortalGunV2.get(), new FluidbarDecorator());
     }
 
     @SubscribeEvent
