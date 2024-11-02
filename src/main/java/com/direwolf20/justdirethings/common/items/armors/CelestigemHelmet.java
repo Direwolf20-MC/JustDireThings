@@ -15,6 +15,7 @@ public class CelestigemHelmet extends BaseHelmet implements PoweredTool {
         registerAbility(Ability.MINDFOG);
         registerAbility(Ability.STUPEFY, new AbilityParams(1, 1, 1, 1, 100, 400));
         registerAbility(Ability.NIGHTVISION);
+        registerAbility(Ability.WATERBREATHING);
     }
 
     @Override

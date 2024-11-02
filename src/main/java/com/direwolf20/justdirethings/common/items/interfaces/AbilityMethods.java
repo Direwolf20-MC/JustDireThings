@@ -405,6 +405,15 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean waterBreathing(Level level, Player player, ItemStack itemStack) {
+        if (player.isInWater() && player.getAirSupply() < (0.5 * player.getMaxAirSupply())) {
+            player.setAirSupply(player.getMaxAirSupply());
+            Helpers.damageTool(itemStack, player, Ability.WATERBREATHING);
+            player.playNotifySound(SoundEvents.PLAYER_BREATH, SoundSource.PLAYERS, .5F, 1.0F);
+        }
+        return false;
+    }
+
     public static boolean jumpBoost(Level level, Player player, ItemStack itemStack) {
         if (!player.isInWaterOrBubble() && !player.isFallFlying()) {
             float speed = (float) ToggleableTool.getToolValue(itemStack, Ability.JUMPBOOST.getName()) / 7.5f;

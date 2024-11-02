@@ -746,6 +746,17 @@ public class JustDireRecipes extends RecipeProvider {
                 .define('e', Items.KELP)
                 .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_WATERBREATHING.get())
+                .pattern("fep")
+                .pattern("gbg")
+                .pattern("pef")
+                .define('b', Registration.UPGRADE_BASE.get())
+                .define('g', Registration.BlazegoldIngot.get())
+                .define('f', Items.PRISMARINE_SHARD)
+                .define('p', Items.PUFFERFISH)
+                .define('e', Items.KELP)
+                .unlockedBy("has_upgrade_base", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.UPGRADE_BASE.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.UPGRADE_GROUNDSTOMP.get())
                 .pattern(" e ")
                 .pattern("fbf")

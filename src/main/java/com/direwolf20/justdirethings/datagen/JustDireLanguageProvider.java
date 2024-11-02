@@ -241,6 +241,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.UPGRADE_HOMING.get(), "Upgrade: Homing Arrow");
         add(Registration.UPGRADE_EPICARROW.get(), "Upgrade: Yondu Arrow");
         add(Registration.UPGRADE_TIMEPROTECTION.get(), "Upgrade: Time Protection");
+        add(Registration.UPGRADE_WATERBREATHING.get(), "Upgrade: Water Breathing");
 
         //Upgrade Text
         add("justdirethings." + Ability.MOBSCANNER.getName() + ".detailtext", "Show the location of nearby mobs");
@@ -335,6 +336,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings." + Ability.EPICARROW.getName() + ".flavortext", "I'm Mary Poppins Ya'll");
         add("justdirethings." + Ability.TIMEPROTECTION.getName() + ".detailtext", "Protection from Time Altering Effects");
         //add("justdirethings." + Ability.RUNSPEED.getName() + ".flavortext", "");
+        add("justdirethings." + Ability.WATERBREATHING.getName() + ".detailtext", "Allows player to breath under water");
+        add("justdirethings." + Ability.WATERBREATHING.getName() + ".flavortext", "Just keep swimming, just keep swimming!");
 
 
         //Misc
@@ -440,6 +443,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.HOMING.getLocalization(), "Homing Arrow");
         add(Ability.EPICARROW.getLocalization(), "Yondu Arrow");
         add(Ability.TIMEPROTECTION.getLocalization(), "Time Protection");
+        add(Ability.WATERBREATHING.getLocalization(), "Water Breathing");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

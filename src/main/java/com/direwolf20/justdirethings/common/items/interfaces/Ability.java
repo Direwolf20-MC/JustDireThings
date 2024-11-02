@@ -75,7 +75,7 @@ public enum Ability {
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/decoy.png"), Registration.UPGRADE_DECOY),
     LINGERING(SettingType.TOGGLE, 50, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_LINGERING),
     HOMING(SettingType.TOGGLE, 50, 2000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.TARGET, Registration.UPGRADE_HOMING),
-
+    WATERBREATHING(SettingType.TOGGLE, 50, 500, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY, AbilityMethods::waterBreathing, CustomSettingType.NONE, Registration.UPGRADE_WATERBREATHING),
 
     //Tier 4
     OREXRAY(SettingType.TOGGLE, 100, 5000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
