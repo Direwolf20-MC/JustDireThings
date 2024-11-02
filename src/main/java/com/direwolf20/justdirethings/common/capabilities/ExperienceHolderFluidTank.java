@@ -44,6 +44,7 @@ public class ExperienceHolderFluidTank extends FluidTank {
         if (fluid.isEmpty()) {
             int returnAmt = resource.getAmount() - insertFluid(resource.getAmount());
             fluid = new FluidStack(Registration.XP_FLUID_SOURCE.get(), returnAmt);
+            onContentsChanged();
             return returnAmt;
         }
         int filled = resource.getAmount() - insertFluid(resource.getAmount());
