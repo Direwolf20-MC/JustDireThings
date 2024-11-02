@@ -42,7 +42,9 @@ public class ExperienceHolderFluidTank extends FluidTank {
             return Math.min(capacity - getFluidAmount() - ((capacity - getFluidAmount()) % 20), resource.getAmount() - resource.getAmount() % 20);
         }
         if (fluid.isEmpty()) {
-            return resource.getAmount() - insertFluid(resource.getAmount());
+            int returnAmt = resource.getAmount() - insertFluid(resource.getAmount());
+            fluid = new FluidStack(Registration.XP_FLUID_SOURCE.get(), returnAmt);
+            return returnAmt;
         }
         int filled = resource.getAmount() - insertFluid(resource.getAmount());
         if (filled > 0)
