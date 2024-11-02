@@ -108,7 +108,7 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
     public boolean hasResources(Player player, ItemStack itemStack, int feCost, int fluidCost) {
         float failurePitch = 0.5F; // G# - lower pitch for failure sound
         if (!FluidContainingItem.hasEnoughFluid(itemStack, fluidCost)) {
-            player.displayClientMessage(Component.translatable("justdirethings.lowportalfluid"), true);
+            player.displayClientMessage(Component.translatable("justdirethings.lowtimefluid"), true);
             player.playNotifySound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), SoundSource.PLAYERS, 1.0F, failurePitch);
             return false;
         }
