@@ -10,7 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 public record ExperienceHolderSettingsPayload(
         int targetExp,
         boolean ownerOnly,
-        boolean collectExp
+        boolean collectExp,
+        boolean showParticles
 ) implements CustomPacketPayload {
     public static final Type<ExperienceHolderSettingsPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "experience_holder_settings"));
 
@@ -23,6 +24,7 @@ public record ExperienceHolderSettingsPayload(
             ByteBufCodecs.INT, ExperienceHolderSettingsPayload::targetExp,
             ByteBufCodecs.BOOL, ExperienceHolderSettingsPayload::ownerOnly,
             ByteBufCodecs.BOOL, ExperienceHolderSettingsPayload::collectExp,
+            ByteBufCodecs.BOOL, ExperienceHolderSettingsPayload::showParticles,
             ExperienceHolderSettingsPayload::new
     );
 }

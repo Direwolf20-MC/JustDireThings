@@ -8,7 +8,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
 public record ItemCollectorSettingsPayload(
-        boolean respectPickupDelay
+        boolean respectPickupDelay,
+        boolean showParticles
 ) implements CustomPacketPayload {
     public static final Type<ItemCollectorSettingsPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "item_collector_settings"));
 
@@ -19,6 +20,7 @@ public record ItemCollectorSettingsPayload(
 
     public static final StreamCodec<FriendlyByteBuf, ItemCollectorSettingsPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, ItemCollectorSettingsPayload::respectPickupDelay,
+            ByteBufCodecs.BOOL, ItemCollectorSettingsPayload::showParticles,
             ItemCollectorSettingsPayload::new
     );
 }

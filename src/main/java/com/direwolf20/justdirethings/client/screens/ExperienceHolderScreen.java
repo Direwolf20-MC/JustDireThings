@@ -22,6 +22,7 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
     private int targetExp;
     private boolean ownerOnly;
     private boolean collectExp;
+    public boolean showParticles = true;
     private static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_background");
     private static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation.withDefaultNamespace("hud/experience_bar_progress");
 
@@ -33,6 +34,7 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
             this.targetExp = experienceHolderBE.targetExp;
             this.ownerOnly = experienceHolderBE.ownerOnly;
             this.collectExp = experienceHolderBE.collectExp;
+            this.showParticles = experienceHolderBE.showParticles;
         }
     }
 
@@ -69,6 +71,11 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
+        addRenderableWidget(ToggleButtonFactory.SHOWPARTICLESBUTTON(topSectionLeft + (topSectionWidth / 2) + 31, topSectionTop + 42, showParticles, b -> {
+            showParticles = !showParticles;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
     }
 
     @Override
@@ -100,6 +107,6 @@ public class ExperienceHolderScreen extends BaseMachineScreen<ExperienceHolderCo
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new ExperienceHolderSettingsPayload(targetExp, ownerOnly, collectExp));
+        PacketDistributor.sendToServer(new ExperienceHolderSettingsPayload(targetExp, ownerOnly, collectExp, showParticles));
     }
 }

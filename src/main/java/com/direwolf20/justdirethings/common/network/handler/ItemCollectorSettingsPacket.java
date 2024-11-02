@@ -20,7 +20,7 @@ public class ItemCollectorSettingsPacket {
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof ItemCollectorContainer itemCollectorContainer && itemCollectorContainer.baseMachineBE instanceof ItemCollectorBE itemCollectorBE) {
-                itemCollectorBE.setSettings(payload.respectPickupDelay());
+                itemCollectorBE.setSettings(payload.respectPickupDelay(), payload.showParticles());
             }
         });
     }

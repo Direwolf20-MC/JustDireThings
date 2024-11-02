@@ -37,6 +37,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     public boolean respectPickupDelay = false;
+    public boolean showParticles = true;
 
     public ItemCollectorBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ItemCollectorBE.get(), pPos, pBlockState);
@@ -70,8 +71,9 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
         findItemsAndStore();
     }
 
-    public void setSettings(boolean respectPickupDelay) {
+    public void setSettings(boolean respectPickupDelay, boolean showParticles) {
         this.respectPickupDelay = respectPickupDelay;
+        this.showParticles = showParticles;
         markDirtyClient();
     }
 
@@ -81,6 +83,8 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     }
 
     public void doParticles(ItemStack itemStack, Vec3 sourcePos) {
+        if (!showParticles)
+            return;
         Direction direction = getBlockState().getValue(BlockStateProperties.FACING);
         BlockPos blockPos = getBlockPos();
         ItemFlowParticleData data = new ItemFlowParticleData(itemStack, blockPos.getX() + 0.5f - (0.3 * direction.getStepX()), blockPos.getY() + 0.5f - (0.3 * direction.getStepY()), blockPos.getZ() + 0.5f - (0.3 * direction.getStepZ()), 5);
@@ -146,11 +150,13 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
         tag.putBoolean("respectPickupDelay", respectPickupDelay);
+        tag.putBoolean("showParticles", showParticles);
     }
 
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.loadAdditional(tag, provider);
         respectPickupDelay = tag.getBoolean("respectPickupDelay");
+        showParticles = tag.getBoolean("showParticles");
     }
 }

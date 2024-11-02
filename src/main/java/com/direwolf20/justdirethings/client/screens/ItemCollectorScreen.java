@@ -12,10 +12,12 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ItemCollectorScreen extends BaseMachineScreen<ItemCollectorContainer> {
     public boolean respectPickupDelay = false;
+    public boolean showParticles = true;
     public ItemCollectorScreen(ItemCollectorContainer container, Inventory inv, Component name) {
         super(container, inv, name);
         if (container.baseMachineBE instanceof ItemCollectorBE itemCollectorBE) {
             respectPickupDelay = itemCollectorBE.respectPickupDelay;
+            showParticles = itemCollectorBE.showParticles;
         }
     }
 
@@ -27,11 +29,16 @@ public class ItemCollectorScreen extends BaseMachineScreen<ItemCollectorContaine
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
+        addRenderableWidget(ToggleButtonFactory.SHOWPARTICLESBUTTON(getGuiLeft() + 98, topSectionTop + 62, showParticles, b -> {
+            showParticles = !showParticles;
+            ((GrayscaleButton) b).toggleActive();
+            saveSettings();
+        }));
     }
 
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new ItemCollectorSettingsPayload(respectPickupDelay));
+        PacketDistributor.sendToServer(new ItemCollectorSettingsPayload(respectPickupDelay, showParticles));
     }
 }

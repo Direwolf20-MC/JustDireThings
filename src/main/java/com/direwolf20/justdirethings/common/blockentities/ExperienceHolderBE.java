@@ -40,6 +40,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     private Player currentPlayer;
     public boolean collectExp;
     public boolean ownerOnly;
+    public boolean showParticles = true;
 
     public ExperienceHolderBE(BlockPos pPos, BlockState pBlockState) {
         super(Registration.ExperienceHolderBE.get(), pPos, pBlockState);
@@ -60,11 +61,12 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         return areaAffectingData;
     }
 
-    public void changeSettings(Player player, int targetExp, boolean ownerOnly, boolean collectExp) {
+    public void changeSettings(Player player, int targetExp, boolean ownerOnly, boolean collectExp, boolean showParticles) {
         if (this.ownerOnly && !player.getUUID().equals(placedByUUID)) return;
         this.targetExp = targetExp;
         this.ownerOnly = ownerOnly;
         this.collectExp = collectExp;
+        this.showParticles = showParticles;
         markDirtyClient();
     }
 
@@ -173,6 +175,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     }
 
     public void doParticles(ItemStack itemStack, Vec3 sourcePos, boolean toBlock) {
+        if (!showParticles) return;
         Direction direction = getBlockState().getValue(BlockStateProperties.FACING);
         BlockPos blockPos = getBlockPos();
         Vec3 baubleSpot = new Vec3(blockPos.getX() + 0.5f - (0.3 * direction.getStepX()), blockPos.getY() + 0.5f - (0.3 * direction.getStepY()), blockPos.getZ() + 0.5f - (0.3 * direction.getStepZ()));
@@ -271,6 +274,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         tag.putInt("targetExp", targetExp);
         tag.putBoolean("collectExp", collectExp);
         tag.putBoolean("ownerOnly", ownerOnly);
+        tag.putBoolean("showParticles", showParticles);
     }
 
     @Override
@@ -280,6 +284,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         targetExp = tag.getInt("targetExp");
         collectExp = tag.getBoolean("collectExp");
         ownerOnly = tag.getBoolean("ownerOnly");
+        showParticles = tag.getBoolean("showParticles");
     }
 
     @Override

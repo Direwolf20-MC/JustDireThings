@@ -20,7 +20,7 @@ public class ExperienceHolderSettingsPacket {
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof ExperienceHolderContainer experienceHolderContainer && experienceHolderContainer.baseMachineBE instanceof ExperienceHolderBE experienceHolderBE) {
-                experienceHolderBE.changeSettings(sender, payload.targetExp(), payload.ownerOnly(), payload.collectExp());
+                experienceHolderBE.changeSettings(sender, payload.targetExp(), payload.ownerOnly(), payload.collectExp(), payload.showParticles());
             }
         });
     }
