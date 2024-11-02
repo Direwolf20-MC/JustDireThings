@@ -8,11 +8,14 @@ import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MagicHelpers;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -102,7 +105,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
     }
 
     public static void spawnProjectile(Level level, Player player, ItemStack itemStack, boolean isPrimaryType) {
-        NBTHelpers.PortalDestination portalDestination = getSelectedFavorite(itemStack);
+        NBTHelpers.PortalDestination portalDestination = player.isShiftKeyDown() ? getPrevious(itemStack) : getSelectedFavorite(itemStack);
         if (portalDestination == null || portalDestination.equals(NBTHelpers.PortalDestination.EMPTY)) return;
         int cost = calculateFluidCost((ServerLevel) level, player, portalDestination);
         if (!hasEnoughFluid(itemStack, cost)) {
@@ -119,6 +122,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
         projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1F, 1.0F);
         level.addFreshEntity(projectile);
         consumeFluid(itemStack, cost);
+        setPrevious(player, itemStack);
     }
 
     public static int calculateFluidCost(ServerLevel sourceLevel, Player player, NBTHelpers.PortalDestination portalDestination) {
@@ -197,6 +201,18 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
 
     public static void setFavorites(ItemStack itemStack, List<NBTHelpers.PortalDestination> favorites) {
         itemStack.set(JustDireDataComponents.PORTAL_GUN_FAVORITES, favorites);
+    }
+
+    public static void setPrevious(Player player, ItemStack itemStack) {
+        Vec3 position = player.position();
+        Direction facing = MiscHelpers.getFacingDirection(player);
+        ResourceKey<Level> dimension = player.level().dimension();
+        NBTHelpers.PortalDestination newDestination = new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(dimension, position), facing, "previous");
+        itemStack.set(JustDireDataComponents.PORTAL_GUN_PREVIOUS, newDestination);
+    }
+
+    public static NBTHelpers.PortalDestination getPrevious(ItemStack itemStack) {
+        return itemStack.getOrDefault(JustDireDataComponents.PORTAL_GUN_PREVIOUS, NBTHelpers.PortalDestination.EMPTY);
     }
 
     public static void addFavorite(ItemStack itemStack, int position, NBTHelpers.PortalDestination portalDestination) {
