@@ -206,6 +206,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem {
     public static void setPrevious(Player player, ItemStack itemStack) {
         Vec3 position = player.position();
         Direction facing = MiscHelpers.getFacingDirection(player);
+        if (facing == Direction.DOWN) facing = Direction.NORTH; //Down is bad
         ResourceKey<Level> dimension = player.level().dimension();
         NBTHelpers.PortalDestination newDestination = new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(dimension, position), facing, "previous");
         itemStack.set(JustDireDataComponents.PORTAL_GUN_PREVIOUS, newDestination);
