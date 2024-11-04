@@ -168,7 +168,7 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     public boolean isBlockPosValid(BlockPos blockPos, FakePlayer fakePlayer) {
         if (!level.getBlockState(blockPos).canBeReplaced())
             return false;
-        if (level.getBlockState(blockPos).getBlock() instanceof LiquidBlock)
+        if (level.getBlockState(blockPos).getBlock() instanceof LiquidBlock liquidBlock && level.getFluidState(blockPos).isSource())
             return false;
         if (!canBreakAndPlaceAt(level, blockPos, fakePlayer))
             return false;
