@@ -84,6 +84,9 @@ public class FluidDropRecipeCategory implements IRecipeCategory<FluidDropRecipe>
         if (output.getBlock() instanceof LiquidBlock liquidBlock) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 68, 20)
                     .addFluidStack(liquidBlock.fluid, 1000);
+        } else {
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 68, 20)
+                    .addItemStack(new ItemStack(output.getBlock()));
         }
     }
 }
