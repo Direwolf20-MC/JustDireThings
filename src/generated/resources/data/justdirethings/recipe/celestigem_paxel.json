@@ -1,5 +1,5 @@
 {
-  "type": "justdirethings:paxel",
+  "type": "minecraft:smithing_transform",
   "addition": {
     "item": "justdirethings:celestigem_shovel"
   },
