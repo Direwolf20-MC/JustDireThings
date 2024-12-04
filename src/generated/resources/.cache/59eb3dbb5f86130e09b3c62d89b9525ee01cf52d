@@ -1,4 +1,4 @@
-// 1.21.1	2024-10-08T15:55:42.5559436	Loot Tables
+// 1.21.1	2024-12-04T16:05:56.8010145	Loot Tables
 16a0ab61513717ab1cb8c1df9718722a643d9728 data/justdirethings/loot_table/blocks/blazegold_block.json
 b2953e2dcd4960e7f275bb42e4ad626219213fe1 data/justdirethings/loot_table/blocks/blockbreakert1.json
 bb65fdba3c1b14526a629aacb462661b5853008b data/justdirethings/loot_table/blocks/blockbreakert2.json
@@ -52,7 +52,7 @@ fcd634e194595dd66e68c9d1a2dfca498a3d6f2e data/justdirethings/loot_table/blocks/r
 5bf2a1543e7b0f4e1ea79595445be65298b21af7 data/justdirethings/loot_table/blocks/sensort2.json
 8796099af6731d42fd8624a4b2698ff6cd7b660d data/justdirethings/loot_table/blocks/time_crystal_block.json
 b2d80d93bccfc4417bba63f15ecad5a094f5dfb7 data/justdirethings/loot_table/blocks/time_crystal_budding_block.json
-d9c0e267306ab4035ecbac1ebba68f4633bad5c4 data/justdirethings/loot_table/blocks/time_crystal_cluster.json
-cd5c4121ea41b6db1ecece8c7cd941e11766e5e3 data/justdirethings/loot_table/blocks/time_crystal_cluster_large.json
-7de3d19992b530a124d361a6c08451e3396b8ea8 data/justdirethings/loot_table/blocks/time_crystal_cluster_medium.json
-ccf71e962691cd5d7cd7f20e7044ea4ebb4942ac data/justdirethings/loot_table/blocks/time_crystal_cluster_small.json
+bbb3b5fa7246c208eca96ea1df77592cc8fa66ce data/justdirethings/loot_table/blocks/time_crystal_cluster.json
+06aeb52806dcdfea0cab462e21a982c4ffc7c0d9 data/justdirethings/loot_table/blocks/time_crystal_cluster_large.json
+e05d13303b887c427c7d9b33cbd68504fdbd7227 data/justdirethings/loot_table/blocks/time_crystal_cluster_medium.json
+e21a9560e8aa0a353ddfcce1df9d16b0428c817d data/justdirethings/loot_table/blocks/time_crystal_cluster_small.json

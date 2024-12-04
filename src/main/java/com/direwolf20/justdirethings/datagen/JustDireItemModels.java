@@ -74,6 +74,9 @@ public class JustDireItemModels extends ItemModelProvider {
         withExistingParent(Registration.TimeCrystalBlock.getId().getPath(), modLoc("block/time_crystal_block"));
         withExistingParent(Registration.TimeCrystalBuddingBlock.getId().getPath(), modLoc("block/time_crystal_budding_block_state_0"));
         withExistingParent(Registration.TimeCrystalCluster.getId().getPath(), modLoc("block/time_crystal_cluster"));
+        withExistingParent(Registration.TimeCrystalCluster_Small_ITEM.getId().getPath(), modLoc("block/time_crystal_cluster_small"));
+        withExistingParent(Registration.TimeCrystalCluster_Medium_ITEM.getId().getPath(), modLoc("block/time_crystal_cluster_medium"));
+        withExistingParent(Registration.TimeCrystalCluster_Large_ITEM.getId().getPath(), modLoc("block/time_crystal_cluster_large"));
         withExistingParent(Registration.ParadoxMachine.getId().getPath(), modLoc("block/paradoxmachine"));
         withExistingParent(Registration.InventoryHolder.getId().getPath(), modLoc("block/inventory_holder"));
         withExistingParent(Registration.ExperienceHolder_ITEM.getId().getPath(), modLoc("block/experienceholder"));

@@ -62,11 +62,18 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(Registration.FluidCollectorT1.get());
         dropSelf(Registration.FluidCollectorT2.get());
         dropSelf(Registration.TimeCrystalBlock.get());
-        dropOther(Registration.TimeCrystalCluster.get(), Registration.TimeCrystal.get());
+        //dropOther(Registration.TimeCrystalCluster.get(), Registration.TimeCrystal.get());
         //dropOther(Registration.TimeCrystalBuddingBlock.get(), Registration.TimeCrystalBlock.get());
-        add(Registration.TimeCrystalCluster_Small.get(), noDrop());
-        add(Registration.TimeCrystalCluster_Medium.get(), noDrop());
-        add(Registration.TimeCrystalCluster_Large.get(), noDrop());
+        add(Registration.TimeCrystalCluster.get(), createSilkTouchDispatchTable(
+                Registration.TimeCrystalCluster.get(),
+                this.applyExplosionDecay(
+                        Registration.TimeCrystalCluster.get(),
+                        LootItem.lootTableItem(Registration.TimeCrystal.get())
+                )
+        ));
+        add(Registration.TimeCrystalCluster_Small.get(), createSilkTouchOnlyTable(Registration.TimeCrystalCluster_Small_ITEM.get()));
+        add(Registration.TimeCrystalCluster_Medium.get(), createSilkTouchOnlyTable(Registration.TimeCrystalCluster_Medium_ITEM.get()));
+        add(Registration.TimeCrystalCluster_Large.get(), createSilkTouchOnlyTable(Registration.TimeCrystalCluster_Large_ITEM.get()));
         add(Registration.TimeCrystalBuddingBlock.get(), noDrop());
         dropSelf(Registration.ParadoxMachine.get());
         dropSelf(Registration.InventoryHolder.get());
