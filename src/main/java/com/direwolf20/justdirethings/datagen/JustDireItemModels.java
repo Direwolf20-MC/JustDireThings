@@ -233,21 +233,18 @@ public class JustDireItemModels extends ItemModelProvider {
     private void registerBowModels() {
         for (var bow : Registration.BOWS.getEntries()) {
             String bowName = bow.getId().getPath();
+
             // Base bow model
             forBows(singleTexture(bowName, mcLoc("item/generated"), "layer0", modLoc("item/bows/" + bowName)));
 
-            // Pulling models
-            getBuilder(bowName + "_pulling_0")
-                    .parent(getExistingFile(mcLoc("item/generated")))
-                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_0"));
-
-            getBuilder(bowName + "_pulling_1")
-                    .parent(getExistingFile(mcLoc("item/generated")))
-                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_1"));
-
-            getBuilder(bowName + "_pulling_2")
-                    .parent(getExistingFile(mcLoc("item/generated")))
-                    .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_2"));
+            // Pulling models with consistent transformations
+            for (int i = 0; i < 3; i++) {
+                forBows(
+                        getBuilder(bowName + "_pulling_" + i)
+                                .parent(getExistingFile(mcLoc("item/generated")))
+                                .texture("layer0", modLoc("item/bows/" + bowName + "_pulling_" + i))
+                );
+            }
 
             // Overrides for pulling states
             getBuilder(bowName)
@@ -256,4 +253,5 @@ public class JustDireItemModels extends ItemModelProvider {
                     .override().predicate(modLoc("pulling"), 1).predicate(modLoc("pull"), 0.9f).model(getExistingFile(modLoc("item/" + bowName + "_pulling_2"))).end();
         }
     }
+
 }
