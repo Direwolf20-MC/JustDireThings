@@ -68,8 +68,8 @@ public class PlayerEvents {
     @SubscribeEvent
     public static void BreakSpeed(PlayerEvent.BreakSpeed event) {
         Player player = event.getEntity();
-        float targetSpeed = event.getOriginalSpeed();
-        if (player.getAbilities().flying) {
+        float targetSpeed = event.getNewSpeed();
+        if (player.getAbilities().flying && event.getNewSpeed() < event.getOriginalSpeed() * 5.0F) { //Prevent this combining with other mods like Apotheosis
             ItemStack chestPlate = player.getItemBySlot(EquipmentSlot.CHEST);
             if (chestPlate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(chestPlate, Ability.FLIGHT))
                 targetSpeed = targetSpeed * 5; //Vanilla divides by 5 if you're flying
@@ -107,7 +107,7 @@ public class PlayerEvents {
                 targetSpeed = 10000f;
             }
         }
-        if (targetSpeed != event.getOriginalSpeed())
+        if (targetSpeed != event.getNewSpeed())
             event.setNewSpeed(targetSpeed);
     }
 }
