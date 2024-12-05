@@ -1,4 +1,4 @@
-// 1.21.1	2024-09-25T22:41:05.4413696	JustDireThings Item Tags
+// 1.21.1	2024-12-05T15:17:54.6261471	JustDireThings Item Tags
 c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/c/tags/item/gems.json
 55719b9c6f0430ad38bf081d697aa5406cc27cfb data/c/tags/item/ingots.json
 d7ad09b1e8fb0835b7f14f744fa7866dd3521c60 data/c/tags/item/ingots/blazegold.json
@@ -8,7 +8,8 @@ d7ad09b1e8fb0835b7f14f744fa7866dd3521c60 data/c/tags/item/ingots/blazegold.json
 8f409e7c4af9ad4f712c47dca67c5a35990128b4 data/c/tags/item/raw_materials/blazegold.json
 5fec8f33bedbc8d4ad810433334d09be1b142495 data/c/tags/item/raw_materials/eclipsealloy.json
 77a64d34066efb0fd114a507b86955e4dd278896 data/c/tags/item/raw_materials/ferricore.json
-455bada5b950203f61d1da4946e513ee909c6275 data/c/tags/item/storage_blocks.json
+a124c9a9e83399d56af0e7461086fb0df1f78677 data/c/tags/item/storage_blocks.json
+5f1e660bc9c2edfefb9b5e0ee9b34fd54e814ffc data/c/tags/item/storage_blocks/charcoal.json
 2e8fde40fae9c5f27ec8016ce871e7e1dba80da8 data/c/tags/item/tools/bow.json
 d43d57f243d07a70864154c42153bce1fa092a9b data/c/tags/item/tools/melee_weapon.json
 4bf06f85140d98a6fdbb3f93325bb5f389124423 data/c/tags/item/tools/mining_tool.json

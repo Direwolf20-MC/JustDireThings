@@ -35,6 +35,8 @@ public class JustDireItemTags extends ItemTagsProvider {
     public static final TagKey<Item> MELEE_WEAPON = forgeTag("tools/melee_weapon");
     public static final TagKey<Item> MINING_TOOL = forgeTag("tools/mining_tool");
     public static final TagKey<Item> PAXEL = forgeTag("tools/paxel");
+    public static final TagKey<Item> STORAGEBLOCKS = forgeTag("storage_blocks");
+    public static final TagKey<Item> CHARCOALBLOCKS = forgeTag("storage_blocks/charcoal");
 
 
     private static TagKey<Item> forgeTag(String name) {
@@ -211,6 +213,10 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.EclipseAlloyPaxel.get());
         tag(PARADOX_DENY)
                 .add(Items.BEDROCK);
+        tag(STORAGEBLOCKS)
+                .add(Registration.CharcoalBlock_ITEM.get());
+        tag(CHARCOALBLOCKS)
+                .add(Registration.CharcoalBlock_ITEM.get());
     }
 
     @Override
