@@ -553,5 +553,10 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.oretoresource.title", "Ores to Resources");
         add("justdirethings.fluiddroprecipe.title", "Fluid Drop Recipes");
 
+        //Sounds
+        add("sound.justdirethings.beep", "Beep");
+        add("sound.justdirethings.portal_gun_close", "Portal Gun Close");
+        add("sound.justdirethings.portal_gun_open", "Portal Gun Open");
+        add("sound.justdirethings.paradox_ambient", "Paradox Machine Ambient");
     }
 }

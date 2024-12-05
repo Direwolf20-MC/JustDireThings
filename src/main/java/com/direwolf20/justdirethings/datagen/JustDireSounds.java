@@ -40,5 +40,9 @@ public class JustDireSounds extends SoundDefinitionsProvider {
                         .preload(true))
                 .subtitle("sound.justdirethings.paradox_ambient")
         );
+        add(Registration.BEEP, SoundDefinition.definition()
+                .with(sound("justdirethings:beep"))
+                .subtitle("sound.justdirethings.beep")
+        );
     }
 }

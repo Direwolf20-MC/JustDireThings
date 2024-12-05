@@ -258,17 +258,14 @@ public class AdvPortalRadialMenu extends Screen {
 
     public void addFavorite() {
         PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, "UNNAMED", false, Vec3.ZERO));
-        OurSounds.playSound(Registration.BEEP.get());
     }
 
     public void removeFavorite() {
         PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, false, "NOTNEEDED", false, Vec3.ZERO));
-        OurSounds.playSound(Registration.BEEP.get());
     }
 
     public void editFavorite() {
         Minecraft.getInstance().setScreen(new AdvPortalEditMenu(portalGun, slotSelected));
-        OurSounds.playSound(Registration.BEEP.get());
     }
 
     public NBTHelpers.PortalDestination getFavorite(int slot) {

@@ -1,4 +1,10 @@
 {
+  "beep": {
+    "sounds": [
+      "justdirethings:beep"
+    ],
+    "subtitle": "sound.justdirethings.beep"
+  },
   "paradox_ambient": {
     "sounds": [
       {
