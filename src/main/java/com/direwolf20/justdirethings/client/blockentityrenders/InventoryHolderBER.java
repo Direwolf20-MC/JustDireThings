@@ -11,12 +11,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.UUID;
 
 public class InventoryHolderBER extends AreaAffectingBER {
+    public static AbstractClientPlayer mockPlayer;
     public InventoryHolderBER(BlockEntityRendererProvider.Context context) {
 
     }
@@ -25,7 +27,8 @@ public class InventoryHolderBER extends AreaAffectingBER {
     public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
         if (blockentity instanceof InventoryHolderBE inventoryHolderBE && inventoryHolderBE.renderPlayer) {
             // Create a fake player entity
-            AbstractClientPlayer mockPlayer = createMockPlayer(inventoryHolderBE);
+            if (mockPlayer == null || mockPlayer.getUUID() != inventoryHolderBE.placedByUUID)
+                mockPlayer = createMockPlayer(inventoryHolderBE);
             if (mockPlayer == null) return;
             mockPlayer.yHeadRot = 0;
             mockPlayer.yHeadRotO = 0;
@@ -34,6 +37,8 @@ public class InventoryHolderBER extends AreaAffectingBER {
 
             // Render the mock player model above the block
             renderMockPlayerEntity(matrixStackIn, bufferIn, mockPlayer, combinedLightsIn, partialTicks);
+            //UnEquip items, so the fake player is ready for the next inventory holder (In case theres more than one)
+            unEquipMockPlayer(mockPlayer, inventoryHolderBE);
         }
     }
 
@@ -77,6 +82,20 @@ public class InventoryHolderBER extends AreaAffectingBER {
             mockPlayer.setItemSlot(EquipmentSlot.LEGS, itemStackHandler.getStackInSlot(38));
         if (!itemStackHandler.getStackInSlot(39).isEmpty())
             mockPlayer.setItemSlot(EquipmentSlot.FEET, itemStackHandler.getStackInSlot(39));
+    }
+
+    public void unEquipMockPlayer(AbstractClientPlayer mockPlayer, InventoryHolderBE blockEntity) {
+        ItemStackHandler itemStackHandler = blockEntity.getMachineHandler();
+        // Equip the pickaxe in the main hand
+        mockPlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+
+        // Equip the offhand
+        mockPlayer.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+
+        mockPlayer.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
+        mockPlayer.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
+        mockPlayer.setItemSlot(EquipmentSlot.LEGS, ItemStack.EMPTY);
+        mockPlayer.setItemSlot(EquipmentSlot.FEET, ItemStack.EMPTY);
     }
 
     public void renderMockPlayerEntity(PoseStack matrixStackIn, MultiBufferSource bufferIn, AbstractClientPlayer mockPlayer, int combinedLightsIn, float partialTicks) {
