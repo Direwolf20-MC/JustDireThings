@@ -153,6 +153,11 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.BlazegoldBow.get())
                 .add(Registration.CelestigemBow.get())
                 .add(Registration.EclipseAlloyBow.get());
+        tag(ItemTags.DURABILITY_ENCHANTABLE)
+                .add(Registration.FerricoreBow.get())
+                .add(Registration.BlazegoldBow.get())
+                .add(Registration.CelestigemBow.get())
+                .add(Registration.EclipseAlloyBow.get());
         tag(RAW_FERRICORE)
                 .add(Registration.RawFerricore.get());
         tag(RAW_BLAZEGOLD)
