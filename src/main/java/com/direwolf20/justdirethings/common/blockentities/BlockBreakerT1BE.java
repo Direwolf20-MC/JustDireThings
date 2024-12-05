@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -130,6 +131,8 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public boolean isBlockValid(FakePlayer fakePlayer, BlockPos blockPos) {
         BlockState blockState = level.getBlockState(blockPos);
         if (blockState.isAir())
+            return false;
+        if ((blockState.getBlock() instanceof LiquidBlock)) //No Liquids
             return false;
         if (blockPos.equals(getBlockPos()))
             return false;
