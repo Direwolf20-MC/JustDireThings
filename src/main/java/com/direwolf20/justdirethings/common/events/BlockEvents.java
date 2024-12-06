@@ -59,6 +59,7 @@ public class BlockEvents {
             alreadyBreaking = true;
             toggleableTool.mineBlocksAbility(itemStack, event.getPlayer().level(), event.getPos(), event.getPlayer());
             alreadyBreaking = false;
+            spawnDropsAtPos = BlockPos.ZERO;
             event.setCanceled(true); //Cancel the original block broken, since its handled in the mineBlocksAbility
         }
     }
