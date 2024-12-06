@@ -203,6 +203,7 @@ public class Helpers {
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getEnergyStored() - poweredTool.getBlockBreakFECost();
         } else {
+            if (!stack.isDamageableItem()) return 1;
             return stack.getMaxDamage() - stack.getDamageValue() - 1;
         }
     }
