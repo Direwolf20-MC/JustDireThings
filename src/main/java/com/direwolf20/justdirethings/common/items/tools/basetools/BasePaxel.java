@@ -133,4 +133,9 @@ public class BasePaxel extends BasePickaxe {
     public float getDestroySpeed(ItemStack pStack, BlockState state) {
         return (state.is(BlockTags.MINEABLE_WITH_PICKAXE) || state.is(BlockTags.MINEABLE_WITH_SHOVEL) || state.is(BlockTags.MINEABLE_WITH_AXE)) ? super.getDestroySpeed(pStack, Blocks.COBBLESTONE.defaultBlockState()) : 1.0F; //Possible hacky way to do this? :)
     }
+
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        if (oldStack.is(newStack.getItem())) return false;
+        return super.shouldCauseBlockBreakReset(oldStack, newStack);
+    }
 }

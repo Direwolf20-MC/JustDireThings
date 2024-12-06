@@ -150,4 +150,9 @@ public class BaseSword extends SwordItem implements ToggleableTool, LeftClickabl
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
     }
+
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        if (oldStack.is(newStack.getItem())) return false;
+        return super.shouldCauseBlockBreakReset(oldStack, newStack);
+    }
 }
