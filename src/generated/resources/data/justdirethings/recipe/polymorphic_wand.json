@@ -8,11 +8,14 @@
     },
     "i": {
       "item": "justdirethings:blazegold_ingot"
+    },
+    "r": {
+      "item": "justdirethings:polymorphic_catalyst"
     }
   },
   "pattern": [
     "  b",
-    " i ",
+    " r ",
     "i  "
   ],
   "result": {

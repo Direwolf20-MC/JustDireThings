@@ -26,7 +26,8 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> NO_EARTHQUAKE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_earthquake"));
     public static final TagKey<EntityType<?>> PARADOX_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_deny"));
     public static final TagKey<EntityType<?>> PARADOX_ABSORB_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
-
+    public static final TagKey<EntityType<?>> POLYMORPHIC_PEACEFUL = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_peaceful"));
+    public static final TagKey<EntityType<?>> POLYMORPHIC_HOSTILE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_hostile"));
 
     @Override
     public void addTags(HolderLookup.Provider lookupProvider) {
@@ -50,5 +51,77 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
                 .add(Registration.ParadoxEntity.get());
         tag(EntityTypeTags.ARROWS)
                 .add(Registration.JustDireArrow.get());
+        tag(POLYMORPHIC_PEACEFUL).add(
+                EntityType.SHEEP,
+                EntityType.PIG,
+                EntityType.COW,
+                EntityType.MOOSHROOM,
+                EntityType.CHICKEN,
+                EntityType.BAT,
+                EntityType.VILLAGER,
+                EntityType.SQUID,
+                EntityType.OCELOT,
+                EntityType.WOLF,
+                EntityType.HORSE,
+                EntityType.RABBIT,
+                EntityType.DONKEY,
+                EntityType.MULE,
+                EntityType.POLAR_BEAR,
+                EntityType.LLAMA,
+                EntityType.PARROT,
+                EntityType.DOLPHIN,
+                EntityType.COD,
+                EntityType.SALMON,
+                EntityType.PUFFERFISH,
+                EntityType.TROPICAL_FISH,
+                EntityType.TURTLE,
+                EntityType.CAT,
+                EntityType.FOX,
+                EntityType.PANDA,
+                EntityType.TRADER_LLAMA,
+                EntityType.WANDERING_TRADER,
+                EntityType.STRIDER,
+                EntityType.GLOW_SQUID,
+                EntityType.GOAT,
+                EntityType.BEE,
+                EntityType.FROG,
+                EntityType.TADPOLE,
+                EntityType.CAMEL,
+                EntityType.AXOLOTL
+        );
+        tag(POLYMORPHIC_HOSTILE).add(
+                EntityType.ZOMBIE,
+                EntityType.SKELETON,
+                EntityType.CREEPER,
+                EntityType.SPIDER,
+                EntityType.ENDERMAN,
+                EntityType.SILVERFISH,
+                EntityType.ZOMBIFIED_PIGLIN,
+                EntityType.PIGLIN,
+                EntityType.PIGLIN_BRUTE,
+                EntityType.HOGLIN,
+                EntityType.ZOGLIN,
+                EntityType.GHAST,
+                EntityType.BLAZE,
+                EntityType.SLIME,
+                EntityType.WITCH,
+                EntityType.RABBIT,
+                EntityType.ENDERMITE,
+                EntityType.STRAY,
+                EntityType.WITHER_SKELETON,
+                EntityType.SKELETON_HORSE,
+                EntityType.ZOMBIE_HORSE,
+                EntityType.ZOMBIE_VILLAGER,
+                EntityType.HUSK,
+                EntityType.GUARDIAN,
+                EntityType.EVOKER,
+                EntityType.VEX,
+                EntityType.VINDICATOR,
+                EntityType.SHULKER,
+                EntityType.DROWNED,
+                EntityType.PHANTOM,
+                EntityType.PILLAGER
+        );
+
     }
 }

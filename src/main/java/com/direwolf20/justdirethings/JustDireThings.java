@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTa
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.FluidCanister;
+import com.direwolf20.justdirethings.common.items.PolymorphicWand;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.items.TimeWand;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
@@ -168,6 +169,20 @@ public class JustDireThings {
 
                         };
                     }
+                    if (itemStack.getItem() instanceof PolymorphicWand polymorphicWand) {
+                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, polymorphicWand.getMaxMB()) {
+                            @Override
+                            public boolean isFluidValid(int tank, FluidStack stack) {
+                                return stack.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
+                            }
+
+                            @Override
+                            public boolean canFillFluidType(FluidStack fluid) {
+                                return fluid.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
+                            }
+
+                        };
+                    }
                     if (itemStack.getItem() instanceof FluidCanister fluidCanister) {
                         return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, fluidCanister.getMaxMB());
                     }
@@ -175,7 +190,8 @@ public class JustDireThings {
                 },
                 Registration.PortalGunV2.get(),
                 Registration.FluidCanister.get(),
-                Registration.TimeWand.get()
+                Registration.TimeWand.get(),
+                Registration.PolymorphicWand.get()
         );
 
         //Blocks

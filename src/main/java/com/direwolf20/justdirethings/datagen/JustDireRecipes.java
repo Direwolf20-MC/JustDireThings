@@ -456,9 +456,10 @@ public class JustDireRecipes extends RecipeProvider {
                 .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.PolymorphicWand.get())
                 .pattern("  b")
-                .pattern(" i ")
+                .pattern(" r ")
                 .pattern("i  ")
                 .define('i', Registration.BlazegoldIngot.get())
+                .define('r', Registration.PolymorphicCatalyst.get())
                 .define('b', Registration.FluidCanister.get())
                 .group("justdirethings")
                 .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))

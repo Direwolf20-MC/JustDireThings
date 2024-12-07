@@ -90,6 +90,10 @@ public class Config {
     public static ModConfigSpec.IntValue POCKET_GENERATOR_MAX_FE;
     public static ModConfigSpec.IntValue POCKET_GENERATOR_FE_PER_TICK;
 
+    public static final String CATEGORY_POLYMORPHIC_WAND = "polymorphic_wand";
+    public static ModConfigSpec.IntValue POLYMORPHIC_WAND_MAX_FLUID;
+    public static ModConfigSpec.IntValue RANDOM_POLYMORPH_COST;
+
     public static void register(ModContainer container) {
         //registerServerConfigs(container);
         registerCommonConfigs(container);
@@ -112,6 +116,7 @@ public class Config {
         pocketGeneratorConfig();
         portalGunConfig();
         timeWandConfig();
+        polymorphWandConfig();
         paradoxConfig();
         COMMON_CONFIG = COMMON_BUILDER.build();
         container.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
@@ -261,6 +266,15 @@ public class Config {
                 });
         TIME_WAND_FAKE_PLAYER_ALLOWED = COMMON_BUILDER.comment("Can fake players use the Time Wand (Like in the clickers)?")
                 .define("time_wand_fake_player_allowed", true);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void polymorphWandConfig() {
+        COMMON_BUILDER.comment("Polymorphic Wand").push(CATEGORY_POLYMORPHIC_WAND);
+        RANDOM_POLYMORPH_COST = COMMON_BUILDER.comment("The polymorphic fluid cost to use the polymorph wand")
+                .defineInRange("polymorphic_wand_fluid_cost", 100, 1, Integer.MAX_VALUE);
+        POLYMORPHIC_WAND_MAX_FLUID = COMMON_BUILDER.comment("The amount of fluid the Polymorphic Wand can hold")
+                .defineInRange("polymorphic_wand_max_fluid", 2000, 1, Integer.MAX_VALUE);
         COMMON_BUILDER.pop();
     }
 

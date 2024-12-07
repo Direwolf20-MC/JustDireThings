@@ -357,9 +357,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.portalfluidamt", "Portal Fluid: %s / %s");
         add("justdirethings.timefluidamt", "Time Fluid: %s / %s");
+        add("justdirethings.polymorphicfluidamt", "Polymorphic Fluid: %s / %s");
         add("justdirethings.paradoxenergy", "Paradox Energy: %s / %s");
         add("justdirethings.lowportalfluid", "Insufficient Portal Fluid");
         add("justdirethings.lowtimefluid", "Insufficient Time Fluid");
+        add("justdirethings.invalidpolymorphentity", "Invalid Entity for Polymorphing");
         add("justdirethings.boundto", "Bound to: %s:%s");
         add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");
@@ -445,6 +447,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.EPICARROW.getLocalization(), "Yondu Arrow");
         add(Ability.TIMEPROTECTION.getLocalization(), "Time Protection");
         add(Ability.WATERBREATHING.getLocalization(), "Water Breathing");
+        add(Ability.POLYMORPH_RANDOM.getLocalization(), "Random Polymorph");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");
