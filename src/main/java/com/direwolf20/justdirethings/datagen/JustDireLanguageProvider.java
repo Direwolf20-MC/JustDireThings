@@ -132,6 +132,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FluidCanister.get(), "Fluid Canister");
         add(Registration.PotionCanister.get(), "Potion Canister");
         add(Registration.TimeWand.get(), "Time Wand");
+        add(Registration.PolymorphicWand.get(), "Polymorphic Wand");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
