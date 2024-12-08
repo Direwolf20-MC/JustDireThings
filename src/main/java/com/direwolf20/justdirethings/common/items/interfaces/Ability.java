@@ -62,6 +62,9 @@ public enum Ability {
             AbilityMethods::stupefy, CustomSettingType.NONE,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/stupefy.png"), Registration.UPGRADE_STUPEFY),
     SPLASH(SettingType.TOGGLE, 20, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SPLASH),
+    POLYMORPH_RANDOM(SettingType.TOGGLE, 10, 1000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
+            AbilityMethods::polymorphRandom, CustomSettingType.NONE,
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_random.png")),
 
     //Tier 3
     DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.RENDER, Registration.UPGRADE_DROPTELEPORT),
@@ -102,6 +105,9 @@ public enum Ability {
     LAVAIMMUNITY(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_LAVAIMMUNITY),
     PHASE(SettingType.SLIDER, 1, 50000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_PHASE),
     TIMEPROTECTION(SettingType.SLIDER, 1, 5000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_TIMEPROTECTION),
+    POLYMORPH_TARGET(SettingType.TOGGLE, 10, 50000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
+            AbilityMethods::polymorphTarget, CustomSettingType.NONE,
+            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_target.png")),
     EPICARROW(SettingType.SLIDER, 25, 100000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::epicArrow, CustomSettingType.NONE,
             ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/epicarrow.png"), Registration.UPGRADE_EPICARROW);

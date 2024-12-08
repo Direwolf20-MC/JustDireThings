@@ -1,4 +1,4 @@
-// 1.21.1	2024-11-02T12:45:23.0801389	Recipes
+// 1.21.1	2024-12-08T14:36:24.9704735	Recipes
 39cd44c838de7f56aeac73aec8b3bfb64ad7fec2 data/justdirethings/advancement/recipes/building_blocks/blazegold_ingot_9x9.json
 2f2a0f948f272df9713010dbcb75beb81c328b01 data/justdirethings/advancement/recipes/building_blocks/celestigem_9x9.json
 4c183b67eff4bc24117606cdc45ebcd987dd4138 data/justdirethings/advancement/recipes/building_blocks/charcoal_9x9.json
@@ -307,6 +307,8 @@ dad2a7782e9a1e1d8e7099a6596640b309925ed9 data/justdirethings/advancement/recipes
 2cf19ff627966b28128eb42fd47c9b9e84bc43d8 data/justdirethings/advancement/recipes/misc/pocket_generator.json
 858af81155eff55f8b4cff67f9bade9f64071902 data/justdirethings/advancement/recipes/misc/polymorphic_catalyst.json
 d028ad197c2078a4c30eafcbde2282aff17f1df1 data/justdirethings/advancement/recipes/misc/polymorphic_fluid_block-fluiddrop.json
+8d77029166db109c5f6f34ecd68888bbb458b36f data/justdirethings/advancement/recipes/misc/polymorphic_wand.json
+cbd75ef6a410d18537c75609ed9a8dc03e4eedf6 data/justdirethings/advancement/recipes/misc/polymorphic_wand_v2.json
 5570c3f5f6bf47c6d6026ead547ac4516bad5da9 data/justdirethings/advancement/recipes/misc/portalgun.json
 f921713cd6dfa2ad74a0b7144f7778c2fe33bc72 data/justdirethings/advancement/recipes/misc/portalgun_v2.json
 c811419aba5aeaf1be214e7f29492a7ccb300ddd data/justdirethings/advancement/recipes/misc/portal_fluid_block-goospread.json
@@ -696,6 +698,8 @@ de4d6dd744789b903d6828fec4ce5847a1dfef60 data/justdirethings/recipe/paradoxmachi
 cc73b7c24448814a0e8663c8065a6625cbd30072 data/justdirethings/recipe/pocket_generator.json
 035ed5c68eac114352b166d38b7f8308e5db63c0 data/justdirethings/recipe/polymorphic_catalyst.json
 6cfafeb9ae58abc121bd78f1c67b11aedec8297b data/justdirethings/recipe/polymorphic_fluid_block-fluiddrop.json
+52f1c1f4d04ba53cc38b2dbfc49fb1d19a35b344 data/justdirethings/recipe/polymorphic_wand.json
+f0837b24753abb981c18893958974a4306f8b4d8 data/justdirethings/recipe/polymorphic_wand_v2.json
 1494fe69edb92207b18a251b9c4a4d7ef2487b45 data/justdirethings/recipe/portalgun.json
 4ed1bcc18461694ef969bb8820a6a4433cec054f data/justdirethings/recipe/portalgun_v2.json
 881053ecbb4f27590666128cfd52f2c212cf6a37 data/justdirethings/recipe/portal_fluid_block-goospread.json

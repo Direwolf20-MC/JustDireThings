@@ -132,6 +132,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Registration.FluidCanister.get(), "Fluid Canister");
         add(Registration.PotionCanister.get(), "Potion Canister");
         add(Registration.TimeWand.get(), "Time Wand");
+        add(Registration.PolymorphicWand.get(), "Polymorphic Wand");
+        add(Registration.PolymorphicWandV2.get(), "Advanced Polymorphic Wand");
 
         //Tools
         add(Registration.FerricoreSword.get(), "Ferricore Sword");
@@ -356,9 +358,12 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.festored", "Forge Energy: %s / %s");
         add("justdirethings.portalfluidamt", "Portal Fluid: %s / %s");
         add("justdirethings.timefluidamt", "Time Fluid: %s / %s");
+        add("justdirethings.polymorphicfluidamt", "Polymorphic Fluid: %s / %s");
         add("justdirethings.paradoxenergy", "Paradox Energy: %s / %s");
         add("justdirethings.lowportalfluid", "Insufficient Portal Fluid");
         add("justdirethings.lowtimefluid", "Insufficient Time Fluid");
+        add("justdirethings.invalidpolymorphentity", "Invalid Entity for Polymorphing");
+        add("justdirethings.polymorphset", "Polymorph Target: %s");
         add("justdirethings.boundto", "Bound to: %s:%s");
         add("justdirethings.boundto-missing", "Bound to (MISSING BLOCK): %s:%s");
         add("justdirethings.unbound", " -Not Bound");
@@ -444,6 +449,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add(Ability.EPICARROW.getLocalization(), "Yondu Arrow");
         add(Ability.TIMEPROTECTION.getLocalization(), "Time Protection");
         add(Ability.WATERBREATHING.getLocalization(), "Water Breathing");
+        add(Ability.POLYMORPH_RANDOM.getLocalization(), "Random Polymorph");
+        add(Ability.POLYMORPH_TARGET.getLocalization(), "Targeted Polymorph");
 
         //GUI
         add("justdirethings.screen.energy", "Energy: %s/%s FE");

@@ -1,4 +1,4 @@
-// 1.21.1	2024-12-04T17:22:22.4686514	Item Models: justdirethings
+// 1.21.1	2024-12-08T14:36:24.9489547	Item Models: justdirethings
 c197a1b2a5ae31fcfabfe6cab9ab95a9dc0e1af6 assets/justdirethings/models/item/blazegold_axe.json
 dddf215922d40d92c2d8bce4229f2e2af8b3c7ba assets/justdirethings/models/item/blazegold_axe_active.json
 6396fb6e503760080534bc26337236d4d09a4cb8 assets/justdirethings/models/item/blazegold_block.json
@@ -292,6 +292,8 @@ b10bbca68270e48599af7174531b0235c8e7c9a4 assets/justdirethings/models/item/playe
 86e8b463737ba209a47a1f3544b51525598d38a3 assets/justdirethings/models/item/pocket_generator_active.json
 6ac490fc1ca0a7b3663a770a09e3cd3ade652bb5 assets/justdirethings/models/item/polymorphic_catalyst.json
 c51b41b9c484aa6724dfe24732b06a196ee05ffe assets/justdirethings/models/item/polymorphic_fluid_bucket.json
+af285bda921f3fea66dd01b7b30fadfd8669ee14 assets/justdirethings/models/item/polymorphic_wand.json
+481f0aeeff37a0ab6393bd83161537fd688e0a2e assets/justdirethings/models/item/polymorphic_wand_v2.json
 403d14795debb89f422eefb10f3b8188e148190a assets/justdirethings/models/item/portal_fluid_bucket.json
 ea9b4416ff95371822cbc5808fd425323b170cc9 assets/justdirethings/models/item/portal_fluid_catalyst.json
 d8ea68a75b8b49f7765e715d62ad23c2f1939281 assets/justdirethings/models/item/raw_blazegold.json

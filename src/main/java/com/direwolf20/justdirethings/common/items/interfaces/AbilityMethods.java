@@ -9,12 +9,15 @@ import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
 import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,10 +29,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TieredItem;
@@ -47,12 +47,14 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
 import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.*;
 
@@ -471,6 +473,98 @@ public class AbilityMethods {
         return false;
     }
 
+    public static boolean polymorphRandom(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.POLYMORPH_RANDOM)) {
+            int fuelAmt = Config.RANDOM_POLYMORPH_COST.get();
+            if (!FluidContainingItem.hasEnoughFluid(itemStack, fuelAmt))
+                return false;
+            Entity entity = MiscTools.getEntityLookedAt(player, 4);
+            if (entity == null) return false;
+            boolean peaceful = entity.getType().is(JustDireEntityTags.POLYMORPHIC_PEACEFUL);
+            if (!peaceful && !entity.getType().is(JustDireEntityTags.POLYMORPHIC_HOSTILE)) {
+                player.displayClientMessage(Component.translatable("justdirethings.invalidpolymorphentity"), true);
+                return false; //If not peaceful or hostile tagged, return
+            }
+            if (entity instanceof Mob mob) {
+                EntityType<?> newType = getRandomMobTypeByCategory(level, peaceful);
+                if (newType != null) {
+                    // Spawn new mob at the same location
+                    Mob newMob = (Mob) newType.create(level);
+                    if (newMob != null) {
+                        EventHooks.finalizeMobSpawn(newMob, (ServerLevel) level, level.getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.SPAWNER, null);
+
+                        newMob.moveTo(mob.getX(), mob.getY(), mob.getZ(), mob.getYRot(), mob.getXRot());
+                        newMob.setHealth(newMob.getMaxHealth()); // Reset health to maximum
+                        ((ServerLevel) level).addFreshEntityWithPassengers(newMob);
+
+                        if (!newMob.isAddedToLevel())
+                            return false; //If it failed to add for some reason?
+
+                        // Play effects
+                        player.playNotifySound(SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.5F, 0.75F);
+                        ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
+                                mob.getX(), mob.getEyeY(), mob.getZ(),
+                                20, 0.25, 0.2, 0.25, 0);
+
+                        // Remove the old mob
+                        mob.discard();
+
+                        // Damage the tool
+                        FluidContainingItem.consumeFluid(itemStack, fuelAmt);
+                        Helpers.damageTool(itemStack, player, Ability.POLYMORPH_RANDOM);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean polymorphTarget(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.POLYMORPH_TARGET)) {
+            Entity entity = MiscTools.getEntityLookedAt(player, 4);
+            if (entity == null) return false;
+
+            int fuelAmt = Config.TARGET_POLYMORPH_COST.get();
+            if (!FluidContainingItem.hasEnoughFluid(itemStack, fuelAmt))
+                return false;
+
+            if (entity instanceof Mob mob) {
+                if (!itemStack.has(ENTITIYTYPE)) return false;
+                EntityType<?> newType = EntityType.byString(itemStack.get(ENTITIYTYPE)).orElse(null);
+                if (newType == null) return false;
+
+                // Spawn new mob at the same location
+                Mob newMob = (Mob) newType.create(level);
+                if (newMob != null) {
+                    EventHooks.finalizeMobSpawn(newMob, (ServerLevel) level, level.getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.SPAWNER, null);
+
+                    newMob.moveTo(mob.getX(), mob.getY(), mob.getZ(), mob.getYRot(), mob.getXRot());
+                    newMob.setHealth(newMob.getMaxHealth()); // Reset health to maximum
+                    ((ServerLevel) level).addFreshEntity(newMob);
+
+                    if (!newMob.isAddedToLevel())
+                        return false; //If it failed to add for some reason?
+
+                    // Play effects
+                    player.playNotifySound(SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.5F, 0.75F);
+                    ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
+                            mob.getX(), mob.getEyeY(), mob.getZ(),
+                            20, 0.25, 0.2, 0.25, 0);
+
+                    // Remove the old mob
+                    mob.discard();
+
+                    // Damage the tool
+                    FluidContainingItem.consumeFluid(itemStack, fuelAmt);
+                    Helpers.damageTool(itemStack, player, Ability.POLYMORPH_RANDOM);
+                }
+            }
+        }
+        return false;
+    }
+
     public static boolean groundstomp(Level level, Player player, ItemStack itemStack) {
         if (level.isClientSide) return false;
         int currentCooldown = ToggleableTool.getAnyCooldown(itemStack, Ability.GROUNDSTOMP);
@@ -660,6 +754,14 @@ public class AbilityMethods {
 
     public static void clearStupefyTargets(ItemStack itemStack) {
         itemStack.set(JustDireDataComponents.STUPEFY_TARGETS, new ArrayList<>());
+    }
+
+    private static EntityType<?> getRandomMobTypeByCategory(Level level, boolean peaceful) {
+        List<EntityType<?>> mobTypes = BuiltInRegistries.ENTITY_TYPE.stream()
+                .filter(type -> peaceful ? type.is(JustDireEntityTags.POLYMORPHIC_PEACEFUL) : type.is(JustDireEntityTags.POLYMORPHIC_HOSTILE))
+                .toList();
+
+        return mobTypes.isEmpty() ? null : mobTypes.get(level.random.nextInt(mobTypes.size()));
     }
 
 }

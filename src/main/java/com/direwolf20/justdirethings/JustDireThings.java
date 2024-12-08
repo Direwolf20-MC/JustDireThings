@@ -9,9 +9,7 @@ import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
 import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
-import com.direwolf20.justdirethings.common.items.FluidCanister;
-import com.direwolf20.justdirethings.common.items.PortalGunV2;
-import com.direwolf20.justdirethings.common.items.TimeWand;
+import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
@@ -136,7 +134,8 @@ public class JustDireThings {
                 Registration.EclipseAlloyHelmet.get(),
                 Registration.CelestigemBow.get(),
                 Registration.EclipseAlloyBow.get(),
-                Registration.TimeWand.get()
+                Registration.TimeWand.get(),
+                Registration.PolymorphicWandV2.get()
         );
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
@@ -168,6 +167,34 @@ public class JustDireThings {
 
                         };
                     }
+                    if (itemStack.getItem() instanceof PolymorphicWand polymorphicWand) {
+                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, polymorphicWand.getMaxMB()) {
+                            @Override
+                            public boolean isFluidValid(int tank, FluidStack stack) {
+                                return stack.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
+                            }
+
+                            @Override
+                            public boolean canFillFluidType(FluidStack fluid) {
+                                return fluid.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
+                            }
+
+                        };
+                    }
+                    if (itemStack.getItem() instanceof PolymorphicWandV2 polymorphicWandv2) {
+                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, polymorphicWandv2.getMaxMB()) {
+                            @Override
+                            public boolean isFluidValid(int tank, FluidStack stack) {
+                                return stack.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
+                            }
+
+                            @Override
+                            public boolean canFillFluidType(FluidStack fluid) {
+                                return fluid.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
+                            }
+
+                        };
+                    }
                     if (itemStack.getItem() instanceof FluidCanister fluidCanister) {
                         return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, fluidCanister.getMaxMB());
                     }
@@ -175,7 +202,9 @@ public class JustDireThings {
                 },
                 Registration.PortalGunV2.get(),
                 Registration.FluidCanister.get(),
-                Registration.TimeWand.get()
+                Registration.TimeWand.get(),
+                Registration.PolymorphicWand.get(),
+                Registration.PolymorphicWandV2.get()
         );
 
         //Blocks
