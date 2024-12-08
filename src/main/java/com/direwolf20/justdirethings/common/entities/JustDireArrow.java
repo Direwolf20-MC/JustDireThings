@@ -176,10 +176,14 @@ public class JustDireArrow extends AbstractArrow {
     }
 
     public boolean isHostileEntity(LivingEntity entity) {
-        if (getTargetAngry()) return true;
+        if (getTargetAngry())
+            return true;
         if (entity instanceof NeutralMob) {
-            setTargetAngry(true);
-            return ((NeutralMob) entity).isAngry();
+            if (((NeutralMob) entity).isAngry()) {
+                setTargetAngry(true);
+                return true;
+            }
+            return false;
         }
         if (entity instanceof Enemy) {
             return true;
