@@ -93,6 +93,10 @@ public class Config {
     public static final String CATEGORY_POLYMORPHIC_WAND = "polymorphic_wand";
     public static ModConfigSpec.IntValue POLYMORPHIC_WAND_MAX_FLUID;
     public static ModConfigSpec.IntValue RANDOM_POLYMORPH_COST;
+    public static ModConfigSpec.IntValue POLYMORPHIC_WAND_V2_MAX_FLUID;
+    public static ModConfigSpec.IntValue TARGET_POLYMORPH_COST;
+    public static ModConfigSpec.IntValue POLYMORPHIC_WAND_V2_FE_CAPACITY;
+    public static ModConfigSpec.IntValue POLYMORPHIC_WAND_V2_FE_COST;
 
     public static void register(ModContainer container) {
         //registerServerConfigs(container);
@@ -275,6 +279,14 @@ public class Config {
                 .defineInRange("polymorphic_wand_fluid_cost", 100, 1, Integer.MAX_VALUE);
         POLYMORPHIC_WAND_MAX_FLUID = COMMON_BUILDER.comment("The amount of fluid the Polymorphic Wand can hold")
                 .defineInRange("polymorphic_wand_max_fluid", 2000, 1, Integer.MAX_VALUE);
+        POLYMORPHIC_WAND_V2_FE_COST = COMMON_BUILDER.comment("The FE cost to use the Advanced Polymorphic Wand")
+                .defineInRange("polymorphic_wand_v2_fe_cost", 50000, 1, Integer.MAX_VALUE);
+        POLYMORPHIC_WAND_V2_FE_CAPACITY = COMMON_BUILDER.comment("The amount of FE the Advanced Polymorphic Wand can hold")
+                .defineInRange("polymorphic_wand_v2_fe_capacity", 1000000, 1, Integer.MAX_VALUE);
+        TARGET_POLYMORPH_COST = COMMON_BUILDER.comment("The polymorphic fluid cost to use the Advanced Polymorphic Wand")
+                .defineInRange("polymorphic_wand_v2_fluid_cost", 250, 1, Integer.MAX_VALUE);
+        POLYMORPHIC_WAND_V2_MAX_FLUID = COMMON_BUILDER.comment("The amount of fluid the Advanced Polymorphic Wand can hold")
+                .defineInRange("polymorphic_wand_v2_max_fluid", 8000, 1, Integer.MAX_VALUE);
         COMMON_BUILDER.pop();
     }
 

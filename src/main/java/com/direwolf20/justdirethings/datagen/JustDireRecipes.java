@@ -464,6 +464,16 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_blazegold_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.BlazegoldIngot.get()))
                 .save(consumer);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.PolymorphicWandV2.get())
+                .pattern("  b")
+                .pattern(" r ")
+                .pattern("i  ")
+                .define('i', Registration.Celestigem.get())
+                .define('r', Registration.PolymorphicWand.get())
+                .define('b', Registration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
+                .save(consumer);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.TimeWand.get())
                 .pattern(" bt")
                 .pattern(" ib")

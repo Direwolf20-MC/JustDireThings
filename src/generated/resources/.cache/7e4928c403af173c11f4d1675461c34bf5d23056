@@ -1,4 +1,4 @@
-// 1.21.1	2024-12-07T15:14:23.6887728	Tags for minecraft:entity_type mod id justdirethings
+// 1.21.1	2024-12-08T14:36:24.946453	Tags for minecraft:entity_type mod id justdirethings
 b7ee8eaecff151e619b9a22ecae620a5b3ce15a0 data/c/tags/entity_type/teleporting_not_supported.json
 e00f2931577049b9a4400a87ed9c249373be376c data/justdirethings/tags/entity_type/creature_catcher_deny.json
 669025814936e708d42d9d0a5b88c11e62cf12ef data/justdirethings/tags/entity_type/no_ai_deny.json
@@ -7,4 +7,5 @@ b7ee8eaecff151e619b9a22ecae620a5b3ce15a0 data/justdirethings/tags/entity_type/pa
 b7ee8eaecff151e619b9a22ecae620a5b3ce15a0 data/justdirethings/tags/entity_type/paradox_deny.json
 263995270039da950f2e27b535f1b7c71a5f5423 data/justdirethings/tags/entity_type/polymorphic_hostile.json
 d53ddb5be22b17ec02beda6e2e3695f074abc70f data/justdirethings/tags/entity_type/polymorphic_peaceful.json
+669025814936e708d42d9d0a5b88c11e62cf12ef data/justdirethings/tags/entity_type/polymorphic_target_deny.json
 6a890ea62d03cc1110fa8d1fe5a0669082d9d96b data/minecraft/tags/entity_type/arrows.json

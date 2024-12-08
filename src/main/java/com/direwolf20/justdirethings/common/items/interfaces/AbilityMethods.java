@@ -54,6 +54,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
 import static com.direwolf20.justdirethings.common.items.interfaces.Helpers.*;
 import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.*;
 
@@ -491,7 +492,7 @@ public class AbilityMethods {
                     // Spawn new mob at the same location
                     Mob newMob = (Mob) newType.create(level);
                     if (newMob != null) {
-                        EventHooks.finalizeMobSpawn(mob, (ServerLevel) level, level.getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.SPAWNER, null);
+                        EventHooks.finalizeMobSpawn(newMob, (ServerLevel) level, level.getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.SPAWNER, null);
 
                         newMob.moveTo(mob.getX(), mob.getY(), mob.getZ(), mob.getYRot(), mob.getXRot());
                         newMob.setHealth(newMob.getMaxHealth()); // Reset health to maximum
@@ -514,10 +515,51 @@ public class AbilityMethods {
                         Helpers.damageTool(itemStack, player, Ability.POLYMORPH_RANDOM);
                     }
                 }
+            }
+        }
+        return false;
+    }
 
-                //player.playNotifySound(SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.5F, 0.75F);
-                //((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
-                //Helpers.damageTool(itemStack, player, Ability.POLYMORPH_RANDOM);
+    public static boolean polymorphTarget(Level level, Player player, ItemStack itemStack) {
+        if (level.isClientSide) return false;
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.POLYMORPH_TARGET)) {
+            Entity entity = MiscTools.getEntityLookedAt(player, 4);
+            if (entity == null) return false;
+
+            int fuelAmt = Config.TARGET_POLYMORPH_COST.get();
+            if (!FluidContainingItem.hasEnoughFluid(itemStack, fuelAmt))
+                return false;
+
+            if (entity instanceof Mob mob) {
+                if (!itemStack.has(ENTITIYTYPE)) return false;
+                EntityType<?> newType = EntityType.byString(itemStack.get(ENTITIYTYPE)).orElse(null);
+                if (newType == null) return false;
+
+                // Spawn new mob at the same location
+                Mob newMob = (Mob) newType.create(level);
+                if (newMob != null) {
+                    EventHooks.finalizeMobSpawn(newMob, (ServerLevel) level, level.getCurrentDifficultyAt(player.blockPosition()), MobSpawnType.SPAWNER, null);
+
+                    newMob.moveTo(mob.getX(), mob.getY(), mob.getZ(), mob.getYRot(), mob.getXRot());
+                    newMob.setHealth(newMob.getMaxHealth()); // Reset health to maximum
+                    ((ServerLevel) level).addFreshEntity(newMob);
+
+                    if (!newMob.isAddedToLevel())
+                        return false; //If it failed to add for some reason?
+
+                    // Play effects
+                    player.playNotifySound(SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.PLAYERS, 0.5F, 0.75F);
+                    ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
+                            mob.getX(), mob.getEyeY(), mob.getZ(),
+                            20, 0.25, 0.2, 0.25, 0);
+
+                    // Remove the old mob
+                    mob.discard();
+
+                    // Damage the tool
+                    FluidContainingItem.consumeFluid(itemStack, fuelAmt);
+                    Helpers.damageTool(itemStack, player, Ability.POLYMORPH_RANDOM);
+                }
             }
         }
         return false;

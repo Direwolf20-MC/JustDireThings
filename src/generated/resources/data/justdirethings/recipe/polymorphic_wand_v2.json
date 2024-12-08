@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": {
+      "item": "justdirethings:eclipsealloy_ingot"
+    },
+    "i": {
+      "item": "justdirethings:celestigem"
+    },
+    "r": {
+      "item": "justdirethings:polymorphic_wand"
+    }
+  },
+  "pattern": [
+    "  b",
+    " r ",
+    "i  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "justdirethings:polymorphic_wand_v2"
+  }
+}

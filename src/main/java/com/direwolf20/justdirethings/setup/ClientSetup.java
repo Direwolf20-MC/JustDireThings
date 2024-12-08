@@ -198,6 +198,7 @@ public class ClientSetup {
         event.register(Registration.PortalGunV2.get(), new FluidbarDecorator());
         event.register(Registration.FluidCanister.get(), new FluidbarDecorator());
         event.register(Registration.PolymorphicWand.get(), new FluidbarDecorator());
+        event.register(Registration.PolymorphicWandV2.get(), new FluidbarDecorator());
     }
 
     @SubscribeEvent

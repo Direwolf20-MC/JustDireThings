@@ -519,6 +519,7 @@ public class Registration {
     public static final DeferredHolder<Item, CelestigemBow> CelestigemBow = BOWS.register("bow_celestigem", CelestigemBow::new);
     public static final DeferredHolder<Item, EclipseAlloyBow> EclipseAlloyBow = BOWS.register("bow_eclipsealloy", EclipseAlloyBow::new);
     public static final DeferredHolder<Item, PolymorphicWand> PolymorphicWand = ITEMS.register("polymorphic_wand", PolymorphicWand::new);
+    public static final DeferredHolder<Item, PolymorphicWandV2> PolymorphicWandV2 = ITEMS.register("polymorphic_wand_v2", PolymorphicWandV2::new);
 
     //Items - Tools
     public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);

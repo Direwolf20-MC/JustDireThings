@@ -28,6 +28,7 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
     public static final TagKey<EntityType<?>> PARADOX_ABSORB_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
     public static final TagKey<EntityType<?>> POLYMORPHIC_PEACEFUL = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_peaceful"));
     public static final TagKey<EntityType<?>> POLYMORPHIC_HOSTILE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_hostile"));
+    public static final TagKey<EntityType<?>> POLYMORPHIC_TARGET_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_target_deny"));
 
     @Override
     public void addTags(HolderLookup.Provider lookupProvider) {
@@ -122,6 +123,10 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
                 EntityType.PHANTOM,
                 EntityType.PILLAGER
         );
+        tag(POLYMORPHIC_TARGET_DENY)
+                .add(EntityType.ENDER_DRAGON)
+                .add(EntityType.WITHER)
+                .add(EntityType.WARDEN);
 
     }
 }

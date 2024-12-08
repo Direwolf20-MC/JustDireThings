@@ -1,6 +1,8 @@
 package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.common.items.PolymorphicWand;
+import com.direwolf20.justdirethings.common.items.PolymorphicWandV2;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
@@ -21,6 +23,7 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerDestroyItemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -109,5 +112,12 @@ public class PlayerEvents {
         }
         if (targetSpeed != event.getNewSpeed())
             event.setNewSpeed(targetSpeed);
+    }
+
+    @SubscribeEvent
+    public static void CancelEntityInteraction(PlayerInteractEvent.EntityInteract event) {
+        ItemStack itemStack = event.getItemStack();
+        if (itemStack.getItem() instanceof PolymorphicWand || itemStack.getItem() instanceof PolymorphicWandV2)
+            event.setCanceled(true);
     }
 }
