@@ -18,8 +18,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -46,6 +44,7 @@ public class JustDireArrow extends AbstractArrow {
     private static final EntityDataAccessor<Float> ORIGINAL_VELOCITY = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> IS_EPIC_ARROW = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_PHASE = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> IS_TARGET_ANGRY = SynchedEntityData.defineId(JustDireArrow.class, EntityDataSerializers.BOOLEAN);
 
     private enum ArrowState {
         NORMAL,
@@ -126,6 +125,10 @@ public class JustDireArrow extends AbstractArrow {
         this.entityData.set(IS_PHASE, phase);
     }
 
+    public void setTargetAngry(boolean angry) {
+        this.entityData.set(IS_TARGET_ANGRY, angry);
+    }
+
     public boolean isPhase() {
         return this.entityData.get(IS_PHASE);
     }
@@ -151,6 +154,10 @@ public class JustDireArrow extends AbstractArrow {
         return this.entityData.get(HOSTILE_ONLY);
     }
 
+    public boolean getTargetAngry() {
+        return this.entityData.get(IS_TARGET_ANGRY);
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder p_326324_) {
         super.defineSynchedData(p_326324_);
@@ -165,10 +172,13 @@ public class JustDireArrow extends AbstractArrow {
         p_326324_.define(IS_EPIC_ARROW, false);
         p_326324_.define(IS_PHASE, false);
         p_326324_.define(HOSTILE_ONLY, true);
+        p_326324_.define(IS_TARGET_ANGRY, false);
     }
 
-    public static boolean isHostileEntity(LivingEntity entity) {
+    public boolean isHostileEntity(LivingEntity entity) {
+        if (getTargetAngry()) return true;
         if (entity instanceof NeutralMob) {
+            setTargetAngry(true);
             return ((NeutralMob) entity).isAngry();
         }
         if (entity instanceof Enemy) {

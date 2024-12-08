@@ -104,7 +104,7 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
                 justDireArrow.setHoming(true);
                 Helpers.damageTool(itemStack, livingEntity, Ability.HOMING);
                 boolean hostileOnly = ToggleableTool.getCustomSetting(itemStack, Ability.HOMING.getName()) == 0;
-                LivingEntity aimedAtEntity = findAimedAtEntity(livingEntity, hostileOnly);
+                LivingEntity aimedAtEntity = findAimedAtEntity(livingEntity, hostileOnly, justDireArrow);
                 if (aimedAtEntity != null)
                     justDireArrow.setTargetEntity(aimedAtEntity);
                 justDireArrow.setHostileOnly(hostileOnly);
@@ -160,7 +160,7 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
         return super.createProjectile(level, livingEntity, itemStack, stack, crit);
     }
 
-    public LivingEntity findAimedAtEntity(LivingEntity livingEntity, boolean onlyHostile) {
+    public LivingEntity findAimedAtEntity(LivingEntity livingEntity, boolean onlyHostile, JustDireArrow justDireArrow) {
         double range = 50;
         Vec3 startVec = livingEntity.getEyePosition(1.0F);
         Vec3 lookVec = livingEntity.getViewVector(1.0F);
@@ -181,7 +181,7 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
 
         for (Entity entity : entities) {
             if (entity instanceof LivingEntity livingEntity1) {
-                if (onlyHostile && !JustDireArrow.isHostileEntity(livingEntity1)) {
+                if (onlyHostile && !justDireArrow.isHostileEntity(livingEntity1)) {
                     continue;  // Skip non-hostile entities if onlyHostile is true
                 }
                 AABB entityBoundingBox = entity.getBoundingBox().inflate(entity.getPickRadius());
