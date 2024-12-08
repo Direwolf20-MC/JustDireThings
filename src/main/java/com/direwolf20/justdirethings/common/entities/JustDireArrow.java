@@ -15,11 +15,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.axolotl.Axolotl;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
@@ -170,11 +168,11 @@ public class JustDireArrow extends AbstractArrow {
     }
 
     public static boolean isHostileEntity(LivingEntity entity) {
-        if (entity instanceof Monster) {
-            return true;
+        if (entity instanceof NeutralMob) {
+            return ((NeutralMob) entity).isAngry();
         }
-        if (entity instanceof ZombifiedPiglin) {
-            return ((ZombifiedPiglin) entity).isAngry();
+        if (entity instanceof Enemy) {
+            return true;
         }
         return false;
     }
