@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +22,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.List;
+import java.util.Set;
 
 public class PolymorphicWand extends BaseToggleableTool implements LeftClickableTool, FluidContainingItem {
     public PolymorphicWand() {
@@ -47,6 +49,18 @@ public class PolymorphicWand extends BaseToggleableTool implements LeftClickable
                 return InteractionResult.SUCCESS;
         }
         return super.useOn(pContext);
+    }
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+        Level level = player.level();
+        if (level.isClientSide) return true;
+        ItemStack itemStack = player.getMainHandItem();
+        Set<Ability> abilities = LeftClickableTool.getLeftClickList(itemStack);
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && !abilities.isEmpty()) {
+            toggleableTool.useAbility(player.level(), player, InteractionHand.MAIN_HAND, false);
+        }
+        return true;
     }
 
     @Override
