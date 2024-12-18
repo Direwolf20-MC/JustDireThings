@@ -27,7 +27,7 @@ public class InventoryHolderBER extends AreaAffectingBER {
     public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
         if (blockentity instanceof InventoryHolderBE inventoryHolderBE && inventoryHolderBE.renderPlayer) {
             // Create a fake player entity
-            if (mockPlayer == null || mockPlayer.getUUID() != inventoryHolderBE.placedByUUID)
+            if (mockPlayer == null || !mockPlayer.getUUID().equals(inventoryHolderBE.placedByUUID))
                 mockPlayer = createMockPlayer(inventoryHolderBE);
             if (mockPlayer == null) return;
             mockPlayer.yHeadRot = 0;
