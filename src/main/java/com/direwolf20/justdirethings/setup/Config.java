@@ -8,6 +8,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Config {
@@ -98,6 +99,11 @@ public class Config {
     public static ModConfigSpec.IntValue POLYMORPHIC_WAND_V2_FE_CAPACITY;
     public static ModConfigSpec.IntValue POLYMORPHIC_WAND_V2_FE_COST;
 
+    public static final String CATEGORY_PLAYER_ACCESSOR = "player_accessor";
+    public static ModConfigSpec.BooleanValue PLAYER_ACCESSOR_DIMENSIONAL_BLACKLISTING;
+    public static ModConfigSpec.IntValue PLAYER_ACCESSOR_VALIDATION_TIME;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> PLAYER_ACCESSOR_BLACKLISTED_DIMENSIONS;
+
     public static void register(ModContainer container) {
         //registerServerConfigs(container);
         registerCommonConfigs(container);
@@ -122,6 +128,7 @@ public class Config {
         timeWandConfig();
         polymorphWandConfig();
         paradoxConfig();
+        playerAccessorConfig();
         COMMON_CONFIG = COMMON_BUILDER.build();
         container.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
     }
@@ -316,6 +323,22 @@ public class Config {
                 .defineInRange("paradox_energy_max", 100, 0, Double.MAX_VALUE);
         PARADOX_RESTRICTED_MOBS = COMMON_BUILDER.comment("Use a more restrictive data filtering for mobs cloned by the paradox machine. When enabled, most modded mobs may not work very well.  When disabled, theres a small chance of item dupe bugs.  Recommended to leave this set to false, and add any mobs that allow dupes to the paradox machines deny entity tag.")
                 .define("paradox_restricted_mobs", false);
+        COMMON_BUILDER.pop();
+    }
+
+    private static void playerAccessorConfig() {
+        COMMON_BUILDER.comment("Player Accessor").push(CATEGORY_PLAYER_ACCESSOR);
+        PLAYER_ACCESSOR_DIMENSIONAL_BLACKLISTING = COMMON_BUILDER.comment("Will you be blacklisting dimensions? If set to false, the Blacklist Dimensions list will not function.")
+                .define("player_accessor_dimensional_blacklisting", false);
+        PLAYER_ACCESSOR_VALIDATION_TIME = COMMON_BUILDER.comment("The frequency with which the player accessor validates the player - the longer this is set to, the longer the player can be accessed in a blacklisted dimension.")
+                .defineInRange("player_accessor_validation_time", 100, 0, 5000);
+        PLAYER_ACCESSOR_BLACKLISTED_DIMENSIONS = COMMON_BUILDER
+                .comment("A list of dimension names to blacklist for the Player Accessor feature.")
+                .defineListAllowEmpty("player_accessor_blacklisted_dimensions",
+                        List.of(), // Default value is an empty list
+                        () -> "",  // Supplier for new elements in the UI
+                        obj -> obj instanceof String); // Validate that all entries are strings
+
         COMMON_BUILDER.pop();
     }
 }

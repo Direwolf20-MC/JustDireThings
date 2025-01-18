@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.containers.handlers.PlayerHandler;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class PlayerAccessorBE extends BaseMachineBE {
     public ServerPlayer serverPlayer;
@@ -21,7 +23,7 @@ public class PlayerAccessorBE extends BaseMachineBE {
 
     public PlayerAccessorBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
-        tickSpeed = 100; //This controls how often validatePlayer() runs.  Don't worry if the player leaves before this checks, because the itemhandler will prevent insertion if they do!
+        tickSpeed = Config.PLAYER_ACCESSOR_VALIDATION_TIME.get(); //This controls how often validatePlayer() runs.  Don't worry if the player leaves before this checks, because the itemhandler will prevent insertion if they do!
     }
 
     @Override
@@ -53,10 +55,22 @@ public class PlayerAccessorBE extends BaseMachineBE {
     }
 
     /**
+     * Check if the player is in an invalid dimension.
+     */
+    public boolean isValidDim(ServerPlayer serverPlayer) {
+        if (serverPlayer == null || serverPlayer.isRemoved())
+            return false;
+        if (Config.PLAYER_ACCESSOR_DIMENSIONAL_BLACKLISTING.isFalse())
+            return true;
+        List<? extends String> blacklist = Config.PLAYER_ACCESSOR_BLACKLISTED_DIMENSIONS.get();
+        return !blacklist.contains(serverPlayer.level().dimension().location().toString());
+    }
+
+    /**
      * Clear the caches, and re-locate the player object if necessary (Like player logged out, etc)
      */
     public void validatePlayer() {
-        if (getServerPlayer() != null && serverPlayer.isRemoved()) {
+        if (getServerPlayer() != null && (serverPlayer.isRemoved() || !isValidDim(serverPlayer))) {
             clearCache();
         }
     }
@@ -77,6 +91,10 @@ public class PlayerAccessorBE extends BaseMachineBE {
         //System.out.println("Updating Player");
         checkedPlayer = true;
         if (this.placedByUUID == null) {
+            serverPlayer = null;
+            return;
+        }
+        if (!isValidDim(level.getServer().getPlayerList().getPlayer(this.placedByUUID))) {
             serverPlayer = null;
             return;
         }
