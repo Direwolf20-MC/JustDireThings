@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -113,5 +114,24 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
         this.strongSignal = tag.getBoolean("strongSignal");
         super.loadAdditional(tag, provider);
         loadBlockStateProperties(tag.getCompound("blockStateProps")); //Do this after the filter data comes in, so we know the itemstack in the filter
+    }
+
+    private int getEntityAmount(List<Entity> entityList) {
+        int entityAmount = entityList.size();
+
+        if (!entityList.isEmpty() && entityList.getFirst() instanceof ItemEntity) {
+            entityAmount = 0;
+            for (Entity entity : entityList) {
+                ItemEntity itemEntity = (ItemEntity) entity;
+                entityAmount += itemEntity.getItem().getCount();
+            }
+        }
+        return entityAmount;
+    }
+
+    @Override
+    public boolean senseEntity(List<Entity> entityList) {
+        int entityAmount = getEntityAmount(entityList);
+        return checkCount(entityAmount);
     }
 }
