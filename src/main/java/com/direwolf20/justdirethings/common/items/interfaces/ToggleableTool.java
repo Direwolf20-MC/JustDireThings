@@ -486,7 +486,6 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     default boolean bindDrops(UseOnContext pContext) {
-        if (pContext.getLevel().isClientSide) return true;
         Player player = pContext.getPlayer();
         if (player == null) return false;
         if (!player.isShiftKeyDown()) return false;
@@ -499,6 +498,7 @@ public interface ToggleableTool extends ToggleableItem {
         if (blockEntity == null) return false;
         IItemHandler handler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK, pPos, pContext.getClickedFace());
         if (handler == null) return false;
+        if (pContext.getLevel().isClientSide) return true;
         NBTHelpers.BoundInventory boundInventory = ToggleableTool.getBoundInventory(pStack);
         NBTHelpers.BoundInventory newBind = new NBTHelpers.BoundInventory(GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace());
         if (boundInventory != null && boundInventory.equals(newBind)) {
