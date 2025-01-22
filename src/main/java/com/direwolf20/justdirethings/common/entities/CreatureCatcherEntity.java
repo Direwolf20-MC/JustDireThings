@@ -227,6 +227,8 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
             return false;
         if (entity.getType().is(JustDireEntityTags.CREATURE_CATCHER_DENY))
             return false;
+        if (!entity.save(new CompoundTag()))
+            return false;
         return true;
     }
 
