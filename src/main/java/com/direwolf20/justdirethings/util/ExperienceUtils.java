@@ -10,7 +10,8 @@ public class ExperienceUtils {
         } else if (level <= 31) {
             return (int) (2.5 * level * level - 40.5 * level + 360);
         } else {
-            return (int) (4.5 * level * level - 162.5 * level + 2220);
+            long totalXp = (long) (4.5 * level * level - 162.5 * level + 2220);
+            return (int) Math.min(totalXp, Integer.MAX_VALUE);
         }
     }
 
@@ -53,8 +54,8 @@ public class ExperienceUtils {
     // Calculate total experience points player currently has (given level and progress)
     public static int getPlayerTotalExperience(Player player) {
         int exp = getTotalExperienceForLevel(player.experienceLevel);
-        exp += Math.round(player.experienceProgress * player.getXpNeededForNextLevel());
-        return exp;
+        long totalXp = (long) exp + (long) Math.round(player.experienceProgress * player.getXpNeededForNextLevel());
+        return (int) Math.min(totalXp, Integer.MAX_VALUE);
     }
 
     public static int getExpNeededForNextLevel(Player player) {
