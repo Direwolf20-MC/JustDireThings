@@ -269,7 +269,7 @@ public class AbilityMethods {
         int multiplier = ToggleableTool.getToolValue(itemStack, Ability.AIRBURST.getName());
         if (testUseTool(itemStack, Ability.AIRBURST, multiplier) < 0)
             return false;
-        if (!level.isClientSide) {
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             // Get the player's looking direction as a vector
             Vec3 lookDirection = player.getViewVector(1.0F);
             // Define the strength of the burst, adjust this value to change how strong the burst should be
@@ -277,7 +277,7 @@ public class AbilityMethods {
             double burstStrength = 1.5 + addedStrength;
             // Set the player's motion based on the look direction and burst strength
             player.setDeltaMovement(lookDirection.x * burstStrength, lookDirection.y * burstStrength, lookDirection.z * burstStrength);
-            ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
+            serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(player));
             //player.hurtMarked = true; //This tells the server to move the client
             player.resetFallDistance();
             // Optionally, you could add some effects or sounds here
