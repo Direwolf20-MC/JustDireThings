@@ -26,6 +26,11 @@ public class ExperienceHolderFluidTank extends FluidTank {
         return Math.min(experienceHolderBE.exp * 20, getCapacity());
     }
 
+    @Override
+    public FluidStack getFluid() {
+        return new FluidStack(Registration.XP_FLUID_SOURCE.get(), getFluidAmount());
+    }
+
     public int getCapacity() {
         return Integer.MAX_VALUE;
     }
