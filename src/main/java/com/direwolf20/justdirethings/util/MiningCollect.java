@@ -103,6 +103,7 @@ public class MiningCollect {
         }
         if (!tool.isCorrectToolForDrops(blockState))
             return false;
+        if (blockState.getDestroySpeed(level, pos) < 0) return false;
         return true;
     }
 }
