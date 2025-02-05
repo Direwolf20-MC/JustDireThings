@@ -104,6 +104,12 @@ public class Config {
     public static ModConfigSpec.IntValue PLAYER_ACCESSOR_VALIDATION_TIME;
     public static ModConfigSpec.ConfigValue<List<? extends String>> PLAYER_ACCESSOR_BLACKLISTED_DIMENSIONS;
 
+    public static final String CATEGORY_TIME_CRYSTAL = "time_crystal";
+    public static ModConfigSpec.BooleanValue TIME_CRYSTAL_CUSTOM_DIMENSIONS;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> TIME_CRYSTAL_STAGE1_DIMENSIONS;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> TIME_CRYSTAL_STAGE2_DIMENSIONS;
+    public static ModConfigSpec.ConfigValue<List<? extends String>> TIME_CRYSTAL_STAGE3_DIMENSIONS;
+
     public static void register(ModContainer container) {
         //registerServerConfigs(container);
         registerCommonConfigs(container);
@@ -129,6 +135,7 @@ public class Config {
         polymorphWandConfig();
         paradoxConfig();
         playerAccessorConfig();
+        timeCrystalConfig();
         COMMON_CONFIG = COMMON_BUILDER.build();
         container.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
     }
@@ -335,6 +342,32 @@ public class Config {
         PLAYER_ACCESSOR_BLACKLISTED_DIMENSIONS = COMMON_BUILDER
                 .comment("A list of dimension names to blacklist for the Player Accessor feature.")
                 .defineListAllowEmpty("player_accessor_blacklisted_dimensions",
+                        List.of(), // Default value is an empty list
+                        () -> "",  // Supplier for new elements in the UI
+                        obj -> obj instanceof String); // Validate that all entries are strings
+
+        COMMON_BUILDER.pop();
+    }
+
+    private static void timeCrystalConfig() {
+        COMMON_BUILDER.comment("Time Crystals").push(CATEGORY_TIME_CRYSTAL);
+        TIME_CRYSTAL_CUSTOM_DIMENSIONS = COMMON_BUILDER.comment("Do you want to customize Time Crystal Growth Dimensions? If set to true, the following 3 fields MUST be populated. Don't leave any blank! Defaults to false, which means normal growth rules occur - Stage 1 = Overworld (or any other dimension besides Nether/End), Stage 2 = Nether, Stage 3 = End.")
+                .define("time_crystal_custom_dimensions", false);
+        TIME_CRYSTAL_STAGE1_DIMENSIONS = COMMON_BUILDER
+                .comment("A list of dimensions that Time Crystals can Advance to Stage 1 in.")
+                .defineListAllowEmpty("time_crystal_stage_1_dims",
+                        List.of(), // Default value is an empty list
+                        () -> "",  // Supplier for new elements in the UI
+                        obj -> obj instanceof String); // Validate that all entries are strings
+        TIME_CRYSTAL_STAGE2_DIMENSIONS = COMMON_BUILDER
+                .comment("A list of dimensions that Time Crystals can Advance to Stage 2 in.")
+                .defineListAllowEmpty("time_crystal_stage_2_dims",
+                        List.of(), // Default value is an empty list
+                        () -> "",  // Supplier for new elements in the UI
+                        obj -> obj instanceof String); // Validate that all entries are strings
+        TIME_CRYSTAL_STAGE3_DIMENSIONS = COMMON_BUILDER
+                .comment("A list of dimensions that Time Crystals can Advance to Stage 3 in.")
+                .defineListAllowEmpty("time_crystal_stage_3_dims",
                         List.of(), // Default value is an empty list
                         () -> "",  // Supplier for new elements in the UI
                         obj -> obj instanceof String); // Validate that all entries are strings
