@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.common.blocks.resources;
 
 import com.direwolf20.justdirethings.client.particles.glitterparticle.GlitterParticleData;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
 
+import java.util.List;
 import java.util.Random;
 
 public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
@@ -46,6 +48,26 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
         return InteractionResult.SUCCESS;
     }*/
 
+    public int canAdvanceToCustom(Level level, BlockState state) {
+        int stage = state.getValue(STAGE);
+        if (stage == 0) {
+            List<? extends String> allowedDims = Config.TIME_CRYSTAL_STAGE1_DIMENSIONS.get();
+            if (allowedDims.contains(level.dimension().location().toString()))
+                return 1;
+        }
+        if (stage == 1) {
+            List<? extends String> allowedDims = Config.TIME_CRYSTAL_STAGE2_DIMENSIONS.get();
+            if (allowedDims.contains(level.dimension().location().toString()))
+                return 2;
+        }
+        if (stage == 2) {
+            List<? extends String> allowedDims = Config.TIME_CRYSTAL_STAGE3_DIMENSIONS.get();
+            if (allowedDims.contains(level.dimension().location().toString()))
+                return 3;
+        }
+        return -1;
+    }
+
     public int canAdvanceTo(Level level, BlockState state) {
         int stage = state.getValue(STAGE);
         if (stage == 0 && (level.dimension() != Level.NETHER && level.dimension() != Level.END))
@@ -65,7 +87,7 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         int stage = state.getValue(STAGE);
-        int advanceTo = canAdvanceTo(level, state);
+        int advanceTo = Config.TIME_CRYSTAL_CUSTOM_DIMENSIONS.isTrue() ? canAdvanceToCustom(level, state) : canAdvanceTo(level, state);
         if (advanceTo != -1) {
             advance(level, state, pos, advanceTo);
         }
@@ -118,7 +140,7 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
         double d2 = (double) pos.getZ() + 0.5;
 
         float r, g, b;
-        int advanceTo = canAdvanceTo(level, state);
+        int advanceTo = Config.TIME_CRYSTAL_CUSTOM_DIMENSIONS.isTrue() ? canAdvanceToCustom(level, state) : canAdvanceTo(level, state);
         if (advanceTo == -1) return;
         if (advanceTo == 1) {
             r = 0.25f;
