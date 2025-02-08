@@ -111,13 +111,14 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe>
         // catalystlist.add(new ItemStack(Registration.GooBlock_Tier4.get()));
 
         // useful for addons without need to use any mixin
-        List<Holder<Item>> a = BuiltInRegistries.ITEM
+        // also it could be more "tag-less" using an itemstack[] inside the json intend of int value
+        List<Holder<Item>> items = BuiltInRegistries.ITEM
                 .getOrCreateTag(TagKey.create(Registries.ITEM, ResourceLocation
                         .fromNamespaceAndPath(JustDireThings.MODID, "goorecipe_tier/" + recipe.getTierRequirement())))
                 .stream().toList();
 
-        for (Holder<Item> b : a) {
-            catalystlist.add(new ItemStack(b));
+        for (Holder<Item> HolderItem : items) {
+            catalystlist.add(new ItemStack(HolderItem));
         }
 
         builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12).addItemStacks(catalystlist);
