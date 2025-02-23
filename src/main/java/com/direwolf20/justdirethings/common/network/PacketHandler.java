@@ -13,6 +13,7 @@ public class PacketHandler {
         //Going to Server
         registrar.playToServer(AreaAffectingPayload.TYPE, AreaAffectingPayload.STREAM_CODEC, AreaAffectingPacket.get()::handle);
         registrar.playToServer(BlockStateFilterPayload.TYPE, BlockStateFilterPayload.STREAM_CODEC, BlockStateFilterPacket.get()::handle);
+        registrar.playToServer(BreakerPayload.TYPE, BreakerPayload.STREAM_CODEC, BreakerPacket.get()::handle);
         registrar.playToServer(ClickerPayload.TYPE, ClickerPayload.STREAM_CODEC, ClickerPacket.get()::handle);
         registrar.playToServer(CopyMachineSettingsPayload.TYPE, CopyMachineSettingsPayload.STREAM_CODEC, CopyMachineSettingsPacket.get()::handle);
         registrar.playToServer(DirectionSettingPayload.TYPE, DirectionSettingPayload.STREAM_CODEC, DirectionSettingPacket.get()::handle);
