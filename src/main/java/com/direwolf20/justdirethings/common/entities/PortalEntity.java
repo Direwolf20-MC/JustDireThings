@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -18,9 +19,11 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.joml.Quaternionf;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -354,18 +357,42 @@ public class PortalEntity extends Entity {
         } else {
             entityHeightFraction = (entityBB.minY - portalBB.minY) / portalBB.getYsize();
         }
+
+        // Clamp fraction to [0, 1] to avoid out-of-bounds positioning
+        entityHeightFraction = Math.max(0.0, Math.min(1.0, entityHeightFraction));
+
         if (matchingPortal.getDirection().getAxis() == Direction.Axis.Y) {
             if (matchingPortal.getAlignment() == Direction.Axis.X) {
-                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 0.5f);
+                double offset = entityHeightFraction * linkedPortal.getBoundingBox().getXsize();
+                double buffer = entityBB.getXsize() / 2 + Shapes.EPSILON;
+                // Don't collide in wall next to top/bottom of floor/ceiling portal
+                offset = Mth.clamp(offset, buffer, linkedPortal.getBoundingBox().getXsize() - buffer);
+                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + offset, linkedPortal.getY(), linkedPortal.getZ());
             } else {
-                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 0.5f);
+                double offset = entityHeightFraction * linkedPortal.getBoundingBox().getZsize();
+                double buffer = entityBB.getZsize() / 2 + Shapes.EPSILON;
+                // Don't collide in wall next to top/bottom of floor/ceiling portal
+                offset = Mth.clamp(offset, buffer, linkedPortal.getBoundingBox().getZsize() - buffer);
+                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + offset);
             }
         } else {
-            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 0.5f);
+            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ());
         }
 
-        if (linkedPortal.getDirection() == Direction.DOWN)
-            teleportTo = teleportTo.relative(Direction.DOWN, 1f);
+        // Move to 'side' of portal (except for portals facing up, where it would give us extra velocity)
+        if (linkedPortal.getDirection() == Direction.DOWN) {
+            teleportTo = teleportTo.relative(Direction.DOWN, entityBB.getYsize());
+        } else if (linkedPortal.getDirection() != Direction.UP) {
+            if (linkedPortal.getDirection().getAxis() == Direction.Axis.X) {
+                teleportTo = teleportTo.relative(linkedPortal.getDirection(), linkedPortal.getBoundingBox().getXsize() / 2 + entityBB.getXsize() / 2);
+            } else if (linkedPortal.getDirection().getAxis() == Direction.Axis.Z) {
+                teleportTo = teleportTo.relative(linkedPortal.getDirection(), linkedPortal.getBoundingBox().getZsize() / 2 + entityBB.getZsize() / 2);
+            }
+        }
+
+        // Don't immediately collide again
+        teleportTo = teleportTo.relative(linkedPortal.getDirection(), Shapes.EPSILON);
+
         return teleportTo;
     }
 
@@ -399,14 +426,13 @@ public class PortalEntity extends Entity {
         if (getLinkedPortal() != null) {
             Vec3 teleportTo = getTeleportTo(entity, linkedPortal);
             // Adjust the entity's rotation to match the exit portal's direction
-            float newYaw = getYawFromDirection(linkedPortal.getDirection());
-            float newPitch = entity.getXRot(); // Maintain the same pitch
+            Vector2f newLookAngle = transformLookAngle(entity, linkedPortal);
             entity.resetFallDistance();
 
             Vec3 newMotion = calculateVelocity(entity);
 
             // Teleport the entity to the new location and set its rotation
-            boolean success = entity.teleportTo((ServerLevel) linkedPortal.level(), teleportTo.x(), teleportTo.y(), teleportTo.z(), new HashSet<>(), newYaw, newPitch);
+            boolean success = entity.teleportTo((ServerLevel) linkedPortal.level(), teleportTo.x(), teleportTo.y(), teleportTo.z(), new HashSet<>(), newLookAngle.y(), newLookAngle.x());
 
             if (success) {
                 entity.resetFallDistance();
@@ -462,14 +488,89 @@ public class PortalEntity extends Entity {
         return new Vec3(motionVec.x(), motionVec.y(), motionVec.z());
     }
 
-    // Helper method to get the yaw from a direction
-    private float getYawFromDirection(Direction direction) {
+    /**
+     * Adjust the entity's look angle (pitch and yaw) for seamless transitions between portals.
+     *
+     * <p>Transitioning between two 'vertical' portals will keep the vertical look, but transform the horizontal
+     * look. For example, if you enter a portal looking at the portal and 10 degrees to the right, you will
+     * leave the exit portal looking away from the portal and 10 degrees to the right. And if you walk in
+     * backwards, you will walk out looking at the exit portal.</p>
+     *
+     * <p>Transitioning between two 'horizontal' (ceiling/floor) portals, the horizontal look is kept,
+     * but the vertical look is flipped such that if you enter a floor portal looking down at it, you will exit a
+     * ceiling portal looking down out of it, or another floor portal looking up out of it.</p>
+     *
+     * <p>Transitions between vertical and horizontal portals currently leave the look angle untouched.
+     * Similar ideas could be applied to enhance this (albeit with a more complex implementation), but these use cases
+     * are less common, and the lack of seamless angle adjustment is less jarring than with axis aligned pairs.</p>
+     *
+     * @param entity entity
+     * @param destination destination portal
+     * @return adjusted (pitch, yaw)
+     */
+    private Vector2f transformLookAngle(Entity entity, PortalEntity destination) {
+        final Direction myDirection = this.getDirection();
+        final boolean verticalEntry = myDirection.getAxis() != Direction.Axis.Y;
+        final Direction destDirection = destination.getDirection();
+        final boolean verticalExit = destDirection.getAxis() != Direction.Axis.Y;
+        final float entityYaw = entity.getYRot();
+        final float entityPitch = entity.getXRot();
+
+        float newYaw = entityYaw;
+        float newPitch = entityPitch;
+
+        if (verticalEntry && verticalExit) { // Handle vertical-to-vertical portal transitions (N/E/S/W)
+            final float entryFacingYaw = getDirectFacingYaw(myDirection);
+            final float exitAwayYaw = getDirectFacingAwayYaw(destDirection);
+
+            // Calculate deviation from facing the entry portal
+            final float yawDeviation = Mth.wrapDegrees(entityYaw - entryFacingYaw);
+
+            // Apply deviation to the direction facing AWAY from the exit portal
+            newYaw = Mth.wrapDegrees(exitAwayYaw + yawDeviation);
+        } else if (!verticalEntry && !verticalExit) { // Both portals are horizontal (U/D to U/D)
+            // Keep horizontal look
+            newYaw = entityYaw;
+            // If we enter looking at the portal, we should exit looking away (and vice versa)
+            newPitch = myDirection == destDirection ? -entityPitch : entityPitch;
+        }
+
+        // Normalize angles to valid ranges
+        newYaw = Mth.wrapDegrees(newYaw);
+        newPitch = Math.max(-90, Math.min(90, newPitch));
+
+        return new Vector2f(newPitch, newYaw);
+    }
+
+    /**
+     * Returns the yaw for looking directly away from the front of the portal.
+     *
+     * @param direction direction
+     * @return yaw
+     */
+    private static float getDirectFacingAwayYaw(Direction direction) {
         return switch (direction) {
-            case NORTH -> 180.0F;
-            case SOUTH -> 0.0F;
-            case WEST -> 90.0F;
-            case EAST -> -90.0F;
-            default -> 0.0F;
+            case NORTH -> 180;
+            case SOUTH -> 0;
+            case EAST -> -90;
+            case WEST -> 90;
+            default -> 0;
+        };
+    }
+
+    /**
+     * Returns the yaw for looking directly at the front of the portal.
+     *
+     * @param direction direction
+     * @return yaw
+     */
+    private static float getDirectFacingYaw(Direction direction) {
+        return switch (direction) {
+            case NORTH -> 0;
+            case SOUTH -> 180;
+            case EAST -> 90;
+            case WEST -> -90;
+            default -> 0;
         };
     }
 }
