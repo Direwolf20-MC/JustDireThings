@@ -11,13 +11,16 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.joml.Quaternionf;
@@ -354,18 +357,42 @@ public class PortalEntity extends Entity {
         } else {
             entityHeightFraction = (entityBB.minY - portalBB.minY) / portalBB.getYsize();
         }
+
+        // Clamp fraction to [0, 1] to avoid out-of-bounds positioning
+        entityHeightFraction = Math.max(0.0, Math.min(1.0, entityHeightFraction));
+
         if (matchingPortal.getDirection().getAxis() == Direction.Axis.Y) {
             if (matchingPortal.getAlignment() == Direction.Axis.X) {
-                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + entityHeightFraction * linkedPortal.getBoundingBox().getXsize(), linkedPortal.getY(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 0.5f);
+                double offset = entityHeightFraction * linkedPortal.getBoundingBox().getXsize();
+                double buffer = entityBB.getXsize() / 2 + Shapes.EPSILON;
+                // Don't collide in wall next to top/bottom of floor/ceiling portal
+                offset = Mth.clamp(offset, buffer, linkedPortal.getBoundingBox().getXsize() - buffer);
+                teleportTo = new Vec3(linkedPortal.getBoundingBox().minX + offset, linkedPortal.getY(), linkedPortal.getZ());
             } else {
-                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + entityHeightFraction * linkedPortal.getBoundingBox().getZsize()).relative(linkedPortal.getDirection(), 0.5f);
+                double offset = entityHeightFraction * linkedPortal.getBoundingBox().getZsize();
+                double buffer = entityBB.getZsize() / 2 + Shapes.EPSILON;
+                // Don't collide in wall next to top/bottom of floor/ceiling portal
+                offset = Mth.clamp(offset, buffer, linkedPortal.getBoundingBox().getZsize() - buffer);
+                teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getY(), linkedPortal.getBoundingBox().minZ + offset);
             }
         } else {
-            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ()).relative(linkedPortal.getDirection(), 0.5f);
+            teleportTo = new Vec3(linkedPortal.getX(), linkedPortal.getBoundingBox().minY + entityHeightFraction * linkedPortal.getBoundingBox().getYsize(), linkedPortal.getZ());
         }
 
-        if (linkedPortal.getDirection() == Direction.DOWN)
-            teleportTo = teleportTo.relative(Direction.DOWN, 1f);
+        // Move to 'side' of portal (except for portals facing up, where it would give us extra velocity)
+        if (linkedPortal.getDirection() == Direction.DOWN) {
+            teleportTo = teleportTo.relative(Direction.DOWN, entityBB.getYsize());
+        } else if (linkedPortal.getDirection() != Direction.UP) {
+            if (linkedPortal.getDirection().getAxis() == Direction.Axis.X) {
+                teleportTo = teleportTo.relative(linkedPortal.getDirection(), linkedPortal.getBoundingBox().getXsize() / 2 + entityBB.getXsize() / 2);
+            } else if (linkedPortal.getDirection().getAxis() == Direction.Axis.Z) {
+                teleportTo = teleportTo.relative(linkedPortal.getDirection(), linkedPortal.getBoundingBox().getZsize() / 2 + entityBB.getZsize() / 2);
+            }
+        }
+
+        // Don't immediately collide again
+        teleportTo = teleportTo.relative(linkedPortal.getDirection(), Shapes.EPSILON);
+
         return teleportTo;
     }
 
@@ -399,14 +426,13 @@ public class PortalEntity extends Entity {
         if (getLinkedPortal() != null) {
             Vec3 teleportTo = getTeleportTo(entity, linkedPortal);
             // Adjust the entity's rotation to match the exit portal's direction
-            float newYaw = getYawFromDirection(linkedPortal.getDirection());
-            float newPitch = entity.getXRot(); // Maintain the same pitch
+            Vec2 newLookAngle = transformLookAngle(entity, linkedPortal);
             entity.resetFallDistance();
 
             Vec3 newMotion = calculateVelocity(entity);
 
             // Teleport the entity to the new location and set its rotation
-            boolean success = entity.teleportTo((ServerLevel) linkedPortal.level(), teleportTo.x(), teleportTo.y(), teleportTo.z(), new HashSet<>(), newYaw, newPitch);
+            boolean success = entity.teleportTo((ServerLevel) linkedPortal.level(), teleportTo.x(), teleportTo.y(), teleportTo.z(), new HashSet<>(), newLookAngle.y, newLookAngle.x);
 
             if (success) {
                 entity.resetFallDistance();
@@ -462,14 +488,25 @@ public class PortalEntity extends Entity {
         return new Vec3(motionVec.x(), motionVec.y(), motionVec.z());
     }
 
-    // Helper method to get the yaw from a direction
-    private float getYawFromDirection(Direction direction) {
-        return switch (direction) {
-            case NORTH -> 180.0F;
-            case SOUTH -> 0.0F;
-            case WEST -> 90.0F;
-            case EAST -> -90.0F;
-            default -> 0.0F;
-        };
+    /**
+     * Adjust the entity's look angle (pitch and yaw) for seamless transitions between portals.
+     *
+     * @param entity      entity
+     * @param destination destination portal
+     * @return adjusted (xrot, yrot)
+     */
+    private Vec2 transformLookAngle(Entity entity, PortalEntity destination) {
+        final Vec3 newLook = transformMotion(entity.getLookAngle(), getDirection(), destination.getDirection().getOpposite());
+        return toDegrees(newLook);
+    }
+
+    private static Vec2 toDegrees(Vec3 vector) {
+        double x = vector.x;
+        double y = vector.y;
+        double z = vector.z;
+        double hyp = Math.sqrt(x * x + z * z);
+        float xrot = Mth.wrapDegrees((float)(-(Mth.atan2(y, hyp) * 180.0F / (float)Math.PI)));
+        float yrot = Mth.wrapDegrees((float)(Mth.atan2(z, x) * 180.0F / (float)Math.PI) - 90.0F);
+        return new Vec2(xrot, yrot);
     }
 }
