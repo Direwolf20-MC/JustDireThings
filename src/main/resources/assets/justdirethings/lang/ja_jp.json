@@ -360,7 +360,7 @@
   "justdirethings.potionarrow.detailtext": "ポーション用容器を挿入して敵に効果を適用する",
   "justdirethings.potionarrow.flavortext": "インベントリの問題がないバニラのように...",
   "justdirethings.presshotkey": "<%s を押す>",
-  "justdirethings.requiresfeeding": "食べ物が入っているブロックをクリックして起動",
+  "justdirethings.requiresfeeding": "ブロックの表面に表示されているアイテムでクリックして起動",
   "justdirethings.runspeed.detailtext": "より速く走る",
   "justdirethings.screen.add_favorite": "お気に入りを追加",
   "justdirethings.screen.allowlist": "許可リスト",
