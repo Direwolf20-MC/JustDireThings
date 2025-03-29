@@ -41,6 +41,10 @@ public class GooSoilBE extends BlockEntity {
         return attachedInventory.getCapability();
     }
 
+    public void invalidateHandler() {
+        attachedInventory = null;
+    }
+
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);

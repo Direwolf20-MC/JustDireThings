@@ -530,6 +530,7 @@ public interface ToggleableTool extends ToggleableItem {
                                 BlockEntity blockEntity = pLevel.getBlockEntity(clickedPos);
                                 if (blockEntity instanceof GooSoilBE gooSoilBE) {
                                     gooSoilBE.bindInventory(boundInventory);
+                                    gooSoilBE.invalidateHandler();
                                     pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundInventory.globalPos().dimension().location().getPath()), "[" + boundInventory.globalPos().pos().toShortString() + "]"), true);
                                     player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
                                     Helpers.damageTool(heldItem, player, Ability.DROPTELEPORT);
