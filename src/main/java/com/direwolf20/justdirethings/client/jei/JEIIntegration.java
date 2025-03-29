@@ -97,7 +97,12 @@ public class JEIIntegration implements IModPlugin {
                 List.of(new OreToResourceRecipe(Registration.RawFerricoreOre.get(), new ItemStack(Registration.RawFerricore)),
                         new OreToResourceRecipe(Registration.RawBlazegoldOre.get(), new ItemStack(Registration.RawBlazegold)),
                         new OreToResourceRecipe(Registration.RawCelestigemOre.get(), new ItemStack(Registration.Celestigem)),
-                        new OreToResourceRecipe(Registration.RawEclipseAlloyOre.get(), new ItemStack(Registration.RawEclipseAlloy))));
+                        new OreToResourceRecipe(Registration.RawEclipseAlloyOre.get(), new ItemStack(Registration.RawEclipseAlloy)),
+                        new OreToResourceRecipe(Registration.RawCoal_T1.get(), new ItemStack(Registration.Coal_T1)),
+                        new OreToResourceRecipe(Registration.RawCoal_T2.get(), new ItemStack(Registration.Coal_T2)),
+                        new OreToResourceRecipe(Registration.RawCoal_T3.get(), new ItemStack(Registration.Coal_T3)),
+                        new OreToResourceRecipe(Registration.RawCoal_T4.get(), new ItemStack(Registration.Coal_T4))
+                ));
 
     }
 
