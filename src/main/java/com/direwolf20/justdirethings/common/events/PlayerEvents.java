@@ -42,7 +42,7 @@ public class PlayerEvents {
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool) {
             EnumSet<Ability> abilities = toggleableTool.getAbilities();
             for (Ability ability : abilities) {
-                if (ToggleableTool.hasUpgrade(itemStack, ability) && ability.requiresUpgrade()) {
+                if (ToggleableTool.hasUpgrade(itemStack, ability) && ability.requiresUpgrade() && itemStack.getMaxDamage() - itemStack.getDamageValue() <= 1) {
                     ItemStack upgradeStack = new ItemStack(ability.getUpgradeItem());
                     event.getEntity().drop(upgradeStack, true);
                 }
