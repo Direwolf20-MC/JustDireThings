@@ -212,7 +212,10 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         if (type == null) return null;
         Entity entity = type.create(level);
         if (!(entity instanceof Mob)) return null;
-        entity.load(itemStack.get(DataComponents.ENTITY_DATA).copyTag());
+        if (itemStack.has(DataComponents.ENTITY_DATA))
+            entity.load(itemStack.get(DataComponents.ENTITY_DATA).copyTag());
+        else
+            entity.load(new CompoundTag());
         return (Mob) entity;
     }
 
