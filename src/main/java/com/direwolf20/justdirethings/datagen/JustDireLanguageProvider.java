@@ -553,6 +553,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("entity.justdirethings.decoy_entity", "Decoy Entity");
         add("entity.justdirethings.time_wand_entity", "Time Wand Entity");
         add("entity.justdirethings.paradox_entity", "Paradox");
+        add("entity.justdirethings.portal_entity", "DirePortal");
+        add("entity.justdirethings.portal_projectile", "Portal Projectile");
+        add("entity.justdirethings.creature_catcher", "Creature Catcher");
+        add("entity.justdirethings.justdirearrow", "Dire Arrow");
+        add("entity.justdirethings.justdireareaeffectcloud", "Area Effect Cloud");
 
         //Recipes
         add("justdirethings.goospreadrecipe.title", "Goo Spreading Recipes");
