@@ -112,7 +112,7 @@ public class LivingEntityEvents {
         if (e.getEntity() instanceof ItemEntity itemEntity) {
             Level level = e.getLevel();
             ItemCollectorBE.ITEM_COLLECTORS
-                    .find(level, itemEntity.position(), (be, pos) -> be.getAABB(be.getBlockPos()).contains(pos))
+                    .find(level, itemEntity.position(), (be, pos) -> be.getAABB(be.getBlockPos()).contains(pos) && be.isActiveRedstone())
                     .ifPresent(collector -> {
                         IItemHandler inv = collector.getAttachedInventory();
                         if (inv == null) return;
