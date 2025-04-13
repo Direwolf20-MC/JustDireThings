@@ -101,15 +101,6 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe>
 
         List<ItemStack> catalystlist = new ArrayList<>();
 
-        // if (recipe.getTierRequirement() <= 1)
-        // catalystlist.add(new ItemStack(Registration.GooBlock_Tier1.get()));
-        // if (recipe.getTierRequirement() <= 2)
-        // catalystlist.add(new ItemStack(Registration.GooBlock_Tier2.get()));
-        // if (recipe.getTierRequirement() <= 3)
-        // catalystlist.add(new ItemStack(Registration.GooBlock_Tier3.get()));
-        // if (recipe.getTierRequirement() <= 4)
-        // catalystlist.add(new ItemStack(Registration.GooBlock_Tier4.get()));
-
         // useful for addons without need to use any mixin
         // also it could be more "tag-less" using an itemstack[] inside the json intend of int value
         List<Holder<Item>> items = BuiltInRegistries.ITEM
