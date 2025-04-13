@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 public class EclipseGateBlock extends Block implements EntityBlock {
     public EclipseGateBlock() {
         super(Properties.of()
-                .strength(20f)
+                .strength(20f, 3600000.0F)
                 .noOcclusion()
                 .noCollission()
                 .forceSolidOn() //This appears to prevent water from flowing into my block...

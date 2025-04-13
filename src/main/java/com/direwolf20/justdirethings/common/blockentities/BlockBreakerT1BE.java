@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,6 +42,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     LinkedHashMap<BlockPos, BlockBreakingProgress> blockBreakingTracker = new LinkedHashMap<>();
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     Map.Entry<BlockPos, BlockBreakingProgress> currentBlock;
+    public boolean sneaking = false;
 
     public BlockBreakerT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -49,6 +51,11 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public BlockBreakerT1BE(BlockPos pPos, BlockState pBlockState) {
         this(Registration.BlockBreakerT1BE.get(), pPos, pBlockState);
+    }
+
+    public void setBreakerSettings(boolean sneaking) {
+        this.sneaking = sneaking;
+        markDirtyClient();
     }
 
     @Override
@@ -96,16 +103,18 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     @Override
     public void tickServer() {
         super.tickServer();
-        doBlockBreak();
+        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
+        fakePlayer.setShiftKeyDown(sneaking);
+        doBlockBreak(fakePlayer);
+        fakePlayer.setShiftKeyDown(false);
     }
 
     public boolean canMine() {
         return true;
     }
 
-    public void doBlockBreak() {
+    public void doBlockBreak(FakePlayer fakePlayer) {
         ItemStack tool = getTool();
-        FakePlayer fakePlayer = getFakePlayer((ServerLevel) level);
         clearTrackerIfNeeded(tool, fakePlayer);
         if (tool.isEmpty()) {
             getRedstoneControlData().pulsed = false;
@@ -268,6 +277,20 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
             return false;
         if (!getRedstoneControlData().equals(getDefaultRedstoneData()))
             return false;
+        if (sneaking)
+            return false;
         return true;
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
+        tag.putBoolean("sneaking", sneaking);
+    }
+
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        this.sneaking = tag.getBoolean("sneaking");
+        super.loadAdditional(tag, provider);
     }
 }

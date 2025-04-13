@@ -154,6 +154,8 @@ public class Helpers {
     }*/
 
     public static void damageTool(ItemStack stack, LivingEntity player) {
+        if (player instanceof ServerPlayer serverPlayer && (serverPlayer.gameMode.getGameModeForPlayer() == GameType.CREATIVE || serverPlayer.gameMode.getGameModeForPlayer() == GameType.SPECTATOR))
+            return;
         if (stack.getItem() instanceof PoweredTool poweredTool) {
             stack.hurtAndBreak(poweredTool.getBlockBreakFECost(), player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
@@ -165,6 +167,8 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, int amount) {
+        if (player instanceof ServerPlayer serverPlayer && (serverPlayer.gameMode.getGameModeForPlayer() == GameType.CREATIVE || serverPlayer.gameMode.getGameModeForPlayer() == GameType.SPECTATOR))
+            return;
         if (stack.getItem() instanceof PoweredItem poweredTool) {
             stack.hurtAndBreak(amount, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
@@ -176,6 +180,8 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability) {
+        if (player instanceof ServerPlayer serverPlayer && (serverPlayer.gameMode.getGameModeForPlayer() == GameType.CREATIVE || serverPlayer.gameMode.getGameModeForPlayer() == GameType.SPECTATOR))
+            return;
         if (stack.getItem() instanceof PoweredItem) {
             stack.hurtAndBreak(ability.getFeCost(), player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
@@ -187,6 +193,8 @@ public class Helpers {
     }
 
     public static void damageTool(ItemStack stack, LivingEntity player, Ability ability, int multiplier) {
+        if (player instanceof ServerPlayer serverPlayer && (serverPlayer.gameMode.getGameModeForPlayer() == GameType.CREATIVE || serverPlayer.gameMode.getGameModeForPlayer() == GameType.SPECTATOR))
+            return;
         if (stack.getItem() instanceof PoweredItem) {
             stack.hurtAndBreak(ability.getFeCost() * multiplier, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
         } else {
