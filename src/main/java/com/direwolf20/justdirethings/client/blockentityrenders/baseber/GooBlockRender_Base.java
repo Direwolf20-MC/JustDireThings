@@ -1,12 +1,12 @@
 package com.direwolf20.justdirethings.client.blockentityrenders.baseber;
 
+import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.renderers.DireModelBlockRenderer;
 import com.direwolf20.justdirethings.client.renderers.DireVertexConsumer;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -27,6 +27,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.*;
@@ -73,16 +75,12 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
     }
 
     private ItemStack getNextItemFromTag(int tier) {
-        TagKey<Item> tag = switch (tier) {
-            case 1 -> JustDireItemTags.GOO_REVIVE_TIER_1;
-            case 2 -> JustDireItemTags.GOO_REVIVE_TIER_2;
-            case 3 -> JustDireItemTags.GOO_REVIVE_TIER_3;
-            case 4 -> JustDireItemTags.GOO_REVIVE_TIER_4;
-            default -> null;  // Handle unexpected tiers
-        };
-        if (tag == null)
-            return ItemStack.EMPTY;
-        List<Holder<Item>> items = BuiltInRegistries.ITEM.getTag(tag).stream().flatMap(h -> h.stream()).toList();
+
+        List<Holder<Item>> items = BuiltInRegistries.ITEM
+                .getTag(TagKey.create(Registries.ITEM,
+                        ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_" + tier)))
+                .stream().flatMap(h -> h.stream()).toList();
+
         if (items.isEmpty()) {
             return ItemStack.EMPTY;
         }
