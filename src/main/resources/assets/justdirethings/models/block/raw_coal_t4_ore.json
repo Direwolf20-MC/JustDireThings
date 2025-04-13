@@ -1,6 +1,0 @@
-{
-	"parent": "justdirethings:block/raw_ore_template",
-	"textures": {
-		"palette": "justdirethings:block/raw_coal_t4_ore"
-	}
-}

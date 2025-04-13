@@ -1,0 +1,6 @@
+{
+  "parent": "justdirethings:block/raw_ore_template",
+  "textures": {
+    "palette": "justdirethings:block/raw_eclipsealloy_ore"
+  }
+}
