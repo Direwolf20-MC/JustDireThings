@@ -14,6 +14,8 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
+import static com.direwolf20.justdirethings.JustDireThings.MODID;
+
 import java.util.concurrent.CompletableFuture;
 
 public class JustDireItemTags extends ItemTagsProvider {
@@ -43,14 +45,24 @@ public class JustDireItemTags extends ItemTagsProvider {
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
     }
 
-    public static final TagKey<Item> FUEL_CANISTER_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "deny_fuel_canister"));
-    public static final TagKey<Item> AUTO_SMELT_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "auto_smelt_deny"));
-    public static final TagKey<Item> AUTO_SMOKE_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "auto_smoke_deny"));
-    public static final TagKey<Item> GOO_REVIVE_TIER_1 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_1"));
-    public static final TagKey<Item> GOO_REVIVE_TIER_2 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_2"));
-    public static final TagKey<Item> GOO_REVIVE_TIER_3 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_3"));
-    public static final TagKey<Item> GOO_REVIVE_TIER_4 = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goo_revive_tier_4"));
-    public static final TagKey<Item> PARADOX_DENY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_deny"));
+
+    public static final TagKey<Item> FUEL_CANISTER_DENY = ModTag("deny_fuel_canister");
+    public static final TagKey<Item> AUTO_SMELT_DENY = ModTag("auto_smelt_deny");
+    public static final TagKey<Item> AUTO_SMOKE_DENY = ModTag("auto_smoke_deny");
+    public static final TagKey<Item> GOO_REVIVE_TIER_1 = ModTag("goo_revive_tier_1");
+    public static final TagKey<Item> GOO_REVIVE_TIER_2 = ModTag("goo_revive_tier_2");
+    public static final TagKey<Item> GOO_REVIVE_TIER_3 = ModTag("goo_revive_tier_3");
+    public static final TagKey<Item> GOO_REVIVE_TIER_4 = ModTag("goo_revive_tier_4");
+    public static final TagKey<Item> PARADOX_DENY = ModTag("paradox_deny");
+    public static final TagKey<Item> GOO_RECIPE_TIER_1 = ModTag("goorecipe_tier/1");
+    public static final TagKey<Item> GOO_RECIPE_TIER_2 = ModTag("goorecipe_tier/2");
+    public static final TagKey<Item> GOO_RECIPE_TIER_3 = ModTag("goorecipe_tier/3");
+    public static final TagKey<Item> GOO_RECIPE_TIER_4 = ModTag("goorecipe_tier/4");
+
+
+    private static TagKey<Item> ModTag(String name) {
+        return ItemTags.create(ResourceLocation.fromNamespaceAndPath(MODID, name));
+    }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -222,6 +234,22 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.CharcoalBlock_ITEM.get());
         tag(CHARCOALBLOCKS)
                 .add(Registration.CharcoalBlock_ITEM.get());
+
+        tag(GOO_RECIPE_TIER_1)
+                        .add(Registration.GooBlock_Tier1_ITEM.get())
+                        .addOptionalTag(GOO_RECIPE_TIER_2);
+
+        tag(GOO_RECIPE_TIER_2)
+                        .add(Registration.GooBlock_Tier2_ITEM.get())
+                        .addOptionalTag(GOO_RECIPE_TIER_3);
+
+        tag(GOO_RECIPE_TIER_3)
+                        .add(Registration.GooBlock_Tier3_ITEM.get())
+                        .addOptionalTag(GOO_RECIPE_TIER_4);
+
+        tag(GOO_RECIPE_TIER_4)
+                        .add(Registration.GooBlock_Tier4_ITEM.get());
+
     }
 
     @Override
