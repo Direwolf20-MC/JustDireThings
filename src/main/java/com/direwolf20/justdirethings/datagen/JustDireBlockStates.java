@@ -55,6 +55,14 @@ public class JustDireBlockStates extends BlockStateProvider {
         soilBlocks(Registration.GooSoil_Tier2);
         soilBlocks(Registration.GooSoil_Tier3);
         soilBlocks(Registration.GooSoil_Tier4);
+        oreBlocks(Registration.RawBlazegoldOre);
+        oreBlocks(Registration.RawCelestigemOre);
+        oreBlocks(Registration.RawEclipseAlloyOre);
+        oreBlocks(Registration.RawFerricoreOre);
+        oreBlocks(Registration.RawCoal_T1);
+        oreBlocks(Registration.RawCoal_T2);
+        oreBlocks(Registration.RawCoal_T3);
+        oreBlocks(Registration.RawCoal_T4);
         patternBlock();
         sidedBlocks();
         fluidBlocks();
@@ -250,7 +258,11 @@ public class JustDireBlockStates extends BlockStateProvider {
     }
 
 
-
+    private void oreBlocks(DeferredHolder<Block, ?> block){
+        directionalBlock(block.get(),models()
+        .withExistingParent(block.getId().getPath(), MODID+":block/raw_ore_template")
+        .texture("palette", block.getId().toString().replace(":", ":block/")));
+    }
 
 
 }
