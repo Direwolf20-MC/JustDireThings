@@ -39,5 +39,5 @@ Curios support is planned for some items.
 
 Some abilities have custom settings as well. For example, the run speed or jump height abilities have sliders (available after Tier 2 armor), that control how much faster you run, or how much higher you jump.
 
-Some abilities improve based on the tier of tool they are installed in. For example, the Hammer ability is 3x3 in a [Blazegold Pickaxe](./tool_blazegold_pickaxe.md), and 7x7 in [Eclipse Alloy Pickaxe](./tool_eclipse_alloy_pickaxe.md).
+Some abilities improve based on the tier of tool they are installed in. For example, the Hammer ability is 3x3 in a [Blazegold Pickaxe](./tool_blazegold_pickaxe.md), and 7x7 in [Eclipse Alloy Pickaxe](./tool_eclipsealloy_pickaxe.md).
 
