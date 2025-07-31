@@ -15,7 +15,13 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -87,18 +93,23 @@ public class GooSpreadRecipeTagCategory implements IRecipeCategory<GooSpreadReci
             inputSlotBuilder
                     .addFluidStack(liquidBlock.fluid, 1000);
         }*/
+        
+        
+        // useful for addons without need to use any mixin
+        // also it could be more "tag-less" using an itemstack[] inside the json intend of int value
         List<ItemStack> catalystlist = new ArrayList<>();
 
-        if (recipe.getTierRequirement() <= 1)
-            catalystlist.add(new ItemStack(Registration.GooBlock_Tier1.get()));
-        if (recipe.getTierRequirement() <= 2)
-            catalystlist.add(new ItemStack(Registration.GooBlock_Tier2.get()));
-        if (recipe.getTierRequirement() <= 3)
-            catalystlist.add(new ItemStack(Registration.GooBlock_Tier3.get()));
-        if (recipe.getTierRequirement() <= 4)
-            catalystlist.add(new ItemStack(Registration.GooBlock_Tier4.get()));
-        builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12)
-                .addItemStacks(catalystlist);
+        List<Holder<Item>> items = BuiltInRegistries.ITEM
+                .getOrCreateTag(TagKey.create(Registries.ITEM, ResourceLocation
+                        .fromNamespaceAndPath(JustDireThings.MODID, "goorecipe_tier/" + recipe.getTierRequirement())))
+                .stream().toList();
+
+        for (Holder<Item> HolderItem : items) {
+            catalystlist.add(new ItemStack(HolderItem));
+        }
+
+        builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12).addItemStacks(catalystlist);
+
 
         BlockState output = recipe.getOutput();
         if (output.getBlock().asItem() != Items.AIR) {
