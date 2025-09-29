@@ -8,3 +8,7 @@
 
 - Updated `PT_BR` translations thanks to #436 by @PrincessStelllar
 - Updated `zh_cn` translations thanks to #386 by @ChuijkYahus
+
+### Fixed
+
+- Crash when placing water bucket in very specific conditions. Added a null check to prevent it. Fixes #445
