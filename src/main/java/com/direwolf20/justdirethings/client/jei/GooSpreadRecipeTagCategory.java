@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GooSpreadRecipeTagCategory implements IRecipeCategory<GooSpreadRecipeTag> {
-    public static final RecipeType<GooSpreadRecipeTag> TYPE =
-            RecipeType.create(JustDireThings.MODID, "goo_spread_recipe_tag", GooSpreadRecipeTag.class);
+    public static final RecipeType<GooSpreadRecipeTag> TYPE = RecipeType.create(JustDireThings.MODID,
+            "goo_spread_recipe_tag", GooSpreadRecipeTag.class);
 
     public static final int width = 120;
     public static final int height = 40;
@@ -73,7 +73,8 @@ public class GooSpreadRecipeTagCategory implements IRecipeCategory<GooSpreadReci
     }
 
     @Override
-    public void draw(GooSpreadRecipeTag recipe, IRecipeSlotsView slotsView, GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(GooSpreadRecipeTag recipe, IRecipeSlotsView slotsView, GuiGraphics gui, double mouseX,
+            double mouseY) {
         RenderSystem.enableBlend();
         arrow.draw(gui, 54, 12);
         background.draw(gui, 17, 0);
@@ -86,15 +87,15 @@ public class GooSpreadRecipeTagCategory implements IRecipeCategory<GooSpreadReci
         IRecipeSlotBuilder inputSlotBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 9, 12);
         List<ItemStack> itemstacks = input.getItems().toList();
         inputSlotBuilder.addItemStacks(itemstacks);
-        /*if (input.getBlock().asItem() != Items.AIR) {
-            inputSlotBuilder
-                    .addItemStack(new ItemStack(input.getBlock()));
-        } else if (input.getBlock() instanceof LiquidBlock liquidBlock) {
-            inputSlotBuilder
-                    .addFluidStack(liquidBlock.fluid, 1000);
-        }*/
-        
-        
+        /*
+         * if (input.getBlock().asItem() != Items.AIR) {
+         * inputSlotBuilder
+         * .addItemStack(new ItemStack(input.getBlock()));
+         * } else if (input.getBlock() instanceof LiquidBlock liquidBlock) {
+         * inputSlotBuilder
+         * .addFluidStack(liquidBlock.fluid, 1000);
+         * }
+         */
 
         List<ItemStack> catalystlist = new ArrayList<>();
 
@@ -117,7 +118,6 @@ public class GooSpreadRecipeTagCategory implements IRecipeCategory<GooSpreadReci
         }
 
         builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12).addItemStacks(catalystlist);
-
 
         BlockState output = recipe.getOutput();
         if (output.getBlock().asItem() != Items.AIR) {
