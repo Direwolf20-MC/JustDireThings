@@ -54,6 +54,11 @@ public class JustDireItemTags extends ItemTagsProvider {
     public static final TagKey<Item> GOO_REVIVE_TIER_3 = ModTag("goo_revive_tier_3");
     public static final TagKey<Item> GOO_REVIVE_TIER_4 = ModTag("goo_revive_tier_4");
     public static final TagKey<Item> PARADOX_DENY = ModTag("paradox_deny");
+    public static final TagKey<Item> GOO_RECIPE_TIER_1 = ModTag("goorecipe_tier/1");
+    public static final TagKey<Item> GOO_RECIPE_TIER_2 = ModTag("goorecipe_tier/2");
+    public static final TagKey<Item> GOO_RECIPE_TIER_3 = ModTag("goorecipe_tier/3");
+    public static final TagKey<Item> GOO_RECIPE_TIER_4 = ModTag("goorecipe_tier/4");
+
 
     private static TagKey<Item> ModTag(String name) {
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath(MODID, name));
@@ -229,6 +234,21 @@ public class JustDireItemTags extends ItemTagsProvider {
                 .add(Registration.CharcoalBlock_ITEM.get());
         tag(CHARCOALBLOCKS)
                 .add(Registration.CharcoalBlock_ITEM.get());
+
+        tag(GOO_RECIPE_TIER_1)
+                        .add(Registration.GooBlock_Tier1_ITEM.get())
+                        .addOptionalTag(GOO_RECIPE_TIER_2);
+
+        tag(GOO_RECIPE_TIER_2)
+                        .add(Registration.GooBlock_Tier2_ITEM.get())
+                        .addOptionalTag(GOO_RECIPE_TIER_3);
+
+        tag(GOO_RECIPE_TIER_3)
+                        .add(Registration.GooBlock_Tier3_ITEM.get())
+                        .addOptionalTag(GOO_RECIPE_TIER_4);
+
+        tag(GOO_RECIPE_TIER_4)
+                        .add(Registration.GooBlock_Tier4_ITEM.get());
 
     }
 
