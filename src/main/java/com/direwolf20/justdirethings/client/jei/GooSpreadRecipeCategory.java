@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.client.jei;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -29,6 +30,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -99,20 +101,10 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe>
                     .addFluidStack(liquidBlock.fluid, 1000);
         }
 
-        List<ItemStack> catalystlist = new ArrayList<>();
-
-        // useful for addons without need to use any mixin
-        // also it could be more "tag-less" using an itemstack[] inside the json intend of int value
-        List<Holder<Item>> items = BuiltInRegistries.ITEM
-                .getOrCreateTag(TagKey.create(Registries.ITEM, ResourceLocation
-                        .fromNamespaceAndPath(JustDireThings.MODID, "goorecipe_tier/" + recipe.getTierRequirement())))
-                .stream().toList();
-
-        for (Holder<Item> HolderItem : items) {
-            catalystlist.add(new ItemStack(HolderItem));
-        }
-
-        builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12).addItemStacks(catalystlist);
+        builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12)
+                .addIngredients(
+                        Ingredient.of(
+                                JustDireItemTags.GOO_RECIPE_TIERS.get(recipe.getTierRequirement()-1)));
 
         BlockState output = recipe.getOutput();
         if (output.getBlock().asItem() != Items.AIR) {
