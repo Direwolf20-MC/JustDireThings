@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.client.jei;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeTag;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -24,6 +25,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.crafting.BlockTagIngredient;
@@ -87,37 +89,18 @@ public class GooSpreadRecipeTagCategory implements IRecipeCategory<GooSpreadReci
         IRecipeSlotBuilder inputSlotBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 9, 12);
         List<ItemStack> itemstacks = input.getItems().toList();
         inputSlotBuilder.addItemStacks(itemstacks);
-        /*
-         * if (input.getBlock().asItem() != Items.AIR) {
-         * inputSlotBuilder
-         * .addItemStack(new ItemStack(input.getBlock()));
-         * } else if (input.getBlock() instanceof LiquidBlock liquidBlock) {
-         * inputSlotBuilder
-         * .addFluidStack(liquidBlock.fluid, 1000);
-         * }
-         */
-
-        List<ItemStack> catalystlist = new ArrayList<>();
-
-        int tier = recipe.getTierRequirement();
-        Item item = BuiltInRegistries.ITEM.get(
-                ResourceLocation.fromNamespaceAndPath(
-                        JustDireThings.MODID, "gooblock_tier" + tier));
-
-        catalystlist.add(new ItemStack(item));
-
-        while (true) {
-            tier++;
-            item = BuiltInRegistries.ITEM.get(
-                    ResourceLocation.fromNamespaceAndPath(
-                            JustDireThings.MODID, "gooblock_tier" + tier));
-            if (item != Items.AIR)
-                catalystlist.add(new ItemStack(item));
-            else
-                break;
-        }
-
-        builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12).addItemStacks(catalystlist);
+        /*if (input.getBlock().asItem() != Items.AIR) {
+            inputSlotBuilder
+                    .addItemStack(new ItemStack(input.getBlock()));
+        } else if (input.getBlock() instanceof LiquidBlock liquidBlock) {
+            inputSlotBuilder
+                    .addFluidStack(liquidBlock.fluid, 1000);
+        }*/
+        
+        builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12)
+                .addIngredients(
+                        Ingredient.of(
+                                JustDireItemTags.GOO_RECIPE_TIERS.get(recipe.getTierRequirement()-1)));
 
         BlockState output = recipe.getOutput();
         if (output.getBlock().asItem() != Items.AIR) {
