@@ -108,7 +108,7 @@ runs {
 
         //if the selected toolchain is a JBR, enable DCEVM
         if (run.project.javaToolchains.launcherFor(java.toolchain).map { it.metadata.vendor }.getOrElse("").contains("JetBrains")) {
-            run.jvmArgument("-XX:+AllowEnhancedClassRedefinition")
+//            run.jvmArgument("-XX:+AllowEnhancedClassRedefinition")
         }
     }
 
@@ -244,4 +244,45 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+def createChangelog() {
+    def issueNumberPattern = ~/(?i)(?<!\S)#[0-9]+(?!\S)/
+    def githubMentionPattern = ~/(?i)(?<!\S)@([a-zA-Z0-9-_]+)(?!\S)/
+
+    def github = "https://github.com"
+    def repo = "$github/direwolf20-mc/justdirethings"
+
+    def changelogFile = file('CHANGELOG.md')
+    if (!changelogFile.exists()) {
+        throw new GradleException("CHANGELOG.md file not found!")
+    }
+
+    def changelogContent = changelogFile.text
+    def output = ""
+
+    def reading = false
+    def lines = changelogContent.readLines()
+    for (line in lines) {
+        if (line.startsWith("## ") && line.contains(mod_version)) {
+            reading = true
+            continue
+        } else if (line.startsWith("## ") && reading) {
+            break
+        }
+
+        // Inject issues and mentions links
+        line = line.replaceAll(issueNumberPattern) { fullMatch ->
+            def issueNumber = fullMatch.substring(1)
+            "[#${issueNumber}](${repo}/issues/${issueNumber})"
+        }
+
+        line = line.replaceAll(githubMentionPattern) { fullMatch, username ->
+            "[@${username}](${github}/${username})"
+        }
+
+        output += line + "\n"
+    }
+
+    return output.trim()
 }

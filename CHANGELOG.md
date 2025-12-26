@@ -11,4 +11,5 @@
 
 ### Fixed
 
+- `SWAPPERDENY` / `RELOCATION_NOT_SUPPORTED` being ignored when swapping from a dimension other than the overworld. Fixes #472
 - Crash when placing water bucket in very specific conditions. Added a null check to prevent it. Fixes #445
