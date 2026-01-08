@@ -4,6 +4,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.165'
+    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
@@ -246,6 +247,24 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
+publishMods {
+    def token = providers.environmentVariable("CURSE_TOKEN");
+    dryRun = !token.isPresent()
+    changelog = createChangelog()
+    version = "${mod_version}"
+    type = STABLE
+
+    curseforge {
+        projectId = "1002348"
+        accessToken = token.getOrElse("")
+        file = project.provider { tasks.jar }.flatMap { it.archiveFile }
+        displayName = "JustDireThings-${mod_version}"
+        modLoaders.add("neoforge")
+        minecraftVersions.add("${minecraft_version}")
+        javaVersions.add(JavaVersion.VERSION_21)
+    }
+}
+
 def createChangelog() {
     def issueNumberPattern = ~/(?i)(?<!\S)#[0-9]+(?!\S)/
     def githubMentionPattern = ~/(?i)(?<!\S)@([a-zA-Z0-9-_]+)(?!\S)/
@@ -265,10 +284,13 @@ def createChangelog() {
     def lines = changelogContent.readLines()
     for (line in lines) {
         if (line.startsWith("## ") && line.contains(mod_version)) {
+            println("Found changelog for version ${mod_version}")
             reading = true
             continue
         } else if (line.startsWith("## ") && reading) {
             break
+        } else if (!reading) {
+            continue
         }
 
         // Inject issues and mentions links
@@ -284,5 +306,6 @@ def createChangelog() {
         output += line + "\n"
     }
 
-    return output.trim()
+    def finalOutput = output.trim();
+    return finalOutput.isEmpty() ? "No changelog available." : finalOutput
 }

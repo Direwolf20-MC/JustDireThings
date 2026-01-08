@@ -4,21 +4,8 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1000
-          fetch-tags: true
-
-      - name: Setup JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '21'
-          distribution: 'microsoft'
-
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
+    if: |
+      !contains(github.event.head_commit.message, '[ciskip]')
+    uses: ./.github/workflows/base.yml
+    with:
+      gradle-tasks: 'build'
