@@ -10,7 +10,7 @@ on:
         type: string
     secrets:
       curse-token:
-        required: true
+        required: false
 
 jobs:
   build:
