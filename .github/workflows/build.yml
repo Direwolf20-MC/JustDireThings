@@ -12,11 +12,11 @@ jobs:
           fetch-depth: 1000
           fetch-tags: true
 
-      - name: Setup JDK 17
+      - name: Setup JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
-          distribution: 'temurin'
+          java-version: '21'
+          distribution: 'microsoft'
 
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2

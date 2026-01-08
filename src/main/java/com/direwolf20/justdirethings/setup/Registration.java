@@ -808,7 +808,7 @@ public class Registration {
             }).build());
     public static final Supplier<AttachmentType<CompoundTag>> DEATH_DATA = ATTACHMENT_TYPES.register(
             "death_data",
-            () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build()
+            () -> AttachmentType.builder(() -> new CompoundTag()).serialize(CompoundTag.CODEC).build()
     );
 
     //Fluids

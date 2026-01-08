@@ -15,10 +15,9 @@ public class Config {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final ModConfigSpec.Builder CLIENT_BUILDER = new ModConfigSpec.Builder();
-    public static final ModConfigSpec.Builder COMMON_BUILDER = new ModConfigSpec.Builder();
     public static final ModConfigSpec.Builder SERVER_BUILDER = new ModConfigSpec.Builder();
 
-    public static ModConfigSpec COMMON_CONFIG;
+    public static ModConfigSpec SERVER_CONFIG;
 
     public static final String OVERLAY_POSITION = "overlay_position";
     public static ModConfigSpec.IntValue OVERLAY_X;
@@ -111,8 +110,7 @@ public class Config {
     public static ModConfigSpec.ConfigValue<List<? extends String>> TIME_CRYSTAL_STAGE3_DIMENSIONS;
 
     public static void register(ModContainer container) {
-        //registerServerConfigs(container);
-        registerCommonConfigs(container);
+        registerServerConfigs(container);
         registerClientConfigs(container);
     }
 
@@ -121,9 +119,9 @@ public class Config {
         container.registerConfig(ModConfig.Type.CLIENT, CLIENT_BUILDER.build());
     }
 
-    private static void registerCommonConfigs(ModContainer container) {
-        generalConfig();
+    private static void registerServerConfigs(ModContainer container) {
         gooConfig();
+        generalConfig();
         abilityConfigs();
         generatorT1Config();
         generatorFluidT1Config();
@@ -136,12 +134,7 @@ public class Config {
         paradoxConfig();
         playerAccessorConfig();
         timeCrystalConfig();
-        COMMON_CONFIG = COMMON_BUILDER.build();
-        container.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
-    }
-
-    private static void registerServerConfigs(ModContainer container) {
-
+        SERVER_CONFIG = SERVER_BUILDER.build();
         container.registerConfig(ModConfig.Type.SERVER, SERVER_BUILDER.build());
     }
 
@@ -154,123 +147,123 @@ public class Config {
         CLIENT_BUILDER.pop();
     }
 
-    private static void generalConfig() {
-        COMMON_BUILDER.comment("Goo settings").push(CATEGORY_GOO);
-        GOO_CAN_DIE = COMMON_BUILDER.comment("Can goo randomly die, needing to be revived by right clicking with an item?")
+    private static void gooConfig() {
+        SERVER_BUILDER.comment("Goo settings").push(CATEGORY_GOO);
+        GOO_CAN_DIE = SERVER_BUILDER.comment("Can goo randomly die, needing to be revived by right clicking with an item?")
                 .define("goo_can_die", true);
-        GOO_DEATH_CHANCE = COMMON_BUILDER.comment("The random chance that a goo block can 'die' when it finishes crafting. Set to 1.0 to guarantee it dies every time.  Default is 0.1, which is a 10% chance.")
+        GOO_DEATH_CHANCE = SERVER_BUILDER.comment("The random chance that a goo block can 'die' when it finishes crafting. Set to 1.0 to guarantee it dies every time.  Default is 0.1, which is a 10% chance.")
                 .defineInRange("goo_death_chance", 0.1, 0.0, 1.0);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
-    private static void gooConfig() {
-        COMMON_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
-        MINIMUM_MACHINE_TICK_SPEED = COMMON_BUILDER.comment("The minimum tick speed machines can be set to. Defaults to 1, meaning every tick")
+    private static void generalConfig() {
+        SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
+        MINIMUM_MACHINE_TICK_SPEED = SERVER_BUILDER.comment("The minimum tick speed machines can be set to. Defaults to 1, meaning every tick")
                 .defineInRange("minimum_machine_tick_speed", 1, 1, 100);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void abilityConfigs() {
-        COMMON_BUILDER.comment("Ability settings: For disabling certain abilities").push(CATEGORY_ABILITIES);
+        SERVER_BUILDER.comment("Ability settings: For disabling certain abilities").push(CATEGORY_ABILITIES);
         for (Ability ability : Ability.values()) {
-            AVAILABLE_ABILITY_MAP.put(ability, COMMON_BUILDER.comment(ability.getName())
+            AVAILABLE_ABILITY_MAP.put(ability, SERVER_BUILDER.comment(ability.getName())
                     .define(ability.getName(), true));
         }
-        TOOL_MAX_BREAK_FERRICORE = COMMON_BUILDER.comment("The maximum number of blocks that a Ferricore tool can break as a result of abilities, such as ore miner or tree feller.")
+        TOOL_MAX_BREAK_FERRICORE = SERVER_BUILDER.comment("The maximum number of blocks that a Ferricore tool can break as a result of abilities, such as ore miner or tree feller.")
                 .defineInRange("tool_max_break_ferricore", 64, 1, 2048);
-        TOOL_MAX_BREAK_BLAZEGOLD = COMMON_BUILDER.comment("The maximum number of blocks that a Blazegold tool can break as a result of abilities, such as ore miner or tree feller.")
+        TOOL_MAX_BREAK_BLAZEGOLD = SERVER_BUILDER.comment("The maximum number of blocks that a Blazegold tool can break as a result of abilities, such as ore miner or tree feller.")
                 .defineInRange("tool_max_break_blazegold", 128, 1, 2048);
-        TOOL_MAX_BREAK_CELESTIGEM = COMMON_BUILDER.comment("The maximum number of blocks that a Celestigem tool can break as a result of abilities, such as ore miner or tree feller.")
+        TOOL_MAX_BREAK_CELESTIGEM = SERVER_BUILDER.comment("The maximum number of blocks that a Celestigem tool can break as a result of abilities, such as ore miner or tree feller.")
                 .defineInRange("tool_max_break_celestigem", 192, 1, 2048);
-        TOOL_MAX_BREAK_ECLIPSEALLOY = COMMON_BUILDER.comment("The maximum number of blocks that a Eclipse Alloy tool can break as a result of abilities, such as ore miner or tree feller.")
+        TOOL_MAX_BREAK_ECLIPSEALLOY = SERVER_BUILDER.comment("The maximum number of blocks that a Eclipse Alloy tool can break as a result of abilities, such as ore miner or tree feller.")
                 .defineInRange("tool_max_break_eclipsealloy", 256, 1, 2048);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void generatorT1Config() {
-        COMMON_BUILDER.comment("Generator T1").push(CATEGORY_GENERATOR_T1);
-        GENERATOR_T1_FE_PER_FUEL_TICK = COMMON_BUILDER.comment("The amount of Forge Energy created per burn tick of fuel. Coal has 1600 burn ticks. Sticks have 100 burn ticks.")
+        SERVER_BUILDER.comment("Generator T1").push(CATEGORY_GENERATOR_T1);
+        GENERATOR_T1_FE_PER_FUEL_TICK = SERVER_BUILDER.comment("The amount of Forge Energy created per burn tick of fuel. Coal has 1600 burn ticks. Sticks have 100 burn ticks.")
                 .defineInRange("generator_t1_fe_per_fuel_tick", 15, 1, Integer.MAX_VALUE);
-        GENERATOR_T1_BURN_SPEED_MULTIPLIER = COMMON_BUILDER.comment("The multiplier for the burn speed, making the generator run faster. Coal is 1600 ticks to burn, if you set this to 10, it will burn in 160 ticks")
+        GENERATOR_T1_BURN_SPEED_MULTIPLIER = SERVER_BUILDER.comment("The multiplier for the burn speed, making the generator run faster. Coal is 1600 ticks to burn, if you set this to 10, it will burn in 160 ticks")
                 .defineInRange("generator_t1_burn_speed_multiplier", 4, 1, 1000);
-        GENERATOR_T1_MAX_FE = COMMON_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
+        GENERATOR_T1_MAX_FE = SERVER_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
                 .defineInRange("generator_t1_max_fe", 1000000, 1, Integer.MAX_VALUE);
-        GENERATOR_T1_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator outputs")
+        GENERATOR_T1_FE_PER_TICK = SERVER_BUILDER.comment("The FE per Tick that the generator outputs")
                 .defineInRange("generator_t1_fe_per_tick", 1000, 1, Integer.MAX_VALUE);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void generatorFluidT1Config() {
-        COMMON_BUILDER.comment("Fluid Generator T1").push(CATEGORY_GENERATOR_FLUID_T1);
-        GENERATOR_FLUID_T1_MAX_FE = COMMON_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
+        SERVER_BUILDER.comment("Fluid Generator T1").push(CATEGORY_GENERATOR_FLUID_T1);
+        GENERATOR_FLUID_T1_MAX_FE = SERVER_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
                 .defineInRange("generator_fluid_t1_max_fe", 5000000, 1, Integer.MAX_VALUE);
-        GENERATOR_FLUID_T1_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator outputs")
+        GENERATOR_FLUID_T1_FE_PER_TICK = SERVER_BUILDER.comment("The FE per Tick that the generator outputs")
                 .defineInRange("generator_fluid_t1_fe_per_tick", 5000, 1, Integer.MAX_VALUE);
-        FUEL_TIER2_FE_PER_MB = COMMON_BUILDER.comment("The FE per produced per MB of Tier 2 fuel (Blaze Ember)")
+        FUEL_TIER2_FE_PER_MB = SERVER_BUILDER.comment("The FE per produced per MB of Tier 2 fuel (Blaze Ember)")
                 .defineInRange("fuel_tier2_fe_per_mb", 450, 1, Integer.MAX_VALUE);
-        FUEL_TIER3_FE_PER_MB = COMMON_BUILDER.comment("The FE per produced per MB of Tier 3 fuel (Voidflame)")
+        FUEL_TIER3_FE_PER_MB = SERVER_BUILDER.comment("The FE per produced per MB of Tier 3 fuel (Voidflame)")
                 .defineInRange("fuel_tier3_fe_per_mb", 1300, 1, Integer.MAX_VALUE);
-        FUEL_TIER4_FE_PER_MB = COMMON_BUILDER.comment("The FE per produced per MB of Tier 4 fuel (Eclipse Ember)")
+        FUEL_TIER4_FE_PER_MB = SERVER_BUILDER.comment("The FE per produced per MB of Tier 4 fuel (Eclipse Ember)")
                 .defineInRange("fuel_tier4_fe_per_mb", 4000, 1, Integer.MAX_VALUE);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void fuelCanisterConfig() {
-        COMMON_BUILDER.comment("Fuel Canister").push(CATEGORY_FUEL_CANISTER);
-        FUEL_CANISTER_MINIMUM_TICKS_CONSUMED = COMMON_BUILDER.comment("The amount of ticks 'consumed' per operation in the furnace. Lower is more efficient fuel use.")
+        SERVER_BUILDER.comment("Fuel Canister").push(CATEGORY_FUEL_CANISTER);
+        FUEL_CANISTER_MINIMUM_TICKS_CONSUMED = SERVER_BUILDER.comment("The amount of ticks 'consumed' per operation in the furnace. Lower is more efficient fuel use.")
                 .defineInRange("fuel_canister_minimum_ticks_consumed", 200, 100, Integer.MAX_VALUE);
-        FUEL_CANISTER_MAXIMUM_FUEL = COMMON_BUILDER.comment("The maximum amount of fuel (in ticks) permitted in the fuel canister.")
+        FUEL_CANISTER_MAXIMUM_FUEL = SERVER_BUILDER.comment("The maximum amount of fuel (in ticks) permitted in the fuel canister.")
                 .defineInRange("fuel_canister_maximum_fuel", 10000000, 100, Integer.MAX_VALUE);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void energyTransmitter() {
-        COMMON_BUILDER.comment("Energy Transmitter T1").push(ENERGY_TRANSMITTER_T1);
-        ENERGY_TRANSMITTER_T1_MAX_RF = COMMON_BUILDER.comment("The maximum energy storage")
+        SERVER_BUILDER.comment("Energy Transmitter T1").push(ENERGY_TRANSMITTER_T1);
+        ENERGY_TRANSMITTER_T1_MAX_RF = SERVER_BUILDER.comment("The maximum energy storage")
                 .defineInRange("energy_transmitter_t1_max_rf", 1000000, 1, Integer.MAX_VALUE);
-        ENERGY_TRANSMITTER_T1_RF_PER_TICK = COMMON_BUILDER.comment("The maximum RF transmitted per tick to machines and other transmitters")
+        ENERGY_TRANSMITTER_T1_RF_PER_TICK = SERVER_BUILDER.comment("The maximum RF transmitted per tick to machines and other transmitters")
                 .defineInRange("energy_transmitter_t1_rf_per_tick", 1000, 1, Integer.MAX_VALUE);
-        ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK = COMMON_BUILDER.comment("The energy loss per block distance in percent")
+        ENERGY_TRANSMITTER_T1_LOSS_PER_BLOCK = SERVER_BUILDER.comment("The energy loss per block distance in percent")
                 .defineInRange("energy_transmitter_t1_loss_per_block", 1.0, 0, 100);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void pocketGeneratorConfig() {
-        COMMON_BUILDER.comment("Pocket Generator").push(CATEGORY_POCKET_GENERATOR);
-        POCKET_GENERATOR_FE_PER_FUEL_TICK = COMMON_BUILDER.comment("The amount of Forge Energy created per burn tick of fuel. Coal has 1600 burn ticks. Sticks have 100 burn ticks.")
+        SERVER_BUILDER.comment("Pocket Generator").push(CATEGORY_POCKET_GENERATOR);
+        POCKET_GENERATOR_FE_PER_FUEL_TICK = SERVER_BUILDER.comment("The amount of Forge Energy created per burn tick of fuel. Coal has 1600 burn ticks. Sticks have 100 burn ticks.")
                 .defineInRange("pocket_gen_fe_per_fuel_tick", 15, 1, Integer.MAX_VALUE);
-        POCKET_GENERATOR_BURN_SPEED_MULTIPLIER = COMMON_BUILDER.comment("The multiplier for the burn speed, making the generator run faster. Coal is 1600 ticks to burn, if you set this to 10, it will burn in 160 ticks")
+        POCKET_GENERATOR_BURN_SPEED_MULTIPLIER = SERVER_BUILDER.comment("The multiplier for the burn speed, making the generator run faster. Coal is 1600 ticks to burn, if you set this to 10, it will burn in 160 ticks")
                 .defineInRange("pocket_gen_burn_speed_multiplier", 4, 1, 1000);
-        POCKET_GENERATOR_MAX_FE = COMMON_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
+        POCKET_GENERATOR_MAX_FE = SERVER_BUILDER.comment("The maximum amount of Forge Energy the generator can hold in its buffer")
                 .defineInRange("pocket_gen_max_fe", 1000000, 1, Integer.MAX_VALUE);
-        POCKET_GENERATOR_FE_PER_TICK = COMMON_BUILDER.comment("The FE per Tick that the generator charges other items at")
+        POCKET_GENERATOR_FE_PER_TICK = SERVER_BUILDER.comment("The FE per Tick that the generator charges other items at")
                 .defineInRange("pocket_gen_fe_per_tick", 5000, 1, Integer.MAX_VALUE);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void portalGunConfig() {
-        COMMON_BUILDER.comment("Portal Guns").push(CATEGORY_PORTAL_GUNS);
-        PORTAL_GUN_V1_RF_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Forge Energy the Portal Gun (V1) can hold in its buffer")
+        SERVER_BUILDER.comment("Portal Guns").push(CATEGORY_PORTAL_GUNS);
+        PORTAL_GUN_V1_RF_CAPACITY = SERVER_BUILDER.comment("The maximum amount of Forge Energy the Portal Gun (V1) can hold in its buffer")
                 .defineInRange("portal_gun_v1_rf_capacity", 100000, 1, Integer.MAX_VALUE);
-        PORTAL_GUN_V1_RF_COST = COMMON_BUILDER.comment("The Forge Energy cost to fire the Portal Gun (V1) projectile")
+        PORTAL_GUN_V1_RF_COST = SERVER_BUILDER.comment("The Forge Energy cost to fire the Portal Gun (V1) projectile")
                 .defineInRange("portal_gun_v1_rf_cost", 1000, 1, Integer.MAX_VALUE);
-        PORTAL_GUN_V2_RF_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Forge Energy the Portal Gun (V2) can hold in its buffer")
+        PORTAL_GUN_V2_RF_CAPACITY = SERVER_BUILDER.comment("The maximum amount of Forge Energy the Portal Gun (V2) can hold in its buffer")
                 .defineInRange("portal_gun_v2_rf_capacity", 1000000, 1, Integer.MAX_VALUE);
-        PORTAL_GUN_V2_RF_COST = COMMON_BUILDER.comment("The Forge Energy cost to fire the Portal Gun (V2) projectile")
+        PORTAL_GUN_V2_RF_COST = SERVER_BUILDER.comment("The Forge Energy cost to fire the Portal Gun (V2) projectile")
                 .defineInRange("portal_gun_v2_rf_cost", 5000, 1, Integer.MAX_VALUE);
 
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void timeWandConfig() {
-        COMMON_BUILDER.comment("Time Wand").push(CATEGORY_TIME_WAND);
-        TIME_WAND_RF_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Forge Energy the Time Wand can hold in its buffer")
+        SERVER_BUILDER.comment("Time Wand").push(CATEGORY_TIME_WAND);
+        TIME_WAND_RF_CAPACITY = SERVER_BUILDER.comment("The maximum amount of Forge Energy the Time Wand can hold in its buffer")
                 .defineInRange("time_wand_rf_capacity", 100000, 1, Integer.MAX_VALUE);
-        TIMEWAND_RF_COST = COMMON_BUILDER.comment("The Forge Energy cost to use the Time wand. This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in FE cost.")
+        TIMEWAND_RF_COST = SERVER_BUILDER.comment("The Forge Energy cost to use the Time wand. This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in FE cost.")
                 .defineInRange("time_wand_rf_cost", 100, 0, Integer.MAX_VALUE);
-        TIMEWAND_FLUID_COST = COMMON_BUILDER.comment("The Time Fluid cost to use the time wand.  This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in Time Fluid.")
+        TIMEWAND_FLUID_COST = SERVER_BUILDER.comment("The Time Fluid cost to use the time wand.  This value is multiplied by the acceleration amount. For example, when you go from 128 to 256, it will charge 256 x <this value> in Time Fluid.")
                 .defineInRange("time_wand_fluid_cost", 0.5, 0, Double.MAX_VALUE);
-        TIME_WAND_MAX_MULTIPLIER = COMMON_BUILDER.comment("The maximum speed multiplier that can be applied using a Time Wand. This value should be a power of two.")
+        TIME_WAND_MAX_MULTIPLIER = SERVER_BUILDER.comment("The maximum speed multiplier that can be applied using a Time Wand. This value should be a power of two.")
                 .define("time_wand_max_multiplier", 256, value -> {
                     if (value == null) {
                         LOGGER.warn("time_wand_max_multiplier is null, creating a default entry in the config.");
@@ -282,26 +275,26 @@ public class Config {
                     }
                     return validPowerOfTwo;
                 });
-        TIME_WAND_FAKE_PLAYER_ALLOWED = COMMON_BUILDER.comment("Can fake players use the Time Wand (Like in the clickers)?")
+        TIME_WAND_FAKE_PLAYER_ALLOWED = SERVER_BUILDER.comment("Can fake players use the Time Wand (Like in the clickers)?")
                 .define("time_wand_fake_player_allowed", true);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void polymorphWandConfig() {
-        COMMON_BUILDER.comment("Polymorphic Wand").push(CATEGORY_POLYMORPHIC_WAND);
-        RANDOM_POLYMORPH_COST = COMMON_BUILDER.comment("The polymorphic fluid cost to use the polymorph wand")
+        SERVER_BUILDER.comment("Polymorphic Wand").push(CATEGORY_POLYMORPHIC_WAND);
+        RANDOM_POLYMORPH_COST = SERVER_BUILDER.comment("The polymorphic fluid cost to use the polymorph wand")
                 .defineInRange("polymorphic_wand_fluid_cost", 100, 1, Integer.MAX_VALUE);
-        POLYMORPHIC_WAND_MAX_FLUID = COMMON_BUILDER.comment("The amount of fluid the Polymorphic Wand can hold")
+        POLYMORPHIC_WAND_MAX_FLUID = SERVER_BUILDER.comment("The amount of fluid the Polymorphic Wand can hold")
                 .defineInRange("polymorphic_wand_max_fluid", 2000, 1, Integer.MAX_VALUE);
-        POLYMORPHIC_WAND_V2_FE_COST = COMMON_BUILDER.comment("The FE cost to use the Advanced Polymorphic Wand")
+        POLYMORPHIC_WAND_V2_FE_COST = SERVER_BUILDER.comment("The FE cost to use the Advanced Polymorphic Wand")
                 .defineInRange("polymorphic_wand_v2_fe_cost", 50000, 1, Integer.MAX_VALUE);
-        POLYMORPHIC_WAND_V2_FE_CAPACITY = COMMON_BUILDER.comment("The amount of FE the Advanced Polymorphic Wand can hold")
+        POLYMORPHIC_WAND_V2_FE_CAPACITY = SERVER_BUILDER.comment("The amount of FE the Advanced Polymorphic Wand can hold")
                 .defineInRange("polymorphic_wand_v2_fe_capacity", 1000000, 1, Integer.MAX_VALUE);
-        TARGET_POLYMORPH_COST = COMMON_BUILDER.comment("The polymorphic fluid cost to use the Advanced Polymorphic Wand")
+        TARGET_POLYMORPH_COST = SERVER_BUILDER.comment("The polymorphic fluid cost to use the Advanced Polymorphic Wand")
                 .defineInRange("polymorphic_wand_v2_fluid_cost", 250, 1, Integer.MAX_VALUE);
-        POLYMORPHIC_WAND_V2_MAX_FLUID = COMMON_BUILDER.comment("The amount of fluid the Advanced Polymorphic Wand can hold")
+        POLYMORPHIC_WAND_V2_MAX_FLUID = SERVER_BUILDER.comment("The amount of fluid the Advanced Polymorphic Wand can hold")
                 .defineInRange("polymorphic_wand_v2_max_fluid", 8000, 1, Integer.MAX_VALUE);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     public static int logBase2(final int value) {
@@ -309,69 +302,69 @@ public class Config {
     }
 
     private static void paradoxConfig() {
-        COMMON_BUILDER.comment("Paradox Machine").push(CATEGORY_PARADOX_MACHINE);
-        PARADOX_TOTAL_RF_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Forge Energy the Paradox Machine can hold in its buffer")
+        SERVER_BUILDER.comment("Paradox Machine").push(CATEGORY_PARADOX_MACHINE);
+        PARADOX_TOTAL_RF_CAPACITY = SERVER_BUILDER.comment("The maximum amount of Forge Energy the Paradox Machine can hold in its buffer")
                 .defineInRange("paradox_rf_capacity", 10000000, 1, Integer.MAX_VALUE);
-        PARADOX_RF_PER_BLOCK = COMMON_BUILDER.comment("The Forge Energy cost to Restore 1 block with the Paradox Machine.  This value is multiplied by the number of blocks the machine is restoring.")
+        PARADOX_RF_PER_BLOCK = SERVER_BUILDER.comment("The Forge Energy cost to Restore 1 block with the Paradox Machine.  This value is multiplied by the number of blocks the machine is restoring.")
                 .defineInRange("paradox_rf_per_block", 250000, 0, Integer.MAX_VALUE);
-        PARADOX_RF_PER_ENTITY = COMMON_BUILDER.comment("The Forge Energy cost to Restore 1 entity with the Paradox Machine.  This value is multiplied by the number of entities the machine is restoring.")
+        PARADOX_RF_PER_ENTITY = SERVER_BUILDER.comment("The Forge Energy cost to Restore 1 entity with the Paradox Machine.  This value is multiplied by the number of entities the machine is restoring.")
                 .defineInRange("paradox_rf_per_entity", 250000, 0, Integer.MAX_VALUE);
-        PARADOX_TOTAL_FLUID_CAPACITY = COMMON_BUILDER.comment("The maximum amount of Time Fluid the Paradox Machine can hold in its buffer")
+        PARADOX_TOTAL_FLUID_CAPACITY = SERVER_BUILDER.comment("The maximum amount of Time Fluid the Paradox Machine can hold in its buffer")
                 .defineInRange("paradox_fluid_capacity", 16000, 1, Integer.MAX_VALUE);
-        PARADOX_FLUID_PER_BLOCK = COMMON_BUILDER.comment("The Time Fluid cost (in mb) to Restore 1 block with the Paradox Machine.  This value is multiplied by the number of blocks the machine is restoring.")
+        PARADOX_FLUID_PER_BLOCK = SERVER_BUILDER.comment("The Time Fluid cost (in mb) to Restore 1 block with the Paradox Machine.  This value is multiplied by the number of blocks the machine is restoring.")
                 .defineInRange("paradox_fluid_per_block", 50, 0, Integer.MAX_VALUE);
-        PARADOX_FLUID_PER_ENTITY = COMMON_BUILDER.comment("The Time Fluid cost (in mb) to Restore 1 entity with the Paradox Machine.  This value is multiplied by the number of entities the machine is restoring.")
+        PARADOX_FLUID_PER_ENTITY = SERVER_BUILDER.comment("The Time Fluid cost (in mb) to Restore 1 entity with the Paradox Machine.  This value is multiplied by the number of entities the machine is restoring.")
                 .defineInRange("paradox_fluid_per_entity", 50, 0, Integer.MAX_VALUE);
-        PARADOX_ENERGY_PER_BLOCK = COMMON_BUILDER.comment("The amount of Paradox Energy accumulated in the Paradox Machine when it restores a single block. This value is multiplied by the number of blocks the machine is restoring.")
+        PARADOX_ENERGY_PER_BLOCK = SERVER_BUILDER.comment("The amount of Paradox Energy accumulated in the Paradox Machine when it restores a single block. This value is multiplied by the number of blocks the machine is restoring.")
                 .defineInRange("paradox_energy_per_block", 0.25, 0, Double.MAX_VALUE);
-        PARADOX_ENERGY_PER_ENTITY = COMMON_BUILDER.comment("The amount of Paradox Energy accumulated in the Paradox Machine when it restores a single entity. This value is multiplied by the number of blocks the machine is restoring.")
+        PARADOX_ENERGY_PER_ENTITY = SERVER_BUILDER.comment("The amount of Paradox Energy accumulated in the Paradox Machine when it restores a single entity. This value is multiplied by the number of blocks the machine is restoring.")
                 .defineInRange("paradox_energy_per_entity", 0.25, 0, Double.MAX_VALUE);
-        PARADOX_ENERGY_MAX = COMMON_BUILDER.comment("The maximum amount of Paradox Energy the Paradox Machine can hold in its buffer, before it spawns a Paradox!")
+        PARADOX_ENERGY_MAX = SERVER_BUILDER.comment("The maximum amount of Paradox Energy the Paradox Machine can hold in its buffer, before it spawns a Paradox!")
                 .defineInRange("paradox_energy_max", 100, 0, Double.MAX_VALUE);
-        PARADOX_RESTRICTED_MOBS = COMMON_BUILDER.comment("Use a more restrictive data filtering for mobs cloned by the paradox machine. When enabled, most modded mobs may not work very well.  When disabled, theres a small chance of item dupe bugs.  Recommended to leave this set to false, and add any mobs that allow dupes to the paradox machines deny entity tag.")
+        PARADOX_RESTRICTED_MOBS = SERVER_BUILDER.comment("Use a more restrictive data filtering for mobs cloned by the paradox machine. When enabled, most modded mobs may not work very well.  When disabled, theres a small chance of item dupe bugs.  Recommended to leave this set to false, and add any mobs that allow dupes to the paradox machines deny entity tag.")
                 .define("paradox_restricted_mobs", false);
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void playerAccessorConfig() {
-        COMMON_BUILDER.comment("Player Accessor").push(CATEGORY_PLAYER_ACCESSOR);
-        PLAYER_ACCESSOR_DIMENSIONAL_BLACKLISTING = COMMON_BUILDER.comment("Will you be blacklisting dimensions? If set to false, the Blacklist Dimensions list will not function.")
+        SERVER_BUILDER.comment("Player Accessor").push(CATEGORY_PLAYER_ACCESSOR);
+        PLAYER_ACCESSOR_DIMENSIONAL_BLACKLISTING = SERVER_BUILDER.comment("Will you be blacklisting dimensions? If set to false, the Blacklist Dimensions list will not function.")
                 .define("player_accessor_dimensional_blacklisting", false);
-        PLAYER_ACCESSOR_VALIDATION_TIME = COMMON_BUILDER.comment("The frequency with which the player accessor validates the player - the longer this is set to, the longer the player can be accessed in a blacklisted dimension.")
+        PLAYER_ACCESSOR_VALIDATION_TIME = SERVER_BUILDER.comment("The frequency with which the player accessor validates the player - the longer this is set to, the longer the player can be accessed in a blacklisted dimension.")
                 .defineInRange("player_accessor_validation_time", 100, 0, 5000);
-        PLAYER_ACCESSOR_BLACKLISTED_DIMENSIONS = COMMON_BUILDER
+        PLAYER_ACCESSOR_BLACKLISTED_DIMENSIONS = SERVER_BUILDER
                 .comment("A list of dimension names to blacklist for the Player Accessor feature.")
                 .defineListAllowEmpty("player_accessor_blacklisted_dimensions",
                         List.of(), // Default value is an empty list
                         () -> "",  // Supplier for new elements in the UI
                         obj -> obj instanceof String); // Validate that all entries are strings
 
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 
     private static void timeCrystalConfig() {
-        COMMON_BUILDER.comment("Time Crystals").push(CATEGORY_TIME_CRYSTAL);
-        TIME_CRYSTAL_CUSTOM_DIMENSIONS = COMMON_BUILDER.comment("Do you want to customize Time Crystal Growth Dimensions? If set to true, the following 3 fields MUST be populated. Don't leave any blank! Defaults to false, which means normal growth rules occur - Stage 1 = Overworld (or any other dimension besides Nether/End), Stage 2 = Nether, Stage 3 = End.")
+        SERVER_BUILDER.comment("Time Crystals").push(CATEGORY_TIME_CRYSTAL);
+        TIME_CRYSTAL_CUSTOM_DIMENSIONS = SERVER_BUILDER.comment("Do you want to customize Time Crystal Growth Dimensions? If set to true, the following 3 fields MUST be populated. Don't leave any blank! Defaults to false, which means normal growth rules occur - Stage 1 = Overworld (or any other dimension besides Nether/End), Stage 2 = Nether, Stage 3 = End.")
                 .define("time_crystal_custom_dimensions", false);
-        TIME_CRYSTAL_STAGE1_DIMENSIONS = COMMON_BUILDER
+        TIME_CRYSTAL_STAGE1_DIMENSIONS = SERVER_BUILDER
                 .comment("A list of dimensions that Time Crystals can Advance to Stage 1 in.")
                 .defineListAllowEmpty("time_crystal_stage_1_dims",
                         List.of(), // Default value is an empty list
                         () -> "",  // Supplier for new elements in the UI
                         obj -> obj instanceof String); // Validate that all entries are strings
-        TIME_CRYSTAL_STAGE2_DIMENSIONS = COMMON_BUILDER
+        TIME_CRYSTAL_STAGE2_DIMENSIONS = SERVER_BUILDER
                 .comment("A list of dimensions that Time Crystals can Advance to Stage 2 in.")
                 .defineListAllowEmpty("time_crystal_stage_2_dims",
                         List.of(), // Default value is an empty list
                         () -> "",  // Supplier for new elements in the UI
                         obj -> obj instanceof String); // Validate that all entries are strings
-        TIME_CRYSTAL_STAGE3_DIMENSIONS = COMMON_BUILDER
+        TIME_CRYSTAL_STAGE3_DIMENSIONS = SERVER_BUILDER
                 .comment("A list of dimensions that Time Crystals can Advance to Stage 3 in.")
                 .defineListAllowEmpty("time_crystal_stage_3_dims",
                         List.of(), // Default value is an empty list
                         () -> "",  // Supplier for new elements in the UI
                         obj -> obj instanceof String); // Validate that all entries are strings
 
-        COMMON_BUILDER.pop();
+        SERVER_BUILDER.pop();
     }
 }

@@ -114,6 +114,7 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     protected boolean canBreakAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
+
         //TODO Revisit once a proper approach to doing this exists
         //BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, blockPos, level.getBlockState(blockPos), fakePlayer);
         //if (NeoForge.EVENT_BUS.post(event).isCanceled())

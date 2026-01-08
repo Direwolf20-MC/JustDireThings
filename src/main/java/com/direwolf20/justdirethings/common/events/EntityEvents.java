@@ -50,7 +50,7 @@ public class EntityEvents {
         BlockState blockState = entity.getInBlockState();
         if (!(blockState.getBlock() instanceof LiquidBlock)) return;
         BlockState fluidDropOutput = findRecipe(blockState, itemEntity);
-        if (!fluidDropOutput.isAir()) {
+        if (fluidDropOutput != null && !fluidDropOutput.isAir()) {
             BlockPos blockPos = entity.blockPosition();
             if (level.setBlockAndUpdate(blockPos, fluidDropOutput)) {
                 itemEntity.getItem().shrink(1);
