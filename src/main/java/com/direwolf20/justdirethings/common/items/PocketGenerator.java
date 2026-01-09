@@ -9,6 +9,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,8 +20,10 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.EntityCapability;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.ComponentItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,6 +31,10 @@ import java.util.List;
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class PocketGenerator extends Item implements PoweredItem, ToggleableItem {
+
+    public static final EntityCapability<IItemHandler, Void> CURIOS_INVENTORY =
+            EntityCapability.createVoid(ResourceLocation.fromNamespaceAndPath("curios", "item_handler"), IItemHandler.class);
+
     public PocketGenerator() {
         super(new Properties()
                 .stacksTo(1));
@@ -58,16 +65,27 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
                 if (energyStorage.getEnergyStored() >= (getFEPerTick() / 10)) { //If we have 1/10th the max transfer speed, go ahead and let it rip
                     for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
                         ItemStack slotStack = player.getInventory().getItem(i);
-                        IEnergyStorage slotEnergy = slotStack.getCapability(Capabilities.EnergyStorage.ITEM);
-                        if (slotEnergy != null) {
-                            int acceptedEnergy = slotEnergy.receiveEnergy(getFEPerTick(), true);
-                            if (acceptedEnergy > 0) {
-                                int extractedEnergy = energyStorage.extractEnergy(acceptedEnergy, false);
-                                slotEnergy.receiveEnergy(extractedEnergy, false);
-                            }
+                        transferEnergy(slotStack, energyStorage);
+                    }
+                    IItemHandler curios = player.getCapability(CURIOS_INVENTORY);
+                    if (curios != null) {
+                        for (int i = 0; i < curios.getSlots(); i++) {
+                            ItemStack slotStack = curios.getStackInSlot(i);
+                            transferEnergy(slotStack, energyStorage);
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private void transferEnergy(ItemStack slotStack, IEnergyStorage energyStorage) {
+        IEnergyStorage slotEnergy = slotStack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (slotEnergy != null) {
+            int acceptedEnergy = slotEnergy.receiveEnergy(getFEPerTick(), true);
+            if (acceptedEnergy > 0) {
+                int extractedEnergy = energyStorage.extractEnergy(acceptedEnergy, false);
+                slotEnergy.receiveEnergy(extractedEnergy, false);
             }
         }
     }
