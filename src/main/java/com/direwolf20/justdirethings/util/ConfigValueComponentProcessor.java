@@ -31,7 +31,7 @@ public class ConfigValueComponentProcessor implements IComponentProcessor {
         String result = this.rawText;
 
         for (final String option : this.options) {
-            final Object value = ((ModConfigSpec.ConfigValue<?>) Config.COMMON_CONFIG.getValues().get(option)).get();
+            final Object value = ((ModConfigSpec.ConfigValue<?>) Config.SERVER_CONFIG.getValues().get(option)).get();
             result = result.replace("#" + option + "#", String.valueOf(value));
         }
 

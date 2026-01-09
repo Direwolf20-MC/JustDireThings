@@ -1,0 +1,16 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    if: |
+      !contains(github.event.head_commit.message, '[ciskip]')
+    uses: ./.github/workflows/base.yml
+    with:
+      gradle-tasks: 'build publishMods'
+    secrets:
+      curse-token: ${{ secrets.CURSE_TOKEN }}
