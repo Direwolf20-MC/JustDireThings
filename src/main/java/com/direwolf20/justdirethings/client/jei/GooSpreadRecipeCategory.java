@@ -1,9 +1,12 @@
 package com.direwolf20.justdirethings.client.jei;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.logging.LogUtils;
+
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,18 +18,30 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe> {
-    public static final RecipeType<GooSpreadRecipe> TYPE =
-            RecipeType.create(JustDireThings.MODID, "goo_spread_recipe", com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe.class);
+    public static final RecipeType<GooSpreadRecipe> TYPE = RecipeType.create(JustDireThings.MODID, "goo_spread_recipe",
+            com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe.class);
 
     public static final int width = 120;
     public static final int height = 40;
@@ -66,7 +81,8 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe>
     }
 
     @Override
-    public void draw(GooSpreadRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(GooSpreadRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics gui, double mouseX,
+            double mouseY) {
         RenderSystem.enableBlend();
         arrow.draw(gui, 54, 12);
         background.draw(gui, 17, 0);
@@ -84,18 +100,11 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<GooSpreadRecipe>
             inputSlotBuilder
                     .addFluidStack(liquidBlock.fluid, 1000);
         }
-        List<ItemStack> catalystlist = new ArrayList<>();
 
-        if (recipe.getTierRequirement() <= 1)
-            catalystlist.add(new ItemStack(Registration.GooBlock_Tier1.get()));
-        if (recipe.getTierRequirement() <= 2)
-            catalystlist.add(new ItemStack(Registration.GooBlock_Tier2.get()));
-        if (recipe.getTierRequirement() <= 3)
-            catalystlist.add(new ItemStack(Registration.GooBlock_Tier3.get()));
-        if (recipe.getTierRequirement() <= 4)
-            catalystlist.add(new ItemStack(Registration.GooBlock_Tier4.get()));
         builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12)
-                .addItemStacks(catalystlist);
+                .addIngredients(
+                        Ingredient.of(
+                                JustDireItemTags.GOO_RECIPE_TIERS.get(recipe.getTierRequirement()-1)));
 
         BlockState output = recipe.getOutput();
         if (output.getBlock().asItem() != Items.AIR) {

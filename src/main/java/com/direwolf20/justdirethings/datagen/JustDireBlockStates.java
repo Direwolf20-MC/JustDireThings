@@ -51,8 +51,19 @@ public class JustDireBlockStates extends BlockStateProvider {
         timeCrystalCluster(Registration.TimeCrystalCluster_Medium);
         timeCrystalCluster(Registration.TimeCrystalCluster_Large);
         timeCrystalCluster(Registration.TimeCrystalCluster);
+        soilBlocks(Registration.GooSoil_Tier1);
+        soilBlocks(Registration.GooSoil_Tier2);
+        soilBlocks(Registration.GooSoil_Tier3);
+        soilBlocks(Registration.GooSoil_Tier4);
+        oreBlocks(Registration.RawBlazegoldOre);
+        oreBlocks(Registration.RawCelestigemOre);
+        oreBlocks(Registration.RawEclipseAlloyOre);
+        oreBlocks(Registration.RawFerricoreOre);
+        oreBlocks(Registration.RawCoal_T1);
+        oreBlocks(Registration.RawCoal_T2);
+        oreBlocks(Registration.RawCoal_T3);
+        oreBlocks(Registration.RawCoal_T4);
         patternBlock();
-        soilBlocks();
         sidedBlocks();
         fluidBlocks();
 
@@ -185,70 +196,6 @@ public class JustDireBlockStates extends BlockStateProvider {
         }
     }
 
-    private void soilBlocks() {
-        getVariantBuilder(Registration.GooSoil_Tier1.get()).forAllStates(s -> {
-            ModelFile model;
-            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
-            if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil_Tier1.getId().getPath() + "_moist", ResourceLocation.parse("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/goosoilside_tier1"))
-                        .texture("top", modLoc("block/goofarmland_tier1_moist"));
-            } else {
-                model = models().withExistingParent(Registration.GooSoil_Tier1.getId().getPath(), ResourceLocation.parse("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/goosoilside_tier1"))
-                        .texture("top", modLoc("block/goofarmland_tier1"));
-            }
-            return ConfiguredModel.builder()
-                    .modelFile(model).build();
-        });
-
-        getVariantBuilder(Registration.GooSoil_Tier2.get()).forAllStates(s -> {
-            ModelFile model;
-            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
-            if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath() + "_moist", ResourceLocation.parse("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/goosoilside_tier2"))
-                        .texture("top", modLoc("block/goofarmland_tier2_moist"));
-            } else {
-                model = models().withExistingParent(Registration.GooSoil_Tier2.getId().getPath(), ResourceLocation.parse("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/goosoilside_tier2"))
-                        .texture("top", modLoc("block/goofarmland_tier2"));
-            }
-            return ConfiguredModel.builder()
-                    .modelFile(model).build();
-        });
-
-        getVariantBuilder(Registration.GooSoil_Tier3.get()).forAllStates(s -> {
-            ModelFile model;
-            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
-            if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath() + "_moist", ResourceLocation.parse("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/goosoilside_tier3"))
-                        .texture("top", modLoc("block/goofarmland_tier3_moist"));
-            } else {
-                model = models().withExistingParent(Registration.GooSoil_Tier3.getId().getPath(), ResourceLocation.parse("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/goosoilside_tier3"))
-                        .texture("top", modLoc("block/goofarmland_tier3"));
-            }
-            return ConfiguredModel.builder()
-                    .modelFile(model).build();
-        });
-        getVariantBuilder(Registration.GooSoil_Tier4.get()).forAllStates(s -> {
-            ModelFile model;
-            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
-            if (Moisture == 7) { //Moist
-                model = models().withExistingParent(Registration.GooSoil_Tier4.getId().getPath() + "_moist", ResourceLocation.parse("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/goosoilside_tier4"))
-                        .texture("top", modLoc("block/goofarmland_tier4_moist"));
-            } else {
-                model = models().withExistingParent(Registration.GooSoil_Tier4.getId().getPath(), ResourceLocation.parse("minecraft:block/template_farmland"))
-                        .texture("dirt", modLoc("block/goosoilside_tier4"))
-                        .texture("top", modLoc("block/goofarmland_tier4"));
-            }
-            return ConfiguredModel.builder()
-                    .modelFile(model).build();
-        });
-    }
 
     private void patternBlock() {
         getVariantBuilder(Registration.GooPatternBlock.get()).forAllStates(s -> {
@@ -291,4 +238,31 @@ public class JustDireBlockStates extends BlockStateProvider {
                     .modelFile(model).build();
         });
     }
+
+    private void soilBlocks(DeferredHolder<Block, ?> soil) {
+        getVariantBuilder(soil.get()).forAllStates(s -> {
+            int Moisture = s.getValue(BlockStateProperties.MOISTURE);
+            return ConfiguredModel.builder()
+                    .modelFile(models()
+                            .withExistingParent(soil.getId().getPath() + (Moisture == 7 ? "_moist" : ""),
+                                    ResourceLocation.parse("minecraft:block/template_farmland"))
+                            .texture("dirt",
+                                    modLoc("block/goosoilside_tier"
+                                            + soil.getId().toString().replace(MODID+":goosoil_tier", "")))
+                            .texture("top",
+                                    modLoc("block/goofarmland_tier"
+                                            + soil.getId().toString().replace(MODID+":goosoil_tier", ""))
+                                            + (Moisture == 7 ? "_moist" : "")))
+                    .build();
+        });
+    }
+
+
+    private void oreBlocks(DeferredHolder<Block, ?> block){
+        directionalBlock(block.get(),models()
+        .withExistingParent(block.getId().getPath(), MODID+":block/raw_ore_template")
+        .texture("palette", block.getId().toString().replace(":", ":block/")));
+    }
+
+
 }

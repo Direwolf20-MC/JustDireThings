@@ -1,4 +1,4 @@
-// 1.21.1	2024-12-05T16:39:42.4119739	JustDireThings Item Tags
+// 1.21.1	2025-04-13T13:57:07.6963165	JustDireThings Item Tags
 c144a5adcf337b1e974a62a8dc0d8f29311210b4 data/c/tags/item/gems.json
 55719b9c6f0430ad38bf081d697aa5406cc27cfb data/c/tags/item/ingots.json
 d7ad09b1e8fb0835b7f14f744fa7866dd3521c60 data/c/tags/item/ingots/blazegold.json
@@ -20,6 +20,10 @@ d43d57f243d07a70864154c42153bce1fa092a9b data/c/tags/item/tools/melee_weapon.jso
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/item/auto_smelt_deny.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data/justdirethings/tags/item/auto_smoke_deny.json
 efe9e0caf089100a228c46379f3aa70d7f602ddc data/justdirethings/tags/item/deny_fuel_canister.json
+bb9c27f62dc128301412c3c45f1d9f3b298f29bb data/justdirethings/tags/item/goorecipe_tier/1.json
+9485c6a6284f794ee075c0aabbdc3ed29ff12671 data/justdirethings/tags/item/goorecipe_tier/2.json
+7b9553fa8759b32c74c8752801e2a5d3b5d13e73 data/justdirethings/tags/item/goorecipe_tier/3.json
+130881a7fea341c2e417648306ead7bc417b6d86 data/justdirethings/tags/item/goorecipe_tier/4.json
 997c28a8e537ed12fd2a9887b2579f3d9fcd2577 data/justdirethings/tags/item/goo_revive_tier_1.json
 eeef6ccb8e598e021db2f245fbdff673e3106bf6 data/justdirethings/tags/item/goo_revive_tier_2.json
 2b5f0c660ffe0de7f842859234134966481a7dfa data/justdirethings/tags/item/goo_revive_tier_3.json
