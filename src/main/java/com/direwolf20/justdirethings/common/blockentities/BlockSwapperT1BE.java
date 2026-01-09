@@ -271,6 +271,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             entities = findEntitiesToSwap(getAABB());
         if (positions.isEmpty() && entities.isEmpty())
             return;
+
         for (BlockPos blockPos : positions) {
             swapBlock(blockPos, remoteSwapper, partnerLevel, fakePlayer, partnerFakePlayer);
         }
@@ -434,10 +435,10 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public boolean isBlockPosValid(ServerLevel serverLevel, BlockPos blockPos) {
-        BlockState blockState = level.getBlockState(blockPos);
+        BlockState blockState = serverLevel.getBlockState(blockPos);
         if (blockState.is(Tags.Blocks.RELOCATION_NOT_SUPPORTED) || blockState.is(JustDireBlockTags.SWAPPERDENY))
             return false;
-        if (blockState.getDestroySpeed(level, blockPos) < 0)
+        if (blockState.getDestroySpeed(serverLevel, blockPos) < 0)
             return false;
         GlobalPos targetGlobalPos = GlobalPos.of(serverLevel.dimension(), blockPos);
         if (targetGlobalPos.equals(getGlobalPos()) || targetGlobalPos.equals(boundTo))
