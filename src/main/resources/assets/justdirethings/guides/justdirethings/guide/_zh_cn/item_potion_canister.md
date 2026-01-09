@@ -1,0 +1,18 @@
+---
+navigation:
+  title: "药水罐"
+  icon: "justdirethings:potion_canister"
+  position: 20
+  parent: justdirethings:items.md
+---
+
+# 药水罐
+
+右击药水罐可打开其界面，其中会接受药水瓶。放入的药水会装入罐内的储罐。
+
+可以把药水罐放到弓中，该弓发射出的箭矢便会携带药水效果。
+
+弓若要使用药水罐，其上应预先加装相应的升级。
+
+药水罐也应放入弓设置界面中相应的槽位。
+
