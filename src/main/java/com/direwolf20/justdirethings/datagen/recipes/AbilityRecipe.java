@@ -59,8 +59,10 @@ public class AbilityRecipe implements SmithingRecipe {
     public ItemStack getResultItem(HolderLookup.Provider provider) {
         ItemStack itemstack = new ItemStack(getBase().getItems()[0].getItem());
         Ability ability = Ability.getAbilityFromUpgradeItem(getAddition().getItems()[0].getItem());
-        if (!Config.AVAILABLE_ABILITY_MAP.get(ability).get())
+
+        if (Config.SERVER_CONFIG.isLoaded() && !Config.AVAILABLE_ABILITY_MAP.get(ability).get())
             return new ItemStack(Items.AIR);
+
         itemstack.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
 
         return itemstack;
