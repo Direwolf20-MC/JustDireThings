@@ -15,7 +15,7 @@ public class JustDireDataMaps extends DataMapProvider {
     }
 
     @Override
-    protected void gather() {
+    protected void gather(HolderLookup.Provider provider) {
         builder(NeoForgeDataMaps.FURNACE_FUELS)
                 .add(Registration.Coal_T1.getId(), new FurnaceFuel(4800), false)
                 .add(Registration.CoalBlock_T1.getId(), new FurnaceFuel(48000), false)
@@ -28,6 +28,4 @@ public class JustDireDataMaps extends DataMapProvider {
                 .add(Registration.CharcoalBlock.getId(), new FurnaceFuel(16000), false);
         ;
     }
-
-
 }

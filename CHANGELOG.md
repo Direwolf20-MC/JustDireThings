@@ -1,3 +1,17 @@
+## [1.5.7]
+
+### Added
+
+- Added support for `Curios` items to be charged via the Pocket Generator, thanks to @dbt
+
+### Fixed
+
+- KubeJS issues with recipe replacements when the server config is used in the result calculation. We now check the config is loaded before mutating our own recipe.
+
+### Reminder
+
+A reminder that in `1.5.6+` the `-common` config file no longer contains any options and all options have been moved to the `-server` config file. Please ensure you move any custom settings you had in the `-common` config to the `-server` config to ensure they are still applied.
+
 ## [1.5.6]
 
 ### Added

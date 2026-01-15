@@ -59,7 +59,7 @@ import java.io.IOException;
 
 import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
-@EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
 public class ClientSetup {
     public static void init(final FMLClientSetupEvent event) {
         NeoForge.EVENT_BUS.addListener(KeyBindings::onClientInput);
