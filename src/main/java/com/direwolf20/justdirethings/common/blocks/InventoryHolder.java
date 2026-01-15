@@ -60,13 +60,6 @@ public class InventoryHolder extends BaseMachineBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.hasBlockEntity() && !state.is(newState.getBlock())) { //Replica of Default Block onRemove - to skip dropping items.
-            level.removeBlockEntity(pos);
-        }
-    }
-
-    @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
         if (!world.isClientSide && entity instanceof Player player) {
