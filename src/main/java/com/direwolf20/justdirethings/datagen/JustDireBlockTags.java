@@ -14,6 +14,8 @@ import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
+import static com.direwolf20.justdirethings.JustDireThings.MODID;
+
 import java.util.concurrent.CompletableFuture;
 
 public class JustDireBlockTags extends BlockTagsProvider {
@@ -22,18 +24,22 @@ public class JustDireBlockTags extends BlockTagsProvider {
         super(output, lookupProvider, JustDireThings.MODID, existingFileHelper);
     }
 
-    public static final TagKey<Block> LAWNMOWERABLE = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "lawnmowerable"));
-    public static final TagKey<Block> NO_AUTO_CLICK = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "noautoclick"));
-    public static final TagKey<Block> SWAPPERDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "swapper_deny"));
-    public static final TagKey<Block> ECLISEGATEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsegate_deny"));
-    public static final TagKey<Block> PHASEDENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "phase_deny"));
-    public static final TagKey<Block> TICK_SPEED_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "tick_speed_deny"));
-    public static final TagKey<Block> PARADOX_ALLOW = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_allow"));
-    public static final TagKey<Block> PARADOX_ABSORB_DENY = BlockTags.create(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
+    public static final TagKey<Block> LAWNMOWERABLE = ModTag( "lawnmowerable");
+    public static final TagKey<Block> NO_AUTO_CLICK = ModTag( "noautoclick");
+    public static final TagKey<Block> SWAPPERDENY = ModTag( "swapper_deny");
+    public static final TagKey<Block> ECLISEGATEDENY = ModTag( "eclipsegate_deny");
+    public static final TagKey<Block> PHASEDENY = ModTag( "phase_deny");
+    public static final TagKey<Block> TICK_SPEED_DENY = ModTag( "tick_speed_deny");
+    public static final TagKey<Block> PARADOX_ALLOW = ModTag( "paradox_allow");
+    public static final TagKey<Block> PARADOX_ABSORB_DENY = ModTag( "paradox_absorb_deny");
     public static final TagKey<Block> CHARCOAL = forgeTag("storage_blocks/charcoal");
 
     private static TagKey<Block> forgeTag(String name) {
         return BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
+    }
+
+    private static TagKey<Block> ModTag(String name) {
+        return BlockTags.create(ResourceLocation.fromNamespaceAndPath(MODID, name));
     }
 
     @Override
