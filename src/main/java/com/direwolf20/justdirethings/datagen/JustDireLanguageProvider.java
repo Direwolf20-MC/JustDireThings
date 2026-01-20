@@ -570,5 +570,8 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("sound.justdirethings.portal_gun_close", "Portal Gun Close");
         add("sound.justdirethings.portal_gun_open", "Portal Gun Open");
         add("sound.justdirethings.paradox_ambient", "Paradox Machine Ambient");
+
+        //GuideMe compat
+        add("justdirethings.guide_name", "Just Dires Guide");
     }
 }
