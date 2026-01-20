@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.events;
 
+import com.direwolf20.justdirethings.common.blockentities.ItemCollectorBE;
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
 import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -31,6 +33,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class LivingEntityEvents {
@@ -102,8 +105,23 @@ public class LivingEntityEvents {
 
     @SubscribeEvent
     public static void blockJoin(EntityJoinLevelEvent e) {
-        if (e.getEntity() instanceof UsefulFakePlayer)
+        if (e.getEntity() instanceof UsefulFakePlayer) {
             e.setCanceled(true);
+        }
+
+        if (e.getEntity() instanceof ItemEntity itemEntity) {
+            Level level = e.getLevel();
+            ItemCollectorBE.ITEM_COLLECTORS
+                    .find(level, itemEntity.position(), (be, pos) -> be.getAABB(be.getBlockPos()).contains(pos) && be.isActiveRedstone())
+                    .ifPresent(collector -> {
+                        IItemHandler inv = collector.getAttachedInventory();
+                        if (inv == null) return;
+
+                        collector.storeItem(inv, itemEntity, () -> {
+                            e.setCanceled(true);
+                        });
+                    });
+        }
     }
 
     @SubscribeEvent
