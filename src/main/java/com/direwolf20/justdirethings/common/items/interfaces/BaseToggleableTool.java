@@ -72,7 +72,8 @@ public abstract class BaseToggleableTool extends BasePoweredItem implements Togg
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide && player.isShiftKeyDown())
             openSettings(player);
-        useAbility(level, player, hand);
+        if (useAbility(level, player, hand))
+            return InteractionResultHolder.success(player.getItemInHand(hand));
         return super.use(level, player, hand);
     }
 
