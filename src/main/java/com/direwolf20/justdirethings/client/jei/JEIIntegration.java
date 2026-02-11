@@ -77,18 +77,15 @@ public class JEIIntegration implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         assert Minecraft.getInstance().level != null;
         RecipeManager recipeManager = Minecraft.getInstance().level.getRecipeManager();
-        List<GooSpreadRecipe> goospreadrecipes = recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE.get())
-                .stream().map(RecipeHolder::value).collect(Collectors.toList());
+        List<RecipeHolder<GooSpreadRecipe>> goospreadrecipes = recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE.get());
 
         registration.addRecipes(GooSpreadRecipeCategory.TYPE, goospreadrecipes);
 
-        List<GooSpreadRecipeTag> goospreadtagrecipes = recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get())
-                .stream().map(RecipeHolder::value).collect(Collectors.toList());
+        List<RecipeHolder<GooSpreadRecipeTag>> goospreadtagrecipes = recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get());
 
         registration.addRecipes(GooSpreadRecipeTagCategory.TYPE, goospreadtagrecipes);
 
-        List<FluidDropRecipe> fluidDropRecipes = recipeManager.getAllRecipesFor(Registration.FLUID_DROP_RECIPE_TYPE.get())
-                .stream().map(RecipeHolder::value).collect(Collectors.toList());
+        List<RecipeHolder<FluidDropRecipe>> fluidDropRecipes = recipeManager.getAllRecipesFor(Registration.FLUID_DROP_RECIPE_TYPE.get());
 
         registration.addRecipes(FluidDropRecipeCategory.TYPE, fluidDropRecipes);
 
