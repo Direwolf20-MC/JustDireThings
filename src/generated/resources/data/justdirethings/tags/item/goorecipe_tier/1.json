@@ -1,0 +1,9 @@
+{
+  "values": [
+    "justdirethings:gooblock_tier1",
+    {
+      "id": "#justdirethings:goorecipe_tier/2",
+      "required": false
+    }
+  ]
+}
