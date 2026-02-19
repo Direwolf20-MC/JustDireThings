@@ -120,28 +120,14 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (newState.getBlock() != this) {
-            BlockEntity blockEntity = worldIn.getBlockEntity(pos);
-            if (blockEntity instanceof BaseMachineBE baseMachineBE) {
-                IItemHandler iItemHandler = baseMachineBE.getMachineHandler();
-                for (int i = 0; i < iItemHandler.getSlots(); ++i) {
-                    Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), iItemHandler.getStackInSlot(i));
-                }
-            }
-        }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
-    }
-
-    @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder); // Get default drops
         BlockEntity blockEntity = builder.getParameter(LootContextParams.BLOCK_ENTITY);
 
-        if (blockEntity instanceof BaseMachineBE baseMachineBE && !baseMachineBE.isDefaultSettings()) {
+        if (blockEntity instanceof BaseMachineBE baseMachineBE) {
             ItemStack itemStack = new ItemStack(Item.byBlock(this));
             CompoundTag compoundTag = new CompoundTag();
-            ((BaseMachineBE) blockEntity).saveAdditional(compoundTag, builder.getLevel().registryAccess());
+            baseMachineBE.saveAdditional(compoundTag, builder.getLevel().registryAccess());
             if (!compoundTag.isEmpty()) {
                 itemStack.set(JustDireDataComponents.CUSTOM_DATA_1, CustomData.of(compoundTag));
             }
