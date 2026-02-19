@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
@@ -99,8 +100,13 @@ public interface FilterableBE {
                     }
                 }
             }
-
         }
+
+        if (entity instanceof ItemEntity itemEntity) {
+            getFilterData().entityCache.put(entity, isStackValidFilter(itemEntity.getItem()));
+            return getFilterData().entityCache.get(entity);
+        }
+
         getFilterData().entityCache.put(entity, !getFilterData().allowlist);
         return !getFilterData().allowlist;
     }

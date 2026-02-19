@@ -275,6 +275,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
             return false;
         if (sense_target.equals(SENSE_TARGET.ITEM) && !(entity instanceof ItemEntity))
             return false;
+        if (sense_target.equals(SENSE_TARGET.LIVING) && !(entity instanceof Player) && !(entity instanceof Animal) && !(entity instanceof Monster))
+            return false;
         return isEntityValidFilter(entity, this.level);
     }
 
