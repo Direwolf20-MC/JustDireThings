@@ -17,12 +17,13 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FluidDropRecipeCategory implements IRecipeCategory<FluidDropRecipe> {
-    public static final RecipeType<FluidDropRecipe> TYPE =
-            RecipeType.create(JustDireThings.MODID, "fluid_drop_recipe", FluidDropRecipe.class);
+public class FluidDropRecipeCategory implements IRecipeCategory<RecipeHolder<FluidDropRecipe>> {
+    public static final RecipeType<RecipeHolder<FluidDropRecipe>> TYPE =
+            RecipeType.createFromVanilla(Registration.FLUID_DROP_RECIPE_TYPE.get());
 
     public static final int width = 120;
     public static final int height = 40;
@@ -42,7 +43,7 @@ public class FluidDropRecipeCategory implements IRecipeCategory<FluidDropRecipe>
     }
 
     @Override
-    public RecipeType<FluidDropRecipe> getRecipeType() {
+    public RecipeType<RecipeHolder<FluidDropRecipe>> getRecipeType() {
         return TYPE;
     }
 
@@ -62,7 +63,7 @@ public class FluidDropRecipeCategory implements IRecipeCategory<FluidDropRecipe>
     }
 
     @Override
-    public void draw(FluidDropRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<FluidDropRecipe> recipe, IRecipeSlotsView slotsView, GuiGraphics gui, double mouseX, double mouseY) {
         RenderSystem.enableBlend();
         arrow.draw(gui, 34, 20);
         background.draw(gui, 17, 0);
@@ -70,17 +71,17 @@ public class FluidDropRecipeCategory implements IRecipeCategory<FluidDropRecipe>
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, FluidDropRecipe recipe, IFocusGroup focuses) {
-        BlockState input = recipe.getInput();
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<FluidDropRecipe> recipe, IFocusGroup focuses) {
+        BlockState input = recipe.value().getInput();
         IRecipeSlotBuilder inputSlotBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 9, 20);
         if (input.getBlock() instanceof LiquidBlock liquidBlock) {
             inputSlotBuilder
                     .addFluidStack(liquidBlock.fluid, 1000);
         }
         builder.addSlot(RecipeIngredientRole.CATALYST, 9, 0)
-                .addItemStack(new ItemStack(recipe.getCatalyst()));
+                .addItemStack(new ItemStack(recipe.value().getCatalyst()));
 
-        BlockState output = recipe.getOutput();
+        BlockState output = recipe.value().getOutput();
         if (output.getBlock() instanceof LiquidBlock liquidBlock) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 68, 20)
                     .addFluidStack(liquidBlock.fluid, 1000);
