@@ -1,0 +1,15 @@
+{
+  "item_settings": {
+    "display_name": {
+      "type": "translatable",
+      "translate": "justdirethings.guide_name"
+    },
+    "tooltip_lines": [
+      {
+        "text": "Just Dire Things - Explained!",
+        "color": "dark_gray"
+      }
+    ],
+    "model": "guideme:item/guide"
+  }
+}
