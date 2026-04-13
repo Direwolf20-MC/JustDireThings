@@ -6,7 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -21,14 +21,14 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
         super(packOutput, providerCompletableFuture, JustDireThings.MODID, existingFileHelper);
     }
 
-    public static final TagKey<EntityType<?>> CREATURE_CATCHER_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "creature_catcher_deny"));
-    public static final TagKey<EntityType<?>> NO_AI_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_ai_deny"));
-    public static final TagKey<EntityType<?>> NO_EARTHQUAKE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_earthquake"));
-    public static final TagKey<EntityType<?>> PARADOX_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_deny"));
-    public static final TagKey<EntityType<?>> PARADOX_ABSORB_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
-    public static final TagKey<EntityType<?>> POLYMORPHIC_PEACEFUL = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_peaceful"));
-    public static final TagKey<EntityType<?>> POLYMORPHIC_HOSTILE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_hostile"));
-    public static final TagKey<EntityType<?>> POLYMORPHIC_TARGET_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_target_deny"));
+    public static final TagKey<EntityType<?>> CREATURE_CATCHER_DENY = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "creature_catcher_deny"));
+    public static final TagKey<EntityType<?>> NO_AI_DENY = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "no_ai_deny"));
+    public static final TagKey<EntityType<?>> NO_EARTHQUAKE = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "no_earthquake"));
+    public static final TagKey<EntityType<?>> PARADOX_DENY = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "paradox_deny"));
+    public static final TagKey<EntityType<?>> PARADOX_ABSORB_DENY = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
+    public static final TagKey<EntityType<?>> POLYMORPHIC_PEACEFUL = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_peaceful"));
+    public static final TagKey<EntityType<?>> POLYMORPHIC_HOSTILE = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_hostile"));
+    public static final TagKey<EntityType<?>> POLYMORPHIC_TARGET_DENY = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_target_deny"));
 
     @Override
     public void addTags(HolderLookup.Provider lookupProvider) {

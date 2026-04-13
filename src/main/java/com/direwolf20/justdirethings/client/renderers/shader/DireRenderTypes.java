@@ -9,7 +9,7 @@ import net.minecraft.Util;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -79,13 +79,13 @@ public class DireRenderTypes extends RenderType {
 		public ShaderInstance shader;
 		private final VertexFormat format;
 		private final BiFunction<List<ShaderTexture>, ShaderRenderType, RenderType> builder;
-		private final ResourceLocation shaderLocation;
+		private final Identifier shaderLocation;
 
 		public ShaderRenderType(String name, VertexFormat format, BiFunction<List<ShaderTexture>, ShaderRenderType, RenderType> builder) {
 			this.name = name;
 			this.format = format;
 			this.builder = Util.memoize(builder);
-			this.shaderLocation = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, this.name);
+			this.shaderLocation = Identifier.fromNamespaceAndPath(JustDireThings.MODID, this.name);
 		}
 
 		public RenderType using(List<ShaderTexture> textures) {
@@ -100,7 +100,7 @@ public class DireRenderTypes extends RenderType {
 			return "%s_%s".formatted(JustDireThings.MODID, name);
 		}
 
-		public ResourceLocation shaderLocation() {
+		public Identifier shaderLocation() {
 			return shaderLocation;
 		}
 

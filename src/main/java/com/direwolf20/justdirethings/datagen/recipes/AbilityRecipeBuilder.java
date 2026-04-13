@@ -11,7 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -90,11 +90,11 @@ public class AbilityRecipeBuilder implements RecipeBuilder {
         String armorName = BuiltInRegistries.ITEM.getKey(this.base.getItems()[0].getItem()).getPath();
         String abilityItemPath = BuiltInRegistries.ITEM.getKey(this.addition.getItems()[0].getItem()).getPath();
         String abilityName = abilityItemPath.substring(abilityItemPath.indexOf("_") + 1);
-        this.save(pRecipeOutput, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, armorName + "-" + abilityName));
+        this.save(pRecipeOutput, Identifier.fromNamespaceAndPath(JustDireThings.MODID, armorName + "-" + abilityName));
     }
 
     @Override
-    public void save(RecipeOutput pRecipeOutput, ResourceLocation pId) {
+    public void save(RecipeOutput pRecipeOutput, Identifier pId) {
         this.ensureValid(pId);
         Advancement.Builder advancement$builder = pRecipeOutput.advancement()
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(pId))
@@ -109,7 +109,7 @@ public class AbilityRecipeBuilder implements RecipeBuilder {
         pRecipeOutput.accept(pId, shapelessrecipe, advancement$builder.build(pId.withPrefix("recipes/" + RecipeCategory.MISC.getFolderName() + "/")));
     }
 
-    private void ensureValid(ResourceLocation pId) {
+    private void ensureValid(Identifier pId) {
         if (this.criteria.isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + pId);
         }

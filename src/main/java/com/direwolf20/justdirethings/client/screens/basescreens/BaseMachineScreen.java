@@ -28,7 +28,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
@@ -45,10 +45,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends BaseScreen<T> {
-    protected final ResourceLocation JUSTSLOT = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/justslot.png");
-    protected final ResourceLocation POWERBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/powerbar.png");
-    protected final ResourceLocation FLUIDBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fluidbar.png");
-    protected final ResourceLocation SOCIALBACKGROUND = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "background");
+    protected final Identifier JUSTSLOT = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/justslot.png");
+    protected final Identifier POWERBAR = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/powerbar.png");
+    protected final Identifier FLUIDBAR = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fluidbar.png");
+    protected final Identifier SOCIALBACKGROUND = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "background");
     protected BaseMachineContainer container;
     protected BaseMachineBE baseMachineBE;
     protected double xRadius = 3, yRadius = 3, zRadius = 3;
@@ -316,7 +316,7 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         if (fluidStack.isEmpty() || height <= 0) return;
 
         Fluid fluid = fluidStack.getFluid();
-        ResourceLocation fluidStill = IClientFluidTypeExtensions.of(fluid).getStillTexture();
+        Identifier fluidStill = IClientFluidTypeExtensions.of(fluid).getStillTexture();
         TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
         int fluidColor = IClientFluidTypeExtensions.of(fluid).getTintColor(fluidStack);
 

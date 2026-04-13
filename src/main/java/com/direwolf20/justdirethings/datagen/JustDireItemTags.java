@@ -5,7 +5,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -43,7 +43,7 @@ public class JustDireItemTags extends ItemTagsProvider {
         public static final TagKey<Item> CHARCOALBLOCKS = forgeTag("storage_blocks/charcoal");
 
         private static TagKey<Item> forgeTag(String name) {
-                return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
+                return ItemTags.create(Identifier.fromNamespaceAndPath("c", name));
         }
 
         public static final TagKey<Item> FUEL_CANISTER_DENY = ModTag("deny_fuel_canister");
@@ -63,7 +63,7 @@ public class JustDireItemTags extends ItemTagsProvider {
                         GOO_RECIPE_TIER_1, GOO_RECIPE_TIER_2, GOO_RECIPE_TIER_3, GOO_RECIPE_TIER_4);
 
         private static TagKey<Item> ModTag(String name) {
-                return ItemTags.create(ResourceLocation.fromNamespaceAndPath(MODID, name));
+                return ItemTags.create(Identifier.fromNamespaceAndPath(MODID, name));
         }
 
         @Override

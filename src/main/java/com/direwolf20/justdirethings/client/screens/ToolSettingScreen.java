@@ -23,7 +23,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -35,8 +35,8 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 
 public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContainer> {
-    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/settings.png");
-    protected final ResourceLocation JUSTSLOT = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/justslot.png");
+    private final Identifier GUI = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/settings.png");
+    protected final Identifier JUSTSLOT = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/justslot.png");
 
     protected final ToolSettingContainer container;
     Player player;

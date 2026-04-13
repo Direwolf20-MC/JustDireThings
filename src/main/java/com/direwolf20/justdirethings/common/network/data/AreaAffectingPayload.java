@@ -5,7 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record AreaAffectingPayload(
@@ -13,7 +13,7 @@ public record AreaAffectingPayload(
         int xOffset, int yOffset, int zOffset,
         boolean renderArea
 ) implements CustomPacketPayload {
-    public static final Type<AreaAffectingPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "area_affecting_packet"));
+    public static final Type<AreaAffectingPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "area_affecting_packet"));
 
     @Override
     public Type<AreaAffectingPayload> type() {

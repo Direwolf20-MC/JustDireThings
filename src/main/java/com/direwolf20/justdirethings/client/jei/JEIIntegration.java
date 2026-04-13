@@ -17,7 +17,7 @@ import mezz.jei.api.recipe.category.extensions.vanilla.smithing.IExtendableSmith
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -34,8 +34,8 @@ public class JEIIntegration implements IModPlugin {
 
     @Nonnull
     @Override
-    public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "jei_plugin");
+    public Identifier getPluginUid() {
+        return Identifier.fromNamespaceAndPath(JustDireThings.MODID, "jei_plugin");
     }
 
     @Override
@@ -46,13 +46,13 @@ public class JEIIntegration implements IModPlugin {
         List<RecipeHolder<CraftingRecipe>> hiddenRecipes = new ArrayList<>();
         for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
-                Optional<RecipeHolder<?>> recipe = recipeManager.byKey(ResourceLocation.parse(sidedBlock.getId() + "_nbtclear"));
+                Optional<RecipeHolder<?>> recipe = recipeManager.byKey(Identifier.parse(sidedBlock.getId() + "_nbtclear"));
                 recipe.ifPresent(recipeHolder -> hiddenRecipes.add((RecipeHolder<CraftingRecipe>) recipeHolder));
             }
         }
         for (var sidedBlock : Registration.BLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
-                Optional<RecipeHolder<?>> recipe = recipeManager.byKey(ResourceLocation.parse(sidedBlock.getId() + "_nbtclear"));
+                Optional<RecipeHolder<?>> recipe = recipeManager.byKey(Identifier.parse(sidedBlock.getId() + "_nbtclear"));
                 recipe.ifPresent(recipeHolder -> hiddenRecipes.add((RecipeHolder<CraftingRecipe>) recipeHolder));
             }
         }

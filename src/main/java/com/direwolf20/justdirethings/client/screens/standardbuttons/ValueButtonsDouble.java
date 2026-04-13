@@ -6,15 +6,15 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class ValueButtonsDouble {
-    private static final ResourceLocation add = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png");
-    private static final ResourceLocation subtract = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png");
+    private static final Identifier add = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png");
+    private static final Identifier subtract = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png");
     private static final int STANDARD_WIDTH = 12; // Example width
     private static final int STANDARD_HEIGHT = 12; // Example height
     private final Font font;

@@ -5,13 +5,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record CopyMachineSettingsPayload(
         boolean area, boolean offset,
         boolean filter, boolean redstone
 ) implements CustomPacketPayload {
-    public static final Type<CopyMachineSettingsPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "copy_machine_settings_packet"));
+    public static final Type<CopyMachineSettingsPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "copy_machine_settings_packet"));
 
     @Override
     public Type<CopyMachineSettingsPayload> type() {

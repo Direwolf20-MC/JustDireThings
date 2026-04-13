@@ -15,7 +15,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -168,7 +168,7 @@ public class PaxelRecipe implements SmithingRecipe {
 
 
     public static class Serializer implements RecipeSerializer<PaxelRecipe> {
-        private static final ResourceLocation NAME = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paxel");
+        private static final Identifier NAME = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "paxel");
         private static final MapCodec<PaxelRecipe> CODEC = RecordCodecBuilder.mapCodec(
                 p_311734_ -> p_311734_.group(
                                 Ingredient.CODEC.fieldOf("template").forGetter(p_301070_ -> p_301070_.template),

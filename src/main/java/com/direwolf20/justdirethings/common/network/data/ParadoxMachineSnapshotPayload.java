@@ -4,13 +4,13 @@ import com.direwolf20.justdirethings.JustDireThings;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record ParadoxMachineSnapshotPayload(
 
 ) implements CustomPacketPayload {
     public static final ParadoxMachineSnapshotPayload INSTANCE = new ParadoxMachineSnapshotPayload();
-    public static final Type<ParadoxMachineSnapshotPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_machine_snapshot"));
+    public static final Type<ParadoxMachineSnapshotPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "paradox_machine_snapshot"));
 
     @Override
     public Type<ParadoxMachineSnapshotPayload> type() {

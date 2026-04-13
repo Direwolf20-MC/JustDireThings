@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -25,7 +25,7 @@ import static com.direwolf20.justdirethings.client.renderers.RenderHelpers.rende
 public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T> {
     protected static final RenderType renderType = DireRenderTypes.getRenderType("portal_entity")
             .using(List.of(
-                    new ShaderTexture(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/block/portal_shader.png"))
+                    new ShaderTexture(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/block/portal_shader.png"))
             ));
     public PortalEntityRender(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -157,7 +157,7 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
     }
 
     @Override
-    public ResourceLocation getTextureLocation(T pEntity) {
+    public Identifier getTextureLocation(T pEntity) {
         return TextureAtlas.LOCATION_BLOCKS;
     }
 

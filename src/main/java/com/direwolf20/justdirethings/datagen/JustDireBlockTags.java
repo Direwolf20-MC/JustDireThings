@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -35,11 +35,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
     public static final TagKey<Block> CHARCOAL = forgeTag("storage_blocks/charcoal");
 
     private static TagKey<Block> forgeTag(String name) {
-        return BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
+        return BlockTags.create(Identifier.fromNamespaceAndPath("c", name));
     }
 
     private static TagKey<Block> ModTag(String name) {
-        return BlockTags.create(ResourceLocation.fromNamespaceAndPath(MODID, name));
+        return BlockTags.create(Identifier.fromNamespaceAndPath(MODID, name));
     }
 
     @Override
@@ -141,7 +141,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
         tag(ECLISEGATEDENY)
                 .addTag(BlockTags.PORTALS)
                 .addTag(BlockTags.DOORS)
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("powah", "player_transmitters"));
+                .addOptionalTag(Identifier.fromNamespaceAndPath("powah", "player_transmitters"));
         tag(PHASEDENY)
                 .addTags(BlockTags.PORTALS)
                 .add(Blocks.BARRIER,

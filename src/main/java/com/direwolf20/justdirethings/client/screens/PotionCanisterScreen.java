@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanisterContainer> {
-    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fuelcanister.png");
-    protected final ResourceLocation FLUIDBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fluidbar.png");
-    ResourceLocation potionOverlay = ResourceLocation.fromNamespaceAndPath("minecraft", "item/potion_overlay");
+    private final Identifier GUI = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fuelcanister.png");
+    protected final Identifier FLUIDBAR = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fluidbar.png");
+    Identifier potionOverlay = Identifier.fromNamespaceAndPath("minecraft", "item/potion_overlay");
 
 
     protected final PotionCanisterContainer container;
@@ -90,7 +90,7 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
     public void renderFluid(GuiGraphics guiGraphics, int startX, int startY, int width, int height, ItemStack potionCanister) {
         PotionContents potionContents = PotionCanister.getPotionContents(potionCanister);
         if (potionContents.equals(PotionContents.EMPTY) || PotionCanister.getPotionAmount(potionCanister) <= 0) return;
-        ResourceLocation fluidStill = IClientFluidTypeExtensions.of(Fluids.WATER).getStillTexture();
+        Identifier fluidStill = IClientFluidTypeExtensions.of(Fluids.WATER).getStillTexture();
         TextureAtlasSprite fluidStillSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidStill);
         int fluidColor = potionContents.getColor();
 

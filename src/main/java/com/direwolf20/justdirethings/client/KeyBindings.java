@@ -60,7 +60,7 @@ public class KeyBindings {
 
     public static void onClientInput(InputEvent.Key event) {
         /*if (menuSettings.consumeClick()) {
-            PacketHandler.sendToServer(new GadgetModeSwitchPacket(new ResourceLocation("x:x"), true));
+            PacketHandler.sendToServer(new GadgetModeSwitchPacket(new Identifier("x:x"), true));
         }*/
     }
 

@@ -11,7 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +29,7 @@ public class GooSpreadRecipeTagBuilder implements RecipeBuilder {
     @Nullable
     private String group;
 
-    private final ResourceLocation id;
+    private final Identifier id;
     protected final BlockTagIngredient input;
     protected final BlockState output;
     protected final int tierRequirement;
@@ -37,7 +37,7 @@ public class GooSpreadRecipeTagBuilder implements RecipeBuilder {
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public GooSpreadRecipeTagBuilder(ResourceLocation id, BlockTagIngredient input, BlockState output, int tierRequirement, int craftingDuration) {
+    public GooSpreadRecipeTagBuilder(Identifier id, BlockTagIngredient input, BlockState output, int tierRequirement, int craftingDuration) {
         this.id = id;
         this.input = input;
         this.output = output;
@@ -45,7 +45,7 @@ public class GooSpreadRecipeTagBuilder implements RecipeBuilder {
         this.craftingDuration = craftingDuration;
     }
 
-    public static GooSpreadRecipeTagBuilder shapeless(ResourceLocation id, BlockTagIngredient input, BlockState output, int tierRequirement, int craftingDuration) {
+    public static GooSpreadRecipeTagBuilder shapeless(Identifier id, BlockTagIngredient input, BlockState output, int tierRequirement, int craftingDuration) {
         return new GooSpreadRecipeTagBuilder(id, input, output, tierRequirement, craftingDuration);
     }
 
@@ -93,11 +93,11 @@ public class GooSpreadRecipeTagBuilder implements RecipeBuilder {
     }
 
     public void save(RecipeOutput pRecipeOutput) {
-        this.save(pRecipeOutput, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-goospread_tag"));
+        this.save(pRecipeOutput, Identifier.fromNamespaceAndPath(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-goospread_tag"));
     }
 
     @Override
-    public void save(RecipeOutput pRecipeOutput, ResourceLocation pId) {
+    public void save(RecipeOutput pRecipeOutput, Identifier pId) {
         this.ensureValid(pId);
         Advancement.Builder advancement$builder = pRecipeOutput.advancement()
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(pId))
@@ -114,7 +114,7 @@ public class GooSpreadRecipeTagBuilder implements RecipeBuilder {
         pRecipeOutput.accept(pId, shapelessrecipe, advancement$builder.build(pId.withPrefix("recipes/" + RecipeCategory.MISC.getFolderName() + "/")));
     }
 
-    private void ensureValid(ResourceLocation pId) {
+    private void ensureValid(Identifier pId) {
         if (this.criteria.isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + pId);
         }

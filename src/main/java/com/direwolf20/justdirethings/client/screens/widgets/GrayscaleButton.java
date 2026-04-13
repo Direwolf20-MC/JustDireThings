@@ -9,16 +9,16 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class GrayscaleButton extends BaseButton {
-    private ResourceLocation texture;
+    private Identifier texture;
     private boolean buttonActive;
     private int value;
     private Component localizationDisabled = Component.empty();
 
-    public GrayscaleButton(int x, int y, int width, int height, ResourceLocation texture, OnPress onPress) {
+    public GrayscaleButton(int x, int y, int width, int height, Identifier texture, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
         this.texture = texture;
         this.buttonActive = true; //AlwaysActive
@@ -26,7 +26,7 @@ public class GrayscaleButton extends BaseButton {
         this.value = -1;
     }
 
-    public GrayscaleButton(int x, int y, int width, int height, ResourceLocation texture, Component localization, OnPress onPress) {
+    public GrayscaleButton(int x, int y, int width, int height, Identifier texture, Component localization, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
         this.texture = texture;
         this.buttonActive = true; //AlwaysActive
@@ -34,7 +34,7 @@ public class GrayscaleButton extends BaseButton {
         this.value = -1;
     }
 
-    public GrayscaleButton(int x, int y, int width, int height, ResourceLocation texture, Component localization, boolean active, OnPress onPress) {
+    public GrayscaleButton(int x, int y, int width, int height, Identifier texture, Component localization, boolean active, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
         this.texture = texture;
         this.buttonActive = active;
@@ -42,7 +42,7 @@ public class GrayscaleButton extends BaseButton {
         this.value = -1;
     }
 
-    public GrayscaleButton(int x, int y, int width, int height, ResourceLocation texture, Component localizationOn, Component localizationOff, boolean active, OnPress onPress) {
+    public GrayscaleButton(int x, int y, int width, int height, Identifier texture, Component localizationOn, Component localizationOff, boolean active, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
         this.texture = texture;
         this.buttonActive = active;
@@ -51,7 +51,7 @@ public class GrayscaleButton extends BaseButton {
         this.value = -1;
     }
 
-    public GrayscaleButton(int x, int y, int width, int height, ResourceLocation texture, Component localization, boolean active, int value, OnPress onPress) {
+    public GrayscaleButton(int x, int y, int width, int height, Identifier texture, Component localization, boolean active, int value, OnPress onPress) {
         super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
         this.texture = texture;
         this.buttonActive = active;

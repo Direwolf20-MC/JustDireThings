@@ -37,7 +37,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -78,11 +78,11 @@ public class ClientSetup {
             registerEnabledToolTextures(Registration.Pocket_Generator.get());
             for (var bow : Registration.BOWS.getEntries()) {
                 if (bow.get() instanceof BaseBow baseBow) {
-                    ItemProperties.register(bow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pull"), (stack, level, living, id) -> {
+                    ItemProperties.register(bow.get(), Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pull"), (stack, level, living, id) -> {
                         if (living == null || living.getUseItem() != stack) return 0.0F;
                         return (stack.getUseDuration(living) - (living.getUseItemRemainingTicks() + (20 - baseBow.getMaxDraw()))) / baseBow.getMaxDraw();
                     });
-                    ItemProperties.register(bow.get(), ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "pulling"), (stack, level, living, id) -> {
+                    ItemProperties.register(bow.get(), Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pulling"), (stack, level, living, id) -> {
                         return living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F;
                     });
                 }
@@ -91,17 +91,17 @@ public class ClientSetup {
 
         event.enqueueWork(() -> {
             ItemProperties.register(Registration.FluidCanister.get(),
-                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
+                    Identifier.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
         });
 
         event.enqueueWork(() -> {
             ItemProperties.register(Registration.PotionCanister.get(),
-                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "potion_fullness"), (stack, level, living, id) -> PotionCanister.getFullness(stack));
+                    Identifier.fromNamespaceAndPath(JustDireThings.MODID, "potion_fullness"), (stack, level, living, id) -> PotionCanister.getFullness(stack));
         });
 
         event.enqueueWork(() -> {
             ItemProperties.register(Registration.PortalGunV2.get(),
-                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> PortalGunV2.getFullness(stack));
+                    Identifier.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> PortalGunV2.getFullness(stack));
         });
 
         ItemBlockRenderTypes.setRenderLayer(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), RenderType.translucent());
@@ -112,7 +112,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.HOTBAR, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "abilitycooldownoverlay"), AbilityCooldownOverlay.INSTANCE);
+        event.registerAbove(VanillaGuiLayers.HOTBAR, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "abilitycooldownoverlay"), AbilityCooldownOverlay.INSTANCE);
     }
 
     private static void onTexturesStitched(final TextureAtlasStitchedEvent event) {
@@ -125,7 +125,7 @@ public class ClientSetup {
     public static void registerEnabledToolTextures(Item tool) {
         if (tool instanceof ToggleableItem toggleableItem) {
             ItemProperties.register(tool,
-                    ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
+                    Identifier.fromNamespaceAndPath(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
                         if (stack.getItem() instanceof PocketGenerator) {
                             if (!toggleableItem.getEnabled(stack)) return 0.0f;
                             IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
@@ -141,7 +141,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void mrl(ModelEvent.RegisterAdditional e) {
-        e.register(ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "item/creaturecatcher_base")));
+        e.register(ModelResourceLocation.standalone(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "item/creaturecatcher_base")));
     }
 
     @SubscribeEvent
@@ -245,28 +245,28 @@ public class ClientSetup {
             }
         }, Registration.CreatureCatcher.get());
 
-        final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.parse("textures/misc/underwater.png");
-        final ResourceLocation WATER_STILL = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_source");
-        final ResourceLocation WATER_FLOW = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_flowing");
-        final ResourceLocation WATER_OVERLAY = ResourceLocation.fromNamespaceAndPath(MODID, "block/fluid_overlay");
+        final Identifier UNDERWATER_LOCATION = Identifier.parse("textures/misc/underwater.png");
+        final Identifier WATER_STILL = Identifier.fromNamespaceAndPath(MODID, "block/fluid_source");
+        final Identifier WATER_FLOW = Identifier.fromNamespaceAndPath(MODID, "block/fluid_flowing");
+        final Identifier WATER_OVERLAY = Identifier.fromNamespaceAndPath(MODID, "block/fluid_overlay");
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -282,22 +282,22 @@ public class ClientSetup {
         }, Registration.POLYMORPHIC_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -313,22 +313,22 @@ public class ClientSetup {
         }, Registration.PORTAL_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -344,22 +344,22 @@ public class ClientSetup {
         }, Registration.UNSTABLE_PORTAL_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -375,22 +375,22 @@ public class ClientSetup {
         }, Registration.REFINED_T2_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -406,22 +406,22 @@ public class ClientSetup {
         }, Registration.REFINED_T3_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -437,22 +437,22 @@ public class ClientSetup {
         }, Registration.REFINED_T4_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -468,22 +468,22 @@ public class ClientSetup {
         }, Registration.UNREFINED_T2_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -499,22 +499,22 @@ public class ClientSetup {
         }, Registration.UNREFINED_T3_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -530,22 +530,22 @@ public class ClientSetup {
         }, Registration.UNREFINED_T4_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 
@@ -561,22 +561,22 @@ public class ClientSetup {
         }, Registration.TIME_FLUID_TYPE.get());
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
-            public ResourceLocation getStillTexture() {
+            public Identifier getStillTexture() {
                 return WATER_STILL;
             }
 
             @Override
-            public ResourceLocation getFlowingTexture() {
+            public Identifier getFlowingTexture() {
                 return WATER_FLOW;
             }
 
             @Override
-            public ResourceLocation getOverlayTexture() {
+            public Identifier getOverlayTexture() {
                 return WATER_OVERLAY;
             }
 
             @Override
-            public ResourceLocation getRenderOverlayTexture(Minecraft mc) {
+            public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
 

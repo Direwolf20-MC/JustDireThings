@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
@@ -19,7 +19,7 @@ import org.joml.Matrix4f;
 import java.awt.*;
 
 public class RenderHelpers {
-    public static final ResourceLocation DUMMY_TEXTURE = ResourceLocation.fromNamespaceAndPath("neoforge", "white");
+    public static final Identifier DUMMY_TEXTURE = Identifier.fromNamespaceAndPath("neoforge", "white");
     private static float dummyU0 = 0F;
     private static float dummyU1 = 1F;
     private static float dummyV0 = 0F;

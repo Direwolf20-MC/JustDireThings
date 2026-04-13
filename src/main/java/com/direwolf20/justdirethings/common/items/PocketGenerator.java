@@ -9,7 +9,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -33,7 +33,7 @@ import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 public class PocketGenerator extends Item implements PoweredItem, ToggleableItem {
 
     public static final EntityCapability<IItemHandler, Void> CURIOS_INVENTORY =
-            EntityCapability.createVoid(ResourceLocation.fromNamespaceAndPath("curios", "item_handler"), IItemHandler.class);
+            EntityCapability.createVoid(Identifier.fromNamespaceAndPath("curios", "item_handler"), IItemHandler.class);
 
     public PocketGenerator() {
         super(new Properties()

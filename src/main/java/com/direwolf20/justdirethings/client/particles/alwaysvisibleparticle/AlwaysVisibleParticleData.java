@@ -7,28 +7,28 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class AlwaysVisibleParticleData implements ParticleOptions {
     public static final MapCodec<AlwaysVisibleParticleData> MAP_CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
-                            ResourceLocation.CODEC.fieldOf("resourceLocation").forGetter(AlwaysVisibleParticleData::getResourceLocation)
+                            Identifier.CODEC.fieldOf("resourceLocation").forGetter(AlwaysVisibleParticleData::getResourceLocation)
                     )
                     .apply(instance, AlwaysVisibleParticleData::new)
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, AlwaysVisibleParticleData> STREAM_CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
+            Identifier.STREAM_CODEC,
             AlwaysVisibleParticleData::getResourceLocation,
             AlwaysVisibleParticleData::new
     );
 
-    ResourceLocation resourceLocation;
+    Identifier resourceLocation;
 
-    public AlwaysVisibleParticleData(ResourceLocation resourceLocation) {
+    public AlwaysVisibleParticleData(Identifier resourceLocation) {
         this.resourceLocation = resourceLocation;
     }
 
-    public ResourceLocation getResourceLocation() {
+    public Identifier getResourceLocation() {
         return resourceLocation;
     }
 

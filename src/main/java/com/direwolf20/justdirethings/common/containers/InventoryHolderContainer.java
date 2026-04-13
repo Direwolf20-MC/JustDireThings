@@ -9,7 +9,7 @@ import com.direwolf20.justdirethings.util.ItemStackKey;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,12 +23,12 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 
 public class InventoryHolderContainer extends BaseMachineContainer {
-    public static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET = ResourceLocation.parse("item/empty_armor_slot_helmet");
-    public static final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE = ResourceLocation.parse("item/empty_armor_slot_chestplate");
-    public static final ResourceLocation EMPTY_ARMOR_SLOT_LEGGINGS = ResourceLocation.parse("item/empty_armor_slot_leggings");
-    public static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS = ResourceLocation.parse("item/empty_armor_slot_boots");
-    public static final ResourceLocation EMPTY_ARMOR_SLOT_SHIELD = ResourceLocation.parse("item/empty_armor_slot_shield");
-    static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[]{
+    public static final Identifier EMPTY_ARMOR_SLOT_HELMET = Identifier.parse("item/empty_armor_slot_helmet");
+    public static final Identifier EMPTY_ARMOR_SLOT_CHESTPLATE = Identifier.parse("item/empty_armor_slot_chestplate");
+    public static final Identifier EMPTY_ARMOR_SLOT_LEGGINGS = Identifier.parse("item/empty_armor_slot_leggings");
+    public static final Identifier EMPTY_ARMOR_SLOT_BOOTS = Identifier.parse("item/empty_armor_slot_boots");
+    public static final Identifier EMPTY_ARMOR_SLOT_SHIELD = Identifier.parse("item/empty_armor_slot_shield");
+    static final Identifier[] TEXTURE_EMPTY_SLOTS = new Identifier[]{
             EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET
     };
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
@@ -227,7 +227,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
                     }
 
                     @Override
-                    public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+                    public Pair<Identifier, Identifier> getNoItemIcon() {
                         return Pair.of(InventoryMenu.BLOCK_ATLAS, TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()]);
                     }
                 });
@@ -235,7 +235,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
 
             this.addSlot(new InventoryHolderSlot(itemHandler, index + 4, x + 4 * 18, y, inventoryHolderBE) {
                 @Override
-                public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+                public Pair<Identifier, Identifier> getNoItemIcon() {
                     return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);
                 }
             });
@@ -269,7 +269,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
                 }
 
                 @Override
-                public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+                public Pair<Identifier, Identifier> getNoItemIcon() {
                     return Pair.of(InventoryMenu.BLOCK_ATLAS, TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()]);
                 }
             });
@@ -283,7 +283,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
             }
 
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+            public Pair<Identifier, Identifier> getNoItemIcon() {
                 return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_SHIELD);
             }
         });

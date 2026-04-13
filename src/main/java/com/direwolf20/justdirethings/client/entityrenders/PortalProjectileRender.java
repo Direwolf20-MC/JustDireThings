@@ -11,11 +11,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
-    protected static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/portal_projectile.png");
+    protected static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/portal_projectile.png");
     protected final PortalProjectileModel model;
 
     public PortalProjectileRender(EntityRendererProvider.Context pContext) {
@@ -46,7 +46,7 @@ public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(PortalProjectile pEntity) {
+    public Identifier getTextureLocation(PortalProjectile pEntity) {
         return TEXTURE;
     }
 }

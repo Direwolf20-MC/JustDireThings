@@ -11,7 +11,7 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -981,94 +981,94 @@ public class JustDireRecipes extends RecipeProvider {
                 .save(consumer);
 
         //GooSpread Recipes
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), Registration.RawBlazegoldOre.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), Registration.RawBlazegoldOre.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_diamond_block"), Blocks.DIAMOND_BLOCK.defaultBlockState(), Registration.RawCelestigemOre.get().defaultBlockState(), 3, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_diamond_block"), Blocks.DIAMOND_BLOCK.defaultBlockState(), Registration.RawCelestigemOre.get().defaultBlockState(), 3, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "dire_netherite_block"), Blocks.NETHERITE_BLOCK.defaultBlockState(), Registration.RawEclipseAlloyOre.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_netherite_block"), Blocks.NETHERITE_BLOCK.defaultBlockState(), Registration.RawEclipseAlloyOre.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
                 .save(consumer);
 
         //GooSpread Coal
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), Blocks.COAL_BLOCK.defaultBlockState(), Registration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), Blocks.COAL_BLOCK.defaultBlockState(), Registration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeTagBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), new BlockTagIngredient(JustDireBlockTags.CHARCOAL), Registration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeTagBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), new BlockTagIngredient(JustDireBlockTags.CHARCOAL), Registration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier1_ITEM.get()))
                 .save(consumer);
 
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t2"), Registration.CoalBlock_T1.get().defaultBlockState(), Registration.RawCoal_T2.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t2"), Registration.CoalBlock_T1.get().defaultBlockState(), Registration.RawCoal_T2.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t3"), Registration.CoalBlock_T2.get().defaultBlockState(), Registration.RawCoal_T3.get().defaultBlockState(), 3, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t3"), Registration.CoalBlock_T2.get().defaultBlockState(), Registration.RawCoal_T3.get().defaultBlockState(), 3, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t4"), Registration.CoalBlock_T3.get().defaultBlockState(), Registration.RawCoal_T4.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t4"), Registration.CoalBlock_T3.get().defaultBlockState(), Registration.RawCoal_T4.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
                 .save(consumer);
 
         //GooSpread Misc
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_fluid"), Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), Registration.PORTAL_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "portal_fluid"), Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), Registration.PORTAL_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "refined_t2_fluid"), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t2_fluid"), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier2_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "refined_t3_fluid"), Registration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t3_fluid"), Registration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier3_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "refined_t4_fluid"), Registration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T4_FLUID_BLOCK.get().defaultBlockState(), 4, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t4_fluid"), Registration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T4_FLUID_BLOCK.get().defaultBlockState(), 4, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
                 .save(consumer);
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"), Blocks.BUDDING_AMETHYST.defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"), Blocks.BUDDING_AMETHYST.defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"));
-        GooSpreadRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"), Registration.TimeCrystalBlock.get().defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"));
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"), Registration.TimeCrystalBlock.get().defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.GooBlock_Tier4_ITEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"));
 
         //FluidDrop Recipes
-        FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.PolymorphicCatalyst.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.PolymorphicCatalyst.get())
                 .group("justdirethings")
                 .unlockedBy("has_polymorphic_catalyst", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.PolymorphicCatalyst.get()))
                 .save(consumer);
-        FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "unstable_portal_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), Registration.PortalFluidCatalyst.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unstable_portal_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), Registration.PortalFluidCatalyst.get())
                 .group("justdirethings")
                 .unlockedBy("has_portal_catalyst", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.PortalFluidCatalyst.get()))
                 .save(consumer);
-        FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t2_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T2.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t2_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T2.get())
                 .group("justdirethings")
                 .unlockedBy("has_coal_t2", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Coal_T2.get()))
                 .save(consumer);
-        FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t3_fluid"), Registration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T3.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t3_fluid"), Registration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T3.get())
                 .group("justdirethings")
                 .unlockedBy("has_coal_t3", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Coal_T3.get()))
                 .save(consumer);
-        FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t4_fluid"), Registration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T4.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t4_fluid"), Registration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T4.get())
                 .group("justdirethings")
                 .unlockedBy("has_coal_t4", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Coal_T4.get()))
                 .save(consumer);
-        FluidDropRecipeBuilder.shapeless(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "time_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.TIME_FLUID_BLOCK.get().defaultBlockState(), Registration.TimeCrystal.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "time_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.TIME_FLUID_BLOCK.get().defaultBlockState(), Registration.TimeCrystal.get())
                 .group("justdirethings")
                 .unlockedBy("has_time_crystal", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TimeCrystal.get()))
                 .save(consumer);
@@ -1077,27 +1077,27 @@ public class JustDireRecipes extends RecipeProvider {
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC,
                         Registration.FerricoreIngot.get(), 1.0f, 200)
                 .unlockedBy("has_ferricore_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawFerricore.get()).build()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ferricore_ingot_smelted"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "ferricore_ingot_smelted"));
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawBlazegold.get()), RecipeCategory.MISC,
                         Registration.BlazegoldIngot.get(), 1.0f, 200)
                 .unlockedBy("has_blazegold_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawBlazegold.get()).build()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "blazegold_ingot_smelted"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "blazegold_ingot_smelted"));
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawEclipseAlloy.get()), RecipeCategory.MISC,
                         Registration.EclipseAlloyIngot.get(), 1.0f, 200)
                 .unlockedBy("has_eclipsealloy_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawEclipseAlloy.get()).build()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy_ingot_smelted"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy_ingot_smelted"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC,
                         Registration.FerricoreIngot.get(), 1.0f, 100)
                 .unlockedBy("has_ferricore_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawFerricore.get()).build()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ferricore_ingot_blasted"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "ferricore_ingot_blasted"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawBlazegold.get()), RecipeCategory.MISC,
                         Registration.BlazegoldIngot.get(), 1.0f, 100)
                 .unlockedBy("has_blazegold_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawBlazegold.get()).build()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "blazegold_ingot_blasted"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "blazegold_ingot_blasted"));
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawEclipseAlloy.get()), RecipeCategory.MISC,
                         Registration.EclipseAlloyIngot.get(), 1.0f, 100)
                 .unlockedBy("has_eclipsealloy_raw", inventoryTrigger(ItemPredicate.Builder.item().of(Registration.RawEclipseAlloy.get()).build()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy_ingot_blasted"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "eclipsealloy_ingot_blasted"));
 
         //Tools
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreSword.get())
@@ -1166,7 +1166,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreBow.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldBow.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldBow.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldBow.getId().getPath() + "-templateupgrade"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemBow.get())
                 .pattern("sf ")
                 .pattern("s f")
@@ -1179,7 +1179,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldBow.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemBow.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemBow.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemBow.getId().getPath() + "-templateupgrade"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyBow.get())
                 .pattern("sf ")
                 .pattern("s f")
@@ -1192,7 +1192,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemBow.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyBow.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyBow.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyBow.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldSword.get())
                 .pattern(" f ")
@@ -1242,23 +1242,23 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreSword.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldSword.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldSword.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldSword.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricorePickaxe.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldPickaxe.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldPickaxe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldPickaxe.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreShovel.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldShovel.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldShovel.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldShovel.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreAxe.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldAxe.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldAxe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldAxe.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreHoe.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldHoe.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldHoe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldHoe.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemSword.get())
                 .pattern(" f ")
@@ -1308,28 +1308,28 @@ public class JustDireRecipes extends RecipeProvider {
         PaxelRecipeBuilder.shapeless(Ingredient.of(Registration.CelestigemPickaxe.get()), Ingredient.of(Registration.CelestigemAxe.get()),
                         Ingredient.of(Registration.CelestigemShovel.get()), Registration.CelestigemPaxel.get())
                 .unlockedBy("has_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.Celestigem.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemPaxel.getId().getPath()));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemPaxel.getId().getPath()));
 
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldSword.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemSword.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemSword.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemSword.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldPickaxe.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemPickaxe.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemPickaxe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemPickaxe.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldShovel.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemShovel.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemShovel.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemShovel.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldAxe.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemAxe.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemAxe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemAxe.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldHoe.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemHoe.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemHoe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemHoe.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloySword.get())
                 .pattern(" f ")
@@ -1379,31 +1379,31 @@ public class JustDireRecipes extends RecipeProvider {
         PaxelRecipeBuilder.shapeless(Ingredient.of(Registration.EclipseAlloyPickaxe.get()), Ingredient.of(Registration.EclipseAlloyAxe.get()),
                         Ingredient.of(Registration.EclipseAlloyShovel.get()), Registration.EclipseAlloyPaxel.get())
                 .unlockedBy("has_eclipsealloy_ingot", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.EclipseAlloyIngot.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyPaxel.getId().getPath()));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyPaxel.getId().getPath()));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemSword.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloySword.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloySword.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloySword.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemPickaxe.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyPickaxe.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyPickaxe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyPickaxe.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemShovel.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyShovel.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyShovel.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyShovel.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemAxe.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyAxe.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyAxe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyAxe.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemHoe.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyHoe.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyHoe.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyHoe.getId().getPath() + "-templateupgrade"));
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemPaxel.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyPaxel.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyPaxel.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyPaxel.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.FerricoreBoots.get())
                 .pattern("f f")
@@ -1449,7 +1449,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreBoots.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldBoots.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldBoots.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldBoots.getId().getPath() + "-templateupgrade"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldLeggings.get())
                 .pattern("fff")
                 .pattern("f f")
@@ -1461,7 +1461,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreLeggings.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldLeggings.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldLeggings.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldLeggings.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldChestplate.get())
                 .pattern("f f")
@@ -1474,7 +1474,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreChestplate.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldChestplate.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldChestplate.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldChestplate.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.BlazegoldHelmet.get())
                 .pattern("fff")
@@ -1487,7 +1487,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreHelmet.get()),
                         Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldHelmet.get())
                 .unlocks("has_template_blazegold", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldHelmet.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.BlazegoldHelmet.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemBoots.get())
                 .pattern("f f")
@@ -1500,7 +1500,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldBoots.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemBoots.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemBoots.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemBoots.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemLeggings.get())
                 .pattern("fff")
@@ -1513,7 +1513,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldLeggings.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemLeggings.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemLeggings.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemLeggings.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemChestplate.get())
                 .pattern("f f")
@@ -1526,7 +1526,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldChestplate.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemChestplate.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemChestplate.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemChestplate.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.CelestigemHelmet.get())
                 .pattern("fff")
@@ -1539,7 +1539,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldHelmet.get()),
                         Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemHelmet.get())
                 .unlocks("has_template_celestigem", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemHelmet.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.CelestigemHelmet.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyBoots.get())
                 .pattern("f f")
@@ -1552,7 +1552,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemBoots.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyBoots.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyBoots.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyBoots.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyLeggings.get())
                 .pattern("fff")
@@ -1565,7 +1565,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemLeggings.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyLeggings.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyLeggings.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyLeggings.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyChestplate.get())
                 .pattern("f f")
@@ -1578,7 +1578,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemChestplate.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyChestplate.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyChestplate.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyChestplate.getId().getPath() + "-templateupgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Registration.EclipseAlloyHelmet.get())
                 .pattern("fff")
@@ -1591,7 +1591,7 @@ public class JustDireRecipes extends RecipeProvider {
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemHelmet.get()),
                         Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyHelmet.get())
                 .unlocks("has_template_eclipsealloy", InventoryChangeTrigger.TriggerInstance.hasItems(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(consumer, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyHelmet.getId().getPath() + "-templateupgrade"));
+                .save(consumer, Identifier.fromNamespaceAndPath(JustDireThings.MODID, Registration.EclipseAlloyHelmet.getId().getPath() + "-templateupgrade"));
 
 
 

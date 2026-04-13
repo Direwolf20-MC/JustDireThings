@@ -12,12 +12,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class MachineSettingsCopierScreen extends Screen {
-    public static final ResourceLocation SOCIALBACKGROUND = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "background");
+    public static final Identifier SOCIALBACKGROUND = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "background");
     private ItemStack copyMachineSettingsItemstack;
     boolean area, offset, filter, redstone;
     int topSectionWidth, topSectionHeight, topSectionLeft, topSectionTop;

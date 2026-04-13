@@ -5,7 +5,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -134,20 +134,20 @@ public class JustDireItemModels extends ItemModelProvider {
         registerEnabledTextureItem(Registration.Pocket_Generator.getId().getPath());
 
         //Buckets
-        /*withExistingParent(Registration.PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+        /*withExistingParent(Registration.PORTAL_FLUID_BUCKET.getId().getPath(), new Identifier(NeoForgeVersion.MOD_ID, "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(Registration.PORTAL_FLUID_BUCKET.get().content);
-        withExistingParent(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+        withExistingParent(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.getId().getPath(), new Identifier(NeoForgeVersion.MOD_ID, "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get().content);
-        withExistingParent(Registration.POLYMORPHIC_FLUID_BUCKET.getId().getPath(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
+        withExistingParent(Registration.POLYMORPHIC_FLUID_BUCKET.getId().getPath(), new Identifier(NeoForgeVersion.MOD_ID, "item/bucket"))
                 .customLoader(DynamicFluidContainerModelBuilder::begin)
                 .fluid(Registration.POLYMORPHIC_FLUID_BUCKET.get().content);*/
     }
 
     public void buckets() {
         for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
-            withExistingParent(bucket.getId().getPath(), ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/bucket"))
+            withExistingParent(bucket.getId().getPath(), Identifier.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/bucket"))
                     .customLoader(DynamicFluidContainerModelBuilder::begin)
                     .fluid(((BucketItem) bucket.get()).content);
 
@@ -174,17 +174,17 @@ public class JustDireItemModels extends ItemModelProvider {
         }
     }
 
-    protected ItemModelBuilder generated(ItemLike itemLike, ResourceLocation texture) {
+    protected ItemModelBuilder generated(ItemLike itemLike, Identifier texture) {
         return withExistingParent(BuiltInRegistries.ITEM.getKey(itemLike.asItem()).getPath(), "item/generated").texture("layer0", texture);
     }
 
-    protected ItemModelBuilder armorWithTrim(ArmorItem armorItem, ResourceLocation texture) {
+    protected ItemModelBuilder armorWithTrim(ArmorItem armorItem, Identifier texture) {
         ItemModelBuilder builder = generated(armorItem, texture);
         for (ItemModelGenerators.TrimModelData trimModelData : ItemModelGenerators.GENERATED_TRIM_MODELS) {
             String trimId = trimModelData.name(armorItem.getMaterial());
             ItemModelBuilder override = withExistingParent(builder.getLocation().withSuffix("_" + trimId + "_trim").getPath(), "item/generated")
                     .texture("layer0", texture)
-                    .texture("layer1", ResourceLocation.withDefaultNamespace("trims/items/" + armorItem.getType().getName() + "_trim_" + trimId));
+                    .texture("layer1", Identifier.withDefaultNamespace("trims/items/" + armorItem.getType().getName() + "_trim_" + trimId));
             builder.override()
                     .predicate(ItemModelGenerators.TRIM_TYPE_PREDICATE_ID, trimModelData.itemModelIndex())
                     .model(override);
@@ -193,15 +193,15 @@ public class JustDireItemModels extends ItemModelProvider {
     }
 
     public void registerEnabledTextureItem(String path) {
-        ResourceLocation enabledModelPath = modLoc("item/" + path + "_active"); // Path to your enabled model
-        ResourceLocation defaultModelPath = modLoc("item/" + path); // Path to your default model
+        Identifier enabledModelPath = modLoc("item/" + path + "_active"); // Path to your enabled model
+        Identifier defaultModelPath = modLoc("item/" + path); // Path to your default model
 
         // Start building your item model
         getBuilder(path) // This should match your item's registry name
                 .parent(getExistingFile(mcLoc("item/handheld")))
                 .texture("layer0", defaultModelPath)
                 .override()
-                .predicate(ResourceLocation.fromNamespaceAndPath("justdirethings", "enabled"), 1.0F) // Using custom property
+                .predicate(Identifier.fromNamespaceAndPath("justdirethings", "enabled"), 1.0F) // Using custom property
                 .model(singleTexture(path + "_active", mcLoc("item/handheld"), "layer0", enabledModelPath))
                 .end();
     }

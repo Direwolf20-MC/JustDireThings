@@ -5,7 +5,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
@@ -23,7 +23,7 @@ public class JustDireFluidTags extends FluidTagsProvider {
     }
 
     private static TagKey<Fluid> forgeTag(String name) {
-        return FluidTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
+        return FluidTags.create(Identifier.fromNamespaceAndPath("c", name));
     }
 
     @Override

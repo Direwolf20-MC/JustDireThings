@@ -12,7 +12,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
@@ -107,7 +107,7 @@ public class AbilityRecipe implements SmithingRecipe {
 
 
     public static class Serializer implements RecipeSerializer<AbilityRecipe> {
-        private static final ResourceLocation NAME = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ability");
+        private static final Identifier NAME = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "ability");
         private static final MapCodec<AbilityRecipe> CODEC = RecordCodecBuilder.mapCodec(
                 p_311734_ -> p_311734_.group(
                                 Ingredient.CODEC.fieldOf("template").forGetter(p_301070_ -> p_301070_.template),

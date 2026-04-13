@@ -8,7 +8,7 @@ import com.direwolf20.justdirethings.common.blocks.resources.TimeCrystalCluster;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
@@ -105,7 +105,7 @@ public class JustDireBlockStates extends BlockStateProvider {
 
     private void fluidBlocks() {
         for (var fluidBlock : Registration.FLUID_BLOCKS.getEntries()) {
-            simpleBlock(fluidBlock.get(), models().getBuilder(fluidBlock.getId().getPath()).texture("particle", ResourceLocation.fromNamespaceAndPath(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
+            simpleBlock(fluidBlock.get(), models().getBuilder(fluidBlock.getId().getPath()).texture("particle", Identifier.fromNamespaceAndPath(MODID, ModelProvider.BLOCK_FOLDER + "/" + "fluid_source")));
         }
     }
 
@@ -245,7 +245,7 @@ public class JustDireBlockStates extends BlockStateProvider {
             return ConfiguredModel.builder()
                     .modelFile(models()
                             .withExistingParent(soil.getId().getPath() + (Moisture == 7 ? "_moist" : ""),
-                                    ResourceLocation.parse("minecraft:block/template_farmland"))
+                                    Identifier.parse("minecraft:block/template_farmland"))
                             .texture("dirt",
                                     modLoc("block/goosoilside_tier"
                                             + soil.getId().toString().replace(MODID+":goosoil_tier", "")))

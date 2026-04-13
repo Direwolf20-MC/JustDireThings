@@ -22,7 +22,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -149,7 +149,7 @@ public class ParadoxMachineBER extends AreaAffectingBER {
         EntityRenderer<? super LivingEntity> renderer = renderManager.getRenderer(entity);
 
         // Set up render type for transparency
-        ResourceLocation resourceLocation = renderer.getTextureLocation(entity);
+        Identifier resourceLocation = renderer.getTextureLocation(entity);
         if (resourceLocation == null) return; //Caused soaryn to crash without this
         RenderType renderType = RenderType.itemEntityTranslucentCull(resourceLocation);
         VertexConsumer vertexconsumer = bufferIn.getBuffer(renderType);

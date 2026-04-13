@@ -11,7 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,21 +28,21 @@ public class FluidDropRecipeBuilder implements RecipeBuilder {
     @Nullable
     private String group;
 
-    private final ResourceLocation id;
+    private final Identifier id;
     protected final BlockState input;
     protected final BlockState output;
     protected final Item catalyst;
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public FluidDropRecipeBuilder(ResourceLocation id, BlockState input, BlockState output, Item catalyst) {
+    public FluidDropRecipeBuilder(Identifier id, BlockState input, BlockState output, Item catalyst) {
         this.id = id;
         this.input = input;
         this.output = output;
         this.catalyst = catalyst;
     }
 
-    public static FluidDropRecipeBuilder shapeless(ResourceLocation id, BlockState input, BlockState output, Item catalyst) {
+    public static FluidDropRecipeBuilder shapeless(Identifier id, BlockState input, BlockState output, Item catalyst) {
         return new FluidDropRecipeBuilder(id, input, output, catalyst);
     }
 
@@ -90,11 +90,11 @@ public class FluidDropRecipeBuilder implements RecipeBuilder {
     }
 
     public void save(RecipeOutput pRecipeOutput) {
-        this.save(pRecipeOutput, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-fluiddrop"));
+        this.save(pRecipeOutput, Identifier.fromNamespaceAndPath(JustDireThings.MODID, BuiltInRegistries.BLOCK.getKey(this.output.getBlock()).getPath() + "-fluiddrop"));
     }
 
     @Override
-    public void save(RecipeOutput pRecipeOutput, ResourceLocation pId) {
+    public void save(RecipeOutput pRecipeOutput, Identifier pId) {
         this.ensureValid(pId);
         Advancement.Builder advancement$builder = pRecipeOutput.advancement()
                 .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(pId))
@@ -110,7 +110,7 @@ public class FluidDropRecipeBuilder implements RecipeBuilder {
         pRecipeOutput.accept(pId, shapelessrecipe, advancement$builder.build(pId.withPrefix("recipes/" + RecipeCategory.MISC.getFolderName() + "/")));
     }
 
-    private void ensureValid(ResourceLocation pId) {
+    private void ensureValid(Identifier pId) {
         if (this.criteria.isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + pId);
         }

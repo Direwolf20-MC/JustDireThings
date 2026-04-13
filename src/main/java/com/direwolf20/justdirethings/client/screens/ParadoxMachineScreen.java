@@ -16,7 +16,7 @@ import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -24,7 +24,7 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class ParadoxMachineScreen extends BaseMachineScreen<ParadoxMachineContainer> {
-    protected static final ResourceLocation PARADOXBAR = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/paradoxbar.png");
+    protected static final Identifier PARADOXBAR = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/paradoxbar.png");
     private boolean renderParadox = false;
     private int targetType = 0;
     public ParadoxMachineScreen(ParadoxMachineContainer container, Inventory inv, Component name) {

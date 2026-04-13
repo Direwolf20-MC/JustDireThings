@@ -10,7 +10,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -20,13 +20,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.crafting.BlockTagIngredient;
 
 public class GooSpreadRecipeTag implements CraftingRecipe {
-    private final ResourceLocation id;
+    private final Identifier id;
     protected final BlockTagIngredient input;
     protected final BlockState output;
     protected int tierRequirement;
     protected int craftingDuration;
 
-    public GooSpreadRecipeTag(ResourceLocation id, BlockTagIngredient input, BlockState output, int tierRequirement, int craftingDuration) {
+    public GooSpreadRecipeTag(Identifier id, BlockTagIngredient input, BlockState output, int tierRequirement, int craftingDuration) {
         this.id = id;
         this.input = input;
         this.output = output;
@@ -99,10 +99,10 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
 
 
     public static class Serializer implements RecipeSerializer<GooSpreadRecipeTag> {
-        private static final ResourceLocation NAME = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "goospread_tag");
+        private static final Identifier NAME = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "goospread_tag");
         private static final MapCodec<GooSpreadRecipeTag> CODEC = RecordCodecBuilder.mapCodec(
                 p_311734_ -> p_311734_.group(
-                                ResourceLocation.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
+                                Identifier.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
                                 BlockTagIngredient.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
                                 BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
                                 Codec.INT.fieldOf("tierRequirement").forGetter(p_301137_ -> p_301137_.tierRequirement),
@@ -127,8 +127,8 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
         }
 
         public static GooSpreadRecipeTag fromNetwork(RegistryFriendlyByteBuf pBuffer) {
-            ResourceLocation resourceLocation = pBuffer.readResourceLocation();
-            ResourceLocation tagLocation = pBuffer.readResourceLocation(); // Read the tag's ResourceLocation
+            Identifier resourceLocation = pBuffer.readIdentifier();
+            Identifier tagLocation = pBuffer.readIdentifier(); // Read the tag's Identifier
             BlockTagIngredient inputIngredient = new BlockTagIngredient(TagKey.create(Registries.BLOCK, tagLocation)); // Create the BlockTagIngredient
             BlockState outputState = Block.stateById(pBuffer.readInt());
             int tierRequirement = pBuffer.readInt();
@@ -138,8 +138,8 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
         }
 
         public static void toNetwork(RegistryFriendlyByteBuf pBuffer, GooSpreadRecipeTag pRecipe) {
-            pBuffer.writeResourceLocation(pRecipe.id);
-            pBuffer.writeResourceLocation(pRecipe.input.getTag().location()); // Write the tag's ResourceLocation
+            pBuffer.writeIdentifier(pRecipe.id);
+            pBuffer.writeIdentifier(pRecipe.input.getTag().location()); // Write the tag's Identifier
             pBuffer.writeInt(Block.getId(pRecipe.output));
             pBuffer.writeInt(pRecipe.tierRequirement);
             pBuffer.writeInt(pRecipe.craftingDuration);

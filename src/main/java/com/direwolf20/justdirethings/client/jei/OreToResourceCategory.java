@@ -16,7 +16,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -25,7 +25,7 @@ public class OreToResourceCategory implements IRecipeCategory<OreToResourceRecip
     private final IDrawable icon;
     private final IDrawable pickaxeIcon;
     private final IDrawableAnimated animatedArrow;
-    public static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "ore_to_resource");
+    public static final Identifier UID = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "ore_to_resource");
 
     public OreToResourceCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createBlankDrawable(120, 30);  // Adjust size as needed

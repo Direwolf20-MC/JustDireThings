@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
     private static final Random random = new Random();  // Use entity's tickCount to seed the randomness
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/vortex1.png");
+    private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/vortex1.png");
 
     private float savedPulseScale = -1;
 
@@ -29,7 +29,7 @@ public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ParadoxEntity pEntity) {
+    public Identifier getTextureLocation(ParadoxEntity pEntity) {
         return TEXTURE;
     }
 

@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.layers.ArrowLayer;
 import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +39,7 @@ public class DecoyEntityRender<T extends DecoyEntity, M extends EntityModel<T>> 
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DecoyEntity entity) {
+    public Identifier getTextureLocation(DecoyEntity entity) {
         Optional<UUID> ownerUUID = entity.getOwnerUUID();
         if (ownerUUID.isPresent()) {
             GameProfile profile = new GameProfile(ownerUUID.get(), "DireDecoy");

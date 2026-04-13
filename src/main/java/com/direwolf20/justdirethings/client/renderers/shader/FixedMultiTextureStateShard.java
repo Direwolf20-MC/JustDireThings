@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class FixedMultiTextureStateShard extends RenderStateShard.EmptyTextureStateShard {
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	private final Optional<ResourceLocation> cutoutTexture;
+	private final Optional<Identifier> cutoutTexture;
 
 	public FixedMultiTextureStateShard(List<ShaderTexture> textures) {
 		super(() -> {
@@ -42,7 +42,7 @@ public class FixedMultiTextureStateShard extends RenderStateShard.EmptyTextureSt
 		this.cutoutTexture = textures.stream().findFirst().map(ShaderTexture::location);
 	}
 
-	protected @NotNull Optional<ResourceLocation> cutoutTexture() {
+	protected @NotNull Optional<Identifier> cutoutTexture() {
 		return this.cutoutTexture;
 	}
 }

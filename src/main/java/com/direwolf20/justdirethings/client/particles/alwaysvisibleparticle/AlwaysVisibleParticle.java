@@ -11,7 +11,7 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class AlwaysVisibleParticle extends TextureSheetParticle {
     static final ParticleRenderType AlwaysOn = new ParticleRenderType() {
@@ -32,12 +32,12 @@ public class AlwaysVisibleParticle extends TextureSheetParticle {
         }
     };
 
-    public AlwaysVisibleParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, ResourceLocation resourceLocation) {
+    public AlwaysVisibleParticle(ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, Identifier resourceLocation) {
         super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
         ParticleEngine particleEngine = Minecraft.getInstance().particleEngine;
         SpriteSet spriteSet = particleEngine.spriteSets.get(resourceLocation);
         if (spriteSet == null)
-            spriteSet = particleEngine.spriteSets.get(ResourceLocation.withDefaultNamespace("smoke"));
+            spriteSet = particleEngine.spriteSets.get(Identifier.withDefaultNamespace("smoke"));
         this.pickSprite(spriteSet);
         this.xd = 0;
         this.yd = 0;

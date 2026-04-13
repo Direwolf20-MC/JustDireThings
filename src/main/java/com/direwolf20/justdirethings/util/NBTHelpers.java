@@ -14,7 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -133,7 +133,7 @@ public class NBTHelpers {
     public static GlobalPos nbtToGlobalPos(CompoundTag tag) {
         ResourceKey<Level> levelKey;
         if (tag.contains("dimension"))
-            levelKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("dimension")));
+            levelKey = ResourceKey.create(Registries.DIMENSION, Identifier.parse(tag.getString("dimension")));
         else
             return null;
         BlockPos blockPos = NbtUtils.readBlockPos(tag, "blockpos").orElse(BlockPos.ZERO);
@@ -161,7 +161,7 @@ public class NBTHelpers {
 
     public static GlobalVec3 nbtToGlobalVec3(CompoundTag tag) {
         if (!tag.contains("dimension")) return null;
-        ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("dimension")));
+        ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, Identifier.parse(tag.getString("dimension")));
         double x = tag.getDouble("vec3x");
         double y = tag.getDouble("vec3y");
         double z = tag.getDouble("vec3z");

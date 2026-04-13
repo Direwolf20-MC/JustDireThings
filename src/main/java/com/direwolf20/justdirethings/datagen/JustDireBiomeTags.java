@@ -5,7 +5,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.BiomeTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
@@ -19,7 +19,7 @@ public class JustDireBiomeTags extends BiomeTagsProvider {
         super(p_255800_, p_256205_, JustDireThings.MODID, existingFileHelper);
     }
 
-    public static final TagKey<Biome> UNSTABLE_PORTAL_FLUID_VIABLE = TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "unstable_portal_fluid_viable"));
+    public static final TagKey<Biome> UNSTABLE_PORTAL_FLUID_VIABLE = TagKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unstable_portal_fluid_viable"));
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {

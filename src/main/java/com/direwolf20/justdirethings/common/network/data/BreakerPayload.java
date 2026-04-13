@@ -5,12 +5,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record BreakerPayload(
     boolean sneaking
 ) implements CustomPacketPayload {
-    public static final Type<BreakerPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "breaker_packet"));
+    public static final Type<BreakerPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "breaker_packet"));
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

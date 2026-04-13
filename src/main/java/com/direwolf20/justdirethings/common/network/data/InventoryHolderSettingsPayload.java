@@ -5,7 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record InventoryHolderSettingsPayload(
@@ -17,7 +17,7 @@ public record InventoryHolderSettingsPayload(
         boolean renderPlayer,
         int renderedSlot
 ) implements CustomPacketPayload {
-    public static final Type<InventoryHolderSettingsPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "inventory_holder_settings"));
+    public static final Type<InventoryHolderSettingsPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "inventory_holder_settings"));
 
     @Override
     public Type<InventoryHolderSettingsPayload> type() {

@@ -14,15 +14,15 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Arrays;
 
 public class BlockSwapperT1Screen extends BaseMachineScreen<BlockSwapperT1Container> {
-    protected final ResourceLocation ACTIVE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/active.png");
-    protected final ResourceLocation INACTIVE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/inactive.png");
+    protected final Identifier ACTIVE = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/active.png");
+    protected final Identifier INACTIVE = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/inactive.png");
     public GlobalPos boundTo;
     public BlockSwapperT1BE be;
     BlockSwapperT1Container container;
@@ -63,7 +63,7 @@ public class BlockSwapperT1Screen extends BaseMachineScreen<BlockSwapperT1Contai
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         boundTo = be.boundTo;
         if (boundTo != null) {
-            ResourceLocation icon = container.getPartnerExists() == 1 ? ACTIVE : INACTIVE;
+            Identifier icon = container.getPartnerExists() == 1 ? ACTIVE : INACTIVE;
             guiGraphics.blit(icon, activeX, activeY, 0, 0, 16, 16, 16, 16);
         } else {
             guiGraphics.blit(INACTIVE, activeX, activeY, 0, 0, 16, 16, 16, 16);

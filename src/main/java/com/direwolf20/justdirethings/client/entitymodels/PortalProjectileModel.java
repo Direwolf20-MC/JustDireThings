@@ -10,11 +10,11 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class PortalProjectileModel extends HierarchicalModel<PortalProjectile> {
 
-    public static ModelLayerLocation Portal_Projectile_Layer = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_projectile"), "body");
+    public static ModelLayerLocation Portal_Projectile_Layer = new ModelLayerLocation(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "portal_projectile"), "body");
     private static final String MAIN = "main";
     private final ModelPart root;
     private final ModelPart main;
