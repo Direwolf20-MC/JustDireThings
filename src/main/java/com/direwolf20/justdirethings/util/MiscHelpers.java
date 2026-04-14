@@ -7,7 +7,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.Random;
 
@@ -30,13 +31,12 @@ public class MiscHelpers {
         return min + (max - min) * rand.nextDouble();
     }
 
-    public static IItemHandler getAttachedInventory(Level level, BlockPos blockPos, Direction side) {
+    public static ResourceHandler<ItemResource> getAttachedInventory(Level level, BlockPos blockPos, Direction side) {
         if (level == null) return null;
         BlockEntity be = level.getBlockEntity(blockPos);
         // if we have a TE and its an item handler, try extracting from that
         if (be != null) {
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, blockPos, side);
-            return handler;
+            return level.getCapability(Capabilities.Item.BLOCK, blockPos, side);
         }
         return null;
     }
