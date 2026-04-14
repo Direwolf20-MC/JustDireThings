@@ -4,8 +4,6 @@ import com.direwolf20.justdirethings.common.blockentities.*;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
-import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
-import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemstack;
 import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
@@ -24,7 +22,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
@@ -34,6 +32,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.neoforged.neoforge.items.ComponentItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.ItemAccessEnergyHandler;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -53,7 +53,7 @@ public class JustDireThings {
         modEventBus.addListener(this::registerChunkLoaders);
         modEventBus.addListener(this::registerEntityAttributes);
         modEventBus.addListener(this::registerCustomAttributes);
-        if (FMLLoader.getDist().isClient()) {
+        if (FMLEnvironment.getDist().isClient()) {
             modEventBus.addListener(ClientSetup::init);
         }
     }
@@ -74,39 +74,52 @@ public class JustDireThings {
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {
         //Items
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1),
+        // TODO(port, stage-5): ComponentItemHandler is deprecated — rewrite against ResourceHandler<ItemResource> (ItemStacksResourceHandler) in Stage 5.
+        event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1),
                 Registration.Pocket_Generator.get()
         );
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
+        // TODO(port, stage-5): ComponentItemHandler deprecated — rework to ResourceHandler<ItemResource>.
+        event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
                 Registration.FerricoreBow.get()
         );
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 2),
+        // TODO(port, stage-5): ComponentItemHandler deprecated — rework to ResourceHandler<ItemResource>.
+        event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 2),
                 Registration.BlazegoldBow.get()
         );
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 3),
+        // TODO(port, stage-5): ComponentItemHandler deprecated — rework to ResourceHandler<ItemResource>.
+        event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 3),
                 Registration.CelestigemBow.get()
         );
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 4),
+        // TODO(port, stage-5): ComponentItemHandler deprecated — rework to ResourceHandler<ItemResource>.
+        event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 4),
                 Registration.EclipseAlloyBow.get()
         );
-        event.registerItem(Capabilities.ItemHandler.ITEM, (itemStack, context) -> new PotionCanisterHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
+        // TODO(port, stage-5/8): PotionCanisterHandler still extends ComponentItemHandler — rework in Stage 5/8.
+        event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new PotionCanisterHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
                 Registration.PotionCanister.get()
         );
-        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
+        // Pocket Generator: external insert blocked (maxInsert=0), internal fill handled via its own BE logic. See TRANSFER_API §3 "one-way energy".
+        event.registerItem(Capabilities.Energy.ITEM, (itemStack, access) -> {
                     int capacity = 1000000; //Default
                     if (itemStack.getItem() instanceof PoweredItem poweredItem) {
                         capacity = poweredItem.getMaxEnergy();
                     }
-                    return new EnergyStorageItemStackNoReceive(capacity, itemStack);
+                    return new ItemAccessEnergyHandler(
+                            access != null ? access : ItemAccess.forStack(itemStack),
+                            JustDireDataComponents.FORGE_ENERGY.get(),
+                            capacity, 0, capacity);
                 },
                 Registration.Pocket_Generator.get()
         );
-        event.registerItem(Capabilities.EnergyStorage.ITEM, (itemStack, context) -> {
+        event.registerItem(Capabilities.Energy.ITEM, (itemStack, access) -> {
                     int capacity = 1000000; //Default
                     if (itemStack.getItem() instanceof PoweredItem poweredItem) {
                         capacity = poweredItem.getMaxEnergy();
                     }
-                    return new EnergyStorageItemstack(capacity, itemStack);
+                    return new ItemAccessEnergyHandler(
+                            access != null ? access : ItemAccess.forStack(itemStack),
+                            JustDireDataComponents.FORGE_ENERGY.get(),
+                            capacity);
                 },
                 Registration.CelestigemSword.get(),
                 Registration.CelestigemPickaxe.get(),
@@ -138,7 +151,8 @@ public class JustDireThings {
                 Registration.PolymorphicWandV2.get()
         );
 
-        event.registerItem(Capabilities.FluidHandler.ITEM, (itemStack, context) -> {
+        // TODO(port, stage-5): FluidHandlerItemStack is deprecated — rewrite against ResourceHandler<FluidResource> (FluidStacksResourceHandler) in Stage 5.
+        event.registerItem(Capabilities.Fluid.ITEM, (itemStack, context) -> {
                     if (itemStack.getItem() instanceof PortalGunV2) {
                         return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, PortalGunV2.maxMB) {
                             @Override
@@ -208,7 +222,7 @@ public class JustDireThings {
         );
 
         //Blocks
-        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+        event.registerBlock(Capabilities.Item.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof BaseMachineBE)
                         return be.getData(Registration.MACHINE_HANDLER);
@@ -228,7 +242,7 @@ public class JustDireThings {
                 Registration.FluidCollectorT1.get(),
                 Registration.FluidCollectorT2.get()
         );
-        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+        event.registerBlock(Capabilities.Item.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof InventoryHolderBE inventoryHolderBE)
                         return inventoryHolderBE.getInventoryHolderHandler();
@@ -236,7 +250,7 @@ public class JustDireThings {
                 },
                 Registration.InventoryHolder.get()
         );
-        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+        event.registerBlock(Capabilities.Item.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof BaseMachineBE)
                         return be.getData(Registration.GENERATOR_ITEM_HANDLER);
@@ -244,7 +258,7 @@ public class JustDireThings {
                 },
                 Registration.GeneratorT1.get()
         );
-        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+        event.registerBlock(Capabilities.Item.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof BaseMachineBE)
                         return be.getData(Registration.GENERATOR_FLUID_ITEM_HANDLER);
@@ -252,10 +266,11 @@ public class JustDireThings {
                 },
                 Registration.GeneratorFluidT1.get()
         );
-        event.registerBlock(Capabilities.ItemHandler.BLOCK,
+        // TODO(port, stage-5/7): ItemStackHandler is deprecated and PlayerAccessorBE#getPlayerHandler return type will change to ResourceHandler<ItemResource> in Stage 5/7.
+        event.registerBlock(Capabilities.Item.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof PlayerAccessorBE playerAccessorBE) {
-                        if (be.getLevel().isClientSide) {
+                        if (be.getLevel().isClientSide()) {
                             return new ItemStackHandler(1);
                         } else {
                             return playerAccessorBE.getPlayerHandler(side);
@@ -265,7 +280,7 @@ public class JustDireThings {
                 },
                 Registration.PlayerAccessor.get()
         );
-        event.registerBlock(Capabilities.EnergyStorage.BLOCK,
+        event.registerBlock(Capabilities.Energy.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof PoweredMachineBE)
                         return be.getData(Registration.ENERGYSTORAGE_MACHINES);
@@ -281,7 +296,7 @@ public class JustDireThings {
                 Registration.FluidCollectorT2.get(),
                 Registration.ParadoxMachine.get()
         );
-        event.registerBlock(Capabilities.EnergyStorage.BLOCK,
+        event.registerBlock(Capabilities.Energy.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof PoweredMachineBE)
                         return be.getData(Registration.ENERGYSTORAGE_GENERATORS);
@@ -290,7 +305,7 @@ public class JustDireThings {
                 Registration.GeneratorT1.get(),
                 Registration.GeneratorFluidT1.get()
         );
-        event.registerBlock(Capabilities.EnergyStorage.BLOCK,
+        event.registerBlock(Capabilities.Energy.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof EnergyTransmitterBE && side != null && side.equals(state.getValue(BlockStateProperties.FACING))) {
                         return be.getData(Registration.ENERGYSTORAGE_TRANSMITTERS);
@@ -299,7 +314,7 @@ public class JustDireThings {
                 },
                 Registration.EnergyTransmitter.get()
         );
-        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+        event.registerBlock(Capabilities.Fluid.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof FluidMachineBE) {
                         return be.getData(Registration.MACHINE_FLUID_HANDLER);
@@ -311,7 +326,7 @@ public class JustDireThings {
                 Registration.FluidCollectorT1.get(),
                 Registration.FluidCollectorT2.get()
         );
-        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+        event.registerBlock(Capabilities.Fluid.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof FluidMachineBE) {
                         return be.getData(Registration.GENERATOR_FLUID_HANDLER);
@@ -320,7 +335,7 @@ public class JustDireThings {
                 },
                 Registration.GeneratorFluidT1.get()
         );
-        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+        event.registerBlock(Capabilities.Fluid.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof ParadoxMachineBE) {
                         return be.getData(Registration.PARADOX_FLUID_HANDLER);
@@ -329,7 +344,8 @@ public class JustDireThings {
                 },
                 Registration.ParadoxMachine.get()
         );
-        event.registerBlock(Capabilities.FluidHandler.BLOCK,
+        // TODO(port, stage-5): ExperienceHolderFluidTank extends deprecated FluidTank — rework to ResourceHandler<FluidResource> in Stage 5.
+        event.registerBlock(Capabilities.Fluid.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof ExperienceHolderBE experienceHolderBE) {
                         return new ExperienceHolderFluidTank(experienceHolderBE, fluidstack -> fluidstack.is(JustDireFluidTags.EXPERIENCE));
