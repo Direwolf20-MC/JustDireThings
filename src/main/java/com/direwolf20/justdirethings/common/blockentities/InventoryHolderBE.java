@@ -6,11 +6,11 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.ItemStackKey;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
@@ -129,48 +129,43 @@ public class InventoryHolderBE extends BaseMachineBE {
         return true;
     }
 
-    public void saveInventory(CompoundTag tag, HolderLookup.Provider provider) {
-        tag.put("storedItems", getMachineHandler().serializeNBT(provider));
+    public void saveInventory(ValueOutput output) {
+        getMachineHandler().serialize(output.child("storedItems"));
     }
 
-    public void loadInventory(CompoundTag tag, HolderLookup.Provider provider) {
-        if (tag.contains("storedItems")) {
-            CompoundTag filteredItems = tag.getCompound("storedItems");
-            getMachineHandler().deserializeNBT(provider, filteredItems);
+    public void loadInventory(ValueInput input) {
+        input.child("storedItems").ifPresent(child -> {
+            getMachineHandler().deserialize(child);
             rebuildFilterCache();
-        }
+        });
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putBoolean("compareNBT", compareNBT);
-        tag.putBoolean("filtersOnly", filtersOnly);
-        tag.putBoolean("compareCounts", compareCounts);
-        tag.putBoolean("automatedFiltersOnly", automatedFiltersOnly);
-        tag.putBoolean("automatedCompareCounts", automatedCompareCounts);
-        tag.putBoolean("renderPlayer", renderPlayer);
-        tag.putInt("renderedSlot", renderedSlot);
-        // Create a new CompoundTag to hold all saved items
-        tag.put("filteredItems", filterBasicHandler.serializeNBT(provider));
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putBoolean("compareNBT", compareNBT);
+        output.putBoolean("filtersOnly", filtersOnly);
+        output.putBoolean("compareCounts", compareCounts);
+        output.putBoolean("automatedFiltersOnly", automatedFiltersOnly);
+        output.putBoolean("automatedCompareCounts", automatedCompareCounts);
+        output.putBoolean("renderPlayer", renderPlayer);
+        output.putInt("renderedSlot", renderedSlot);
+        filterBasicHandler.serialize(output.child("filteredItems"));
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        compareNBT = tag.getBoolean("compareNBT");
-        filtersOnly = tag.getBoolean("filtersOnly");
-        compareCounts = tag.getBoolean("compareCounts");
-        automatedFiltersOnly = tag.getBoolean("automatedFiltersOnly");
-        automatedCompareCounts = tag.getBoolean("automatedCompareCounts");
-        if (tag.contains("renderPlayer"))
-            renderPlayer = tag.getBoolean("renderPlayer");
-        if (tag.contains("renderedSlot"))
-            renderedSlot = tag.getInt("renderedSlot");
-        if (tag.contains("filteredItems")) {
-            CompoundTag filteredItems = tag.getCompound("filteredItems");
-            filterBasicHandler.deserializeNBT(provider, filteredItems);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        compareNBT = input.getBooleanOr("compareNBT", compareNBT);
+        filtersOnly = input.getBooleanOr("filtersOnly", filtersOnly);
+        compareCounts = input.getBooleanOr("compareCounts", compareCounts);
+        automatedFiltersOnly = input.getBooleanOr("automatedFiltersOnly", automatedFiltersOnly);
+        automatedCompareCounts = input.getBooleanOr("automatedCompareCounts", automatedCompareCounts);
+        renderPlayer = input.getBooleanOr("renderPlayer", renderPlayer);
+        renderedSlot = input.getIntOr("renderedSlot", renderedSlot);
+        input.child("filteredItems").ifPresent(child -> {
+            filterBasicHandler.deserialize(child);
             rebuildFilterCache();
-        }
+        });
     }
 }

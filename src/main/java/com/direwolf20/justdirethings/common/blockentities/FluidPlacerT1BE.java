@@ -10,21 +10,21 @@ import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,14 +78,29 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
         if (isFull()) return;
         ItemStack itemStack = getItemStack();
         if (!isStackValid(itemStack)) return;
-        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        FluidStack testExtract = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-        int insertAmt = getFluidTank().fill(testExtract, IFluidHandler.FluidAction.SIMULATE);
-        if (insertAmt > 0) {
-            FluidStack extractedStack = fluidHandlerItem.drain(insertAmt, IFluidHandler.FluidAction.EXECUTE);
-            getFluidTank().fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
-            if (itemStack.getItem() instanceof BucketItem)
-                getMachineHandler().setStackInSlot(0, fluidHandlerItem.getContainer());
+        ItemAccess itemAccess = ItemAccess.forHandlerIndex(getMachineHandler(), 0);
+        ResourceHandler<FluidResource> fluidHandler = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null) return;
+
+        // Find any non-empty fluid slot in the item and transfer into the tank
+        try (Transaction tx = Transaction.openRoot()) {
+            for (int i = 0; i < fluidHandler.size(); i++) {
+                FluidResource resource = fluidHandler.getResource(i);
+                if (resource.isEmpty()) continue;
+                int avail = fluidHandler.getAmountAsInt(i);
+                if (avail <= 0) continue;
+                int capacityFit;
+                try (Transaction simTx = Transaction.open(tx)) {
+                    capacityFit = getFluidTank().insert(0, resource, Math.min(avail, 1000), simTx);
+                }
+                if (capacityFit <= 0) continue;
+                int extracted = fluidHandler.extract(i, resource, capacityFit, tx);
+                if (extracted > 0) {
+                    getFluidTank().insert(0, resource, extracted, tx);
+                    tx.commit();
+                }
+                return;
+            }
         }
     }
 
@@ -96,19 +111,22 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     public boolean isStackValid(ItemStack itemStack) {
         if (itemStack.isEmpty())
             return false;
-        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (fluidHandlerItem == null)
+        ResourceHandler<FluidResource> fluidHandler = ItemAccess.forStack(itemStack).getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null)
             return false;
-        FluidStack fluidStack = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-        if (fluidStack.getAmount() == 0)
-            return false;
-        if (!getFluidStack().isEmpty() && !getFluidStack().is(fluidStack.getFluid()))
-            return false;
-        return true;
+        // Probe for any non-empty fluid in the item
+        for (int i = 0; i < fluidHandler.size(); i++) {
+            FluidResource resource = fluidHandler.getResource(i);
+            if (resource.isEmpty()) continue;
+            if (!getFluidStack().isEmpty() && !getFluidStack().is(resource.getFluid()))
+                continue;
+            return true;
+        }
+        return false;
     }
 
     public FluidStack getPlaceStack() {
-        return getFluidTank().getFluid();
+        return getFluidStack();
     }
 
     public JustDireFluidTank getFluidTank() {
@@ -162,7 +180,22 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     }
 
     public boolean placeFluid(FluidStack fluidStack, BlockPos blockPos) {
-        return FluidUtil.tryPlaceFluid(null, level, InteractionHand.MAIN_HAND, blockPos, getFluidTank(), fluidStack);
+        if (fluidStack.isEmpty() || fluidStack.getAmount() < 1000) return false;
+        Fluid fluid = fluidStack.getFluid();
+        BlockState placementState = fluid.defaultFluidState().createLegacyBlock();
+        if (placementState.isAir()) return false;
+        if (!level.getBlockState(blockPos).canBeReplaced()) return false;
+
+        // Drain 1000 mB from the tank on successful placement
+        FluidResource resource = FluidResource.of(fluid);
+        int drained;
+        try (Transaction tx = Transaction.openRoot()) {
+            drained = getFluidTank().extract(0, resource, 1000, tx);
+            if (drained < 1000) return false;
+            if (!level.setBlock(blockPos, placementState, 3)) return false;
+            tx.commit();
+        }
+        return true;
     }
 
     public boolean isBlockPosValid(BlockPos blockPos, FakePlayer fakePlayer) {

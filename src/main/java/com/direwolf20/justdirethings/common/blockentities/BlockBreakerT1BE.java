@@ -9,8 +9,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -283,14 +284,14 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putBoolean("sneaking", sneaking);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putBoolean("sneaking", sneaking);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        this.sneaking = tag.getBoolean("sneaking");
-        super.loadAdditional(tag, provider);
+    protected void loadAdditional(ValueInput input) {
+        this.sneaking = input.getBooleanOr("sneaking", sneaking);
+        super.loadAdditional(input);
     }
 }

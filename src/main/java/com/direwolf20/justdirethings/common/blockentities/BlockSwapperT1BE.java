@@ -9,10 +9,11 @@ import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -198,7 +199,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     /** Validates the connections are still valid -- for use if a block is moved **/
     public void validateConnections() {
         //If we got here, it means the Block Swapper was moved, and so we assume it needs to update its partner
-        if (boundTo == null || level == null || level.isClientSide) { //Don't do anything if this wasn't bound to something already
+        if (boundTo == null || level == null || level.isClientSide()) { //Don't do anything if this wasn't bound to something already
             return;
         }
         //System.out.println("Validating Connections!");
@@ -215,7 +216,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public void doesPartnerExist() {
-        if (boundTo == null || level == null || level.isClientSide) { //Don't do anything if this wasn't bound to something already
+        if (boundTo == null || level == null || level.isClientSide()) { //Don't do anything if this wasn't bound to something already
             return;
         }
         BlockSwapperT1BE blockSwapperT1BE = getPartnerBE();
@@ -381,7 +382,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 BlockEntity newBE = partnerLevel.getBlockEntity(remoteSwapPos);
                 if (newBE != null) {
                     try {
-                        newBE.loadCustomOnly(thisNBT, level.registryAccess());
+                        newBE.loadCustomOnly(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, partnerLevel.registryAccess(), thisNBT));
                     } catch (Exception e) {
                         System.out.println("Failed to restore tile data for block at: " + remoteSwapPos + " with NBT: " + thisNBT + ". Consider adding it to the blacklist");
                     }
@@ -396,7 +397,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
                 BlockEntity newBE = level.getBlockEntity(blockPos);
                 if (newBE != null) {
                     try {
-                        newBE.loadCustomOnly(thatNBT, level.registryAccess());
+                        newBE.loadCustomOnly(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess(), thatNBT));
                     } catch (Exception e) {
                         System.out.println("Failed to restore tile data for block at: " + blockPos + " with NBT: " + thatNBT + ". Consider adding it to the blacklist");
                     }
@@ -489,28 +490,28 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         if (boundTo != null)
-            tag.put("boundTo", NBTHelpers.globalPosToNBT(boundTo));
-        tag.putBoolean("swapBlocks", swapBlocks);
-        tag.putInt("swap_entity_type", swap_entity_type.ordinal());
+            output.store("boundTo", CompoundTag.CODEC, NBTHelpers.globalPosToNBT(boundTo));
+        output.putBoolean("swapBlocks", swapBlocks);
+        output.putInt("swap_entity_type", swap_entity_type.ordinal());
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        if (tag.contains("boundTo")) {
-            GlobalPos newBoundTo = NBTHelpers.nbtToGlobalPos(tag.getCompound("boundTo"));
-            boolean same = newBoundTo.equals(boundTo);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        java.util.Optional<CompoundTag> boundToTag = input.read("boundTo", CompoundTag.CODEC);
+        if (boundToTag.isPresent()) {
+            GlobalPos newBoundTo = NBTHelpers.nbtToGlobalPos(boundToTag.get());
+            boolean same = newBoundTo != null && newBoundTo.equals(boundTo);
             this.boundTo = newBoundTo;
             if (!same)
                 validateConnections();
         } else {
             this.boundTo = null;
         }
-        if (tag.contains("swapBlocks"))
-            swapBlocks = tag.getBoolean("swapBlocks");
-        swap_entity_type = SWAP_ENTITY_TYPE.values()[tag.getInt("swap_entity_type")];
+        swapBlocks = input.getBooleanOr("swapBlocks", swapBlocks);
+        swap_entity_type = SWAP_ENTITY_TYPE.values()[input.getIntOr("swap_entity_type", 0)];
     }
 }

@@ -17,13 +17,10 @@ import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -33,15 +30,17 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -96,12 +95,10 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         g = 1.00f;
         b = 0.39f;
 
-        // Helper method to generate random positions outside the block (either -0.5 to 0 or 1 to 1.5)
         double offsetX = random.nextBoolean() ? -0.5 + random.nextDouble() * 0.5 : 1.0 + random.nextDouble() * 0.5;
         double offsetY = random.nextBoolean() ? -0.5 + random.nextDouble() * 0.5 : 1.0 + random.nextDouble() * 0.5;
         double offsetZ = random.nextBoolean() ? -0.5 + random.nextDouble() * 0.5 : 1.0 + random.nextDouble() * 0.5;
 
-        // Calculate the start position with the random offsets
         double startX = d0 - 0.5 + offsetX;
         double startY = d1 - 0.5 + offsetY;
         double startZ = d2 - 0.5 + offsetZ;
@@ -121,7 +118,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     public int getRunTime() {
         if (!isRunning) {
-            return 300; //Should technically never happen
+            return 300;
         }
         return (restoringBlocks.size() + restoringEntites.size()) * 10;
     }
@@ -280,7 +277,6 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     }
 
     private void restoreBlocks(FakePlayer fakePlayer) {
-        //Map<BlockPos, BlockState> blocksToRestore = getBlocksFromNBT();
         int restoredCount = 0;
 
         for (Map.Entry<BlockPos, BlockState> entry : restoringBlocks.entrySet()) {
@@ -288,7 +284,6 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             BlockState blockState = entry.getValue();
             if (!canPlace(fakePlayer, blockPos))
                 continue;
-            // Place the block in the world
             if (level.setBlock(blockPos, blockState, 3)) {
                 restoredCount++;
             }
@@ -306,7 +301,6 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
                 continue;
             LivingEntity entity = entry.getValue();
 
-            // Place the entity in the world
             entity.moveTo(entityPos.x, entityPos.y, entityPos.z, entity.getYRot(), entity.getXRot());
             if (level.addFreshEntity(entity)) {
                 restoredCount++;
@@ -404,18 +398,31 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     public boolean canParadox() {
         if (!hasSnapshotData())
             return false;
-        if (getFluidTank().isEmpty())
+        if (getFluidStack().isEmpty())
             return false;
         return true;
     }
 
     public boolean hasEnoughFluid(int fluidCost) {
-        FluidStack extractedStack = getFluidTank().drain(fluidCost, IFluidHandler.FluidAction.SIMULATE);
-        return extractedStack.getAmount() == fluidCost;
+        JustDireFluidTank tank = getFluidTank();
+        FluidResource resource = tank.getResource(0);
+        if (resource.isEmpty()) return fluidCost == 0;
+        try (Transaction tx = Transaction.openRoot()) {
+            int extracted = tank.extract(0, resource, fluidCost, tx);
+            return extracted == fluidCost;
+        }
     }
 
     public int extractFluid(int fluidCost) {
-        return getFluidTank().drain(fluidCost, IFluidHandler.FluidAction.EXECUTE).getAmount();
+        if (fluidCost <= 0) return 0;
+        JustDireFluidTank tank = getFluidTank();
+        FluidResource resource = tank.getResource(0);
+        if (resource.isEmpty()) return 0;
+        try (Transaction tx = Transaction.openRoot()) {
+            int extracted = tank.extract(0, resource, fluidCost, tx);
+            tx.commit();
+            return extracted;
+        }
     }
 
     public int getFluidCostPerTick(int totalFluidCost) {
@@ -455,17 +462,20 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         BlockPos machinePos = getBlockPos();
         Map<BlockPos, BlockState> blockMap = new HashMap<>();
         if (targetType == 2 || !snapshotData.contains("blocks")) {
-            return blockMap; // Return empty list if no block data is found
+            return blockMap;
         }
 
-        ListTag blockDataList = snapshotData.getList("blocks", 10); // 10 indicates a CompoundTag
+        ListTag blockDataList = snapshotData.getListOrEmpty("blocks");
         for (int i = 0; i < blockDataList.size(); i++) {
-            CompoundTag blockTag = blockDataList.getCompound(i);
-            BlockPos relativePos = NbtUtils.readBlockPos(blockTag, "pos").orElse(null);
-            if (relativePos == null) continue;
-            BlockPos worldPos = relativePos.offset(machinePos); // Convert relative to world position
-            BlockState blockState = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), blockTag.getCompound("state"));
-            blockMap.put(worldPos, blockState); // Add the block's position and state to the list
+            CompoundTag blockTag = blockDataList.getCompoundOrEmpty(i);
+            long packedPos = blockTag.getLongOr("pos", Long.MIN_VALUE);
+            if (packedPos == Long.MIN_VALUE) continue;
+            BlockPos relativePos = BlockPos.of(packedPos);
+            BlockPos worldPos = relativePos.offset(machinePos);
+            BlockState blockState = BlockState.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE, blockTag.get("state"))
+                    .result()
+                    .orElse(net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+            blockMap.put(worldPos, blockState);
         }
 
         return blockMap;
@@ -475,17 +485,16 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         BlockPos machinePos = getBlockPos();
         Map<Vec3, LivingEntity> entityMap = new HashMap<>();
         if (targetType == 1 || !snapshotData.contains("entities")) {
-            return entityMap; // Return empty list if no entity data is found
+            return entityMap;
         }
 
-        ListTag entityDataList = snapshotData.getList("entities", 10); // 10 indicates a CompoundTag
+        ListTag entityDataList = snapshotData.getListOrEmpty("entities");
         for (int i = 0; i < entityDataList.size(); i++) {
-            CompoundTag entityTag = entityDataList.getCompound(i);
-            Vec3 relativePos = NBTHelpers.nbtToVec3(entityTag.getCompound("relativePos"));
-            Vec3 worldPos = relativePos.add(Vec3.atCenterOf(machinePos)); // Convert relative to world position
+            CompoundTag entityTag = entityDataList.getCompoundOrEmpty(i);
+            Vec3 relativePos = NBTHelpers.nbtToVec3(entityTag.getCompoundOrEmpty("relativePos"));
+            Vec3 worldPos = relativePos.add(Vec3.atCenterOf(machinePos));
 
-            // Restore the LivingEntity from the NBT data
-            CompoundTag entityData = entityTag.getCompound("data");
+            CompoundTag entityData = entityTag.getCompoundOrEmpty("data");
             LivingEntity entity = restoreEntityFromNBT(entityData, worldPos);
 
             if (entity != null) {
@@ -498,44 +507,41 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     private LivingEntity restoreEntityFromNBT(CompoundTag entityData, Vec3 worldPos) {
         if (entityData == null || !entityData.contains("id")) {
-            return null; // Return null if the entity data is invalid
+            return null;
         }
 
-        // Retrieve the EntityType from the saved NBT data
-        EntityType<?> entityType = EntityType.byString(entityData.getString("id")).orElse(null);
+        EntityType<?> entityType = EntityType.byString(entityData.getString("id").orElse("")).orElse(null);
         if (entityType == null) {
-            return null; // Return null if the entity type is invalid
+            return null;
         }
 
         if (entityData.contains("UUID")) {
-            UUID entityUUID = entityData.getUUID("UUID");
-            if (level.isClientSide) {
-
-            } else {
+            UUID entityUUID = UUIDUtil.uuidFromIntArray(entityData.getIntArray("UUID").orElse(new int[]{0, 0, 0, 0}));
+            if (!level.isClientSide()) {
                 Entity existingEntity = ((ServerLevel) level).getEntity(entityUUID);
                 if (existingEntity != null) {
-                    // Skip restoring the entity as it already exists
                     return null;
                 }
             }
         }
 
-        // Create the entity instance
-        Entity entity = entityType.create(level);
+        Entity entity = entityType.create(level, EntitySpawnReason.SPAWNER);
         if (!(entity instanceof LivingEntity)) {
-            return null; // Return null if the entity is not a LivingEntity
+            return null;
         }
 
-        // Load the entity data and set its position
         CompoundTag santizedData = Config.PARADOX_RESTRICTED_MOBS.get() ? sanitizeEntityData(entityData) : sanitizeEntityDataDeny(entityData);
-        entity.load(santizedData);
+        // TODO(port, stage-7): Entity#load signature changed in 26.1 (now takes ValueInput). Wrap the
+        // sanitized CompoundTag through TagValueInput so we can feed the new API.
+        net.minecraft.world.level.storage.ValueInput wrappedInput = net.minecraft.world.level.storage.TagValueInput.create(
+                net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess(), santizedData);
+        entity.load(wrappedInput);
         if (entity instanceof Mob mob && level instanceof ServerLevel serverLevel)
-            EventHooks.finalizeMobSpawn(mob, serverLevel, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.SPAWNER, null);
-        //mob.finalizeSpawn(serverLevel, level.getCurrentDifficultyAt(getBlockPos()), MobSpawnType.SPAWNER, null);
+            EventHooks.finalizeMobSpawn(mob, serverLevel, level.getCurrentDifficultyAt(getBlockPos()), EntitySpawnReason.SPAWNER, null);
 
         entity.moveTo(worldPos.x, worldPos.y, worldPos.z, entity.getYRot(), entity.getXRot());
 
-        return (LivingEntity) entity; // Return the restored LivingEntity
+        return (LivingEntity) entity;
     }
 
     public CompoundTag sanitizeEntityData(CompoundTag entityData) {
@@ -544,7 +550,6 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
                 "Color", "Sheared", "Variant", "FromBucket", "Age", "VillagerData", "Xp",
                 "LastRestock", "RestocksToday", "Offers", "EggLayTime"};
 
-        // Iterate over the fields and copy them if they exist
         for (String field : fieldsToCopy) {
             if (entityData.contains(field)) {
                 compoundTag.put(field, entityData.get(field));
@@ -557,9 +562,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         CompoundTag compoundTag = new CompoundTag();
         String[] fieldsToRemove = {"ArmorItems", "HandItems", "Items", "SaddleItem", "Inventory"};
 
-        // Iterate over the fields and copy them if they exist
-        for (String key : entityData.getAllKeys()) {
-            // If the key is NOT in the fieldsToRemove list, copy it to the sanitizedTag
+        for (String key : entityData.keySet()) {
             boolean shouldRemove = false;
             for (String field : fieldsToRemove) {
                 if (key.equals(field)) {
@@ -569,7 +572,6 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             }
 
             if (!shouldRemove && entityData.get(key) != null) {
-                // Copy the data that is not in the fieldsToRemove list
                 compoundTag.put(key, entityData.get(key));
             }
         }
@@ -584,8 +586,8 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     public void snapshotArea() {
         if (level == null) return;
-        BlockPos machinePos = getBlockEntity().getBlockPos(); // Get the machine's position
-        AABB area = getAABB(machinePos); // Get the affected area
+        BlockPos machinePos = getBlockEntity().getBlockPos();
+        AABB area = getAABB(machinePos);
 
         List<CompoundTag> blockDataList = new ArrayList<>();
         List<CompoundTag> entityDataList = new ArrayList<>();
@@ -595,8 +597,10 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             BlockState blockState = level.getBlockState(pos);
             if (!blockState.isAir()) {
                 CompoundTag blockTag = new CompoundTag();
-                blockTag.put("pos", NbtUtils.writeBlockPos(pos.subtract(machinePos))); // Relative position
-                blockTag.put("state", NbtUtils.writeBlockState(blockState)); // Block state
+                blockTag.putLong("pos", pos.subtract(machinePos).asLong());
+                BlockState.CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, blockState)
+                        .result()
+                        .ifPresent(tag -> blockTag.put("state", tag));
                 blockDataList.add(blockTag);
             }
         }
@@ -605,19 +609,26 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         List<LivingEntity> entities = findEntitiesToSave(area);
         for (LivingEntity entity : entities) {
             CompoundTag entityTag = new CompoundTag();
-            CompoundTag entityData = new CompoundTag();
-            entity.save(entityData);
-            Vec3 entityRelativePos = entity.position().subtract(Vec3.atCenterOf(machinePos)); // Relative position as Vec3
-            entityTag.put("relativePos", NBTHelpers.vec3ToNBT(entityRelativePos)); // Save Vec3 position
+            CompoundTag entityData = saveEntityToNBT(entity);
+            Vec3 entityRelativePos = entity.position().subtract(Vec3.atCenterOf(machinePos));
+            entityTag.put("relativePos", NBTHelpers.vec3ToNBT(entityRelativePos));
             entityTag.put("data", entityData);
             entityDataList.add(entityTag);
         }
 
         snapshotData = new CompoundTag();
-        snapshotData.put("blocks", writeBlockDataList(blockDataList)); // Store blocks
-        snapshotData.put("entities", writeEntityDataList(entityDataList)); // Store entities
+        snapshotData.put("blocks", writeBlockDataList(blockDataList));
+        snapshotData.put("entities", writeEntityDataList(entityDataList));
         clearSnapshotCache();
         markDirtyClient();
+    }
+
+    private CompoundTag saveEntityToNBT(LivingEntity entity) {
+        // Entity#save now writes via ValueOutput; round-trip via TagValueOutput to get a CompoundTag.
+        net.minecraft.world.level.storage.TagValueOutput output = net.minecraft.world.level.storage.TagValueOutput.createWithContext(
+                net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess());
+        entity.save(output);
+        return output.buildResult();
     }
 
     public void clearSnapshotCache() {
@@ -663,7 +674,6 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         return true;
     }
 
-    // Helper methods to write lists to NBT
     private ListTag writeBlockDataList(List<CompoundTag> blockDataList) {
         ListTag listTag = new ListTag();
         listTag.addAll(blockDataList);
@@ -677,87 +687,79 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        if (level.isClientSide && isRunning && !pkt.getTag().getBoolean("isRunning")) {
+    public void onDataPacket(Connection net, ValueInput input) {
+        boolean incomingRunning = input.getBooleanOr("isRunning", false);
+        if (level.isClientSide() && isRunning && !incomingRunning) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.level != null) {
-                // Stop the specific sound using SoundManager
                 mc.getSoundManager().stop(SoundEvents.PORTAL_AMBIENT.getLocation(), SoundSource.BLOCKS);
             }
         }
-        super.onDataPacket(net, pkt, lookupProvider);
-
+        super.onDataPacket(net, input);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.put("snapshotData", snapshotData);
-        tag.putBoolean("renderParadox", renderParadox);
-        tag.putInt("targetType", targetType);
-        tag.putBoolean("isRunning", isRunning);
-        tag.putInt("timeRunning", timeRunning);
-        tag.putInt("fePerTick", fePerTick);
-        tag.putInt("fluidPerTick", fluidPerTick);
-        tag.putFloat("paradoxEnergy", paradoxEnergy);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.store("snapshotData", CompoundTag.CODEC, snapshotData);
+        output.putBoolean("renderParadox", renderParadox);
+        output.putInt("targetType", targetType);
+        output.putBoolean("isRunning", isRunning);
+        output.putInt("timeRunning", timeRunning);
+        output.putInt("fePerTick", fePerTick);
+        output.putInt("fluidPerTick", fluidPerTick);
+        output.putFloat("paradoxEnergy", paradoxEnergy);
 
-        // Save restoringBlocks map
-        ListTag restoringBlocksList = new ListTag();
+        // Save restoringBlocks map as packed long + codec state
+        ValueOutput.ValueOutputList restoringBlocksList = output.childrenList("restoringBlocks");
         for (Map.Entry<BlockPos, BlockState> entry : restoringBlocks.entrySet()) {
-            CompoundTag blockData = new CompoundTag();
-            blockData.put("pos", NbtUtils.writeBlockPos(entry.getKey())); // Write BlockPos
-            blockData.put("state", NbtUtils.writeBlockState(entry.getValue())); // Write BlockState
-            restoringBlocksList.add(blockData);
+            ValueOutput blockData = restoringBlocksList.addChild();
+            blockData.putLong("pos", entry.getKey().asLong());
+            blockData.store("state", BlockState.CODEC, entry.getValue());
         }
-        tag.put("restoringBlocks", restoringBlocksList);
 
         // Save restoringEntities list
-        ListTag restoringEntitiesList = new ListTag();
+        ValueOutput.ValueOutputList restoringEntitiesList = output.childrenList("restoringEntities");
         for (Vec3 vec : restoringEntites) {
-            CompoundTag entityData = NBTHelpers.vec3ToNBT(vec);
-            restoringEntitiesList.add(entityData);
+            ValueOutput entityData = restoringEntitiesList.addChild();
+            entityData.putDouble("x", vec.x);
+            entityData.putDouble("y", vec.y);
+            entityData.putDouble("z", vec.z);
         }
-        tag.put("restoringEntities", restoringEntitiesList);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        if (tag.contains("snapshotData"))
-            snapshotData = tag.getCompound("snapshotData");
-        if (tag.contains("renderParadox"))
-            renderParadox = tag.getBoolean("renderParadox");
-        if (tag.contains("targetType"))
-            targetType = tag.getInt("targetType");
-        if (tag.contains("isRunning"))
-            isRunning = tag.getBoolean("isRunning");
-        if (tag.contains("timeRunning"))
-            timeRunning = tag.getInt("timeRunning");
-        if (tag.contains("paradoxEnergy"))
-            paradoxEnergy = tag.getFloat("paradoxEnergy");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        snapshotData = input.read("snapshotData", CompoundTag.CODEC).orElse(snapshotData);
+        renderParadox = input.getBooleanOr("renderParadox", renderParadox);
+        targetType = input.getIntOr("targetType", targetType);
+        isRunning = input.getBooleanOr("isRunning", isRunning);
+        timeRunning = input.getIntOr("timeRunning", timeRunning);
+        paradoxEnergy = input.getFloatOr("paradoxEnergy", paradoxEnergy);
 
         // Load restoringBlocks map
         restoringBlocks.clear();
-        if (tag.contains("restoringBlocks")) {
-            ListTag restoringBlocksList = tag.getList("restoringBlocks", 10); // 10 indicates a CompoundTag
-            for (int i = 0; i < restoringBlocksList.size(); i++) {
-                CompoundTag blockData = restoringBlocksList.getCompound(i);
-                BlockPos pos = NbtUtils.readBlockPos(blockData, "pos").orElse(null);
-                if (pos == null) continue;
-                BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), blockData.getCompound("state"));
-                restoringBlocks.put(pos, state);
+        input.childrenList("restoringBlocks").ifPresent(list -> {
+            for (ValueInput child : list) {
+                long packed = child.getLongOr("pos", Long.MIN_VALUE);
+                if (packed == Long.MIN_VALUE) continue;
+                BlockPos pos = BlockPos.of(packed);
+                BlockState state = child.read("state", BlockState.CODEC).orElse(null);
+                if (state != null)
+                    restoringBlocks.put(pos, state);
             }
-        }
+        });
 
         // Load restoringEntities list
         restoringEntites.clear();
-        if (tag.contains("restoringEntities")) {
-            ListTag restoringEntitiesList = tag.getList("restoringEntities", 10); // 10 indicates a CompoundTag
-            for (int i = 0; i < restoringEntitiesList.size(); i++) {
-                CompoundTag entityData = restoringEntitiesList.getCompound(i);
-                Vec3 vec = NBTHelpers.nbtToVec3(entityData);
-                restoringEntites.add(vec);
+        input.childrenList("restoringEntities").ifPresent(list -> {
+            for (ValueInput child : list) {
+                double x = child.getDoubleOr("x", 0);
+                double y = child.getDoubleOr("y", 0);
+                double z = child.getDoubleOr("z", 0);
+                restoringEntites.add(new Vec3(x, y, z));
             }
-        }
+        });
     }
 }

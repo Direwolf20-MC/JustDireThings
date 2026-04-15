@@ -19,11 +19,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
     public final PoweredMachineContainerData poweredMachineData;
     public final FluidContainerData fluidContainerData;
-    private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyHandlers = new HashMap<>();
+    private final Map<Direction, BlockCapabilityCache<EnergyHandler, Direction>> energyHandlers = new HashMap<>();
 
     public GeneratorFluidT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
@@ -108,15 +109,29 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
     public boolean isStackValid(ItemStack itemStack) {
         if (itemStack.isEmpty())
             return false;
-        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (fluidHandlerItem == null)
+        ResourceHandler<FluidResource> fluidHandler = ItemAccess.forStack(itemStack).getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null)
             return false;
-        FluidStack fluidStack = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-        if (fluidStack.getAmount() == 0)
+        // Probe for any non-empty fluid in the item
+        FluidResource probedResource = null;
+        int probedAmount = 0;
+        try (Transaction tx = Transaction.openRoot()) {
+            for (int i = 0; i < fluidHandler.size(); i++) {
+                FluidResource r = fluidHandler.getResource(i);
+                if (r.isEmpty()) continue;
+                int extracted = fluidHandler.extract(i, r, 1000, tx);
+                if (extracted > 0) {
+                    probedResource = r;
+                    probedAmount = extracted;
+                    break;
+                }
+            }
+        }
+        if (probedResource == null || probedAmount == 0)
             return false;
-        if (!getFluidStack().isEmpty() && !getFluidStack().is(fluidStack.getFluid()))
+        if (!getFluidStack().isEmpty() && !getFluidStack().is(probedResource.getFluid()))
             return false;
-        if (!(getFluidTank().isFluidValid(fluidStack)))
+        if (!getFluidTank().isValid(0, probedResource))
             return false;
         return true;
     }
@@ -125,14 +140,32 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
         if (isFull()) return;
         ItemStack itemStack = getItemStack();
         if (!isStackValid(itemStack)) return;
-        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        FluidStack testExtract = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-        int insertAmt = getFluidTank().fill(testExtract, IFluidHandler.FluidAction.SIMULATE);
-        if (insertAmt > 0) {
-            FluidStack extractedStack = fluidHandlerItem.drain(insertAmt, IFluidHandler.FluidAction.EXECUTE);
-            getFluidTank().fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
-            if (itemStack.getItem() instanceof BucketItem)
-                getMachineHandler().setStackInSlot(0, fluidHandlerItem.getContainer());
+        ItemAccess itemAccess = ItemAccess.forHandlerIndex(getMachineHandler(), 0);
+        ResourceHandler<FluidResource> fluidHandler = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null) return;
+
+        // Find the non-empty fluid slot and transfer
+        try (Transaction tx = Transaction.openRoot()) {
+            for (int i = 0; i < fluidHandler.size(); i++) {
+                FluidResource resource = fluidHandler.getResource(i);
+                if (resource.isEmpty()) continue;
+                int amountAvail = fluidHandler.getAmountAsInt(i);
+                if (amountAvail <= 0) continue;
+                int capacityFit;
+                try (Transaction simTx = Transaction.open(tx)) {
+                    capacityFit = getFluidTank().insert(0, resource, Math.min(amountAvail, 1000), simTx);
+                }
+                if (capacityFit <= 0) continue;
+                int extracted = fluidHandler.extract(i, resource, capacityFit, tx);
+                getFluidTank().insert(0, resource, extracted, tx);
+                tx.commit();
+                if (itemStack.getItem() instanceof BucketItem) {
+                    // For buckets, the drained container should become an empty bucket.
+                    // Since ItemAccess.exchange handles this via the fluid capability provider,
+                    // the slot should already reflect the new state. No manual swap needed.
+                }
+                return;
+            }
         }
     }
 
@@ -144,15 +177,15 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
         return 0;
     }
 
-    public IEnergyStorage getHandler(Direction direction) {
+    public EnergyHandler getHandler(Direction direction) {
         var tempStorage = energyHandlers.get(direction);
         if (tempStorage == null) {
             BlockPos targetPos = getBlockPos().relative(direction);
             tempStorage = BlockCapabilityCache.create(
-                    Capabilities.EnergyStorage.BLOCK, // capability to cache
-                    (ServerLevel) level, // level
-                    targetPos, // target position
-                    direction.getOpposite() // context (The side of the block we're trying to pull/push from?)
+                    Capabilities.Energy.BLOCK,
+                    (ServerLevel) level,
+                    targetPos,
+                    direction.getOpposite()
             );
             energyHandlers.put(direction, tempStorage);
         }
@@ -160,27 +193,38 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
     }
 
     public void providePowerAdjacent() {
-        if (getEnergyStorage().getEnergyStored() <= 0) return; //Don't bother if we're empty!
+        if (getEnergyStorage().getEnergyStored() <= 0) return;
         for (Direction direction : Direction.values()) {
-            IEnergyStorage iEnergyStorage = getHandler(direction);
-            if (iEnergyStorage == null) continue;
-            int amtFit = iEnergyStorage.receiveEnergy(getFEOutputPerTick() * 10, true);
+            EnergyHandler energyHandler = getHandler(direction);
+            if (energyHandler == null) continue;
+            int amtFit;
+            try (Transaction simTx = Transaction.openRoot()) {
+                amtFit = energyHandler.insert(getFEOutputPerTick() * 10, simTx);
+            }
             if (amtFit <= 0) continue;
-            int extractAmt = extractEnergy(amtFit, false);
-            iEnergyStorage.receiveEnergy(extractAmt, false);
+            try (Transaction tx = Transaction.openRoot()) {
+                int extractAmt = getEnergyStorage().extract(amtFit, tx);
+                energyHandler.insert(extractAmt, tx);
+                tx.commit();
+            }
         }
     }
-    
+
     public void doGenerate() {
         if (!isActiveRedstone() || getFluidStack().isEmpty()) return;
         int fePerFuelTick = getFePerFuelTick();
         boolean canInsertEnergy = insertEnergy(fePerFuelTick, true) == fePerFuelTick;
-        if (fePerFuelTick == 0 || !canInsertEnergy) return; //Don't burn if the buffer is full
-        FluidStack extractedStack = getFluidTank().drain(1, IFluidHandler.FluidAction.EXECUTE);
-        if (extractedStack.getAmount() == 0) return;
+        if (fePerFuelTick == 0 || !canInsertEnergy) return;
 
-        //At this point we extracted some fuel!
-        insertEnergy(fePerFuelTick, false); //Receive energy
+        FluidResource tankResource = getFluidTank().getResource(0);
+        if (tankResource.isEmpty()) return;
+        try (Transaction tx = Transaction.openRoot()) {
+            int extracted = getFluidTank().extract(0, tankResource, 1, tx);
+            if (extracted == 0) return;
+            tx.commit();
+        }
+
+        insertEnergy(fePerFuelTick, false);
 
         setChanged();
     }
@@ -205,6 +249,8 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
     }
 
     public int getFePerFuelTick() {
-        return getFluidTank().getFluid().getFluid() instanceof RefinedFuel refinedFuel ? refinedFuel.fePerMb() : 0;
+        FluidResource resource = getFluidTank().getResource(0);
+        if (resource.isEmpty()) return 0;
+        return resource.getFluid() instanceof RefinedFuel refinedFuel ? refinedFuel.fePerMb() : 0;
     }
 }

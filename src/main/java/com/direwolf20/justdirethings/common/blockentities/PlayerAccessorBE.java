@@ -6,11 +6,11 @@ import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.HashMap;
 import java.util.List;
@@ -131,19 +131,19 @@ public class PlayerAccessorBE extends BaseMachineBE {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         for (Direction direction : Direction.values()) {
-            tag.putInt("sidedInventory_" + direction.ordinal(), sidedInventoryTypes.getOrDefault(direction, 0));
+            output.putInt("sidedInventory_" + direction.ordinal(), sidedInventoryTypes.getOrDefault(direction, 0));
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+    protected void loadAdditional(ValueInput input) {
         for (Direction direction : Direction.values()) {
-            sidedInventoryTypes.put(direction, tag.getInt("sidedInventory_" + direction.ordinal()));
+            sidedInventoryTypes.put(direction, input.getIntOr("sidedInventory_" + direction.ordinal(), 0));
         }
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(input);
     }
 
     @Override

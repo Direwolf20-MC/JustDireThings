@@ -4,18 +4,20 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class GooSoilBE extends BlockEntity {
     private NBTHelpers.BoundInventory boundInventory;
-    protected BlockCapabilityCache<IItemHandler, Direction> attachedInventory;
+    protected BlockCapabilityCache<ResourceHandler<ItemResource>, Direction> attachedInventory;
 
     public GooSoilBE(BlockPos pos, BlockState state) {
         super(Registration.GooSoilBE.get(), pos, state);
@@ -26,16 +28,16 @@ public class GooSoilBE extends BlockEntity {
         this.setChanged();
     }
 
-    public IItemHandler getAttachedInventory(ServerLevel serverLevel) {
+    public ResourceHandler<ItemResource> getAttachedInventory(ServerLevel serverLevel) {
         if (boundInventory == null) return null;
         if (attachedInventory == null) {
             ServerLevel boundLevel = serverLevel.getServer().getLevel(boundInventory.globalPos().dimension());
             if (boundLevel == null) return null;
             attachedInventory = BlockCapabilityCache.create(
-                    Capabilities.ItemHandler.BLOCK, // capability to cache
-                    boundLevel, // level
-                    boundInventory.globalPos().pos(), // target position
-                    boundInventory.direction() // context (The side of the block we're trying to pull/push from?)
+                    Capabilities.Item.BLOCK,
+                    boundLevel,
+                    boundInventory.globalPos().pos(),
+                    boundInventory.direction()
             );
         }
         return attachedInventory.getCapability();
@@ -46,17 +48,18 @@ public class GooSoilBE extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         if (boundInventory != null) {
-            tag.put("boundinventory", NBTHelpers.BoundInventory.toNBT(boundInventory));
+            output.store("boundinventory", CompoundTag.CODEC, NBTHelpers.BoundInventory.toNBT(boundInventory));
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        if (tag.contains("boundinventory"))
-            boundInventory = NBTHelpers.BoundInventory.fromNBT(tag.getCompound("boundinventory"));
-        super.loadAdditional(tag, provider);
+    protected void loadAdditional(ValueInput input) {
+        input.read("boundinventory", CompoundTag.CODEC).ifPresent(tag -> {
+            boundInventory = NBTHelpers.BoundInventory.fromNBT(tag);
+        });
+        super.loadAdditional(input);
     }
 }

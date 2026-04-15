@@ -7,9 +7,9 @@ import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -163,16 +163,16 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("dropCount", dropCount);
-        tag.putInt("pickupDelay", pickupDelay);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("dropCount", dropCount);
+        output.putInt("pickupDelay", pickupDelay);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        this.dropCount = tag.getInt("dropCount");
-        this.pickupDelay = tag.getInt("pickupDelay");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.dropCount = input.getIntOr("dropCount", dropCount);
+        this.pickupDelay = input.getIntOr("pickupDelay", pickupDelay);
     }
 }

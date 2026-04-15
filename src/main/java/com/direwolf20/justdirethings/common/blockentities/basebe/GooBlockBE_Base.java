@@ -10,8 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +22,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public class GooBlockBE_Base extends BlockEntity {
     public boolean updateSideCounter(Direction direction, int newCounter) {
         int oldCounter = sidedCounters.get(direction);
         sidedCounters.put(direction, newCounter);
-        if (oldCounter >= 0 && newCounter == -1 && level.isClientSide) {
+        if (oldCounter >= 0 && newCounter == -1 && level.isClientSide()) {
             spawnParticles(direction);
         }
         int duration = sidedDurations.get(direction);
@@ -112,7 +112,7 @@ public class GooBlockBE_Base extends BlockEntity {
                     needsUpdate = true;
             }
         }
-        if (needsUpdate && !level.isClientSide)
+        if (needsUpdate && !level.isClientSide())
             markDirtyClient();
     }
 
@@ -157,11 +157,11 @@ public class GooBlockBE_Base extends BlockEntity {
 
     private void killGoo() {
         if (!Config.GOO_CAN_DIE.get()) return;
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             BlockState state = this.getBlockState();
 
             // Ensure the block is currently alive and perform the 10% chance check
-            if (state.getValue(ALIVE) && level.random.nextFloat() < Config.GOO_DEATH_CHANCE.get().floatValue()) {
+            if (state.getValue(ALIVE) && level.getRandom().nextFloat() < Config.GOO_DEATH_CHANCE.get().floatValue()) {
                 // Update the block state to dead
                 level.setBlock(worldPosition, state.setValue(ALIVE, false), 3);
                 level.playSound(null, getBlockPos(), SoundEvents.VEX_DEATH, SoundSource.BLOCKS, 1.0F, 0.25F);
@@ -226,71 +226,60 @@ public class GooBlockBE_Base extends BlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        ListTag counterListTag = new ListTag();
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ValueOutput.ValueOutputList counterList = output.childrenList("sideCounters");
         for (Direction direction : Direction.values()) {
-            CompoundTag counterTag = new CompoundTag();
-            counterTag.putInt("side", direction.ordinal());
-            counterTag.putInt("counter", sidedCounters.get(direction));
-            counterListTag.add(counterTag);
+            ValueOutput counter = counterList.addChild();
+            counter.putInt("side", direction.ordinal());
+            counter.putInt("counter", sidedCounters.get(direction));
         }
-        tag.put("sideCounters", counterListTag);
 
-        ListTag durationListTag = new ListTag();
+        ValueOutput.ValueOutputList durationList = output.childrenList("sideDurations");
         for (Direction direction : Direction.values()) {
-            CompoundTag durationTag = new CompoundTag();
-            durationTag.putInt("side", direction.ordinal());
-            durationTag.putInt("duration", sidedDurations.get(direction));
-            durationListTag.add(durationTag);
+            ValueOutput duration = durationList.addChild();
+            duration.putInt("side", direction.ordinal());
+            duration.putInt("duration", sidedDurations.get(direction));
         }
-        tag.put("sideDurations", durationListTag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        if (tag.contains("sideCounters")) {
-            ListTag listNBT = tag.getList("sideCounters", Tag.TAG_COMPOUND);
-            for (int i = 0; i < listNBT.size(); i++) {
-                CompoundTag sideCounterTag = listNBT.getCompound(i);
-                int direction = sideCounterTag.getInt("side");
-                int counter = sideCounterTag.getInt("counter");
-                this.updateSideCounter(Direction.values()[direction], counter);
+    protected void loadAdditional(ValueInput input) {
+        input.childrenList("sideCounters").ifPresent(list -> {
+            for (ValueInput child : list) {
+                int dir = child.getIntOr("side", 0);
+                int counter = child.getIntOr("counter", -1);
+                this.updateSideCounter(Direction.values()[dir], counter);
             }
-        }
-        if (tag.contains("sideDurations")) {
-            ListTag listNBT = tag.getList("sideDurations", Tag.TAG_COMPOUND);
-            for (int i = 0; i < listNBT.size(); i++) {
-                CompoundTag sideCounterTag = listNBT.getCompound(i);
-                int direction = sideCounterTag.getInt("side");
-                int duration = sideCounterTag.getInt("duration");
-                this.sidedDurations.put(Direction.values()[direction], duration);
+        });
+        input.childrenList("sideDurations").ifPresent(list -> {
+            for (ValueInput child : list) {
+                int dir = child.getIntOr("side", 0);
+                int duration = child.getIntOr("duration", -1);
+                this.sidedDurations.put(Direction.values()[dir], duration);
             }
-        }
-        super.loadAdditional(tag, provider);
+        });
+        super.loadAdditional(input);
     }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        // Vanilla uses the type parameter to indicate which type of tile entity (command block, skull, or beacon?) is receiving the packet, but it seems like Forge has overridden this behavior
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        this.loadAdditional(tag, lookupProvider);
+    public void handleUpdateTag(ValueInput input) {
+        this.loadWithComponents(input);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider p_323910_) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, p_323910_);
-        return tag;
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return saveCustomOnly(provider);
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        this.loadAdditional(pkt.getTag(), lookupProvider);
+    public void onDataPacket(Connection net, ValueInput input) {
+        this.loadWithComponents(input);
     }
 
     public void markDirtyClient() {

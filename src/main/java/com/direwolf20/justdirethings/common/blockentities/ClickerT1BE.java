@@ -10,9 +10,9 @@ import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -260,23 +260,22 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("clickType", clickType);
-        tag.putInt("clickTarget", clickTarget.ordinal());
-        tag.putBoolean("sneaking", sneaking);
-        tag.putBoolean("showFakePlayer", showFakePlayer);
-        tag.putInt("maxHoldTicks", maxHoldTicks);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("clickType", clickType);
+        output.putInt("clickTarget", clickTarget.ordinal());
+        output.putBoolean("sneaking", sneaking);
+        output.putBoolean("showFakePlayer", showFakePlayer);
+        output.putInt("maxHoldTicks", maxHoldTicks);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        this.clickType = tag.getInt("clickType");
-        this.clickTarget = CLICK_TARGET.values()[tag.getInt("clickTarget")];
-        this.sneaking = tag.getBoolean("sneaking");
-        this.showFakePlayer = tag.getBoolean("showFakePlayer");
-        if (tag.contains("maxHoldTicks"))
-            maxHoldTicks = tag.getInt("maxHoldTicks");
-        super.loadAdditional(tag, provider);
+    protected void loadAdditional(ValueInput input) {
+        this.clickType = input.getIntOr("clickType", clickType);
+        this.clickTarget = CLICK_TARGET.values()[input.getIntOr("clickTarget", 0)];
+        this.sneaking = input.getBooleanOr("sneaking", sneaking);
+        this.showFakePlayer = input.getBooleanOr("showFakePlayer", showFakePlayer);
+        maxHoldTicks = input.getIntOr("maxHoldTicks", maxHoldTicks);
+        super.loadAdditional(input);
     }
 }

@@ -1,29 +1,26 @@
 package com.direwolf20.justdirethings.common.capabilities;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 
 import java.util.function.Predicate;
 
-public class JustDireFluidTank extends FluidTank implements INBTSerializable<CompoundTag> {
+public class JustDireFluidTank extends FluidStacksResourceHandler {
+    private final Predicate<FluidStack> validator;
+
     public JustDireFluidTank(int capacity) {
-        super(capacity);
+        this(capacity, fs -> true);
     }
 
     public JustDireFluidTank(int capacity, Predicate<FluidStack> validator) {
-        super(capacity, validator);
+        super(1, capacity);
+        this.validator = validator;
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        return super.writeToNBT(provider, new CompoundTag());
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
-        fluid = super.readFromNBT(provider, nbt).getFluid();
+    public boolean isValid(int index, FluidResource resource) {
+        if (resource.isEmpty()) return true;
+        return validator.test(resource.toStack(1));
     }
 }
