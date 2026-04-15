@@ -2,98 +2,95 @@ package com.direwolf20.justdirethings.common.capabilities;
 
 import com.direwolf20.justdirethings.common.blockentities.ExperienceHolderBE;
 import com.direwolf20.justdirethings.setup.Registration;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.function.Predicate;
 
-public class ExperienceHolderFluidTank extends FluidTank {
+public class ExperienceHolderFluidTank implements ResourceHandler<FluidResource> {
+    private static final int MB_PER_XP = 20;
+
     private final ExperienceHolderBE experienceHolderBE;
+    private final Predicate<FluidResource> validator;
+    private final Journal journal = new Journal();
 
-    public ExperienceHolderFluidTank(ExperienceHolderBE experienceHolderBE, Predicate<FluidStack> validator) {
-        super(Integer.MAX_VALUE, validator);
+    public ExperienceHolderFluidTank(ExperienceHolderBE experienceHolderBE, Predicate<FluidResource> validator) {
         this.experienceHolderBE = experienceHolderBE;
-        fluid = new FluidStack(Registration.XP_FLUID_SOURCE.get(), getFluidAmount());
-    }
-
-    public int getFluidAmount() {
-        // Prevent overflow by capping experienceHolderBE.exp at Integer.MAX_VALUE / 20
-        if (experienceHolderBE.exp > Integer.MAX_VALUE / 20) {
-            return Integer.MAX_VALUE;  // If multiplying by 20 would overflow, return max int value
-        }
-
-        // Safe to multiply without overflow
-        return Math.min(experienceHolderBE.exp * 20, getCapacity());
+        this.validator = validator;
     }
 
     @Override
-    public FluidStack getFluid() {
-        return new FluidStack(Registration.XP_FLUID_SOURCE.get(), getFluidAmount());
+    public int size() {
+        return 1;
     }
 
-    public int getCapacity() {
+    @Override
+    public FluidResource getResource(int index) {
+        return FluidResource.of(Registration.XP_FLUID_SOURCE.get());
+    }
+
+    @Override
+    public long getAmountAsLong(int index) {
+        if (experienceHolderBE.exp > Integer.MAX_VALUE / MB_PER_XP) {
+            return Integer.MAX_VALUE;
+        }
+        return Math.min((long) experienceHolderBE.exp * MB_PER_XP, getCapacityAsLong(index, FluidResource.EMPTY));
+    }
+
+    @Override
+    public long getCapacityAsLong(int index, FluidResource resource) {
         return Integer.MAX_VALUE;
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
-        if (resource.isEmpty() || !isFluidValid(resource)) {
-            return 0;
-        }
-        if (action.simulate()) {
-            if (fluid.isEmpty()) {
-                return Math.min(capacity, resource.getAmount() - resource.getAmount() % 20);
-            }
-            return Math.min(capacity - getFluidAmount() - ((capacity - getFluidAmount()) % 20), resource.getAmount() - resource.getAmount() % 20);
-        }
-        if (fluid.isEmpty()) {
-            int returnAmt = resource.getAmount() - insertFluid(resource.getAmount());
-            fluid = new FluidStack(Registration.XP_FLUID_SOURCE.get(), returnAmt);
-            onContentsChanged();
-            return returnAmt;
-        }
-        int filled = resource.getAmount() - insertFluid(resource.getAmount());
-        if (filled > 0)
-            onContentsChanged();
-        return filled;
-    }
-
-    public int insertFluid(int amt) {
-        int remaining = experienceHolderBE.addExp(amt / 20);
-        int excessFluid = amt % 20;  // Calculate remainder fluid (less than 1 XP)
-        return (remaining * 20) + excessFluid;
-    }
-
-    public int extractFluid(int amt) {
-        int expNeeded = amt / 20;
-        int unAvailable = experienceHolderBE.subExp(expNeeded);
-        return (unAvailable * 20) + (amt % 20);
+    public boolean isValid(int index, FluidResource resource) {
+        if (resource.isEmpty()) return true;
+        return validator.test(resource);
     }
 
     @Override
-    public FluidStack drain(FluidStack resource, FluidAction action) {
-        if (resource.isEmpty() || !FluidStack.isSameFluidSameComponents(resource, fluid)) {
-            return FluidStack.EMPTY;
-        }
-        return drain(resource.getAmount(), action);
+    public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+        if (!isValid(index, resource)) return 0;
+        int acceptable = amount - (amount % MB_PER_XP);
+        if (acceptable <= 0) return 0;
+        int xpToAdd = acceptable / MB_PER_XP;
+        journal.updateSnapshots(transaction);
+        int leftoverXp = experienceHolderBE.addExp(xpToAdd);
+        int insertedXp = xpToAdd - leftoverXp;
+        return insertedXp * MB_PER_XP;
     }
 
     @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
-        int drained = maxDrain - (maxDrain % 20); //Trim remainder
-        if (getFluidAmount() < drained) {
-            drained = getFluidAmount();
-        }
-        FluidStack stack = fluid.copyWithAmount(drained);
-        if (action.execute() && drained > 0) {
-            extractFluid(drained);
-            onContentsChanged();
-        }
-        return stack;
+    public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+        if (!resource.is(Registration.XP_FLUID_SOURCE.get())) return 0;
+        int drainable = amount - (amount % MB_PER_XP);
+        if (drainable <= 0) return 0;
+        int xpNeeded = drainable / MB_PER_XP;
+        journal.updateSnapshots(transaction);
+        int unavailableXp = experienceHolderBE.subExp(xpNeeded);
+        int extractedXp = xpNeeded - unavailableXp;
+        return extractedXp * MB_PER_XP;
     }
 
-    @Override
-    protected void onContentsChanged() {
-        experienceHolderBE.markDirtyClient();
+    private class Journal extends SnapshotJournal<Integer> {
+        @Override
+        protected Integer createSnapshot() {
+            return experienceHolderBE.exp;
+        }
+
+        @Override
+        protected void revertToSnapshot(Integer snapshot) {
+            experienceHolderBE.exp = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Integer originalState) {
+            experienceHolderBE.markDirtyClient();
+        }
     }
 }
