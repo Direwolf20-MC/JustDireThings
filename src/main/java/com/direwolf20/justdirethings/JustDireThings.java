@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
+import com.direwolf20.justdirethings.common.capabilities.FluidHandlerItemStack;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
 import com.direwolf20.justdirethings.common.items.*;
@@ -28,12 +29,11 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.neoforged.neoforge.items.ComponentItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.ItemAccessEnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -151,66 +151,42 @@ public class JustDireThings {
                 Registration.PolymorphicWandV2.get()
         );
 
-        // TODO(port, stage-5): FluidHandlerItemStack is deprecated — rewrite against ResourceHandler<FluidResource> (FluidStacksResourceHandler) in Stage 5.
-        event.registerItem(Capabilities.Fluid.ITEM, (itemStack, context) -> {
+        event.registerItem(Capabilities.Fluid.ITEM, (itemStack, access) -> {
+                    ItemAccess ia = access != null ? access : ItemAccess.forStack(itemStack);
                     if (itemStack.getItem() instanceof PortalGunV2) {
-                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, PortalGunV2.maxMB) {
+                        return new FluidHandlerItemStack(ia, JustDireDataComponents.FLUID_CONTAINER.get(), PortalGunV2.maxMB) {
                             @Override
-                            public boolean isFluidValid(int tank, FluidStack stack) {
-                                return stack.is(Registration.PORTAL_FLUID_TYPE.get());
+                            public boolean isFluidValid(FluidResource resource) {
+                                return resource.is(Registration.PORTAL_FLUID_TYPE.get());
                             }
-
-                            @Override
-                            public boolean canFillFluidType(FluidStack fluid) {
-                                return fluid.is(Registration.PORTAL_FLUID_TYPE.get());
-                            }
-
                         };
                     }
                     if (itemStack.getItem() instanceof TimeWand timeWand) {
-                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, timeWand.getMaxMB()) {
+                        return new FluidHandlerItemStack(ia, JustDireDataComponents.FLUID_CONTAINER.get(), timeWand.getMaxMB()) {
                             @Override
-                            public boolean isFluidValid(int tank, FluidStack stack) {
-                                return stack.is(Registration.TIME_FLUID_TYPE.get());
+                            public boolean isFluidValid(FluidResource resource) {
+                                return resource.is(Registration.TIME_FLUID_TYPE.get());
                             }
-
-                            @Override
-                            public boolean canFillFluidType(FluidStack fluid) {
-                                return fluid.is(Registration.TIME_FLUID_TYPE.get());
-                            }
-
                         };
                     }
                     if (itemStack.getItem() instanceof PolymorphicWand polymorphicWand) {
-                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, polymorphicWand.getMaxMB()) {
+                        return new FluidHandlerItemStack(ia, JustDireDataComponents.FLUID_CONTAINER.get(), polymorphicWand.getMaxMB()) {
                             @Override
-                            public boolean isFluidValid(int tank, FluidStack stack) {
-                                return stack.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
+                            public boolean isFluidValid(FluidResource resource) {
+                                return resource.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
                             }
-
-                            @Override
-                            public boolean canFillFluidType(FluidStack fluid) {
-                                return fluid.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
-                            }
-
                         };
                     }
                     if (itemStack.getItem() instanceof PolymorphicWandV2 polymorphicWandv2) {
-                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, polymorphicWandv2.getMaxMB()) {
+                        return new FluidHandlerItemStack(ia, JustDireDataComponents.FLUID_CONTAINER.get(), polymorphicWandv2.getMaxMB()) {
                             @Override
-                            public boolean isFluidValid(int tank, FluidStack stack) {
-                                return stack.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
+                            public boolean isFluidValid(FluidResource resource) {
+                                return resource.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
                             }
-
-                            @Override
-                            public boolean canFillFluidType(FluidStack fluid) {
-                                return fluid.is(Registration.POLYMORPHIC_FLUID_TYPE.get());
-                            }
-
                         };
                     }
                     if (itemStack.getItem() instanceof FluidCanister fluidCanister) {
-                        return new FluidHandlerItemStack(JustDireDataComponents.FLUID_CONTAINER, itemStack, fluidCanister.getMaxMB());
+                        return new FluidHandlerItemStack(ia, JustDireDataComponents.FLUID_CONTAINER.get(), fluidCanister.getMaxMB());
                     }
                     return null;
                 },

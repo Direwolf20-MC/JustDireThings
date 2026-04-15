@@ -3,9 +3,10 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public interface RedstoneControlledBE {
     RedstoneControlData getRedstoneControlData();
@@ -63,17 +64,18 @@ public interface RedstoneControlledBE {
         return false;
     }
 
-    default void saveRedstoneSettings(CompoundTag tag) {
-        tag.putInt("redstoneMode", getRedstoneControlData().redstoneMode.ordinal());
-        tag.putBoolean("pulsed", getRedstoneControlData().pulsed);
-        tag.putBoolean("receivingRedstone", getRedstoneControlData().receivingRedstone);
+    default void saveRedstoneSettings(ValueOutput output) {
+        output.putInt("redstoneMode", getRedstoneControlData().redstoneMode.ordinal());
+        output.putBoolean("pulsed", getRedstoneControlData().pulsed);
+        output.putBoolean("receivingRedstone", getRedstoneControlData().receivingRedstone);
     }
 
-    default void loadRedstoneSettings(CompoundTag tag) {
-        if (tag.contains("redstoneMode")) { //Assume all the others are there too...
-            getRedstoneControlData().redstoneMode = MiscHelpers.RedstoneMode.values()[tag.getInt("redstoneMode")];
-            getRedstoneControlData().pulsed = tag.getBoolean("pulsed");
-            getRedstoneControlData().receivingRedstone = tag.getBoolean("receivingRedstone");
-        }
+    default void loadRedstoneSettings(ValueInput input) {
+        input.getInt("redstoneMode").ifPresent(mode -> {
+            RedstoneControlData data = getRedstoneControlData();
+            data.redstoneMode = MiscHelpers.RedstoneMode.values()[mode];
+            data.pulsed = input.getBooleanOr("pulsed", data.pulsed);
+            data.receivingRedstone = input.getBooleanOr("receivingRedstone", data.receivingRedstone);
+        });
     }
 }
