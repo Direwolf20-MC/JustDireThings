@@ -6,25 +6,36 @@ import net.minecraft.world.item.BottleItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.component.ItemContainerContents;
-import net.neoforged.neoforge.items.ComponentItemHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemAccessItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class PotionCanisterHandler extends ComponentItemHandler {
-    private final ItemStack potionStack;
+public class PotionCanisterHandler extends ItemAccessItemHandler {
+    public PotionCanisterHandler(ItemAccess itemAccess, DataComponentType<ItemContainerContents> component, int size) {
+        super(itemAccess, component, size);
+    }
 
     public PotionCanisterHandler(ItemStack parent, DataComponentType<ItemContainerContents> component, int size) {
-        super(parent, component, size);
-        potionStack = parent;
+        this(ItemAccess.forStack(parent), component, size);
     }
 
     @Override
-    protected void onContentsChanged(int slot, ItemStack oldStack, ItemStack newStack) {
-        if (!newStack.isEmpty() && newStack.getItem() instanceof PotionItem) {
-            PotionCanister.attemptFill(potionStack);
+    public boolean isValid(int index, ItemResource resource) {
+        if (!super.isValid(index, resource)) return false;
+        if (resource.isEmpty()) return true;
+        return resource.getItem() instanceof PotionItem || resource.getItem() instanceof BottleItem;
+    }
+
+    @Override
+    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+        int inserted = super.insert(index, resource, amount, transaction);
+        if (inserted > 0 && resource.getItem() instanceof PotionItem) {
+            ItemStack parent = itemAccess.getResource().toStack(itemAccess.getAmount());
+            if (!parent.isEmpty()) {
+                PotionCanister.attemptFill(parent);
+            }
         }
-    }
-
-    @Override
-    public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.getItem() instanceof PotionItem || stack.getItem() instanceof BottleItem || stack.isEmpty();
+        return inserted;
     }
 }

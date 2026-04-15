@@ -31,7 +31,7 @@ import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import java.util.Map;
 import java.util.UUID;
@@ -168,9 +168,7 @@ public class BaseMachineBE extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    // TODO(port, stage-7): MACHINE_HANDLER attachment still uses legacy ItemStackHandler.
-    // Retype once Registration's attachment is migrated to ItemStacksResourceHandler.
-    public ItemStackHandler getMachineHandler() {
+    public ItemStacksResourceHandler getMachineHandler() {
         return getData(Registration.MACHINE_HANDLER);
     }
 
@@ -231,8 +229,8 @@ public class BaseMachineBE extends BlockEntity {
             return false;
         if (this instanceof FilterableBE filterableBE) {
             FilterBasicHandler filteredItems = filterableBE.getFilterHandler();
-            for (int i = 0; i < filteredItems.getSlots(); i++) {
-                if (!filteredItems.getStackInSlot(i).isEmpty())
+            for (int i = 0; i < filteredItems.size(); i++) {
+                if (!filteredItems.getResource(i).isEmpty())
                     return false;
             }
         }

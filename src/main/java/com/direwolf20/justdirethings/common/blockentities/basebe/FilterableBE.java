@@ -62,8 +62,8 @@ public interface FilterableBE {
         if (getFilterData().filterCache.containsKey(key)) return getFilterData().filterCache.get(key);
 
         FilterBasicHandler filteredItems = getFilterHandler();
-        for (int i = 0; i < filteredItems.getSlots(); i++) {
-            ItemStack stack = filteredItems.getStackInSlot(i);
+        for (int i = 0; i < filteredItems.size(); i++) {
+            ItemStack stack = filteredItems.getResource(i).toStack(filteredItems.getAmountAsInt(i));
             if (stack.isEmpty()) continue;
             if (key.equals(new ItemStackKey(stack, getFilterData().compareNBT))) {
                 getFilterData().filterCache.put(key, getFilterData().allowlist);
@@ -78,8 +78,8 @@ public interface FilterableBE {
         if (getFilterData().entityCache.containsKey(entity)) return getFilterData().entityCache.get(entity);
 
         FilterBasicHandler filteredItems = getFilterHandler();
-        for (int i = 0; i < filteredItems.getSlots(); i++) {
-            ItemStack stack = filteredItems.getStackInSlot(i);
+        for (int i = 0; i < filteredItems.size(); i++) {
+            ItemStack stack = filteredItems.getResource(i).toStack(filteredItems.getAmountAsInt(i));
             if (stack.isEmpty()) continue;
             if (stack.getItem() instanceof SpawnEggItem) {
                 Optional<Holder<Item>> entityEgg = SpawnEggItem.byId(entity.getType());
@@ -176,8 +176,8 @@ public interface FilterableBE {
         if (getFilterData().filterCache.containsKey(key)) return getFilterData().filterCache.get(key);
 
         FilterBasicHandler filteredItems = getFilterHandler();
-        for (int i = 0; i < filteredItems.getSlots(); i++) {
-            ItemStack stack = filteredItems.getStackInSlot(i);
+        for (int i = 0; i < filteredItems.size(); i++) {
+            ItemStack stack = filteredItems.getResource(i).toStack(filteredItems.getAmountAsInt(i));
             if (stack.isEmpty()) continue;
             if (key.equals(new ItemStackKey(stack, getFilterData().compareNBT))) {
                 getFilterData().filterCache.put(key, getFilterData().allowlist);

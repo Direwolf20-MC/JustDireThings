@@ -157,7 +157,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         nbt.keySet().forEach(key -> {
             int index = Integer.parseInt(key);
             ListTag listTag = nbt.getListOrEmpty(key);
-            ItemStack stateStack = getFilterHandler().getStackInSlot(index);
+            ItemStack stateStack = getFilterHandler().getResource(index).toStack(getFilterHandler().getAmountAsInt(index));
             Map<Property<?>, Comparable<?>> propertiesList = loadBlockStateProperty(listTag, stateStack);
             if (!propertiesList.isEmpty())
                 blockStateProperties.put(index, propertiesList);
@@ -303,7 +303,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         boolean returnValue = isStackValidFilter(blockItemStack);
         outerLoop:
         for (Map.Entry<Integer, Map<Property<?>, Comparable<?>>> propertyValues : blockStateProperties.entrySet()) {
-            ItemStack filterStack = getFilterHandler().getStackInSlot(propertyValues.getKey());
+            ItemStack filterStack = getFilterHandler().getResource(propertyValues.getKey()).toStack(getFilterHandler().getAmountAsInt(propertyValues.getKey()));
             if (!ItemStack.isSameItemSameComponents(filterStack, blockItemStack)) //If the itemstack we are comparing in this slot doesn't match the blockItem
                 continue;
             for (Map.Entry<Property<?>, Comparable<?>> prop : propertyValues.getValue().entrySet()) {
@@ -330,7 +330,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         boolean returnValue = isStackValidFilter(blockItemStack);
         outerLoop:
         for (Map.Entry<Integer, Map<Property<?>, Comparable<?>>> propertyValues : blockStateProperties.entrySet()) {
-            ItemStack filterStack = getFilterHandler().getStackInSlot(propertyValues.getKey());
+            ItemStack filterStack = getFilterHandler().getResource(propertyValues.getKey()).toStack(getFilterHandler().getAmountAsInt(propertyValues.getKey()));
             if (!ItemStack.isSameItemSameComponents(filterStack, blockItemStack)) //If the itemstack we are comparing in this slot doesn't match the blockItem
                 continue;
             for (Map.Entry<Property<?>, Comparable<?>> prop : propertyValues.getValue().entrySet()) {

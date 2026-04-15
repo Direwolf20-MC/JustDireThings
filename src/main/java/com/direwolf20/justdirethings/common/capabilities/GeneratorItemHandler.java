@@ -1,9 +1,9 @@
 package com.direwolf20.justdirethings.common.capabilities;
 
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
-public class GeneratorItemHandler extends ItemStackHandler {
+public class GeneratorItemHandler extends ItemStacksResourceHandler {
     public GeneratorItemHandler() {
         super(1);
     }
@@ -13,10 +13,7 @@ public class GeneratorItemHandler extends ItemStackHandler {
     }
 
     @Override
-    public boolean isItemValid(int slot, ItemStack itemStack) {
-        // TODO(port, stage-7): getBurnTime now requires FuelValues which depends on Level;
-        // at handler-construction time we have neither. Allow any non-empty item here;
-        // concrete BE logic gates actual burning via burnTime>0 check in doBurn().
-        return !itemStack.isEmpty();
+    public boolean isValid(int slot, ItemResource resource) {
+        return !resource.isEmpty();
     }
 }

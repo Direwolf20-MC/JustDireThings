@@ -4,14 +4,18 @@ import com.direwolf20.justdirethings.common.blockentities.InventoryHolderBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.util.ItemStackKey;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
-public class InventoryHolderSlot extends SlotItemHandler {
-    private InventoryHolderBE inventoryHolderBE;
+public class InventoryHolderSlot extends ResourceHandlerSlot {
+    private final int slotIndex;
+    private final InventoryHolderBE inventoryHolderBE;
 
-    public InventoryHolderSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition, InventoryHolderBE inventoryHolderBE) {
-        super(itemHandler, index, xPosition, yPosition);
+    public InventoryHolderSlot(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> slotModifier, int index, int xPosition, int yPosition, InventoryHolderBE inventoryHolderBE) {
+        super(handler, slotModifier, index, xPosition, yPosition);
+        this.slotIndex = index;
         this.inventoryHolderBE = inventoryHolderBE;
     }
 
@@ -22,14 +26,14 @@ public class InventoryHolderSlot extends SlotItemHandler {
 
     @Override
     public int getMaxStackSize() {
-        if (inventoryHolderBE.compareCounts)
+        if (inventoryHolderBE != null && inventoryHolderBE.compareCounts)
             return getFilterStackSize();
         return super.getMaxStackSize();
     }
 
     @Override
     public int getMaxStackSize(ItemStack stack) {
-        if (inventoryHolderBE.compareCounts)
+        if (inventoryHolderBE != null && inventoryHolderBE.compareCounts)
             return getFilterStackSize(stack);
         return super.getMaxStackSize(stack);
     }
@@ -39,7 +43,7 @@ public class InventoryHolderSlot extends SlotItemHandler {
         ItemStackKey key = new ItemStackKey(currentStack, inventoryHolderBE.compareNBT);
 
         FilterBasicHandler filteredItems = inventoryHolderBE.filterBasicHandler;
-        ItemStack stack = filteredItems.getStackInSlot(index);
+        ItemStack stack = filteredItems.getResource(slotIndex).toStack(filteredItems.getAmountAsInt(slotIndex));
         if (stack.isEmpty()) return !inventoryHolderBE.filtersOnly;
         return key.equals(new ItemStackKey(stack, inventoryHolderBE.compareNBT));
     }
@@ -47,7 +51,7 @@ public class InventoryHolderSlot extends SlotItemHandler {
     public int getFilterStackSize() {
         if (this.inventoryHolderBE == null) return 0;
         FilterBasicHandler filteredItems = inventoryHolderBE.filterBasicHandler;
-        ItemStack filterStack = filteredItems.getStackInSlot(index);
+        ItemStack filterStack = filteredItems.getResource(slotIndex).toStack(filteredItems.getAmountAsInt(slotIndex));
         if (filterStack.isEmpty())
             return super.getMaxStackSize();
         return filterStack.getCount();
@@ -56,7 +60,7 @@ public class InventoryHolderSlot extends SlotItemHandler {
     public int getFilterStackSize(ItemStack stack) {
         if (this.inventoryHolderBE == null) return 0;
         FilterBasicHandler filteredItems = inventoryHolderBE.filterBasicHandler;
-        ItemStack filterStack = filteredItems.getStackInSlot(index);
+        ItemStack filterStack = filteredItems.getResource(slotIndex).toStack(filteredItems.getAmountAsInt(slotIndex));
         if (filterStack.isEmpty())
             return super.getMaxStackSize(stack);
         return filterStack.getCount();

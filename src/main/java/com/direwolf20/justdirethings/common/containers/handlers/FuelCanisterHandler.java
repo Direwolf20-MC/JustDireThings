@@ -2,30 +2,48 @@ package com.direwolf20.justdirethings.common.containers.handlers;
 
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraft.world.level.block.entity.FuelValues;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
-public class FuelCanisterHandler extends ItemStackHandler {
+public class FuelCanisterHandler extends ItemStacksResourceHandler {
     public ItemStack stack;
+    @Nullable
+    private final FuelValues fuelValues;
 
-    public FuelCanisterHandler(int size, ItemStack itemStack) {
+    public FuelCanisterHandler(int size, ItemStack itemStack, @Nullable FuelValues fuelValues) {
         super(size);
         this.stack = itemStack;
+        this.fuelValues = fuelValues;
     }
 
     @Override
-    protected void onContentsChanged(int slot) {
-        ItemStack fuelStack = this.getStackInSlot(slot);
+    protected void onContentsChanged(int slot, ItemStack previousContents) {
+        ItemStack fuelStack = getResource(slot).toStack(getAmountAsInt(slot));
         if (!stack.isEmpty() && !fuelStack.isEmpty()) {
             FuelCanister.incrementFuel(stack, fuelStack);
         }
     }
 
     @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return !(stack.getItem() instanceof FuelCanister) && stack.getBurnTime(RecipeType.SMELTING) > 0 && !stack.hasCraftingRemainingItem() && !stack.is(JustDireItemTags.FUEL_CANISTER_DENY);
+    public boolean isValid(int slot, ItemResource resource) {
+        if (resource.isEmpty()) return true;
+        if (resource.getItem() instanceof FuelCanister) return false;
+        ItemStack probe = resource.toStack();
+        if (probe.is(JustDireItemTags.FUEL_CANISTER_DENY)) return false;
+        if (resource.getItem().getCraftingRemainder() != null) return false;
+        // Client-side fallback: no FuelValues, permit; server enforces burn-time check.
+        if (fuelValues == null) return true;
+        return probe.getBurnTime(RecipeType.SMELTING, fuelValues) > 0;
+    }
+
+    @Override
+    protected int getCapacity(int index, ItemResource resource) {
+        return resource.isEmpty() ? Item.ABSOLUTE_MAX_STACK_SIZE
+                : Math.min(resource.getMaxStackSize(), Item.ABSOLUTE_MAX_STACK_SIZE);
     }
 }

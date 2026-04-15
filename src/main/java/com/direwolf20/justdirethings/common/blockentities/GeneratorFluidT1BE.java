@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.GeneratorFluidItemHandler;
 import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
@@ -98,11 +98,11 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
     }
 
     public ItemStack getItemStack() {
-        return getMachineHandler().getStackInSlot(0);
+        return getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
     }
 
     @Override
-    public ItemStackHandler getMachineHandler() {
+    public GeneratorFluidItemHandler getMachineHandler() {
         return getData(Registration.GENERATOR_FLUID_ITEM_HANDLER);
     }
 

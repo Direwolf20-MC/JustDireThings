@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,11 +100,14 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public ItemStack getClickStack() {
-        return getMachineHandler().getStackInSlot(0);
+        return getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
     }
 
     public void setClickStack(ItemStack stack) {
-        getMachineHandler().setStackInSlot(0, stack);
+        if (stack.isEmpty())
+            getMachineHandler().set(0, ItemResource.EMPTY, 0);
+        else
+            getMachineHandler().set(0, ItemResource.of(stack), stack.getCount());
     }
 
     public boolean isStackValid(ItemStack itemStack) {

@@ -105,7 +105,7 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     }
 
     public ItemStack getItemStack() {
-        return getMachineHandler().getStackInSlot(0);
+        return getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
     }
 
     public boolean isStackValid(ItemStack itemStack) {

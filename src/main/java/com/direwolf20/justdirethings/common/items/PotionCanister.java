@@ -66,7 +66,7 @@ public class PotionCanister extends Item {
     public static void attemptFill(ItemStack canister) {
         if (!(canister.getItem() instanceof PotionCanister)) return;
         PotionCanisterHandler handler = new PotionCanisterHandler(canister, JustDireDataComponents.TOOL_CONTENTS.get(), 1);
-        ItemStack potion = handler.getStackInSlot(0);
+        ItemStack potion = handler.getResource(0).toStack(handler.getAmountAsInt(0));
         if (potion.isEmpty() || !(potion.getItem() instanceof PotionItem)) return;
         PotionContents currentContents = getPotionContents(canister);
         PotionContents newContents = potion.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
@@ -75,7 +75,15 @@ public class PotionCanister extends Item {
             if (currentAmt + 250 <= getMaxMB()) {
                 setPotionContents(canister, newContents);
                 addPotionAmount(canister, 250);
-                handler.setStackInSlot(0, new ItemStack(Items.GLASS_BOTTLE));
+                try (net.neoforged.neoforge.transfer.transaction.Transaction tx = net.neoforged.neoforge.transfer.transaction.Transaction.openRoot()) {
+                    net.neoforged.neoforge.transfer.item.ItemResource existing = handler.getResource(0);
+                    if (!existing.isEmpty()) {
+                        handler.extract(0, existing, handler.getAmountAsInt(0), tx);
+                    }
+                    ItemStack bottle = new ItemStack(Items.GLASS_BOTTLE);
+                    handler.insert(0, net.neoforged.neoforge.transfer.item.ItemResource.of(bottle), bottle.getCount(), tx);
+                    tx.commit();
+                }
             }
         }
     }

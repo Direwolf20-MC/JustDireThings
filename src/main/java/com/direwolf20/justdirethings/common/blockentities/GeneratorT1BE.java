@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.GeneratorItemHandler;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
@@ -24,8 +25,8 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.HashMap;
@@ -79,7 +80,7 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
     }
 
     @Override
-    public ItemStackHandler getMachineHandler() {
+    public GeneratorItemHandler getMachineHandler() {
         return getData(Registration.GENERATOR_ITEM_HANDLER);
     }
 
@@ -167,7 +168,9 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
 
         boolean canInsertEnergy = insertEnergy(fePerTick(), true) > 0;
         if (!canInsertEnergy) return; //Don't burn if the buffer is full
-        ItemStack fuelStack = getMachineHandler().getStackInSlot(0);
+        ItemResource fuelResource = getMachineHandler().getResource(0);
+        int fuelAmount = getMachineHandler().getAmountAsInt(0);
+        ItemStack fuelStack = fuelResource.toStack(fuelAmount);
         if (fuelStack.isEmpty())
             return; //Stop if we have no fuel! The slot only accepts burnables, so this should be a good enough check
         int oldMultiplier = this.fuelBurnMultiplier;
@@ -184,10 +187,18 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
         }
         if (this.fuelBurnMultiplier != oldMultiplier)
             markDirtyClient();
-        if (fuelStack.hasCraftingRemainingItem())
-            getMachineHandler().setStackInSlot(0, fuelStack.getCraftingRemainingItem());
-        else
-            fuelStack.shrink(1);
+        if (fuelStack.getItem().getCraftingRemainder() != null) {
+            ItemStack remainder = fuelStack.getItem().getCraftingRemainder().create();
+            if (remainder.isEmpty())
+                getMachineHandler().set(0, ItemResource.EMPTY, 0);
+            else
+                getMachineHandler().set(0, ItemResource.of(remainder), remainder.getCount());
+        } else {
+            try (Transaction tx = Transaction.openRoot()) {
+                getMachineHandler().extract(0, fuelResource, 1, tx);
+                tx.commit();
+            }
+        }
 
         feRemaining = burnTime * getFePerFuelTick();
         maxBurn = (int) (Math.floor(burnTime) / getBurnSpeedMultiplier());

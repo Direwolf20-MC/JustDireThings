@@ -108,7 +108,7 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
     }
 
     public ItemStack getItemStack() {
-        return getMachineHandler().getStackInSlot(0);
+        return getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
     }
 
     public boolean isStackValid(ItemStack itemStack, FluidStack fluidStack) {

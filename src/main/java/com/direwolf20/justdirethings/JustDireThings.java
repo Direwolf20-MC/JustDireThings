@@ -30,10 +30,11 @@ import net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.items.ComponentItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.EmptyResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.ItemAccessEnergyHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -94,8 +95,9 @@ public class JustDireThings {
         event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new ComponentItemHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 4),
                 Registration.EclipseAlloyBow.get()
         );
-        // TODO(port, stage-5/8): PotionCanisterHandler still extends ComponentItemHandler — rework in Stage 5/8.
-        event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new PotionCanisterHandler(itemStack, JustDireDataComponents.TOOL_CONTENTS.get(), 1),
+        event.registerItem(Capabilities.Item.ITEM, (itemStack, context) -> new PotionCanisterHandler(
+                        context != null ? context : ItemAccess.forStack(itemStack),
+                        JustDireDataComponents.TOOL_CONTENTS.get(), 1),
                 Registration.PotionCanister.get()
         );
         // Pocket Generator: external insert blocked (maxInsert=0), internal fill handled via its own BE logic. See TRANSFER_API §3 "one-way energy".
@@ -242,12 +244,11 @@ public class JustDireThings {
                 },
                 Registration.GeneratorFluidT1.get()
         );
-        // TODO(port, stage-5/7): ItemStackHandler is deprecated and PlayerAccessorBE#getPlayerHandler return type will change to ResourceHandler<ItemResource> in Stage 5/7.
         event.registerBlock(Capabilities.Item.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof PlayerAccessorBE playerAccessorBE) {
                         if (be.getLevel().isClientSide()) {
-                            return new ItemStackHandler(1);
+                            return EmptyResourceHandler.<ItemResource>instance();
                         } else {
                             return playerAccessorBE.getPlayerHandler(side);
                         }

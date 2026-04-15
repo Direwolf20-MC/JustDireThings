@@ -76,7 +76,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     @Override
     public void tickServer() {
         super.tickServer();
-        chargeItemStack(getMachineHandler().getStackInSlot(0));
+        chargeItemStack(getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0)));
     }
 
     @Override

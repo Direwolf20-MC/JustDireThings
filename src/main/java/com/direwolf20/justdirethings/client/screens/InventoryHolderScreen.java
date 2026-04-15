@@ -109,8 +109,8 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
 
     @Override
     protected void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !inventoryHolderBE.filterBasicHandler.getStackInSlot(slot.getSlotIndex()).isEmpty()) {
-            ItemStack showStack = inventoryHolderBE.filterBasicHandler.getStackInSlot(slot.getSlotIndex());
+        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !inventoryHolderBE.filterBasicHandler.getResource(slot.getSlotIndex()).toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slot.getSlotIndex())).isEmpty()) {
+            ItemStack showStack = inventoryHolderBE.filterBasicHandler.getResource(slot.getSlotIndex()).toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slot.getSlotIndex()));
             RenderSystem.enableBlend(); // Enable blending
             RenderSystem.defaultBlendFunc(); // Set default blend mode
             guiGraphics.renderFakeItem(showStack, slot.x, slot.y);
@@ -140,8 +140,8 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
         Slot slot = this.hoveredSlot;
-        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !inventoryHolderBE.filterBasicHandler.getStackInSlot(slot.getSlotIndex()).isEmpty()) {
-            ItemStack itemstack = inventoryHolderBE.filterBasicHandler.getStackInSlot(slot.getSlotIndex());
+        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !inventoryHolderBE.filterBasicHandler.getResource(slot.getSlotIndex()).toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slot.getSlotIndex())).isEmpty()) {
+            ItemStack itemstack = inventoryHolderBE.filterBasicHandler.getResource(slot.getSlotIndex()).toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slot.getSlotIndex()));
             guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, x, y);
         } else {
             super.renderTooltip(guiGraphics, x, y);

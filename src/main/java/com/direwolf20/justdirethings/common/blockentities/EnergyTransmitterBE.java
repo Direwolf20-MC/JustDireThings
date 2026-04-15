@@ -223,7 +223,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     }
 
     public void drainFromSlot() {
-        ItemStack itemStack = getMachineHandler().getStackInSlot(0);
+        ItemStack itemStack = getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
         if (itemStack.isEmpty()) return;
         ItemAccess itemAccess = ItemAccess.forHandlerIndex(getMachineHandler(), 0);
         EnergyHandler energyStorage = itemAccess.getCapability(Capabilities.Energy.ITEM);

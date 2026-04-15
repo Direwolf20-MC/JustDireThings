@@ -92,7 +92,7 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -744,13 +744,13 @@ public class Registration {
             () -> IMenuTypeExtension.create(ExperienceHolderContainer::new));
 
     //Data Attachments
-    public static final Supplier<AttachmentType<ItemStackHandler>> HANDLER = ATTACHMENT_TYPES.register(
-            "handler", () -> AttachmentType.serializable(() -> new ItemStackHandler(1)).build());
-    public static final Supplier<AttachmentType<ItemStackHandler>> MACHINE_HANDLER = ATTACHMENT_TYPES.register(
+    public static final Supplier<AttachmentType<ItemStacksResourceHandler>> HANDLER = ATTACHMENT_TYPES.register(
+            "handler", () -> AttachmentType.serializable(() -> new ItemStacksResourceHandler(1)).build());
+    public static final Supplier<AttachmentType<ItemStacksResourceHandler>> MACHINE_HANDLER = ATTACHMENT_TYPES.register(
             "machine_handler", () -> AttachmentType.serializable(holder -> {
                 if (holder instanceof BaseMachineBE baseMachineBE)
-                    return new ItemStackHandler(baseMachineBE.MACHINE_SLOTS);
-                return new ItemStackHandler(1);
+                    return new ItemStacksResourceHandler(baseMachineBE.MACHINE_SLOTS);
+                return new ItemStacksResourceHandler(1);
             }).build());
     public static final Supplier<AttachmentType<GeneratorItemHandler>> GENERATOR_ITEM_HANDLER = ATTACHMENT_TYPES.register(
             "generator_item_handler", () -> AttachmentType.serializable(holder -> {

@@ -71,8 +71,8 @@ public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, Powered
     public List<ItemStack> getFilteredList() {
         if (filteredList == null) {
             filteredList = new ArrayList<>();
-            for (int slot = 0; slot < getFilterHandler().getSlots(); slot++) {
-                ItemStack itemStack = getFilterHandler().getStackInSlot(slot);
+            for (int slot = 0; slot < getFilterHandler().size(); slot++) {
+                ItemStack itemStack = getFilterHandler().getResource(slot).toStack(getFilterHandler().getAmountAsInt(slot));
                 if (!itemStack.isEmpty()) filteredList.add(itemStack);
             }
         }
@@ -83,8 +83,8 @@ public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, Powered
         for (ItemStack filterStack : getFilteredList()) {
             ItemStackKey filterKey = new ItemStackKey(filterStack, getFilterData().compareNBT);
             boolean foundThisOne = false;
-            for (int machineSlot = 0; machineSlot < getMachineHandler().getSlots(); machineSlot++) {
-                ItemStack itemStack = getMachineHandler().getStackInSlot(machineSlot);
+            for (int machineSlot = 0; machineSlot < getMachineHandler().size(); machineSlot++) {
+                ItemStack itemStack = getMachineHandler().getResource(machineSlot).toStack(getMachineHandler().getAmountAsInt(machineSlot));
                 if (itemStack.isEmpty()) continue;
                 if (filterKey.equals(new ItemStackKey(itemStack, getFilterData().compareNBT))) {
                     foundThisOne = true;

@@ -11,7 +11,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +40,14 @@ public class InventoryHolderBE extends BaseMachineBE {
     }
 
     public void addSavedItem(int slot) {
-        ItemStack itemStack = getMachineHandler().getStackInSlot(slot).copy();
-        filterBasicHandler.setStackInSlot(slot, itemStack);
+        ItemStacksResourceHandler machine = getMachineHandler();
+        ItemResource resource = machine.getResource(slot);
+        int count = machine.getAmountAsInt(slot);
+        if (resource.isEmpty() || count == 0) {
+            filterBasicHandler.set(slot, ItemResource.EMPTY, 0);
+        } else {
+            filterBasicHandler.set(slot, resource, count);
+        }
         rebuildFilterCache();
         markDirtyClient();
     }
@@ -57,8 +65,8 @@ public class InventoryHolderBE extends BaseMachineBE {
 
     public void rebuildFilterCache() {
         filteredCache.clear();
-        for (int i = 0; i < filterBasicHandler.getSlots(); i++) {
-            ItemStack stack = filterBasicHandler.getStackInSlot(i);
+        for (int i = 0; i < filterBasicHandler.size(); i++) {
+            ItemStack stack = filterBasicHandler.getResource(i).toStack(filterBasicHandler.getAmountAsInt(i));
             if (stack.isEmpty()) continue;
             ItemStackKey key = new ItemStackKey(stack, compareNBT);
             List<Integer> slotList = filteredCache.getOrDefault(key, new ArrayList<>());
@@ -67,18 +75,18 @@ public class InventoryHolderBE extends BaseMachineBE {
         }
     }
 
-    public ItemStackHandler getInventoryHolderHandler() {
+    public ResourceHandler<ItemResource> getInventoryHolderHandler() {
         return new InventoryHolderItemHandler(this, getMachineHandler());
     }
 
     public int allowedExtractAmount(int slot, int amount) {
-        ItemStack stack = filterBasicHandler.getStackInSlot(slot);
+        ItemStack stack = filterBasicHandler.getResource(slot).toStack(filterBasicHandler.getAmountAsInt(slot));
         if (stack.isEmpty()) {
             return amount;
         }
         if (automatedCompareCounts) {
             int amountDesired = getSlotLimit(slot);
-            int amountHad = getMachineHandler().getStackInSlot(slot).getCount();
+            int amountHad = getMachineHandler().getAmountAsInt(slot);
             if (amountDesired > amountHad)
                 return 0;
             return Math.min(amount, amountHad - amountDesired);
@@ -88,7 +96,7 @@ public class InventoryHolderBE extends BaseMachineBE {
 
     public boolean isStackValidFilter(ItemStack testStack, int slot) {
         ItemStackKey key = new ItemStackKey(testStack, compareNBT);
-        ItemStack stack = filterBasicHandler.getStackInSlot(slot);
+        ItemStack stack = filterBasicHandler.getResource(slot).toStack(filterBasicHandler.getAmountAsInt(slot));
         if (stack.isEmpty()) {
             return !automatedFiltersOnly;
         }
@@ -98,7 +106,7 @@ public class InventoryHolderBE extends BaseMachineBE {
     public int getSlotLimit(int slot) {
         if (!automatedCompareCounts)
             return -1;
-        ItemStack stack = filterBasicHandler.getStackInSlot(slot);
+        ItemStack stack = filterBasicHandler.getResource(slot).toStack(filterBasicHandler.getAmountAsInt(slot));
         if (stack.isEmpty()) return -1;
         return stack.getCount();
     }
@@ -117,13 +125,13 @@ public class InventoryHolderBE extends BaseMachineBE {
             return false;
         if (renderedSlot != 27)
             return false;
-        for (int i = 0; i < filterBasicHandler.getSlots(); i++) {
-            if (!filterBasicHandler.getStackInSlot(i).isEmpty())
+        for (int i = 0; i < filterBasicHandler.size(); i++) {
+            if (!filterBasicHandler.getResource(i).isEmpty())
                 return false;
         }
-        ItemStackHandler itemStackHandler = getMachineHandler();
-        for (int i = 0; i < itemStackHandler.getSlots(); i++) {
-            if (!itemStackHandler.getStackInSlot(i).isEmpty())
+        ItemStacksResourceHandler machine = getMachineHandler();
+        for (int i = 0; i < machine.size(); i++) {
+            if (!machine.getResource(i).isEmpty())
                 return false;
         }
         return true;
