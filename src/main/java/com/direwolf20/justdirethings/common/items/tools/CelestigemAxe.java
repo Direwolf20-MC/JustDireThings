@@ -1,21 +1,25 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.GooTieredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseAxe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class CelestigemAxe extends BaseAxe implements PoweredTool {
+public class CelestigemAxe extends BaseAxe implements PoweredTool, GooTieredItem {
     public CelestigemAxe() {
-        super(GooTier.CELESTIGEM, new Properties()
-                .attributes(AxeItem.createAttributes(GooTier.CELESTIGEM, 7.0F, -2.5F))
-                .fireResistant());
+        super(GooTier.CELESTIGEM.material(), 7.0F, -2.5F, new Item.Properties().fireResistant());
         registerAbility(Ability.TREEFELLER);
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);
         registerAbility(Ability.DROPTELEPORT);
+    }
+
+    @Override
+    public GooTier getGooTier() {
+        return GooTier.CELESTIGEM;
     }
 
     @Override

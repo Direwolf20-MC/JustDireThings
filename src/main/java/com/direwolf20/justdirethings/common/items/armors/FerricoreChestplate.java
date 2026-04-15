@@ -4,12 +4,12 @@ import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseChestpla
 import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.equipment.ArmorType;
 
 public class FerricoreChestplate extends BaseChestplate {
     public FerricoreChestplate() {
-        super(ArmorTiers.FERRICORE, new Properties()
-                .durability(ArmorItem.Type.CHESTPLATE.getDurability(15)));
+        super(new Item.Properties().humanoidArmor(ArmorTiers.FERRICORE, ArmorType.CHESTPLATE));
         registerAbility(Ability.INVULNERABILITY, new AbilityParams(1, 1, 1, 1, 200, 1200));
     }
 }

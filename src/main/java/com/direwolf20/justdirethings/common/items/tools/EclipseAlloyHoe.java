@@ -2,19 +2,23 @@ package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
+import com.direwolf20.justdirethings.common.items.interfaces.GooTieredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseHoe;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class EclipseAlloyHoe extends BaseHoe implements PoweredTool {
+public class EclipseAlloyHoe extends BaseHoe implements PoweredTool, GooTieredItem {
     public EclipseAlloyHoe() {
-        super(GooTier.ECLIPSEALLOY, new Properties()
-                .attributes(HoeItem.createAttributes(GooTier.ECLIPSEALLOY, -2.0F, -1.0F))
-                .fireResistant());
+        super(GooTier.ECLIPSEALLOY.material(), -2.0F, -1.0F, new Item.Properties().fireResistant());
         registerAbility(Ability.DROPTELEPORT);
         registerAbility(Ability.HAMMER, new AbilityParams(3, 7, 2));
+    }
+
+    @Override
+    public GooTier getGooTier() {
+        return GooTier.ECLIPSEALLOY;
     }
 
     @Override

@@ -1,65 +1,53 @@
 package com.direwolf20.justdirethings.common.items.tools.utils;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.JustDireThings;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.LazyLoadedValue;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.level.block.Block;
-
-import java.util.function.Supplier;
 
 import static net.minecraft.tags.BlockTags.*;
 
-public enum GooTier implements Tier {
-    FERRICORE(INCORRECT_FOR_IRON_TOOL, 500, 7.0F, 2.5F, 15, () -> Ingredient.of(Registration.FerricoreIngot.get())),
-    BLAZEGOLD(INCORRECT_FOR_DIAMOND_TOOL, 1440, 12.0F, 3.0F, 22, () -> Ingredient.of(Registration.BlazegoldIngot.get())),
-    CELESTIGEM(INCORRECT_FOR_DIAMOND_TOOL, 1561, 10.0F, 4.0F, 18, () -> Ingredient.of(Registration.Celestigem.get())),
-    ECLIPSEALLOY(INCORRECT_FOR_NETHERITE_TOOL, 2561, 16.0F, 5.0F, 25, () -> Ingredient.of(Registration.EclipseAlloyIngot.get()));
+public enum GooTier {
+    FERRICORE(new ToolMaterial(INCORRECT_FOR_IRON_TOOL, 500, 7.0F, 2.5F, 15, repairTag("ferricore"))),
+    BLAZEGOLD(new ToolMaterial(INCORRECT_FOR_DIAMOND_TOOL, 1440, 12.0F, 3.0F, 22, repairTag("blazegold"))),
+    CELESTIGEM(new ToolMaterial(INCORRECT_FOR_DIAMOND_TOOL, 1561, 10.0F, 4.0F, 18, repairTag("celestigem"))),
+    ECLIPSEALLOY(new ToolMaterial(INCORRECT_FOR_NETHERITE_TOOL, 2561, 16.0F, 5.0F, 25, repairTag("eclipsealloy")));
 
-    private final TagKey<Block> incorrectBlocksForDrops;
-    private final int uses;
-    private final float speed;
-    private final float damage;
-    private final int enchantmentValue;
-    private final LazyLoadedValue<Ingredient> repairIngredient;
+    private final ToolMaterial material;
 
-    GooTier(TagKey<Block> incorrectBlocksForDrops, int pUses, float pSpeed, float pDamage, int pEnchantmentValue, Supplier<Ingredient> pRepairIngredient) {
-        this.incorrectBlocksForDrops = incorrectBlocksForDrops;
-        this.uses = pUses;
-        this.speed = pSpeed;
-        this.damage = pDamage;
-        this.enchantmentValue = pEnchantmentValue;
-        this.repairIngredient = new LazyLoadedValue<>(pRepairIngredient);
+    GooTier(ToolMaterial material) {
+        this.material = material;
     }
 
-    @Override
+    public ToolMaterial material() {
+        return material;
+    }
+
     public int getUses() {
-        return this.uses;
+        return material.durability();
     }
 
-    @Override
     public float getSpeed() {
-        return this.speed;
+        return material.speed();
     }
 
-    @Override
     public float getAttackDamageBonus() {
-        return this.damage;
+        return material.attackDamageBonus();
     }
 
-    @Override
     public TagKey<Block> getIncorrectBlocksForDrops() {
-        return incorrectBlocksForDrops;
+        return material.incorrectBlocksForDrops();
     }
 
-    @Override
     public int getEnchantmentValue() {
-        return this.enchantmentValue;
+        return material.enchantmentValue();
     }
 
-    @Override
-    public Ingredient getRepairIngredient() {
-        return this.repairIngredient.get();
+    // TODO(port, stage-17): populate these repair tags in the item tag provider so repair actually works.
+    private static TagKey<Item> repairTag(String name) {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "repairs_" + name + "_tool"));
     }
 }

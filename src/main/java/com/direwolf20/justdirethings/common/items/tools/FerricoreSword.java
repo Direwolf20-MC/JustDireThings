@@ -1,15 +1,19 @@
 package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.GooTieredItem;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseSword;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SwordItem;
 
-public class FerricoreSword extends BaseSword {
+public class FerricoreSword extends BaseSword implements GooTieredItem {
     public FerricoreSword() {
-        super(GooTier.FERRICORE, new Item.Properties()
-                .attributes(SwordItem.createAttributes(GooTier.FERRICORE, 3, -2.0F)));
+        super(new Item.Properties().sword(GooTier.FERRICORE.material(), 3, -2.0F));
         registerAbility(Ability.MOBSCANNER);
+    }
+
+    @Override
+    public GooTier getGooTier() {
+        return GooTier.FERRICORE;
     }
 }

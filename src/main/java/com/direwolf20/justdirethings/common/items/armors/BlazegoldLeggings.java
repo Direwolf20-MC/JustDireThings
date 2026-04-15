@@ -6,13 +6,16 @@ import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.equipment.ArmorType;
 
 public class BlazegoldLeggings extends BaseLeggings {
     public BlazegoldLeggings() {
-        super(ArmorTiers.BLAZEGOLD, new Properties()
+        super(new Item.Properties()
+                .humanoidArmor(ArmorTiers.BLAZEGOLD, ArmorType.LEGGINGS)
                 .fireResistant()
-                .durability(Type.LEGGINGS.getDurability(25)));
+                .durability(ArmorType.LEGGINGS.getDurability(25)));
         registerAbility(Ability.RUNSPEED, new AbilityParams(1, 2, 1));
         registerAbility(Ability.WALKSPEED, new AbilityParams(1, 2, 1));
         registerAbility(Ability.SWIMSPEED, new AbilityParams(1, 2, 1));
