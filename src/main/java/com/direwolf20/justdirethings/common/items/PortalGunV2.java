@@ -20,14 +20,14 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,13 +35,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidContainingItem {
     public static final int MAX_FAVORITES = 12;
@@ -58,45 +59,54 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         BlockHitResult blockhitresult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
         if (blockhitresult.getType() == HitResult.Type.BLOCK) {
             if (pickupFluid(level, player, itemStack, blockhitresult))
-                return InteractionResultHolder.fail(itemStack);
+                return InteractionResult.FAIL;
         }
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             spawnProjectile(level, player, itemStack, true);
         }
-        return InteractionResultHolder.fail(itemStack);
+        return InteractionResult.FAIL;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
         Level level = context.level();
         if (level == null) {
             return;
         }
-        IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, null);
         if (fluidHandler == null) {
             return;
         }
-        tooltip.add(Component.translatable("justdirethings.portalfluidamt", MagicHelpers.formatted(fluidHandler.getFluidInTank(0).getAmount()), MagicHelpers.formatted(maxMB)).withStyle(ChatFormatting.GREEN));
+        List<Component> buffer = new ArrayList<>();
+        buffer.add(Component.translatable("justdirethings.portalfluidamt", MagicHelpers.formatted(fluidHandler.getAmountAsInt(0)), MagicHelpers.formatted(maxMB)).withStyle(ChatFormatting.GREEN));
+        buffer.forEach(tooltip);
     }
 
     public static boolean pickupFluid(Level level, Player player, ItemStack itemStack, BlockHitResult blockhitresult) {
         BlockPos blockpos = blockhitresult.getBlockPos();
         BlockState blockstate1 = level.getBlockState(blockpos);
         if (blockstate1.getBlock() instanceof PortalFluidBlock portalFluidBlock) {
-            IFluidHandlerItem fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
             if (fluidHandler == null) return true;
-            int filledAmt = fluidHandler.fill(new FluidStack(Registration.PORTAL_FLUID_SOURCE.get(), 1000), IFluidHandler.FluidAction.SIMULATE);
+            FluidResource resource = FluidResource.of(Registration.PORTAL_FLUID_SOURCE.get());
+            int filledAmt;
+            try (Transaction probe = Transaction.openRoot()) {
+                filledAmt = fluidHandler.insert(0, resource, 1000, probe);
+            }
             if (filledAmt == 1000) {
                 ItemStack itemstack2 = portalFluidBlock.pickupBlock(player, level, blockpos, blockstate1);
-                fluidHandler.fill(new FluidStack(Registration.PORTAL_FLUID_SOURCE.get(), 1000), IFluidHandler.FluidAction.EXECUTE);
-                portalFluidBlock.getPickupSound(blockstate1).ifPresent(p_150709_ -> player.playSound(p_150709_, 1.0F, 1.0F));
-                if (!level.isClientSide) {
+                try (Transaction tx = Transaction.openRoot()) {
+                    fluidHandler.insert(0, resource, 1000, tx);
+                    tx.commit();
+                }
+                portalFluidBlock.getPickupSound().ifPresent(p_150709_ -> player.playSound(p_150709_, 1.0F, 1.0F));
+                if (!level.isClientSide()) {
                     CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, itemstack2);
                 }
             }
@@ -110,13 +120,13 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
         if (portalDestination == null || portalDestination.equals(NBTHelpers.PortalDestination.EMPTY)) return;
         int cost = calculateFluidCost((ServerLevel) level, player, portalDestination);
         if (!hasEnoughFluid(itemStack, cost)) {
-            player.displayClientMessage(Component.translatable("justdirethings.lowportalfluid"), true);
-            player.playNotifySound(SoundEvents.VAULT_INSERT_ITEM_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            player.sendOverlayMessage(Component.translatable("justdirethings.lowportalfluid"));
+            player.playSound(SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
             return;
         }
         if (!PoweredItem.consumeEnergy(itemStack, Config.PORTAL_GUN_V2_RF_COST.get())) {
-            player.displayClientMessage(Component.translatable("justdirethings.lowenergy"), true);
-            player.playNotifySound(SoundEvents.VAULT_INSERT_ITEM_FAIL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            player.sendOverlayMessage(Component.translatable("justdirethings.lowenergy"));
+            player.playSound(SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
             return;
         }
         PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType, true, portalDestination);
@@ -139,24 +149,27 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
     }
 
     public static boolean hasEnoughFluid(ItemStack itemStack, int amt) {
-        IFluidHandlerItem fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
         if (fluidHandler == null) {
             return false;
         }
-        return fluidHandler.getFluidInTank(0).getAmount() >= amt;
+        return fluidHandler.getAmountAsInt(0) >= amt;
     }
 
     public static void consumeFluid(ItemStack itemStack, int amt) {
-        IFluidHandlerItem fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
         if (fluidHandler == null) {
             return;
         }
-        fluidHandler.drain(amt, IFluidHandler.FluidAction.EXECUTE);
+        try (Transaction tx = Transaction.openRoot()) {
+            fluidHandler.extract(0, fluidHandler.getResource(0), amt, tx);
+            tx.commit();
+        }
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.NONE;
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.NONE;
     }
 
     @Override
@@ -256,9 +269,9 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
     }
 
     public static int getFullness(ItemStack itemStack) {
-        IFluidHandlerItem fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (fluidHandler != null && !fluidHandler.getFluidInTank(0).isEmpty()) {
-            float percentFull = ((float) fluidHandler.getFluidInTank(0).getAmount() / maxMB) * 100;
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+        if (fluidHandler != null && !fluidHandler.getResource(0).isEmpty()) {
+            float percentFull = ((float) fluidHandler.getAmountAsInt(0) / maxMB) * 100;
             if (percentFull > 0 && percentFull <= 33) {
                 return 1;
             } else if (percentFull > 33 && percentFull <= 66) {

@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.blockentities.*;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
+import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
 import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.FluidHandlerItemStack;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
@@ -105,16 +106,15 @@ public class JustDireThings {
                         JustDireDataComponents.TOOL_CONTENTS.get(), 1),
                 Registration.PotionCanister.get()
         );
-        // Pocket Generator: external insert blocked (maxInsert=0), internal fill handled via its own BE logic. See TRANSFER_API §3 "one-way energy".
+        // Pocket Generator: external insert blocked (maxInsert=0), internal fill handled via its own BE logic (forceReceiveEnergy). See TRANSFER_API §3 "one-way energy".
         event.registerItem(Capabilities.Energy.ITEM, (itemStack, access) -> {
                     int capacity = 1000000; //Default
                     if (itemStack.getItem() instanceof PoweredItem poweredItem) {
                         capacity = poweredItem.getMaxEnergy();
                     }
-                    return new ItemAccessEnergyHandler(
+                    return new EnergyStorageItemStackNoReceive(
                             access != null ? access : ItemAccess.forStack(itemStack),
-                            JustDireDataComponents.FORGE_ENERGY.get(),
-                            capacity, 0, capacity);
+                            capacity);
                 },
                 Registration.Pocket_Generator.get()
         );

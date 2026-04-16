@@ -7,13 +7,16 @@ import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.ComponentItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.List;
 
@@ -23,14 +26,16 @@ public class TooltipHelpers {
         if (!(stack.getItem() instanceof PoweredItem poweredItem))
             return;
 
-        var energy = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, null);
         if (energy == null) {
             return;
         }
-        if (Screen.hasShiftDown())
-            tooltip.add(Component.translatable("justdirethings.festored", MagicHelpers.formatted(energy.getEnergyStored()), MagicHelpers.formatted(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
+        int stored = energy.getAmountAsInt();
+        int max = energy.getCapacityAsInt();
+        if (Minecraft.getInstance().hasShiftDown())
+            tooltip.add(Component.translatable("justdirethings.festored", MagicHelpers.formatted(stored), MagicHelpers.formatted(max)).withStyle(ChatFormatting.GREEN));
         else
-            tooltip.add(Component.translatable("justdirethings.festored", MagicHelpers.tidyValue(energy.getEnergyStored()), MagicHelpers.tidyValue(energy.getMaxEnergyStored())).withStyle(ChatFormatting.GREEN));
+            tooltip.add(Component.translatable("justdirethings.festored", MagicHelpers.tidyValue(stored), MagicHelpers.tidyValue(max)).withStyle(ChatFormatting.GREEN));
     }
 
     public static void appendToolEnabled(ItemStack stack, List<Component> tooltip) {
@@ -71,7 +76,7 @@ public class TooltipHelpers {
                         dimString = I18n.get("justdirethings.unbound");
                         tooltip.add(Component.literal(dimString).withStyle(chatFormatting));
                     } else {
-                        dimString = " -" + I18n.get(boundInventory.globalPos().dimension().location().getPath()) + ": [" + boundInventory.globalPos().pos().toShortString() + "]";
+                        dimString = " -" + I18n.get(boundInventory.globalPos().dimension().identifier().getPath()) + ": [" + boundInventory.globalPos().pos().toShortString() + "]";
                         tooltip.add(Component.literal(dimString).withStyle(chatFormatting));
                         tooltip.add(Component.literal("").append(Component.translatable("justdirethings.boundside")).append(Component.translatable("justdirethings.screen.direction-" + boundInventory.direction().getName())).withStyle(chatFormatting));
                     }
@@ -103,9 +108,9 @@ public class TooltipHelpers {
     }
 
     public static void appendGeneratorDetails(ItemStack stack, List<Component> tooltip) {
-        ComponentItemHandler handler = new ComponentItemHandler(stack, JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1);
-        ItemStack fuelStack = handler.getStackInSlot(0);
-        if (Screen.hasShiftDown()) {
+        ResourceHandler<ItemResource> handler = ItemAccess.forStack(stack).getCapability(Capabilities.Item.ITEM);
+        ItemStack fuelStack = handler == null ? ItemStack.EMPTY : handler.getResource(0).toStack(handler.getAmountAsInt(0));
+        if (Minecraft.getInstance().hasShiftDown()) {
             tooltip.add(Component.translatable("justdirethings.pocketgeneratorburntime", stack.getOrDefault(JustDireDataComponents.POCKETGEN_COUNTER, 0), stack.getOrDefault(JustDireDataComponents.POCKETGEN_MAXBURN, 0)).withStyle(ChatFormatting.DARK_RED));
             if (fuelStack.isEmpty())
                 tooltip.add(Component.translatable("justdirethings.pocketgeneratornofuel").withStyle(ChatFormatting.RED));

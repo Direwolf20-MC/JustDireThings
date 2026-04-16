@@ -6,15 +6,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
 
@@ -24,7 +27,7 @@ public class CreatureCatcher extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+    public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pHand) {
         ItemStack itemStack = pPlayer.getItemInHand(pHand);
         pLevel.playSound(
                 null,
@@ -36,7 +39,7 @@ public class CreatureCatcher extends Item {
                 0.5F,
                 0.4F / (pLevel.getRandom().nextFloat() * 0.4F + 0.8F)
         );
-        if (!pLevel.isClientSide) {
+        if (!pLevel.isClientSide()) {
             CreatureCatcherEntity creatureCatcherEntity = new CreatureCatcherEntity(pLevel, pPlayer);
             creatureCatcherEntity.setItem(itemStack);
             creatureCatcherEntity.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), 0.0F, 1.5F, 1.0F);
@@ -48,7 +51,7 @@ public class CreatureCatcher extends Item {
         }
 
 
-        return InteractionResultHolder.sidedSuccess(itemStack, pLevel.isClientSide());
+        return InteractionResult.SUCCESS.heldItemTransformedTo(itemStack);
     }
 
     public static boolean hasEntity(ItemStack itemStack) {
@@ -56,8 +59,8 @@ public class CreatureCatcher extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
         Level level = context.level();
         if (level == null) {
             return;
@@ -66,10 +69,12 @@ public class CreatureCatcher extends Item {
         Mob mob = CreatureCatcherEntity.getEntityFromItemStack(stack, level);
         if (mob == null) return;
 
-        tooltip.add(Component.translatable("justdirethings.creature")
+        List<Component> buffer = new ArrayList<>();
+        buffer.add(Component.translatable("justdirethings.creature")
                 .withStyle(ChatFormatting.DARK_GRAY)
                 .append(Component.literal("")
                         .append(mob.getName())
                         .withStyle(ChatFormatting.GREEN)));
+        buffer.forEach(tooltip);
     }
 }
