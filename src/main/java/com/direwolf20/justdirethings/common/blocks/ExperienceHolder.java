@@ -4,35 +4,34 @@ import com.direwolf20.justdirethings.common.blockentities.ExperienceHolderBE;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.containers.ExperienceHolderContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
@@ -107,16 +106,10 @@ public class ExperienceHolder extends BaseMachineBlock {
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get() //WEST
     };
 
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
-    public ExperienceHolder() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .noOcclusion()
-                .forceSolidOn()
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public ExperienceHolder(Properties properties) {
+        super(properties);
     }
 
     @Nullable
@@ -134,41 +127,52 @@ public class ExperienceHolder extends BaseMachineBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
-        if (level.isClientSide) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+        if (level.isClientSide()) return InteractionResult.TRY_WITH_EMPTY_HAND;
+        if (itemStack.isEmpty()) return InteractionResult.TRY_WITH_EMPTY_HAND;
+        ItemAccess access = ItemAccess.forPlayerInteraction(player, hand);
+        ResourceHandler<FluidResource> fluidHandlerItem = access.getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerItem != null) {
-            IFluidHandler cap = level.getCapability(Capabilities.FluidHandler.BLOCK, blockPos, blockHitResult.getDirection());
-            if (cap == null) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            if (fluidHandlerItem.getFluidInTank(0).getAmount() < fluidHandlerItem.getTankCapacity(0) && !cap.getFluidInTank(0).isEmpty()) {
-                FluidStack testStack = cap.drain(fluidHandlerItem.getTankCapacity(0), IFluidHandler.FluidAction.SIMULATE);
-                if (testStack.getAmount() > 0) {
-                    int amtFit = fluidHandlerItem.fill(testStack, IFluidHandler.FluidAction.SIMULATE);
-                    if (amtFit > 0) {
-                        FluidStack extractedStack = cap.drain(amtFit, IFluidHandler.FluidAction.EXECUTE);
-                        fluidHandlerItem.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
-                        if (itemStack.getItem() instanceof BucketItem)
-                            player.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, fluidHandlerItem.getContainer());
-                        level.playSound(null, blockPos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1F, 1.0F);
-                        return ItemInteractionResult.SUCCESS;
+            ResourceHandler<FluidResource> cap = level.getCapability(Capabilities.Fluid.BLOCK, blockPos, blockHitResult.getDirection());
+            if (cap == null) return InteractionResult.TRY_WITH_EMPTY_HAND;
+            FluidResource itemResource = fluidHandlerItem.getResource(0);
+            int itemAmount = fluidHandlerItem.getAmountAsInt(0);
+            int itemCapacity = fluidHandlerItem.getCapacityAsInt(0, itemResource);
+            FluidResource blockResource = cap.getResource(0);
+            int blockAmount = cap.getAmountAsInt(0);
+            if (itemAmount < itemCapacity && blockAmount > 0 && !blockResource.isEmpty()) {
+                try (Transaction tx = Transaction.openRoot()) {
+                    int extracted = cap.extract(0, blockResource, itemCapacity, tx);
+                    if (extracted > 0) {
+                        int inserted = fluidHandlerItem.insert(0, blockResource, extracted, tx);
+                        if (inserted > 0) {
+                            if (inserted < extracted) {
+                                cap.insert(0, blockResource, extracted - inserted, tx);
+                            }
+                            tx.commit();
+                            level.playSound(null, blockPos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1F, 1.0F);
+                            return InteractionResult.SUCCESS;
+                        }
                     }
                 }
-            } else {
-                FluidStack fluidStack = fluidHandlerItem.getFluidInTank(0);
-                int insertAmt = cap.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
-                if (insertAmt > 0) {
-                    FluidStack extractedStack = fluidHandlerItem.drain(insertAmt, IFluidHandler.FluidAction.EXECUTE);
-                    if (!extractedStack.isEmpty()) {
-                        cap.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
-                        if (itemStack.getItem() instanceof BucketItem)
-                            player.setItemSlot(hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, fluidHandlerItem.getContainer());
-                        level.playSound(null, blockPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1.0F);
-                        return ItemInteractionResult.SUCCESS;
+            } else if (!itemResource.isEmpty() && itemAmount > 0) {
+                try (Transaction tx = Transaction.openRoot()) {
+                    int extracted = fluidHandlerItem.extract(0, itemResource, itemAmount, tx);
+                    if (extracted > 0) {
+                        int inserted = cap.insert(0, itemResource, extracted, tx);
+                        if (inserted > 0) {
+                            if (inserted < extracted) {
+                                fluidHandlerItem.insert(0, itemResource, extracted - inserted, tx);
+                            }
+                            tx.commit();
+                            level.playSound(null, blockPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1F, 1.0F);
+                            return InteractionResult.SUCCESS;
+                        }
                     }
                 }
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
@@ -183,7 +187,7 @@ public class ExperienceHolder extends BaseMachineBlock {
 
     @SuppressWarnings("deprecation")
     @Override
-    public VoxelShape getOcclusionShape(BlockState state, BlockGetter reader, BlockPos pos) {
+    public VoxelShape getOcclusionShape(BlockState state) {
         return shapes[state.getValue(FACING).get3DDataValue()];
     }
 
@@ -203,7 +207,7 @@ public class ExperienceHolder extends BaseMachineBlock {
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState p_48740_, BlockGetter p_48741_, BlockPos p_48742_) {
+    public boolean propagatesSkylightDown(BlockState p_48740_) {
         return true;
     }
 }

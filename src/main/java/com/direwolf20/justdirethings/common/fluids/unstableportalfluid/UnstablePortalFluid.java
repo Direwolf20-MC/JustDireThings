@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.fluids.unstableportalfluid;
 
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -35,7 +35,7 @@ public abstract class UnstablePortalFluid extends BaseFlowingFluid {
     }
 
     @Override
-    protected boolean canConvertToSource(Level pLevel) {
+    protected boolean canConvertToSource(ServerLevel pLevel) {
         return false;
     }
 

@@ -17,12 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class SensorT2 extends BaseMachineBlock {
-    public SensorT2() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public SensorT2(Properties properties) {
+        super(properties);
     }
 
     @Nullable

@@ -14,29 +14,37 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.CactusBlock;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.AttachedStemBlock;
+import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.SugarCaneBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.TriState;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraft.util.TriState;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.minecraft.world.level.block.CactusBlock.AGE;
 
-public class GooSoilBase extends FarmBlock {
-    public GooSoilBase() {
-        super(Properties.of()
-                .sound(SoundType.GRAVEL)
-                .strength(2.0f)
-                .randomTicks()
-        );
+public class GooSoilBase extends FarmlandBlock {
+    public GooSoilBase(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+    protected boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         BlockState blockstate = pLevel.getBlockState(pPos.above());
         if (blockstate.is(Blocks.BAMBOO) || blockstate.is(Blocks.CACTUS) || blockstate.is(Blocks.BAMBOO_SAPLING))
             return true;
@@ -65,12 +73,12 @@ public class GooSoilBase extends FarmBlock {
     }
 
     @Override
-    public void fallOn(Level pLevel, BlockState pState, BlockPos pPos, Entity pEntity, float pFallDistance) {
-        pEntity.causeFallDamage(pFallDistance, 1.0F, pEntity.damageSources().fall());
+    public void fallOn(Level pLevel, BlockState pState, BlockPos pPos, Entity pEntity, double pFallDistance) {
+        pEntity.causeFallDamage((float) pFallDistance, 1.0F, pEntity.damageSources().fall());
     }
 
     @Override
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+    protected void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         super.tick(pState, pLevel, pPos, pRandom);
     }
 
@@ -78,7 +86,7 @@ public class GooSoilBase extends FarmBlock {
      * Performs a random tick on a block.
      */
     @Override
-    public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
+    protected void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRandom) {
         super.randomTick(pState, pLevel, pPos, pRandom);
     }
 
@@ -110,7 +118,7 @@ public class GooSoilBase extends FarmBlock {
                 pLevel.setBlockAndUpdate(blockpos, crop.getBlock().defaultBlockState());
                 BlockState blockstate = crop.setValue(AGE, Integer.valueOf(0));
                 pLevel.setBlock(cropPos, blockstate, 4);
-                pLevel.neighborChanged(blockstate, blockpos, crop.getBlock(), cropPos, false);
+                pLevel.neighborChanged(blockstate, blockpos, crop.getBlock(), null, false);
             } else {
                 pLevel.setBlock(cropPos, crop.setValue(AGE, Integer.valueOf(j + 1)), 4);
             }
@@ -229,7 +237,7 @@ public class GooSoilBase extends FarmBlock {
     public static void teleportDrops(ServerLevel pLevel, BlockPos pPos, List<ItemStack> drops, BlockPos cropPos) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (blockEntity != null && blockEntity instanceof GooSoilBE gooSoilBE) {
-            IItemHandler handler = gooSoilBE.getAttachedInventory(pLevel);
+            ResourceHandler<ItemResource> handler = gooSoilBE.getAttachedInventory(pLevel);
             if (handler != null) {
                 Helpers.teleportDrops(drops, handler);
                 if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing

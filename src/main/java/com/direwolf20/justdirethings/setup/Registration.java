@@ -10,6 +10,7 @@ import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_T
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier3;
 import com.direwolf20.justdirethings.common.blockentities.gooblocks.GooBlockBE_Tier4;
 import com.direwolf20.justdirethings.common.blocks.*;
+import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.*;
 import com.direwolf20.justdirethings.common.blocks.resources.*;
 import com.direwolf20.justdirethings.common.blocks.soil.GooSoilTier1;
@@ -86,6 +87,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -172,28 +174,43 @@ public class Registration {
     }
 
     //Gooblocks
-    public static final DeferredHolder<Block, GooBlock_Tier1> GooBlock_Tier1 = BLOCKS.register("gooblock_tier1", GooBlock_Tier1::new);
-    public static final DeferredHolder<Item, BlockItem> GooBlock_Tier1_ITEM = ITEMS.register("gooblock_tier1", () -> new GooBlock_Item(GooBlock_Tier1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, GooBlock_Tier2> GooBlock_Tier2 = BLOCKS.register("gooblock_tier2", GooBlock_Tier2::new);
-    public static final DeferredHolder<Item, BlockItem> GooBlock_Tier2_ITEM = ITEMS.register("gooblock_tier2", () -> new GooBlock_Item(GooBlock_Tier2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, GooBlock_Tier3> GooBlock_Tier3 = BLOCKS.register("gooblock_tier3", GooBlock_Tier3::new);
-    public static final DeferredHolder<Item, BlockItem> GooBlock_Tier3_ITEM = ITEMS.register("gooblock_tier3", () -> new GooBlock_Item(GooBlock_Tier3.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, GooBlock_Tier4> GooBlock_Tier4 = BLOCKS.register("gooblock_tier4", GooBlock_Tier4::new);
-    public static final DeferredHolder<Item, BlockItem> GooBlock_Tier4_ITEM = ITEMS.register("gooblock_tier4", () -> new GooBlock_Item(GooBlock_Tier4.get(), new Item.Properties()));
+    private static Supplier<BlockBehaviour.Properties> gooBlockProps() {
+        return () -> BlockBehaviour.Properties.of().sound(SoundType.FUNGUS).strength(2.0f).noOcclusion();
+    }
+    private static Supplier<BlockBehaviour.Properties> gooSoilProps() {
+        return () -> BlockBehaviour.Properties.of().sound(SoundType.GRAVEL).strength(2.0f).randomTicks();
+    }
+    private static Supplier<BlockBehaviour.Properties> machineProps() {
+        return () -> BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(2.0f).isRedstoneConductor(BaseMachineBlock::never);
+    }
 
-    public static final DeferredHolder<Block, GooPatternBlock> GooPatternBlock = BLOCKS.register("goopatternblock", GooPatternBlock::new);
+    public static final DeferredHolder<Block, GooBlock_Tier1> GooBlock_Tier1 = BLOCKS.registerBlock("gooblock_tier1", GooBlock_Tier1::new, gooBlockProps());
+    public static final DeferredHolder<Item, GooBlock_Item> GooBlock_Tier1_ITEM = ITEMS.registerItem("gooblock_tier1",
+            props -> new GooBlock_Item(GooBlock_Tier1.get(), props), Item.Properties::new);
+    public static final DeferredHolder<Block, GooBlock_Tier2> GooBlock_Tier2 = BLOCKS.registerBlock("gooblock_tier2", GooBlock_Tier2::new, gooBlockProps());
+    public static final DeferredHolder<Item, GooBlock_Item> GooBlock_Tier2_ITEM = ITEMS.registerItem("gooblock_tier2",
+            props -> new GooBlock_Item(GooBlock_Tier2.get(), props), Item.Properties::new);
+    public static final DeferredHolder<Block, GooBlock_Tier3> GooBlock_Tier3 = BLOCKS.registerBlock("gooblock_tier3", GooBlock_Tier3::new, gooBlockProps());
+    public static final DeferredHolder<Item, GooBlock_Item> GooBlock_Tier3_ITEM = ITEMS.registerItem("gooblock_tier3",
+            props -> new GooBlock_Item(GooBlock_Tier3.get(), props), Item.Properties::new);
+    public static final DeferredHolder<Block, GooBlock_Tier4> GooBlock_Tier4 = BLOCKS.registerBlock("gooblock_tier4", GooBlock_Tier4::new, gooBlockProps());
+    public static final DeferredHolder<Item, GooBlock_Item> GooBlock_Tier4_ITEM = ITEMS.registerItem("gooblock_tier4",
+            props -> new GooBlock_Item(GooBlock_Tier4.get(), props), Item.Properties::new);
+
+    public static final DeferredHolder<Block, GooPatternBlock> GooPatternBlock = BLOCKS.registerBlock("goopatternblock", GooPatternBlock::new, gooBlockProps());
 
 
     //Blocks
-    public static final DeferredHolder<Block, GooSoilTier1> GooSoil_Tier1 = BLOCKS.register("goosoil_tier1", GooSoilTier1::new);
-    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier1 = ITEMS.register("goosoil_tier1", () -> new BlockItem(GooSoil_Tier1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, GooSoilTier2> GooSoil_Tier2 = BLOCKS.register("goosoil_tier2", GooSoilTier2::new);
-    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier2 = ITEMS.register("goosoil_tier2", () -> new BlockItem(GooSoil_Tier2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, GooSoilTier3> GooSoil_Tier3 = BLOCKS.register("goosoil_tier3", GooSoilTier3::new);
-    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier3 = ITEMS.register("goosoil_tier3", () -> new BlockItem(GooSoil_Tier3.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, GooSoilTier4> GooSoil_Tier4 = BLOCKS.register("goosoil_tier4", GooSoilTier4::new);
-    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier4 = ITEMS.register("goosoil_tier4", () -> new BlockItem(GooSoil_Tier4.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, EclipseGateBlock> EclipseGateBlock = BLOCKS.register("eclipsegateblock", EclipseGateBlock::new);
+    public static final DeferredHolder<Block, GooSoilTier1> GooSoil_Tier1 = BLOCKS.registerBlock("goosoil_tier1", GooSoilTier1::new, gooSoilProps());
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier1 = ITEMS.registerSimpleBlockItem("goosoil_tier1", GooSoil_Tier1);
+    public static final DeferredHolder<Block, GooSoilTier2> GooSoil_Tier2 = BLOCKS.registerBlock("goosoil_tier2", GooSoilTier2::new, gooSoilProps());
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier2 = ITEMS.registerSimpleBlockItem("goosoil_tier2", GooSoil_Tier2);
+    public static final DeferredHolder<Block, GooSoilTier3> GooSoil_Tier3 = BLOCKS.registerBlock("goosoil_tier3", GooSoilTier3::new, gooSoilProps());
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier3 = ITEMS.registerSimpleBlockItem("goosoil_tier3", GooSoil_Tier3);
+    public static final DeferredHolder<Block, GooSoilTier4> GooSoil_Tier4 = BLOCKS.registerBlock("goosoil_tier4", GooSoilTier4::new, gooSoilProps());
+    public static final DeferredHolder<Item, BlockItem> GooSoil_ITEM_Tier4 = ITEMS.registerSimpleBlockItem("goosoil_tier4", GooSoil_Tier4);
+    public static final DeferredHolder<Block, EclipseGateBlock> EclipseGateBlock = BLOCKS.registerBlock("eclipsegateblock", EclipseGateBlock::new,
+            () -> BlockBehaviour.Properties.of().strength(20f, 3600000.0F).noOcclusion().noCollision().forceSolidOn().pushReaction(PushReaction.BLOCK));
 
     //Fluids
     //Polymorphic Fluid
@@ -203,10 +220,13 @@ public class Registration {
             PolymorphicFluid.Flowing::new);
     public static final DeferredHolder<Fluid, PolymorphicFluid> POLYMORPHIC_FLUID_SOURCE = FLUIDS.register("polymorphic_fluid_source",
             PolymorphicFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> POLYMORPHIC_FLUID_BLOCK = FLUID_BLOCKS.register("polymorphic_fluid_block",
-            PolymorphicFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> POLYMORPHIC_FLUID_BUCKET = BUCKET_ITEMS.register("polymorphic_fluid_bucket",
-            () -> new BucketItem(Registration.POLYMORPHIC_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> POLYMORPHIC_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("polymorphic_fluid_block",
+            PolymorphicFluidBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> POLYMORPHIC_FLUID_BUCKET = BUCKET_ITEMS.registerItem("polymorphic_fluid_bucket",
+            props -> new BucketItem(Registration.POLYMORPHIC_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Portal Fluid
     public static final DeferredHolder<FluidType, FluidType> PORTAL_FLUID_TYPE = FLUID_TYPES.register("portal_fluid_type",
@@ -215,10 +235,13 @@ public class Registration {
             PortalFluid.Flowing::new);
     public static final DeferredHolder<Fluid, PortalFluid> PORTAL_FLUID_SOURCE = FLUIDS.register("portal_fluid_source",
             PortalFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = FLUID_BLOCKS.register("portal_fluid_block",
-            PortalFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = BUCKET_ITEMS.register("portal_fluid_bucket",
-            () -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> PORTAL_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("portal_fluid_block",
+            PortalFluidBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = BUCKET_ITEMS.registerItem("portal_fluid_bucket",
+            props -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Time Fluid
     public static final DeferredHolder<FluidType, FluidType> TIME_FLUID_TYPE = FLUID_TYPES.register("time_fluid_type",
@@ -227,10 +250,13 @@ public class Registration {
             TimeFluid.Flowing::new);
     public static final DeferredHolder<Fluid, TimeFluid> TIME_FLUID_SOURCE = FLUIDS.register("time_fluid_source",
             TimeFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> TIME_FLUID_BLOCK = FLUID_BLOCKS.register("time_fluid_block",
-            TimeFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> TIME_FLUID_BUCKET = BUCKET_ITEMS.register("time_fluid_bucket",
-            () -> new BucketItem(Registration.TIME_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> TIME_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("time_fluid_block",
+            TimeFluidBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> TIME_FLUID_BUCKET = BUCKET_ITEMS.registerItem("time_fluid_bucket",
+            props -> new BucketItem(Registration.TIME_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Unstable Portal Fluid
     public static final DeferredHolder<FluidType, FluidType> UNSTABLE_PORTAL_FLUID_TYPE = FLUID_TYPES.register("unstable_portal_fluid_type",
@@ -239,10 +265,13 @@ public class Registration {
             UnstablePortalFluid.Flowing::new);
     public static final DeferredHolder<Fluid, UnstablePortalFluid> UNSTABLE_PORTAL_FLUID_SOURCE = FLUIDS.register("unstable_portal_fluid_source",
             UnstablePortalFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> UNSTABLE_PORTAL_FLUID_BLOCK = FLUID_BLOCKS.register("unstable_portal_fluid_block",
-            UnstablePortalFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> UNSTABLE_PORTAL_FLUID_BUCKET = BUCKET_ITEMS.register("unstable_portal_fluid_bucket",
-            () -> new BucketItem(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> UNSTABLE_PORTAL_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("unstable_portal_fluid_block",
+            UnstablePortalFluidBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> UNSTABLE_PORTAL_FLUID_BUCKET = BUCKET_ITEMS.registerItem("unstable_portal_fluid_bucket",
+            props -> new BucketItem(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Unrefined T2 Fuel
     public static final DeferredHolder<FluidType, FluidType> UNREFINED_T2_FLUID_TYPE = FLUID_TYPES.register("unrefined_t2_fluid_type",
@@ -251,10 +280,13 @@ public class Registration {
             UnrefinedT2Fuel.Flowing::new);
     public static final DeferredHolder<Fluid, UnrefinedT2Fuel> UNREFINED_T2_FLUID_SOURCE = FLUIDS.register("unrefined_t2_fluid_source",
             UnrefinedT2Fuel.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T2_FLUID_BLOCK = FLUID_BLOCKS.register("unrefined_t2_fluid_block",
-            UnrefinedT2FuelBlock::new);
-    public static final DeferredHolder<Item, BucketItem> UNREFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t2_fluid_bucket",
-            () -> new BucketItem(Registration.UNREFINED_T2_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T2_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("unrefined_t2_fluid_block",
+            UnrefinedT2FuelBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> UNREFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.registerItem("unrefined_t2_fluid_bucket",
+            props -> new BucketItem(Registration.UNREFINED_T2_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Refined T2 Fuel
     public static final DeferredHolder<FluidType, FluidType> REFINED_T2_FLUID_TYPE = FLUID_TYPES.register("refined_t2_fluid_type",
@@ -263,10 +295,13 @@ public class Registration {
             RefinedT2Fuel.Flowing::new);
     public static final DeferredHolder<Fluid, RefinedT2Fuel> REFINED_T2_FLUID_SOURCE = FLUIDS.register("refined_t2_fluid_source",
             RefinedT2Fuel.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> REFINED_T2_FLUID_BLOCK = FLUID_BLOCKS.register("refined_t2_fluid_block",
-            RefinedT2FuelBlock::new);
-    public static final DeferredHolder<Item, BucketItem> REFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t2_fluid_bucket",
-            () -> new BucketItem(Registration.REFINED_T2_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> REFINED_T2_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("refined_t2_fluid_block",
+            RefinedT2FuelBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> REFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.registerItem("refined_t2_fluid_bucket",
+            props -> new BucketItem(Registration.REFINED_T2_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Unrefined T3 Fuel
     public static final DeferredHolder<FluidType, FluidType> UNREFINED_T3_FLUID_TYPE = FLUID_TYPES.register("unrefined_t3_fluid_type",
@@ -275,10 +310,13 @@ public class Registration {
             UnrefinedT3Fuel.Flowing::new);
     public static final DeferredHolder<Fluid, UnrefinedT3Fuel> UNREFINED_T3_FLUID_SOURCE = FLUIDS.register("unrefined_t3_fluid_source",
             UnrefinedT3Fuel.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T3_FLUID_BLOCK = FLUID_BLOCKS.register("unrefined_t3_fluid_block",
-            UnrefinedT3FuelBlock::new);
-    public static final DeferredHolder<Item, BucketItem> UNREFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t3_fluid_bucket",
-            () -> new BucketItem(Registration.UNREFINED_T3_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T3_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("unrefined_t3_fluid_block",
+            UnrefinedT3FuelBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> UNREFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.registerItem("unrefined_t3_fluid_bucket",
+            props -> new BucketItem(Registration.UNREFINED_T3_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Refined T3 Fuel
     public static final DeferredHolder<FluidType, FluidType> REFINED_T3_FLUID_TYPE = FLUID_TYPES.register("refined_t3_fluid_type",
@@ -287,10 +325,13 @@ public class Registration {
             RefinedT3Fuel.Flowing::new);
     public static final DeferredHolder<Fluid, RefinedT3Fuel> REFINED_T3_FLUID_SOURCE = FLUIDS.register("refined_t3_fluid_source",
             RefinedT3Fuel.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> REFINED_T3_FLUID_BLOCK = FLUID_BLOCKS.register("refined_t3_fluid_block",
-            RefinedT3FuelBlock::new);
-    public static final DeferredHolder<Item, BucketItem> REFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t3_fluid_bucket",
-            () -> new BucketItem(Registration.REFINED_T3_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> REFINED_T3_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("refined_t3_fluid_block",
+            RefinedT3FuelBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> REFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.registerItem("refined_t3_fluid_bucket",
+            props -> new BucketItem(Registration.REFINED_T3_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Unrefined T4 Fuel
     public static final DeferredHolder<FluidType, FluidType> UNREFINED_T4_FLUID_TYPE = FLUID_TYPES.register("unrefined_t4_fluid_type",
@@ -299,10 +340,13 @@ public class Registration {
             UnrefinedT4Fuel.Flowing::new);
     public static final DeferredHolder<Fluid, UnrefinedT4Fuel> UNREFINED_T4_FLUID_SOURCE = FLUIDS.register("unrefined_t4_fluid_source",
             UnrefinedT4Fuel.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T4_FLUID_BLOCK = FLUID_BLOCKS.register("unrefined_t4_fluid_block",
-            UnrefinedT4FuelBlock::new);
-    public static final DeferredHolder<Item, BucketItem> UNREFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.register("unrefined_t4_fluid_bucket",
-            () -> new BucketItem(Registration.UNREFINED_T4_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> UNREFINED_T4_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("unrefined_t4_fluid_block",
+            UnrefinedT4FuelBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> UNREFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.registerItem("unrefined_t4_fluid_bucket",
+            props -> new BucketItem(Registration.UNREFINED_T4_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Refined T4 Fuel
     public static final DeferredHolder<FluidType, FluidType> REFINED_T4_FLUID_TYPE = FLUID_TYPES.register("refined_t4_fluid_type",
@@ -311,10 +355,13 @@ public class Registration {
             RefinedT4Fuel.Flowing::new);
     public static final DeferredHolder<Fluid, RefinedT4Fuel> REFINED_T4_FLUID_SOURCE = FLUIDS.register("refined_t4_fluid_source",
             RefinedT4Fuel.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> REFINED_T4_FLUID_BLOCK = FLUID_BLOCKS.register("refined_t4_fluid_block",
-            RefinedT4FuelBlock::new);
-    public static final DeferredHolder<Item, BucketItem> REFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.register("refined_t4_fluid_bucket",
-            () -> new BucketItem(Registration.REFINED_T4_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> REFINED_T4_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("refined_t4_fluid_block",
+            RefinedT4FuelBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> REFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.registerItem("refined_t4_fluid_bucket",
+            props -> new BucketItem(Registration.REFINED_T4_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //XP Fluid
     public static final DeferredHolder<FluidType, FluidType> XP_FLUID_TYPE = FLUID_TYPES.register("xp_fluid_type",
@@ -323,132 +370,155 @@ public class Registration {
             XPFluid.Flowing::new);
     public static final DeferredHolder<Fluid, XPFluid> XP_FLUID_SOURCE = FLUIDS.register("xp_fluid_source",
             XPFluid.Source::new);
-    public static final DeferredHolder<Block, LiquidBlock> XP_FLUID_BLOCK = FLUID_BLOCKS.register("xp_fluid_block",
-            XPFluidBlock::new);
-    public static final DeferredHolder<Item, BucketItem> XP_FLUID_BUCKET = BUCKET_ITEMS.register("xp_fluid_bucket",
-            () -> new BucketItem(Registration.XP_FLUID_SOURCE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final DeferredHolder<Block, LiquidBlock> XP_FLUID_BLOCK = FLUID_BLOCKS.registerBlock("xp_fluid_block",
+            XPFluidBlock::new,
+            () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().noCollision().strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+    public static final DeferredHolder<Item, BucketItem> XP_FLUID_BUCKET = BUCKET_ITEMS.registerItem("xp_fluid_bucket",
+            props -> new BucketItem(Registration.XP_FLUID_SOURCE.get(), props),
+            () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
 
     //Machines
-    public static final DeferredHolder<Block, ItemCollector> ItemCollector = BLOCKS.register("itemcollector", ItemCollector::new);
-    public static final DeferredHolder<Item, BlockItem> ItemCollector_ITEM = ITEMS.register("itemcollector", () -> new BlockItem(ItemCollector.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, BlockBreakerT1> BlockBreakerT1 = SIDEDBLOCKS.register("blockbreakert1", BlockBreakerT1::new);
-    public static final DeferredHolder<Item, BlockItem> BlockBreakerT1_ITEM = ITEMS.register("blockbreakert1", () -> new BlockItem(BlockBreakerT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, BlockBreakerT2> BlockBreakerT2 = SIDEDBLOCKS.register("blockbreakert2", BlockBreakerT2::new);
-    public static final DeferredHolder<Item, BlockItem> BlockBreakerT2_ITEM = ITEMS.register("blockbreakert2", () -> new BlockItem(BlockBreakerT2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, BlockPlacerT1> BlockPlacerT1 = SIDEDBLOCKS.register("blockplacert1", BlockPlacerT1::new);
-    public static final DeferredHolder<Item, BlockItem> BlockPlacerT1_ITEM = ITEMS.register("blockplacert1", () -> new BlockItem(BlockPlacerT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, BlockPlacerT2> BlockPlacerT2 = SIDEDBLOCKS.register("blockplacert2", BlockPlacerT2::new);
-    public static final DeferredHolder<Item, BlockItem> BlockPlacerT2_ITEM = ITEMS.register("blockplacert2", () -> new BlockItem(BlockPlacerT2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, ClickerT1> ClickerT1 = SIDEDBLOCKS.register("clickert1", ClickerT1::new);
-    public static final DeferredHolder<Item, BlockItem> ClickerT1_ITEM = ITEMS.register("clickert1", () -> new BlockItem(ClickerT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, ClickerT2> ClickerT2 = SIDEDBLOCKS.register("clickert2", ClickerT2::new);
-    public static final DeferredHolder<Item, BlockItem> ClickerT2_ITEM = ITEMS.register("clickert2", () -> new BlockItem(ClickerT2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, SensorT1> SensorT1 = SIDEDBLOCKS.register("sensort1", SensorT1::new);
-    public static final DeferredHolder<Item, BlockItem> SensorT1_ITEM = ITEMS.register("sensort1", () -> new BlockItem(SensorT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, SensorT2> SensorT2 = SIDEDBLOCKS.register("sensort2", SensorT2::new);
-    public static final DeferredHolder<Item, BlockItem> SensorT2_ITEM = ITEMS.register("sensort2", () -> new BlockItem(SensorT2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, DropperT1> DropperT1 = SIDEDBLOCKS.register("droppert1", DropperT1::new);
-    public static final DeferredHolder<Item, BlockItem> DropperT1_ITEM = ITEMS.register("droppert1", () -> new BlockItem(DropperT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, DropperT2> DropperT2 = SIDEDBLOCKS.register("droppert2", DropperT2::new);
-    public static final DeferredHolder<Item, BlockItem> DropperT2_ITEM = ITEMS.register("droppert2", () -> new BlockItem(DropperT2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, BlockSwapperT1> BlockSwapperT1 = SIDEDBLOCKS.register("blockswappert1", BlockSwapperT1::new);
-    public static final DeferredHolder<Item, BlockItem> BlockSwapperT1_ITEM = ITEMS.register("blockswappert1", () -> new BlockItem(BlockSwapperT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, BlockSwapperT2> BlockSwapperT2 = SIDEDBLOCKS.register("blockswappert2", BlockSwapperT2::new);
-    public static final DeferredHolder<Item, BlockItem> BlockSwapperT2_ITEM = ITEMS.register("blockswappert2", () -> new BlockItem(BlockSwapperT2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, PlayerAccessor> PlayerAccessor = BLOCKS.register("playeraccessor", PlayerAccessor::new);
-    public static final DeferredHolder<Item, BlockItem> PlayerAccessor_ITEM = ITEMS.register("playeraccessor", () -> new BlockItem(PlayerAccessor.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, FluidPlacerT1> FluidPlacerT1 = SIDEDBLOCKS.register("fluidplacert1", FluidPlacerT1::new);
-    public static final DeferredHolder<Item, BlockItem> FluidPlacerT1_ITEM = ITEMS.register("fluidplacert1", () -> new BlockItem(FluidPlacerT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, FluidPlacerT2> FluidPlacerT2 = SIDEDBLOCKS.register("fluidplacert2", FluidPlacerT2::new);
-    public static final DeferredHolder<Item, BlockItem> FluidPlacerT2_ITEM = ITEMS.register("fluidplacert2", () -> new BlockItem(FluidPlacerT2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, FluidCollectorT1> FluidCollectorT1 = SIDEDBLOCKS.register("fluidcollectort1", FluidCollectorT1::new);
-    public static final DeferredHolder<Item, BlockItem> FluidCollectorT1_ITEM = ITEMS.register("fluidcollectort1", () -> new BlockItem(FluidCollectorT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, FluidCollectorT2> FluidCollectorT2 = SIDEDBLOCKS.register("fluidcollectort2", FluidCollectorT2::new);
-    public static final DeferredHolder<Item, BlockItem> FluidCollectorT2_ITEM = ITEMS.register("fluidcollectort2", () -> new BlockItem(FluidCollectorT2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, ParadoxMachine> ParadoxMachine = SIDEDBLOCKS.register("paradoxmachine", ParadoxMachine::new);
-    public static final DeferredHolder<Item, BlockItem> ParadoxMachine_ITEM = ITEMS.register("paradoxmachine", () -> new BlockItem(ParadoxMachine.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, InventoryHolder> InventoryHolder = BLOCKS.register("inventory_holder", InventoryHolder::new);
-    public static final DeferredHolder<Item, BlockItem> InventoryHolder_ITEM = ITEMS.register("inventory_holder", () -> new BlockItem(InventoryHolder.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, ExperienceHolder> ExperienceHolder = BLOCKS.register("experienceholder", ExperienceHolder::new);
-    public static final DeferredHolder<Item, BlockItem> ExperienceHolder_ITEM = ITEMS.register("experienceholder", () -> new BlockItem(ExperienceHolder.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, ItemCollector> ItemCollector = BLOCKS.registerBlock("itemcollector", ItemCollector::new,
+            () -> BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(2.0f).noOcclusion().isRedstoneConductor(BaseMachineBlock::never));
+    public static final DeferredHolder<Item, BlockItem> ItemCollector_ITEM = ITEMS.registerSimpleBlockItem("itemcollector", ItemCollector);
+    public static final DeferredHolder<Block, BlockBreakerT1> BlockBreakerT1 = SIDEDBLOCKS.registerBlock("blockbreakert1", BlockBreakerT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> BlockBreakerT1_ITEM = ITEMS.registerSimpleBlockItem("blockbreakert1", BlockBreakerT1);
+    public static final DeferredHolder<Block, BlockBreakerT2> BlockBreakerT2 = SIDEDBLOCKS.registerBlock("blockbreakert2", BlockBreakerT2::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> BlockBreakerT2_ITEM = ITEMS.registerSimpleBlockItem("blockbreakert2", BlockBreakerT2);
+    public static final DeferredHolder<Block, BlockPlacerT1> BlockPlacerT1 = SIDEDBLOCKS.registerBlock("blockplacert1", BlockPlacerT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> BlockPlacerT1_ITEM = ITEMS.registerSimpleBlockItem("blockplacert1", BlockPlacerT1);
+    public static final DeferredHolder<Block, BlockPlacerT2> BlockPlacerT2 = SIDEDBLOCKS.registerBlock("blockplacert2", BlockPlacerT2::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> BlockPlacerT2_ITEM = ITEMS.registerSimpleBlockItem("blockplacert2", BlockPlacerT2);
+    public static final DeferredHolder<Block, ClickerT1> ClickerT1 = SIDEDBLOCKS.registerBlock("clickert1", ClickerT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> ClickerT1_ITEM = ITEMS.registerSimpleBlockItem("clickert1", ClickerT1);
+    public static final DeferredHolder<Block, ClickerT2> ClickerT2 = SIDEDBLOCKS.registerBlock("clickert2", ClickerT2::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> ClickerT2_ITEM = ITEMS.registerSimpleBlockItem("clickert2", ClickerT2);
+    public static final DeferredHolder<Block, SensorT1> SensorT1 = SIDEDBLOCKS.registerBlock("sensort1", SensorT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> SensorT1_ITEM = ITEMS.registerSimpleBlockItem("sensort1", SensorT1);
+    public static final DeferredHolder<Block, SensorT2> SensorT2 = SIDEDBLOCKS.registerBlock("sensort2", SensorT2::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> SensorT2_ITEM = ITEMS.registerSimpleBlockItem("sensort2", SensorT2);
+    public static final DeferredHolder<Block, DropperT1> DropperT1 = SIDEDBLOCKS.registerBlock("droppert1", DropperT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> DropperT1_ITEM = ITEMS.registerSimpleBlockItem("droppert1", DropperT1);
+    public static final DeferredHolder<Block, DropperT2> DropperT2 = SIDEDBLOCKS.registerBlock("droppert2", DropperT2::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> DropperT2_ITEM = ITEMS.registerSimpleBlockItem("droppert2", DropperT2);
+    public static final DeferredHolder<Block, BlockSwapperT1> BlockSwapperT1 = SIDEDBLOCKS.registerBlock("blockswappert1", BlockSwapperT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> BlockSwapperT1_ITEM = ITEMS.registerSimpleBlockItem("blockswappert1", BlockSwapperT1);
+    public static final DeferredHolder<Block, BlockSwapperT2> BlockSwapperT2 = SIDEDBLOCKS.registerBlock("blockswappert2", BlockSwapperT2::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> BlockSwapperT2_ITEM = ITEMS.registerSimpleBlockItem("blockswappert2", BlockSwapperT2);
+    public static final DeferredHolder<Block, PlayerAccessor> PlayerAccessor = BLOCKS.registerBlock("playeraccessor", PlayerAccessor::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> PlayerAccessor_ITEM = ITEMS.registerSimpleBlockItem("playeraccessor", PlayerAccessor);
+    public static final DeferredHolder<Block, FluidPlacerT1> FluidPlacerT1 = SIDEDBLOCKS.registerBlock("fluidplacert1", FluidPlacerT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> FluidPlacerT1_ITEM = ITEMS.registerSimpleBlockItem("fluidplacert1", FluidPlacerT1);
+    public static final DeferredHolder<Block, FluidPlacerT2> FluidPlacerT2 = SIDEDBLOCKS.registerBlock("fluidplacert2", FluidPlacerT2::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> FluidPlacerT2_ITEM = ITEMS.registerSimpleBlockItem("fluidplacert2", FluidPlacerT2);
+    public static final DeferredHolder<Block, FluidCollectorT1> FluidCollectorT1 = SIDEDBLOCKS.registerBlock("fluidcollectort1", FluidCollectorT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> FluidCollectorT1_ITEM = ITEMS.registerSimpleBlockItem("fluidcollectort1", FluidCollectorT1);
+    public static final DeferredHolder<Block, FluidCollectorT2> FluidCollectorT2 = SIDEDBLOCKS.registerBlock("fluidcollectort2", FluidCollectorT2::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> FluidCollectorT2_ITEM = ITEMS.registerSimpleBlockItem("fluidcollectort2", FluidCollectorT2);
+    public static final DeferredHolder<Block, ParadoxMachine> ParadoxMachine = SIDEDBLOCKS.registerBlock("paradoxmachine", ParadoxMachine::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> ParadoxMachine_ITEM = ITEMS.registerSimpleBlockItem("paradoxmachine", ParadoxMachine);
+    public static final DeferredHolder<Block, InventoryHolder> InventoryHolder = BLOCKS.registerBlock("inventory_holder", InventoryHolder::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> InventoryHolder_ITEM = ITEMS.registerSimpleBlockItem("inventory_holder", InventoryHolder);
+    public static final DeferredHolder<Block, ExperienceHolder> ExperienceHolder = BLOCKS.registerBlock("experienceholder", ExperienceHolder::new,
+            () -> BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(2.0f).noOcclusion().forceSolidOn().isRedstoneConductor(BaseMachineBlock::never));
+    public static final DeferredHolder<Item, BlockItem> ExperienceHolder_ITEM = ITEMS.registerSimpleBlockItem("experienceholder", ExperienceHolder);
 
 
     //Power Machines
-    public static final DeferredHolder<Block, GeneratorT1> GeneratorT1 = BLOCKS.register("generatort1", GeneratorT1::new);
-    public static final DeferredHolder<Block, GeneratorFluidT1> GeneratorFluidT1 = BLOCKS.register("generatorfluidt1", GeneratorFluidT1::new);
-    public static final DeferredHolder<Item, BlockItem> GeneratorT1_ITEM = ITEMS.register("generatort1", () -> new BlockItem(GeneratorT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Item, BlockItem> GeneratorFluidT1_ITEM = ITEMS.register("generatorfluidt1", () -> new BlockItem(GeneratorFluidT1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, EnergyTransmitter> EnergyTransmitter = BLOCKS.register("energytransmitter", EnergyTransmitter::new);
-    public static final DeferredHolder<Item, BlockItem> EnergyTransmitter_ITEM = ITEMS.register("energytransmitter", () -> new BlockItem(EnergyTransmitter.get(), new Item.Properties()));
+    public static final DeferredHolder<Block, GeneratorT1> GeneratorT1 = BLOCKS.registerBlock("generatort1", GeneratorT1::new, machineProps());
+    public static final DeferredHolder<Block, GeneratorFluidT1> GeneratorFluidT1 = BLOCKS.registerBlock("generatorfluidt1", GeneratorFluidT1::new, machineProps());
+    public static final DeferredHolder<Item, BlockItem> GeneratorT1_ITEM = ITEMS.registerSimpleBlockItem("generatort1", GeneratorT1);
+    public static final DeferredHolder<Item, BlockItem> GeneratorFluidT1_ITEM = ITEMS.registerSimpleBlockItem("generatorfluidt1", GeneratorFluidT1);
+    public static final DeferredHolder<Block, EnergyTransmitter> EnergyTransmitter = BLOCKS.registerBlock("energytransmitter", EnergyTransmitter::new,
+            () -> BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(2.0f).noOcclusion().forceSolidOn().isRedstoneConductor(BaseMachineBlock::never));
+    public static final DeferredHolder<Item, BlockItem> EnergyTransmitter_ITEM = ITEMS.registerSimpleBlockItem("energytransmitter", EnergyTransmitter);
 
     //Blocks - Raw Resources
-    public static final DeferredHolder<Block, RawFerricoreOre> RawFerricoreOre = BLOCKS.register("raw_ferricore_ore", RawFerricoreOre::new);
-    public static final DeferredHolder<Item, BlockItem> RawFerricoreOre_ITEM = ITEMS.register("raw_ferricore_ore", () -> new BlockItem(RawFerricoreOre.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, RawBlazegoldOre> RawBlazegoldOre = BLOCKS.register("raw_blazegold_ore", RawBlazegoldOre::new);
-    public static final DeferredHolder<Item, BlockItem> RawBlazegoldOre_ITEM = ITEMS.register("raw_blazegold_ore", () -> new BlockItem(RawBlazegoldOre.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, RawCelestigemOre> RawCelestigemOre = BLOCKS.register("raw_celestigem_ore", RawCelestigemOre::new);
-    public static final DeferredHolder<Item, BlockItem> RawCelestigemOre_ITEM = ITEMS.register("raw_celestigem_ore", () -> new BlockItem(RawCelestigemOre.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, RawEclipseAlloyOre> RawEclipseAlloyOre = BLOCKS.register("raw_eclipsealloy_ore", RawEclipseAlloyOre::new);
-    public static final DeferredHolder<Item, BlockItem> RawEclipseAlloyOre_ITEM = ITEMS.register("raw_eclipsealloy_ore", () -> new BlockItem(RawEclipseAlloyOre.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, RawCoal_T1> RawCoal_T1 = BLOCKS.register("raw_coal_t1_ore", RawCoal_T1::new);
-    public static final DeferredHolder<Item, BlockItem> RawCoal_T1_ITEM = ITEMS.register("raw_coal_t1_ore", () -> new BlockItem(RawCoal_T1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, RawCoal_T2> RawCoal_T2 = BLOCKS.register("raw_coal_t2_ore", RawCoal_T2::new);
-    public static final DeferredHolder<Item, BlockItem> RawCoal_T2_ITEM = ITEMS.register("raw_coal_t2_ore", () -> new BlockItem(RawCoal_T2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, RawCoal_T3> RawCoal_T3 = BLOCKS.register("raw_coal_t3_ore", RawCoal_T3::new);
-    public static final DeferredHolder<Item, BlockItem> RawCoal_T3_ITEM = ITEMS.register("raw_coal_t3_ore", () -> new BlockItem(RawCoal_T3.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, RawCoal_T4> RawCoal_T4 = BLOCKS.register("raw_coal_t4_ore", RawCoal_T4::new);
-    public static final DeferredHolder<Item, BlockItem> RawCoal_T4_ITEM = ITEMS.register("raw_coal_t4_ore", () -> new BlockItem(RawCoal_T4.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, TimeCrystalBlock> TimeCrystalBlock = BLOCKS.register("time_crystal_block", TimeCrystalBlock::new);
-    public static final DeferredHolder<Item, BlockItem> TimeCrystalBlock_ITEM = ITEMS.register("time_crystal_block", () -> new BlockItem(TimeCrystalBlock.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, TimeCrystalBuddingBlock> TimeCrystalBuddingBlock = BLOCKS.register("time_crystal_budding_block", TimeCrystalBuddingBlock::new);
-    public static final DeferredHolder<Item, BlockItem> TimeCrystalBuddingBlock_ITEM = ITEMS.register("time_crystal_budding_block", () -> new BlockItem(TimeCrystalBuddingBlock.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster = BLOCKS.register("time_crystal_cluster", () -> new TimeCrystalCluster(
-            7.0F,
-            3.0F,
-            BlockBehaviour.Properties.of()
+    private static Supplier<BlockBehaviour.Properties> rawOreAmethystProps() {
+        return () -> BlockBehaviour.Properties.of().sound(SoundType.AMETHYST).requiresCorrectToolForDrops().noOcclusion().strength(5.0F, 6.0F);
+    }
+    private static Supplier<BlockBehaviour.Properties> rawOreCoalProps() {
+        return () -> BlockBehaviour.Properties.of().requiresCorrectToolForDrops().noOcclusion().strength(5.0F, 6.0F);
+    }
+
+    public static final DeferredHolder<Block, RawFerricoreOre> RawFerricoreOre = BLOCKS.registerBlock("raw_ferricore_ore", RawFerricoreOre::new, rawOreAmethystProps());
+    public static final DeferredHolder<Item, BlockItem> RawFerricoreOre_ITEM = ITEMS.registerSimpleBlockItem("raw_ferricore_ore", RawFerricoreOre);
+    public static final DeferredHolder<Block, RawBlazegoldOre> RawBlazegoldOre = BLOCKS.registerBlock("raw_blazegold_ore", RawBlazegoldOre::new, rawOreAmethystProps());
+    public static final DeferredHolder<Item, BlockItem> RawBlazegoldOre_ITEM = ITEMS.registerSimpleBlockItem("raw_blazegold_ore", RawBlazegoldOre);
+    public static final DeferredHolder<Block, RawCelestigemOre> RawCelestigemOre = BLOCKS.registerBlock("raw_celestigem_ore", RawCelestigemOre::new, rawOreAmethystProps());
+    public static final DeferredHolder<Item, BlockItem> RawCelestigemOre_ITEM = ITEMS.registerSimpleBlockItem("raw_celestigem_ore", RawCelestigemOre);
+    public static final DeferredHolder<Block, RawEclipseAlloyOre> RawEclipseAlloyOre = BLOCKS.registerBlock("raw_eclipsealloy_ore", RawEclipseAlloyOre::new, rawOreAmethystProps());
+    public static final DeferredHolder<Item, BlockItem> RawEclipseAlloyOre_ITEM = ITEMS.registerSimpleBlockItem("raw_eclipsealloy_ore", RawEclipseAlloyOre);
+    public static final DeferredHolder<Block, RawCoal_T1> RawCoal_T1 = BLOCKS.registerBlock("raw_coal_t1_ore", RawCoal_T1::new, rawOreCoalProps());
+    public static final DeferredHolder<Item, BlockItem> RawCoal_T1_ITEM = ITEMS.registerSimpleBlockItem("raw_coal_t1_ore", RawCoal_T1);
+    public static final DeferredHolder<Block, RawCoal_T2> RawCoal_T2 = BLOCKS.registerBlock("raw_coal_t2_ore", RawCoal_T2::new, rawOreCoalProps());
+    public static final DeferredHolder<Item, BlockItem> RawCoal_T2_ITEM = ITEMS.registerSimpleBlockItem("raw_coal_t2_ore", RawCoal_T2);
+    public static final DeferredHolder<Block, RawCoal_T3> RawCoal_T3 = BLOCKS.registerBlock("raw_coal_t3_ore", RawCoal_T3::new, rawOreCoalProps());
+    public static final DeferredHolder<Item, BlockItem> RawCoal_T3_ITEM = ITEMS.registerSimpleBlockItem("raw_coal_t3_ore", RawCoal_T3);
+    public static final DeferredHolder<Block, RawCoal_T4> RawCoal_T4 = BLOCKS.registerBlock("raw_coal_t4_ore", RawCoal_T4::new, rawOreCoalProps());
+    public static final DeferredHolder<Item, BlockItem> RawCoal_T4_ITEM = ITEMS.registerSimpleBlockItem("raw_coal_t4_ore", RawCoal_T4);
+    public static final DeferredHolder<Block, TimeCrystalBlock> TimeCrystalBlock = BLOCKS.registerBlock("time_crystal_block", TimeCrystalBlock::new,
+            () -> BlockBehaviour.Properties.of().sound(SoundType.AMETHYST).requiresCorrectToolForDrops().strength(1.5F));
+    public static final DeferredHolder<Item, BlockItem> TimeCrystalBlock_ITEM = ITEMS.registerSimpleBlockItem("time_crystal_block", TimeCrystalBlock);
+    public static final DeferredHolder<Block, TimeCrystalBuddingBlock> TimeCrystalBuddingBlock = BLOCKS.registerBlock("time_crystal_budding_block", TimeCrystalBuddingBlock::new,
+            () -> BlockBehaviour.Properties.of().sound(SoundType.AMETHYST).randomTicks().strength(1.5F));
+    public static final DeferredHolder<Item, BlockItem> TimeCrystalBuddingBlock_ITEM = ITEMS.registerSimpleBlockItem("time_crystal_budding_block", TimeCrystalBuddingBlock);
+    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster = BLOCKS.registerBlock("time_crystal_cluster",
+            props -> new TimeCrystalCluster(7.0F, 3.0F, props),
+            () -> BlockBehaviour.Properties.of()
                     .forceSolidOn()
                     .noOcclusion()
                     .sound(SoundType.AMETHYST_CLUSTER)
                     .strength(1.5F)
                     .lightLevel(p_152632_ -> 5)
-                    .pushReaction(PushReaction.DESTROY)
-    ));
-    public static final DeferredHolder<Item, BlockItem> TimeCrystalCluster_ITEM = ITEMS.register("time_crystal_cluster", () -> new BlockItem(TimeCrystalCluster.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Small = BLOCKS.register("time_crystal_cluster_small", () -> new TimeCrystalCluster(
-            3.0F, 4.0F, BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.SMALL_AMETHYST_BUD).lightLevel(p_187409_ -> 1)
-    ));
-    public static final DeferredHolder<Item, BlockItem> TimeCrystalCluster_Small_ITEM = ITEMS.register("time_crystal_cluster_small", () -> new BlockItem(TimeCrystalCluster_Small.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Medium = BLOCKS.register("time_crystal_cluster_medium", () -> new TimeCrystalCluster(
-            4.0F, 3.0F, BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.MEDIUM_AMETHYST_BUD).lightLevel(p_152617_ -> 2)
-    ));
-    public static final DeferredHolder<Item, BlockItem> TimeCrystalCluster_Medium_ITEM = ITEMS.register("time_crystal_cluster_medium", () -> new BlockItem(TimeCrystalCluster_Medium.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Large = BLOCKS.register("time_crystal_cluster_large", () -> new TimeCrystalCluster(
-            5.0F, 3.0F, BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.LARGE_AMETHYST_BUD).lightLevel(p_152629_ -> 4)
-    ));
-    public static final DeferredHolder<Item, BlockItem> TimeCrystalCluster_Large_ITEM = ITEMS.register("time_crystal_cluster_large", () -> new BlockItem(TimeCrystalCluster_Large.get(), new Item.Properties()));
+                    .pushReaction(PushReaction.DESTROY));
+    public static final DeferredHolder<Item, BlockItem> TimeCrystalCluster_ITEM = ITEMS.registerSimpleBlockItem("time_crystal_cluster", TimeCrystalCluster);
+    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Small = BLOCKS.registerBlock("time_crystal_cluster_small",
+            props -> new TimeCrystalCluster(3.0F, 4.0F, props),
+            () -> BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.SMALL_AMETHYST_BUD).lightLevel(p_187409_ -> 1));
+    public static final DeferredHolder<Item, BlockItem> TimeCrystalCluster_Small_ITEM = ITEMS.registerSimpleBlockItem("time_crystal_cluster_small", TimeCrystalCluster_Small);
+    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Medium = BLOCKS.registerBlock("time_crystal_cluster_medium",
+            props -> new TimeCrystalCluster(4.0F, 3.0F, props),
+            () -> BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.MEDIUM_AMETHYST_BUD).lightLevel(p_152617_ -> 2));
+    public static final DeferredHolder<Item, BlockItem> TimeCrystalCluster_Medium_ITEM = ITEMS.registerSimpleBlockItem("time_crystal_cluster_medium", TimeCrystalCluster_Medium);
+    public static final DeferredHolder<Block, TimeCrystalCluster> TimeCrystalCluster_Large = BLOCKS.registerBlock("time_crystal_cluster_large",
+            props -> new TimeCrystalCluster(5.0F, 3.0F, props),
+            () -> BlockBehaviour.Properties.ofLegacyCopy(TimeCrystalCluster.get()).sound(SoundType.LARGE_AMETHYST_BUD).lightLevel(p_152629_ -> 4));
+    public static final DeferredHolder<Item, BlockItem> TimeCrystalCluster_Large_ITEM = ITEMS.registerSimpleBlockItem("time_crystal_cluster_large", TimeCrystalCluster_Large);
 
 
 
     //Blocks Consolidated Resources
-    public static final DeferredHolder<Block, FerricoreBlock> FerricoreBlock = BLOCKS.register("ferricore_block", FerricoreBlock::new);
-    public static final DeferredHolder<Item, BlockItem> FerricoreBlock_ITEM = ITEMS.register("ferricore_block", () -> new BlockItem(FerricoreBlock.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, BlazeGoldBlock> BlazeGoldBlock = BLOCKS.register("blazegold_block", BlazeGoldBlock::new);
-    public static final DeferredHolder<Item, BlockItem> BlazeGoldBlock_ITEM = ITEMS.register("blazegold_block", () -> new BlockItem(BlazeGoldBlock.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, CelestigemBlock> CelestigemBlock = BLOCKS.register("celestigem_block", CelestigemBlock::new);
-    public static final DeferredHolder<Item, BlockItem> CelestigemBlock_ITEM = ITEMS.register("celestigem_block", () -> new BlockItem(CelestigemBlock.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, EclipseAlloyBlock> EclipseAlloyBlock = BLOCKS.register("eclipsealloy_block", EclipseAlloyBlock::new);
-    public static final DeferredHolder<Item, BlockItem> EclipseAlloyBlock_ITEM = ITEMS.register("eclipsealloy_block", () -> new BlockItem(EclipseAlloyBlock.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, CoalBlock_T1> CoalBlock_T1 = BLOCKS.register("coalblock_t1", CoalBlock_T1::new);
-    public static final DeferredHolder<Item, BlockItem> CoalBlock_T1_ITEM = ITEMS.register("coalblock_t1", () -> new BlockItem(CoalBlock_T1.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, CoalBlock_T2> CoalBlock_T2 = BLOCKS.register("coalblock_t2", CoalBlock_T2::new);
-    public static final DeferredHolder<Item, BlockItem> CoalBlock_T2_ITEM = ITEMS.register("coalblock_t2", () -> new BlockItem(CoalBlock_T2.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, CoalBlock_T3> CoalBlock_T3 = BLOCKS.register("coalblock_t3", CoalBlock_T3::new);
-    public static final DeferredHolder<Item, BlockItem> CoalBlock_T3_ITEM = ITEMS.register("coalblock_t3", () -> new BlockItem(CoalBlock_T3.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, CoalBlock_T4> CoalBlock_T4 = BLOCKS.register("coalblock_t4", CoalBlock_T4::new);
-    public static final DeferredHolder<Item, BlockItem> CoalBlock_T4_ITEM = ITEMS.register("coalblock_t4", () -> new BlockItem(CoalBlock_T4.get(), new Item.Properties()));
-    public static final DeferredHolder<Block, CharcoalBlock> CharcoalBlock = BLOCKS.register("charcoal", CharcoalBlock::new);
-    public static final DeferredHolder<Item, BlockItem> CharcoalBlock_ITEM = ITEMS.register("charcoal", () -> new BlockItem(CharcoalBlock.get(), new Item.Properties()));
+    private static Supplier<BlockBehaviour.Properties> metalResourceProps() {
+        return () -> BlockBehaviour.Properties.of().sound(SoundType.METAL).requiresCorrectToolForDrops().strength(5.0F, 6.0F);
+    }
+    private static Supplier<BlockBehaviour.Properties> amethystResourceProps() {
+        return () -> BlockBehaviour.Properties.of().sound(SoundType.AMETHYST).requiresCorrectToolForDrops().strength(5.0F, 6.0F);
+    }
+    private static Supplier<BlockBehaviour.Properties> coalResourceProps() {
+        return () -> BlockBehaviour.Properties.of().requiresCorrectToolForDrops().strength(5.0F, 6.0F);
+    }
+
+    public static final DeferredHolder<Block, FerricoreBlock> FerricoreBlock = BLOCKS.registerBlock("ferricore_block", FerricoreBlock::new, metalResourceProps());
+    public static final DeferredHolder<Item, BlockItem> FerricoreBlock_ITEM = ITEMS.registerSimpleBlockItem("ferricore_block", FerricoreBlock);
+    public static final DeferredHolder<Block, BlazeGoldBlock> BlazeGoldBlock = BLOCKS.registerBlock("blazegold_block", BlazeGoldBlock::new, metalResourceProps());
+    public static final DeferredHolder<Item, BlockItem> BlazeGoldBlock_ITEM = ITEMS.registerSimpleBlockItem("blazegold_block", BlazeGoldBlock);
+    public static final DeferredHolder<Block, CelestigemBlock> CelestigemBlock = BLOCKS.registerBlock("celestigem_block", CelestigemBlock::new, amethystResourceProps());
+    public static final DeferredHolder<Item, BlockItem> CelestigemBlock_ITEM = ITEMS.registerSimpleBlockItem("celestigem_block", CelestigemBlock);
+    public static final DeferredHolder<Block, EclipseAlloyBlock> EclipseAlloyBlock = BLOCKS.registerBlock("eclipsealloy_block", EclipseAlloyBlock::new, metalResourceProps());
+    public static final DeferredHolder<Item, BlockItem> EclipseAlloyBlock_ITEM = ITEMS.registerSimpleBlockItem("eclipsealloy_block", EclipseAlloyBlock);
+    public static final DeferredHolder<Block, CoalBlock_T1> CoalBlock_T1 = BLOCKS.registerBlock("coalblock_t1", CoalBlock_T1::new, coalResourceProps());
+    public static final DeferredHolder<Item, BlockItem> CoalBlock_T1_ITEM = ITEMS.registerSimpleBlockItem("coalblock_t1", CoalBlock_T1);
+    public static final DeferredHolder<Block, CoalBlock_T2> CoalBlock_T2 = BLOCKS.registerBlock("coalblock_t2", CoalBlock_T2::new, coalResourceProps());
+    public static final DeferredHolder<Item, BlockItem> CoalBlock_T2_ITEM = ITEMS.registerSimpleBlockItem("coalblock_t2", CoalBlock_T2);
+    public static final DeferredHolder<Block, CoalBlock_T3> CoalBlock_T3 = BLOCKS.registerBlock("coalblock_t3", CoalBlock_T3::new, coalResourceProps());
+    public static final DeferredHolder<Item, BlockItem> CoalBlock_T3_ITEM = ITEMS.registerSimpleBlockItem("coalblock_t3", CoalBlock_T3);
+    public static final DeferredHolder<Block, CoalBlock_T4> CoalBlock_T4 = BLOCKS.registerBlock("coalblock_t4", CoalBlock_T4::new, coalResourceProps());
+    public static final DeferredHolder<Item, BlockItem> CoalBlock_T4_ITEM = ITEMS.registerSimpleBlockItem("coalblock_t4", CoalBlock_T4);
+    public static final DeferredHolder<Block, CharcoalBlock> CharcoalBlock = BLOCKS.registerBlock("charcoal", CharcoalBlock::new, coalResourceProps());
+    public static final DeferredHolder<Item, BlockItem> CharcoalBlock_ITEM = ITEMS.registerSimpleBlockItem("charcoal", CharcoalBlock);
 
     //BlockEntities (Not TileEntities - Honest)
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GooBlockBE_Tier1>> GooBlockBE_Tier1 = BLOCK_ENTITIES.register("gooblock_tier1", () -> new BlockEntityType<>(GooBlockBE_Tier1::new, GooBlock_Tier1.get()));

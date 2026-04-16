@@ -14,12 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class BlockSwapperT1 extends BaseMachineBlock {
-    public BlockSwapperT1() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public BlockSwapperT1(Properties properties) {
+        super(properties);
     }
 
     @Nullable

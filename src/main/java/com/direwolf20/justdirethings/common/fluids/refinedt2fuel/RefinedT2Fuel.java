@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -42,7 +42,7 @@ public abstract class RefinedT2Fuel extends BaseFlowingFluid implements RefinedF
     }
 
     @Override
-    protected boolean canConvertToSource(Level pLevel) {
+    protected boolean canConvertToSource(ServerLevel pLevel) {
         return false;
     }
 

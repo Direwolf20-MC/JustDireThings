@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -239,6 +240,18 @@ public class BaseMachineBE extends BlockEntity {
         if (this instanceof RedstoneControlledBE redstoneControlledBE && !redstoneControlledBE.getRedstoneControlData().equals(getDefaultRedstoneData()))
             return false;
         return true;
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (this.level != null) {
+            ItemStacksResourceHandler handler = getMachineHandler();
+            for (int i = 0; i < handler.size(); i++) {
+                ItemStack stack = handler.getResource(i).toStack(handler.getAmountAsInt(i));
+                Containers.dropItemStack(this.level, pos.getX(), pos.getY(), pos.getZ(), stack);
+            }
+        }
     }
 
     @Override

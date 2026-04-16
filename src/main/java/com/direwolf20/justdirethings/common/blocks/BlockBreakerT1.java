@@ -20,12 +20,8 @@ import javax.annotation.Nullable;
 
 public class BlockBreakerT1 extends BaseMachineBlock {
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
-    public BlockBreakerT1() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public BlockBreakerT1(Properties properties) {
+        super(properties);
     }
 
     @Nullable

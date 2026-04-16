@@ -14,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BuddingAmethystBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -28,11 +27,8 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
     private static final Direction[] DIRECTIONS = Direction.values();
     public static final IntegerProperty STAGE = IntegerProperty.create("stage", 0, 3);
 
-    public TimeCrystalBuddingBlock() {
-        super(Properties.of()
-                .sound(SoundType.AMETHYST)
-                .randomTicks()
-                .strength(1.5F));
+    public TimeCrystalBuddingBlock(Properties properties) {
+        super(properties);
     }
 
     /*@Override
@@ -113,7 +109,7 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
                         .setValue(TimeCrystalCluster.WATERLOGGED, Boolean.valueOf(blockstate.getFluidState().getType() == Fluids.WATER));
                 level.setBlockAndUpdate(blockpos, blockstate1);
 
-                if (state.getValue(STAGE) == 3 && level.random.nextFloat() < 0.05f) {
+                if (state.getValue(STAGE) == 3 && level.getRandom().nextFloat() < 0.05f) {
                     // Update the block state to dead
                     level.setBlockAndUpdate(pos, state.setValue(STAGE, 0));
                     level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS, 1.0F, 0.25F);

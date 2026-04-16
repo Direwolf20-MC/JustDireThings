@@ -14,12 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class ClickerT2 extends BaseMachineBlock {
-    public ClickerT2() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public ClickerT2(Properties properties) {
+        super(properties);
     }
 
     @Nullable

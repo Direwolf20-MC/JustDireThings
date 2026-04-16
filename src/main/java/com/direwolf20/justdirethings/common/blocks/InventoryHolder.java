@@ -32,12 +32,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class InventoryHolder extends BaseMachineBlock {
-    public InventoryHolder() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public InventoryHolder(Properties properties) {
+        super(properties);
     }
 
     @Nullable
@@ -69,7 +65,7 @@ public class InventoryHolder extends BaseMachineBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
-        if (!world.isClientSide && entity instanceof Player player) {
+        if (!world.isClientSide() && entity instanceof Player player) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof InventoryHolderBE inventoryHolderBE) {
                 if (stack.has(JustDireDataComponents.CUSTOM_DATA_1)) {

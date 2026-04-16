@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class GooBlock_Tier4 extends GooBlock_Base implements EntityBlock {
-    public GooBlock_Tier4() {
-        super();
+    public GooBlock_Tier4(Properties properties) {
+        super(properties);
     }
 
     @Nullable
