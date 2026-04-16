@@ -6,7 +6,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record AreaAffectingPayload(
         double xRadius, double yRadius, double zRadius,
@@ -20,7 +19,7 @@ public record AreaAffectingPayload(
         return TYPE;
     }
 
-    public static final StreamCodec<FriendlyByteBuf, AreaAffectingPayload> STREAM_CODEC = NeoForgeStreamCodecs.composite(
+    public static final StreamCodec<FriendlyByteBuf, AreaAffectingPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.DOUBLE, AreaAffectingPayload::xRadius,
             ByteBufCodecs.DOUBLE, AreaAffectingPayload::yRadius,
             ByteBufCodecs.DOUBLE, AreaAffectingPayload::zRadius,

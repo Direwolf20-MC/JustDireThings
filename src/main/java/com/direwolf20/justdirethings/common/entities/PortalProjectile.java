@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +15,8 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -146,7 +148,7 @@ public class PortalProjectile extends Projectile {
         MinecraftServer server = level.getServer();
         if (server == null) return;
         if (getOwner() == null) return;
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             PortalEntity source = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, true, getOwner().getUUID());
             if (direction.getAxis() != Direction.Axis.Y) {
                 y = y - 1.5;
@@ -196,7 +198,7 @@ public class PortalProjectile extends Projectile {
         MinecraftServer server = level.getServer();
         if (server == null) return;
         if (getOwner() == null) return;
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             PortalEntity portal = new PortalEntity(level, direction, getPortalAlignment(getDeltaMovement()), portalGunUUID, isPrimaryType, false, getOwner().getUUID());
             if (direction.getAxis() != Direction.Axis.Y) {
                 y = y - 1.5;
@@ -231,21 +233,17 @@ public class PortalProjectile extends Projectile {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
-        if (compound.hasUUID("portalGunUUID"))
-            portalGunUUID = compound.getUUID("portalGunUUID");
-        if (compound.contains("portalDestination"))
-            portalDestination = NBTHelpers.PortalDestination.fromNBT(compound.getCompound("portalDestination"));
-        isPrimaryType = compound.getBoolean("isPrimaryType");
+    protected void readAdditionalSaveData(ValueInput input) {
+        portalGunUUID = input.read("portalGunUUID", UUIDUtil.CODEC).orElse(null);
+        portalDestination = input.read("portalDestination", NBTHelpers.PortalDestination.CODEC).orElse(null);
+        isPrimaryType = input.getBooleanOr("isPrimaryType", false);
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
-        compound.putBoolean("isPrimaryType", isPrimaryType);
-        if (portalGunUUID != null)
-            compound.putUUID("portalGunUUID", portalGunUUID);
-        if (portalDestination != null)
-            compound.put("portalDestination", NBTHelpers.PortalDestination.toNBT(portalDestination));
+    protected void addAdditionalSaveData(ValueOutput output) {
+        output.putBoolean("isPrimaryType", isPrimaryType);
+        output.storeNullable("portalGunUUID", UUIDUtil.CODEC, portalGunUUID);
+        output.storeNullable("portalDestination", NBTHelpers.PortalDestination.CODEC, portalDestination);
     }
 
     private static Direction.Axis getPortalAlignment(Vec3 velocity) {

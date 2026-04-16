@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
@@ -19,9 +19,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseMachineContainer extends BaseContainer {
@@ -29,7 +31,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
     public int MACHINE_SLOTS = 0;
     public BaseMachineBE baseMachineBE;
     public FilterBasicHandler filterHandler;
-    public ItemStackHandler machineHandler;
+    public ItemStacksResourceHandler machineHandler;
     protected Player player;
     protected BlockPos pos;
     public ContainerData data;
@@ -48,7 +50,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
             addMachineSlots();
         if (blockEntity instanceof FilterableBE filterableBE) {
             filterHandler = filterableBE.getFilterHandler();
-            FILTER_SLOTS = filterHandler.getSlots();
+            FILTER_SLOTS = filterHandler.size();
             addFilterSlots();
         }
         if (blockEntity instanceof PoweredMachineBE poweredMachineBE) {
@@ -63,13 +65,13 @@ public abstract class BaseMachineContainer extends BaseContainer {
 
     //Override this if you want the slot layout to be different...
     public void addFilterSlots() {
-        addFilterSlots(filterHandler, 0, 8, 54, FILTER_SLOTS, 18);
+        addFilterSlots(filterHandler, filterHandler::set, 0, 8, 54, FILTER_SLOTS, 18);
     }
 
     //Override this if you want the slot layout to be different...
     public void addMachineSlots() {
         machineHandler = baseMachineBE.getMachineHandler();
-        addSlotRange(machineHandler, 0, 80, 35, MACHINE_SLOTS, 18);
+        addSlotRange(machineHandler, machineHandler::set, 0, 80, 35, MACHINE_SLOTS, 18);
     }
 
     public int getEnergy() {
@@ -89,7 +91,7 @@ public abstract class BaseMachineContainer extends BaseContainer {
     }
 
     @Override
-    public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
+    public void clicked(int slotId, int dragType, ContainerInput clickTypeIn, Player player) {
         if (baseMachineBE instanceof FilterableBE && slotId >= MACHINE_SLOTS && slotId < FILTER_SLOTS) {
             return;
         }
@@ -140,16 +142,15 @@ public abstract class BaseMachineContainer extends BaseContainer {
         return itemstack;
     }
 
-    protected int addFilterSlots(IItemHandler handler, int index, int x, int y, int amount, int dx) {
+    protected int addFilterSlots(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> slotModifier, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
             if (handler instanceof FilterBasicHandler) //This should always be true, but can't hurt to check!
-                addSlot(new FilterBasicSlot(handler, index, x, y));
+                addSlot(new FilterBasicSlot(handler, slotModifier, index, x, y));
             else
-                addSlot(new SlotItemHandler(handler, index, x, y));
+                addSlot(new ResourceHandlerSlot(handler, slotModifier, index, x, y));
             x += dx;
             index++;
         }
         return index;
     }
-
 }

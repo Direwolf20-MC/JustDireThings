@@ -6,7 +6,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record InventoryHolderSettingsPayload(
         boolean compareNBT,
@@ -24,7 +23,7 @@ public record InventoryHolderSettingsPayload(
         return TYPE;
     }
 
-    public static final StreamCodec<FriendlyByteBuf, InventoryHolderSettingsPayload> STREAM_CODEC = NeoForgeStreamCodecs.composite(
+    public static final StreamCodec<FriendlyByteBuf, InventoryHolderSettingsPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::compareNBT,
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::filtersOnly,
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::compareCounts,

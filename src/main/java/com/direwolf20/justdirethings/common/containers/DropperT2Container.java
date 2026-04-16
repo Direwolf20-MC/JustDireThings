@@ -23,7 +23,7 @@ public class DropperT2Container extends BaseMachineContainer {
     @Override
     public void addMachineSlots() {
         machineHandler = baseMachineBE.getMachineHandler();
-        addSlotBox(machineHandler, 0, 62, -1, 3, 18, 3, 18);
+        addSlotBox(machineHandler, machineHandler::set, 0, 62, -1, 3, 18, 3, 18);
     }
 
     @Override

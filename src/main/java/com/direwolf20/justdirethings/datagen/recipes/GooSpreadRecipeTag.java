@@ -98,51 +98,37 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
     }
 
 
-    public static class Serializer implements RecipeSerializer<GooSpreadRecipeTag> {
-        private static final Identifier NAME = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "goospread_tag");
-        private static final MapCodec<GooSpreadRecipeTag> CODEC = RecordCodecBuilder.mapCodec(
-                p_311734_ -> p_311734_.group(
-                                Identifier.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
-                                BlockTagIngredient.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
-                                BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
-                                Codec.INT.fieldOf("tierRequirement").forGetter(p_301137_ -> p_301137_.tierRequirement),
-                                Codec.INT.fieldOf("craftingDuration").forGetter(p_301138_ -> p_301138_.craftingDuration)
-                        )
-                        .apply(p_311734_, GooSpreadRecipeTag::new)
-        );
+    public static final MapCodec<GooSpreadRecipeTag> CODEC = RecordCodecBuilder.mapCodec(
+            p_311734_ -> p_311734_.group(
+                            Identifier.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
+                            BlockTagIngredient.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
+                            BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
+                            Codec.INT.fieldOf("tierRequirement").forGetter(p_301137_ -> p_301137_.tierRequirement),
+                            Codec.INT.fieldOf("craftingDuration").forGetter(p_301138_ -> p_301138_.craftingDuration)
+                    )
+                    .apply(p_311734_, GooSpreadRecipeTag::new)
+    );
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipeTag> STREAM_CODEC = StreamCodec.of(
-                GooSpreadRecipeTag.Serializer::toNetwork, GooSpreadRecipeTag.Serializer::fromNetwork
-        );
+    public static final StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipeTag> STREAM_CODEC = StreamCodec.of(
+            GooSpreadRecipeTag::toNetwork, GooSpreadRecipeTag::fromNetwork
+    );
 
+    public static GooSpreadRecipeTag fromNetwork(RegistryFriendlyByteBuf pBuffer) {
+        Identifier resourceLocation = pBuffer.readIdentifier();
+        Identifier tagLocation = pBuffer.readIdentifier(); // Read the tag's Identifier
+        BlockTagIngredient inputIngredient = new BlockTagIngredient(TagKey.create(Registries.BLOCK, tagLocation)); // Create the BlockTagIngredient
+        BlockState outputState = Block.stateById(pBuffer.readInt());
+        int tierRequirement = pBuffer.readInt();
+        int craftingDuration = pBuffer.readInt();
 
-        @Override
-        public MapCodec<GooSpreadRecipeTag> codec() {
-            return CODEC;
-        }
+        return new GooSpreadRecipeTag(resourceLocation, inputIngredient, outputState, tierRequirement, craftingDuration);
+    }
 
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipeTag> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-        public static GooSpreadRecipeTag fromNetwork(RegistryFriendlyByteBuf pBuffer) {
-            Identifier resourceLocation = pBuffer.readIdentifier();
-            Identifier tagLocation = pBuffer.readIdentifier(); // Read the tag's Identifier
-            BlockTagIngredient inputIngredient = new BlockTagIngredient(TagKey.create(Registries.BLOCK, tagLocation)); // Create the BlockTagIngredient
-            BlockState outputState = Block.stateById(pBuffer.readInt());
-            int tierRequirement = pBuffer.readInt();
-            int craftingDuration = pBuffer.readInt();
-
-            return new GooSpreadRecipeTag(resourceLocation, inputIngredient, outputState, tierRequirement, craftingDuration);
-        }
-
-        public static void toNetwork(RegistryFriendlyByteBuf pBuffer, GooSpreadRecipeTag pRecipe) {
-            pBuffer.writeIdentifier(pRecipe.id);
-            pBuffer.writeIdentifier(pRecipe.input.getTag().location()); // Write the tag's Identifier
-            pBuffer.writeInt(Block.getId(pRecipe.output));
-            pBuffer.writeInt(pRecipe.tierRequirement);
-            pBuffer.writeInt(pRecipe.craftingDuration);
-        }
+    public static void toNetwork(RegistryFriendlyByteBuf pBuffer, GooSpreadRecipeTag pRecipe) {
+        pBuffer.writeIdentifier(pRecipe.id);
+        pBuffer.writeIdentifier(pRecipe.input.getTag().location()); // Write the tag's Identifier
+        pBuffer.writeInt(Block.getId(pRecipe.output));
+        pBuffer.writeInt(pRecipe.tierRequirement);
+        pBuffer.writeInt(pRecipe.craftingDuration);
     }
 }

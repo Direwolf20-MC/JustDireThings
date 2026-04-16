@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -14,9 +14,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Relative;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -89,7 +92,7 @@ public class PortalEntity extends Entity {
     public void tick() {
         super.tick();
         refreshDimensions();
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             tickCooldowns();
             if (getLinkedPortal() != null) {
                 teleportCollidingEntities();
@@ -160,7 +163,7 @@ public class PortalEntity extends Entity {
         List<Entity> entities = level().getEntities(this, boundingBox);
         for (Entity entity : entities) {
             if (entity != this && isValidEntity(entity)) {
-                if (!level().isClientSide) {
+                if (!level().isClientSide()) {
                     teleport(entity);
                 }
             }
@@ -196,46 +199,36 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
-        this.entityData.set(DIRECTION, compound.getByte("direction"));
-        this.entityData.set(ALIGNMENT, compound.getByte("alignment"));
-        this.entityData.set(ISPRIMARY, compound.getBoolean("isPrimary"));
-        this.entityData.set(ISDYING, compound.getBoolean("isDying"));
-        deathCounter = compound.getInt("deathCounter");
-        if (compound.hasUUID("portalGunUUID"))
-            portalGunUUID = compound.getUUID("portalGunUUID");
-        if (compound.hasUUID("linkedPortalUUID"))
-            linkedPortalUUID = compound.getUUID("linkedPortalUUID");
-        if (compound.hasUUID("Owner")) {
-            this.ownerUUID = compound.getUUID("Owner");
-        }
+    protected void readAdditionalSaveData(ValueInput input) {
+        this.entityData.set(DIRECTION, input.getByteOr("direction", (byte) 0));
+        this.entityData.set(ALIGNMENT, input.getByteOr("alignment", (byte) Direction.Axis.Z.ordinal()));
+        this.entityData.set(ISPRIMARY, input.getBooleanOr("isPrimary", false));
+        this.entityData.set(ISDYING, input.getBooleanOr("isDying", false));
+        deathCounter = input.getIntOr("deathCounter", 0);
+        portalGunUUID = input.read("portalGunUUID", UUIDUtil.CODEC).orElse(null);
+        linkedPortalUUID = input.read("linkedPortalUUID", UUIDUtil.CODEC).orElse(null);
+        this.ownerUUID = input.read("Owner", UUIDUtil.CODEC).orElse(null);
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
-        compound.putByte("direction", this.entityData.get(DIRECTION));
-        compound.putByte("alignment", this.entityData.get(ALIGNMENT));
-        compound.putBoolean("isPrimary", getIsPrimary());
-        compound.putBoolean("isDying", isDying());
-        compound.putInt("deathCounter", deathCounter);
-        if (this.getPortalGunUUID() != null) {
-            compound.putUUID("portalGunUUID", this.getPortalGunUUID());
-        }
-        if (this.linkedPortalUUID != null) {
-            compound.putUUID("linkedPortalUUID", this.linkedPortalUUID);
-        }
-        if (this.ownerUUID != null) {
-            compound.putUUID("Owner", this.ownerUUID);
-        }
+    protected void addAdditionalSaveData(ValueOutput output) {
+        output.putByte("direction", this.entityData.get(DIRECTION));
+        output.putByte("alignment", this.entityData.get(ALIGNMENT));
+        output.putBoolean("isPrimary", getIsPrimary());
+        output.putBoolean("isDying", isDying());
+        output.putInt("deathCounter", deathCounter);
+        output.storeNullable("portalGunUUID", UUIDUtil.CODEC, this.getPortalGunUUID());
+        output.storeNullable("linkedPortalUUID", UUIDUtil.CODEC, this.linkedPortalUUID);
+        output.storeNullable("Owner", UUIDUtil.CODEC, this.ownerUUID);
     }
 
     @Override
     public void onAddedToLevel() {
         super.onAddedToLevel();
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
-            ChunkPos chunkPos = new ChunkPos(this.blockPosition());
-            Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x, chunkPos.z, true, false);
+            ChunkPos chunkPos = ChunkPos.containing(this.blockPosition());
+            Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), true, false);
 
             level().playSound(
                     null,
@@ -267,10 +260,10 @@ public class PortalEntity extends Entity {
     @Override
     public void remove(Entity.RemovalReason pReason) {
         super.remove(pReason);
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
-            ChunkPos chunkPos = new ChunkPos(this.blockPosition());
-            Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x, chunkPos.z, false, false);
+            ChunkPos chunkPos = ChunkPos.containing(this.blockPosition());
+            Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), false, false);
         }
     }
 
@@ -280,7 +273,7 @@ public class PortalEntity extends Entity {
     }
 
     @Override
-    protected AABB makeBoundingBox() {
+    protected AABB makeBoundingBox(Vec3 position) {
         float width = 1f;
         float height = 2f;
         float depth = 0.2F; // Default depth
@@ -297,25 +290,25 @@ public class PortalEntity extends Entity {
             if (alignment == Direction.Axis.X) {
                 setWidth = height;
                 setDepth = width;
-                return this.makeBoundingBox(this.getX() + 1, this.getY(), this.getZ(), setWidth, setHeight, setDepth);
+                return this.buildBox(position.x + 1, position.y, position.z, setWidth, setHeight, setDepth);
             } else {
                 setWidth = width;
                 setDepth = height;
-                return this.makeBoundingBox(this.getX(), this.getY(), this.getZ() + 1, setWidth, setHeight, setDepth);
+                return this.buildBox(position.x, position.y, position.z + 1, setWidth, setHeight, setDepth);
             }
         } else if (direction.getAxis() == Direction.Axis.Z) {
             setWidth = width;
             setDepth = depth;
-            return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), setWidth, setHeight, setDepth);
+            return this.buildBox(position.x, position.y, position.z, setWidth, setHeight, setDepth);
         } else if (direction.getAxis() == Direction.Axis.X) {
             setWidth = depth;
             setDepth = width;
-            return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), setWidth, setHeight, setDepth);
+            return this.buildBox(position.x, position.y, position.z, setWidth, setHeight, setDepth);
         }
-        return this.makeBoundingBox(this.getX(), this.getY(), this.getZ(), width, height, depth);
+        return this.buildBox(position.x, position.y, position.z, width, height, depth);
     }
 
-    private AABB makeBoundingBox(double x, double y, double z, float width, float height, float depth) {
+    private AABB buildBox(double x, double y, double z, float width, float height, float depth) {
         float halfWidth = width / 2.0F;
         float halfDepth = depth / 2.0F;
         return new AABB(x - halfWidth, y, z - halfDepth, x + halfWidth, y + height, z + halfDepth);
@@ -331,7 +324,7 @@ public class PortalEntity extends Entity {
     }
 
     public PortalEntity getLinkedPortal() {
-        if (level().isClientSide) return null;
+        if (level().isClientSide()) return null;
         if (linkedPortal == null && linkedPortalUUID != null) {
             linkedPortal = findPartnerPortal(level().getServer());
         }
@@ -422,7 +415,7 @@ public class PortalEntity extends Entity {
     }
 
     public void teleport(Entity entity) {
-        if (entity.level().isClientSide) return;
+        if (entity.level().isClientSide()) return;
         if (getLinkedPortal() != null) {
             Vec3 teleportTo = getTeleportTo(entity, linkedPortal);
             // Adjust the entity's rotation to match the exit portal's direction
@@ -432,17 +425,19 @@ public class PortalEntity extends Entity {
             Vec3 newMotion = calculateVelocity(entity);
 
             // Teleport the entity to the new location and set its rotation
-            boolean success = entity.teleportTo((ServerLevel) linkedPortal.level(), teleportTo.x(), teleportTo.y(), teleportTo.z(), new HashSet<>(), newLookAngle.y, newLookAngle.x);
+            boolean success = entity.teleportTo((ServerLevel) linkedPortal.level(), teleportTo.x(), teleportTo.y(), teleportTo.z(), EnumSet.noneOf(Relative.class), newLookAngle.y, newLookAngle.x, true);
 
             if (success) {
                 entity.resetFallDistance();
                 if (!newMotion.equals(Vec3.ZERO)) {
                     entity.setDeltaMovement(newMotion);
-                    entity.hasImpulse = true;
-                    if (entity instanceof Player player)
+                    if (entity instanceof Player player) {
                         ((ServerPlayer) player).connection.send(new ClientboundSetEntityMotionPacket(player));
-                    else
-                        ((ServerLevel) entity.level()).getChunkSource().broadcast(entity, new ClientboundSetEntityMotionPacket(entity));
+                    } else {
+                        ServerLevel srv = (ServerLevel) entity.level();
+                        ClientboundSetEntityMotionPacket packet = new ClientboundSetEntityMotionPacket(entity);
+                        srv.getServer().getPlayerList().broadcast(null, entity.getX(), entity.getY(), entity.getZ(), 128.0, srv.dimension(), packet);
+                    }
                 }
                 linkedPortal.entityCooldowns.put(entity.getUUID(), TELEPORT_COOLDOWN); //Ensure it doesn't get teleported back!
             }
@@ -458,9 +453,9 @@ public class PortalEntity extends Entity {
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (!entity.canChangeDimensions(level(), getLinkedPortal().level()) && !isSameLevel())
+        if (!entity.canUsePortal(false) && !isSameLevel())
             return false;
-        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
+        if (entity.getType().builtInRegistryHolder().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;
         return true;
     }
@@ -508,5 +503,10 @@ public class PortalEntity extends Entity {
         float xrot = Mth.wrapDegrees((float)(-(Mth.atan2(y, hyp) * 180.0F / (float)Math.PI)));
         float yrot = Mth.wrapDegrees((float)(Mth.atan2(z, x) * 180.0F / (float)Math.PI) - 90.0F);
         return new Vec2(xrot, yrot);
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, net.minecraft.world.damagesource.DamageSource source, float damage) {
+        return false;
     }
 }

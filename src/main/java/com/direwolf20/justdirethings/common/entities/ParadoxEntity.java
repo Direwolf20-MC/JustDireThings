@@ -7,7 +7,6 @@ import com.direwolf20.justdirethings.datagen.JustDireItemTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -25,6 +24,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
@@ -62,7 +63,7 @@ public class ParadoxEntity extends Entity {
 
     public ParadoxEntity(Level level, BlockPos blockPos) {
         this(Registration.ParadoxEntity.get(), level);
-        this.moveTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
+        this.snapTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ParadoxEntity extends Entity {
         int currentRadius = getRadius();
         int targetRadius = getTargetRadius();
         incRadiusGrowthTimer(1);
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             if (collapsing) {
                 float scale = getShrinkScale() - 0.02f; // Decrease the scale over time
                 setShrinkScale(Math.max(scale, 0.0f)); // Ensure scale doesn't go below 0
@@ -108,7 +109,7 @@ public class ParadoxEntity extends Entity {
             handleItemAbsorption(currentRadius);
         } else {
             if (getShrinkScale() < 1.0f) {
-                Minecraft.getInstance().getSoundManager().stop(Registration.PARADOX_AMBIENT.get().getLocation(), SoundSource.HOSTILE);
+                Minecraft.getInstance().getSoundManager().stop(Registration.PARADOX_AMBIENT.get().location(), SoundSource.HOSTILE);
             }
         }
     }
@@ -226,9 +227,9 @@ public class ParadoxEntity extends Entity {
             return false;
         if (entity instanceof Player)
             return false;
-        if (entity.getType().is(JustDireEntityTags.PARADOX_ABSORB_DENY))
+        if (entity.getType().builtInRegistryHolder().is(JustDireEntityTags.PARADOX_ABSORB_DENY))
             return false;
-        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
+        if (entity.getType().builtInRegistryHolder().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;
         return true;
     }
@@ -365,25 +366,25 @@ public class ParadoxEntity extends Entity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        if (compound.contains("requiredConsumption"))
-            this.entityData.set(REQUIRED_CONSUMPTION, compound.getInt("requiredConsumption"));
-        if (compound.contains("consumed"))
-            this.entityData.set(CONSUMPTION, compound.getInt("consumed"));
-        if (compound.contains("radius"))
-            this.entityData.set(RADIUS, compound.getInt("radius"));
-        if (compound.contains("targetRadius"))
-            this.entityData.set(TARGET_RADIUS, compound.getInt("targetRadius"));
-        if (compound.contains("radiusGrowthTimer"))
-            this.radiusGrowthTimer = compound.getInt("radiusGrowthTimer");
+    protected void readAdditionalSaveData(ValueInput input) {
+        input.getInt("requiredConsumption").ifPresent(v -> this.entityData.set(REQUIRED_CONSUMPTION, v));
+        input.getInt("consumed").ifPresent(v -> this.entityData.set(CONSUMPTION, v));
+        input.getInt("radius").ifPresent(v -> this.entityData.set(RADIUS, v));
+        input.getInt("targetRadius").ifPresent(v -> this.entityData.set(TARGET_RADIUS, v));
+        this.radiusGrowthTimer = input.getIntOr("radiusGrowthTimer", 0);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt("requiredConsumption", getRequiredConsumption());
-        compound.putInt("consumed", getConsumed());
-        compound.putInt("radius", getRadius());
-        compound.putInt("targetRadius", getTargetRadius());
-        compound.putInt("radiusGrowthTimer", radiusGrowthTimer);
+    protected void addAdditionalSaveData(ValueOutput output) {
+        output.putInt("requiredConsumption", getRequiredConsumption());
+        output.putInt("consumed", getConsumed());
+        output.putInt("radius", getRadius());
+        output.putInt("targetRadius", getTargetRadius());
+        output.putInt("radiusGrowthTimer", radiusGrowthTimer);
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, net.minecraft.world.damagesource.DamageSource source, float damage) {
+        return false;
     }
 }

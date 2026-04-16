@@ -10,8 +10,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class PotionCanisterContainer extends BaseContainer {
     public static final int SLOTS = 1;
@@ -28,8 +30,7 @@ public class PotionCanisterContainer extends BaseContainer {
         playerEntity = player;
         handler = new PotionCanisterHandler(potionCanister, JustDireDataComponents.TOOL_CONTENTS.get(), 1);
         this.potionCanister = potionCanister;
-        if (handler != null)
-            addItemSlots(handler, 0, 80, 35, 1, 18);
+        addItemSlots(handler, PocketGeneratorContainer.transactionalSet(handler), 0, 80, 35, 1, 18);
 
         addPlayerSlots(playerInventory, 8, 84);
     }
@@ -39,9 +40,9 @@ public class PotionCanisterContainer extends BaseContainer {
         return playerIn.getMainHandItem().equals(potionCanister);
     }
 
-    protected int addItemSlots(IItemHandler handler, int index, int x, int y, int amount, int dx) {
+    protected int addItemSlots(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> slotModifier, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
-            addSlot(new SlotItemHandler(handler, i, x, y) {
+            addSlot(new ResourceHandlerSlot(handler, slotModifier, index, x, y) {
                 @Override
                 public boolean mayPlace(ItemStack stack) {
                     return stack.getItem() instanceof PotionItem;

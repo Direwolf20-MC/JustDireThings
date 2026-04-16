@@ -25,8 +25,9 @@ public class BlockStateFilterPacket {
             AbstractContainerMenu container = sender.containerMenu;
 
             if (container instanceof BaseMachineContainer baseMachineContainer && baseMachineContainer.baseMachineBE instanceof SensorT1BE sensor) {
-                ListTag listTag = payload.compoundTag().getList("tagList", 10); // 10 for CompoundTag type
-                ItemStack stateStack = sensor.getFilterHandler().getStackInSlot(payload.slot());
+                ListTag listTag = payload.compoundTag().getListOrEmpty("tagList");
+                var filterHandler = sensor.getFilterHandler();
+                ItemStack stateStack = filterHandler.getResource(payload.slot()).toStack(filterHandler.getAmountAsInt(payload.slot()));
                 Map<Property<?>, Comparable<?>> propertiesList = SensorT1BE.loadBlockStateProperty(listTag, stateStack);
                 sensor.addBlockStateProperty(payload.slot(), propertiesList);
             }

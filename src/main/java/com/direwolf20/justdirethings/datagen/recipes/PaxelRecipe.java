@@ -167,35 +167,21 @@ public class PaxelRecipe implements SmithingRecipe {
     }
 
 
-    public static class Serializer implements RecipeSerializer<PaxelRecipe> {
-        private static final Identifier NAME = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "paxel");
-        private static final MapCodec<PaxelRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                p_311734_ -> p_311734_.group(
-                                Ingredient.CODEC.fieldOf("template").forGetter(p_301070_ -> p_301070_.template),
-                                Ingredient.CODEC.fieldOf("base").forGetter(p_300969_ -> p_300969_.base),
-                                Ingredient.CODEC.fieldOf("addition").forGetter(p_300977_ -> p_300977_.addition),
-                                net.minecraft.world.item.ItemStack.STRICT_CODEC.fieldOf("result").forGetter(p_300935_ -> p_300935_.result)
-                        )
-                        .apply(p_311734_, PaxelRecipe::new)
-        );
+    public static final MapCodec<PaxelRecipe> CODEC = RecordCodecBuilder.mapCodec(
+            p_311734_ -> p_311734_.group(
+                            Ingredient.CODEC.fieldOf("template").forGetter(p_301070_ -> p_301070_.template),
+                            Ingredient.CODEC.fieldOf("base").forGetter(p_300969_ -> p_300969_.base),
+                            Ingredient.CODEC.fieldOf("addition").forGetter(p_300977_ -> p_300977_.addition),
+                            net.minecraft.world.item.ItemStack.STRICT_CODEC.fieldOf("result").forGetter(p_300935_ -> p_300935_.result)
+                    )
+                    .apply(p_311734_, PaxelRecipe::new)
+    );
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, PaxelRecipe> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getTemplate,
-                Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getBase,
-                Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getAddition,
-                ItemStack.STREAM_CODEC, PaxelRecipe::getResult,
-                PaxelRecipe::new
-        );
-
-
-        @Override
-        public MapCodec<PaxelRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, PaxelRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, PaxelRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getTemplate,
+            Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getBase,
+            Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getAddition,
+            ItemStack.STREAM_CODEC, PaxelRecipe::getResult,
+            PaxelRecipe::new
+    );
 }

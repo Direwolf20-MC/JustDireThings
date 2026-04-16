@@ -133,11 +133,11 @@ public class Registration {
     public static final Supplier<RecipeType<PaxelRecipe>> PAXEL_RECIPE_TYPE = RECIPE_TYPES.register("paxelrecipe", () -> RecipeType.simple(Identifier.fromNamespaceAndPath(MODID, "paxelrecipe")));
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, JustDireThings.MODID);
-    public static final Supplier<GooSpreadRecipe.Serializer> GOO_SPREAD_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("goospread", GooSpreadRecipe.Serializer::new);
-    public static final Supplier<GooSpreadRecipeTag.Serializer> GOO_SPREAD_RECIPE_SERIALIZER_TAG = RECIPE_SERIALIZERS.register("goospread_tag", GooSpreadRecipeTag.Serializer::new);
-    public static final Supplier<FluidDropRecipe.Serializer> FLUID_DROP_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("fluiddrop", FluidDropRecipe.Serializer::new);
-    public static final Supplier<AbilityRecipe.Serializer> ABILITY_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("ability", AbilityRecipe.Serializer::new);
-    public static final Supplier<PaxelRecipe.Serializer> PAXEL_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("paxel", PaxelRecipe.Serializer::new);
+    public static final Supplier<RecipeSerializer<GooSpreadRecipe>> GOO_SPREAD_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("goospread", () -> new RecipeSerializer<>(GooSpreadRecipe.CODEC, GooSpreadRecipe.STREAM_CODEC));
+    public static final Supplier<RecipeSerializer<GooSpreadRecipeTag>> GOO_SPREAD_RECIPE_SERIALIZER_TAG = RECIPE_SERIALIZERS.register("goospread_tag", () -> new RecipeSerializer<>(GooSpreadRecipeTag.CODEC, GooSpreadRecipeTag.STREAM_CODEC));
+    public static final Supplier<RecipeSerializer<FluidDropRecipe>> FLUID_DROP_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("fluiddrop", () -> new RecipeSerializer<>(FluidDropRecipe.CODEC, FluidDropRecipe.STREAM_CODEC));
+    public static final Supplier<RecipeSerializer<AbilityRecipe>> ABILITY_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("ability", () -> new RecipeSerializer<>(AbilityRecipe.CODEC, AbilityRecipe.STREAM_CODEC));
+    public static final Supplier<RecipeSerializer<PaxelRecipe>> PAXEL_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("paxel", () -> new RecipeSerializer<>(PaxelRecipe.CODEC, PaxelRecipe.STREAM_CODEC));
 
     private static final DeferredRegister<SoundEvent> SOUND_REGISTRY = DeferredRegister.create(Registries.SOUND_EVENT, JustDireThings.MODID);
     public static final Supplier<SoundEvent> BEEP = SOUND_REGISTRY.register("beep", () -> SoundEvent.createVariableRangeEvent(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "beep")));

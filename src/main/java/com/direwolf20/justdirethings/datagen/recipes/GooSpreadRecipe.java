@@ -95,50 +95,36 @@ public class GooSpreadRecipe implements CraftingRecipe {
     }
 
 
-    public static class Serializer implements RecipeSerializer<GooSpreadRecipe> {
-        private static final net.minecraft.resources.Identifier NAME = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "goospread");
-        private static final MapCodec<GooSpreadRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                p_311734_ -> p_311734_.group(
-                                Identifier.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
-                                BlockState.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
-                                BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
-                                Codec.INT.fieldOf("tierRequirement").forGetter(p_301137_ -> p_301137_.tierRequirement),
-                                Codec.INT.fieldOf("craftingDuration").forGetter(p_301138_ -> p_301138_.craftingDuration)
-                        )
-                        .apply(p_311734_, GooSpreadRecipe::new)
-        );
+    public static final MapCodec<GooSpreadRecipe> CODEC = RecordCodecBuilder.mapCodec(
+            p_311734_ -> p_311734_.group(
+                            Identifier.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
+                            BlockState.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
+                            BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
+                            Codec.INT.fieldOf("tierRequirement").forGetter(p_301137_ -> p_301137_.tierRequirement),
+                            Codec.INT.fieldOf("craftingDuration").forGetter(p_301138_ -> p_301138_.craftingDuration)
+                    )
+                    .apply(p_311734_, GooSpreadRecipe::new)
+    );
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipe> STREAM_CODEC = StreamCodec.of(
-                GooSpreadRecipe.Serializer::toNetwork, GooSpreadRecipe.Serializer::fromNetwork
-        );
+    public static final StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipe> STREAM_CODEC = StreamCodec.of(
+            GooSpreadRecipe::toNetwork, GooSpreadRecipe::fromNetwork
+    );
 
+    public static GooSpreadRecipe fromNetwork(RegistryFriendlyByteBuf pBuffer) {
+        Identifier resourceLocation = pBuffer.readIdentifier();
+        BlockState inputState = Block.stateById(pBuffer.readInt());
+        BlockState outputState = Block.stateById(pBuffer.readInt());
+        int tierRequirement = pBuffer.readInt();
+        int craftingDuration = pBuffer.readInt();
 
-        @Override
-        public MapCodec<GooSpreadRecipe> codec() {
-            return CODEC;
-        }
+        return new GooSpreadRecipe(resourceLocation, inputState, outputState, tierRequirement, craftingDuration);
+    }
 
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-
-        public static GooSpreadRecipe fromNetwork(RegistryFriendlyByteBuf pBuffer) {
-            Identifier resourceLocation = pBuffer.readIdentifier();
-            BlockState inputState = Block.stateById(pBuffer.readInt());
-            BlockState outputState = Block.stateById(pBuffer.readInt());
-            int tierRequirement = pBuffer.readInt();
-            int craftingDuration = pBuffer.readInt();
-
-            return new GooSpreadRecipe(resourceLocation, inputState, outputState, tierRequirement, craftingDuration);
-        }
-
-        public static void toNetwork(RegistryFriendlyByteBuf pBuffer, GooSpreadRecipe pRecipe) {
-            pBuffer.writeIdentifier(pRecipe.id);
-            pBuffer.writeInt(Block.getId(pRecipe.input));
-            pBuffer.writeInt(Block.getId(pRecipe.output));
-            pBuffer.writeInt(pRecipe.tierRequirement);
-            pBuffer.writeInt(pRecipe.craftingDuration);
-        }
+    public static void toNetwork(RegistryFriendlyByteBuf pBuffer, GooSpreadRecipe pRecipe) {
+        pBuffer.writeIdentifier(pRecipe.id);
+        pBuffer.writeInt(Block.getId(pRecipe.input));
+        pBuffer.writeInt(Block.getId(pRecipe.output));
+        pBuffer.writeInt(pRecipe.tierRequirement);
+        pBuffer.writeInt(pRecipe.craftingDuration);
     }
 }

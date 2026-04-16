@@ -9,12 +9,16 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ComponentItemHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemAccessItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class PocketGeneratorContainer extends BaseContainer {
     public static final int SLOTS = 1;
-    public ComponentItemHandler handler;
+    public ItemAccessItemHandler handler;
     public ItemStack pocketGeneratorItemStack;
     public Player playerEntity;
 
@@ -25,10 +29,9 @@ public class PocketGeneratorContainer extends BaseContainer {
     public PocketGeneratorContainer(int windowId, Inventory playerInventory, Player player, ItemStack pocketGenerator) {
         super(Registration.PocketGenerator_Container.get(), windowId);
         playerEntity = player;
-        handler = new ComponentItemHandler(pocketGenerator, JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1);
+        handler = new ItemAccessItemHandler(ItemAccess.forStack(pocketGenerator), JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1);
         this.pocketGeneratorItemStack = pocketGenerator;
-        if (handler != null)
-            addGeneratorSlots(handler, 0, 80, 35, 1, 18);
+        addGeneratorSlots(handler, transactionalSet(handler), 0, 80, 35, 1, 18);
 
         addPlayerSlots(playerInventory, 8, 84);
     }
@@ -38,13 +41,28 @@ public class PocketGeneratorContainer extends BaseContainer {
         return playerIn.getMainHandItem().equals(pocketGeneratorItemStack);
     }
 
-    protected int addGeneratorSlots(IItemHandler handler, int index, int x, int y, int amount, int dx) {
+    protected int addGeneratorSlots(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> slotModifier, int index, int x, int y, int amount, int dx) {
         for (int i = 0; i < amount; i++) {
-            addSlot(new FuelSlot(handler, index, x, y));
+            addSlot(new FuelSlot(handler, slotModifier, index, x, y));
             x += dx;
             index++;
         }
         return index;
+    }
+
+    static IndexModifier<ItemResource> transactionalSet(ResourceHandler<ItemResource> handler) {
+        return (idx, res, amount) -> {
+            try (Transaction tx = Transaction.openRoot()) {
+                int current = handler.getAmountAsInt(idx);
+                if (current > 0) {
+                    handler.extract(idx, handler.getResource(idx), current, tx);
+                }
+                if (!res.isEmpty() && amount > 0) {
+                    handler.insert(idx, res, amount, tx);
+                }
+                tx.commit();
+            }
+        };
     }
 
     @Override

@@ -24,8 +24,8 @@ public class FuelCanisterHandler extends ItemStacksResourceHandler {
     @Override
     protected void onContentsChanged(int slot, ItemStack previousContents) {
         ItemStack fuelStack = getResource(slot).toStack(getAmountAsInt(slot));
-        if (!stack.isEmpty() && !fuelStack.isEmpty()) {
-            FuelCanister.incrementFuel(stack, fuelStack);
+        if (!stack.isEmpty() && !fuelStack.isEmpty() && fuelValues != null) {
+            FuelCanister.incrementFuel(stack, fuelStack, fuelValues);
         }
     }
 

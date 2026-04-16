@@ -22,8 +22,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Set;
 
@@ -39,7 +39,7 @@ public class PlayerEvents {
             activateAbilities(itemStack, toggleableTool, event.getEntity(), event.getHand(), true, BlockPos.ZERO, Direction.DOWN);
         }
         if (itemStack.getItem() instanceof PortalGun)
-            PacketDistributor.sendToServer(new PortalGunLeftClickPayload());
+            ClientPacketDistributor.sendToServer(new PortalGunLeftClickPayload());
     }
 
     @SubscribeEvent
@@ -54,7 +54,7 @@ public class PlayerEvents {
             doExtraCrumblings(event, itemStack, toggleableTool);
         }
         if (event.getEntity().level().isClientSide() && itemStack.getItem() instanceof PortalGun && event.getAction().equals(PlayerInteractEvent.LeftClickBlock.Action.START))
-            PacketDistributor.sendToServer(new PortalGunLeftClickPayload());
+            ClientPacketDistributor.sendToServer(new PortalGunLeftClickPayload());
     }
 
     private static void doExtraCrumblings(PlayerInteractEvent.LeftClickBlock event, ItemStack itemStack, ToggleableTool toggleableTool) {
@@ -63,7 +63,7 @@ public class PlayerEvents {
         BlockPos blockPos = event.getPos();
         BlockState blockState = level.getBlockState(blockPos);
         if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START) { //Client and Server
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 gameTicksMining = 0;
                 destroyPos = blockPos;
             }
@@ -89,7 +89,7 @@ public class PlayerEvents {
         int j = (int) (f * 10.0F);
         for (BlockPos blockPos : breakBlockPositions) {
             if (blockPos.equals(pPos)) continue; //Let the vanilla mechanics handle the block we're hitting
-            if (level.isClientSide)
+            if (level.isClientSide())
                 level.destroyBlockProgress(player.getId() + generatePosHash(blockPos), blockPos, j);
             else
                 sendDestroyBlockProgress(player.getId() + generatePosHash(blockPos), blockPos, -1, (ServerPlayer) player);
@@ -119,7 +119,7 @@ public class PlayerEvents {
             //Do them client side and Server side, since some abilities (like ore scanner) are client side activated.
             if (air) { //Air
                 toggleableTool.useAbility(player.level(), player, hand, false);
-                PacketDistributor.sendToServer(new LeftClickPayload(0, hand == InteractionHand.MAIN_HAND, BlockPos.ZERO, -1, -1, -1, false)); //Type 0 == air
+                ClientPacketDistributor.sendToServer(new LeftClickPayload(0, hand == InteractionHand.MAIN_HAND, BlockPos.ZERO, -1, -1, -1, false)); //Type 0 == air
             } else { //Block - No need for a packet since this will run both client and server side! (See above!)
                 UseOnContext useoncontext = new UseOnContext(player.level(), player, hand, itemStack, new BlockHitResult(Vec3.atCenterOf(blockPos), direction, blockPos, false));
                 toggleableTool.useOnAbility(useoncontext, false);

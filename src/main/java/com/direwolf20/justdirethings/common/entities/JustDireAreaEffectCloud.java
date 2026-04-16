@@ -3,19 +3,15 @@ package com.direwolf20.justdirethings.common.entities;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mojang.logging.LogUtils;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.util.ARGB;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,7 +19,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.PushReaction;
-import org.slf4j.Logger;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -31,7 +28,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
-    private static final Logger LOGGER = LogUtils.getLogger();
     private static final int TIME_BETWEEN_APPLICATIONS = 5;
     private static final EntityDataAccessor<Float> DATA_RADIUS = SynchedEntityData.defineId(JustDireAreaEffectCloud.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> DATA_WAITING = SynchedEntityData.defineId(JustDireAreaEffectCloud.class, EntityDataSerializers.BOOLEAN);
@@ -72,7 +68,7 @@ public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
     }
 
     public void setRadius(float radius) {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             this.getEntityData().set(DATA_RADIUS, Mth.clamp(radius, 0.0F, 32.0F));
         }
     }
@@ -99,7 +95,7 @@ public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
         ParticleOptions particleoptions = this.entityData.get(DATA_PARTICLE);
         if (particleoptions instanceof ColorParticleOption colorparticleoption) {
             int i = this.potionContents.equals(PotionContents.EMPTY) ? 0 : this.potionContents.getColor();
-            this.entityData.set(DATA_PARTICLE, ColorParticleOption.create(colorparticleoption.getType(), FastColor.ARGB32.opaque(i)));
+            this.entityData.set(DATA_PARTICLE, ColorParticleOption.create(colorparticleoption.getType(), ARGB.opaque(i)));
         }
     }
 
@@ -139,7 +135,7 @@ public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
         super.tick();
         boolean flag = this.isWaiting();
         float f = this.getRadius();
-        if (this.level().isClientSide) {
+        if (this.level().isClientSide()) {
             if (flag && this.random.nextBoolean()) {
                 return;
             }
@@ -240,9 +236,10 @@ public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
                                         if (mobeffectinstance.getEffect().value().getCategory() == MobEffectCategory.BENEFICIAL && getOwner() != null && !livingentity.is(getOwner()))
                                             continue;
                                         if (mobeffectinstance.getEffect().value().isInstantenous()) {
-                                            mobeffectinstance.getEffect()
-                                                    .value()
-                                                    .applyInstantenousEffect(this, this.getOwner(), livingentity, mobeffectinstance.getAmplifier(), 0.5);
+                                            if (this.level() instanceof ServerLevel sl)
+                                                mobeffectinstance.getEffect()
+                                                        .value()
+                                                        .applyInstantenousEffect(sl, this, this.getOwner(), livingentity, mobeffectinstance.getAmplifier(), 0.5);
                                         } else {
                                             livingentity.addEffect(new MobEffectInstance(mobeffectinstance), this);
                                         }
@@ -324,58 +321,37 @@ public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
         return this.owner;
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound) {
-        this.tickCount = compound.getInt("Age");
-        this.duration = compound.getInt("Duration");
-        this.waitTime = compound.getInt("WaitTime");
-        this.reapplicationDelay = compound.getInt("ReapplicationDelay");
-        this.durationOnUse = compound.getInt("DurationOnUse");
-        this.radiusOnUse = compound.getFloat("RadiusOnUse");
-        this.radiusPerTick = compound.getFloat("RadiusPerTick");
-        this.setRadius(compound.getFloat("Radius"));
-        if (compound.hasUUID("Owner")) {
-            this.ownerUUID = compound.getUUID("Owner");
-        }
-
-        RegistryOps<Tag> registryops = this.registryAccess().createSerializationContext(NbtOps.INSTANCE);
-        if (compound.contains("Particle", 10)) {
-            ParticleTypes.CODEC
-                    .parse(registryops, compound.get("Particle"))
-                    .resultOrPartial(p_329991_ -> LOGGER.warn("Failed to parse area effect cloud particle options: '{}'", p_329991_))
-                    .ifPresent(this::setParticle);
-        }
-
-        if (compound.contains("potion_contents")) {
-            PotionContents.CODEC
-                    .parse(registryops, compound.get("potion_contents"))
-                    .resultOrPartial(p_340707_ -> LOGGER.warn("Failed to parse area effect cloud potions: '{}'", p_340707_))
-                    .ifPresent(this::setPotionContents);
-        }
+    protected void readAdditionalSaveData(ValueInput input) {
+        this.tickCount = input.getIntOr("Age", 0);
+        this.duration = input.getIntOr("Duration", 600);
+        this.waitTime = input.getIntOr("WaitTime", 20);
+        this.reapplicationDelay = input.getIntOr("ReapplicationDelay", 20);
+        this.durationOnUse = input.getIntOr("DurationOnUse", 0);
+        this.radiusOnUse = input.getFloatOr("RadiusOnUse", 0.0F);
+        this.radiusPerTick = input.getFloatOr("RadiusPerTick", 0.0F);
+        this.setRadius(input.getFloatOr("Radius", DEFAULT_RADIUS));
+        this.ownerUUID = input.read("Owner", UUIDUtil.CODEC).orElse(null);
+        input.read("Particle", ParticleTypes.CODEC)
+                .ifPresent(this::setParticle);
+        input.read("potion_contents", PotionContents.CODEC)
+                .ifPresent(this::setPotionContents);
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt("Age", this.tickCount);
-        compound.putInt("Duration", this.duration);
-        compound.putInt("WaitTime", this.waitTime);
-        compound.putInt("ReapplicationDelay", this.reapplicationDelay);
-        compound.putInt("DurationOnUse", this.durationOnUse);
-        compound.putFloat("RadiusOnUse", this.radiusOnUse);
-        compound.putFloat("RadiusPerTick", this.radiusPerTick);
-        compound.putFloat("Radius", this.getRadius());
-        RegistryOps<Tag> registryops = this.registryAccess().createSerializationContext(NbtOps.INSTANCE);
-        compound.put("Particle", ParticleTypes.CODEC.encodeStart(registryops, this.getParticle()).getOrThrow());
-        if (this.ownerUUID != null) {
-            compound.putUUID("Owner", this.ownerUUID);
-        }
-
+    protected void addAdditionalSaveData(ValueOutput output) {
+        output.putInt("Age", this.tickCount);
+        output.putInt("Duration", this.duration);
+        output.putInt("WaitTime", this.waitTime);
+        output.putInt("ReapplicationDelay", this.reapplicationDelay);
+        output.putInt("DurationOnUse", this.durationOnUse);
+        output.putFloat("RadiusOnUse", this.radiusOnUse);
+        output.putFloat("RadiusPerTick", this.radiusPerTick);
+        output.putFloat("Radius", this.getRadius());
+        output.store("Particle", ParticleTypes.CODEC, this.getParticle());
+        output.storeNullable("Owner", UUIDUtil.CODEC, this.ownerUUID);
         if (!this.potionContents.equals(PotionContents.EMPTY)) {
-            Tag tag = PotionContents.CODEC.encodeStart(registryops, this.potionContents).getOrThrow();
-            compound.put("potion_contents", tag);
+            output.store("potion_contents", PotionContents.CODEC, this.potionContents);
         }
     }
 
@@ -391,6 +367,11 @@ public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
     @Override
     public PushReaction getPistonPushReaction() {
         return PushReaction.IGNORE;
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, net.minecraft.world.damagesource.DamageSource source, float damage) {
+        return false;
     }
 
     @Override

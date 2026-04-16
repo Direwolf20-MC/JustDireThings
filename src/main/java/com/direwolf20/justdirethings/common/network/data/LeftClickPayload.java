@@ -7,7 +7,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
 public record LeftClickPayload(
         int clickType, //0 for empty, 1 for block
@@ -25,7 +24,7 @@ public record LeftClickPayload(
         return TYPE;
     }
 
-    public static final StreamCodec<FriendlyByteBuf, LeftClickPayload> STREAM_CODEC = NeoForgeStreamCodecs.composite(
+    public static final StreamCodec<FriendlyByteBuf, LeftClickPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, LeftClickPayload::clickType,
             ByteBufCodecs.BOOL, LeftClickPayload::mainHand,
             BlockPos.STREAM_CODEC, LeftClickPayload::blockPos,

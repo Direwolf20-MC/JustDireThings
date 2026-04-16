@@ -107,35 +107,21 @@ public class FluidDropRecipe implements CraftingRecipe {
     }
 
 
-    public static class Serializer implements RecipeSerializer<FluidDropRecipe> {
-        private static final Identifier NAME = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "fluiddrop");
-        private static final MapCodec<FluidDropRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                p_311734_ -> p_311734_.group(
-                                Identifier.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
-                                BlockState.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
-                                BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
-                                ItemStack.ITEM_NON_AIR_CODEC.fieldOf("catalyst").forGetter(p_301137_ -> p_301137_.catalyst.builtInRegistryHolder())
-                        )
-                        .apply(p_311734_, FluidDropRecipe::new)
-        );
+    public static final MapCodec<FluidDropRecipe> CODEC = RecordCodecBuilder.mapCodec(
+            p_311734_ -> p_311734_.group(
+                            Identifier.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
+                            BlockState.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
+                            BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
+                            ItemStack.ITEM_NON_AIR_CODEC.fieldOf("catalyst").forGetter(p_301137_ -> p_301137_.catalyst.builtInRegistryHolder())
+                    )
+                    .apply(p_311734_, FluidDropRecipe::new)
+    );
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, FluidDropRecipe> STREAM_CODEC = StreamCodec.composite(
-                Identifier.STREAM_CODEC, FluidDropRecipe::getId,
-                ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY), FluidDropRecipe::getInput,
-                ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY), FluidDropRecipe::getOutput,
-                ByteBufCodecs.holderRegistry(Registries.ITEM), FluidDropRecipe::getCatalystHolder,
-                FluidDropRecipe::new
-        );
-
-
-        @Override
-        public MapCodec<FluidDropRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, FluidDropRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, FluidDropRecipe> STREAM_CODEC = StreamCodec.composite(
+            Identifier.STREAM_CODEC, FluidDropRecipe::getId,
+            ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY), FluidDropRecipe::getInput,
+            ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY), FluidDropRecipe::getOutput,
+            ByteBufCodecs.holderRegistry(Registries.ITEM), FluidDropRecipe::getCatalystHolder,
+            FluidDropRecipe::new
+    );
 }

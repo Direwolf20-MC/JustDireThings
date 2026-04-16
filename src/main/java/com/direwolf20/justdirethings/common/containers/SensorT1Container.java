@@ -22,7 +22,7 @@ public class SensorT1Container extends BaseMachineContainer {
 
     @Override
     public void addFilterSlots() {
-        addFilterSlots(filterHandler, 0, 80, 13, FILTER_SLOTS, 18);
+        addFilterSlots(filterHandler, filterHandler::set, 0, 80, 13, FILTER_SLOTS, 18);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class ClientSoundPacket {
 
     public void handle(final ClientSoundPayload payload, final IPayloadContext context) {
         context.enqueueWork(() -> {
-            SoundEvent soundEvent = BuiltInRegistries.SOUND_EVENT.get(payload.soundEvent());
+            SoundEvent soundEvent = BuiltInRegistries.SOUND_EVENT.getValue(payload.soundEvent());
             if (soundEvent != null) {
                 OurSounds.playSound(soundEvent, payload.pitch(), payload.volume());
             }

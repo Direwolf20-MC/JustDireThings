@@ -106,33 +106,19 @@ public class AbilityRecipe implements SmithingRecipe {
     }
 
 
-    public static class Serializer implements RecipeSerializer<AbilityRecipe> {
-        private static final Identifier NAME = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "ability");
-        private static final MapCodec<AbilityRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                p_311734_ -> p_311734_.group(
-                                Ingredient.CODEC.fieldOf("template").forGetter(p_301070_ -> p_301070_.template),
-                                Ingredient.CODEC.fieldOf("base").forGetter(p_300969_ -> p_300969_.base),
-                                Ingredient.CODEC.fieldOf("addition").forGetter(p_300977_ -> p_300977_.addition)
-                        )
-                        .apply(p_311734_, AbilityRecipe::new)
-        );
+    public static final MapCodec<AbilityRecipe> CODEC = RecordCodecBuilder.mapCodec(
+            p_311734_ -> p_311734_.group(
+                            Ingredient.CODEC.fieldOf("template").forGetter(p_301070_ -> p_301070_.template),
+                            Ingredient.CODEC.fieldOf("base").forGetter(p_300969_ -> p_300969_.base),
+                            Ingredient.CODEC.fieldOf("addition").forGetter(p_300977_ -> p_300977_.addition)
+                    )
+                    .apply(p_311734_, AbilityRecipe::new)
+    );
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, AbilityRecipe> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC, AbilityRecipe::getTemplate,
-                Ingredient.CONTENTS_STREAM_CODEC, AbilityRecipe::getBase,
-                Ingredient.CONTENTS_STREAM_CODEC, AbilityRecipe::getAddition,
-                AbilityRecipe::new
-        );
-
-
-        @Override
-        public MapCodec<AbilityRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, AbilityRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, AbilityRecipe> STREAM_CODEC = StreamCodec.composite(
+            Ingredient.CONTENTS_STREAM_CODEC, AbilityRecipe::getTemplate,
+            Ingredient.CONTENTS_STREAM_CODEC, AbilityRecipe::getBase,
+            Ingredient.CONTENTS_STREAM_CODEC, AbilityRecipe::getAddition,
+            AbilityRecipe::new
+    );
 }
