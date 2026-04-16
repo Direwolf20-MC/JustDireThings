@@ -1,52 +1,49 @@
 package com.direwolf20.justdirethings.client.entityrenders;
 
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
-import com.mojang.authlib.GameProfile;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HumanoidArmorModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.geom.ModelLayers;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.ArrowLayer;
-import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
-import net.minecraft.client.renderer.entity.layers.ElytraLayer;
-import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
-import net.minecraft.resources.Identifier;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 
-import java.util.Optional;
 import java.util.UUID;
 
-public class DecoyEntityRender<T extends DecoyEntity, M extends EntityModel<T>> extends LivingEntityRenderer<DecoyEntity, PlayerModel<DecoyEntity>> {
+// TODO(port, stage-18): reimplement the decoy's player-lookalike rendering.
+// 1.21.1 extended LivingEntityRenderer<DecoyEntity, PlayerModel<DecoyEntity>> and attached
+// HumanoidArmorLayer / ArrowLayer / CustomHeadLayer / ElytraLayer with the owner's skin texture.
+// In 26.1:
+//   - LivingEntityRenderer is now LivingEntityRenderer<T, S extends LivingEntityRenderState, M extends EntityModel<? super S>>
+//   - PlayerModel is parameterized by AvatarRenderState, not a generic LivingEntityRenderState.
+//   - Armor / arrow / head / elytra layers all accept the generified RenderLayer<S, M> API.
+//   - Skin lookup goes through Minecraft.getInstance().getSkinManager().getInsecureSkin(profile).texture() same as before.
+// The clean path is probably to reuse AvatarRenderer / AvatarRenderState directly and swap the skin, instead of
+// rebuilding a bespoke renderer. Deferred until we have the rest of the client compiling.
+public class DecoyEntityRender extends EntityRenderer<DecoyEntity, DecoyEntityRender.DecoyRenderState> {
 
     public static final UUID defaultPlayerUUID = UUID.fromString("0192723f-b3dc-495a-959f-52c53fa63bff");
-    public boolean modelSet = false;
+
+    public static class DecoyRenderState extends LivingEntityRenderState {
+    }
 
     public DecoyEntityRender(EntityRendererProvider.Context context) {
-        super(context, new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false), 0.5F);
-        this.addLayer(
-                new HumanoidArmorLayer<>(
-                        this,
-                        new HumanoidArmorModel(context.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)),
-                        new HumanoidArmorModel(context.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)),
-                        context.getModelManager()
-                )
-        );
-        this.addLayer(new ArrowLayer<>(context, this));
-        this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
-        this.addLayer(new ElytraLayer<>(this, context.getModelSet()));
+        super(context);
     }
 
     @Override
-    public Identifier getTextureLocation(DecoyEntity entity) {
-        Optional<UUID> ownerUUID = entity.getOwnerUUID();
-        if (ownerUUID.isPresent()) {
-            GameProfile profile = new GameProfile(ownerUUID.get(), "DireDecoy");
-            return Minecraft.getInstance().getSkinManager().getInsecureSkin(profile).texture();
-        } else {
-            GameProfile profile = new GameProfile(defaultPlayerUUID, "DireDecoy");
-            return Minecraft.getInstance().getSkinManager().getInsecureSkin(profile).texture();
-        }
+    public DecoyRenderState createRenderState() {
+        return new DecoyRenderState();
+    }
+
+    @Override
+    public void extractRenderState(DecoyEntity entity, DecoyRenderState state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+    }
+
+    @Override
+    public void submit(DecoyRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        super.submit(state, poseStack, submitNodeCollector, camera);
+        // TODO(port, stage-18): actually submit a player-style model with the owner's skin.
     }
 }

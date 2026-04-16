@@ -4,29 +4,50 @@ import com.direwolf20.justdirethings.client.blockentityrenders.baseber.AreaAffec
 import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 import org.joml.Matrix4f;
 
-public class EclipseGateRenderer extends AreaAffectingBER {
-    public EclipseGateRenderer(BlockEntityRendererProvider.Context context) {
+public class EclipseGateRenderer extends AreaAffectingBER<EclipseGateBE, EclipseGateRenderer.EclipseGateRenderState> {
 
+    public static class EclipseGateRenderState extends AreaAffectingRenderState {
+        public long gameTime;
+        public float partialTicks;
+    }
+
+    public EclipseGateRenderer(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
-    public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
-        super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
-        long gameTime = blockentity.getLevel().getGameTime();
-        Matrix4f matrix4f = matrixStackIn.last().pose();
-        if (blockentity instanceof EclipseGateBE eclipseGateBE)
-            this.renderCube(eclipseGateBE, matrix4f, bufferIn.getBuffer(this.renderType()), gameTime, partialTicks);
+    public EclipseGateRenderState createRenderState() {
+        return new EclipseGateRenderState();
     }
 
-    private void renderCube(EclipseGateBE blockEntity, Matrix4f matrixStack, VertexConsumer vertexConsumer, long gameTime, float partialTicks) {
+    @Override
+    public void extractRenderState(EclipseGateBE blockEntity, EclipseGateRenderState state, float partialTicks, Vec3 cameraPosition,
+                                    ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        state.gameTime = blockEntity.getLevel() != null ? blockEntity.getLevel().getGameTime() : 0L;
+        state.partialTicks = partialTicks;
+    }
+
+    @Override
+    public void submit(EclipseGateRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        super.submit(state, poseStack, submitNodeCollector, camera);
+        long gameTime = state.gameTime;
+        float partialTicks = state.partialTicks;
+        submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.endPortal(),
+                (pose, buffer) -> renderCube(gameTime, partialTicks, pose.pose(), buffer));
+    }
+
+    private void renderCube(long gameTime, float partialTicks, Matrix4f matrixStack, VertexConsumer vertexConsumer) {
         Direction direction = Direction.UP;
         float oneSmall = 0.515625f;
         float zeroSmall = 0.484375f;
@@ -48,58 +69,58 @@ public class EclipseGateRenderer extends AreaAffectingBER {
         float f;
         switch (direction) {
             case UP:
-                f = 0.5f; //Center of cube up 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f + diff, one, one, one, one); //South
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f, zero, zero, zero, zero); //North
-                this.renderFace(matrixStack, vertexConsumer, one, one, f + diff, f, zero, one, one, zero); //East
-                this.renderFace(matrixStack, vertexConsumer, zero, zero, f, f + diff, zero, one, one, zero); //West
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f, zero, zero, one, one); //Down
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f + diff, one, one, zero, zero); //Up
+                f = 0.5f;
+                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f + diff, one, one, one, one);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f, zero, zero, zero, zero);
+                this.renderFace(matrixStack, vertexConsumer, one, one, f + diff, f, zero, one, one, zero);
+                this.renderFace(matrixStack, vertexConsumer, zero, zero, f, f + diff, zero, one, one, zero);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f, zero, zero, one, one);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f + diff, one, one, zero, zero);
                 break;
             case DOWN:
-                f = 0.5f; //Center of cube down 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f - diff, one, one, one, one); //South
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f - diff, f, zero, zero, zero, zero); //North
-                this.renderFace(matrixStack, vertexConsumer, one, one, f - diff, f, zero, one, one, zero); //East
-                this.renderFace(matrixStack, vertexConsumer, zero, zero, f, f - diff, zero, one, one, zero); //West
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f, zero, zero, one, one); //Down
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f - diff, f - diff, one, one, zero, zero); //Up
+                f = 0.5f;
+                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f - diff, one, one, one, one);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, f - diff, f, zero, zero, zero, zero);
+                this.renderFace(matrixStack, vertexConsumer, one, one, f - diff, f, zero, one, one, zero);
+                this.renderFace(matrixStack, vertexConsumer, zero, zero, f, f - diff, zero, one, one, zero);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f, zero, zero, one, one);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, f - diff, f - diff, one, one, zero, zero);
                 break;
             case NORTH:
-                f = 0.5f; //Center of cube up 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, one, f, f, f, f); //South
-                this.renderFace(matrixStack, vertexConsumer, zero, one, one, zero, f - diff, f - diff, f - diff, f - diff); //North
-                this.renderFace(matrixStack, vertexConsumer, one, one, one, zero, f - diff, f, f, f - diff); //East
-                this.renderFace(matrixStack, vertexConsumer, zero, zero, zero, one, f - diff, f, f, f - diff); //West
-                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, zero, f - diff, f - diff, f, f); //Down
-                this.renderFace(matrixStack, vertexConsumer, zero, one, one, one, f, f, f - diff, f - diff); //Up
+                f = 0.5f;
+                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, one, f, f, f, f);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, one, zero, f - diff, f - diff, f - diff, f - diff);
+                this.renderFace(matrixStack, vertexConsumer, one, one, one, zero, f - diff, f, f, f - diff);
+                this.renderFace(matrixStack, vertexConsumer, zero, zero, zero, one, f - diff, f, f, f - diff);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, zero, f - diff, f - diff, f, f);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, one, one, f, f, f - diff, f - diff);
                 break;
             case SOUTH:
-                f = 0.5f; //Center of cube down 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, one, f, f, f, f); //South
-                this.renderFace(matrixStack, vertexConsumer, zero, one, one, zero, f + diff, f + diff, f + diff, f + diff); //North
-                this.renderFace(matrixStack, vertexConsumer, zero, zero, zero, one, f + diff, f, f, f + diff); //East
-                this.renderFace(matrixStack, vertexConsumer, one, one, one, zero, f + diff, f, f, f + diff); //West
-                this.renderFace(matrixStack, vertexConsumer, zero, one, one, one, f, f, f + diff, f + diff); //Down
-                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, zero, f + diff, f + diff, f, f); //Up
+                f = 0.5f;
+                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, one, f, f, f, f);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, one, zero, f + diff, f + diff, f + diff, f + diff);
+                this.renderFace(matrixStack, vertexConsumer, zero, zero, zero, one, f + diff, f, f, f + diff);
+                this.renderFace(matrixStack, vertexConsumer, one, one, one, zero, f + diff, f, f, f + diff);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, one, one, f, f, f + diff, f + diff);
+                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, zero, f + diff, f + diff, f, f);
                 break;
             case EAST:
-                f = 0.5f; //Center of cube up 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, f, f + diff, zero, one, one, one, one, one); //South
-                this.renderFace(matrixStack, vertexConsumer, f, f + diff, one, zero, zero, zero, zero, zero); //North
-                this.renderFace(matrixStack, vertexConsumer, f + diff, f + diff, one, zero, zero, one, one, zero); //East
-                this.renderFace(matrixStack, vertexConsumer, f, f, zero, one, zero, one, one, zero); //West
-                this.renderFace(matrixStack, vertexConsumer, f, f + diff, zero, zero, zero, zero, one, one); //Down
-                this.renderFace(matrixStack, vertexConsumer, f, f + diff, one, one, one, one, zero, zero); //Up
+                f = 0.5f;
+                this.renderFace(matrixStack, vertexConsumer, f, f + diff, zero, one, one, one, one, one);
+                this.renderFace(matrixStack, vertexConsumer, f, f + diff, one, zero, zero, zero, zero, zero);
+                this.renderFace(matrixStack, vertexConsumer, f + diff, f + diff, one, zero, zero, one, one, zero);
+                this.renderFace(matrixStack, vertexConsumer, f, f, zero, one, zero, one, one, zero);
+                this.renderFace(matrixStack, vertexConsumer, f, f + diff, zero, zero, zero, zero, one, one);
+                this.renderFace(matrixStack, vertexConsumer, f, f + diff, one, one, one, one, zero, zero);
                 break;
             case WEST:
-                f = 0.5f; //Center of cube shifted 1/4 block to the west
-                this.renderFace(matrixStack, vertexConsumer, f, f - diff, zero, one, one, one, one, one); //South
-                this.renderFace(matrixStack, vertexConsumer, f, f - diff, one, zero, zero, zero, zero, zero); //North
-                this.renderFace(matrixStack, vertexConsumer, f, f, zero, one, zero, one, one, zero); //East
-                this.renderFace(matrixStack, vertexConsumer, f - diff, f - diff, one, zero, zero, one, one, zero); //West
-                this.renderFace(matrixStack, vertexConsumer, f, f - diff, one, one, one, one, zero, zero); //Down
-                this.renderFace(matrixStack, vertexConsumer, f, f - diff, zero, zero, zero, zero, one, one); //Up
+                f = 0.5f;
+                this.renderFace(matrixStack, vertexConsumer, f, f - diff, zero, one, one, one, one, one);
+                this.renderFace(matrixStack, vertexConsumer, f, f - diff, one, zero, zero, zero, zero, zero);
+                this.renderFace(matrixStack, vertexConsumer, f, f, zero, one, zero, one, one, zero);
+                this.renderFace(matrixStack, vertexConsumer, f - diff, f - diff, one, zero, zero, one, one, zero);
+                this.renderFace(matrixStack, vertexConsumer, f, f - diff, one, one, one, one, zero, zero);
+                this.renderFace(matrixStack, vertexConsumer, f, f - diff, zero, zero, zero, zero, one, one);
                 break;
             default:
                 break;
@@ -112,9 +133,4 @@ public class EclipseGateRenderer extends AreaAffectingBER {
         vertexConsumer.addVertex(matrixStack, x2, y2, z3);
         vertexConsumer.addVertex(matrixStack, x1, y2, z4);
     }
-
-    protected RenderType renderType() {
-        return RenderType.endPortal();
-    }
-
 }

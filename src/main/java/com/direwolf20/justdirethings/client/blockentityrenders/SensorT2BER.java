@@ -1,18 +1,10 @@
 package com.direwolf20.justdirethings.client.blockentityrenders;
 
 import com.direwolf20.justdirethings.client.blockentityrenders.baseber.AreaAffectingBER;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.direwolf20.justdirethings.common.blockentities.SensorT2BE;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class SensorT2BER extends AreaAffectingBER {
+public class SensorT2BER extends AreaAffectingBER<SensorT2BE, AreaAffectingBER.AreaAffectingRenderState> {
     public SensorT2BER(BlockEntityRendererProvider.Context context) {
-
-    }
-
-    @Override
-    public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
-        super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
     }
 }
