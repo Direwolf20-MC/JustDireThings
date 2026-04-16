@@ -8,7 +8,7 @@ import com.direwolf20.justdirethings.common.network.data.DirectionSettingPayload
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class BlockPlacerT1Screen extends BaseMachineScreen<BlockPlacerT1Container> {
     public BlockPlacerT1Screen(BlockPlacerT1Container container, Inventory inv, Component name) {
@@ -18,9 +18,9 @@ public class BlockPlacerT1Screen extends BaseMachineScreen<BlockPlacerT1Containe
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 122, topSectionTop + 38, direction, b -> {
+        addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(leftPos + 122, topSectionTop + 38, direction, b -> {
             direction = ((ToggleButton) b).getTexturePosition();
-            PacketDistributor.sendToServer(new DirectionSettingPayload(direction));
+            ClientPacketDistributor.sendToServer(new DirectionSettingPayload(direction));
         }));
     }
 
@@ -32,7 +32,7 @@ public class BlockPlacerT1Screen extends BaseMachineScreen<BlockPlacerT1Containe
 
     @Override
     public void addRedstoneButtons() {
-        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
+        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(leftPos + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
             redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
             saveSettings();
         }));

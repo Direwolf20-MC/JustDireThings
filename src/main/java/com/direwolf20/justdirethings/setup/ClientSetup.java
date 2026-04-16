@@ -14,48 +14,22 @@ import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
-import com.direwolf20.justdirethings.client.itemcustomrenders.FluidbarDecorator;
-import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
-import com.direwolf20.justdirethings.client.renderers.JustDireItemRenderer;
-import com.direwolf20.justdirethings.client.renderers.RenderHelpers;
-import com.direwolf20.justdirethings.client.renderers.shader.DireRenderTypes;
 import com.direwolf20.justdirethings.client.screens.*;
-import com.direwolf20.justdirethings.common.items.FluidCanister;
-import com.direwolf20.justdirethings.common.items.PocketGenerator;
-import com.direwolf20.justdirethings.common.items.PortalGunV2;
-import com.direwolf20.justdirethings.common.items.PotionCanister;
-import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
-import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
-import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.item.ItemColors;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.entity.NoopRenderer;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-
-import java.io.IOException;
 
 import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
@@ -70,95 +44,54 @@ public class ClientSetup {
         NeoForge.EVENT_BUS.register(RenderHighlight.class);
         NeoForge.EVENT_BUS.register(PlayerEvents.class);
 
-        //Item Properties
-        event.enqueueWork(() -> {
-            for (var tool : Registration.TOOLS.getEntries()) {
-                registerEnabledToolTextures(tool.get());
-            }
-            registerEnabledToolTextures(Registration.Pocket_Generator.get());
-            for (var bow : Registration.BOWS.getEntries()) {
-                if (bow.get() instanceof BaseBow baseBow) {
-                    ItemProperties.register(bow.get(), Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pull"), (stack, level, living, id) -> {
-                        if (living == null || living.getUseItem() != stack) return 0.0F;
-                        return (stack.getUseDuration(living) - (living.getUseItemRemainingTicks() + (20 - baseBow.getMaxDraw()))) / baseBow.getMaxDraw();
-                    });
-                    ItemProperties.register(bow.get(), Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pulling"), (stack, level, living, id) -> {
-                        return living != null && living.isUsingItem() && living.getUseItem() == stack ? 1.0F : 0.0F;
-                    });
-                }
-            }
-        });
+        // TODO(port, stage-16): ItemProperties.register(...) is dead in 1.21.4+. Each item that
+        // used it (every tool via registerEnabledToolTextures, PocketGenerator, Bows with pull/pulling,
+        // FluidCanister fullness, PotionCanister potion_fullness, PortalGunV2 fullness) needs a
+        // RangeSelectItemModelProperty / ConditionalItemModelProperty + a client-item JSON.
+        // See PORTING §3.4 "1.21.4 — Client items" + §3.3 ID_MAPPER AT note.
 
-        event.enqueueWork(() -> {
-            ItemProperties.register(Registration.FluidCanister.get(),
-                    Identifier.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> FluidCanister.getFullness(stack));
-        });
-
-        event.enqueueWork(() -> {
-            ItemProperties.register(Registration.PotionCanister.get(),
-                    Identifier.fromNamespaceAndPath(JustDireThings.MODID, "potion_fullness"), (stack, level, living, id) -> PotionCanister.getFullness(stack));
-        });
-
-        event.enqueueWork(() -> {
-            ItemProperties.register(Registration.PortalGunV2.get(),
-                    Identifier.fromNamespaceAndPath(JustDireThings.MODID, "fullness"), (stack, level, living, id) -> PortalGunV2.getFullness(stack));
-        });
-
-        ItemBlockRenderTypes.setRenderLayer(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(Registration.UNSTABLE_PORTAL_FLUID_FLOWING.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(Registration.TIME_FLUID_SOURCE.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(Registration.TIME_FLUID_FLOWING.get(), RenderType.translucent());
+        // TODO(port, stage-16): ItemBlockRenderTypes.setRenderLayer is gone. Render layer is now
+        // declared on the Block itself or via FluidModel for fluids (see RENDER_PORTING §7). The
+        // four fluid blocks below (UNSTABLE_PORTAL_FLUID_*, TIME_FLUID_*) need the translucent
+        // layer set via whatever the fluid-model replacement is.
     }
 
-    @SubscribeEvent
-    public static void registerOverlays(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.HOTBAR, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "abilitycooldownoverlay"), AbilityCooldownOverlay.INSTANCE);
-    }
+    // TODO(port, stage-16): RegisterGuiLayersEvent now takes a GuiLayer, not LayeredDraw.Layer —
+    // AbilityCooldownOverlay must implement net.neoforged.neoforge.client.gui.GuiLayer. Restore
+    // when overlays are ported.
+    // @SubscribeEvent
+    // public static void registerOverlays(RegisterGuiLayersEvent event) {
+    //     event.registerAbove(VanillaGuiLayers.HOTBAR,
+    //             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "abilitycooldownoverlay"),
+    //             AbilityCooldownOverlay.INSTANCE);
+    // }
 
-    private static void onTexturesStitched(final TextureAtlasStitchedEvent event) {
-        //noinspection deprecation
-        if (event.getAtlas().location().equals(TextureAtlas.LOCATION_BLOCKS)) {
-            RenderHelpers.captureDummySprite(event.getAtlas());
-        }
-    }
-
-    public static void registerEnabledToolTextures(Item tool) {
-        if (tool instanceof ToggleableItem toggleableItem) {
-            ItemProperties.register(tool,
-                    Identifier.fromNamespaceAndPath(JustDireThings.MODID, "enabled"), (stack, level, living, id) -> {
-                        if (stack.getItem() instanceof PocketGenerator) {
-                            if (!toggleableItem.getEnabled(stack)) return 0.0f;
-                            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
-                            if (energyStorage == null) return 0.0f;
-                            if (energyStorage.getEnergyStored() > 0) return 1.0f;
-                            if (!(stack.getOrDefault(JustDireDataComponents.POCKETGEN_COUNTER, 0) > 0)) return 0.0f;
-                            return 1.0f;
-                        } else
-                            return toggleableItem.getEnabled(stack) ? 1.0f : 0.0f;
-                    });
-        }
-    }
-
-    @SubscribeEvent
-    public static void mrl(ModelEvent.RegisterAdditional e) {
-        e.register(ModelResourceLocation.standalone(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "item/creaturecatcher_base")));
-    }
+    // TODO(port, stage-16): ModelEvent.RegisterAdditional is gone in 26.1 — the standalone-model
+    // registration path for CreatureCatcher base went away with the client-item JSON system.
+    // @SubscribeEvent
+    // public static void mrl(ModelEvent.RegisterAdditional e) {
+    //     e.register(ModelResourceLocation.standalone(
+    //             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "item/creaturecatcher_base")));
+    // }
 
     @SubscribeEvent
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(PortalProjectileModel.Portal_Projectile_Layer, PortalProjectileModel::createBodyLayer);
     }
 
-    @SubscribeEvent
-    private static void registerShaders(RegisterShadersEvent event) {
-        try {
-            for(DireRenderTypes.ShaderRenderType type : DireRenderTypes.getRenderTypes().values()) {
-                type.register(event.getResourceProvider(), event::registerShader);
-            }
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    // TODO(port, stage-16): RegisterShadersEvent is gone in 26.1 — custom shaders/RenderPipelines
+    // register via RegisterRenderPipelinesEvent and the RenderSetup.builder API. See RENDER_PORTING
+    // §1.3 / §1.4. DireRenderTypes will be rewritten during Stage 16.
+    // @SubscribeEvent
+    // private static void registerShaders(RegisterShadersEvent event) {
+    //     try {
+    //         for (DireRenderTypes.ShaderRenderType type : DireRenderTypes.getRenderTypes().values()) {
+    //             type.register(event.getResourceProvider(), event::registerShader);
+    //         }
+    //     } catch (IOException e) {
+    //         throw new RuntimeException(e);
+    //     }
+    // }
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
@@ -192,14 +125,17 @@ public class ClientSetup {
         event.register(Registration.Experience_Holder_Container.get(), ExperienceHolderScreen::new);
     }
 
-    @SubscribeEvent
-    public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
-        event.register(Registration.TimeWand.get(), new FluidbarDecorator());
-        event.register(Registration.PortalGunV2.get(), new FluidbarDecorator());
-        event.register(Registration.FluidCanister.get(), new FluidbarDecorator());
-        event.register(Registration.PolymorphicWand.get(), new FluidbarDecorator());
-        event.register(Registration.PolymorphicWandV2.get(), new FluidbarDecorator());
-    }
+    // TODO(port, stage-16): RegisterItemDecorationsEvent + FluidbarDecorator — the ItemDecorator
+    // hook still exists on the event but FluidbarDecorator uses the removed GuiGraphics/BakedModel
+    // APIs. Restore when item decorators are ported.
+    // @SubscribeEvent
+    // public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
+    //     event.register(Registration.TimeWand.get(), new FluidbarDecorator());
+    //     event.register(Registration.PortalGunV2.get(), new FluidbarDecorator());
+    //     event.register(Registration.FluidCanister.get(), new FluidbarDecorator());
+    //     event.register(Registration.PolymorphicWand.get(), new FluidbarDecorator());
+    //     event.register(Registration.PolymorphicWandV2.get(), new FluidbarDecorator());
+    // }
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -236,14 +172,13 @@ public class ClientSetup {
 
     @SubscribeEvent
     static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(new IClientItemExtensions() {
-            JustDireItemRenderer diremodel = new JustDireItemRenderer();
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return diremodel;
-            }
-        }, Registration.CreatureCatcher.get());
+        // TODO(port, stage-16): IClientItemExtensions.getCustomRenderer() is gone in 26.1. The
+        // CreatureCatcher custom renderer (JustDireItemRenderer) needs a SpecialModelRenderer or
+        // ClientItem JSON rewrite — see RENDER_PORTING §2/§4 + PORTING §3.4 on client-items.
+        // event.registerItem(new IClientItemExtensions() {
+        //     JustDireItemRenderer diremodel = new JustDireItemRenderer();
+        //     @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return diremodel; }
+        // }, Registration.CreatureCatcher.get());
 
         final Identifier UNDERWATER_LOCATION = Identifier.parse("textures/misc/underwater.png");
         final Identifier WATER_STILL = Identifier.fromNamespaceAndPath(MODID, "block/fluid_source");
@@ -592,31 +527,31 @@ public class ClientSetup {
         }, Registration.XP_FLUID_TYPE.get());
     }
 
-    @SubscribeEvent
-    static void itemColors(RegisterColorHandlersEvent.Item event) {
-        final ItemColors colors = event.getItemColors();
-
-        for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
-            colors.register((stack, index) -> {
-                if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
-                    return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
-                }
-                return 0xFFFFFFFF;
-            }, bucket.get());
-        }
-
-        colors.register((stack, index) -> {
-            if (index == 1 && stack.getItem() instanceof FluidCanister) {
-                return FluidCanister.getFluidColor(stack);
-            }
-            return 0xFFFFFFFF;
-        }, Registration.FluidCanister.get());
-
-        colors.register((stack, index) -> {
-            if (index == 1 && stack.getItem() instanceof PotionCanister) {
-                return PotionCanister.getPotionColor(stack);
-            }
-            return 0xFFFFFFFF;
-        }, Registration.PotionCanister.get());
-    }
+    // TODO(port, stage-16): ItemColors is gone in 26.1 — per-item tint is expressed via
+    // ItemTintSource in the items/*.json client-item file. The three registrations here (all
+    // bucket items, FluidCanister, PotionCanister) need to migrate to that format.
+    // @SubscribeEvent
+    // static void itemColors(RegisterColorHandlersEvent.Item event) {
+    //     final ItemColors colors = event.getItemColors();
+    //     for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
+    //         colors.register((stack, index) -> {
+    //             if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
+    //                 return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
+    //             }
+    //             return 0xFFFFFFFF;
+    //         }, bucket.get());
+    //     }
+    //     colors.register((stack, index) -> {
+    //         if (index == 1 && stack.getItem() instanceof FluidCanister) {
+    //             return FluidCanister.getFluidColor(stack);
+    //         }
+    //         return 0xFFFFFFFF;
+    //     }, Registration.FluidCanister.get());
+    //     colors.register((stack, index) -> {
+    //         if (index == 1 && stack.getItem() instanceof PotionCanister) {
+    //             return PotionCanister.getPotionColor(stack);
+    //         }
+    //         return 0xFFFFFFFF;
+    //     }, Registration.PotionCanister.get());
+    // }
 }

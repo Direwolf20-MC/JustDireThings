@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.ToggleableItem;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -22,11 +23,14 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class KeyBindings {
     private static final Logger LOGGER = LoggerFactory.getLogger(KeyBindings.class);
     private static final KeyConflictContextGadget CONFLICT_CONTEXT_GADGET = new KeyConflictContextGadget();
     private static final KeyConflictContextConfigScreen CONFLICT_CONTEXT_CONFIG = new KeyConflictContextConfigScreen();
+
+    public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "category"));
 
     private static final List<KeyMapping> keyMappings = new ArrayList<>();
 
@@ -37,13 +41,13 @@ public class KeyBindings {
     public static KeyMapping range = createBinding("range", GLFW.GLFW_KEY_R);*/
 
     private static KeyMapping createBinding(String name, int key) {
-        KeyMapping keyBinding = new KeyMapping(getKey(name), CONFLICT_CONTEXT_GADGET, InputConstants.Type.KEYSYM.getOrCreate(key), getKey("category"));
+        KeyMapping keyBinding = new KeyMapping(getKey(name), CONFLICT_CONTEXT_GADGET, InputConstants.Type.KEYSYM, key, CATEGORY);
         keyMappings.add(keyBinding);
         return keyBinding;
     }
 
     private static KeyMapping createBindingGUI(String name, int key) {
-        KeyMapping keyBinding = new KeyMapping(getKey(name), CONFLICT_CONTEXT_CONFIG, InputConstants.Type.KEYSYM.getOrCreate(key), getKey("category"));
+        KeyMapping keyBinding = new KeyMapping(getKey(name), CONFLICT_CONTEXT_CONFIG, InputConstants.Type.KEYSYM, key, CATEGORY);
         keyMappings.add(keyBinding);
         return keyBinding;
     }

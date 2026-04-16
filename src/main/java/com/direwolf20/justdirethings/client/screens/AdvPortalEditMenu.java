@@ -6,16 +6,18 @@ import com.direwolf20.justdirethings.common.network.data.PortalGunFavoriteChange
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.gui.widget.ExtendedButton;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.function.Predicate;
 
@@ -27,7 +29,6 @@ public class AdvPortalEditMenu extends Screen {
     private EditBox xPos;
     private EditBox yPos;
     private EditBox zPos;
-    // Define the predicate as a class-level variable
     private final Predicate<String> doubleInputValidator = this::isValidDoubleInput;
 
     protected AdvPortalEditMenu(ItemStack itemStack, int favoritePosition) {
@@ -37,7 +38,8 @@ public class AdvPortalEditMenu extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        // Suppress default background.
     }
 
     @Override
@@ -82,29 +84,19 @@ public class AdvPortalEditMenu extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mx, int my, float partialTicks) {
-        super.render(guiGraphics, mx, my, partialTicks);
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-
-    @Override
     public boolean isPauseScreen() {
         return false;
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (ticksOpened < 400 && p_keyPressed_1_ == KeyBindings.toggleTool.getKey().getValue()) return true;
-        if (p_keyPressed_1_ == 256) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
+        if (ticksOpened < 400 && keyCode == KeyBindings.toggleTool.getKey().getValue()) return true;
+        if (keyCode == 256) {
             onClose();
             return true;
         }
-
-        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return super.keyPressed(event);
     }
 
     @Override
@@ -113,20 +105,15 @@ public class AdvPortalEditMenu extends Screen {
     }
 
     @Override
-    public boolean charTyped(char pCodePoint, int pModifiers) {
+    public boolean charTyped(CharacterEvent event) {
         String toggleToolKeybind = KeyBindings.toggleTool.getKey().getName();
-        if (ticksOpened < 20 && toggleToolKeybind.charAt(toggleToolKeybind.length() - 1) == pCodePoint)
+        if (ticksOpened < 20 && toggleToolKeybind.charAt(toggleToolKeybind.length() - 1) == event.codepoint())
             return false;
-        return this.getFocused() != null && this.getFocused().charTyped(pCodePoint, pModifiers);
+        return this.getFocused() != null && this.getFocused().charTyped(event);
     }
 
     public void addFavorite() {
-        // Convert the valid string to a double
         try {
-            //TODO Bring this back when/if I allow editing the Positions. Should fix bug #71
-            //double xValue = Double.parseDouble(xPos.getValue());
-            //double yValue = Double.parseDouble(yPos.getValue());
-            //double zValue = Double.parseDouble(zPos.getValue());
             NBTHelpers.PortalDestination portalDestination = PortalGunV2.getFavorite(portalGun, slotSelected);
             if (portalDestination == null || portalDestination.equals(NBTHelpers.PortalDestination.EMPTY)) {
                 Player player = Minecraft.getInstance().player;
@@ -135,7 +122,7 @@ public class AdvPortalEditMenu extends Screen {
                 portalDestination = new NBTHelpers.PortalDestination(new NBTHelpers.GlobalVec3(player.level().dimension(), position), facing, "UNNAMED");
             }
             Vec3 coords = portalDestination.globalVec3().position();
-            PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, nameField.getValue(), true, coords));
+            ClientPacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, nameField.getValue(), true, coords));
             this.onClose();
         } catch (NumberFormatException e) {
             System.out.println("Error: Invalid format for the validFormattedX string");
@@ -160,9 +147,8 @@ public class AdvPortalEditMenu extends Screen {
 
 
     private boolean isValidDoubleInput(String input) {
-        if (input.isEmpty()) return true; // Allow empty input
+        if (input.isEmpty()) return true;
         try {
-            // Check if the input can be parsed to a double
             Double.parseDouble(input);
             return true;
         } catch (NumberFormatException e) {

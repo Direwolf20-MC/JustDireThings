@@ -9,20 +9,22 @@ import com.direwolf20.justdirethings.common.containers.slots.InventoryHolderSlot
 import com.direwolf20.justdirethings.common.network.data.InventoryHolderMoveItemsPayload;
 import com.direwolf20.justdirethings.common.network.data.InventoryHolderSaveSlotPayload;
 import com.direwolf20.justdirethings.common.network.data.InventoryHolderSettingsPayload;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderContainer> {
+    private static final int SELECTED_BORDER_ARGB = 0xFFFF0000;
+    private static final int GHOST_OVERLAY_ARGB = 0x80888888;
+
     private InventoryHolderBE inventoryHolderBE;
     private boolean compareNBT;
     private boolean filtersOnly;
@@ -54,42 +56,42 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.FILTERONLYBUTTON(getGuiLeft() + 134, topSectionTop + 22, filtersOnly, b -> {
+        addRenderableWidget(ToggleButtonFactory.FILTERONLYBUTTON(leftPos + 134, topSectionTop + 22, filtersOnly, b -> {
             filtersOnly = !filtersOnly;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(getGuiLeft() + 152, topSectionTop + 22, compareNBT, b -> {
+        addRenderableWidget(ToggleButtonFactory.COMPARENBTBUTTON(leftPos + 152, topSectionTop + 22, compareNBT, b -> {
             compareNBT = !compareNBT;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.COMPARECOUNTSBUTTON(getGuiLeft() + 134, topSectionTop + 4, compareCounts, b -> {
+        addRenderableWidget(ToggleButtonFactory.COMPARECOUNTSBUTTON(leftPos + 134, topSectionTop + 4, compareCounts, b -> {
             compareCounts = !compareCounts;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.SEND_INV_BUTTON(getGuiLeft() + 134, topSectionTop + 132, b -> {
-            PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(0));
+        addRenderableWidget(ToggleButtonFactory.SEND_INV_BUTTON(leftPos + 134, topSectionTop + 132, b -> {
+            ClientPacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(0));
         }));
-        addRenderableWidget(ToggleButtonFactory.PULL_INV_BUTTON(getGuiLeft() + 26, topSectionTop + 132, b -> {
-            PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(1));
+        addRenderableWidget(ToggleButtonFactory.PULL_INV_BUTTON(leftPos + 26, topSectionTop + 132, b -> {
+            ClientPacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(1));
         }));
-        addRenderableWidget(ToggleButtonFactory.SWAP_INV_BUTTON(getGuiLeft() + 152, topSectionTop + 132, b -> {
-            PacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(2));
+        addRenderableWidget(ToggleButtonFactory.SWAP_INV_BUTTON(leftPos + 152, topSectionTop + 132, b -> {
+            ClientPacketDistributor.sendToServer(new InventoryHolderMoveItemsPayload(2));
         }));
-        addRenderableWidget(ToggleButtonFactory.FILTERONLYBUTTON(getGuiLeft() + 26, topSectionTop + 22, automatedFiltersOnly, b -> {
+        addRenderableWidget(ToggleButtonFactory.FILTERONLYBUTTON(leftPos + 26, topSectionTop + 22, automatedFiltersOnly, b -> {
             automatedFiltersOnly = !automatedFiltersOnly;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.COMPARECOUNTSBUTTON(getGuiLeft() + 26, topSectionTop + 4, automatedCompareCounts, b -> {
+        addRenderableWidget(ToggleButtonFactory.COMPARECOUNTSBUTTON(leftPos + 26, topSectionTop + 4, automatedCompareCounts, b -> {
             automatedCompareCounts = !automatedCompareCounts;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
 
-        addRenderableWidget(ToggleButtonFactory.SHOWFAKEPLAYERBUTTON(getGuiLeft() + 8, topSectionTop + 4, renderPlayer, b -> {
+        addRenderableWidget(ToggleButtonFactory.SHOWFAKEPLAYERBUTTON(leftPos + 8, topSectionTop + 4, renderPlayer, b -> {
             renderPlayer = !renderPlayer;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
@@ -102,66 +104,56 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
         extraHeight = 24;
     }
 
-    @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+    private ItemStack ghostStack(int slotIndex) {
+        return inventoryHolderBE.filterBasicHandler.getResource(slotIndex)
+                .toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slotIndex));
     }
 
     @Override
-    protected void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !inventoryHolderBE.filterBasicHandler.getResource(slot.getSlotIndex()).toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slot.getSlotIndex())).isEmpty()) {
-            ItemStack showStack = inventoryHolderBE.filterBasicHandler.getResource(slot.getSlotIndex()).toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slot.getSlotIndex()));
-            RenderSystem.enableBlend(); // Enable blending
-            RenderSystem.defaultBlendFunc(); // Set default blend mode
-            guiGraphics.renderFakeItem(showStack, slot.x, slot.y);
-            guiGraphics.pose().pushPose();
-            guiGraphics.renderItemDecorations(Minecraft.getInstance().font, showStack, slot.x, slot.y);
-            guiGraphics.pose().translate(0, 0, -200); //This was needed to make Damage Bars transparent
-            guiGraphics.fill(RenderType.guiGhostRecipeOverlay(), slot.x, slot.y, slot.x + 16, slot.y + 16, 0x80888888);
-            guiGraphics.pose().popPose();
-            RenderSystem.disableBlend();
+    protected void extractSlot(GuiGraphicsExtractor graphics, Slot slot, int mouseX, int mouseY) {
+        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !ghostStack(slot.getSlotIndex()).isEmpty()) {
+            ItemStack showStack = ghostStack(slot.getSlotIndex());
+            graphics.fakeItem(showStack, slot.x, slot.y);
+            graphics.itemDecorations(Minecraft.getInstance().font, showStack, slot.x, slot.y);
+            graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, GHOST_OVERLAY_ARGB);
         } else {
-            super.renderSlot(guiGraphics, slot);
+            super.extractSlot(graphics, slot, mouseX, mouseY);
         }
 
-        // Draw red border if this is the selected slot (renderedSlot)
         if (slot.getSlotIndex() == renderedSlot && slot instanceof InventoryHolderSlot) {
-            // Top border
-            guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 1, 0xFFFF0000);
-            // Bottom border
-            guiGraphics.fill(slot.x, slot.y + 15, slot.x + 16, slot.y + 16, 0xFFFF0000);
-            // Left border
-            guiGraphics.fill(slot.x, slot.y, slot.x + 1, slot.y + 16, 0xFFFF0000);
-            // Right border
-            guiGraphics.fill(slot.x + 15, slot.y, slot.x + 16, slot.y + 16, 0xFFFF0000);
+            graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 1, SELECTED_BORDER_ARGB);
+            graphics.fill(slot.x, slot.y + 15, slot.x + 16, slot.y + 16, SELECTED_BORDER_ARGB);
+            graphics.fill(slot.x, slot.y, slot.x + 1, slot.y + 16, SELECTED_BORDER_ARGB);
+            graphics.fill(slot.x + 15, slot.y, slot.x + 16, slot.y + 16, SELECTED_BORDER_ARGB);
         }
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         Slot slot = this.hoveredSlot;
-        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !inventoryHolderBE.filterBasicHandler.getResource(slot.getSlotIndex()).toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slot.getSlotIndex())).isEmpty()) {
-            ItemStack itemstack = inventoryHolderBE.filterBasicHandler.getResource(slot.getSlotIndex()).toStack(inventoryHolderBE.filterBasicHandler.getAmountAsInt(slot.getSlotIndex()));
-            guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, x, y);
+        if (slot instanceof InventoryHolderSlot && slot.getItem().isEmpty() && !ghostStack(slot.getSlotIndex()).isEmpty()) {
+            ItemStack itemstack = ghostStack(slot.getSlotIndex());
+            graphics.setTooltipForNextFrame(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, mouseX, mouseY);
         } else {
-            super.renderTooltip(guiGraphics, x, y);
+            super.extractTooltip(graphics, mouseX, mouseY);
         }
     }
 
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new InventoryHolderSettingsPayload(compareNBT, filtersOnly, compareCounts, automatedFiltersOnly, automatedCompareCounts, renderPlayer, renderedSlot));
-    }
-
-    public void renderInventorySection(GuiGraphics guiGraphics, int relX, int relY) {
-        guiGraphics.blitSprite(SOCIALBACKGROUND, relX, relY + 83 - 8, this.imageWidth, this.imageHeight - 55); //Inventory Section
+        ClientPacketDistributor.sendToServer(new InventoryHolderSettingsPayload(compareNBT, filtersOnly, compareCounts, automatedFiltersOnly, automatedCompareCounts, renderPlayer, renderedSlot));
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int btn) {
-        if (btn == 0 && Screen.hasControlDown() && hoveredSlot != null && hoveredSlot instanceof InventoryHolderSlot) {
-            if (Screen.hasShiftDown()) {
+    public void renderInventorySection(GuiGraphicsExtractor graphics, int relX, int relY) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, relX, relY + 83 - 8, this.imageWidth, this.imageHeight - 55);
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (event.button() == 0 && Minecraft.getInstance().hasControlDown() && hoveredSlot != null && hoveredSlot instanceof InventoryHolderSlot) {
+            if (Minecraft.getInstance().hasShiftDown()) {
                 if (hoveredSlot.getSlotIndex() >= 27 && hoveredSlot.getSlotIndex() <= 35) {
                     renderedSlot = hoveredSlot.getSlotIndex();
                     saveSettings();
@@ -169,11 +161,11 @@ public class InventoryHolderScreen extends BaseMachineScreen<InventoryHolderCont
                     return true;
                 }
             } else {
-                PacketDistributor.sendToServer(new InventoryHolderSaveSlotPayload(hoveredSlot.getSlotIndex()));
+                ClientPacketDistributor.sendToServer(new InventoryHolderSaveSlotPayload(hoveredSlot.getSlotIndex()));
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             }
         }
-        return super.mouseClicked(x, y, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 }

@@ -5,9 +5,10 @@ import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContai
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -17,17 +18,12 @@ public abstract class BaseScreen<T extends BaseContainer> extends AbstractContai
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
-    }
-
-    @Override
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
-        super.renderTooltip(pGuiGraphics, pX, pY);
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        super.extractTooltip(graphics, mouseX, mouseY);
         for (Renderable renderable : this.renderables) {
-            if (renderable instanceof BaseButton button && !button.getLocalization(pX, pY).equals(Component.empty()))
-                pGuiGraphics.renderTooltip(font, button.getLocalization(pX, pY), pX, pY);
+            if (renderable instanceof BaseButton button && !button.getLocalization(mouseX, mouseY).equals(Component.empty())) {
+                graphics.setTooltipForNextFrame(font, button.getLocalization(mouseX, mouseY), mouseX, mouseY);
+            }
         }
     }
 
@@ -37,14 +33,14 @@ public abstract class BaseScreen<T extends BaseContainer> extends AbstractContai
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        InputConstants.Key mouseKey = InputConstants.getKey(p_keyPressed_1_, p_keyPressed_2_);
-        if (p_keyPressed_1_ == 256 || minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
+    public boolean keyPressed(KeyEvent event) {
+        InputConstants.Key mouseKey = InputConstants.getKey(event);
+        if (event.key() == 256 || minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
             onClose();
             return true;
         }
 
-        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return super.keyPressed(event);
     }
 
     public Minecraft getMinecraftInstance() {

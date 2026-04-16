@@ -9,12 +9,13 @@ import com.direwolf20.justdirethings.common.containers.GeneratorFluidT1Container
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.locale.Language;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeneratorFluidT1Screen extends BaseMachineScreen<GeneratorFluidT1Container> {
     protected GeneratorFluidT1Container container;
@@ -46,26 +47,24 @@ public class GeneratorFluidT1Screen extends BaseMachineScreen<GeneratorFluidT1Co
 
     @Override
     public void addRedstoneButtons() {
-        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
+        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(leftPos + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
             redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
             saveSettings();
         }));
     }
 
     @Override
-    public void powerBarTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+    public void powerBarTooltip(GuiGraphicsExtractor graphics, int pX, int pY) {
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
             if (MiscTools.inBounds(topSectionLeft + 5, topSectionTop + 5, 18, 72, pX, pY)) {
-                if (hasShiftDown())
-                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
-                            Component.translatable("justdirethings.screen.energy", MagicHelpers.formatted(this.container.getEnergy()), MagicHelpers.formatted(poweredMachineBE.getMaxEnergy())),
-                            Component.translatable("justdirethings.screen.fepertick", MagicHelpers.formatted(generatorBE.getFePerFuelTick()))
-                    )), pX, pY);
-                else
-                    pGuiGraphics.renderTooltip(font, Language.getInstance().getVisualOrder(Arrays.asList(
-                            Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(this.container.getEnergy()), MagicHelpers.withSuffix(poweredMachineBE.getMaxEnergy())),
-                            Component.translatable("justdirethings.screen.fepertick", MagicHelpers.formatted(generatorBE.getFePerFuelTick()))
-                    )), pX, pY);
+                List<Component> lines = new ArrayList<>();
+                if (Minecraft.getInstance().hasShiftDown()) {
+                    lines.add(Component.translatable("justdirethings.screen.energy", MagicHelpers.formatted(this.container.getEnergy()), MagicHelpers.formatted(poweredMachineBE.getMaxEnergy())));
+                } else {
+                    lines.add(Component.translatable("justdirethings.screen.energy", MagicHelpers.withSuffix(this.container.getEnergy()), MagicHelpers.withSuffix(poweredMachineBE.getMaxEnergy())));
+                }
+                lines.add(Component.translatable("justdirethings.screen.fepertick", MagicHelpers.formatted(generatorBE.getFePerFuelTick())));
+                graphics.setTooltipForNextFrame(font, lines, java.util.Optional.empty(), pX, pY);
             }
         }
     }

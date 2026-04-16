@@ -11,7 +11,7 @@ import com.direwolf20.justdirethings.common.network.data.DropperSettingPayload;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
     protected int dropCount;
@@ -27,18 +27,18 @@ public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 122, topSectionTop + 38, direction, b -> {
+        addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(leftPos + 122, topSectionTop + 38, direction, b -> {
             direction = ((ToggleButton) b).getTexturePosition();
-            PacketDistributor.sendToServer(new DirectionSettingPayload(direction));
+            ClientPacketDistributor.sendToServer(new DirectionSettingPayload(direction));
         }));
 
-        addRenderableWidget(new NumberButton(getGuiLeft() + 50, topSectionTop + 41, 24, 12, dropCount, 1, 64, Component.translatable("justdirethings.screen.dropcount"), b -> {
-            dropCount = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
+        addRenderableWidget(new NumberButton(leftPos + 50, topSectionTop + 41, 24, 12, dropCount, 1, 64, Component.translatable("justdirethings.screen.dropcount"), b -> {
+            dropCount = ((NumberButton) b).getValue();
             saveSettings();
         }));
 
-        addRenderableWidget(ToggleButtonFactory.PICKUPDELAYBUTTON(getGuiLeft() + 50, topSectionTop + 27, pickupDelay, b -> {
-            pickupDelay = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
+        addRenderableWidget(ToggleButtonFactory.PICKUPDELAYBUTTON(leftPos + 50, topSectionTop + 27, pickupDelay, b -> {
+            pickupDelay = ((NumberButton) b).getValue();
             saveSettings();
         }));
     }
@@ -51,7 +51,7 @@ public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
 
     @Override
     public void addRedstoneButtons() {
-        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
+        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(leftPos + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
             redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
             saveSettings();
         }));
@@ -60,6 +60,6 @@ public class DropperT1Screen extends BaseMachineScreen<DropperT1Container> {
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new DropperSettingPayload(dropCount, pickupDelay));
+        ClientPacketDistributor.sendToServer(new DropperSettingPayload(dropCount, pickupDelay));
     }
 }

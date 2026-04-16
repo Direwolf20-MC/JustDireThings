@@ -3,8 +3,9 @@ package com.direwolf20.justdirethings.client.screens.widgets;
 import com.direwolf20.justdirethings.client.screens.basescreens.SensorScreenInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
@@ -21,6 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollList.BlockStateEntry> {
+    private static final int NAME_TEXT_ARGB = 0xFFFFFFFF;
+    private static final int VALUE_TEXT_ARGB = 0xFFCCCCCC;
+    private static final int BACKGROUND_TOP_ARGB = 0xC0101010;
+    private static final int BACKGROUND_BOTTOM_ARGB = 0xD0101010;
+
     private static String stripControlCodes(String value) {
         return net.minecraft.util.StringUtil.stripColor(value);
     }
@@ -33,7 +39,6 @@ public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollLi
         super(Minecraft.getInstance(), listWidth, bottom - top, top, parent.getFontRenderer().lineHeight * 2 + 8);
         this.parent = parent;
         this.listWidth = listWidth;
-        //this.setRenderBackground(false);
         this.refreshList();
         setX(left);
     }
@@ -44,11 +49,6 @@ public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollLi
 
     public void setStateStack(ItemStack stack) {
         this.stateStack = stack;
-    }
-
-    @Override
-    protected int getScrollbarPosition() {
-        return this.getX() + this.listWidth - 5;
     }
 
     @Override
@@ -87,13 +87,13 @@ public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollLi
     }
 
     @Override
-    public void renderWidget(GuiGraphics p_282708_, int p_283242_, int p_282891_, float p_283683_) {
-        renderContentBackground(p_282708_);
-        super.renderWidget(p_282708_, p_283242_, p_282891_, p_283683_);
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        renderContentBackground(graphics);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTicks);
     }
 
-    protected void renderContentBackground(GuiGraphics guiGraphics) {
-        guiGraphics.fillGradient(getX(), getY(), getRight(), getBottom(), 0xC0101010, 0xD0101010);
+    protected void renderContentBackground(GuiGraphicsExtractor graphics) {
+        graphics.fillGradient(getX(), getY(), getRight(), getBottom(), BACKGROUND_TOP_ARGB, BACKGROUND_BOTTOM_ARGB);
     }
 
     public class BlockStateEntry extends ObjectSelectionList.Entry<BlockStateEntry> {
@@ -120,16 +120,18 @@ public class BlockStateScrollList extends ObjectSelectionList<BlockStateScrollLi
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float partialTick) {
             Component name = Component.literal(stripControlCodes(property.getName()));
             Component value = Component.literal(stripControlCodes(isAny ? "ANY" : this.currentValue.toString()));
             Font font = this.parent.getFontRenderer();
-            guiGraphics.drawString(font, Language.getInstance().getVisualOrder(FormattedText.composite(font.substrByWidth(name, listWidth))), left + 3, top + 2, 0xFFFFFF, false);
-            guiGraphics.drawString(font, Language.getInstance().getVisualOrder(FormattedText.composite(font.substrByWidth(value, listWidth))), left + 3, top + 2 + font.lineHeight, 0xCCCCCC, false);
+            int left = this.getX();
+            int top = this.getY();
+            graphics.text(font, Language.getInstance().getVisualOrder(FormattedText.composite(font.substrByWidth(name, listWidth))), left + 3, top + 2, NAME_TEXT_ARGB, false);
+            graphics.text(font, Language.getInstance().getVisualOrder(FormattedText.composite(font.substrByWidth(value, listWidth))), left + 3, top + 2 + font.lineHeight, VALUE_TEXT_ARGB, false);
         }
 
         @Override
-        public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+        public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
             BlockStateScrollList.this.setSelected(this);
             int currentIndex = possibleValues.indexOf(this.currentValue);
             int nextIndex;

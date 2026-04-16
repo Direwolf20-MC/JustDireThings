@@ -8,7 +8,6 @@ package com.direwolf20.justdirethings.client.screens;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.OurSounds;
-import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.BaseButton;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
@@ -18,24 +17,22 @@ import com.direwolf20.justdirethings.common.network.data.PortalGunFavoritePayloa
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.joml.Matrix4f;
-
-import java.awt.*;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class AdvPortalRadialMenu extends Screen {
+    private static final int WHITE_ARGB = 0xFFFFFFFF;
+    private static final int LIGHT_GRAY_ARGB = 0xFFC0C0C0;
+
     ToggleButtonFactory.TextureLocalization ADD_BUTTON = new ToggleButtonFactory.TextureLocalization(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png"), Component.translatable("justdirethings.screen.add_favorite"));
     ToggleButtonFactory.TextureLocalization REMOVE_BUTTON = new ToggleButtonFactory.TextureLocalization(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png"), Component.translatable("justdirethings.screen.remove_favorite"));
     ToggleButtonFactory.TextureLocalization EDIT_BUTTON = new ToggleButtonFactory.TextureLocalization(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/matchnbttrue.png"), Component.translatable("justdirethings.screen.edit_favorite"));
@@ -66,7 +63,8 @@ public class AdvPortalRadialMenu extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        // Suppress default background.
     }
 
     @Override
@@ -95,29 +93,35 @@ public class AdvPortalRadialMenu extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mx, int my, float partialTicks) {
-        renderTooltip(guiGraphics, mx, my);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         portalGun = PortalGunV2.getPortalGunv2(Minecraft.getInstance().player);
-        PoseStack matrices = guiGraphics.pose();
-        float speedOfButtonGrowth = 5f; // How fast the buttons move during initial window opening
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+
+        // TODO(port, stage-16): Radial-menu pie slice rendering — old code used MultiBufferSource +
+        // OurRenderTypes.TRIANGLE_STRIP with manual VertexConsumer.addVertex calls. The 26.1 GuiGraphicsExtractor
+        // pose() returns a 2D Matrix3x2fStack with no Z and no Quaternionf rotation, so the per-segment
+        // mulPose(Axis.ZP.rotation(...)) text rotation also needs a different approach (likely
+        // Matrix3x2f.rotate(angle) on the GUI matrix). Restore once Stage 16 ports OurRenderTypes/RenderPipelines.
+
+        boolean inRange = isInRange(mouseX, mouseY);
+        float speedOfButtonGrowth = 5f;
         float fract = Math.min(speedOfButtonGrowth, this.timeIn + partialTicks) / speedOfButtonGrowth;
         int x = this.width / 2;
         int y = this.height / 2;
 
-        boolean inRange = isInRange(mx, my);
-
-
-        // This triggers the animation on creation - only affects side buttons and slider(s)
-        matrices.pushPose();
-        matrices.translate((1 - fract) * x, (1 - fract) * y, 0);
-        matrices.scale(fract, fract, fract);
-        super.render(guiGraphics, mx, my, partialTicks);
-        matrices.popPose();
-
-        float angle = mouseAngle(x, y, mx, my);
+        // Update slotHovered for click handling — same arithmetic as before.
+        float angle = mouseAngle(x, y, mouseX, mouseY);
         float totalDeg = 0;
         float degPer = 360F / SEGMENTS;
+        for (int seg = 0; seg < SEGMENTS; seg++) {
+            if (this.isCursorInSlice(angle, totalDeg, degPer, inRange)) {
+                this.slotHovered = seg;
+            }
+            totalDeg += degPer;
+        }
 
+        // Render the favorite labels in straight-up orientation as a placeholder until Stage 16 restores rotation.
+        totalDeg = 0;
         for (int seg = 0; seg < SEGMENTS; seg++) {
             NBTHelpers.PortalDestination favorite = getFavorite(seg);
             String favoriteName = favorite != null ? favorite.name() : "Empty";
@@ -126,76 +130,23 @@ public class AdvPortalRadialMenu extends Screen {
                     (int) favorite.globalVec3().position().x(),
                     (int) favorite.globalVec3().position().y(),
                     (int) favorite.globalVec3().position().z()) : "";
-            boolean mouseInSector = this.isCursorInSlice(angle, totalDeg, degPer, inRange);
-            float delayBetweenSegments = 1f;
-            float speedOfSegmentGrowth = 25f;
-            float radius = Math.max(0F, Math.min((this.timeIn + partialTicks - seg * delayBetweenSegments / SEGMENTS) * speedOfSegmentGrowth, radiusMax));
-            float gs = 0.25F;
-            if (seg % 2 == 0) {
-                gs += 0.1F;
-            }
-
-            float r = gs;
-            float g = gs;
-            float b = gs;
-            float a = 0.4F;
-            if (mouseInSector) {
-                this.slotHovered = seg;
-                r = g = b = 1F;
-            }
-            if (seg == slotSelected) {
-                r = g = 1F;
-                a = 0.6f;
-            }
-
-            MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-            VertexConsumer buffer = bufferSource.getBuffer(OurRenderTypes.TRIANGLE_STRIP);
-
-            for (float i = degPer; i >= 0; i--) {
-                float rad = (float) ((i + totalDeg) / 180F * Math.PI);
-                float xp = (float) (x + Math.cos(rad) * radius);
-                float yp = (float) (y + Math.sin(rad) * radius);
-
-                Matrix4f pose = matrices.last().pose();
-                buffer.addVertex(pose, (float) (x + Math.cos(rad) * radius / 2.3F), (float) (y + Math.sin(rad) * radius / 2.3F), 0).setColor(r, g, b, a);
-                buffer.addVertex(xp, yp, 0).setColor(r, g, b, a);
-            }
-
-            bufferSource.endBatch(OurRenderTypes.TRIANGLE_STRIP);
-            totalDeg += degPer;
-
-            // Draw the name of the favorite destination, centered within each slice
-            float nameAngle = (totalDeg - degPer / 2) * (float) Math.PI / 180F;
-            float nameX = x + (float) (Math.cos(nameAngle) * (radiusMax / 1.4));
-            float nameY = y + (float) (Math.sin(nameAngle) * (radiusMax / 1.4));
+            float nameAngle = (totalDeg + degPer / 2) * (float) Math.PI / 180F;
+            float nameX = x + (float) (Math.cos(nameAngle) * (radiusMax / 1.4)) * fract;
+            float nameY = y + (float) (Math.sin(nameAngle) * (radiusMax / 1.4)) * fract;
             int textWidth = this.font.width(favoriteName);
             int dimensionWidth = this.font.width(dimension);
             int coordinatesWidth = this.font.width(coordinates);
+            graphics.text(this.font, favoriteName, (int) nameX - textWidth / 2, (int) nameY - 15, WHITE_ARGB, false);
+            graphics.text(this.font, dimension, (int) nameX - dimensionWidth / 2, (int) nameY - 5, LIGHT_GRAY_ARGB, false);
+            graphics.text(this.font, coordinates, (int) nameX - coordinatesWidth / 2, (int) nameY + 10, LIGHT_GRAY_ARGB, false);
+            totalDeg += degPer;
+        }
 
-            matrices.pushPose();
-            matrices.translate(nameX, nameY, 0);
-            matrices.scale(0.85f, 0.85f, 0.85f); // Scale down to simulate a smaller font
-            // Determine if the text is upside down and adjust the rotation
-            if (nameAngle > Math.PI / 2 && nameAngle < 3 * Math.PI / 2) {
-                matrices.mulPose(Axis.ZP.rotation(nameAngle + (float) Math.PI)); // Rotate the text upside down
-            } else {
-                matrices.mulPose(Axis.ZP.rotation(nameAngle)); // Rotate the text normally
+        // Render tooltips for buttons (replaces the old custom renderTooltip walk).
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof BaseButton button && !button.getLocalization(mouseX, mouseY).equals(Component.empty())) {
+                graphics.setTooltipForNextFrame(font, button.getLocalization(), mouseX, mouseY);
             }
-            guiGraphics.drawString(this.font, favoriteName, -textWidth / 2, -15, Color.WHITE.getRGB());
-            matrices.popPose();
-
-            matrices.pushPose();
-            matrices.translate(nameX, nameY, 0);
-            // Draw the dimension and coordinates underneath the name in a smaller font
-            matrices.scale(0.7f, 0.7f, 0.7f); // Scale down to simulate a smaller font
-            if (nameAngle > Math.PI / 2 && nameAngle < 3 * Math.PI / 2) {
-                matrices.mulPose(Axis.ZP.rotation(nameAngle + (float) Math.PI)); // Rotate the text upside down
-            } else {
-                matrices.mulPose(Axis.ZP.rotation(nameAngle)); // Rotate the text normally
-            }
-            guiGraphics.drawString(this.font, dimension, -dimensionWidth / 2, -5, Color.LIGHT_GRAY.getRGB());
-            guiGraphics.drawString(this.font, coordinates, -coordinatesWidth / 2, 10, Color.LIGHT_GRAY.getRGB());
-            matrices.popPose();
         }
     }
 
@@ -212,37 +163,28 @@ public class AdvPortalRadialMenu extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (isInRange(mouseX, mouseY))
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (isInRange(event.x(), event.y()))
             saveFavorite();
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (staysOpen && (p_keyPressed_1_ == 256 || p_keyPressed_1_ == KeyBindings.toggleTool.getKey().getValue())) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
+        if (staysOpen && (keyCode == 256 || keyCode == KeyBindings.toggleTool.getKey().getValue())) {
             onClose();
             return true;
         }
-
-        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return super.keyPressed(event);
     }
 
     @Override
     public void tick() {
-        if (!staysOpen && !InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), KeyBindings.toggleTool.getKey().getValue())) {
+        if (!staysOpen && !InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), KeyBindings.toggleTool.getKey().getValue())) {
             onClose();
         }
-
         this.timeIn++;
-    }
-
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
-        for (Renderable renderable : this.renderables) {
-            if (renderable instanceof BaseButton button && !button.getLocalization(pX, pY).equals(Component.empty())) {
-                pGuiGraphics.renderTooltip(font, button.getLocalization(), pX, pY);
-            }
-        }
     }
 
     @Override
@@ -252,16 +194,16 @@ public class AdvPortalRadialMenu extends Screen {
 
     public void saveFavorite() {
         slotSelected = slotHovered;
-        PacketDistributor.sendToServer(new PortalGunFavoritePayload(slotSelected, staysOpen));
+        ClientPacketDistributor.sendToServer(new PortalGunFavoritePayload(slotSelected, staysOpen));
         OurSounds.playSound(Registration.BEEP.get());
     }
 
     public void addFavorite() {
-        PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, "UNNAMED", false, Vec3.ZERO));
+        ClientPacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, "UNNAMED", false, Vec3.ZERO));
     }
 
     public void removeFavorite() {
-        PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, false, "NOTNEEDED", false, Vec3.ZERO));
+        ClientPacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, false, "NOTNEEDED", false, Vec3.ZERO));
     }
 
     public void editFavorite() {
