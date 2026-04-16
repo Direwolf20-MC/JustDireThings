@@ -4,14 +4,12 @@ import com.direwolf20.justdirethings.client.particles.alwaysvisibleparticle.Alwa
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.util.MiscHelpers;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,16 +18,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.common.Tags;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,34 +33,21 @@ import java.util.stream.Collectors;
 public class ThingFinder {
     public static long xRayStartTime;
     public static long blockParticlesStartTime;
-    private static long lastBlockDrawTime = 0; // The last time particles were drawn
-    private static long lastEntityDrawTime = 0; // The last time particles were drawn
+    private static long lastBlockDrawTime = 0;
+    private static long lastEntityDrawTime = 0;
     public static long entityParticlesStartTime;
 
     public static List<BlockPos> oreBlocksList = new ArrayList<>();
     public static List<Entity> entityList = new ArrayList<>();
-    private static int sortCounter = 0;
-
-    //A eBufferBuilder, so we can draw the render
-    private static final ByteBufferBuilder byteBufferBuilder = new ByteBufferBuilder(RenderType.cutout().bufferSize());
-
-    //Cached SortStates used for re-sorting every so often
-    private static MeshData meshdata;
-    private static MeshData.SortState sortState;
-    //Vertex Buffer to buffer the different ores.
-    private static final VertexBuffer vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-    //The render type
-    private static final RenderType renderType = RenderType.translucent();
-    private static final RenderType xRayRender = OurRenderTypes.OreXRAY;
-    private static BlockPos renderedAtPos = BlockPos.ZERO;
+    private static List<BlockPos> xRayBlocks = new ArrayList<>();
 
     public static void render(RenderLevelStageEvent evt, Player player, ItemStack heldItemMain) {
-        if (((System.currentTimeMillis() - xRayStartTime) / 1000) < 10)  //Lasts for 10 seconds
-            drawVBO(evt, player);
+        if (((System.currentTimeMillis() - xRayStartTime) / 1000) < 10)
+            drawXRay(evt, player);
         if (!oreBlocksList.isEmpty()) {
             long currentTime = System.currentTimeMillis();
-            if ((currentTime - blockParticlesStartTime) < 10000) { //Lasts for 10 seconds
-                if ((currentTime - lastBlockDrawTime) >= 500) { //Every 1/2 second
+            if ((currentTime - blockParticlesStartTime) < 10000) {
+                if ((currentTime - lastBlockDrawTime) >= 500) {
                     drawParticlesOre(evt, player);
                     lastBlockDrawTime = currentTime;
                 }
@@ -75,8 +56,8 @@ public class ThingFinder {
         }
         if (!entityList.isEmpty()) {
             long currentTime = System.currentTimeMillis();
-            if ((currentTime - entityParticlesStartTime) < 10000) { //Lasts for 10 seconds
-                if ((currentTime - lastEntityDrawTime) >= 500) { //Every 1/2 second
+            if ((currentTime - entityParticlesStartTime) < 10000) {
+                if ((currentTime - lastEntityDrawTime) >= 500) {
                     discoverMobs(player, false);
                     drawParticlesEntity(evt, player);
                     lastEntityDrawTime = currentTime;
@@ -103,7 +84,7 @@ public class ThingFinder {
                 .collect(Collectors.toList());
         if (toolAbility.equals(Ability.OREXRAY)) {
             xRayStartTime = System.currentTimeMillis();
-            generateVBO(player);
+            xRayBlocks = new ArrayList<>(oreBlocksList);
         } else if (toolAbility.equals(Ability.ORESCANNER)) {
             blockParticlesStartTime = System.currentTimeMillis();
         }
@@ -111,12 +92,9 @@ public class ThingFinder {
 
     private static boolean isValidBlock(BlockPos blockPos, Player player, ItemStack itemStack) {
         BlockState blockState = player.level().getBlockState(blockPos);
-        if (!blockState.getTags().anyMatch(tag -> tag.equals(Tags.Blocks.ORES)))
+        if (!blockState.is(Tags.Blocks.ORES))
             return false;
-        if (itemStack.getItem() instanceof TieredItem tieredItem) {
-            return itemStack.isCorrectToolForDrops(blockState);
-        }
-        return true;
+        return itemStack.isCorrectToolForDrops(blockState);
     }
 
     private static void discoverMobs(Player player, boolean startTimer) {
@@ -160,114 +138,64 @@ public class ThingFinder {
         }
     }
 
-    public static void generateVBO(Player player) {
-        if (oreBlocksList == null || oreBlocksList.isEmpty()) return;
-        PoseStack matrix = new PoseStack(); //Create a new matrix stack for use in the buffer building process
-        BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
-        ModelBlockRenderer modelBlockRenderer = dispatcher.getModelRenderer();
-        final RandomSource random = RandomSource.create();
+    public static void drawXRay(RenderLevelStageEvent evt, Player player) {
+        if (xRayBlocks == null || xRayBlocks.isEmpty()) return;
+
+        Minecraft mc = Minecraft.getInstance();
         Level level = player.level();
-        renderedAtPos = player.getOnPos();
+        MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
+        RandomSource random = RandomSource.create();
 
-        byteBufferBuilder.clear();
-        BufferBuilder builder = new BufferBuilder(byteBufferBuilder, renderType.mode(), renderType.format());
+        Vec3 projectedView = mc.gameRenderer.getMainCamera().position();
+        PoseStack matrix = evt.getPoseStack();
+        matrix.pushPose();
+        matrix.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
 
-        for (BlockPos pos : oreBlocksList) {
+        for (BlockPos pos : xRayBlocks) {
             BlockState renderState = level.getBlockState(pos);
             if (renderState.isAir()) continue;
 
-            BakedModel ibakedmodel = dispatcher.getBlockModel(renderState);
-            matrix.pushPose();
-            matrix.translate(-renderedAtPos.getX(), -renderedAtPos.getY(), -renderedAtPos.getZ());
-            matrix.translate(pos.getX(), pos.getY(), pos.getZ());
+            BlockStateModel model = mc.getModelManager().getBlockStateModelSet().get(renderState);
+            List<BlockStateModelPart> parts = new ArrayList<>();
+            model.collectParts(random, parts);
 
-            //We make this just a TINY bit smaller than a full block - because we're doing GREATERTHAN depth testing.
-            float translateF = (float) 1 / 2000;
+            matrix.pushPose();
+            matrix.translate(pos.getX(), pos.getY(), pos.getZ());
+            float translateF = 1f / 2000f;
             matrix.translate(translateF, translateF, translateF);
-            float scaleF = (float) 1 / 1000;
+            float scaleF = 1f / 1000f;
             matrix.scale(1 - scaleF, 1 - scaleF, 1 - scaleF);
 
-            for (RenderType renderTypeDraw : ibakedmodel.getRenderTypes(renderState, random, ModelData.EMPTY)) {
-                try {
-                    modelBlockRenderer.tesselateBlock(level, ibakedmodel, renderState, pos.above(255), matrix, builder, false, random, renderState.getSeed(pos), OverlayTexture.NO_OVERLAY, ibakedmodel.getModelData(level, pos, renderState, ModelData.EMPTY), renderTypeDraw);
-                } catch (Exception e) {
-                    //System.out.println(e);
+            try {
+                com.mojang.blaze3d.vertex.VertexConsumer buffer = bufferSource.getBuffer(OurRenderTypes.OreXRAY);
+                for (BlockStateModelPart part : parts) {
+                    renderPart(part, matrix, buffer);
                 }
+            } catch (Exception e) {
+                // Swallow broken models rather than crash the render pipeline
             }
             matrix.popPose();
         }
-        //Sort all the builder's vertices and then upload them to the vertex buffer
-        Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        Vec3 subtracted = projectedView.subtract(renderedAtPos.getX(), renderedAtPos.getY(), renderedAtPos.getZ());
-        Vector3f sortPos = new Vector3f((float) subtracted.x, (float) subtracted.y, (float) subtracted.z);
-        if (meshdata != null) {
-            meshdata.close();
-        }
-        meshdata = builder.build();
-        if (meshdata != null) {
-            sortState = meshdata.sortQuads(byteBufferBuilder, VertexSorting.byDistance(sortPos));
-            vertexBuffer.bind();
-            vertexBuffer.upload(meshdata);
-            VertexBuffer.unbind();
-        }
-        oreBlocksList.clear();
-    }
 
-    public static void drawVBO(RenderLevelStageEvent evt, Player player) {
-        if (vertexBuffer == null || oreBlocksList == null) {
-            return;
-        }
-
-        Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        BlockPos currentPos = player.getOnPos();
-        BlockPos renderPos = new BlockPos(
-                currentPos.getX() - (currentPos.getX() - renderedAtPos.getX()),
-                currentPos.getY() - (currentPos.getY() - renderedAtPos.getY()),
-                currentPos.getZ() - (currentPos.getZ() - renderedAtPos.getZ())
-        );
-
-        //Sort every <X> Frames to prevent screendoor effect
-        if (sortCounter > 20) {
-            if (sortState != null)
-                sortAll(renderPos);
-            sortCounter = 0;
-        } else {
-            sortCounter++;
-        }
-
-        PoseStack matrix = evt.getPoseStack();
-        matrix.pushPose();
-        matrix.mulPose(evt.getModelViewMatrix());
-        matrix.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
-        matrix.translate(renderPos.getX(), renderPos.getY(), renderPos.getZ());
-        //Draw the renders in the specified order
-        try {
-            if (vertexBuffer.getFormat() == null)
-                return; //IDE says this is never null, but if we remove this check we crash because its null so....
-            xRayRender.setupRenderState();
-            vertexBuffer.bind();
-            vertexBuffer.drawWithShader(matrix.last().pose(), new Matrix4f(evt.getProjectionMatrix()), RenderSystem.getShader());
-            VertexBuffer.unbind();
-            xRayRender.clearRenderState();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
         matrix.popPose();
+        bufferSource.endBatch(OurRenderTypes.OreXRAY);
     }
 
-    public static void sortAll(BlockPos lookingAt) {
-        ByteBufferBuilder.Result sortResult = sort(lookingAt);
-        vertexBuffer.bind();
-        vertexBuffer.uploadIndexBuffer(sortResult);
-        VertexBuffer.unbind();
+    private static void renderPart(BlockStateModelPart part,
+                                   PoseStack matrix, com.mojang.blaze3d.vertex.VertexConsumer buffer) {
+        com.mojang.blaze3d.vertex.QuadInstance instance = new com.mojang.blaze3d.vertex.QuadInstance();
+        instance.setColor(-1);
+        instance.setLightCoords(net.minecraft.util.LightCoordsUtil.FULL_BRIGHT);
+        instance.setOverlayCoords(OverlayTexture.NO_OVERLAY);
+        com.mojang.blaze3d.vertex.PoseStack.Pose pose = matrix.last();
 
-    }
-
-    //Sort the render type we pass in - using DireBufferBuilder because we want to sort in the opposite direction from normal
-    public static ByteBufferBuilder.Result sort(BlockPos lookingAt) {
-        Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        Vec3 subtracted = projectedView.subtract(lookingAt.getX(), lookingAt.getY(), lookingAt.getZ());
-        Vector3f sortPos = new Vector3f((float) subtracted.x, (float) subtracted.y, (float) subtracted.z);
-        return sortState.buildSortedIndexBuffer(byteBufferBuilder, VertexSorting.byDistance(sortPos));
+        for (net.minecraft.core.Direction direction : net.minecraft.core.Direction.values()) {
+            for (net.minecraft.client.resources.model.geometry.BakedQuad quad : part.getQuads(direction)) {
+                buffer.putBakedQuad(pose, quad, instance);
+            }
+        }
+        for (net.minecraft.client.resources.model.geometry.BakedQuad quad : part.getQuads(null)) {
+            buffer.putBakedQuad(pose, quad, instance);
+        }
     }
 }

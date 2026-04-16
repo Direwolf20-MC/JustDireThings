@@ -61,8 +61,6 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
         int maxMB = PotionCanister.getMaxMB(), height = 70;
         if (maxMB > 0) {
             int remaining = (PotionCanister.getPotionAmount(potionCanister) * height) / maxMB;
-            // TODO(port, stage-16): Potion fluid GUI rendering — the old Tesselator+BufferBuilder fluid blit + IClientFluidTypeExtensions
-            // for the still-water sprite is gone. Restore once Stage 16 ports the FluidModel/FluidTintSource pipeline.
             renderFluid(graphics, leftPos + offset + 1, topPos + 5 + 72 - 1, 16, remaining, potionCanister);
         }
         graphics.blit(RenderPipelines.GUI_TEXTURED, FLUIDBAR, leftPos + offset, topPos + 5, 18.0F, 0.0F, 18, 72, 36, 72);
@@ -71,7 +69,34 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
     public void renderFluid(GuiGraphicsExtractor graphics, int startX, int startY, int width, int height, ItemStack potionCanister) {
         PotionContents potionContents = PotionCanister.getPotionContents(potionCanister);
         if (potionContents.equals(PotionContents.EMPTY) || PotionCanister.getPotionAmount(potionCanister) <= 0) return;
-        // TODO(port, stage-16): replace with FluidModel/FluidTintSource-based GUI fluid blit using potionContents.getColor() as tint.
+        if (height <= 0) return;
+
+        net.minecraft.world.level.material.FluidState waterState = net.minecraft.world.level.material.Fluids.WATER.defaultFluidState();
+        net.minecraft.client.renderer.block.FluidModel fluidModel =
+                net.minecraft.client.Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(waterState);
+        net.minecraft.client.renderer.texture.TextureAtlasSprite sprite = fluidModel.stillMaterial().sprite();
+
+        int tint = potionContents.getColor() | 0xFF000000;
+
+        int tileSize = 16;
+        int remaining = height;
+        int y = startY;
+        while (remaining > 0) {
+            int drawHeight = Math.min(tileSize, remaining);
+            int drawY = y - drawHeight;
+            if (drawHeight == tileSize) {
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, startX, drawY, width, drawHeight, tint);
+            } else {
+                float u0 = sprite.getU0();
+                float u1 = sprite.getU1();
+                float v0 = sprite.getV0();
+                float v1 = sprite.getV0() + (sprite.getV1() - sprite.getV0()) * drawHeight / (float) tileSize;
+                graphics.blit(sprite.atlasLocation(), startX, drawY,
+                        startX + width, drawY + drawHeight, u0, u1, v0, v1);
+            }
+            remaining -= drawHeight;
+            y -= drawHeight;
+        }
     }
 
     public void fluidBarTooltip(GuiGraphicsExtractor graphics, int pX, int pY) {
@@ -81,7 +106,7 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
         if (MiscTools.inBounds(leftPos + 5, topPos + 5, 18, 72, pX, pY)) {
             List<Component> components = new ArrayList<>();
             components.add(Component.literal(MagicHelpers.formatted(potionAmt) + "/" + MagicHelpers.formatted(PotionCanister.getMaxMB())));
-            potionContents.addPotionTooltip(components::add, 1, 20);
+            potionContents.addPotionTooltip(component -> components.add(component), 1, 20);
             graphics.setTooltipForNextFrame(font, components, Optional.empty(), pX, pY);
         }
     }

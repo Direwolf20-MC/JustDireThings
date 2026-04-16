@@ -4,17 +4,19 @@ import com.direwolf20.justdirethings.common.items.interfaces.AbilityMethods;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,70 +26,57 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 public class MiscRenders {
     public static void renderTransparentPlayer(RenderLevelStageEvent evt, Player player, ItemStack itemStack) {
         Vec3 renderPosition = AbilityMethods.getShiftPosition(player.level(), player, itemStack);
-        Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().position();
         PoseStack matrixStack = evt.getPoseStack();
         matrixStack.pushPose();
         matrixStack.translate(-projectedView.x(), -projectedView.y(), -projectedView.z());
-        // Translate to the designated position
         matrixStack.translate(renderPosition.x, renderPosition.y, renderPosition.z);
 
         int lightLevel = player.level().getMaxLocalRawBrightness(BlockPos.containing(renderPosition));
-        int packedLight = LightTexture.pack(lightLevel, lightLevel);
+        int packedLight = LightCoordsUtil.pack(lightLevel, lightLevel);
 
-        // Render the player model
         MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
         EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        EntityRenderer<? super Player> renderer = renderManager.getRenderer(player);
-        RenderType renderType = RenderType.itemEntityTranslucentCull(renderer.getTextureLocation(player));
-        VertexConsumer vertexconsumer = buffer.getBuffer(renderType);
-        int i = LivingEntityRenderer.getOverlayCoords(player, 0);
-        DeltaTracker pPartialTicks = evt.getPartialTick();
-        if (renderer instanceof LivingEntityRenderer<?, ?>) {
-            LivingEntityRenderer<Player, ?> livingRenderer = (LivingEntityRenderer<Player, ?>) renderer;
-            float f = Mth.rotLerp(pPartialTicks.getGameTimeDeltaTicks(), player.yBodyRotO, player.yBodyRot);
-            float f1 = Mth.rotLerp(pPartialTicks.getGameTimeDeltaTicks(), player.yHeadRotO, player.yHeadRot);
-            float f2 = f1 - f;
-            float f5 = Mth.lerp(pPartialTicks.getGameTimeDeltaTicks(), player.xRotO, player.getXRot());
-            float f7 = 0;
-            setupRotations(player, matrixStack, f7, f, pPartialTicks.getGameTimeDeltaTicks());
-            matrixStack.scale(-1.0F, -1.0F, 1.0F);
-            scale(player, matrixStack, pPartialTicks.getGameTimeDeltaTicks());
-            matrixStack.translate(0.0F, -1.501F, 0.0F);
-            float f8 = 0.0F;
-            float f4 = 0.0F;
-            if (player.isAlive()) {
-                f8 = player.walkAnimation.speed(pPartialTicks.getGameTimeDeltaTicks());
-                f4 = player.walkAnimation.position(pPartialTicks.getGameTimeDeltaTicks());
-                if (player.isBaby()) {
-                    f4 *= 3.0F;
-                }
-
-                if (f8 > 1.0F) {
-                    f8 = 1.0F;
-                }
-            }
-            EntityModel<Player> entityModel = livingRenderer.getModel();
-            entityModel.attackTime = 0f;
-            entityModel.riding = false;
-            entityModel.young = player.isBaby();
-            entityModel.prepareMobModel(player, f4, f8, pPartialTicks.getGameTimeDeltaTicks());
-            entityModel.setupAnim(player, f4, f8, f7, f2, f5);
-            int packedARGB = (127 << 24) | (255 << 16) | (255 << 8) | 255;
-            entityModel.renderToBuffer(matrixStack, vertexconsumer, packedLight, i, packedARGB);
+        EntityRenderer<? super Player, ?> renderer = renderManager.getRenderer(player);
+        if (!(renderer instanceof LivingEntityRenderer<?, ?, ?> livingRenderer)) {
+            matrixStack.popPose();
+            return;
         }
+
+        float partialTick = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false);
+        renderLivingTransparent(livingRenderer, player, matrixStack, buffer, packedLight, partialTick);
 
         matrixStack.popPose();
-
+        buffer.endBatch();
     }
 
-    protected static void setupRotations(Player pEntityLiving, PoseStack pPoseStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks) {
-        if (!pEntityLiving.hasPose(Pose.SLEEPING)) {
-            pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - pRotationYaw));
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static <T extends Player, S extends LivingEntityRenderState, M extends EntityModel<? super S>>
+            void renderLivingTransparent(LivingEntityRenderer<?, ?, ?> rendererRaw, Player player, PoseStack matrixStack,
+                                         MultiBufferSource.BufferSource buffer, int packedLight, float partialTick) {
+        LivingEntityRenderer<T, S, M> renderer = (LivingEntityRenderer<T, S, M>) rendererRaw;
+        S state = renderer.createRenderState();
+        renderer.extractRenderState((T) player, state, partialTick);
+
+        matrixStack.pushPose();
+        setupRotations(player, matrixStack, state.bodyRot);
+        matrixStack.scale(-1.0F, -1.0F, 1.0F);
+        matrixStack.translate(0.0F, -1.501F, 0.0F);
+
+        M model = renderer.getModel();
+        model.setupAnim(state);
+
+        Identifier texture = renderer.getTextureLocation(state);
+        int tintedColor = ARGB.color(127, 255, 255, 255);
+        VertexConsumer vertexConsumer = buffer.getBuffer(RenderTypes.entityTranslucent(texture));
+        model.renderToBuffer(matrixStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, tintedColor);
+
+        matrixStack.popPose();
+    }
+
+    protected static void setupRotations(Player entity, PoseStack poseStack, float bodyRot) {
+        if (!entity.hasPose(Pose.SLEEPING)) {
+            poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - bodyRot));
         }
-    }
-
-    protected static void scale(Player pLivingEntity, PoseStack pPoseStack, float pPartialTickTime) {
-        float f = 0.9375F;
-        pPoseStack.scale(0.9375F, 0.9375F, 0.9375F);
     }
 }

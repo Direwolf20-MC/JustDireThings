@@ -8,6 +8,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 
 public class GlitterParticleType extends ParticleType<GlitterParticleData> {
     public GlitterParticleType(boolean pOverrideLimiter) {
@@ -36,8 +37,8 @@ public class GlitterParticleType extends ParticleType<GlitterParticleData> {
         }
 
         @Override
-        public Particle createParticle(GlitterParticleData data, ClientLevel world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new GlitterParticle(world, x, y, z, data.targetX, data.targetY, data.targetZ, xSpeed, ySpeed, zSpeed, data.size, data.r, data.g, data.b, data.a, data.depthTest, data.maxAgeMul, data.partType, this.sprites);
+        public Particle createParticle(GlitterParticleData data, ClientLevel world, double x, double y, double z, double xAux, double yAux, double zAux, RandomSource random) {
+            return new GlitterParticle(world, x, y, z, data.targetX, data.targetY, data.targetZ, xAux, yAux, zAux, data.size, data.r, data.g, data.b, data.a, data.depthTest, data.maxAgeMul, data.partType, this.sprites);
         }
     }
 }

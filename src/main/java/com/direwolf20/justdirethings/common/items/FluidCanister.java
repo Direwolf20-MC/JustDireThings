@@ -319,8 +319,12 @@ public class FluidCanister extends Item implements FluidContainingItem {
         if (fluidData != null && !fluidData.isEmpty()) {
             if (fluidData.getFluid().isSame(Fluids.LAVA)) //Special case lava
                 return 0xFFFF4500;
-            // TODO(port, stage-16): IClientFluidTypeExtensions#getTintColor was removed in 26.1; rework against FluidModel/FluidTintSource.
-            return 0xFFFFFFFF;
+            net.neoforged.neoforge.fluids.FluidStack stack = new net.neoforged.neoforge.fluids.FluidStack(fluidData.getFluid(), fluidData.getAmount());
+            net.minecraft.client.renderer.block.FluidModel model =
+                    net.minecraft.client.Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(stack.getFluid().defaultFluidState());
+            net.neoforged.neoforge.client.fluid.FluidTintSource tintSource = model.fluidTintSource();
+            int tint = tintSource != null ? tintSource.colorAsStack(stack) : 0xFFFFFFFF;
+            return tint | 0xFF000000;
         }
         return 0xFFFFFFFF;
     }

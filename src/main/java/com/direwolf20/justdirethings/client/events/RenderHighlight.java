@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -16,32 +16,42 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.event.ExtractBlockOutlineRenderStateEvent;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
 public class RenderHighlight {
     @SubscribeEvent
-    static void renderBlockHighlight(RenderHighlightEvent.Block evt) {
+    static void extractBlockOutline(ExtractBlockOutlineRenderStateEvent evt) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        if (mc.player == null)
-            return;
+        if (player == null) return;
         ItemStack toggleableToolStack = player.getMainHandItem();
         if (!(toggleableToolStack.getItem() instanceof ToggleableTool toggleableTool)) return;
         Level level = player.level();
-        BlockPos targetPos = evt.getTarget().getBlockPos();
+        BlockPos targetPos = evt.getBlockPos();
         Set<BlockPos> breakBlockPositions = toggleableTool.getBreakBlockPositions(toggleableToolStack, level, targetPos, player, level.getBlockState(targetPos));
-        Vec3 vec3 = evt.getCamera().getPosition();
-        double d0 = vec3.x();
-        double d1 = vec3.y();
-        double d2 = vec3.z();
-        for (BlockPos blockPos : breakBlockPositions) {
-            if (blockPos.equals(targetPos)) continue; //Let the original event draw this one!
-            VertexConsumer vertexconsumer2 = evt.getMultiBufferSource().getBuffer(RenderType.lines());
-            renderHitOutline(evt.getPoseStack(), vertexconsumer2, player, d0, d1, d2, level, blockPos, level.getBlockState(blockPos));
-        }
+        if (breakBlockPositions.isEmpty()) return;
+
+        Set<BlockPos> extras = new HashSet<>(breakBlockPositions);
+        extras.remove(targetPos);
+        if (extras.isEmpty()) return;
+
+        Vec3 cameraPos = evt.getCamera().position();
+        double camX = cameraPos.x();
+        double camY = cameraPos.y();
+        double camZ = cameraPos.z();
+
+        evt.addCustomRenderer((renderState, bufferSource, poseStack, translucentPass, levelRenderState) -> {
+            VertexConsumer buffer = bufferSource.getBuffer(RenderTypes.lines());
+            for (BlockPos blockPos : extras) {
+                BlockState state = level.getBlockState(blockPos);
+                renderHitOutline(poseStack, buffer, player, camX, camY, camZ, level, blockPos, state);
+            }
+            return false;
+        });
     }
 
     private static void renderHitOutline(
@@ -93,10 +103,12 @@ public class RenderHighlight {
                     f2 /= f3;
                     pConsumer.addVertex(posestack$pose.pose(), (float) (p_234280_ + pX), (float) (p_234281_ + pY), (float) (p_234282_ + pZ))
                             .setColor(pRed, pGreen, pBlue, pAlpha)
-                            .setNormal(posestack$pose, f, f1, f2);
+                            .setNormal(posestack$pose, f, f1, f2)
+                            .setLineWidth(2.0F);
                     pConsumer.addVertex(posestack$pose.pose(), (float) (p_234283_ + pX), (float) (p_234284_ + pY), (float) (p_234285_ + pZ))
                             .setColor(pRed, pGreen, pBlue, pAlpha)
-                            .setNormal(posestack$pose, f, f1, f2);
+                            .setNormal(posestack$pose, f, f1, f2)
+                            .setLineWidth(2.0F);
                 }
         );
     }

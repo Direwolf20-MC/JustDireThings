@@ -14,24 +14,27 @@ import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
+import com.direwolf20.justdirethings.client.itemcustomrenders.FluidbarDecorator;
+import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
+import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
+import com.direwolf20.justdirethings.client.renderers.shader.DireRenderTypes;
 import com.direwolf20.justdirethings.client.screens.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.entity.NoopRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.material.FluidState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
-
-import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
 @EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
 public class ClientSetup {
@@ -56,15 +59,12 @@ public class ClientSetup {
         // layer set via whatever the fluid-model replacement is.
     }
 
-    // TODO(port, stage-16): RegisterGuiLayersEvent now takes a GuiLayer, not LayeredDraw.Layer —
-    // AbilityCooldownOverlay must implement net.neoforged.neoforge.client.gui.GuiLayer. Restore
-    // when overlays are ported.
-    // @SubscribeEvent
-    // public static void registerOverlays(RegisterGuiLayersEvent event) {
-    //     event.registerAbove(VanillaGuiLayers.HOTBAR,
-    //             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "abilitycooldownoverlay"),
-    //             AbilityCooldownOverlay.INSTANCE);
-    // }
+    @SubscribeEvent
+    public static void registerOverlays(RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.HOTBAR,
+                Identifier.fromNamespaceAndPath(JustDireThings.MODID, "abilitycooldownoverlay"),
+                AbilityCooldownOverlay.INSTANCE);
+    }
 
     // TODO(port, stage-16): ModelEvent.RegisterAdditional is gone in 26.1 — the standalone-model
     // registration path for CreatureCatcher base went away with the client-item JSON system.
@@ -79,19 +79,11 @@ public class ClientSetup {
         event.registerLayerDefinition(PortalProjectileModel.Portal_Projectile_Layer, PortalProjectileModel::createBodyLayer);
     }
 
-    // TODO(port, stage-16): RegisterShadersEvent is gone in 26.1 — custom shaders/RenderPipelines
-    // register via RegisterRenderPipelinesEvent and the RenderSetup.builder API. See RENDER_PORTING
-    // §1.3 / §1.4. DireRenderTypes will be rewritten during Stage 16.
-    // @SubscribeEvent
-    // private static void registerShaders(RegisterShadersEvent event) {
-    //     try {
-    //         for (DireRenderTypes.ShaderRenderType type : DireRenderTypes.getRenderTypes().values()) {
-    //             type.register(event.getResourceProvider(), event::registerShader);
-    //         }
-    //     } catch (IOException e) {
-    //         throw new RuntimeException(e);
-    //     }
-    // }
+    @SubscribeEvent
+    public static void onRegisterRenderPipelines(RegisterRenderPipelinesEvent event) {
+        OurRenderTypes.registerPipelines(event);
+        DireRenderTypes.registerPipelines(event);
+    }
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
@@ -125,17 +117,14 @@ public class ClientSetup {
         event.register(Registration.Experience_Holder_Container.get(), ExperienceHolderScreen::new);
     }
 
-    // TODO(port, stage-16): RegisterItemDecorationsEvent + FluidbarDecorator — the ItemDecorator
-    // hook still exists on the event but FluidbarDecorator uses the removed GuiGraphics/BakedModel
-    // APIs. Restore when item decorators are ported.
-    // @SubscribeEvent
-    // public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
-    //     event.register(Registration.TimeWand.get(), new FluidbarDecorator());
-    //     event.register(Registration.PortalGunV2.get(), new FluidbarDecorator());
-    //     event.register(Registration.FluidCanister.get(), new FluidbarDecorator());
-    //     event.register(Registration.PolymorphicWand.get(), new FluidbarDecorator());
-    //     event.register(Registration.PolymorphicWandV2.get(), new FluidbarDecorator());
-    // }
+    @SubscribeEvent
+    public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
+        event.register(Registration.TimeWand.get(), new FluidbarDecorator());
+        event.register(Registration.PortalGunV2.get(), new FluidbarDecorator());
+        event.register(Registration.FluidCanister.get(), new FluidbarDecorator());
+        event.register(Registration.PolymorphicWand.get(), new FluidbarDecorator());
+        event.register(Registration.PolymorphicWandV2.get(), new FluidbarDecorator());
+    }
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -181,350 +170,38 @@ public class ClientSetup {
         // }, Registration.CreatureCatcher.get());
 
         final Identifier UNDERWATER_LOCATION = Identifier.parse("textures/misc/underwater.png");
-        final Identifier WATER_STILL = Identifier.fromNamespaceAndPath(MODID, "block/fluid_source");
-        final Identifier WATER_FLOW = Identifier.fromNamespaceAndPath(MODID, "block/fluid_flowing");
-        final Identifier WATER_OVERLAY = Identifier.fromNamespaceAndPath(MODID, "block/fluid_overlay");
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
+        // Still/flowing/overlay textures + per-fluid tint colors moved to FluidModel JSON in Stage 17
+        // (see documentation/RENDER_PORTING.md §7). These registrations now only wire the underwater
+        // overlay render; the tint values that used to live in getTintColor() are captured below as
+        // reference for the Stage 17 FluidTintSource port:
+        //   POLYMORPHIC_FLUID_TYPE      → 0xFFFFFFFF
+        //   PORTAL_FLUID_TYPE           → 0xFF00DD00
+        //   UNSTABLE_PORTAL_FLUID_TYPE  → 0xFF9400D3
+        //   REFINED_T2_FLUID_TYPE       → 0xFF8B0000
+        //   REFINED_T3_FLUID_TYPE       → 0xFF40C7C7
+        //   REFINED_T4_FLUID_TYPE       → 0xFF1B2027
+        //   UNREFINED_T2_FLUID_TYPE     → 0xFF8B4500
+        //   UNREFINED_T3_FLUID_TYPE     → 0xFF64D5AD
+        //   UNREFINED_T4_FLUID_TYPE     → 0xFF36484A
+        //   TIME_FLUID_TYPE             → 0x3300FF00 stack / 0x7700FF00 in-world
+        //   XP_FLUID_TYPE               → 0xFF32CD32
+        IClientFluidTypeExtensions underwaterOverlay = new IClientFluidTypeExtensions() {
             @Override
             public Identifier getRenderOverlayTexture(Minecraft mc) {
                 return UNDERWATER_LOCATION;
             }
-
-            @Override
-            public int getTintColor() {
-                return 0xFFFFFFFF;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFFFFFFFF;
-            }
-        }, Registration.POLYMORPHIC_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF00DD00;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF00DD00;
-            }
-        }, Registration.PORTAL_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF9400D3;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF9400D3;
-            }
-        }, Registration.UNSTABLE_PORTAL_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF8B0000;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF8B0000;
-            }
-        }, Registration.REFINED_T2_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF40C7C7;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF40C7C7;
-            }
-        }, Registration.REFINED_T3_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF1B2027;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF1B2027;
-            }
-        }, Registration.REFINED_T4_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF8B4500;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF8B4500;
-            }
-        }, Registration.UNREFINED_T2_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF64D5AD;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF64D5AD;
-            }
-        }, Registration.UNREFINED_T3_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF36484A;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF36484A;
-            }
-        }, Registration.UNREFINED_T4_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0x3300FF00;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0x7700FF00;
-            }
-        }, Registration.TIME_FLUID_TYPE.get());
-        event.registerFluidType(new IClientFluidTypeExtensions() {
-            @Override
-            public Identifier getStillTexture() {
-                return WATER_STILL;
-            }
-
-            @Override
-            public Identifier getFlowingTexture() {
-                return WATER_FLOW;
-            }
-
-            @Override
-            public Identifier getOverlayTexture() {
-                return WATER_OVERLAY;
-            }
-
-            @Override
-            public Identifier getRenderOverlayTexture(Minecraft mc) {
-                return UNDERWATER_LOCATION;
-            }
-
-            @Override
-            public int getTintColor() {
-                return 0xFF32CD32;
-            }
-
-            @Override
-            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos) {
-                return 0xFF32CD32;
-            }
-        }, Registration.XP_FLUID_TYPE.get());
+        };
+        event.registerFluidType(underwaterOverlay, Registration.POLYMORPHIC_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.PORTAL_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.UNSTABLE_PORTAL_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.REFINED_T2_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.REFINED_T3_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.REFINED_T4_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.UNREFINED_T2_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.UNREFINED_T3_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.UNREFINED_T4_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.TIME_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, Registration.XP_FLUID_TYPE.get());
     }
 
     // TODO(port, stage-16): ItemColors is gone in 26.1 — per-item tint is expressed via

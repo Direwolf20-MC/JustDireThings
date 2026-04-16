@@ -1,11 +1,12 @@
-#version 150
+#version 330
+
 #define PI 3.1415926538
-#moj_import <matrix.glsl>
+#define Layers 15
+
+#moj_import <minecraft:globals.glsl>
+#moj_import <minecraft:matrix.glsl>
 
 uniform sampler2D Sampler0;
-
-uniform float GameTime;
-uniform int Layers;
 
 in vec2 texCoord0;
 

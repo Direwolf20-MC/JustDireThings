@@ -23,10 +23,7 @@ import java.awt.*;
 
 public class RenderLevelLast {
     @SubscribeEvent
-    static void renderWorldLastEvent(RenderLevelStageEvent evt) {
-        if (evt.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-            return;
-        }
+    static void renderWorldLastEvent(RenderLevelStageEvent.AfterTranslucentBlocks evt) {
         Player player = Minecraft.getInstance().player;
         if (player == null)
             return;
@@ -63,7 +60,7 @@ public class RenderLevelLast {
 
         MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 
-        Vec3 view = mc.gameRenderer.getMainCamera().getPosition();
+        Vec3 view = mc.gameRenderer.getMainCamera().position();
 
         PoseStack matrix = event.getPoseStack();
         matrix.pushPose();
@@ -73,7 +70,6 @@ public class RenderLevelLast {
         matrix.translate(pos.getX(), pos.getY(), pos.getZ());
         matrix.translate(-0.005f, -0.005f, -0.005f);
         matrix.scale(1.01f, 1.01f, 1.01f);
-        //matrix.mulPose(Axis.YP.rotationDegrees(-90.0F));
 
         Matrix4f positionMatrix = matrix.last().pose();
         RenderHelpers.renderBoxSolid(matrix, positionMatrix, buffer, BlockPos.ZERO, 0, 1, 0, 0.25f);

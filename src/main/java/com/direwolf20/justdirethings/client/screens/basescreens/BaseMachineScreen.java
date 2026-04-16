@@ -201,10 +201,10 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
     }
 
     @Override
-    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn) {
         if (MiscTools.inBounds(topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight, mouseX, mouseY))
             return false;
-        return super.hasClickedOutside(mouseX, mouseY, guiLeftIn, guiTopIn, mouseButton);
+        return super.hasClickedOutside(mouseX, mouseY, guiLeftIn, guiTopIn);
     }
 
     @Override
@@ -296,13 +296,40 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         return baseMachineBE instanceof PoweredMachineBE ? 24 : getEnergyBarOffset();
     }
 
-    // TODO(port, stage-16): Fluid GUI rendering — old code used Tesselator + BufferBuilder + RenderSystem.setShader/setShaderTexture/setShaderColor
-    // (all removed in 26.1) plus IClientFluidTypeExtensions#getStillTexture/getTintColor (FluidModel/FluidTintSource per RENDER_PORTING.md §7).
-    // Stub-out until Stage 16 ports the fluid rendering pipeline.
     public void renderFluid(GuiGraphicsExtractor graphics, int startX, int startY, int width, int height) {
         FluidStack fluidStack = container.getFluidStack();
         if (fluidStack.isEmpty() || height <= 0) return;
-        // TODO(port, stage-16): replace with FluidModel-based GUI fluid blit.
+
+        net.minecraft.world.level.material.FluidState fluidState = fluidStack.getFluid().defaultFluidState();
+        net.minecraft.client.renderer.block.FluidModel fluidModel =
+                Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidState);
+        net.minecraft.client.renderer.texture.TextureAtlasSprite sprite = fluidModel.stillMaterial().sprite();
+
+        net.neoforged.neoforge.client.fluid.FluidTintSource tintSource = fluidModel.fluidTintSource();
+        int tint = tintSource != null ? tintSource.colorAsStack(fluidStack) : -1;
+        int colorARGB = tint | 0xFF000000;
+
+        // Tile the fluid sprite vertically. The sprite's native size is 16 texels; scale to our box.
+        int tileSize = 16;
+        int remaining = height;
+        int y = startY + height; // fill from bottom up
+        while (remaining > 0) {
+            int drawHeight = Math.min(tileSize, remaining);
+            int drawY = y - drawHeight;
+            if (drawHeight == tileSize) {
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, startX, drawY, width, drawHeight, colorARGB);
+            } else {
+                // Partial tile — clamp UV so we don't squish the texture
+                float u0 = sprite.getU0();
+                float u1 = sprite.getU1();
+                float v0 = sprite.getV0();
+                float v1 = sprite.getV0() + (sprite.getV1() - sprite.getV0()) * drawHeight / (float) tileSize;
+                graphics.blit(sprite.atlasLocation(), startX, drawY,
+                        startX + width, drawY + drawHeight, u0, u1, v0, v1);
+            }
+            remaining -= drawHeight;
+            y -= drawHeight;
+        }
     }
 
     public void powerBarTooltip(GuiGraphicsExtractor graphics, int pX, int pY) {
