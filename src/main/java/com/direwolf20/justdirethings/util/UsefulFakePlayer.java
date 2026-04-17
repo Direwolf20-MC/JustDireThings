@@ -5,12 +5,10 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
@@ -52,11 +50,6 @@ public class UsefulFakePlayer extends FakePlayer {
     @Override
     public boolean canBeSeenByAnyone() {
         return false; //Prevent them being targetting by mobs?
-    }
-
-    @Override
-    public Entity changeDimension(DimensionTransition dimensionTransition) {
-        return createPlayer(dimensionTransition.newLevel(), this.getGameProfile());
     }
 
     /**

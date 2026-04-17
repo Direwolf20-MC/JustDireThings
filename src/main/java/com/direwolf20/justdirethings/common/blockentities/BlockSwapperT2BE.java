@@ -147,7 +147,7 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
             return false;
         BlockState blockState = serverLevel.getBlockState(blockPos);
         if (blockState.isAir()) return true; //Don't need to filter AIR either way
-        ItemStack blockItemStack = blockState.getBlock().getCloneItemStack(serverLevel, blockPos, blockState);
+        ItemStack blockItemStack = blockState.getBlock().getCloneItemStack(serverLevel, blockPos, blockState, false);
         return isStackValidFilter(blockItemStack);
     }
 

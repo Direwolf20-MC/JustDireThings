@@ -57,7 +57,7 @@ public class TotemOfDeathRecall extends Item {
                         Vec3 position = globalPos.position();
                         ServerLevel targetLevel = world.getServer().getLevel(globalPos.dimension());
                         if (targetLevel != null) {
-                            player.teleportTo(targetLevel, position.x(), position.y(), position.z(), new HashSet<>(), player.getYRot(), player.getXRot());
+                            player.teleportTo(targetLevel, position.x(), position.y(), position.z(), new HashSet<>(), player.getYRot(), player.getXRot(), false);
                             stack.shrink(1);
                             world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
                         }

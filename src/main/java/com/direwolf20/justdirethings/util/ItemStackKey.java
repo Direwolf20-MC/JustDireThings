@@ -14,7 +14,7 @@ public class ItemStackKey {
 
 
     public ItemStackKey(ItemStack stack, boolean compareNBT) {
-        this.item = stack.getItemHolder();
+        this.item = stack.getItem().builtInRegistryHolder();
         this.dataComponents = compareNBT ? stack.getComponentsPatch() : DataComponentPatch.EMPTY;
         this.hash = Objects.hash(item, dataComponents);
     }

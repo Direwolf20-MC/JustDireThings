@@ -20,8 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.ArrayList;
@@ -123,7 +121,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
         if (!super.isBlockValid(fakePlayer, blockPos))
             return false; //Do the same checks as normal, then check the filters
         if (filterData.blockItemFilter == 0) { //Block Comparison
-            ItemStack blockItemStack = level.getBlockState(blockPos).getCloneItemStack(new BlockHitResult(Vec3.ZERO, Direction.UP, blockPos, false), level, blockPos, fakePlayer);
+            ItemStack blockItemStack = level.getBlockState(blockPos).getCloneItemStack(blockPos, level, false, fakePlayer);
             return isStackValidFilter(blockItemStack);
         } else { //Item Drop Comparison
             ItemStack tool = getTool();

@@ -63,7 +63,7 @@ public class PlayerAccessorBE extends BaseMachineBE {
         if (Config.PLAYER_ACCESSOR_DIMENSIONAL_BLACKLISTING.isFalse())
             return true;
         List<? extends String> blacklist = Config.PLAYER_ACCESSOR_BLACKLISTED_DIMENSIONS.get();
-        return !blacklist.contains(serverPlayer.level().dimension().location().toString());
+        return !blacklist.contains(serverPlayer.level().dimension().identifier().toString());
     }
 
     /**

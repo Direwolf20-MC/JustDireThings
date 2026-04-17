@@ -300,7 +300,7 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
 
     public void swapEntity(Entity entity, BlockSwapperT1BE remoteSwapper, ServerLevel partnerLevel) {
         Vec3 remotePosition = remoteSwapper.getWorldPos(getRelativePos(entity.position()));
-        entity.teleportTo(partnerLevel, remotePosition.x, remotePosition.y, remotePosition.z, new HashSet<>(), entity.getYRot(), entity.getXRot());
+        entity.teleportTo(partnerLevel, remotePosition.x, remotePosition.y, remotePosition.z, new HashSet<>(), entity.getYRot(), entity.getXRot(), false);
     }
 
     public AABB getAABB() {
@@ -323,9 +323,9 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (!entity.canChangeDimensions(level, getPartnerBE().level) && !isSameLevel())
+        if (!entity.canTeleport(level, getPartnerBE().level) && !isSameLevel())
             return false;
-        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
+        if (entity.getType().builtInRegistryHolder().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.HOSTILE) && !(entity instanceof Monster))
             return false;

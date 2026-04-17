@@ -65,7 +65,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         this.player = container.playerEntity;
         if (player.getMainHandItem().getItem() instanceof ToggleableTool) {
             tool = player.getMainHandItem();
-            toolSlot = player.getInventory().selected;
+            toolSlot = player.getInventory().getSelectedSlot();
         } else if (player.getOffhandItem().getItem() instanceof ToggleableTool) {
             tool = player.getOffhandItem();
             toolSlot = 40;

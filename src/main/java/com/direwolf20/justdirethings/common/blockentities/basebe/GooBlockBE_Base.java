@@ -94,9 +94,9 @@ public class GooBlockBE_Base extends BlockEntity {
         GooExplodeParticleData data = new GooExplodeParticleData(itemStack);
         for (Direction direction : Direction.values()) {
             for (int i = 0; i < 100; i++) {
-                double randomX = 0.5 + (0.6 * direction.getNormal().getX()) + (direction.getNormal().getX() == 0 ? random.nextDouble() - 0.5 : 0);
-                double randomY = 0.5 + (0.6 * direction.getNormal().getY()) + (direction.getNormal().getY() == 0 ? random.nextDouble() - 0.5 : 0);
-                double randomZ = 0.5 + (0.6 * direction.getNormal().getZ()) + (direction.getNormal().getZ() == 0 ? random.nextDouble() - 0.5 : 0);
+                double randomX = 0.5 + (0.6 * direction.getUnitVec3i().getX()) + (direction.getUnitVec3i().getX() == 0 ? random.nextDouble() - 0.5 : 0);
+                double randomY = 0.5 + (0.6 * direction.getUnitVec3i().getY()) + (direction.getUnitVec3i().getY() == 0 ? random.nextDouble() - 0.5 : 0);
+                double randomZ = 0.5 + (0.6 * direction.getUnitVec3i().getZ()) + (direction.getUnitVec3i().getZ() == 0 ? random.nextDouble() - 0.5 : 0);
                 level.addParticle(data, startPos.getX() + randomX, startPos.getY() + randomY, startPos.getZ() + randomZ, 0, 0, 0);
             }
         }

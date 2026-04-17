@@ -125,7 +125,7 @@ public class AdvPortalRadialMenu extends Screen {
         for (int seg = 0; seg < SEGMENTS; seg++) {
             NBTHelpers.PortalDestination favorite = getFavorite(seg);
             String favoriteName = favorite != null ? favorite.name() : "Empty";
-            String dimension = favorite != null && !favorite.equals(NBTHelpers.PortalDestination.EMPTY) ? favorite.globalVec3().dimension().location().getPath().toString() : "";
+            String dimension = favorite != null && !favorite.equals(NBTHelpers.PortalDestination.EMPTY) ? favorite.globalVec3().dimension().identifier().getPath().toString() : "";
             String coordinates = favorite != null && !favorite.equals(NBTHelpers.PortalDestination.EMPTY) ? String.format("(%d, %d, %d)",
                     (int) favorite.globalVec3().position().x(),
                     (int) favorite.globalVec3().position().y(),

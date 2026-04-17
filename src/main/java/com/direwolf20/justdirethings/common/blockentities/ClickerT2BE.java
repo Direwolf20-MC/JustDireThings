@@ -19,8 +19,6 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.Comparator;
@@ -101,7 +99,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
         BlockState blockState = level.getBlockState(blockPos);
         if ((blockState.getBlock() instanceof LiquidBlock liquidBlock))
             return isStackValidFilter(liquidBlock);
-        ItemStack blockItemStack = blockState.getCloneItemStack(new BlockHitResult(Vec3.ZERO, getDirectionValue(), blockPos, false), level, blockPos, fakePlayer);
+        ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, level, false, fakePlayer);
         return isStackValidFilter(blockItemStack);
     }
 

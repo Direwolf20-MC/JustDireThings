@@ -10,7 +10,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -64,7 +64,7 @@ public class FakePlayerUtil {
      * @param toHold    The stack the player will be using. Should probably come from an ItemStackHandler or similar.
      */
     public static void setupFakePlayerForUse(UsefulFakePlayer player, Vec3 pos, Direction direction, ItemStack toHold, boolean sneaking) {
-        player.getInventory().items.set(player.getInventory().selected, toHold);
+        player.getInventory().setItem(player.getInventory().getSelectedSlot(), toHold);
         float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
         player.setXRot(xRot);
         player.setYRot(direction.toYRot());
@@ -89,11 +89,10 @@ public class FakePlayerUtil {
      * @param toHold    The stack the player will be using. Should probably come from an ItemStackHandler or similar.
      */
     public static void setupFakePlayerForUse(UsefulFakePlayer player, BlockPos pos, Direction direction, ItemStack toHold, boolean sneaking) {
-        player.getInventory().items.set(player.getInventory().selected, toHold);
+        player.getInventory().setItem(player.getInventory().getSelectedSlot(), toHold);
         float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
-        //player.setXRot(xRot);
-        //player.setYRot(direction.toYRot());
-        player.absRotateTo(direction.toYRot(), xRot);
+        player.setYRot(direction.toYRot());
+        player.setXRot(xRot);
         player.setYHeadRot(direction.toYRot());
         player.yHeadRotO = direction.toYRot();
         Direction.Axis a = direction.getAxis();
@@ -101,7 +100,7 @@ public class FakePlayerUtil {
         double x = a == Direction.Axis.X ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double y = a == Direction.Axis.Y ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
         double z = a == Direction.Axis.Z ? ad == Direction.AxisDirection.NEGATIVE ? 0.95 : 0.05 : 0.5;
-        player.absMoveTo(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
+        player.snapTo(pos.getX() + x, pos.getY() + y - player.getEyeHeight(), pos.getZ() + z);
         if (!toHold.isEmpty())
             addAttributes(player, toHold, EquipmentSlot.MAINHAND);
         player.setShiftKeyDown(sneaking);
@@ -116,7 +115,7 @@ public class FakePlayerUtil {
      * @param toHold    The stack the player will be using. Should probably come from an ItemStackHandler or similar.
      */
     public static void setupFakePlayerForUse(UsefulFakePlayer player, BlockPos pos, Direction direction, Vec3 entityPosition, ItemStack toHold, boolean sneaking) {
-        player.getInventory().items.set(player.getInventory().selected, toHold);
+        player.getInventory().setItem(player.getInventory().getSelectedSlot(), toHold);
         float xRot = direction == Direction.DOWN ? 90 : direction == Direction.UP ? -90 : 0;
         player.setXRot(xRot);
         player.setYRot(direction.toYRot());
@@ -151,7 +150,7 @@ public class FakePlayerUtil {
     public static void cleanupFakePlayerFromUse(UsefulFakePlayer player, ItemStack oldStack) {
         if (!oldStack.isEmpty())
             removeAttributes(player, oldStack, EquipmentSlot.MAINHAND);
-        player.getInventory().items.set(player.getInventory().selected, ItemStack.EMPTY);
+        player.getInventory().setItem(player.getInventory().getSelectedSlot(), ItemStack.EMPTY);
         if (!player.getInventory().isEmpty()) player.getInventory().dropAll(); //Handles bucket stacks, for example
         player.setShiftKeyDown(false);
         player.setReach(player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE));
@@ -232,7 +231,7 @@ public class FakePlayerUtil {
                     if (type == InteractionResult.SUCCESS || type == InteractionResult.CONSUME)
                         return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
                 } else {
-                    player.gameMode.handleBlockBreakAction(blockpos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxBuildHeight(), 0);
+                    player.gameMode.handleBlockBreakAction(blockpos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxY() + 1, 0);
                     return new FakePlayerResult(InteractionResult.SUCCESS, player.getMainHandItem());
                 }
             }
@@ -327,7 +326,7 @@ public class FakePlayerUtil {
             BlockPos blockpos = ((BlockHitResult) toUse).getBlockPos();
             BlockState state = world.getBlockState(blockpos);
             if (state != sourceState && !state.isAir()) {
-                player.gameMode.handleBlockBreakAction(blockpos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxBuildHeight(), 0);
+                player.gameMode.handleBlockBreakAction(blockpos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, ((BlockHitResult) toUse).getDirection(), player.level().getMaxY() + 1, 0);
                 return player.getMainHandItem();
             }
         }
@@ -336,7 +335,7 @@ public class FakePlayerUtil {
             for (int i = 1; i <= 5; i++) {
                 BlockState state = world.getBlockState(pos.relative(side, i));
                 if (state != sourceState && !state.isAir()) {
-                    player.gameMode.handleBlockBreakAction(pos.relative(side, i), ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, side.getOpposite(), player.level().getMaxBuildHeight(), 0);
+                    player.gameMode.handleBlockBreakAction(pos.relative(side, i), ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, side.getOpposite(), player.level().getMaxY() + 1, 0);
                     return player.getMainHandItem();
                 }
             }
@@ -416,11 +415,11 @@ public class FakePlayerUtil {
         if (entity != null) {
             if (player.distanceToSqr(entity) < 36) {
                 if (action == InteractionType.INTERACT) {
-                    return player.interactOn(entity, InteractionHand.MAIN_HAND) == InteractionResult.SUCCESS;
+                    return player.interactOn(entity, InteractionHand.MAIN_HAND, Vec3.ZERO) == InteractionResult.SUCCESS;
                 } else if (action == InteractionType.INTERACT_AT) {
                     if (CommonHooks.onInteractEntityAt(player, entity, result.getLocation(), InteractionHand.MAIN_HAND) != null)
                         return false;
-                    return entity.interactAt(player, result.getLocation(), InteractionHand.MAIN_HAND) == InteractionResult.SUCCESS;
+                    return entity.interact(player, InteractionHand.MAIN_HAND, result.getLocation()) == InteractionResult.SUCCESS;
                 } else if (action == InteractionType.ATTACK) {
                     if (entity instanceof ItemEntity || entity instanceof ExperienceOrb || entity instanceof Arrow || entity == player)
                         return false;

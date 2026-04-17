@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.AABB;
 
 import java.util.*;
@@ -198,8 +199,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         super.tickServer();
         if (newlyLoaded && level != null) {
             for (Direction direction : Direction.values()) {
-                level.neighborChanged(getBlockPos().relative(direction), this.getBlockState().getBlock(), getBlockPos());
-                level.updateNeighborsAtExceptFromFacing(getBlockPos().relative(direction), this.getBlockState().getBlock(), direction.getOpposite());
+                level.neighborChanged(getBlockPos().relative(direction), this.getBlockState().getBlock(), (Orientation) null);
+                level.updateNeighborsAtExceptFromFacing(getBlockPos().relative(direction), this.getBlockState().getBlock(), direction.getOpposite(), null);
             }
             newlyLoaded = false;
         }
@@ -215,8 +216,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
             emitRedstone = emit;
             strongSignal = strong;
             for (Direction direction : Direction.values()) {
-                level.neighborChanged(getBlockPos().relative(direction), this.getBlockState().getBlock(), getBlockPos());
-                level.updateNeighborsAtExceptFromFacing(getBlockPos().relative(direction), this.getBlockState().getBlock(), direction.getOpposite());
+                level.neighborChanged(getBlockPos().relative(direction), this.getBlockState().getBlock(), (Orientation) null);
+                level.updateNeighborsAtExceptFromFacing(getBlockPos().relative(direction), this.getBlockState().getBlock(), direction.getOpposite(), null);
             }
         }
     }
@@ -323,7 +324,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     public boolean handleBlockStates(BlockPos blockPos, BlockState blockState) {
-        ItemStack blockItemStack = blockState.getBlock().getCloneItemStack(level, blockPos, blockState);
+        ItemStack blockItemStack = blockState.getBlock().getCloneItemStack(level, blockPos, blockState, false);
         boolean allowList = filterData.allowlist;
         if (blockStateFilterCache.containsKey(blockState))
             return blockStateFilterCache.get(blockState);

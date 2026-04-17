@@ -14,8 +14,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -254,7 +253,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
         if (success) {
             Block.dropResources(state, level, breakPos, blockEntity, player, itemStack);
             if (state.getDestroySpeed(level, breakPos) != 0.0F)
-                itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
+                itemStack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
         }
     }
 

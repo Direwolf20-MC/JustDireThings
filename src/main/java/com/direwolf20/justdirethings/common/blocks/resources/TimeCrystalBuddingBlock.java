@@ -48,17 +48,17 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
         int stage = state.getValue(STAGE);
         if (stage == 0) {
             List<? extends String> allowedDims = Config.TIME_CRYSTAL_STAGE1_DIMENSIONS.get();
-            if (allowedDims.contains(level.dimension().location().toString()))
+            if (allowedDims.contains(level.dimension().identifier().toString()))
                 return 1;
         }
         if (stage == 1) {
             List<? extends String> allowedDims = Config.TIME_CRYSTAL_STAGE2_DIMENSIONS.get();
-            if (allowedDims.contains(level.dimension().location().toString()))
+            if (allowedDims.contains(level.dimension().identifier().toString()))
                 return 2;
         }
         if (stage == 2) {
             List<? extends String> allowedDims = Config.TIME_CRYSTAL_STAGE3_DIMENSIONS.get();
-            if (allowedDims.contains(level.dimension().location().toString()))
+            if (allowedDims.contains(level.dimension().identifier().toString()))
                 return 3;
         }
         return -1;

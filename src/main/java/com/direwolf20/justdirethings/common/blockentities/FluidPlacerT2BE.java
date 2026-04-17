@@ -14,8 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -95,7 +93,7 @@ public class FluidPlacerT2BE extends FluidPlacerT1BE implements PoweredMachineBE
     public boolean isBlockPosValid(BlockPos blockPos, FakePlayer fakePlayer) {
         if (!super.isBlockPosValid(blockPos, fakePlayer))
             return false; //Do the same checks as normal, then check the filters
-        ItemStack blockItemStack = level.getBlockState(blockPos.relative(getDirectionValue())).getCloneItemStack(new BlockHitResult(Vec3.ZERO, getDirectionValue(), blockPos, false), level, blockPos, null);
+        ItemStack blockItemStack = level.getBlockState(blockPos.relative(getDirectionValue())).getCloneItemStack(blockPos, level, false, null);
         return isStackValidFilter(blockItemStack);
     }
 }

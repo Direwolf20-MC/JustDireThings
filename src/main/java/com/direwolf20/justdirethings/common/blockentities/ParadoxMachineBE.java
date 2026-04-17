@@ -300,7 +300,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
                 continue;
             LivingEntity entity = entry.getValue();
 
-            entity.moveTo(entityPos.x, entityPos.y, entityPos.z, entity.getYRot(), entity.getXRot());
+            entity.snapTo(entityPos.x, entityPos.y, entityPos.z, entity.getYRot(), entity.getXRot());
             if (level.addFreshEntity(entity)) {
                 restoredCount++;
             }
@@ -530,15 +530,13 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         }
 
         CompoundTag santizedData = Config.PARADOX_RESTRICTED_MOBS.get() ? sanitizeEntityData(entityData) : sanitizeEntityDataDeny(entityData);
-        // TODO(port, stage-7): Entity#load signature changed in 26.1 (now takes ValueInput). Wrap the
-        // sanitized CompoundTag through TagValueInput so we can feed the new API.
         net.minecraft.world.level.storage.ValueInput wrappedInput = net.minecraft.world.level.storage.TagValueInput.create(
                 net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess(), santizedData);
         entity.load(wrappedInput);
         if (entity instanceof Mob mob && level instanceof ServerLevel serverLevel)
-            EventHooks.finalizeMobSpawn(mob, serverLevel, level.getCurrentDifficultyAt(getBlockPos()), EntitySpawnReason.SPAWNER, null);
+            EventHooks.finalizeMobSpawn(mob, serverLevel, serverLevel.getCurrentDifficultyAt(getBlockPos()), EntitySpawnReason.SPAWNER, null);
 
-        entity.moveTo(worldPos.x, worldPos.y, worldPos.z, entity.getYRot(), entity.getXRot());
+        entity.snapTo(worldPos.x, worldPos.y, worldPos.z, entity.getYRot(), entity.getXRot());
 
         return (LivingEntity) entity;
     }
@@ -664,9 +662,9 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
+        if (entity.getType().builtInRegistryHolder().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;
-        if (entity.getType().is(ModTags.Entities.PARADOX_DENY))
+        if (entity.getType().builtInRegistryHolder().is(ModTags.Entities.PARADOX_DENY))
             return false;
         if (entity instanceof Player)
             return false;
@@ -691,7 +689,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
         if (level.isClientSide() && isRunning && !incomingRunning) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.level != null) {
-                mc.getSoundManager().stop(SoundEvents.PORTAL_AMBIENT.getLocation(), SoundSource.BLOCKS);
+                mc.getSoundManager().stop(SoundEvents.PORTAL_AMBIENT.location(), SoundSource.BLOCKS);
             }
         }
         super.onDataPacket(net, input);

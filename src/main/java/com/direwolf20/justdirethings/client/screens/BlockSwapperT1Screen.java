@@ -87,7 +87,7 @@ public class BlockSwapperT1Screen extends BaseMachineScreen<BlockSwapperT1Contai
                 ChatFormatting chatFormatting = container.getPartnerExists() == 1 ? ChatFormatting.BLUE : ChatFormatting.DARK_RED;
                 String key = container.getPartnerExists() == 1 ? "justdirethings.boundto" : "justdirethings.boundto-missing";
                 graphics.setTooltipForNextFrame(this.font,
-                        Component.translatable(key, Component.translatable(boundTo.dimension().location().getPath()), "[" + boundTo.pos().toShortString() + "]").withStyle(chatFormatting),
+                        Component.translatable(key, Component.translatable(boundTo.dimension().identifier().getPath()), "[" + boundTo.pos().toShortString() + "]").withStyle(chatFormatting),
                         mouseX, mouseY);
             } else {
                 graphics.setTooltipForNextFrame(this.font,
