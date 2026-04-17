@@ -42,13 +42,6 @@ repositories {
         }
     }
 
-    maven { //Curios
-        url = "https://maven.theillusivec4.top/"
-        content {
-            includeGroup "top.theillusivec4.curios"
-        }
-    }
-
     maven { // mek
         url = 'https://modmaven.dev/'
         content {
@@ -134,8 +127,10 @@ dependencies {
 
     compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
-    localRuntime "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
-    
+    runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
+
+    implementation "curse.maven:curios-309927:${curios_file_id}"
+
 //    compileOnly "vazkii.patchouli:Patchouli:${patchouli_version}:api"
 //    localRuntime "vazkii.patchouli:Patchouli:${patchouli_version}"
 
