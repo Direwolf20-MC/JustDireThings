@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
@@ -89,7 +89,7 @@ public class PolymorphicWandV2 extends BaseToggleableTool implements LeftClickab
     }
 
     public static void savePolymorphTarget(ItemStack stack, Player player, LivingEntity interactionTarget) {
-        if (interactionTarget instanceof Mob && !interactionTarget.getType().builtInRegistryHolder().is(JustDireEntityTags.POLYMORPHIC_TARGET_DENY)) {
+        if (interactionTarget instanceof Mob && !interactionTarget.getType().builtInRegistryHolder().is(ModTags.Entities.POLYMORPHIC_TARGET_DENY)) {
             stack.set(ENTITIYTYPE, EntityType.getKey(interactionTarget.getType()).toString());
             player.sendOverlayMessage(Component.translatable("justdirethings.polymorphset", interactionTarget.getType().getDescription()));
         } else {

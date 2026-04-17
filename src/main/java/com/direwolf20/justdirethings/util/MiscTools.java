@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.util;
 
-import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,7 +53,7 @@ public class MiscTools {
             if (ticker == null)
                 return false;
         }
-        if (blockState.is(JustDireBlockTags.TICK_SPEED_DENY))
+        if (blockState.is(ModTags.Blocks.TICK_SPEED_DENY))
             return false;
         return true;
     }

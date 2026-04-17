@@ -6,8 +6,7 @@ import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.entities.ParadoxEntity;
 import com.direwolf20.justdirethings.common.network.data.ParadoxSyncPayload;
-import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
-import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
@@ -455,7 +454,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     public boolean isBlockPosValid(ServerLevel serverLevel, BlockPos blockPos) {
         BlockState blockState = serverLevel.getBlockState(blockPos);
-        return blockState.is(JustDireBlockTags.PARADOX_ALLOW);
+        return blockState.is(ModTags.Blocks.PARADOX_ALLOW);
     }
 
     public Map<BlockPos, BlockState> getBlocksFromNBT() {
@@ -667,7 +666,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
             return false;
         if (entity.getType().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;
-        if (entity.getType().is(JustDireEntityTags.PARADOX_DENY))
+        if (entity.getType().is(ModTags.Entities.PARADOX_DENY))
             return false;
         if (entity instanceof Player)
             return false;

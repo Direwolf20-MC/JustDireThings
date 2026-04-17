@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.fluids.unstableportalfluid;
 
-import com.direwolf20.justdirethings.datagen.JustDireBiomeTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
@@ -25,7 +25,7 @@ public class UnstablePortalFluidType extends FluidType {
 
     @Override
     public boolean isVaporizedOnPlacement(Level level, BlockPos pos, FluidStack stack) {
-        return !level.getBiome(pos).is(JustDireBiomeTags.UNSTABLE_PORTAL_FLUID_VIABLE);
+        return !level.getBiome(pos).is(ModTags.Biomes.UNSTABLE_PORTAL_FLUID_VIABLE);
     }
 
     public void onVaporize(@Nullable Player player, Level level, BlockPos pos, FluidStack stack) {

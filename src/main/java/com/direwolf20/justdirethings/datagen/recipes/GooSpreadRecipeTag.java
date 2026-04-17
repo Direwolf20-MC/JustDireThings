@@ -1,19 +1,22 @@
 package com.direwolf20.justdirethings.datagen.recipes;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,8 +38,9 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
     }
 
     @Override
-    public RecipeType<?> getType() {
-        return Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get();
+    @SuppressWarnings("unchecked")
+    public RecipeType<CraftingRecipe> getType() {
+        return (RecipeType<CraftingRecipe>) (RecipeType<?>) Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get();
     }
 
     public boolean matches(GooBlockBE_Base gooBlockBE_base, BlockState sourceState) {
@@ -65,48 +69,49 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
     public boolean isSpecial() {
         return true;
     }
 
     @Override
-    public boolean matches(CraftingInput p_346065_, Level p_345375_) {
+    public boolean matches(CraftingInput input, Level level) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(CraftingInput p_345149_, HolderLookup.Provider p_346030_) {
+    public ItemStack assemble(CraftingInput input) {
         return ItemStack.EMPTY;
     }
 
-    /**
-     * Used to determine if this recipe can fit in a grid of the given width/height
-     */
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+    public boolean showNotification() {
         return false;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public String group() {
+        return "";
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public RecipeSerializer<? extends CraftingRecipe> getSerializer() {
         return Registration.GOO_SPREAD_RECIPE_SERIALIZER_TAG.get();
     }
 
-
     public static final MapCodec<GooSpreadRecipeTag> CODEC = RecordCodecBuilder.mapCodec(
-            p_311734_ -> p_311734_.group(
-                            Identifier.CODEC.fieldOf("id").forGetter(p_301134_ -> p_301134_.id),
-                            BlockTagIngredient.CODEC.fieldOf("input").forGetter(p_301135_ -> p_301135_.input),
-                            BlockState.CODEC.fieldOf("output").forGetter(p_301136_ -> p_301136_.output),
-                            Codec.INT.fieldOf("tierRequirement").forGetter(p_301137_ -> p_301137_.tierRequirement),
-                            Codec.INT.fieldOf("craftingDuration").forGetter(p_301138_ -> p_301138_.craftingDuration)
+            instance -> instance.group(
+                            Identifier.CODEC.fieldOf("id").forGetter(r -> r.id),
+                            BlockTagIngredient.CODEC.fieldOf("input").forGetter(r -> r.input),
+                            BlockState.CODEC.fieldOf("output").forGetter(r -> r.output),
+                            Codec.INT.fieldOf("tierRequirement").forGetter(r -> r.tierRequirement),
+                            Codec.INT.fieldOf("craftingDuration").forGetter(r -> r.craftingDuration)
                     )
-                    .apply(p_311734_, GooSpreadRecipeTag::new)
+                    .apply(instance, GooSpreadRecipeTag::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, GooSpreadRecipeTag> STREAM_CODEC = StreamCodec.of(
@@ -115,8 +120,8 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
 
     public static GooSpreadRecipeTag fromNetwork(RegistryFriendlyByteBuf pBuffer) {
         Identifier resourceLocation = pBuffer.readIdentifier();
-        Identifier tagLocation = pBuffer.readIdentifier(); // Read the tag's Identifier
-        BlockTagIngredient inputIngredient = new BlockTagIngredient(TagKey.create(Registries.BLOCK, tagLocation)); // Create the BlockTagIngredient
+        Identifier tagLocation = pBuffer.readIdentifier();
+        BlockTagIngredient inputIngredient = new BlockTagIngredient(TagKey.create(Registries.BLOCK, tagLocation));
         BlockState outputState = Block.stateById(pBuffer.readInt());
         int tierRequirement = pBuffer.readInt();
         int craftingDuration = pBuffer.readInt();
@@ -126,7 +131,7 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
 
     public static void toNetwork(RegistryFriendlyByteBuf pBuffer, GooSpreadRecipeTag pRecipe) {
         pBuffer.writeIdentifier(pRecipe.id);
-        pBuffer.writeIdentifier(pRecipe.input.getTag().location()); // Write the tag's Identifier
+        pBuffer.writeIdentifier(pRecipe.input.getTag().location());
         pBuffer.writeInt(Block.getId(pRecipe.output));
         pBuffer.writeInt(pRecipe.tierRequirement);
         pBuffer.writeInt(pRecipe.craftingDuration);

@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.mixin;
 
-import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,7 +53,7 @@ public interface CollisionMixin {
         Level level = player.level();
         BlockPos blockPos = new BlockPos((int) shape.min(Direction.Axis.X), (int) shape.min(Direction.Axis.Y), (int) shape.min(Direction.Axis.Z));
         BlockState blockState = level.getBlockState(blockPos);
-        if (blockState.getDestroySpeed(level, blockPos) < 0 || blockState.is(JustDireBlockTags.PHASEDENY))
+        if (blockState.getDestroySpeed(level, blockPos) < 0 || blockState.is(ModTags.Blocks.PHASEDENY))
             return true;
         double maxY = shape.max(Direction.Axis.Y);
         double minY = collisionBox.minY;

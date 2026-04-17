@@ -7,8 +7,7 @@ import com.direwolf20.justdirethings.common.events.BlockEvents;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
-import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
-import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.MiscTools;
@@ -204,7 +203,7 @@ public class AbilityMethods {
         if (blockState.is(Registration.EclipseGateBlock.get())) return false;
         if (blockState.isAir()) return false;
         if (blockState.getDestroySpeed(serverLevel, blockPos) < 0) return false;
-        if (blockState.is(JustDireBlockTags.ECLISEGATEDENY)) return false;
+        if (blockState.is(ModTags.Blocks.ECLISEGATEDENY)) return false;
         if (blockState.is(Tags.Blocks.RELOCATION_NOT_SUPPORTED)) return false;
         return true;
     }
@@ -320,7 +319,7 @@ public class AbilityMethods {
     public static boolean lawnmower(Level level, Player player, ItemStack itemStack) {
         if (!level.isClientSide()) {
             List<TagKey<Block>> tags = new ArrayList<>();
-            tags.add(JustDireBlockTags.LAWNMOWERABLE);
+            tags.add(ModTags.Blocks.LAWNMOWERABLE);
             Set<BlockPos> breakBlocks = findTaggedBlocks(level, tags, player.getOnPos(), 64, 5);
             List<ItemStack> drops = new ArrayList<>();
             for (BlockPos breakPos : breakBlocks) {
@@ -482,8 +481,8 @@ public class AbilityMethods {
                 return false;
             Entity entity = MiscTools.getEntityLookedAt(player, 4);
             if (entity == null) return false;
-            boolean peaceful = entity.getType().builtInRegistryHolder().is(JustDireEntityTags.POLYMORPHIC_PEACEFUL);
-            if (!peaceful && !entity.getType().builtInRegistryHolder().is(JustDireEntityTags.POLYMORPHIC_HOSTILE)) {
+            boolean peaceful = entity.getType().builtInRegistryHolder().is(ModTags.Entities.POLYMORPHIC_PEACEFUL);
+            if (!peaceful && !entity.getType().builtInRegistryHolder().is(ModTags.Entities.POLYMORPHIC_HOSTILE)) {
                 player.sendOverlayMessage(Component.translatable("justdirethings.invalidpolymorphentity"));
                 return false; //If not peaceful or hostile tagged, return
             }
@@ -726,7 +725,7 @@ public class AbilityMethods {
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (entity.getType().builtInRegistryHolder().is(JustDireEntityTags.NO_AI_DENY))
+        if (entity.getType().builtInRegistryHolder().is(ModTags.Entities.NO_AI_DENY))
             return false;
         return true;
     }
@@ -738,7 +737,7 @@ public class AbilityMethods {
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (entity.getType().builtInRegistryHolder().is(JustDireEntityTags.NO_EARTHQUAKE))
+        if (entity.getType().builtInRegistryHolder().is(ModTags.Entities.NO_EARTHQUAKE))
             return false;
         return true;
     }
@@ -759,7 +758,7 @@ public class AbilityMethods {
 
     private static EntityType<?> getRandomMobTypeByCategory(Level level, boolean peaceful) {
         List<EntityType<?>> mobTypes = BuiltInRegistries.ENTITY_TYPE.stream()
-                .filter(type -> peaceful ? type.builtInRegistryHolder().is(JustDireEntityTags.POLYMORPHIC_PEACEFUL) : type.builtInRegistryHolder().is(JustDireEntityTags.POLYMORPHIC_HOSTILE))
+                .filter(type -> peaceful ? type.builtInRegistryHolder().is(ModTags.Entities.POLYMORPHIC_PEACEFUL) : type.builtInRegistryHolder().is(ModTags.Entities.POLYMORPHIC_HOSTILE))
                 .toList();
 
         return mobTypes.isEmpty() ? null : mobTypes.get(level.getRandom().nextInt(mobTypes.size()));

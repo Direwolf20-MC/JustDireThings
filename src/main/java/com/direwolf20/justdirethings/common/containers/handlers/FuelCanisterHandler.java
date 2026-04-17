@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.containers.handlers;
 
 import com.direwolf20.justdirethings.common.items.FuelCanister;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -34,7 +34,7 @@ public class FuelCanisterHandler extends ItemStacksResourceHandler {
         if (resource.isEmpty()) return true;
         if (resource.getItem() instanceof FuelCanister) return false;
         ItemStack probe = resource.toStack();
-        if (probe.is(JustDireItemTags.FUEL_CANISTER_DENY)) return false;
+        if (probe.is(ModTags.Items.FUEL_CANISTER_DENY)) return false;
         if (resource.getItem().getCraftingRemainder() != null) return false;
         // Client-side fallback: no FuelValues, permit; server enforces burn-time check.
         if (fuelValues == null) return true;

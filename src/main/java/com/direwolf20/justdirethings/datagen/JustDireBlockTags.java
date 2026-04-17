@@ -2,44 +2,23 @@ package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
-
-import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
 import java.util.concurrent.CompletableFuture;
 
 public class JustDireBlockTags extends BlockTagsProvider {
 
-    public JustDireBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, JustDireThings.MODID, existingFileHelper);
-    }
-
-    public static final TagKey<Block> LAWNMOWERABLE = ModTag( "lawnmowerable");
-    public static final TagKey<Block> NO_AUTO_CLICK = ModTag( "noautoclick");
-    public static final TagKey<Block> SWAPPERDENY = ModTag( "swapper_deny");
-    public static final TagKey<Block> ECLISEGATEDENY = ModTag( "eclipsegate_deny");
-    public static final TagKey<Block> PHASEDENY = ModTag( "phase_deny");
-    public static final TagKey<Block> TICK_SPEED_DENY = ModTag( "tick_speed_deny");
-    public static final TagKey<Block> PARADOX_ALLOW = ModTag( "paradox_allow");
-    public static final TagKey<Block> PARADOX_ABSORB_DENY = ModTag( "paradox_absorb_deny");
-    public static final TagKey<Block> CHARCOAL = forgeTag("storage_blocks/charcoal");
-
-    private static TagKey<Block> forgeTag(String name) {
-        return BlockTags.create(Identifier.fromNamespaceAndPath("c", name));
-    }
-
-    private static TagKey<Block> ModTag(String name) {
-        return BlockTags.create(Identifier.fromNamespaceAndPath(MODID, name));
+    public JustDireBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider, JustDireThings.MODID);
     }
 
     @Override
@@ -97,7 +76,7 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.InventoryHolder.get())
                 .add(Registration.ExperienceHolder.get())
                 .add(Registration.CharcoalBlock.get());
-        tag(LAWNMOWERABLE)
+        tag(ModTags.Blocks.LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
                 .add(Blocks.SHORT_GRASS)
@@ -123,13 +102,13 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.CoalBlock_T2.get())
                 .add(Registration.CoalBlock_T3.get())
                 .add(Registration.CoalBlock_T4.get());
-        tag(BlockTags.BAMBOO_PLANTABLE_ON)
+        tag(BlockTags.SUPPORTS_BAMBOO)
                 .add(Registration.GooSoil_Tier1.get())
                 .add(Registration.GooSoil_Tier2.get())
                 .add(Registration.GooSoil_Tier3.get())
                 .add(Registration.GooSoil_Tier4.get());
-        tag(NO_AUTO_CLICK);
-        tag(SWAPPERDENY)
+        tag(ModTags.Blocks.NO_AUTO_CLICK);
+        tag(ModTags.Blocks.SWAPPERDENY)
                 .add(Blocks.PISTON_HEAD)
                 .add(Blocks.MOVING_PISTON)
                 .add(Blocks.BEDROCK)
@@ -138,11 +117,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .addTag(BlockTags.BEDS)
                 .addTag(BlockTags.PORTALS)
                 .addTag(BlockTags.DOORS);
-        tag(ECLISEGATEDENY)
+        tag(ModTags.Blocks.ECLISEGATEDENY)
                 .addTag(BlockTags.PORTALS)
                 .addTag(BlockTags.DOORS)
-                .addOptionalTag(Identifier.fromNamespaceAndPath("powah", "player_transmitters"));
-        tag(PHASEDENY)
+                .addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("powah", "player_transmitters")));
+        tag(ModTags.Blocks.PHASEDENY)
                 .addTags(BlockTags.PORTALS)
                 .add(Blocks.BARRIER,
                         Blocks.BEDROCK,
@@ -159,17 +138,12 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Registration.TimeCrystalCluster_Large.get());
         tag(Tags.Blocks.CLUSTERS)
                 .add(Registration.TimeCrystalCluster.get());
-        tag(TICK_SPEED_DENY);
-        tag(PARADOX_ALLOW)
+        tag(ModTags.Blocks.TICK_SPEED_DENY);
+        tag(ModTags.Blocks.PARADOX_ALLOW)
                 .addTag(Tags.Blocks.ORES);
-        tag(PARADOX_ABSORB_DENY)
+        tag(ModTags.Blocks.PARADOX_ABSORB_DENY)
                 .add(Blocks.BEDROCK);
-        tag(CHARCOAL)
+        tag(ModTags.Blocks.CHARCOAL)
                 .add(Registration.CharcoalBlock.get());
-    }
-
-    @Override
-    public String getName() {
-        return "JustDireThings Tags";
     }
 }

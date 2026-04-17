@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.blocks.gooblocks;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -70,7 +70,7 @@ public class GooBlock_Base extends Block implements EntityBlock {
     }
 
     protected boolean validRevivalItem(ItemStack itemStack) {
-        return itemStack.is(JustDireItemTags.GOO_REVIVE_TIER_1);
+        return itemStack.is(ModTags.Items.GOO_REVIVE_TIER_1);
     }
 
     @Nullable

@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.client.blockentityrenders.baseber;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.core.Holder;
@@ -137,10 +137,10 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
 
     private static ItemStack nextItemFromTag(int tier) {
         TagKey<Item> tag = switch (tier) {
-            case 1 -> JustDireItemTags.GOO_REVIVE_TIER_1;
-            case 2 -> JustDireItemTags.GOO_REVIVE_TIER_2;
-            case 3 -> JustDireItemTags.GOO_REVIVE_TIER_3;
-            case 4 -> JustDireItemTags.GOO_REVIVE_TIER_4;
+            case 1 -> ModTags.Items.GOO_REVIVE_TIER_1;
+            case 2 -> ModTags.Items.GOO_REVIVE_TIER_2;
+            case 3 -> ModTags.Items.GOO_REVIVE_TIER_3;
+            case 4 -> ModTags.Items.GOO_REVIVE_TIER_4;
             default -> null;
         };
         if (tag == null) return ItemStack.EMPTY;

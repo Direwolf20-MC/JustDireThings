@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.client.jei;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeTag;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -93,7 +93,7 @@ public class GooSpreadRecipeTagCategory implements IRecipeCategory<RecipeHolder<
         builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12)
                 .addIngredients(
                         Ingredient.of(
-                                JustDireItemTags.GOO_RECIPE_TIERS.get(recipe.value().getTierRequirement()-1)));
+                                ModTags.Items.GOO_RECIPE_TIERS.get(recipe.value().getTierRequirement()-1)));
 
         BlockState output = recipe.value().getOutput();
         if (output.getBlock().asItem() != Items.AIR) {

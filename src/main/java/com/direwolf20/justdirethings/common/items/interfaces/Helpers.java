@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -282,7 +282,7 @@ public class Helpers {
         RecipeManager recipeManager = level.recipeAccess();
         ItemStack returnStack = ItemStack.EMPTY;
         Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(itemStack), level);
-        if (smeltingRecipe.isPresent() && !itemStack.is(JustDireItemTags.AUTO_SMELT_DENY))
+        if (smeltingRecipe.isPresent() && !itemStack.is(ModTags.Items.AUTO_SMELT_DENY))
             returnStack = smeltingRecipe.get().value().assemble(new SingleRecipeInput(itemStack));
         if (returnStack.isEmpty()) return itemStack;
         return returnStack;
@@ -297,7 +297,7 @@ public class Helpers {
             // Check if there's a smelting recipe for the drop
             Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = recipeManager.getRecipeFor(RecipeType.SMELTING, input, level);
 
-            if (smeltingRecipe.isPresent() && !drop.is(JustDireItemTags.AUTO_SMELT_DENY)) {
+            if (smeltingRecipe.isPresent() && !drop.is(ModTags.Items.AUTO_SMELT_DENY)) {
                 // Get the result of the smelting recipe
                 ItemStack smeltedResult = smeltingRecipe.get().value().assemble(input);
 
@@ -327,7 +327,7 @@ public class Helpers {
         // Check if there's a smoking recipe for the drop
         Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = recipeManager.getRecipeFor(RecipeType.SMOKING, input, level);
 
-        if (smokingRecipe.isPresent() && !drop.getItem().is(JustDireItemTags.AUTO_SMOKE_DENY)) {
+        if (smokingRecipe.isPresent() && !drop.getItem().is(ModTags.Items.AUTO_SMOKE_DENY)) {
             // Get the result of the smoking recipe
             ItemStack smokedResults = smokingRecipe.get().value().assemble(input);
 

@@ -1,9 +1,7 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticleData;
-import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
-import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -215,7 +213,7 @@ public class ParadoxEntity extends Entity {
 
     private boolean isValidItem(ItemEntity entity) {
         ItemStack itemStack = entity.getItem();
-        if (itemStack.is(JustDireItemTags.PARADOX_DENY))
+        if (itemStack.is(ModTags.Items.PARADOX_DENY))
             return false;
         return true;
     }
@@ -227,7 +225,7 @@ public class ParadoxEntity extends Entity {
             return false;
         if (entity instanceof Player)
             return false;
-        if (entity.getType().builtInRegistryHolder().is(JustDireEntityTags.PARADOX_ABSORB_DENY))
+        if (entity.getType().builtInRegistryHolder().is(ModTags.Entities.PARADOX_ABSORB_DENY))
             return false;
         if (entity.getType().builtInRegistryHolder().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;
@@ -287,7 +285,7 @@ public class ParadoxEntity extends Entity {
         BlockState blockState = level().getBlockState(blockPos);
         if (blockState.isAir())
             return false;
-        if (blockState.is(JustDireBlockTags.PARADOX_ABSORB_DENY))
+        if (blockState.is(ModTags.Blocks.PARADOX_ABSORB_DENY))
             return false;
         if (blocksToAbsorb.containsKey(blockPos))
             return false;

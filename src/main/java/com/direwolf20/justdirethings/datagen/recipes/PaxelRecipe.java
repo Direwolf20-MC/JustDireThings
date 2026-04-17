@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.datagen.recipes;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
@@ -11,13 +10,14 @@ import com.direwolf20.justdirethings.setup.Registration;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.stream.Stream;
 
 public class PaxelRecipe implements SmithingRecipe {
     private final Ingredient template;
@@ -43,32 +42,26 @@ public class PaxelRecipe implements SmithingRecipe {
     }
 
     @Override
-    public RecipeType<?> getType() {
-        return RecipeType.SMITHING;
+    public boolean matches(SmithingRecipeInput input, Level level) {
+        return this.template.test(input.template()) && this.base.test(input.base()) && this.addition.test(input.addition());
     }
 
-    public boolean matches(SmithingRecipeInput p_346082_, Level p_345460_) {
-        return this.template.test(p_346082_.template()) && this.base.test(p_346082_.base()) && this.addition.test(p_346082_.addition());
-    }
-
-    public ItemStack assemble(SmithingRecipeInput smithingRecipeInput, HolderLookup.Provider provider) {
+    @Override
+    public ItemStack assemble(SmithingRecipeInput smithingRecipeInput) {
         ItemStack pickaxe = smithingRecipeInput.template();
         ItemStack axe = smithingRecipeInput.base();
         ItemStack shovel = smithingRecipeInput.addition();
-        ItemStack result = getResultItem(provider);
+        ItemStack result = this.result.copy();
 
-        if (isTemplateIngredient(pickaxe) && pickaxe.getItem() instanceof ToggleableTool pickaxetoggleableTool) {
+        if (pickaxe.getItem() instanceof BasePickaxe && pickaxe.getItem() instanceof ToggleableTool pickaxetoggleableTool) {
             for (Ability ability : pickaxetoggleableTool.getAbilities()) {
                 if (ToggleableTool.hasUpgrade(pickaxe, ability))
                     result.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
             }
-
-            Optional<? extends ItemEnchantments> enchantments = pickaxe.getComponentsPatch().get(DataComponents.ENCHANTMENTS);
-
         } else {
             return ItemStack.EMPTY;
         }
-        if (isBaseIngredient(axe) && axe.getItem() instanceof ToggleableTool axetoggleableTool) {
+        if (axe.getItem() instanceof BaseAxe && axe.getItem() instanceof ToggleableTool axetoggleableTool) {
             for (Ability ability : axetoggleableTool.getAbilities()) {
                 if (ToggleableTool.hasUpgrade(axe, ability))
                     result.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
@@ -76,7 +69,7 @@ public class PaxelRecipe implements SmithingRecipe {
         } else {
             return ItemStack.EMPTY;
         }
-        if (isAdditionIngredient(shovel) && shovel.getItem() instanceof ToggleableTool shoveltoggleableTool) {
+        if (shovel.getItem() instanceof BaseShovel && shovel.getItem() instanceof ToggleableTool shoveltoggleableTool) {
             for (Ability ability : shoveltoggleableTool.getAbilities()) {
                 if (ToggleableTool.hasUpgrade(shovel, ability))
                     result.set(JustDireDataComponents.ABILITY_UPGRADE_INSTALLS.get(ability), true);
@@ -85,33 +78,27 @@ public class PaxelRecipe implements SmithingRecipe {
             return ItemStack.EMPTY;
         }
 
-        // Transfer and combine enchantments from pickaxe, axe, and shovel
         ItemEnchantments pickaxeEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(pickaxe);
         ItemEnchantments axeEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(axe);
         ItemEnchantments shovelEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(shovel);
 
-        // Apply combined enchantments to the result
         EnchantmentHelper.updateEnchantments(result, enchantments -> {
-            // A set to store the already applied enchantments for compatibility checks
             Set<Holder<Enchantment>> appliedEnchantments = new HashSet<>();
 
-            // Helper function to check and add enchantments while ensuring compatibility
             BiConsumer<ItemEnchantments, String> addEnchantments = (itemEnchantments, toolName) -> {
                 itemEnchantments.entrySet().forEach(entry -> {
                     Holder<Enchantment> enchantment = entry.getKey();
                     int level = entry.getIntValue();
 
-                    // Ensure the enchantment is compatible with already applied enchantments
                     if (appliedEnchantments.stream().allMatch(existing -> Enchantment.areCompatible(existing, enchantment))) {
-                        enchantments.set(enchantment, level); // Add the enchantment to the result
-                        appliedEnchantments.add(enchantment); // Track the added enchantment
+                        enchantments.set(enchantment, level);
+                        appliedEnchantments.add(enchantment);
                     } else {
                         System.out.println("Skipping incompatible enchantment from " + toolName + ": " + enchantment);
                     }
                 });
             };
 
-            // Add enchantments from each tool with compatibility checks
             addEnchantments.accept(pickaxeEnchantments, "pickaxe");
             addEnchantments.accept(axeEnchantments, "axe");
             addEnchantments.accept(shovelEnchantments, "shovel");
@@ -120,24 +107,8 @@ public class PaxelRecipe implements SmithingRecipe {
         return result;
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
+    public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider provider) {
         return result.copy();
-    }
-
-    @Override
-    public boolean isTemplateIngredient(ItemStack stack) {
-        return stack.getItem() instanceof BasePickaxe;
-    }
-
-    @Override
-    public boolean isBaseIngredient(ItemStack stack) {
-        return stack.getItem() instanceof BaseAxe;
-    }
-
-    @Override
-    public boolean isAdditionIngredient(ItemStack stack) {
-        return stack.getItem() instanceof BaseShovel;
     }
 
     public Ingredient getTemplate() {
@@ -157,24 +128,48 @@ public class PaxelRecipe implements SmithingRecipe {
     }
 
     @Override
-    public boolean isIncomplete() {
-        return Stream.of(this.template, this.base, this.addition).anyMatch(Ingredient::hasNoItems);
+    public Optional<Ingredient> templateIngredient() {
+        return template.isEmpty() ? Optional.empty() : Optional.of(template);
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public Ingredient baseIngredient() {
+        return base;
+    }
+
+    @Override
+    public Optional<Ingredient> additionIngredient() {
+        return addition.isEmpty() ? Optional.empty() : Optional.of(addition);
+    }
+
+    @Override
+    public boolean showNotification() {
+        return true;
+    }
+
+    @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public RecipeSerializer<? extends SmithingRecipe> getSerializer() {
         return Registration.PAXEL_RECIPE_SERIALIZER.get();
     }
 
-
     public static final MapCodec<PaxelRecipe> CODEC = RecordCodecBuilder.mapCodec(
-            p_311734_ -> p_311734_.group(
-                            Ingredient.CODEC.fieldOf("template").forGetter(p_301070_ -> p_301070_.template),
-                            Ingredient.CODEC.fieldOf("base").forGetter(p_300969_ -> p_300969_.base),
-                            Ingredient.CODEC.fieldOf("addition").forGetter(p_300977_ -> p_300977_.addition),
-                            net.minecraft.world.item.ItemStack.STRICT_CODEC.fieldOf("result").forGetter(p_300935_ -> p_300935_.result)
+            instance -> instance.group(
+                            Ingredient.CODEC.fieldOf("template").forGetter(r -> r.template),
+                            Ingredient.CODEC.fieldOf("base").forGetter(r -> r.base),
+                            Ingredient.CODEC.fieldOf("addition").forGetter(r -> r.addition),
+                            ItemStack.CODEC.fieldOf("result").forGetter(r -> r.result)
                     )
-                    .apply(p_311734_, PaxelRecipe::new)
+                    .apply(instance, PaxelRecipe::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PaxelRecipe> STREAM_CODEC = StreamCodec.composite(

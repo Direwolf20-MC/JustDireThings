@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.common.items.CreatureCatcher;
-import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -234,7 +234,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
             return false;
         if (entity.getType().builtInRegistryHolder().is(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED))
             return false;
-        if (entity.getType().builtInRegistryHolder().is(JustDireEntityTags.CREATURE_CATCHER_DENY))
+        if (entity.getType().builtInRegistryHolder().is(ModTags.Entities.CREATURE_CATCHER_DENY))
             return false;
         if (!entity.save(TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess())))
             return false;

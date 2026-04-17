@@ -13,7 +13,7 @@ import com.direwolf20.justdirethings.common.items.*;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.network.PacketHandler;
-import com.direwolf20.justdirethings.datagen.JustDireFluidTags;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.ModSetup;
@@ -329,7 +329,7 @@ public class JustDireThings {
         event.registerBlock(Capabilities.Fluid.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof ExperienceHolderBE experienceHolderBE) {
-                        return new ExperienceHolderFluidTank(experienceHolderBE, fluidResource -> fluidResource.is(JustDireFluidTags.EXPERIENCE));
+                        return new ExperienceHolderFluidTank(experienceHolderBE, fluidResource -> fluidResource.is(ModTags.Fluids.EXPERIENCE));
                     }
                     return null;
                 },
