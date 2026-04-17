@@ -4,7 +4,6 @@ import com.direwolf20.justdirethings.client.particles.gooexplodeparticle.GooExpl
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeTag;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -201,10 +200,12 @@ public class GooBlockBE_Base extends BlockEntity {
 
     @Nullable
     private GooSpreadRecipe findRecipe(BlockState state) {
-        RecipeManager recipeManager = getLevel().getRecipeManager();
+        if (!(getLevel() instanceof net.minecraft.server.level.ServerLevel serverLevel)) return null;
+        RecipeManager recipeManager = serverLevel.recipeAccess();
 
-        for (RecipeHolder<?> recipe : recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE.get())) {
-            if (recipe.value() instanceof GooSpreadRecipe gooSpreadRecipe && gooSpreadRecipe.matches(this, state)) {
+        for (RecipeHolder<GooSpreadRecipe> recipe : recipeManager.recipeMap().byType(Registration.GOO_SPREAD_RECIPE_TYPE.get())) {
+            GooSpreadRecipe gooSpreadRecipe = recipe.value();
+            if (gooSpreadRecipe.matches(this, state)) {
                 return gooSpreadRecipe;
             }
         }
@@ -214,10 +215,12 @@ public class GooBlockBE_Base extends BlockEntity {
 
     @Nullable
     private GooSpreadRecipeTag findRecipeTag(BlockState state) {
-        RecipeManager recipeManager = getLevel().getRecipeManager();
+        if (!(getLevel() instanceof net.minecraft.server.level.ServerLevel serverLevel)) return null;
+        RecipeManager recipeManager = serverLevel.recipeAccess();
 
-        for (RecipeHolder<?> recipe : recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get())) {
-            if (recipe.value() instanceof GooSpreadRecipeTag gooSpreadRecipeTag && gooSpreadRecipeTag.matches(this, state)) {
+        for (RecipeHolder<GooSpreadRecipeTag> recipe : recipeManager.recipeMap().byType(Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get())) {
+            GooSpreadRecipeTag gooSpreadRecipeTag = recipe.value();
+            if (gooSpreadRecipeTag.matches(this, state)) {
                 return gooSpreadRecipeTag;
             }
         }

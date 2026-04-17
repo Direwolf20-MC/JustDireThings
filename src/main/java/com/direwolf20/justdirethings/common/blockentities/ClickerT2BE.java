@@ -6,7 +6,6 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineContainerData;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
@@ -68,7 +67,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
     @Override
     public void tickServer() {
         super.tickServer();
-        chargeItemStack(getClickStack());
+        chargeItemStack(getMachineHandler(), 0);
     }
 
     @Override

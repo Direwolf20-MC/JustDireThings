@@ -4,8 +4,12 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ItemTagsProvider;
@@ -15,6 +19,14 @@ import java.util.concurrent.CompletableFuture;
 public class JustDireItemTags extends ItemTagsProvider {
     public JustDireItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(packOutput, lookupProvider, JustDireThings.MODID);
+    }
+
+    private static TagKey<Item> toolRepairTag(String name) {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "repairs_" + name + "_tool"));
+    }
+
+    private static TagKey<Item> armorRepairTag(String name) {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "repairs_" + name + "_armor"));
     }
 
     @Override
@@ -202,5 +214,15 @@ public class JustDireItemTags extends ItemTagsProvider {
 
         tag(ModTags.Items.GOO_RECIPE_TIER_4)
                 .add(Registration.GooBlock_Tier4_ITEM.get());
+
+        tag(toolRepairTag("ferricore")).add(Registration.FerricoreIngot.get());
+        tag(toolRepairTag("blazegold")).add(Registration.BlazegoldIngot.get());
+        tag(toolRepairTag("celestigem")).add(Registration.Celestigem.get());
+        tag(toolRepairTag("eclipsealloy")).add(Registration.EclipseAlloyIngot.get());
+
+        tag(armorRepairTag("ferricore")).add(Registration.FerricoreIngot.get());
+        tag(armorRepairTag("blazegold")).add(Registration.BlazegoldIngot.get());
+        tag(armorRepairTag("celestigem")).add(Registration.Celestigem.get());
+        tag(armorRepairTag("eclipsealloy")).add(Registration.EclipseAlloyIngot.get());
     }
 }

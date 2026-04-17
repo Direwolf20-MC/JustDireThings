@@ -15,7 +15,6 @@ import net.minecraft.world.item.equipment.EquipmentAssets;
 import java.util.Map;
 
 public class ArmorTiers {
-    // TODO(port, stage-17): populate these repair tags in the item tag provider so repair actually works.
     private static final TagKey<Item> REPAIRS_FERRICORE = repairTag("ferricore");
     private static final TagKey<Item> REPAIRS_BLAZEGOLD = repairTag("blazegold");
     private static final TagKey<Item> REPAIRS_CELESTIGEM = repairTag("celestigem");

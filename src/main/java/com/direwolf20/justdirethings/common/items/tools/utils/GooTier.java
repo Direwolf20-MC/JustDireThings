@@ -46,7 +46,6 @@ public enum GooTier {
         return material.enchantmentValue();
     }
 
-    // TODO(port, stage-17): populate these repair tags in the item tag provider so repair actually works.
     private static TagKey<Item> repairTag(String name) {
         return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "repairs_" + name + "_tool"));
     }

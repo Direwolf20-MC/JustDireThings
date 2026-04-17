@@ -1,35 +1,48 @@
 package com.direwolf20.justdirethings.common.items.tools.basetools;
 
 import com.direwolf20.justdirethings.common.entities.JustDireArrow;
+import com.direwolf20.justdirethings.common.items.PotionCanister;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
 public class BaseBow extends BowItem implements ToggleableTool, LeftClickableTool {
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
@@ -56,7 +69,12 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
         return super.use(level, player, hand);
     }
 
-    // TODO(port, stage-4): restore inventoryTick against new (ItemStack, ServerLevel, Entity, @Nullable EquipmentSlot) signature.
+    @Override
+    public void inventoryTick(ItemStack itemStack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
+        if ((!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
+            ToggleableTool.tickCooldowns(level, itemStack, player);
+        }
+    }
 
     @Override
     protected Projectile createProjectile(Level level, LivingEntity livingEntity, ItemStack itemStack, ItemStack stack, boolean crit) {
@@ -93,10 +111,53 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
                 justDireArrow.setHostileOnly(hostileOnly);
             }
 
-            // TODO(port, stage-5/8): potion-canister arrow abilities relied on ComponentItemHandler / IItemHandler;
-            // re-wire once item-side fluid/item handlers are ported to ResourceHandler<ItemResource>.
             if (noPotionAbilitiesActive(itemStack))
                 return customArrow(justDireArrow, stack, itemStack);
+
+            ResourceHandler<ItemResource> handler = itemStack.getCapability(Capabilities.Item.ITEM, null);
+            if (handler != null) {
+                PotionContents potionContents = PotionContents.EMPTY;
+                for (int slot = 0; slot < handler.size(); slot++) {
+                    ItemResource slotResource = handler.getResource(slot);
+                    if (slotResource.isEmpty() || !(slotResource.getItem() instanceof PotionCanister)) continue;
+                    ItemStack potionCanister = slotResource.toStack(handler.getAmountAsInt(slot));
+                    int potionAmt = PotionCanister.getPotionAmount(potionCanister);
+                    PotionContents slotPotionContents = PotionCanister.getPotionContents(potionCanister);
+                    if (slotPotionContents.equals(PotionContents.EMPTY)) continue;
+                    int neededAmt = 0;
+                    if (canUseAbilityAndDurability(itemStack, Ability.POTIONARROW))
+                        neededAmt += 25;
+                    if (canUseAbilityAndDurability(itemStack, Ability.SPLASH))
+                        neededAmt += 25;
+                    if (canUseAbilityAndDurability(itemStack, Ability.LINGERING))
+                        neededAmt += 50;
+                    if (potionAmt < neededAmt) continue;
+                    for (MobEffectInstance mobEffectInstance : slotPotionContents.getAllEffects())
+                        potionContents = potionContents.withEffectAdded(mobEffectInstance);
+                    PotionCanister.setPotionAmount(potionCanister, potionAmt - neededAmt);
+                    ItemResource newResource = ItemResource.of(potionCanister);
+                    try (Transaction tx = Transaction.openRoot()) {
+                        handler.extract(slot, slotResource, handler.getAmountAsInt(slot), tx);
+                        handler.insert(slot, newResource, potionCanister.getCount(), tx);
+                        tx.commit();
+                    }
+                }
+                if (!potionContents.equals(PotionContents.EMPTY)) {
+                    justDireArrow.setPotionContents(potionContents);
+                    if (canUseAbilityAndDurability(itemStack, Ability.POTIONARROW)) {
+                        justDireArrow.setPotionArrow(true);
+                        Helpers.damageTool(itemStack, livingEntity, Ability.POTIONARROW);
+                    }
+                    if (canUseAbilityAndDurability(itemStack, Ability.SPLASH)) {
+                        justDireArrow.setSplash(true);
+                        Helpers.damageTool(itemStack, livingEntity, Ability.SPLASH);
+                    }
+                    if (canUseAbilityAndDurability(itemStack, Ability.LINGERING)) {
+                        justDireArrow.setLingering(true);
+                        Helpers.damageTool(itemStack, livingEntity, Ability.LINGERING);
+                    }
+                }
+            }
 
             return customArrow(justDireArrow, stack, itemStack);
         }
@@ -181,8 +242,46 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
         return abilityParams;
     }
 
-    // TODO(port, stage-4): restore appendHoverText against new signature.
-    // TODO(port, stage-5): re-wire damageItem against new EnergyHandler/ItemAccess.
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
+        Level level = context.level();
+        if (level == null) {
+            return;
+        }
+        List<Component> buffer = new ArrayList<>();
+        boolean sneakPressed = Minecraft.getInstance().hasShiftDown();
+        appendFEText(stack, buffer);
+        if (sneakPressed) {
+            appendToolEnabled(stack, buffer);
+            appendAbilityList(stack, buffer);
+        } else {
+            appendToolEnabled(stack, buffer);
+            appendShiftForInfo(stack, buffer);
+        }
+        buffer.forEach(tooltip);
+    }
+
+    @Override
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
+        if (stack.getItem() instanceof PoweredTool) {
+            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, null);
+            if (energyStorage == null) return amount;
+            double reductionFactor = 0;
+            if (entity != null && entity.level().getServer() != null) {
+                HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
+                reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
+            }
+            int finalEnergyCost = (int) Math.max(0, amount - (amount * reductionFactor));
+            try (Transaction tx = Transaction.openRoot()) {
+                energyStorage.extract(finalEnergyCost, tx);
+                tx.commit();
+            }
+            return 0;
+        }
+        return amount;
+    }
 
     @Override
     public boolean isPrimaryItemFor(ItemStack stack, Holder<Enchantment> enchantment) {

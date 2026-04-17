@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataCom
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -19,12 +20,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
@@ -71,7 +74,8 @@ public class InventoryHolder extends BaseMachineBlock {
                 if (stack.has(JustDireDataComponents.CUSTOM_DATA_1)) {
                     CompoundTag compound = stack.get(JustDireDataComponents.CUSTOM_DATA_1).copyTag();
                     if (!compound.isEmpty()) {
-                        inventoryHolderBE.loadInventory(compound, world.registryAccess());
+                        ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, world.registryAccess(), compound);
+                        inventoryHolderBE.loadInventory(input);
                     }
                 }
             }
@@ -85,9 +89,10 @@ public class InventoryHolder extends BaseMachineBlock {
 
         if (blockEntity instanceof BaseMachineBE baseMachineBE && !baseMachineBE.isDefaultSettings()) {
             ItemStack itemStack = new ItemStack(Item.byBlock(this));
-            CompoundTag compoundTag = new CompoundTag();
-            ((BaseMachineBE) blockEntity).saveAdditional(compoundTag, builder.getLevel().registryAccess());
-            ((InventoryHolderBE) blockEntity).saveInventory(compoundTag, builder.getLevel().registryAccess());
+            TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, builder.getLevel().registryAccess());
+            baseMachineBE.saveAdditional(output);
+            ((InventoryHolderBE) blockEntity).saveInventory(output);
+            CompoundTag compoundTag = output.buildResult();
             if (!compoundTag.isEmpty()) {
                 itemStack.set(JustDireDataComponents.CUSTOM_DATA_1, CustomData.of(compoundTag));
             }

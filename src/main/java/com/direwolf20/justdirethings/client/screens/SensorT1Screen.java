@@ -79,10 +79,10 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
     }
 
     @Override
-    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn) {
         if (showBlockStates && MiscTools.inBounds(topSectionLeft - 101, topSectionTop, 100, topSectionHeight, mouseX, mouseY))
             return false;
-        return super.hasClickedOutside(mouseX, mouseY, guiLeftIn, guiTopIn, mouseButton);
+        return super.hasClickedOutside(mouseX, mouseY, guiLeftIn, guiTopIn);
     }
 
     @Override

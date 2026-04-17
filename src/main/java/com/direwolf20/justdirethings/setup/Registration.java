@@ -94,10 +94,10 @@ import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.common.world.chunk.TicketController;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import java.util.function.Supplier;
 
@@ -877,11 +877,22 @@ public class Registration {
                     throw new IllegalStateException("Cannot attach energy handler item to a non-PoweredMachine.");
                 }
             }).build());
-    // TODO(port, stage-1): CompoundTag.CODEC is a Codec, not a MapCodec — AttachmentType.Builder#serialize now requires MapCodec<T> or IAttachmentSerializer<T>.
-    // Wrapping the raw tag in a MapCodec field so the attachment compiles; downstream consumers should migrate off CompoundTag-as-attachment in a later stage.
     public static final Supplier<AttachmentType<CompoundTag>> DEATH_DATA = ATTACHMENT_TYPES.register(
             "death_data",
-            () -> AttachmentType.builder(() -> new CompoundTag()).serialize(CompoundTag.CODEC.fieldOf("data")).build()
+            () -> AttachmentType.builder(() -> new CompoundTag())
+                    .serialize(new net.neoforged.neoforge.attachment.IAttachmentSerializer<CompoundTag>() {
+                        @Override
+                        public CompoundTag read(net.neoforged.neoforge.attachment.IAttachmentHolder holder, net.minecraft.world.level.storage.ValueInput input) {
+                            return input.read("data", CompoundTag.CODEC).orElseGet(CompoundTag::new);
+                        }
+
+                        @Override
+                        public boolean write(CompoundTag attachment, net.minecraft.world.level.storage.ValueOutput output) {
+                            if (attachment.isEmpty()) return false;
+                            output.store("data", CompoundTag.CODEC, attachment);
+                            return true;
+                        }
+                    }).build()
     );
 
     //Fluids

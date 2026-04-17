@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.fluids.unstableportalfluid;
 import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.PowerParticleOption;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -33,7 +34,7 @@ public class UnstablePortalFluidType extends FluidType {
         level.playSound(player, pos, sound != null ? sound : SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.8F);
 
         for (int l = 0; l < 8; ++l)
-            level.addAlwaysVisibleParticle(ParticleTypes.DRAGON_BREATH, (double) pos.getX() + Math.random(), (double) pos.getY() + Math.random(), (double) pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
+            level.addAlwaysVisibleParticle(PowerParticleOption.create(ParticleTypes.DRAGON_BREATH, 1.0F), (double) pos.getX() + Math.random(), (double) pos.getY() + Math.random(), (double) pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
     }
 
     @Override

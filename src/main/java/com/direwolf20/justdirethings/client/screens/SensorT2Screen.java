@@ -29,7 +29,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> implements SensorScreenInterface {
     public int senseTarget;
@@ -97,10 +100,10 @@ public class SensorT2Screen extends BaseMachineScreen<SensorT2Container> impleme
     }
 
     @Override
-    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn) {
         if (showBlockStates && MiscTools.inBounds(topSectionLeft - 101, topSectionTop, 100, topSectionHeight, mouseX, mouseY))
             return false;
-        return super.hasClickedOutside(mouseX, mouseY, guiLeftIn, guiTopIn, mouseButton);
+        return super.hasClickedOutside(mouseX, mouseY, guiLeftIn, guiTopIn);
     }
 
     @Override

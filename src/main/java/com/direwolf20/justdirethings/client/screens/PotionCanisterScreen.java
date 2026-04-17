@@ -106,7 +106,7 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
         if (MiscTools.inBounds(leftPos + 5, topPos + 5, 18, 72, pX, pY)) {
             List<Component> components = new ArrayList<>();
             components.add(Component.literal(MagicHelpers.formatted(potionAmt) + "/" + MagicHelpers.formatted(PotionCanister.getMaxMB())));
-            potionContents.addPotionTooltip(component -> components.add(component), 1, 20);
+            PotionContents.addPotionTooltip(potionContents.getAllEffects(), components::add, 1, 20);
             graphics.setTooltipForNextFrame(font, components, Optional.empty(), pX, pY);
         }
     }

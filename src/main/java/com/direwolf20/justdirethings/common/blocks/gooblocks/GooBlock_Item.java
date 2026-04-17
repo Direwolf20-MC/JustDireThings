@@ -7,12 +7,13 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class GooBlock_Item extends BlockItem {
     public GooBlock_Item(Block block, Properties properties) {
@@ -20,14 +21,14 @@ public class GooBlock_Item extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
         Level level = context.level();
         if (level == null) {
             return;
         }
 
-        tooltip.add(Component.translatable("justdirethings.requiresfeeding")
+        tooltip.accept(Component.translatable("justdirethings.requiresfeeding")
                 .withStyle(ChatFormatting.DARK_RED));
     }
 

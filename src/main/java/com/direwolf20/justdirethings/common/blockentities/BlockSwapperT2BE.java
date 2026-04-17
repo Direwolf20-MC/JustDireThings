@@ -3,7 +3,6 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
@@ -147,7 +146,7 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
             return false;
         BlockState blockState = serverLevel.getBlockState(blockPos);
         if (blockState.isAir()) return true; //Don't need to filter AIR either way
-        ItemStack blockItemStack = blockState.getBlock().getCloneItemStack(serverLevel, blockPos, blockState, false);
+        ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, serverLevel, false, null);
         return isStackValidFilter(blockItemStack);
     }
 

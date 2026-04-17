@@ -9,7 +9,6 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
-import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
@@ -74,7 +73,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     @Override
     public void tickServer() {
         super.tickServer();
-        chargeItemStack(getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0)));
+        chargeItemStack(getMachineHandler(), 0);
     }
 
     @Override
@@ -128,7 +127,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
             List<ItemStack> drops = Block.getDrops(level.getBlockState(blockPos), (ServerLevel) level, blockPos, level.getBlockEntity(blockPos), fakePlayer, tool);
             for (ItemStack drop : drops) {
                 if (tool.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbility(tool, Ability.SMELTER)) {
-                    if (isStackValidFilter(Helpers.getSmeltedItem(level, drop))) return true;
+                    if (isStackValidFilter(Helpers.getSmeltedItem((ServerLevel) level, drop))) return true;
                 } else {
                     if (isStackValidFilter(drop)) return true;
                 }

@@ -8,7 +8,6 @@ import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorag
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -374,7 +373,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
                     if (!foundAcceptableSide)
                         return;
 
-                    ItemStack blockItemStack = blockState.getBlock().getCloneItemStack(level, blockPos, blockState, false);
+                    ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, level, false, null);
                     if (!isStackValidFilter(blockItemStack)) return;
 
                     if (blockState.getBlock() instanceof EnergyTransmitter)

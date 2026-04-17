@@ -2,10 +2,11 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public interface PoweredMachineBE {
@@ -39,8 +40,9 @@ public interface PoweredMachineBE {
         return getEnergyStorage().extractEnergy(power, simulate);
     }
 
-    default void chargeItemStack(ItemStack itemStack) {
-        EnergyHandler slotEnergy = ItemAccess.forStack(itemStack).getCapability(Capabilities.Energy.ITEM);
+    default void chargeItemStack(ResourceHandler<ItemResource> handler, int slotIndex) {
+        if (handler.getResource(slotIndex).isEmpty()) return;
+        EnergyHandler slotEnergy = ItemAccess.forHandlerIndex(handler, slotIndex).getCapability(Capabilities.Energy.ITEM);
         if (slotEnergy == null) return;
         int acceptedEnergy;
         try (Transaction simTx = Transaction.openRoot()) {

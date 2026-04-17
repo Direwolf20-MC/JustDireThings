@@ -39,7 +39,7 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         super(container, inv, name);
         this.container = container;
         this.pocketGenerator = container.playerEntity.getMainHandItem();
-        this.energyStorage = pocketGenerator.getCapability(Capabilities.EnergyHandler.ITEM);
+        this.energyStorage = pocketGenerator.getCapability(Capabilities.Energy.ITEM);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         this.pocketGenerator = container.playerEntity.getMainHandItem();
         if (pocketGenerator.isEmpty() || !(pocketGenerator.getItem() instanceof PocketGenerator))
             return;
-        this.energyStorage = pocketGenerator.getCapability(Capabilities.EnergyHandler.ITEM);
+        this.energyStorage = pocketGenerator.getCapability(Capabilities.Energy.ITEM);
         if (energyStorage == null)
             return;
         int maxBurn = pocketGenerator.getOrDefault(JustDireDataComponents.POCKETGEN_MAXBURN, 0);

@@ -3,15 +3,12 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -28,6 +25,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 
 import java.util.*;
@@ -324,7 +323,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     public boolean handleBlockStates(BlockPos blockPos, BlockState blockState) {
-        ItemStack blockItemStack = blockState.getBlock().getCloneItemStack(level, blockPos, blockState, false);
+        ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, level, false, null);
         boolean allowList = filterData.allowlist;
         if (blockStateFilterCache.containsKey(blockState))
             return blockStateFilterCache.get(blockState);
