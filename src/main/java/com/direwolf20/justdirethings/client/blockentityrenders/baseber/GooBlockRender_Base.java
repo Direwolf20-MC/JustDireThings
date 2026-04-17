@@ -1,14 +1,19 @@
 package com.direwolf20.justdirethings.client.blockentityrenders.baseber;
 
+import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base;
+import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
+import com.direwolf20.justdirethings.setup.Registration;
 import com.direwolf20.justdirethings.util.ModTags;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.QuadInstance;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
@@ -17,8 +22,13 @@ import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -28,6 +38,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +47,8 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
 
     private static final long CYCLE_MILLIS = 3600L;
     private static final float FADE_VISIBILITY_THRESHOLD = 0.5f;
+    private static final int TOTAL_STAGES = GooPatternBlock.GOOSTAGE.getPossibleValues().size(); // 12
+    private static final float PERCENT_DIVISOR = 100F / TOTAL_STAGES;
 
     private static int currentItemIndex = 0;
     private static long lastChangeTime = 0L;
@@ -90,9 +103,6 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
             }
 
             if (!cachedItemStack.isEmpty() && fadeFactor >= FADE_VISIBILITY_THRESHOLD) {
-                // TODO(port, stage-16): restore smooth alpha fade (0..1 via fadeFactor).
-                // ItemStackRenderState.submit has no alpha-modulation path; porting the old
-                // DireVertexConsumer multiplier requires a custom RenderType that is built in Stage 16.
                 state.showFloatingItem = true;
                 state.floatingItemIsBlock = cachedItemStack.getItem() instanceof BlockItem;
                 this.itemModelResolver.updateForTopItem(
@@ -117,16 +127,84 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
             }
         }
 
-        // TODO(port, stage-16): crafting pattern overlay for each Direction in state.progress.keySet().
-        // Old: ModelBlockRenderer.renderModelFaceAO into OurRenderTypes.GooPattern (depth-mask)
-        // then again into OurRenderTypes.RenderBlockBackface (blend-equal) for the real block,
-        // scaled/translated per state.tier, rotated by direction.getRotation().
-        // 26.1 replacement: ModelBlockRenderer.tesselateBlock(BlockQuadOutput, ...) driving a
-        // custom BlockQuadOutput→VertexConsumer bridge (RENDER_PORTING.md §5.3) from
-        // submitCustomGeometry(...). AmbientOcclusionFace path is gone; drop AO lighting.
-        // - Pattern block: Registration.GooPatternBlock with GOOSTAGE = tier-1 (full alpha)
-        //   and GOOSTAGE = tier (alpha = percentagePart/percentageDivisor).
-        // - Real block: state.renderBlockState.
+        if (!state.progress.isEmpty()) {
+            for (Map.Entry<Direction, int[]> entry : state.progress.entrySet()) {
+                Direction direction = entry.getKey();
+                int[] p = entry.getValue();
+                renderCraftingOverlay(state, poseStack, submitNodeCollector, direction, p[0], p[1]);
+            }
+        }
+    }
+
+    private void renderCraftingOverlay(GooBlockRenderState state, PoseStack poseStack, SubmitNodeCollector collector,
+                                       Direction direction, int remainingTicks, int maxTicks) {
+        float percentComplete = (1F - (float) remainingTicks / (float) maxTicks) * 100F;
+        int tensDigit = (int) (percentComplete / PERCENT_DIVISOR);
+        if (tensDigit >= TOTAL_STAGES) tensDigit = TOTAL_STAGES - 1;
+        float startOfCurrentStage = tensDigit * PERCENT_DIVISOR;
+        float stageFrac = (percentComplete - startOfCurrentStage) / PERCENT_DIVISOR; // 0..1 inside this stage
+        float alpha = (tensDigit + stageFrac) / (float) TOTAL_STAGES; // monotonic 0..1 across all stages
+        int alphaByte = Math.max(0, Math.min(255, Math.round(alpha * 255F)));
+        int packedColor = (alphaByte << 24) | 0x00FFFFFF;
+
+        BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, tensDigit);
+
+        poseStack.pushPose();
+        // Offset to the direction we're crafting at (render on neighbor block).
+        net.minecraft.core.Vec3i normal = direction.getUnitVec3i();
+        poseStack.translate(normal.getX(), normal.getY(), normal.getZ());
+        // Slightly larger than a normal block to prevent z-fighting, scaled per tier.
+        float translateF = (float) state.tier / 2000F;
+        poseStack.translate(-translateF, -translateF, -translateF);
+        float scaleF = (float) state.tier / 1000F;
+        poseStack.scale(1F + scaleF, 1F + scaleF, 1F + scaleF);
+        // Rotate so pattern + real block align.
+        poseStack.translate(0.5, 0.5, 0.5);
+        poseStack.mulPose(direction.getRotation());
+        poseStack.translate(-0.5, -0.5, -0.5);
+
+        List<BlockStateModelPart> patternParts = collectModelParts(patternState);
+        if (!patternParts.isEmpty()) {
+            // Pass 1 (depth-only): stamp the pattern silhouette into the depth buffer.
+            collector.submitBlockModel(poseStack, OurRenderTypes.GooPattern, patternParts,
+                    new int[]{-1}, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+        }
+
+        List<BlockStateModelPart> realParts = collectModelParts(state.renderBlockState);
+        if (!realParts.isEmpty()) {
+            // Pass 2 (color): depth-EQUAL test; real block shows only where pattern stamped.
+            // QuadInstance carries the alpha via packed ARGB; putBakedQuad multiplies instance color × baked color per vertex.
+            collector.submitCustomGeometry(poseStack, OurRenderTypes.RenderBlockBackface,
+                    (pose, buffer) -> writeModelQuads(realParts, pose, buffer, packedColor, state.lightCoords));
+        }
+
+        poseStack.popPose();
+    }
+
+    private static List<BlockStateModelPart> collectModelParts(BlockState state) {
+        BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(state);
+        List<BlockStateModelPart> parts = new ArrayList<>();
+        model.collectParts(RandomSource.create(42L), parts);
+        return parts;
+    }
+
+    private static void writeModelQuads(List<BlockStateModelPart> parts, PoseStack.Pose pose, VertexConsumer buffer,
+                                        int packedColor, int lightCoords) {
+        QuadInstance instance = new QuadInstance();
+        instance.setColor(packedColor);
+        instance.setLightCoords(lightCoords);
+        for (BlockStateModelPart part : parts) {
+            writeFace(part.getQuads(null), pose, buffer, instance);
+            for (Direction d : Direction.values()) {
+                writeFace(part.getQuads(d), pose, buffer, instance);
+            }
+        }
+    }
+
+    private static void writeFace(List<BakedQuad> quads, PoseStack.Pose pose, VertexConsumer buffer, QuadInstance instance) {
+        for (BakedQuad quad : quads) {
+            buffer.putBakedQuad(pose, quad, instance);
+        }
     }
 
     @Override

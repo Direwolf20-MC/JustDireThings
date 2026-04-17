@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.client.renderers;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.CompareOp;
@@ -14,6 +15,8 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
+
+import java.util.Optional;
 
 public final class OurRenderTypes {
 
@@ -31,7 +34,8 @@ public final class OurRenderTypes {
     public static final RenderPipeline GOO_PATTERN_PIPELINE = RenderPipelines.TRANSLUCENT_BLOCK.toBuilder()
             .withLocation(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pipeline/goo_pattern"))
             .withCull(false)
-            .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+            .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, true))
+            .withColorTargetState(new ColorTargetState(Optional.empty(), ColorTargetState.WRITE_NONE))
             .build();
 
     public static final RenderPipeline TRIANGLE_STRIP_PIPELINE = RenderPipelines.DEBUG_QUADS.toBuilder()
