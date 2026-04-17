@@ -1,38 +1,33 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.itemcustomrenders.*;
 import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.TimeCrystalBuddingBlock;
 import com.direwolf20.justdirethings.setup.Registration;
+import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.data.models.model.ModelLocationUtils;
-import net.minecraft.client.data.models.model.ModelTemplate;
-import net.minecraft.client.data.models.model.ModelTemplates;
-import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.RangeSelectItemModel;
 import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 public class JustDireModels extends ModelProvider {
     public JustDireModels(PackOutput output) {
@@ -206,16 +201,10 @@ public class JustDireModels extends ModelProvider {
         itemModels.generateFlatItem(Registration.PolymorphicWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         itemModels.generateFlatItem(Registration.PolymorphicWandV2.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
-        // CreatureCatcher uses built-in entity renderer
+        // CreatureCatcher uses a hand-written Blockbench model at models/item/creaturecatcher_base.json.
+        // Emit a plain client-item JSON pointing at it. Captured-mob visual happens via the entity renderer.
         itemModels.itemModelOutput.accept(Registration.CreatureCatcher.get(),
-                ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(Registration.CreatureCatcher.get())));
-        itemModels.modelOutput.accept(
-                ModelLocationUtils.getModelLocation(Registration.CreatureCatcher.get()),
-                () -> {
-                    com.google.gson.JsonObject obj = new com.google.gson.JsonObject();
-                    obj.addProperty("parent", "builtin/entity");
-                    return obj;
-                });
+                ItemModelUtils.plainModel(modLoc("item/creaturecatcher_base")));
 
         // Upgrades (flat_item, all textures under item/abilityupgrades/<suffix>)
         for (var upgrade : Registration.UPGRADES.getEntries()) {
@@ -230,12 +219,26 @@ public class JustDireModels extends ModelProvider {
             itemModels.itemModelOutput.accept(u, ItemModelUtils.plainModel(model));
         }
 
-        // Tools: base flat_handheld model (enabled-swap deferred — see TODO in ClientSetup)
+        // Tools: enabled-state texture swap via ConditionalItemModelProperty dispatch.
+        // Emit two handheld models per tool: <tool> (disabled/default) and <tool>_active (enabled).
         for (var tool : Registration.TOOLS.getEntries()) {
-            itemModels.generateFlatItem(tool.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+            emitEnabledSwapItem(itemModels, tool.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         }
-        // Pocket generators (and similar enabled-swap tools grouped under TOOLS above)
-        itemModels.generateFlatItem(Registration.Pocket_Generator.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        // Pocket generator — enabled-state swap, flat handheld.
+        emitEnabledSwapItem(itemModels, Registration.Pocket_Generator.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        // Fluid canister (8 fullness levels) — RangeSelectItemModelProperty dispatch with tint source on the fluid layer.
+        emitFluidCanisterModels(itemModels);
+
+        // Potion canister (4 fullness levels) — RangeSelectItemModelProperty dispatch with potion tint source.
+        emitPotionCanisterModels(itemModels);
+
+        // Portal Gun V1 — uses a hand-written Blockbench model at models/item/portalgun.json.
+        itemModels.itemModelOutput.accept(Registration.PortalGun.get(),
+                ItemModelUtils.plainModel(modLoc("item/portalgun")));
+
+        // Portal Gun V2 (4 fullness levels: 0/33/66/100) — reuses existing hand-written models.
+        emitPortalGunV2Model(itemModels);
 
         // Bows: full pulling-stage dispatch via vanilla generateBow
         for (var bow : Registration.BOWS.getEntries()) {
@@ -296,10 +299,144 @@ public class JustDireModels extends ModelProvider {
             itemModels.generateDynamicTrimmableItem(armorItem, prefix);
         }
 
-        // Buckets: plain flat item (fluid tint is handled by FluidTintSource in client setup — Stage 16 TODO)
+        // Buckets: flat item with BucketFluidTintSource. Emit a bucket model with two layers
+        // (shell + fluid) so the tint source can paint the fluid layer while leaving the shell untinted.
         for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
-            itemModels.generateFlatItem(bucket.get(), ModelTemplates.FLAT_ITEM);
+            Item bucketItem = bucket.get();
+            Identifier modelId = ModelLocationUtils.getModelLocation(bucketItem);
+            // Single-layer flat item model; the tint source colors the whole sprite.
+            ModelTemplates.FLAT_ITEM.create(modelId, TextureMapping.layer0(bucketItem), itemModels.modelOutput);
+            itemModels.itemModelOutput.accept(bucketItem,
+                    ItemModelUtils.tintedModel(modelId, new BucketFluidTintSource()));
         }
+    }
+
+    // -----------------------------------------------------------------
+    // Client-items helpers (enabled swap, fluid/potion fullness, portal gun)
+    // -----------------------------------------------------------------
+
+    private static void emitEnabledSwapItem(ItemModelGenerators itemModels, Item item, ModelTemplate template) {
+        // Base (disabled) model: item/<id>.png
+        Identifier baseModelId = ModelLocationUtils.getModelLocation(item);
+        template.create(baseModelId, TextureMapping.layer0(item), itemModels.modelOutput);
+        // Active (enabled) model: item/<id>_active.png
+        Identifier activeModelId = ModelLocationUtils.getModelLocation(item, "_active");
+        String itemPath = BuiltInRegistries.ITEM.getKey(item).getPath();
+        template.create(activeModelId,
+                new TextureMapping().put(TextureSlot.LAYER0, new Material(modLoc("item/" + itemPath + "_active"))),
+                itemModels.modelOutput);
+        itemModels.itemModelOutput.accept(item,
+                ItemModelUtils.conditional(new ToolEnabledProperty(),
+                        ItemModelUtils.plainModel(activeModelId),
+                        ItemModelUtils.plainModel(baseModelId)));
+    }
+
+    private static void emitFluidCanisterModels(ItemModelGenerators itemModels) {
+        Item canister = Registration.FluidCanister.get();
+        ItemTintSource tint = new FluidCanisterTintSource();
+
+        // Base fluid-canister model uses a neoforge:fluid_container loader with tinted layer1.
+        Identifier baseModelId = ModelLocationUtils.getModelLocation(canister);
+        itemModels.modelOutput.accept(baseModelId, () -> fluidCanisterBaseJson(0));
+
+        // Eight fullness-level models (layers 1..8); each is tinted by FluidCanisterTintSource at runtime.
+        List<RangeSelectItemModel.Entry> entries = new ArrayList<>();
+        for (int i = 1; i <= 8; i++) {
+            final int level = i;
+            Identifier levelModelId = ModelLocationUtils.getModelLocation(canister, "_" + i);
+            itemModels.modelOutput.accept(levelModelId, () -> fluidCanisterBaseJson(level));
+            ItemModel.Unbaked submodel = ItemModelUtils.tintedModel(levelModelId, tint);
+            entries.add(ItemModelUtils.override(submodel, i));
+        }
+
+        ItemModel.Unbaked fallback = ItemModelUtils.tintedModel(baseModelId, tint);
+        itemModels.itemModelOutput.accept(canister,
+                ItemModelUtils.rangeSelect(new FluidCanisterFullnessProperty(), fallback, entries));
+    }
+
+    private static com.google.gson.JsonObject fluidCanisterBaseJson(int level) {
+        // Reproduces the hand-written models/item/fluid_canister[_N].json using the neoforge fluid_container
+        // loader. Level 0 uses fluid_canister_fluid_layer_0 (empty); 1-8 use the matching layer texture.
+        com.google.gson.JsonObject obj = new com.google.gson.JsonObject();
+        obj.addProperty("loader", "neoforge:fluid_container");
+        obj.addProperty("fluid", "minecraft:water");
+        obj.addProperty("flip_gas", true);
+        obj.addProperty("cover_is_mask", false);
+        obj.addProperty("apply_fluid_luminosity", true);
+        com.google.gson.JsonObject textures = new com.google.gson.JsonObject();
+        textures.addProperty("base", "justdirethings:item/fluidcanister/fluid_canister");
+        textures.addProperty("fluid", "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_" + level);
+        obj.add("textures", textures);
+        com.google.gson.JsonObject display = new com.google.gson.JsonObject();
+        addDisplayEntry(display, "thirdperson_righthand", new float[]{75, 45, 0}, new float[]{0, 2.5F, 0}, new float[]{0.375F, 0.375F, 0.375F});
+        addDisplayEntry(display, "thirdperson_lefthand", new float[]{75, 45, 0}, new float[]{0, 2.5F, 0}, new float[]{0.5F, 0.5F, 0.5F});
+        addDisplayEntry(display, "firstperson_righthand", new float[]{0, -30, 0}, new float[]{0, 3.5F, 0}, new float[]{0.5F, 0.5F, 0.5F});
+        addDisplayEntry(display, "firstperson_lefthand", new float[]{0, -30, 0}, new float[]{0, 3.5F, 0}, new float[]{0.5F, 0.5F, 0.5F});
+        addDisplayEntry(display, "ground", null, new float[]{0, 1.5F, 0}, new float[]{0.5F, 0.5F, 0.5F});
+        obj.add("display", display);
+        return obj;
+    }
+
+    private static void addDisplayEntry(com.google.gson.JsonObject parent, String name, float[] rotation, float[] translation, float[] scale) {
+        com.google.gson.JsonObject entry = new com.google.gson.JsonObject();
+        if (rotation != null) {
+            com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
+            for (float v : rotation) arr.add(v);
+            entry.add("rotation", arr);
+        }
+        if (translation != null) {
+            com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
+            for (float v : translation) arr.add(v);
+            entry.add("translation", arr);
+        }
+        if (scale != null) {
+            com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
+            for (float v : scale) arr.add(v);
+            entry.add("scale", arr);
+        }
+        parent.add(name, entry);
+    }
+
+    private static void emitPotionCanisterModels(ItemModelGenerators itemModels) {
+        Item canister = Registration.PotionCanister.get();
+        ItemTintSource tint = new PotionCanisterTintSource();
+
+        // Empty (no fluid layer visible)
+        Identifier emptyModelId = ModelLocationUtils.getModelLocation(canister);
+        ModelTemplates.FLAT_ITEM.create(emptyModelId,
+                new TextureMapping().put(TextureSlot.LAYER0, new Material(modLoc("item/potioncanister/potion_canister"))),
+                itemModels.modelOutput);
+
+        // 4 fullness levels — each model has a background layer0 (canister shell) + layer1 (fluid — tinted).
+        List<RangeSelectItemModel.Entry> entries = new ArrayList<>();
+        for (int i = 1; i <= 4; i++) {
+            Identifier levelModelId = ModelLocationUtils.getModelLocation(canister, "_" + i);
+            TextureMapping mapping = new TextureMapping()
+                    .put(TextureSlot.LAYER0, new Material(modLoc("item/potioncanister/potion_canister")))
+                    .put(TextureSlot.LAYER1, new Material(modLoc("item/potioncanister/potion_canister_fluid_layer_" + i)));
+            ModelTemplates.TWO_LAYERED_ITEM.create(levelModelId, mapping, itemModels.modelOutput);
+            ItemModel.Unbaked submodel = ItemModelUtils.tintedModel(levelModelId, ItemModelUtils.constantTint(-1), tint);
+            entries.add(ItemModelUtils.override(submodel, i));
+        }
+
+        ItemModel.Unbaked fallback = ItemModelUtils.plainModel(emptyModelId);
+        itemModels.itemModelOutput.accept(canister,
+                ItemModelUtils.rangeSelect(new PotionCanisterFullnessProperty(), fallback, entries));
+    }
+
+    private static void emitPortalGunV2Model(ItemModelGenerators itemModels) {
+        // PortalGunV2 uses hand-written Blockbench models (portalgun_v2_0/33/66/100.json) at assets/justdirethings/models/item/.
+        // The fullness property returns 0/1/2/3; emit a range-select dispatch pointing at those models.
+        Item gun = Registration.PortalGunV2.get();
+        ItemModel.Unbaked m0 = ItemModelUtils.plainModel(modLoc("item/portalgun_v2_0"));
+        ItemModel.Unbaked m1 = ItemModelUtils.plainModel(modLoc("item/portalgun_v2_33"));
+        ItemModel.Unbaked m2 = ItemModelUtils.plainModel(modLoc("item/portalgun_v2_66"));
+        ItemModel.Unbaked m3 = ItemModelUtils.plainModel(modLoc("item/portalgun_v2_100"));
+        itemModels.itemModelOutput.accept(gun,
+                ItemModelUtils.rangeSelect(new PortalGunFullnessProperty(), m0,
+                        ItemModelUtils.override(m1, 1),
+                        ItemModelUtils.override(m2, 2),
+                        ItemModelUtils.override(m3, 3)));
     }
 
     // -----------------------------------------------------------------

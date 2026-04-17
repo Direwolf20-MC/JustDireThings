@@ -14,7 +14,7 @@ import com.direwolf20.justdirethings.client.events.EventKeyInput;
 import com.direwolf20.justdirethings.client.events.PlayerEvents;
 import com.direwolf20.justdirethings.client.events.RenderHighlight;
 import com.direwolf20.justdirethings.client.events.RenderLevelLast;
-import com.direwolf20.justdirethings.client.itemcustomrenders.FluidbarDecorator;
+import com.direwolf20.justdirethings.client.itemcustomrenders.*;
 import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.client.renderers.shader.DireRenderTypes;
@@ -26,14 +26,10 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 
 @EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
@@ -47,16 +43,11 @@ public class ClientSetup {
         NeoForge.EVENT_BUS.register(RenderHighlight.class);
         NeoForge.EVENT_BUS.register(PlayerEvents.class);
 
-        // TODO(port, stage-16): ItemProperties.register(...) is dead in 1.21.4+. Each item that
-        // used it (every tool via registerEnabledToolTextures, PocketGenerator, Bows with pull/pulling,
-        // FluidCanister fullness, PotionCanister potion_fullness, PortalGunV2 fullness) needs a
-        // RangeSelectItemModelProperty / ConditionalItemModelProperty + a client-item JSON.
-        // See PORTING §3.4 "1.21.4 — Client items" + §3.3 ID_MAPPER AT note.
-
-        // TODO(port, stage-16): ItemBlockRenderTypes.setRenderLayer is gone. Render layer is now
-        // declared on the Block itself or via FluidModel for fluids (see RENDER_PORTING §7). The
-        // four fluid blocks below (UNSTABLE_PORTAL_FLUID_*, TIME_FLUID_*) need the translucent
-        // layer set via whatever the fluid-model replacement is.
+        // Item model properties (tool enabled-state swap, fluid/potion/portal fullness range-select dispatches,
+        // bucket/canister tint sources) are registered via the RegisterConditionalItemModelPropertyEvent /
+        // RegisterRangeSelectItemModelPropertyEvent / RegisterColorHandlersEvent.ItemTintSources handlers below.
+        // Render layers for fluids are declared on the FluidModel JSON produced by datagen — no Java-side
+        // ItemBlockRenderTypes call is needed in 26.1.
     }
 
     @SubscribeEvent
@@ -66,13 +57,24 @@ public class ClientSetup {
                 AbilityCooldownOverlay.INSTANCE);
     }
 
-    // TODO(port, stage-16): ModelEvent.RegisterAdditional is gone in 26.1 — the standalone-model
-    // registration path for CreatureCatcher base went away with the client-item JSON system.
-    // @SubscribeEvent
-    // public static void mrl(ModelEvent.RegisterAdditional e) {
-    //     e.register(ModelResourceLocation.standalone(
-    //             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "item/creaturecatcher_base")));
-    // }
+    @SubscribeEvent
+    public static void onRegisterConditionalItemModelProperties(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "tool_enabled"), ToolEnabledProperty.MAP_CODEC);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRangeSelectItemModelProperties(RegisterRangeSelectItemModelPropertyEvent event) {
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "fluid_canister_fullness"), FluidCanisterFullnessProperty.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "potion_canister_fullness"), PotionCanisterFullnessProperty.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_fullness"), PortalGunFullnessProperty.MAP_CODEC);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterItemTintSources(RegisterColorHandlersEvent.ItemTintSources event) {
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "bucket_fluid"), BucketFluidTintSource.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "fluid_canister"), FluidCanisterTintSource.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "potion_canister"), PotionCanisterTintSource.MAP_CODEC);
+    }
 
     @SubscribeEvent
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
@@ -161,30 +163,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     static void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
-        // TODO(port, stage-16): IClientItemExtensions.getCustomRenderer() is gone in 26.1. The
-        // CreatureCatcher custom renderer (JustDireItemRenderer) needs a SpecialModelRenderer or
-        // ClientItem JSON rewrite — see RENDER_PORTING §2/§4 + PORTING §3.4 on client-items.
-        // event.registerItem(new IClientItemExtensions() {
-        //     JustDireItemRenderer diremodel = new JustDireItemRenderer();
-        //     @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return diremodel; }
-        // }, Registration.CreatureCatcher.get());
-
         final Identifier UNDERWATER_LOCATION = Identifier.parse("textures/misc/underwater.png");
-        // Still/flowing/overlay textures + per-fluid tint colors moved to FluidModel JSON in Stage 17
-        // (see documentation/RENDER_PORTING.md §7). These registrations now only wire the underwater
-        // overlay render; the tint values that used to live in getTintColor() are captured below as
-        // reference for the Stage 17 FluidTintSource port:
-        //   POLYMORPHIC_FLUID_TYPE      → 0xFFFFFFFF
-        //   PORTAL_FLUID_TYPE           → 0xFF00DD00
-        //   UNSTABLE_PORTAL_FLUID_TYPE  → 0xFF9400D3
-        //   REFINED_T2_FLUID_TYPE       → 0xFF8B0000
-        //   REFINED_T3_FLUID_TYPE       → 0xFF40C7C7
-        //   REFINED_T4_FLUID_TYPE       → 0xFF1B2027
-        //   UNREFINED_T2_FLUID_TYPE     → 0xFF8B4500
-        //   UNREFINED_T3_FLUID_TYPE     → 0xFF64D5AD
-        //   UNREFINED_T4_FLUID_TYPE     → 0xFF36484A
-        //   TIME_FLUID_TYPE             → 0x3300FF00 stack / 0x7700FF00 in-world
-        //   XP_FLUID_TYPE               → 0xFF32CD32
         IClientFluidTypeExtensions underwaterOverlay = new IClientFluidTypeExtensions() {
             @Override
             public Identifier getRenderOverlayTexture(Minecraft mc) {
@@ -203,32 +182,4 @@ public class ClientSetup {
         event.registerFluidType(underwaterOverlay, Registration.TIME_FLUID_TYPE.get());
         event.registerFluidType(underwaterOverlay, Registration.XP_FLUID_TYPE.get());
     }
-
-    // TODO(port, stage-16): ItemColors is gone in 26.1 — per-item tint is expressed via
-    // ItemTintSource in the items/*.json client-item file. The three registrations here (all
-    // bucket items, FluidCanister, PotionCanister) need to migrate to that format.
-    // @SubscribeEvent
-    // static void itemColors(RegisterColorHandlersEvent.Item event) {
-    //     final ItemColors colors = event.getItemColors();
-    //     for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
-    //         colors.register((stack, index) -> {
-    //             if (index == 1 && stack.getItem() instanceof BucketItem bucketItem) {
-    //                 return IClientFluidTypeExtensions.of(bucketItem.content).getTintColor();
-    //             }
-    //             return 0xFFFFFFFF;
-    //         }, bucket.get());
-    //     }
-    //     colors.register((stack, index) -> {
-    //         if (index == 1 && stack.getItem() instanceof FluidCanister) {
-    //             return FluidCanister.getFluidColor(stack);
-    //         }
-    //         return 0xFFFFFFFF;
-    //     }, Registration.FluidCanister.get());
-    //     colors.register((stack, index) -> {
-    //         if (index == 1 && stack.getItem() instanceof PotionCanister) {
-    //             return PotionCanister.getPotionColor(stack);
-    //         }
-    //         return 0xFFFFFFFF;
-    //     }, Registration.PotionCanister.get());
-    // }
 }

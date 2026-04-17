@@ -59,13 +59,6 @@ public class InventoryHolder extends BaseMachineBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.hasBlockEntity() && !state.is(newState.getBlock())) { //Replica of Default Block onRemove - to skip dropping items.
-            level.removeBlockEntity(pos);
-        }
-    }
-
-    @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
         if (!world.isClientSide() && entity instanceof Player player) {
@@ -90,7 +83,7 @@ public class InventoryHolder extends BaseMachineBlock {
         if (blockEntity instanceof BaseMachineBE baseMachineBE && !baseMachineBE.isDefaultSettings()) {
             ItemStack itemStack = new ItemStack(Item.byBlock(this));
             TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, builder.getLevel().registryAccess());
-            baseMachineBE.saveAdditional(output);
+            baseMachineBE.saveCustomOnly(output);
             ((InventoryHolderBE) blockEntity).saveInventory(output);
             CompoundTag compoundTag = output.buildResult();
             if (!compoundTag.isEmpty()) {

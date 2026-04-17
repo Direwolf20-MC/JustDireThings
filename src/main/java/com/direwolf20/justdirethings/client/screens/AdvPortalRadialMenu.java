@@ -28,6 +28,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import org.joml.Matrix3x2fStack;
 
 public class AdvPortalRadialMenu extends Screen {
     private static final int WHITE_ARGB = 0xFFFFFFFF;
@@ -97,19 +98,12 @@ public class AdvPortalRadialMenu extends Screen {
         portalGun = PortalGunV2.getPortalGunv2(Minecraft.getInstance().player);
         super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
-        // TODO(port, stage-16): Radial-menu pie slice rendering — old code used MultiBufferSource +
-        // OurRenderTypes.TRIANGLE_STRIP with manual VertexConsumer.addVertex calls. The 26.1 GuiGraphicsExtractor
-        // pose() returns a 2D Matrix3x2fStack with no Z and no Quaternionf rotation, so the per-segment
-        // mulPose(Axis.ZP.rotation(...)) text rotation also needs a different approach (likely
-        // Matrix3x2f.rotate(angle) on the GUI matrix). Restore once Stage 16 ports OurRenderTypes/RenderPipelines.
-
         boolean inRange = isInRange(mouseX, mouseY);
         float speedOfButtonGrowth = 5f;
         float fract = Math.min(speedOfButtonGrowth, this.timeIn + partialTicks) / speedOfButtonGrowth;
         int x = this.width / 2;
         int y = this.height / 2;
 
-        // Update slotHovered for click handling — same arithmetic as before.
         float angle = mouseAngle(x, y, mouseX, mouseY);
         float totalDeg = 0;
         float degPer = 360F / SEGMENTS;
@@ -120,7 +114,31 @@ public class AdvPortalRadialMenu extends Screen {
             totalDeg += degPer;
         }
 
-        // Render the favorite labels in straight-up orientation as a placeholder until Stage 16 restores rotation.
+        totalDeg = 0;
+        float delayBetweenSegments = 1f;
+        float speedOfSegmentGrowth = 25f;
+        float innerRatio = 1F / 2.3F;
+        for (int seg = 0; seg < SEGMENTS; seg++) {
+            boolean mouseInSector = this.isCursorInSlice(angle, totalDeg, degPer, inRange);
+            float radius = Math.max(0F, Math.min((this.timeIn + partialTicks - seg * delayBetweenSegments / SEGMENTS) * speedOfSegmentGrowth, radiusMax));
+            float gs = 0.25F;
+            if (seg % 2 == 0) gs += 0.1F;
+            int r = (int) (gs * 255);
+            int g = (int) (gs * 255);
+            int b = (int) (gs * 255);
+            int a = (int) (0.4F * 255);
+            if (mouseInSector) {
+                r = g = b = 255;
+            }
+            if (seg == slotSelected) {
+                r = g = 255;
+                a = (int) (0.6F * 255);
+            }
+            int sliceColor = (a << 24) | (r << 16) | (g << 8) | b;
+            drawPieSlice(graphics, x, y, totalDeg, degPer, radius * innerRatio, radius, sliceColor);
+            totalDeg += degPer;
+        }
+
         totalDeg = 0;
         for (int seg = 0; seg < SEGMENTS; seg++) {
             NBTHelpers.PortalDestination favorite = getFavorite(seg);
@@ -130,23 +148,65 @@ public class AdvPortalRadialMenu extends Screen {
                     (int) favorite.globalVec3().position().x(),
                     (int) favorite.globalVec3().position().y(),
                     (int) favorite.globalVec3().position().z()) : "";
-            float nameAngle = (totalDeg + degPer / 2) * (float) Math.PI / 180F;
-            float nameX = x + (float) (Math.cos(nameAngle) * (radiusMax / 1.4)) * fract;
-            float nameY = y + (float) (Math.sin(nameAngle) * (radiusMax / 1.4)) * fract;
+            float nameAngleDeg = totalDeg + degPer / 2F;
+            float nameAngleRad = nameAngleDeg * (float) Math.PI / 180F;
+            float nameX = x + (float) (Math.cos(nameAngleRad) * (radiusMax / 1.4)) * fract;
+            float nameY = y + (float) (Math.sin(nameAngleRad) * (radiusMax / 1.4)) * fract;
             int textWidth = this.font.width(favoriteName);
             int dimensionWidth = this.font.width(dimension);
             int coordinatesWidth = this.font.width(coordinates);
-            graphics.text(this.font, favoriteName, (int) nameX - textWidth / 2, (int) nameY - 15, WHITE_ARGB, false);
-            graphics.text(this.font, dimension, (int) nameX - dimensionWidth / 2, (int) nameY - 5, LIGHT_GRAY_ARGB, false);
-            graphics.text(this.font, coordinates, (int) nameX - coordinatesWidth / 2, (int) nameY + 10, LIGHT_GRAY_ARGB, false);
+
+            boolean upsideDown = nameAngleRad > Math.PI / 2 && nameAngleRad < 3 * Math.PI / 2;
+            float rotation = upsideDown ? nameAngleRad + (float) Math.PI : nameAngleRad;
+
+            Matrix3x2fStack pose = graphics.pose();
+            pose.pushMatrix();
+            pose.translate(nameX, nameY);
+            pose.rotate(rotation);
+            pose.scale(0.85F, 0.85F);
+            graphics.text(this.font, favoriteName, -textWidth / 2, -15, WHITE_ARGB, false);
+            pose.popMatrix();
+
+            pose.pushMatrix();
+            pose.translate(nameX, nameY);
+            pose.rotate(rotation);
+            pose.scale(0.7F, 0.7F);
+            graphics.text(this.font, dimension, -dimensionWidth / 2, -5, LIGHT_GRAY_ARGB, false);
+            graphics.text(this.font, coordinates, -coordinatesWidth / 2, 10, LIGHT_GRAY_ARGB, false);
+            pose.popMatrix();
+
             totalDeg += degPer;
         }
 
-        // Render tooltips for buttons (replaces the old custom renderTooltip walk).
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof BaseButton button && !button.getLocalization(mouseX, mouseY).equals(Component.empty())) {
                 graphics.setTooltipForNextFrame(font, button.getLocalization(), mouseX, mouseY);
             }
+        }
+    }
+
+    private void drawPieSlice(GuiGraphicsExtractor graphics, int cx, int cy, float startDeg, float spanDeg, float innerRadius, float outerRadius, int color) {
+        if (outerRadius <= 0F || spanDeg <= 0F) return;
+        float thickness = outerRadius - innerRadius;
+        if (thickness <= 0F) return;
+
+        int steps = Math.max(8, (int) Math.ceil(spanDeg));
+        float stepRad = (spanDeg * (float) Math.PI / 180F) / steps;
+        float startRad = startDeg * (float) Math.PI / 180F;
+        float midRadius = (innerRadius + outerRadius) * 0.5F;
+        float chord = 2F * midRadius * (float) Math.tan(stepRad * 0.5F);
+        int quadHeight = Math.max(1, (int) Math.ceil(chord));
+
+        Matrix3x2fStack pose = graphics.pose();
+        for (int i = 0; i < steps; i++) {
+            float segCenterRad = startRad + (i + 0.5F) * stepRad;
+            pose.pushMatrix();
+            pose.translate(cx, cy);
+            pose.rotate(segCenterRad);
+            int y0 = -quadHeight / 2;
+            int y1 = y0 + quadHeight;
+            graphics.fill((int) innerRadius, y0, (int) Math.ceil(outerRadius), y1, color);
+            pose.popMatrix();
         }
     }
 
