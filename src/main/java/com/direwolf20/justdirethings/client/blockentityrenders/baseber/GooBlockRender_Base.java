@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.QuadInstance;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
@@ -22,11 +23,13 @@ import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
@@ -46,13 +49,15 @@ import java.util.Map;
 public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEntityRenderer<T, GooBlockRender_Base.GooBlockRenderState> {
 
     private static final long CYCLE_MILLIS = 3600L;
-    private static final float FADE_VISIBILITY_THRESHOLD = 0.5f;
     private static final int TOTAL_STAGES = GooPatternBlock.GOOSTAGE.getPossibleValues().size(); // 12
     private static final float PERCENT_DIVISOR = 100F / TOTAL_STAGES;
 
-    private static int currentItemIndex = 0;
-    private static long lastChangeTime = 0L;
-    private static ItemStack cachedItemStack = ItemStack.EMPTY;
+    // Per-renderer-instance (one instance per BE type, i.e. per tier). Making these static
+    // cross-pollinates the cycle index/cached item across tiers, which causes wrong items
+    // to show and out-of-range indexes → broken textures when a different-tier renderer ticks.
+    private int currentItemIndex = 0;
+    private long lastChangeTime = 0L;
+    private ItemStack cachedItemStack = ItemStack.EMPTY;
 
     public static class GooBlockRenderState extends BlockEntityRenderState {
         public boolean alive;
@@ -61,6 +66,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         public final Map<Direction, int[]> progress = new EnumMap<>(Direction.class); // [remainingTicks, maxTicks]
         public boolean showFloatingItem;
         public boolean floatingItemIsBlock;
+        public float floatingItemAlpha;
         public final ItemStackRenderState floatingItem = new ItemStackRenderState();
     }
 
@@ -102,9 +108,10 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
                 lastChangeTime = currentTime;
             }
 
-            if (!cachedItemStack.isEmpty() && fadeFactor >= FADE_VISIBILITY_THRESHOLD) {
+            if (!cachedItemStack.isEmpty()) {
                 state.showFloatingItem = true;
                 state.floatingItemIsBlock = cachedItemStack.getItem() instanceof BlockItem;
+                state.floatingItemAlpha = fadeFactor;
                 this.itemModelResolver.updateForTopItem(
                         state.floatingItem, cachedItemStack, ItemDisplayContext.GROUND,
                         blockEntity.getLevel(), null, 0);
@@ -115,14 +122,15 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
     @Override
     public void submit(GooBlockRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
         if (state.showFloatingItem) {
+            int alphaByte = Math.max(0, Math.min(255, Math.round(state.floatingItemAlpha * 255F)));
+            int packedColor = (alphaByte << 24) | 0x00FFFFFF;
             for (Direction direction : Direction.values()) {
                 poseStack.pushPose();
                 Vec3 itemPos = getOffsetPositionForSide(direction, state.floatingItemIsBlock);
                 poseStack.translate(itemPos.x, itemPos.y, itemPos.z);
                 applyRotationForSide(poseStack, direction);
                 poseStack.scale(0.6f, 0.6f, 0.6f);
-                state.floatingItem.submit(poseStack, submitNodeCollector,
-                        state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+                submitFloatingItem(state.floatingItem, poseStack, submitNodeCollector, packedColor, state.lightCoords);
                 poseStack.popPose();
             }
         }
@@ -203,6 +211,64 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         poseStack.popPose();
     }
 
+    // Re-emits the ItemStackRenderState's baked quads through translucent render types so we can
+    // fade the floating item in/out. 26.1's item rendering goes through SubmitNodeCollector
+    // which only honors per-layer tints for TINTED quads — most block items have no tint index,
+    // so the normal submit() path can't alpha-fade them. We instead grab each layer's quads
+    // and transforms (exposed via AT) and submit them ourselves with QuadInstance's alpha color.
+    // Quads are grouped by their sprite atlas (BLOCKS vs ITEMS) so flat item sprites render
+    // against the correct sheet — mixing them would show broken/UV-garbage faces.
+    private static void submitFloatingItem(ItemStackRenderState itemState, PoseStack poseStack,
+                                           SubmitNodeCollector collector, int packedColor, int lightCoords) {
+        ItemDisplayContext displayContext = itemState.displayContext;
+        for (int i = 0; i < itemState.activeLayerCount; i++) {
+            ItemStackRenderState.LayerRenderState layer = itemState.layers[i];
+            List<BakedQuad> quads = layer.prepareQuadList();
+            if (quads.isEmpty()) continue;
+
+            poseStack.pushPose();
+            // Mirror LayerRenderState.applyTransform — itemTransform then localTransform.
+            layer.itemTransform.apply(displayContext.leftHand(), poseStack.last());
+            poseStack.mulPose(layer.localTransform);
+
+            // Bucket quads by atlas, then dispatch each bucket through its matching translucent
+            // item sheet so UVs resolve on the right texture.
+            List<BakedQuad> blockAtlasQuads = null;
+            List<BakedQuad> itemAtlasQuads = null;
+            for (BakedQuad quad : quads) {
+                Identifier atlas = quad.materialInfo().sprite().atlasLocation();
+                if (atlas.equals(TextureAtlas.LOCATION_BLOCKS)) {
+                    if (blockAtlasQuads == null) blockAtlasQuads = new ArrayList<>();
+                    blockAtlasQuads.add(quad);
+                } else {
+                    if (itemAtlasQuads == null) itemAtlasQuads = new ArrayList<>();
+                    itemAtlasQuads.add(quad);
+                }
+            }
+            if (blockAtlasQuads != null) {
+                final List<BakedQuad> batch = blockAtlasQuads;
+                collector.submitCustomGeometry(poseStack, Sheets.translucentBlockItemSheet(),
+                        (pose, buffer) -> writeQuads(batch, pose, buffer, packedColor, lightCoords));
+            }
+            if (itemAtlasQuads != null) {
+                final List<BakedQuad> batch = itemAtlasQuads;
+                collector.submitCustomGeometry(poseStack, Sheets.translucentItemSheet(),
+                        (pose, buffer) -> writeQuads(batch, pose, buffer, packedColor, lightCoords));
+            }
+            poseStack.popPose();
+        }
+    }
+
+    private static void writeQuads(List<BakedQuad> quads, PoseStack.Pose pose, VertexConsumer buffer,
+                                   int packedColor, int lightCoords) {
+        QuadInstance instance = new QuadInstance();
+        instance.setColor(packedColor);
+        instance.setLightCoords(lightCoords);
+        for (BakedQuad quad : quads) {
+            buffer.putBakedQuad(pose, quad, instance);
+        }
+    }
+
     private static List<BlockStateModelPart> collectModelParts(BlockState state) {
         BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(state);
         List<BlockStateModelPart> parts = new ArrayList<>();
@@ -235,7 +301,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
                 blockEntity.getBlockPos().below(10).south(10).west(10));
     }
 
-    private static ItemStack nextItemFromTag(int tier) {
+    private ItemStack nextItemFromTag(int tier) {
         TagKey<Item> tag = switch (tier) {
             case 1 -> ModTags.Items.GOO_REVIVE_TIER_1;
             case 2 -> ModTags.Items.GOO_REVIVE_TIER_2;
