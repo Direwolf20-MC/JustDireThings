@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/ferricore_sword"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/ferricore_sword_active"
+    },
+    "property": "justdirethings:tool_enabled"
+  }
+}

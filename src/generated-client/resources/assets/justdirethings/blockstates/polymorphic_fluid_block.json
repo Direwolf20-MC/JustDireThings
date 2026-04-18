@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "justdirethings:block/polymorphic_fluid_block"
+    }
+  }
+}

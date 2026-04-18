@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "justdirethings:item/xp_fluid_bucket",
+    "tints": [
+      {
+        "type": "justdirethings:bucket_fluid"
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "justdirethings:block/blockplacert2",
+      "x": 90
+    },
+    "facing=east": {
+      "model": "justdirethings:block/blockplacert2",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "justdirethings:block/blockplacert2"
+    },
+    "facing=south": {
+      "model": "justdirethings:block/blockplacert2",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "justdirethings:block/blockplacert2",
+      "x": 270
+    },
+    "facing=west": {
+      "model": "justdirethings:block/blockplacert2",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "entries": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/potion_canister_1",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "justdirethings:potion_canister"
+            }
+          ]
+        },
+        "threshold": 1.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/potion_canister_2",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "justdirethings:potion_canister"
+            }
+          ]
+        },
+        "threshold": 2.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/potion_canister_3",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "justdirethings:potion_canister"
+            }
+          ]
+        },
+        "threshold": 3.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/potion_canister_4",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "justdirethings:potion_canister"
+            }
+          ]
+        },
+        "threshold": 4.0
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/potion_canister"
+    },
+    "property": "justdirethings:potion_canister_fullness"
+  }
+}

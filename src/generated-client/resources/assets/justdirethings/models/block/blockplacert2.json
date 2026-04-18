@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "justdirethings:block/blockplacert2_bottom",
+    "front": "justdirethings:block/blockplacert2_side",
+    "side": "justdirethings:block/blockplacert2_side",
+    "top": "justdirethings:block/blockplacert2_top"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "entries": [
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/fluid_canister_1",
+          "tints": [
+            {
+              "type": "justdirethings:fluid_canister"
+            }
+          ]
+        },
+        "threshold": 1.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/fluid_canister_2",
+          "tints": [
+            {
+              "type": "justdirethings:fluid_canister"
+            }
+          ]
+        },
+        "threshold": 2.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/fluid_canister_3",
+          "tints": [
+            {
+              "type": "justdirethings:fluid_canister"
+            }
+          ]
+        },
+        "threshold": 3.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/fluid_canister_4",
+          "tints": [
+            {
+              "type": "justdirethings:fluid_canister"
+            }
+          ]
+        },
+        "threshold": 4.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/fluid_canister_5",
+          "tints": [
+            {
+              "type": "justdirethings:fluid_canister"
+            }
+          ]
+        },
+        "threshold": 5.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/fluid_canister_6",
+          "tints": [
+            {
+              "type": "justdirethings:fluid_canister"
+            }
+          ]
+        },
+        "threshold": 6.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/fluid_canister_7",
+          "tints": [
+            {
+              "type": "justdirethings:fluid_canister"
+            }
+          ]
+        },
+        "threshold": 7.0
+      },
+      {
+        "model": {
+          "type": "minecraft:model",
+          "model": "justdirethings:item/fluid_canister_8",
+          "tints": [
+            {
+              "type": "justdirethings:fluid_canister"
+            }
+          ]
+        },
+        "threshold": 8.0
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/fluid_canister",
+      "tints": [
+        {
+          "type": "justdirethings:fluid_canister"
+        }
+      ]
+    },
+    "property": "justdirethings:fluid_canister_fullness"
+  }
+}

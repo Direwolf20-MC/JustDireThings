@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "stage=0": {
+      "model": "justdirethings:block/time_crystal_budding_block_state_0"
+    },
+    "stage=1": {
+      "model": "justdirethings:block/time_crystal_budding_block_state_1"
+    },
+    "stage=2": {
+      "model": "justdirethings:block/time_crystal_budding_block_state_2"
+    },
+    "stage=3": {
+      "model": "justdirethings:block/time_crystal_budding_block"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "justdirethings:block/sensort1_bottom",
+    "front": "justdirethings:block/sensort1_side",
+    "side": "justdirethings:block/sensort1_side",
+    "top": "justdirethings:block/sensort1_top"
+  }
+}
