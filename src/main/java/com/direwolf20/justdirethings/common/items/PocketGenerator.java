@@ -43,9 +43,8 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
             EntityCapability.createVoid(Identifier.fromNamespaceAndPath("curios", "item_handler"),
                     (Class<ResourceHandler<ItemResource>>) (Class<?>) ResourceHandler.class);
 
-    public PocketGenerator() {
-        super(new Properties()
-                .stacksTo(1));
+    public PocketGenerator(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

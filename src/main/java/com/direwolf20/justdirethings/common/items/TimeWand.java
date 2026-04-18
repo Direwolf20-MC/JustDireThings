@@ -44,9 +44,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class TimeWand extends BasePoweredItem implements PoweredItem, FluidContainingItem {
-    public TimeWand() {
-        super(new Properties()
-                .stacksTo(1));
+    public TimeWand(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

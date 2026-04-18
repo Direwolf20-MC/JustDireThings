@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "justdirethings",
+  "ingredients": [
+    "justdirethings:celestigem_block"
+  ],
+  "result": {
+    "count": 9,
+    "id": "justdirethings:celestigem"
+  }
+}

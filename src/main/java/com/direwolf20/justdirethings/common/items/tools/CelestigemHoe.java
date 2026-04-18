@@ -10,8 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CelestigemHoe extends BaseHoe implements PoweredTool, GooTieredItem {
-    public CelestigemHoe() {
-        super(GooTier.CELESTIGEM.material(), -2.0F, -1.0F, new Item.Properties().fireResistant());
+    public CelestigemHoe(Item.Properties pProperties) {
+        super(GooTier.CELESTIGEM.material(), -2.0F, -1.0F, pProperties);
         registerAbility(Ability.DROPTELEPORT);
         registerAbility(Ability.HAMMER, new AbilityParams(3, 5, 2));
     }

@@ -1,0 +1,31 @@
+{
+  "values": {
+    "justdirethings:charcoal": {
+      "burn_time": 16000
+    },
+    "justdirethings:coal_t1": {
+      "burn_time": 4800
+    },
+    "justdirethings:coal_t2": {
+      "burn_time": 14400
+    },
+    "justdirethings:coal_t3": {
+      "burn_time": 43200
+    },
+    "justdirethings:coal_t4": {
+      "burn_time": 129600
+    },
+    "justdirethings:coalblock_t1": {
+      "burn_time": 48000
+    },
+    "justdirethings:coalblock_t2": {
+      "burn_time": 144000
+    },
+    "justdirethings:coalblock_t3": {
+      "burn_time": 432000
+    },
+    "justdirethings:coalblock_t4": {
+      "burn_time": 1296000
+    }
+  }
+}

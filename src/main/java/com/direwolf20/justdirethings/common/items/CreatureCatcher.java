@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
 
 public class CreatureCatcher extends Item {
-    public CreatureCatcher() {
-        super(new Properties());
+    public CreatureCatcher(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

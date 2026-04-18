@@ -1,0 +1,15 @@
+{
+  "type": "justdirethings:goospread",
+  "craftingDuration": 4800,
+  "id": "justdirethings:budding_time_amethyst",
+  "input": {
+    "Name": "minecraft:budding_amethyst"
+  },
+  "output": {
+    "Name": "justdirethings:time_crystal_budding_block",
+    "Properties": {
+      "stage": "0"
+    }
+  },
+  "tierRequirement": 4
+}

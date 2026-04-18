@@ -11,8 +11,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldHoe extends BaseHoe implements GooTieredItem {
-    public BlazegoldHoe() {
-        super(GooTier.BLAZEGOLD.material(), -2.0F, -1.0F, new Item.Properties().fireResistant());
+    public BlazegoldHoe(Item.Properties pProperties) {
+        super(GooTier.BLAZEGOLD.material(), -2.0F, -1.0F, pProperties);
         registerAbility(Ability.LAVAREPAIR);
         registerAbility(Ability.HAMMER, new AbilityParams(3, 3, 2));
     }

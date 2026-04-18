@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_generatorfluidt1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "justdirethings:generatorfluidt1"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:generatorfluidt1_nbtclear"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_generatorfluidt1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:generatorfluidt1_nbtclear"
+    ]
+  }
+}

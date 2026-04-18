@@ -13,11 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -29,9 +25,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class FuelCanister extends Item {
-    public FuelCanister() {
-        super(new Properties()
-                .stacksTo(1));
+    public FuelCanister(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

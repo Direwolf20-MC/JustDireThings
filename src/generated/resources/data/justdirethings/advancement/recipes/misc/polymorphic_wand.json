@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_blazegold_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "justdirethings:blazegold_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:polymorphic_wand"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_blazegold_ingot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:polymorphic_wand"
+    ]
+  }
+}

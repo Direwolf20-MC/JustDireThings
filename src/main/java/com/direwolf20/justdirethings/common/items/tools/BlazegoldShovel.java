@@ -11,8 +11,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldShovel extends BaseShovel implements GooTieredItem {
-    public BlazegoldShovel() {
-        super(GooTier.BLAZEGOLD.material(), 1.5F, -3.0F, new Item.Properties().fireResistant());
+    public BlazegoldShovel(Item.Properties pProperties) {
+        super(GooTier.BLAZEGOLD.material(), 1.5F, -3.0F, pProperties);
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
         registerAbility(Ability.SMELTER);

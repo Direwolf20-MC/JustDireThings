@@ -1,0 +1,17 @@
+{
+  "type": "justdirethings:fluiddrop",
+  "catalyst": "justdirethings:portal_fluid_catalyst",
+  "id": "justdirethings:unstable_portal_fluid",
+  "input": {
+    "Name": "justdirethings:polymorphic_fluid_block",
+    "Properties": {
+      "level": "0"
+    }
+  },
+  "output": {
+    "Name": "justdirethings:unstable_portal_fluid_block",
+    "Properties": {
+      "level": "0"
+    }
+  }
+}

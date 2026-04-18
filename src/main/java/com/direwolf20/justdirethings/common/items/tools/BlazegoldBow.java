@@ -7,8 +7,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldBow extends BaseBow {
-    public BlazegoldBow() {
-        super(new Properties().durability(450).fireResistant());
+    public BlazegoldBow(Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.POTIONARROW);
         registerAbility(Ability.SPLASH);
         registerAbility(Ability.LAVAREPAIR);

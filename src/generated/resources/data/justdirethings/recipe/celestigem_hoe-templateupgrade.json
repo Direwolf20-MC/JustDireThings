@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "justdirethings:celestigem",
+  "base": "justdirethings:blazegold_hoe",
+  "result": {
+    "id": "justdirethings:celestigem_hoe"
+  },
+  "template": "justdirethings:template_celestigem"
+}

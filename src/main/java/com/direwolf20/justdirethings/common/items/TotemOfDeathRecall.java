@@ -26,9 +26,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class TotemOfDeathRecall extends Item {
-    public TotemOfDeathRecall() {
-        super(new Properties()
-                .stacksTo(1));
+    public TotemOfDeathRecall(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

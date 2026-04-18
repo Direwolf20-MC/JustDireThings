@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "f": "justdirethings:blazegold_ingot",
+    "s": "minecraft:stick"
+  },
+  "pattern": [
+    "ff ",
+    " s ",
+    " s "
+  ],
+  "result": {
+    "id": "justdirethings:blazegold_hoe"
+  }
+}

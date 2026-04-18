@@ -13,6 +13,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -28,9 +29,9 @@ public class PaxelRecipe implements SmithingRecipe {
     private final Ingredient template;
     private final Ingredient base;
     private final Ingredient addition;
-    private final ItemStack result;
+    private final ItemStackTemplate result;
 
-    public PaxelRecipe(Ingredient template, Ingredient base, Ingredient addition, ItemStack result) {
+    public PaxelRecipe(Ingredient template, Ingredient base, Ingredient addition, ItemStackTemplate result) {
         this.template = template;
         this.base = base;
         this.addition = addition;
@@ -47,7 +48,7 @@ public class PaxelRecipe implements SmithingRecipe {
         ItemStack pickaxe = smithingRecipeInput.template();
         ItemStack axe = smithingRecipeInput.base();
         ItemStack shovel = smithingRecipeInput.addition();
-        ItemStack result = this.result.copy();
+        ItemStack result = this.result.create();
 
         if (pickaxe.getItem() instanceof BasePickaxe && pickaxe.getItem() instanceof ToggleableTool pickaxetoggleableTool) {
             for (Ability ability : pickaxetoggleableTool.getAbilities()) {
@@ -104,7 +105,7 @@ public class PaxelRecipe implements SmithingRecipe {
     }
 
     public ItemStack getResultItem(net.minecraft.core.HolderLookup.Provider provider) {
-        return result.copy();
+        return result.create();
     }
 
     public Ingredient getTemplate() {
@@ -119,8 +120,8 @@ public class PaxelRecipe implements SmithingRecipe {
         return addition;
     }
 
-    public ItemStack getResult() {
-        return result.copy();
+    public ItemStackTemplate getResult() {
+        return result;
     }
 
     @Override
@@ -163,7 +164,7 @@ public class PaxelRecipe implements SmithingRecipe {
                             Ingredient.CODEC.fieldOf("template").forGetter(r -> r.template),
                             Ingredient.CODEC.fieldOf("base").forGetter(r -> r.base),
                             Ingredient.CODEC.fieldOf("addition").forGetter(r -> r.addition),
-                            ItemStack.CODEC.fieldOf("result").forGetter(r -> r.result)
+                            ItemStackTemplate.CODEC.fieldOf("result").forGetter(r -> r.result)
                     )
                     .apply(instance, PaxelRecipe::new)
     );
@@ -172,7 +173,7 @@ public class PaxelRecipe implements SmithingRecipe {
             Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getTemplate,
             Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getBase,
             Ingredient.CONTENTS_STREAM_CODEC, PaxelRecipe::getAddition,
-            ItemStack.STREAM_CODEC, PaxelRecipe::getResult,
+            ItemStackTemplate.STREAM_CODEC, PaxelRecipe::getResult,
             PaxelRecipe::new
     );
 }

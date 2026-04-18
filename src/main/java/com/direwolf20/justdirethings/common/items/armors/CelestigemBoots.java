@@ -1,20 +1,15 @@
 package com.direwolf20.justdirethings.common.items.armors;
 
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseBoots;
-import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.equipment.ArmorType;
 
 public class CelestigemBoots extends BaseBoots implements PoweredTool {
-    public CelestigemBoots() {
-        super(new Item.Properties()
-                .humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.BOOTS)
-                .fireResistant()
-                .durability(ArmorType.BOOTS.getDurability(25)));
+    public CelestigemBoots(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.STEPHEIGHT);
         registerAbility(Ability.JUMPBOOST, new AbilityParams(1, 3, 1, 3));
         registerAbility(Ability.GROUNDSTOMP, new AbilityParams(1, 3, 1, 3, 0, 200));

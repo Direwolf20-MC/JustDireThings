@@ -10,10 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CelestigemPickaxe extends BasePickaxe implements PoweredTool, GooTieredItem {
-    public CelestigemPickaxe() {
-        super(new Item.Properties()
-                .pickaxe(GooTier.CELESTIGEM.material(), 1.0F, -2.8F)
-                .fireResistant());
+    public CelestigemPickaxe(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);

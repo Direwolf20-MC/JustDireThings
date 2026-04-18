@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": "justdirethings:blazegold_ingot",
+    "d": "minecraft:diamond",
+    "e": "minecraft:ender_pearl",
+    "l": "minecraft:lapis_lazuli"
+  },
+  "pattern": [
+    "bdb",
+    "lel",
+    "bdb"
+  ],
+  "result": {
+    "id": "justdirethings:totem_of_death_recall"
+  }
+}

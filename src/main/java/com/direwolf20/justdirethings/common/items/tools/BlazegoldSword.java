@@ -11,10 +11,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldSword extends BaseSword implements GooTieredItem {
-    public BlazegoldSword() {
-        super(new Item.Properties()
-                .sword(GooTier.BLAZEGOLD.material(), 3, -2.0F)
-                .fireResistant());
+    public BlazegoldSword(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.MOBSCANNER);
         registerAbility(Ability.LAVAREPAIR);
         registerAbility(Ability.CAUTERIZEWOUNDS, new AbilityParams(1, 1, 1, 1, 0, 1200));

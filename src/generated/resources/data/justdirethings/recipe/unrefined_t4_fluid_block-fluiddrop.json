@@ -1,0 +1,17 @@
+{
+  "type": "justdirethings:fluiddrop",
+  "catalyst": "justdirethings:coal_t4",
+  "id": "justdirethings:unrefined_t4_fluid",
+  "input": {
+    "Name": "justdirethings:refined_t3_fluid_block",
+    "Properties": {
+      "level": "0"
+    }
+  },
+  "output": {
+    "Name": "justdirethings:unrefined_t4_fluid_block",
+    "Properties": {
+      "level": "0"
+    }
+  }
+}

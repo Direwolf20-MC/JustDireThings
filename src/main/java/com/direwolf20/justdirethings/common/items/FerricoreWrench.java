@@ -26,9 +26,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class FerricoreWrench extends Item {
-    public FerricoreWrench() {
-        super(new Properties()
-                .stacksTo(1));
+    public FerricoreWrench(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

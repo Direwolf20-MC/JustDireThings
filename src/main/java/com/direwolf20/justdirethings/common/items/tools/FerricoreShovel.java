@@ -7,8 +7,8 @@ import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.Item;
 
 public class FerricoreShovel extends BaseShovel implements GooTieredItem {
-    public FerricoreShovel() {
-        super(GooTier.FERRICORE.material(), 1.5F, -3.0F, new Item.Properties());
+    public FerricoreShovel(Item.Properties pProperties) {
+        super(GooTier.FERRICORE.material(), 1.5F, -3.0F, pProperties);
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
     }

@@ -7,8 +7,8 @@ import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.Item;
 
 public class FerricoreSword extends BaseSword implements GooTieredItem {
-    public FerricoreSword() {
-        super(new Item.Properties().sword(GooTier.FERRICORE.material(), 3, -2.0F));
+    public FerricoreSword(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.MOBSCANNER);
     }
 

@@ -48,9 +48,8 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
     public static final int MAX_FAVORITES = 12;
     public static final int maxMB = 8000;
 
-    public PortalGunV2() {
-        super(new Properties()
-                .stacksTo(1));
+    public PortalGunV2(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

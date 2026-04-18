@@ -10,8 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyShovel extends BaseShovel implements PoweredTool, GooTieredItem {
-    public EclipseAlloyShovel() {
-        super(GooTier.ECLIPSEALLOY.material(), 1.5F, -3.0F, new Item.Properties().fireResistant());
+    public EclipseAlloyShovel(Item.Properties pProperties) {
+        super(GooTier.ECLIPSEALLOY.material(), 1.5F, -3.0F, pProperties);
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
         registerAbility(Ability.SMELTER);

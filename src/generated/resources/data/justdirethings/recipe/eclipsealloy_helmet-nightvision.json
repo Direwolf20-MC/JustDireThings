@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_nightvision",
+  "base": "justdirethings:eclipsealloy_helmet"
+}

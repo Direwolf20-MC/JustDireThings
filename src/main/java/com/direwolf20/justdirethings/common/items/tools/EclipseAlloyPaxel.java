@@ -15,10 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbility;
 
 public class EclipseAlloyPaxel extends BasePaxel implements PoweredTool, GooTieredItem {
-    public EclipseAlloyPaxel() {
-        super(new Item.Properties()
-                .pickaxe(GooTier.ECLIPSEALLOY.material(), 1.0F, -2.8F)
-                .fireResistant());
+    public EclipseAlloyPaxel(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.OREXRAY);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SKYSWEEPER);

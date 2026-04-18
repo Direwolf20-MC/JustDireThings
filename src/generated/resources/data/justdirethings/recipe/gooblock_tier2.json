@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": "minecraft:blaze_powder",
+    "g": "justdirethings:gooblock_tier1",
+    "r": "#c:dusts/redstone",
+    "w": "minecraft:nether_wart"
+  },
+  "pattern": [
+    "brb",
+    "wgw",
+    "brb"
+  ],
+  "result": {
+    "id": "justdirethings:gooblock_tier2"
+  }
+}

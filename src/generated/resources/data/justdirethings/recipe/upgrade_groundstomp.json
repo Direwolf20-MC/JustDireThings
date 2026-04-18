@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": "justdirethings:upgrade_blank",
+    "e": "minecraft:piston",
+    "f": "minecraft:slime_block"
+  },
+  "pattern": [
+    " e ",
+    "fbf",
+    " e "
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_groundstomp"
+  }
+}

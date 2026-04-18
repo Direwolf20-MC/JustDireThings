@@ -9,8 +9,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CelestigemAxe extends BaseAxe implements PoweredTool, GooTieredItem {
-    public CelestigemAxe() {
-        super(GooTier.CELESTIGEM.material(), 7.0F, -2.5F, new Item.Properties().fireResistant());
+    public CelestigemAxe(Item.Properties pProperties) {
+        super(GooTier.CELESTIGEM.material(), 7.0F, -2.5F, pProperties);
         registerAbility(Ability.TREEFELLER);
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);

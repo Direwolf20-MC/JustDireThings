@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "d": "minecraft:ender_eye",
+    "f": "justdirethings:blazegold_ingot",
+    "l": "minecraft:ender_pearl",
+    "o": "minecraft:dispenser",
+    "r": "minecraft:lapis_lazuli"
+  },
+  "pattern": [
+    "fdf",
+    "lol",
+    "frf"
+  ],
+  "result": {
+    "id": "justdirethings:playeraccessor"
+  }
+}

@@ -10,10 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CelestigemSword extends BaseSword implements PoweredTool, GooTieredItem {
-    public CelestigemSword() {
-        super(new Item.Properties()
-                .sword(GooTier.CELESTIGEM.material(), 3, -2.0F)
-                .fireResistant());
+    public CelestigemSword(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.MOBSCANNER);
         registerAbility(Ability.CAUTERIZEWOUNDS, new AbilityParams(1, 1, 1, 1, 0, 1200));
         registerAbility(Ability.DROPTELEPORT);

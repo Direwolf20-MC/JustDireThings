@@ -6,8 +6,8 @@ import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.Item;
 
 public class FerricoreHoe extends BaseHoe implements GooTieredItem {
-    public FerricoreHoe() {
-        super(GooTier.FERRICORE.material(), -2.0F, -1.0F, new Item.Properties());
+    public FerricoreHoe(Item.Properties pProperties) {
+        super(GooTier.FERRICORE.material(), -2.0F, -1.0F, pProperties);
     }
 
     @Override

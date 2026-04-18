@@ -20,13 +20,11 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class TimeCrystal extends Item {
-    public TimeCrystal() {
-        super(new Item.Properties());
+    public TimeCrystal(Item.Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

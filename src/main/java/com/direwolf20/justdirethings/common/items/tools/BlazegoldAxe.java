@@ -10,8 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldAxe extends BaseAxe implements GooTieredItem {
-    public BlazegoldAxe() {
-        super(GooTier.BLAZEGOLD.material(), 7.0F, -2.5F, new Item.Properties().fireResistant());
+    public BlazegoldAxe(Item.Properties pProperties) {
+        super(GooTier.BLAZEGOLD.material(), 7.0F, -2.5F, pProperties);
         registerAbility(Ability.TREEFELLER);
         registerAbility(Ability.LEAFBREAKER);
         registerAbility(Ability.SMELTER);

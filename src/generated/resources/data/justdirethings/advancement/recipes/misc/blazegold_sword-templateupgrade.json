@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_template_blazegold": {
+      "conditions": {
+        "items": [
+          {
+            "items": "justdirethings:template_blazegold"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:blazegold_sword-templateupgrade"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_template_blazegold"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:blazegold_sword-templateupgrade"
+    ]
+  }
+}

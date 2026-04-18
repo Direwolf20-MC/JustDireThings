@@ -14,7 +14,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 
@@ -74,7 +74,7 @@ public class PaxelRecipeBuilder implements RecipeBuilder {
                 this.template,
                 this.base,
                 this.addition,
-                new ItemStack(this.result)
+                new ItemStackTemplate(this.result)
         );
         Identifier path = pId.identifier();
         pRecipeOutput.accept(pId, recipe, advancement$builder.build(path.withPrefix("recipes/" + RecipeCategory.MISC.getFolderName() + "/")));

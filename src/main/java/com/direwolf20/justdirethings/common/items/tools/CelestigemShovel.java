@@ -10,8 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CelestigemShovel extends BaseShovel implements PoweredTool, GooTieredItem {
-    public CelestigemShovel() {
-        super(GooTier.CELESTIGEM.material(), 1.5F, -3.0F, new Item.Properties().fireResistant());
+    public CelestigemShovel(Item.Properties pProperties) {
+        super(GooTier.CELESTIGEM.material(), 1.5F, -3.0F, pProperties);
         registerAbility(Ability.SKYSWEEPER);
         registerAbility(Ability.LAWNMOWER);
         registerAbility(Ability.SMELTER);

@@ -28,10 +28,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class PolymorphicWand extends BaseToggleableTool implements LeftClickableTool, FluidContainingItem {
-    public PolymorphicWand() {
-        super(new Properties()
-                .fireResistant()
-                .durability(200));
+    public PolymorphicWand(Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.LAVAREPAIR);
         registerAbility(Ability.POLYMORPH_RANDOM);
     }

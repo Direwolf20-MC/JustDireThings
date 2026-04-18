@@ -1313,7 +1313,7 @@ public class JustDireRecipes extends RecipeProvider {
         PaxelRecipeBuilder.shapeless(Ingredient.of(JDTRegistration.CelestigemPickaxe.get()), Ingredient.of(JDTRegistration.CelestigemAxe.get()),
                         Ingredient.of(JDTRegistration.CelestigemShovel.get()), JDTRegistration.CelestigemPaxel.get())
                 .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemPaxel.get().asItem())).toString());
+                .save(this.output);
 
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldSword.get()),
                         Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemSword.get())
@@ -1384,7 +1384,7 @@ public class JustDireRecipes extends RecipeProvider {
         PaxelRecipeBuilder.shapeless(Ingredient.of(JDTRegistration.EclipseAlloyPickaxe.get()), Ingredient.of(JDTRegistration.EclipseAlloyAxe.get()),
                         Ingredient.of(JDTRegistration.EclipseAlloyShovel.get()), JDTRegistration.EclipseAlloyPaxel.get())
                 .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyPaxel.get().asItem())).toString());
+                .save(this.output);
         SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemSword.get()),
                         Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloySword.get())
                 .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))

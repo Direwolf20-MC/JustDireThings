@@ -30,8 +30,23 @@ import java.util.List;
 import java.util.Optional;
 
 public class JustDireModels extends ModelProvider {
+    // Blocks whose blockstate + model JSONs are hand-authored under src/main/resources
+    // (BlockBench-exported custom geometry) and therefore excluded from datagen validation.
+    private static final java.util.Set<Block> HAND_AUTHORED_BLOCKS = java.util.Set.of(
+            JDTRegistration.ItemCollector.get(),
+            JDTRegistration.ExperienceHolder.get(),
+            JDTRegistration.GeneratorT1.get(),
+            JDTRegistration.GeneratorFluidT1.get(),
+            JDTRegistration.EnergyTransmitter.get()
+    );
+
     public JustDireModels(PackOutput output) {
         super(output, JustDireThings.MODID);
+    }
+
+    @Override
+    protected java.util.stream.Stream<? extends net.minecraft.core.Holder<Block>> getKnownBlocks() {
+        return super.getKnownBlocks().filter(h -> !HAND_AUTHORED_BLOCKS.contains(h.value()));
     }
 
     private static Material blockTexture(String path) {

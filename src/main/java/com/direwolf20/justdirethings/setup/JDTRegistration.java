@@ -60,16 +60,20 @@ import com.direwolf20.justdirethings.common.items.abilityupgrades.Upgrade;
 import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeBlank;
 import com.direwolf20.justdirethings.common.items.abilityupgrades.UpgradeTemplate;
 import com.direwolf20.justdirethings.common.items.armors.*;
+import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
+import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.datagen.recipes.*;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -81,6 +85,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -553,149 +558,149 @@ public class JDTRegistration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ExperienceHolderBE>> ExperienceHolderBE = BLOCK_ENTITIES.register("experienceholder", () -> new BlockEntityType<>(ExperienceHolderBE::new, ExperienceHolder.get()));
 
     //Items - Raw Resources
-    public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.register("raw_ferricore", RawFerricore::new);
-    public static final DeferredHolder<Item, RawBlazegold> RawBlazegold = ITEMS.register("raw_blazegold", RawBlazegold::new);
-    public static final DeferredHolder<Item, RawEclipseAlloy> RawEclipseAlloy = ITEMS.register("raw_eclipsealloy", RawEclipseAlloy::new);
+    public static final DeferredHolder<Item, RawFerricore> RawFerricore = ITEMS.registerItem("raw_ferricore", RawFerricore::new, Item.Properties::new);
+    public static final DeferredHolder<Item, RawBlazegold> RawBlazegold = ITEMS.registerItem("raw_blazegold", RawBlazegold::new, Item.Properties::new);
+    public static final DeferredHolder<Item, RawEclipseAlloy> RawEclipseAlloy = ITEMS.registerItem("raw_eclipsealloy", RawEclipseAlloy::new, Item.Properties::new);
 
     //Items - Resources
-    public static final DeferredHolder<Item, FerricoreIngot> FerricoreIngot = ITEMS.register("ferricore_ingot", FerricoreIngot::new);
-    public static final DeferredHolder<Item, BlazeGoldIngot> BlazegoldIngot = ITEMS.register("blazegold_ingot", BlazeGoldIngot::new);
-    public static final DeferredHolder<Item, Celestigem> Celestigem = ITEMS.register("celestigem", Celestigem::new);
-    public static final DeferredHolder<Item, EclipseAlloyIngot> EclipseAlloyIngot = ITEMS.register("eclipsealloy_ingot", EclipseAlloyIngot::new);
-    public static final DeferredHolder<Item, Coal_T1> Coal_T1 = ITEMS.register("coal_t1", Coal_T1::new);
-    public static final DeferredHolder<Item, Coal_T2> Coal_T2 = ITEMS.register("coal_t2", Coal_T2::new);
-    public static final DeferredHolder<Item, Coal_T3> Coal_T3 = ITEMS.register("coal_t3", Coal_T3::new);
-    public static final DeferredHolder<Item, Coal_T4> Coal_T4 = ITEMS.register("coal_t4", Coal_T4::new);
-    public static final DeferredHolder<Item, PolymorphicCatalyst> PolymorphicCatalyst = ITEMS.register("polymorphic_catalyst", PolymorphicCatalyst::new);
-    public static final DeferredHolder<Item, PortalFluidCatalyst> PortalFluidCatalyst = ITEMS.register("portal_fluid_catalyst", PortalFluidCatalyst::new);
-    public static final DeferredHolder<Item, TimeCrystal> TimeCrystal = ITEMS.register("time_crystal", TimeCrystal::new);
+    public static final DeferredHolder<Item, FerricoreIngot> FerricoreIngot = ITEMS.registerItem("ferricore_ingot", FerricoreIngot::new, Item.Properties::new);
+    public static final DeferredHolder<Item, BlazeGoldIngot> BlazegoldIngot = ITEMS.registerItem("blazegold_ingot", BlazeGoldIngot::new, Item.Properties::new);
+    public static final DeferredHolder<Item, Celestigem> Celestigem = ITEMS.registerItem("celestigem", Celestigem::new, Item.Properties::new);
+    public static final DeferredHolder<Item, EclipseAlloyIngot> EclipseAlloyIngot = ITEMS.registerItem("eclipsealloy_ingot", EclipseAlloyIngot::new, Item.Properties::new);
+    public static final DeferredHolder<Item, Coal_T1> Coal_T1 = ITEMS.registerItem("coal_t1", Coal_T1::new, Item.Properties::new);
+    public static final DeferredHolder<Item, Coal_T2> Coal_T2 = ITEMS.registerItem("coal_t2", Coal_T2::new, Item.Properties::new);
+    public static final DeferredHolder<Item, Coal_T3> Coal_T3 = ITEMS.registerItem("coal_t3", Coal_T3::new, Item.Properties::new);
+    public static final DeferredHolder<Item, Coal_T4> Coal_T4 = ITEMS.registerItem("coal_t4", Coal_T4::new, Item.Properties::new);
+    public static final DeferredHolder<Item, PolymorphicCatalyst> PolymorphicCatalyst = ITEMS.registerItem("polymorphic_catalyst", PolymorphicCatalyst::new, Item.Properties::new);
+    public static final DeferredHolder<Item, PortalFluidCatalyst> PortalFluidCatalyst = ITEMS.registerItem("portal_fluid_catalyst", PortalFluidCatalyst::new, Item.Properties::new);
+    public static final DeferredHolder<Item, TimeCrystal> TimeCrystal = ITEMS.registerItem("time_crystal", TimeCrystal::new, Item.Properties::new);
 
     //Items
-    public static final DeferredHolder<Item, FuelCanister> Fuel_Canister = ITEMS.register("fuel_canister", FuelCanister::new);
-    public static final DeferredHolder<Item, PocketGenerator> Pocket_Generator = ITEMS.register("pocket_generator", PocketGenerator::new);
-    public static final DeferredHolder<Item, FerricoreWrench> FerricoreWrench = ITEMS.register("ferricore_wrench", FerricoreWrench::new);
-    public static final DeferredHolder<Item, TotemOfDeathRecall> TotemOfDeathRecall = ITEMS.register("totem_of_death_recall", TotemOfDeathRecall::new);
-    public static final DeferredHolder<Item, BlazejetWand> BlazejetWand = ITEMS.register("blazejet_wand", BlazejetWand::new);
-    public static final DeferredHolder<Item, VoidshiftWand> VoidshiftWand = ITEMS.register("voidshift_wand", VoidshiftWand::new);
-    public static final DeferredHolder<Item, EclipsegateWand> EclipsegateWand = ITEMS.register("eclipsegate_wand", EclipsegateWand::new);
-    public static final DeferredHolder<Item, TimeWand> TimeWand = ITEMS.register("time_wand", TimeWand::new);
-    public static final DeferredHolder<Item, CreatureCatcher> CreatureCatcher = ITEMS.register("creaturecatcher", CreatureCatcher::new);
-    public static final DeferredHolder<Item, MachineSettingsCopier> MachineSettingsCopier = ITEMS.register("machinesettingscopier", MachineSettingsCopier::new);
-    public static final DeferredHolder<Item, PortalGun> PortalGun = ITEMS.register("portalgun", PortalGun::new);
-    public static final DeferredHolder<Item, PortalGunV2> PortalGunV2 = ITEMS.register("portalgun_v2", PortalGunV2::new);
-    public static final DeferredHolder<Item, FluidCanister> FluidCanister = ITEMS.register("fluid_canister", FluidCanister::new);
-    public static final DeferredHolder<Item, PotionCanister> PotionCanister = ITEMS.register("potion_canister", PotionCanister::new);
-    public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = BOWS.register("bow_ferricore", FerricoreBow::new);
-    public static final DeferredHolder<Item, BlazegoldBow> BlazegoldBow = BOWS.register("bow_blazegold", BlazegoldBow::new);
-    public static final DeferredHolder<Item, CelestigemBow> CelestigemBow = BOWS.register("bow_celestigem", CelestigemBow::new);
-    public static final DeferredHolder<Item, EclipseAlloyBow> EclipseAlloyBow = BOWS.register("bow_eclipsealloy", EclipseAlloyBow::new);
-    public static final DeferredHolder<Item, PolymorphicWand> PolymorphicWand = ITEMS.register("polymorphic_wand", PolymorphicWand::new);
-    public static final DeferredHolder<Item, PolymorphicWandV2> PolymorphicWandV2 = ITEMS.register("polymorphic_wand_v2", PolymorphicWandV2::new);
+    public static final DeferredHolder<Item, FuelCanister> Fuel_Canister = ITEMS.registerItem("fuel_canister", FuelCanister::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, PocketGenerator> Pocket_Generator = ITEMS.registerItem("pocket_generator", PocketGenerator::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, FerricoreWrench> FerricoreWrench = ITEMS.registerItem("ferricore_wrench", FerricoreWrench::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, TotemOfDeathRecall> TotemOfDeathRecall = ITEMS.registerItem("totem_of_death_recall", TotemOfDeathRecall::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, BlazejetWand> BlazejetWand = ITEMS.registerItem("blazejet_wand", BlazejetWand::new, () -> new Item.Properties().fireResistant().durability(200));
+    public static final DeferredHolder<Item, VoidshiftWand> VoidshiftWand = ITEMS.registerItem("voidshift_wand", VoidshiftWand::new, () -> new Item.Properties().durability(200).fireResistant());
+    public static final DeferredHolder<Item, EclipsegateWand> EclipsegateWand = ITEMS.registerItem("eclipsegate_wand", EclipsegateWand::new, () -> new Item.Properties().durability(200).fireResistant());
+    public static final DeferredHolder<Item, TimeWand> TimeWand = ITEMS.registerItem("time_wand", TimeWand::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, CreatureCatcher> CreatureCatcher = ITEMS.registerItem("creaturecatcher", CreatureCatcher::new, Item.Properties::new);
+    public static final DeferredHolder<Item, MachineSettingsCopier> MachineSettingsCopier = ITEMS.registerItem("machinesettingscopier", MachineSettingsCopier::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, PortalGun> PortalGun = ITEMS.registerItem("portalgun", PortalGun::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, PortalGunV2> PortalGunV2 = ITEMS.registerItem("portalgun_v2", PortalGunV2::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, FluidCanister> FluidCanister = ITEMS.registerItem("fluid_canister", FluidCanister::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, PotionCanister> PotionCanister = ITEMS.registerItem("potion_canister", PotionCanister::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, FerricoreBow> FerricoreBow = BOWS.registerItem("bow_ferricore", FerricoreBow::new, () -> new Item.Properties().durability(250));
+    public static final DeferredHolder<Item, BlazegoldBow> BlazegoldBow = BOWS.registerItem("bow_blazegold", BlazegoldBow::new, () -> new Item.Properties().durability(450).fireResistant());
+    public static final DeferredHolder<Item, CelestigemBow> CelestigemBow = BOWS.registerItem("bow_celestigem", CelestigemBow::new, () -> new Item.Properties().durability(450).fireResistant());
+    public static final DeferredHolder<Item, EclipseAlloyBow> EclipseAlloyBow = BOWS.registerItem("bow_eclipsealloy", EclipseAlloyBow::new, () -> new Item.Properties().durability(450).fireResistant());
+    public static final DeferredHolder<Item, PolymorphicWand> PolymorphicWand = ITEMS.registerItem("polymorphic_wand", PolymorphicWand::new, () -> new Item.Properties().fireResistant().durability(200));
+    public static final DeferredHolder<Item, PolymorphicWandV2> PolymorphicWandV2 = ITEMS.registerItem("polymorphic_wand_v2", PolymorphicWandV2::new, () -> new Item.Properties().fireResistant());
 
     //Items - Tools
-    public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.register("ferricore_sword", FerricoreSword::new);
-    public static final DeferredHolder<Item, FerricorePickaxe> FerricorePickaxe = TOOLS.register("ferricore_pickaxe", FerricorePickaxe::new);
-    public static final DeferredHolder<Item, FerricoreShovel> FerricoreShovel = TOOLS.register("ferricore_shovel", FerricoreShovel::new);
-    public static final DeferredHolder<Item, FerricoreAxe> FerricoreAxe = TOOLS.register("ferricore_axe", FerricoreAxe::new);
-    public static final DeferredHolder<Item, FerricoreHoe> FerricoreHoe = TOOLS.register("ferricore_hoe", FerricoreHoe::new);
-    public static final DeferredHolder<Item, BlazegoldSword> BlazegoldSword = TOOLS.register("blazegold_sword", BlazegoldSword::new);
-    public static final DeferredHolder<Item, BlazegoldPickaxe> BlazegoldPickaxe = TOOLS.register("blazegold_pickaxe", BlazegoldPickaxe::new);
-    public static final DeferredHolder<Item, BlazegoldShovel> BlazegoldShovel = TOOLS.register("blazegold_shovel", BlazegoldShovel::new);
-    public static final DeferredHolder<Item, BlazegoldAxe> BlazegoldAxe = TOOLS.register("blazegold_axe", BlazegoldAxe::new);
-    public static final DeferredHolder<Item, BlazegoldHoe> BlazegoldHoe = TOOLS.register("blazegold_hoe", BlazegoldHoe::new);
-    public static final DeferredHolder<Item, CelestigemSword> CelestigemSword = TOOLS.register("celestigem_sword", CelestigemSword::new);
-    public static final DeferredHolder<Item, CelestigemPickaxe> CelestigemPickaxe = TOOLS.register("celestigem_pickaxe", CelestigemPickaxe::new);
-    public static final DeferredHolder<Item, CelestigemShovel> CelestigemShovel = TOOLS.register("celestigem_shovel", CelestigemShovel::new);
-    public static final DeferredHolder<Item, CelestigemAxe> CelestigemAxe = TOOLS.register("celestigem_axe", CelestigemAxe::new);
-    public static final DeferredHolder<Item, CelestigemHoe> CelestigemHoe = TOOLS.register("celestigem_hoe", CelestigemHoe::new);
-    public static final DeferredHolder<Item, CelestigemPaxel> CelestigemPaxel = TOOLS.register("celestigem_paxel", CelestigemPaxel::new);
-    public static final DeferredHolder<Item, EclipseAlloySword> EclipseAlloySword = TOOLS.register("eclipsealloy_sword", EclipseAlloySword::new);
-    public static final DeferredHolder<Item, EclipseAlloyPickaxe> EclipseAlloyPickaxe = TOOLS.register("eclipsealloy_pickaxe", EclipseAlloyPickaxe::new);
-    public static final DeferredHolder<Item, EclipseAlloyShovel> EclipseAlloyShovel = TOOLS.register("eclipsealloy_shovel", EclipseAlloyShovel::new);
-    public static final DeferredHolder<Item, EclipseAlloyAxe> EclipseAlloyAxe = TOOLS.register("eclipsealloy_axe", EclipseAlloyAxe::new);
-    public static final DeferredHolder<Item, EclipseAlloyHoe> EclipseAlloyHoe = TOOLS.register("eclipsealloy_hoe", EclipseAlloyHoe::new);
-    public static final DeferredHolder<Item, EclipseAlloyPaxel> EclipseAlloyPaxel = TOOLS.register("eclipsealloy_paxel", EclipseAlloyPaxel::new);
+    public static final DeferredHolder<Item, FerricoreSword> FerricoreSword = TOOLS.registerItem("ferricore_sword", FerricoreSword::new, () -> new Item.Properties().sword(GooTier.FERRICORE.material(), 3, -2.0F));
+    public static final DeferredHolder<Item, FerricorePickaxe> FerricorePickaxe = TOOLS.registerItem("ferricore_pickaxe", FerricorePickaxe::new, () -> new Item.Properties().pickaxe(GooTier.FERRICORE.material(), 1.0F, -2.8F));
+    public static final DeferredHolder<Item, FerricoreShovel> FerricoreShovel = TOOLS.registerItem("ferricore_shovel", FerricoreShovel::new, Item.Properties::new);
+    public static final DeferredHolder<Item, FerricoreAxe> FerricoreAxe = TOOLS.registerItem("ferricore_axe", FerricoreAxe::new, Item.Properties::new);
+    public static final DeferredHolder<Item, FerricoreHoe> FerricoreHoe = TOOLS.registerItem("ferricore_hoe", FerricoreHoe::new, Item.Properties::new);
+    public static final DeferredHolder<Item, BlazegoldSword> BlazegoldSword = TOOLS.registerItem("blazegold_sword", BlazegoldSword::new, () -> new Item.Properties().sword(GooTier.BLAZEGOLD.material(), 3, -2.0F).fireResistant());
+    public static final DeferredHolder<Item, BlazegoldPickaxe> BlazegoldPickaxe = TOOLS.registerItem("blazegold_pickaxe", BlazegoldPickaxe::new, () -> new Item.Properties().pickaxe(GooTier.BLAZEGOLD.material(), 1.0F, -2.8F).fireResistant());
+    public static final DeferredHolder<Item, BlazegoldShovel> BlazegoldShovel = TOOLS.registerItem("blazegold_shovel", BlazegoldShovel::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, BlazegoldAxe> BlazegoldAxe = TOOLS.registerItem("blazegold_axe", BlazegoldAxe::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, BlazegoldHoe> BlazegoldHoe = TOOLS.registerItem("blazegold_hoe", BlazegoldHoe::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, CelestigemSword> CelestigemSword = TOOLS.registerItem("celestigem_sword", CelestigemSword::new, () -> new Item.Properties().sword(GooTier.CELESTIGEM.material(), 3, -2.0F).fireResistant());
+    public static final DeferredHolder<Item, CelestigemPickaxe> CelestigemPickaxe = TOOLS.registerItem("celestigem_pickaxe", CelestigemPickaxe::new, () -> new Item.Properties().pickaxe(GooTier.CELESTIGEM.material(), 1.0F, -2.8F).fireResistant());
+    public static final DeferredHolder<Item, CelestigemShovel> CelestigemShovel = TOOLS.registerItem("celestigem_shovel", CelestigemShovel::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, CelestigemAxe> CelestigemAxe = TOOLS.registerItem("celestigem_axe", CelestigemAxe::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, CelestigemHoe> CelestigemHoe = TOOLS.registerItem("celestigem_hoe", CelestigemHoe::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, CelestigemPaxel> CelestigemPaxel = TOOLS.registerItem("celestigem_paxel", CelestigemPaxel::new, () -> new Item.Properties().pickaxe(GooTier.CELESTIGEM.material(), 1.0F, -2.8F).fireResistant());
+    public static final DeferredHolder<Item, EclipseAlloySword> EclipseAlloySword = TOOLS.registerItem("eclipsealloy_sword", EclipseAlloySword::new, () -> new Item.Properties().sword(GooTier.ECLIPSEALLOY.material(), 3, -2.0F).fireResistant());
+    public static final DeferredHolder<Item, EclipseAlloyPickaxe> EclipseAlloyPickaxe = TOOLS.registerItem("eclipsealloy_pickaxe", EclipseAlloyPickaxe::new, () -> new Item.Properties().pickaxe(GooTier.ECLIPSEALLOY.material(), 1.0F, -2.8F).fireResistant());
+    public static final DeferredHolder<Item, EclipseAlloyShovel> EclipseAlloyShovel = TOOLS.registerItem("eclipsealloy_shovel", EclipseAlloyShovel::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, EclipseAlloyAxe> EclipseAlloyAxe = TOOLS.registerItem("eclipsealloy_axe", EclipseAlloyAxe::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, EclipseAlloyHoe> EclipseAlloyHoe = TOOLS.registerItem("eclipsealloy_hoe", EclipseAlloyHoe::new, () -> new Item.Properties().fireResistant());
+    public static final DeferredHolder<Item, EclipseAlloyPaxel> EclipseAlloyPaxel = TOOLS.registerItem("eclipsealloy_paxel", EclipseAlloyPaxel::new, () -> new Item.Properties().pickaxe(GooTier.ECLIPSEALLOY.material(), 1.0F, -2.8F).fireResistant());
 
     //Items - Armor
-    public static final DeferredHolder<Item, FerricoreHelmet> FerricoreHelmet = ARMORS.register("ferricore_helmet", FerricoreHelmet::new);
-    public static final DeferredHolder<Item, FerricoreChestplate> FerricoreChestplate = ARMORS.register("ferricore_chestplate", FerricoreChestplate::new);
-    public static final DeferredHolder<Item, FerricoreLeggings> FerricoreLeggings = ARMORS.register("ferricore_leggings", FerricoreLeggings::new);
-    public static final DeferredHolder<Item, FerricoreBoots> FerricoreBoots = ARMORS.register("ferricore_boots", FerricoreBoots::new);
+    public static final DeferredHolder<Item, FerricoreHelmet> FerricoreHelmet = ARMORS.registerItem("ferricore_helmet", FerricoreHelmet::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.FERRICORE, ArmorType.HELMET));
+    public static final DeferredHolder<Item, FerricoreChestplate> FerricoreChestplate = ARMORS.registerItem("ferricore_chestplate", FerricoreChestplate::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.FERRICORE, ArmorType.CHESTPLATE));
+    public static final DeferredHolder<Item, FerricoreLeggings> FerricoreLeggings = ARMORS.registerItem("ferricore_leggings", FerricoreLeggings::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.FERRICORE, ArmorType.LEGGINGS));
+    public static final DeferredHolder<Item, FerricoreBoots> FerricoreBoots = ARMORS.registerItem("ferricore_boots", FerricoreBoots::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.FERRICORE, ArmorType.BOOTS));
 
-    public static final DeferredHolder<Item, BlazegoldHelmet> BlazegoldHelmet = ARMORS.register("blazegold_helmet", BlazegoldHelmet::new);
-    public static final DeferredHolder<Item, BlazegoldChestplate> BlazegoldChestplate = ARMORS.register("blazegold_chestplate", BlazegoldChestplate::new);
-    public static final DeferredHolder<Item, BlazegoldLeggings> BlazegoldLeggings = ARMORS.register("blazegold_leggings", BlazegoldLeggings::new);
-    public static final DeferredHolder<Item, BlazegoldBoots> BlazegoldBoots = ARMORS.register("blazegold_boots", BlazegoldBoots::new);
+    public static final DeferredHolder<Item, BlazegoldHelmet> BlazegoldHelmet = ARMORS.registerItem("blazegold_helmet", BlazegoldHelmet::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.BLAZEGOLD, ArmorType.HELMET).fireResistant().durability(ArmorType.HELMET.getDurability(25)));
+    public static final DeferredHolder<Item, BlazegoldChestplate> BlazegoldChestplate = ARMORS.registerItem("blazegold_chestplate", BlazegoldChestplate::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.BLAZEGOLD, ArmorType.CHESTPLATE).fireResistant().durability(ArmorType.CHESTPLATE.getDurability(25)));
+    public static final DeferredHolder<Item, BlazegoldLeggings> BlazegoldLeggings = ARMORS.registerItem("blazegold_leggings", BlazegoldLeggings::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.BLAZEGOLD, ArmorType.LEGGINGS).fireResistant().durability(ArmorType.LEGGINGS.getDurability(25)));
+    public static final DeferredHolder<Item, BlazegoldBoots> BlazegoldBoots = ARMORS.registerItem("blazegold_boots", BlazegoldBoots::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.BLAZEGOLD, ArmorType.BOOTS).fireResistant().durability(ArmorType.BOOTS.getDurability(25)));
 
-    public static final DeferredHolder<Item, CelestigemHelmet> CelestigemHelmet = ARMORS.register("celestigem_helmet", CelestigemHelmet::new);
-    public static final DeferredHolder<Item, CelestigemChestplate> CelestigemChestplate = ARMORS.register("celestigem_chestplate", CelestigemChestplate::new);
-    public static final DeferredHolder<Item, CelestigemLeggings> CelestigemLeggings = ARMORS.register("celestigem_leggings", CelestigemLeggings::new);
-    public static final DeferredHolder<Item, CelestigemBoots> CelestigemBoots = ARMORS.register("celestigem_boots", CelestigemBoots::new);
+    public static final DeferredHolder<Item, CelestigemHelmet> CelestigemHelmet = ARMORS.registerItem("celestigem_helmet", CelestigemHelmet::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.HELMET).fireResistant().durability(ArmorType.HELMET.getDurability(25)));
+    public static final DeferredHolder<Item, CelestigemChestplate> CelestigemChestplate = ARMORS.registerItem("celestigem_chestplate", CelestigemChestplate::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.CHESTPLATE).fireResistant().durability(ArmorType.CHESTPLATE.getDurability(25)).component(DataComponents.GLIDER, Unit.INSTANCE));
+    public static final DeferredHolder<Item, CelestigemLeggings> CelestigemLeggings = ARMORS.registerItem("celestigem_leggings", CelestigemLeggings::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.LEGGINGS).fireResistant().durability(ArmorType.LEGGINGS.getDurability(25)));
+    public static final DeferredHolder<Item, CelestigemBoots> CelestigemBoots = ARMORS.registerItem("celestigem_boots", CelestigemBoots::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.BOOTS).fireResistant().durability(ArmorType.BOOTS.getDurability(25)));
 
-    public static final DeferredHolder<Item, EclipseAlloyHelmet> EclipseAlloyHelmet = ARMORS.register("eclipsealloy_helmet", EclipseAlloyHelmet::new);
-    public static final DeferredHolder<Item, EclipseAlloyChestplate> EclipseAlloyChestplate = ARMORS.register("eclipsealloy_chestplate", EclipseAlloyChestplate::new);
-    public static final DeferredHolder<Item, EclipseAlloyLeggings> EclipseAlloyLeggings = ARMORS.register("eclipsealloy_leggings", EclipseAlloyLeggings::new);
-    public static final DeferredHolder<Item, EclipseAlloyBoots> EclipseAlloyBoots = ARMORS.register("eclipsealloy_boots", EclipseAlloyBoots::new);
+    public static final DeferredHolder<Item, EclipseAlloyHelmet> EclipseAlloyHelmet = ARMORS.registerItem("eclipsealloy_helmet", EclipseAlloyHelmet::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.HELMET).fireResistant().durability(ArmorType.HELMET.getDurability(25)));
+    public static final DeferredHolder<Item, EclipseAlloyChestplate> EclipseAlloyChestplate = ARMORS.registerItem("eclipsealloy_chestplate", EclipseAlloyChestplate::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.CHESTPLATE).fireResistant().durability(ArmorType.CHESTPLATE.getDurability(25)).component(DataComponents.GLIDER, Unit.INSTANCE));
+    public static final DeferredHolder<Item, EclipseAlloyLeggings> EclipseAlloyLeggings = ARMORS.registerItem("eclipsealloy_leggings", EclipseAlloyLeggings::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.LEGGINGS).fireResistant().durability(ArmorType.LEGGINGS.getDurability(25)));
+    public static final DeferredHolder<Item, EclipseAlloyBoots> EclipseAlloyBoots = ARMORS.registerItem("eclipsealloy_boots", EclipseAlloyBoots::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.BOOTS).fireResistant().durability(ArmorType.BOOTS.getDurability(25)));
 
     //Items - Ability Upgrades
-    public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_FERRICORE = ITEMS.register("template_ferricore", UpgradeTemplate::new);
-    public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_BLAZEGOLD = ITEMS.register("template_blazegold", UpgradeTemplate::new);
-    public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_CELESTIGEM = ITEMS.register("template_celestigem", UpgradeTemplate::new);
-    public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_ECLIPSEALLOY = ITEMS.register("template_eclipsealloy", UpgradeTemplate::new);
+    public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_FERRICORE = ITEMS.registerItem("template_ferricore", UpgradeTemplate::new, Item.Properties::new);
+    public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_BLAZEGOLD = ITEMS.registerItem("template_blazegold", UpgradeTemplate::new, Item.Properties::new);
+    public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_CELESTIGEM = ITEMS.registerItem("template_celestigem", UpgradeTemplate::new, Item.Properties::new);
+    public static final DeferredHolder<Item, UpgradeTemplate> TEMPLATE_ECLIPSEALLOY = ITEMS.registerItem("template_eclipsealloy", UpgradeTemplate::new, Item.Properties::new);
 
-    public static final DeferredHolder<Item, UpgradeBlank> UPGRADE_BASE = UPGRADES.register("upgrade_blank", UpgradeBlank::new);
+    public static final DeferredHolder<Item, UpgradeBlank> UPGRADE_BASE = UPGRADES.registerItem("upgrade_blank", UpgradeBlank::new, Item.Properties::new);
 
 
     //Tier 1 Abilities
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_MOBSCANNER = UPGRADES.register("upgrade_mobscanner", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_OREMINER = UPGRADES.register("upgrade_oreminer", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_ORESCANNER = UPGRADES.register("upgrade_orescanner", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_LAWNMOWER = UPGRADES.register("upgrade_lawnmower", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_SKYSWEEPER = UPGRADES.register("upgrade_skysweeper", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_TREEFELLER = UPGRADES.register("upgrade_treefeller", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_LEAFBREAKER = UPGRADES.register("upgrade_leafbreaker", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_RUNSPEED = UPGRADES.register("upgrade_runspeed", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_WALKSPEED = UPGRADES.register("upgrade_walkspeed", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_STEPHEIGHT = UPGRADES.register("upgrade_stepheight", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_JUMPBOOST = UPGRADES.register("upgrade_jumpboost", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_MINDFOG = UPGRADES.register("upgrade_mindfog", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_INVULNERABILITY = UPGRADES.register("upgrade_invulnerability", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_POTIONARROW = UPGRADES.register("upgrade_potionarrow", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_MOBSCANNER = UPGRADES.registerItem("upgrade_mobscanner", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_OREMINER = UPGRADES.registerItem("upgrade_oreminer", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_ORESCANNER = UPGRADES.registerItem("upgrade_orescanner", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LAWNMOWER = UPGRADES.registerItem("upgrade_lawnmower", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SKYSWEEPER = UPGRADES.registerItem("upgrade_skysweeper", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_TREEFELLER = UPGRADES.registerItem("upgrade_treefeller", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LEAFBREAKER = UPGRADES.registerItem("upgrade_leafbreaker", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_RUNSPEED = UPGRADES.registerItem("upgrade_runspeed", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_WALKSPEED = UPGRADES.registerItem("upgrade_walkspeed", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_STEPHEIGHT = UPGRADES.registerItem("upgrade_stepheight", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_JUMPBOOST = UPGRADES.registerItem("upgrade_jumpboost", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_MINDFOG = UPGRADES.registerItem("upgrade_mindfog", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_INVULNERABILITY = UPGRADES.registerItem("upgrade_invulnerability", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_POTIONARROW = UPGRADES.registerItem("upgrade_potionarrow", Upgrade::new, () -> new Item.Properties().stacksTo(1));
 
     //Tier 2 Abilities
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_SMELTER = UPGRADES.register("upgrade_smelter", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_SMOKER = UPGRADES.register("upgrade_smoker", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_HAMMER = UPGRADES.register("upgrade_hammer", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_CAUTERIZEWOUNDS = UPGRADES.register("upgrade_cauterizewounds", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_SWIMSPEED = UPGRADES.register("upgrade_swimspeed", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_GROUNDSTOMP = UPGRADES.register("upgrade_groundstomp", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_EXTINGUISH = UPGRADES.register("upgrade_extinguish", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_STUPEFY = UPGRADES.register("upgrade_stupefy", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_SPLASH = UPGRADES.register("upgrade_splash", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SMELTER = UPGRADES.registerItem("upgrade_smelter", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SMOKER = UPGRADES.registerItem("upgrade_smoker", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_HAMMER = UPGRADES.registerItem("upgrade_hammer", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_CAUTERIZEWOUNDS = UPGRADES.registerItem("upgrade_cauterizewounds", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SWIMSPEED = UPGRADES.registerItem("upgrade_swimspeed", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_GROUNDSTOMP = UPGRADES.registerItem("upgrade_groundstomp", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_EXTINGUISH = UPGRADES.registerItem("upgrade_extinguish", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_STUPEFY = UPGRADES.registerItem("upgrade_stupefy", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_SPLASH = UPGRADES.registerItem("upgrade_splash", Upgrade::new, () -> new Item.Properties().stacksTo(1));
 
     //Tier 3 Abilities
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_ELYTRA = UPGRADES.register("upgrade_elytra", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_DROPTELEPORT = UPGRADES.register("upgrade_dropteleport", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_NEGATEFALLDAMAGE = UPGRADES.register("upgrade_negatefalldamage", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_NIGHTVISION = UPGRADES.register("upgrade_nightvision", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_DECOY = UPGRADES.register("upgrade_decoy", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_LINGERING = UPGRADES.register("upgrade_lingering", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_HOMING = UPGRADES.register("upgrade_homing", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_WATERBREATHING = UPGRADES.register("upgrade_waterbreathing", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_ELYTRA = UPGRADES.registerItem("upgrade_elytra", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_DROPTELEPORT = UPGRADES.registerItem("upgrade_dropteleport", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_NEGATEFALLDAMAGE = UPGRADES.registerItem("upgrade_negatefalldamage", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_NIGHTVISION = UPGRADES.registerItem("upgrade_nightvision", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_DECOY = UPGRADES.registerItem("upgrade_decoy", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LINGERING = UPGRADES.registerItem("upgrade_lingering", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_HOMING = UPGRADES.registerItem("upgrade_homing", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_WATERBREATHING = UPGRADES.registerItem("upgrade_waterbreathing", Upgrade::new, () -> new Item.Properties().stacksTo(1));
 
     //Tier 4 Abilities
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_OREXRAY = UPGRADES.register("upgrade_orexray", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_GLOWING = UPGRADES.register("upgrade_glowing", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_INSTABREAK = UPGRADES.register("upgrade_instabreak", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_EARTHQUAKE = UPGRADES.register("upgrade_earthquake", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_NOAI = UPGRADES.register("upgrade_noai", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_FLIGHT = UPGRADES.register("upgrade_flight", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_LAVAIMMUNITY = UPGRADES.register("upgrade_lavaimmunity", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_PHASE = UPGRADES.register("upgrade_phase", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.register("upgrade_deathprotection", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.register("upgrade_debuffremover", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_EPICARROW = UPGRADES.register("upgrade_epicarrow", Upgrade::new);
-    public static final DeferredHolder<Item, Upgrade> UPGRADE_TIMEPROTECTION = UPGRADES.register("upgrade_time_protection", Upgrade::new);
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_OREXRAY = UPGRADES.registerItem("upgrade_orexray", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_GLOWING = UPGRADES.registerItem("upgrade_glowing", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_INSTABREAK = UPGRADES.registerItem("upgrade_instabreak", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_EARTHQUAKE = UPGRADES.registerItem("upgrade_earthquake", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_NOAI = UPGRADES.registerItem("upgrade_noai", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_FLIGHT = UPGRADES.registerItem("upgrade_flight", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_LAVAIMMUNITY = UPGRADES.registerItem("upgrade_lavaimmunity", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_PHASE = UPGRADES.registerItem("upgrade_phase", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_DEATHPROTECTION = UPGRADES.registerItem("upgrade_deathprotection", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_DEBUFFREMOVER = UPGRADES.registerItem("upgrade_debuffremover", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_EPICARROW = UPGRADES.registerItem("upgrade_epicarrow", Upgrade::new, () -> new Item.Properties().stacksTo(1));
+    public static final DeferredHolder<Item, Upgrade> UPGRADE_TIMEPROTECTION = UPGRADES.registerItem("upgrade_time_protection", Upgrade::new, () -> new Item.Properties().stacksTo(1));
 
     //Entities
     public static final DeferredHolder<EntityType<?>, EntityType<CreatureCatcherEntity>> CreatureCatcherEntity = ENTITY_TYPES.register("creature_catcher",

@@ -16,9 +16,8 @@ import static com.direwolf20.justdirethings.util.TooltipHelpers.appendShiftForIn
 import static com.direwolf20.justdirethings.util.TooltipHelpers.appendUpgradeDetails;
 
 public class Upgrade extends Item {
-    public Upgrade() {
-        super(new Properties()
-                .stacksTo(1));
+    public Upgrade(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

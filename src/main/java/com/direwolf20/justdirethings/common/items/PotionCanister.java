@@ -18,8 +18,8 @@ import net.minecraft.world.level.Level;
 import java.util.function.Consumer;
 
 public class PotionCanister extends Item {
-    public PotionCanister() {
-        super(new Properties().stacksTo(1));
+    public PotionCanister(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

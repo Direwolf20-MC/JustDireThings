@@ -10,10 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloySword extends BaseSword implements PoweredTool, GooTieredItem {
-    public EclipseAlloySword() {
-        super(new Item.Properties()
-                .sword(GooTier.ECLIPSEALLOY.material(), 3, -2.0F)
-                .fireResistant());
+    public EclipseAlloySword(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.GLOWING);
         registerAbility(Ability.CAUTERIZEWOUNDS, new AbilityParams(1, 1, 1, 1, 0, 1200));
         registerAbility(Ability.DROPTELEPORT);

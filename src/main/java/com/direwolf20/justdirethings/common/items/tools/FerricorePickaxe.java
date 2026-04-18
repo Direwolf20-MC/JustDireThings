@@ -7,8 +7,8 @@ import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.Item;
 
 public class FerricorePickaxe extends BasePickaxe implements GooTieredItem {
-    public FerricorePickaxe() {
-        super(new Item.Properties().pickaxe(GooTier.FERRICORE.material(), 1.0F, -2.8F));
+    public FerricorePickaxe(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.ORESCANNER);
         registerAbility(Ability.OREMINER);
     }

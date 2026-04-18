@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": "justdirethings:upgrade_blank",
+    "e": "minecraft:lapis_lazuli",
+    "f": "minecraft:fermented_spider_eye"
+  },
+  "pattern": [
+    " e ",
+    "fbf",
+    " e "
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_mindfog"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "d": "minecraft:ender_eye",
+    "f": "justdirethings:eclipsealloy_ingot",
+    "o": "justdirethings:blockswappert1",
+    "r": "minecraft:redstone"
+  },
+  "pattern": [
+    "fdf",
+    "dod",
+    "frf"
+  ],
+  "result": {
+    "id": "justdirethings:blockswappert2"
+  }
+}

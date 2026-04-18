@@ -1,13 +1,12 @@
 package com.direwolf20.justdirethings.common.items.armors;
 
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseChestplate;
-import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
-import com.direwolf20.justdirethings.common.items.interfaces.*;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.util.Unit;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.equipment.ArmorType;
 
 public class EclipseAlloyChestplate extends BaseChestplate implements PoweredTool {
     // 26.1: gliding is component-driven via DataComponents.GLIDER. See CelestigemChestplate for details.
@@ -15,12 +14,8 @@ public class EclipseAlloyChestplate extends BaseChestplate implements PoweredToo
     //   no longer actually stops gliding. Re-wire via a LivingTickEvent handler that adds/removes
     //   DataComponents.GLIDER based on canUseAbilityAndDurability(stack, Ability.ELYTRA), and calls
     //   entity.stopFallFlying() when toggling off mid-flight.
-    public EclipseAlloyChestplate() {
-        super(new Item.Properties()
-                .humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.CHESTPLATE)
-                .fireResistant()
-                .durability(ArmorType.CHESTPLATE.getDurability(25))
-                .component(DataComponents.GLIDER, Unit.INSTANCE));
+    public EclipseAlloyChestplate(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.INVULNERABILITY, new AbilityParams(1, 1, 1, 1, 200, 400));
         registerAbility(Ability.EXTINGUISH, new AbilityParams(1, 1, 1, 1, 0, 40));
         registerAbility(Ability.ELYTRA);

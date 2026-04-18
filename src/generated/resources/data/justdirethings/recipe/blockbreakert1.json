@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "d": "minecraft:diamond",
+    "f": "justdirethings:ferricore_ingot",
+    "l": "minecraft:lapis_lazuli",
+    "o": "minecraft:observer",
+    "r": "minecraft:redstone"
+  },
+  "pattern": [
+    "fdf",
+    "lol",
+    "frf"
+  ],
+  "result": {
+    "id": "justdirethings:blockbreakert1"
+  }
+}

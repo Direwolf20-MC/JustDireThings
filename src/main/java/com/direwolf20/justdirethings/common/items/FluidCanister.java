@@ -76,9 +76,8 @@ public class FluidCanister extends Item implements FluidContainingItem {
         }
     }
 
-    public FluidCanister() {
-        super(new Properties()
-                .stacksTo(1));
+    public FluidCanister(Properties pProperties) {
+        super(pProperties);
     }
 
     public int getMaxMB() {

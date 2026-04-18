@@ -7,8 +7,8 @@ import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import net.minecraft.world.item.Item;
 
 public class FerricoreAxe extends BaseAxe implements GooTieredItem {
-    public FerricoreAxe() {
-        super(GooTier.FERRICORE.material(), 7.0F, -2.5F, new Item.Properties());
+    public FerricoreAxe(Item.Properties pProperties) {
+        super(GooTier.FERRICORE.material(), 7.0F, -2.5F, pProperties);
         registerAbility(Ability.TREEFELLER);
         registerAbility(Ability.LEAFBREAKER);
     }

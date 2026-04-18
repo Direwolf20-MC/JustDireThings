@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": "justdirethings:upgrade_blank",
+    "e": "minecraft:ender_eye",
+    "f": "minecraft:golden_carrot"
+  },
+  "pattern": [
+    " e ",
+    "fbf",
+    " e "
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_nightvision"
+  }
+}

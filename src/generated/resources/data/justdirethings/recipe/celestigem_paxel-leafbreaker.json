@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_leafbreaker",
+  "base": "justdirethings:celestigem_paxel"
+}

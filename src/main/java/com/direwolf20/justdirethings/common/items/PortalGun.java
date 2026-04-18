@@ -22,9 +22,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class PortalGun extends BasePoweredItem implements PoweredItem {
-    public PortalGun() {
-        super(new Properties()
-                .stacksTo(1));
+    public PortalGun(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override

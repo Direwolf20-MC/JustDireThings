@@ -1,10 +1,10 @@
 package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -35,9 +35,8 @@ import java.util.function.Consumer;
 import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
 
 public class PolymorphicWandV2 extends BaseToggleableTool implements LeftClickableTool, FluidContainingItem, PoweredItem {
-    public PolymorphicWandV2() {
-        super(new Properties()
-                .fireResistant());
+    public PolymorphicWandV2(Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.POLYMORPH_RANDOM);
         registerAbility(Ability.POLYMORPH_TARGET);
     }

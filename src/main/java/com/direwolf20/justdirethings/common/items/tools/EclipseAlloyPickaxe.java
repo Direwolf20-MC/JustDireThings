@@ -10,10 +10,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyPickaxe extends BasePickaxe implements PoweredTool, GooTieredItem {
-    public EclipseAlloyPickaxe() {
-        super(new Item.Properties()
-                .pickaxe(GooTier.ECLIPSEALLOY.material(), 1.0F, -2.8F)
-                .fireResistant());
+    public EclipseAlloyPickaxe(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.OREXRAY);
         registerAbility(Ability.OREMINER);
         registerAbility(Ability.SMELTER);

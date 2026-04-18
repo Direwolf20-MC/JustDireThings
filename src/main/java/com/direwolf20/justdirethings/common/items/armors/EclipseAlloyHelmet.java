@@ -1,20 +1,15 @@
 package com.direwolf20.justdirethings.common.items.armors;
 
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseHelmet;
-import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.equipment.ArmorType;
 
 public class EclipseAlloyHelmet extends BaseHelmet implements PoweredTool {
-    public EclipseAlloyHelmet() {
-        super(new Item.Properties()
-                .humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.HELMET)
-                .fireResistant()
-                .durability(ArmorType.HELMET.getDurability(25)));
+    public EclipseAlloyHelmet(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.MINDFOG);
         registerAbility(Ability.STUPEFY, new AbilityParams(1, 1, 1, 1, 100, 200));
         registerAbility(Ability.NIGHTVISION);

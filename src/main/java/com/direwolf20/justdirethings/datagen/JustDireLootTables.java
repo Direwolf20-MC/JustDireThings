@@ -34,7 +34,7 @@ public class JustDireLootTables extends VanillaBlockLoot {
         dropSelf(JDTRegistration.CoalBlock_T2.get());
         dropSelf(JDTRegistration.CoalBlock_T3.get());
         dropSelf(JDTRegistration.CoalBlock_T4.get());
-        dropSelf(JDTRegistration.GooPatternBlock.get());
+        add(JDTRegistration.GooPatternBlock.get(), noDrop());
         dropSelf(JDTRegistration.ItemCollector.get());
         dropSelf(JDTRegistration.BlockBreakerT1.get());
         dropSelf(JDTRegistration.BlockBreakerT2.get());

@@ -1,20 +1,15 @@
 package com.direwolf20.justdirethings.common.items.armors;
 
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseBoots;
-import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.equipment.ArmorType;
 
 public class EclipseAlloyBoots extends BaseBoots implements PoweredTool {
-    public EclipseAlloyBoots() {
-        super(new Item.Properties()
-                .humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.BOOTS)
-                .fireResistant()
-                .durability(ArmorType.BOOTS.getDurability(25)));
+    public EclipseAlloyBoots(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.STEPHEIGHT);
         registerAbility(Ability.JUMPBOOST, new AbilityParams(1, 5, 1, 5));
         registerAbility(Ability.GROUNDSTOMP, new AbilityParams(1, 5, 1, 5, 0, 200));
