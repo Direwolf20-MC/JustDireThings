@@ -1,12 +1,13 @@
 package com.direwolf20.justdirethings.util;
-/*
+
 import com.direwolf20.justdirethings.setup.Config;
-import java.util.List;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
+
+import java.util.List;
 
 public class ConfigValueComponentProcessor implements IComponentProcessor {
     private String rawText;
@@ -37,4 +38,4 @@ public class ConfigValueComponentProcessor implements IComponentProcessor {
 
         return IVariable.wrap(result, level.registryAccess());
     }
-}*/
+}

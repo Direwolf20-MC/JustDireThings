@@ -131,8 +131,8 @@ dependencies {
 
     implementation "curse.maven:curios-309927:${curios_file_id}"
 
-//    compileOnly "vazkii.patchouli:Patchouli:${patchouli_version}:api"
-//    localRuntime "vazkii.patchouli:Patchouli:${patchouli_version}"
+    compileOnly "vazkii.patchouli:patchouli-neoforge:${patchouli_version}:api"
+    localRuntime "vazkii.patchouli:patchouli-neoforge:${patchouli_version}"
 
     addLocalArtifacts('localRuntime', extraModsDir)
     addLocalArtifacts('compileOnly', extraAPIDir, "extra-api")
