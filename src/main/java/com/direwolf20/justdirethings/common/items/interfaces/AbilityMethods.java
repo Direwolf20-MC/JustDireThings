@@ -72,7 +72,7 @@ public class AbilityMethods {
         for (Mob entity : entityList) {
             entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 200, 0)); // 200 ticks = 10 seconds
         }
-        player.playSound(SoundEvents.SCULK_CLICKING, 1.0F, 1.0F);
+        Helpers.playSoundToAll(player, SoundEvents.SCULK_CLICKING, 1.0F, 1.0F);
         damageTool(itemStack, player, Ability.GLOWING);
         return true;
     }
@@ -99,9 +99,9 @@ public class AbilityMethods {
         if (level.isClientSide()) {
             ThingFinder.discover(player, toolAbility, itemStack);
             if (toolAbility.equals(Ability.OREXRAY))
-                player.playSound(SoundEvents.SCULK_CLICKING, 1.0F, 1.0F);
+                Helpers.playSoundToAll(player, SoundEvents.SCULK_CLICKING, 1.0F, 1.0F);
             else
-                player.playSound(SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
+                Helpers.playSoundToAll(player, SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
         } else { //ServerSide
             damageTool(itemStack, player, toolAbility);
         }
@@ -302,7 +302,7 @@ public class AbilityMethods {
                 AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.CAUTERIZEWOUNDS);
                 ToggleableTool.addCooldown(itemStack, Ability.CAUTERIZEWOUNDS, abilityParams.cooldown, false);
                 player.heal(6f);
-                player.playSound(SoundEvents.LAVA_EXTINGUISH, 1.0F, 1.0F);
+                Helpers.playSoundToAll(player, SoundEvents.LAVA_EXTINGUISH, 1.0F, 1.0F);
                 Random random = new Random();
                 Vec3 pos = player.getEyePosition();
                 for (int i = 0; i < 10; i++) {
@@ -413,7 +413,7 @@ public class AbilityMethods {
         if (player.isInWater() && player.getAirSupply() < (0.5 * player.getMaxAirSupply())) {
             player.setAirSupply(player.getMaxAirSupply());
             Helpers.damageTool(itemStack, player, Ability.WATERBREATHING);
-            player.playSound(SoundEvents.PLAYER_BREATH, .5F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.PLAYER_BREATH, .5F, 1.0F);
         }
         return false;
     }
@@ -435,7 +435,7 @@ public class AbilityMethods {
                 AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.EXTINGUISH);
                 ToggleableTool.addCooldown(itemStack, Ability.EXTINGUISH, abilityParams.cooldown, false);
                 player.clearFire();
-                player.playSound(SoundEvents.LAVA_EXTINGUISH, .5F, 1.0F);
+                Helpers.playSoundToAll(player, SoundEvents.LAVA_EXTINGUISH, .5F, 1.0F);
                 ((ServerLevel) level).sendParticles(ParticleTypes.SOUL_FIRE_FLAME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 1.5, 0.5, 0);
                 Helpers.damageTool(itemStack, player, Ability.EXTINGUISH);
             }
@@ -450,7 +450,7 @@ public class AbilityMethods {
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.INVULNERABILITY)) {
             AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.INVULNERABILITY);
             ToggleableTool.addCooldown(itemStack, Ability.INVULNERABILITY, abilityParams.activeCooldown, true);
-            player.playSound(SoundEvents.CONDUIT_ACTIVATE, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.CONDUIT_ACTIVATE, 1.0F, 1.0F);
             Helpers.damageTool(itemStack, player, Ability.INVULNERABILITY);
         }
         return false;
@@ -467,7 +467,7 @@ public class AbilityMethods {
                 mob.setTarget(null);
                 AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.STUPEFY);
                 ToggleableTool.addCooldown(itemStack, Ability.STUPEFY, abilityParams.activeCooldown, true);
-                player.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
+                Helpers.playSoundToAll(player, SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
                 ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
                 Helpers.damageTool(itemStack, player, Ability.STUPEFY);
             }
@@ -504,7 +504,7 @@ public class AbilityMethods {
                             return false; //If it failed to add for some reason?
 
                         // Play effects
-                        player.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
+                        Helpers.playSoundToAll(player, SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
                         ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
                                 mob.getX(), mob.getEyeY(), mob.getZ(),
                                 20, 0.25, 0.2, 0.25, 0);
@@ -550,7 +550,7 @@ public class AbilityMethods {
                         return false; //If it failed to add for some reason?
 
                     // Play effects
-                    player.playSound(SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
+                    Helpers.playSoundToAll(player, SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
                     ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
                             mob.getX(), mob.getEyeY(), mob.getZ(),
                             20, 0.25, 0.2, 0.25, 0);
@@ -593,7 +593,7 @@ public class AbilityMethods {
                     mob.knockback(strength, -dx, -dz);
                 }
             }
-            player.playSound(SoundEvents.MACE_SMASH_GROUND, .5F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.MACE_SMASH_GROUND, .5F, 1.0F);
             ((ServerLevel) level).sendParticles(ParticleTypes.DUST_PLUME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 0.2, 0.5, 0);
             Helpers.damageTool(itemStack, player, Ability.GROUNDSTOMP);
         }
@@ -612,7 +612,7 @@ public class AbilityMethods {
             decoy.setOwnerUUID(player.getUUID());
             level.addFreshEntity(decoy);
             ToggleableTool.addCooldown(itemStack, Ability.DECOY, abilityParams.activeCooldown, true);
-            player.playSound(SoundEvents.EVOKER_PREPARE_SUMMON, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.EVOKER_PREPARE_SUMMON, 1.0F, 1.0F);
             Helpers.damageTool(itemStack, player, Ability.DECOY);
 
         }
@@ -626,7 +626,7 @@ public class AbilityMethods {
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.DEBUFFREMOVER)) {
             AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.DEBUFFREMOVER);
             ToggleableTool.addCooldown(itemStack, Ability.DEBUFFREMOVER, abilityParams.cooldown, false);
-            player.playSound(SoundEvents.WANDERING_TRADER_DRINK_MILK, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.WANDERING_TRADER_DRINK_MILK, 1.0F, 1.0F);
             List<Holder<MobEffect>> negativeEffects = new ArrayList<>();
             for (Holder<MobEffect> mobEffect : player.getActiveEffectsMap().keySet()) {
                 if (mobEffect.value().getCategory() == MobEffectCategory.HARMFUL)
@@ -649,7 +649,7 @@ public class AbilityMethods {
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EARTHQUAKE)) {
             AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.EARTHQUAKE);
             ToggleableTool.addCooldown(itemStack, Ability.EARTHQUAKE, abilityParams.activeCooldown, true);
-            player.playSound(SoundEvents.MACE_SMASH_GROUND_HEAVY, 1.0F, 0.5F);
+            Helpers.playSoundToAll(player, SoundEvents.MACE_SMASH_GROUND_HEAVY, 1.0F, 0.5F);
             int radius = 5;
             AABB aabb = new AABB(player.getX() - radius, player.getY() - radius, player.getZ() - radius,
                     player.getX() + radius, player.getY() + radius, player.getZ() + radius);
@@ -689,8 +689,8 @@ public class AbilityMethods {
                     Helpers.damageTool(itemStack, player, Ability.NOAI);
                 }
             }
-            player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1F, 0.5F);
-            player.playSound(SoundEvents.SCULK_SHRIEKER_SHRIEK, 1F, 0.25F);
+            Helpers.playSoundToAll(player, SoundEvents.ENCHANTMENT_TABLE_USE, 1F, 0.5F);
+            Helpers.playSoundToAll(player, SoundEvents.SCULK_SHRIEKER_SHRIEK, 1F, 0.25F);
         }
         return false;
     }
@@ -701,7 +701,7 @@ public class AbilityMethods {
         if (currentCooldown != -1) return false;
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EPICARROW) && !itemStack.getOrDefault(JustDireDataComponents.EPIC_ARROW, false)) {
             itemStack.set(JustDireDataComponents.EPIC_ARROW, true);
-            player.playSound(SoundEvents.EVOKER_PREPARE_SUMMON, 1F, 0.5F);
+            Helpers.playSoundToAll(player, SoundEvents.EVOKER_PREPARE_SUMMON, 1F, 0.5F);
             Helpers.damageTool(itemStack, player, Ability.EPICARROW);
         }
         return false;

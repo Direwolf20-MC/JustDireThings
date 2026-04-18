@@ -101,7 +101,7 @@ public interface FluidContainingItem {
                 fluidHandler.insert(fluidResource, 1000, tx);
                 tx.commit();
             }
-            liquidBlock.getPickupSound(blockstate1).ifPresent(p_150709_ -> player.playSound(p_150709_, 1.0F, 1.0F));
+            liquidBlock.getPickupSound(blockstate1).ifPresent(p_150709_ -> Helpers.playSoundToAll(player, p_150709_, 1.0F, 1.0F));
             if (!level.isClientSide()) {
                 CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, itemstack2);
             }

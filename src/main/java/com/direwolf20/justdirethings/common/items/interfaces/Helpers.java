@@ -49,6 +49,14 @@ import java.util.stream.Collectors;
 import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getInstantRFCost;
 
 public class Helpers {
+    // 26.1 removed Player#playNotifySound. Player#playSound broadcasts with except=self, so the
+    // activating player never hears their own ability sound. Broadcast via level with except=null
+    // — matches vanilla's pattern (ServerPlayer.java:820).
+    public static void playSoundToAll(Player player, net.minecraft.sounds.SoundEvent sound, float volume, float pitch) {
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                sound, SoundSource.PLAYERS, volume, pitch);
+    }
+
     public static final Predicate<BlockState> oreCondition = s -> s.is(Tags.Blocks.ORES) || s.is(Tags.Blocks.CLUSTERS);
     public static final Predicate<BlockState> fallingBlockCondition = s -> s.getBlock() instanceof FallingBlock;
     public static final Predicate<BlockState> logCondition = s -> s.is(BlockTags.LOGS);

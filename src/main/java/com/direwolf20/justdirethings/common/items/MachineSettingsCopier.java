@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -55,11 +56,11 @@ public class MachineSettingsCopier extends Item {
         if (player.isShiftKeyDown()) { //Copy
             saveSettings(level, blockEntity, itemStack);
             player.sendOverlayMessage(Component.translatable("justdirethings.settingscopied"));
-            player.playSound(SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, 1.0F, 1.0F);
         } else { //Paste
             loadSettings(level, blockEntity, itemStack);
             player.sendOverlayMessage(Component.translatable("justdirethings.settingspasted"));
-            player.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
         }
 
         return InteractionResult.SUCCESS;

@@ -226,7 +226,7 @@ public class FluidCanister extends Item implements FluidContainingItem {
                     fluidHandler.insert(0, resource, 1000, tx);
                     tx.commit();
                 }
-                liquidBlock.getPickupSound().ifPresent(p_150709_ -> player.playSound(p_150709_, 1.0F, 1.0F));
+                liquidBlock.getPickupSound().ifPresent(p_150709_ -> com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, p_150709_, 1.0F, 1.0F));
                 if (!level.isClientSide()) {
                     CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, itemstack2);
                 }

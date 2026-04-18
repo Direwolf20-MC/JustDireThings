@@ -58,7 +58,7 @@ public class PortalGun extends BasePoweredItem implements PoweredItem {
     public static void spawnProjectile(Level level, Player player, ItemStack itemStack, boolean isPrimaryType) {
         if (!PoweredItem.consumeEnergy(itemStack, Config.PORTAL_GUN_V1_RF_COST.get())) {
             player.sendOverlayMessage(Component.translatable("justdirethings.lowenergy"));
-            player.playSound(SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
+            com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
             return;
         }
         PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType, false);

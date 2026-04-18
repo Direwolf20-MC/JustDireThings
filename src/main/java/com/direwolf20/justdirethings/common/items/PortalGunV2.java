@@ -104,7 +104,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
                     fluidHandler.insert(0, resource, 1000, tx);
                     tx.commit();
                 }
-                portalFluidBlock.getPickupSound().ifPresent(p_150709_ -> player.playSound(p_150709_, 1.0F, 1.0F));
+                portalFluidBlock.getPickupSound().ifPresent(p_150709_ -> com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, p_150709_, 1.0F, 1.0F));
                 if (!level.isClientSide()) {
                     CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, itemstack2);
                 }
@@ -120,12 +120,12 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
         int cost = calculateFluidCost((ServerLevel) level, player, portalDestination);
         if (!hasEnoughFluid(itemStack, cost)) {
             player.sendOverlayMessage(Component.translatable("justdirethings.lowportalfluid"));
-            player.playSound(SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
+            com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
             return;
         }
         if (!PoweredItem.consumeEnergy(itemStack, Config.PORTAL_GUN_V2_RF_COST.get())) {
             player.sendOverlayMessage(Component.translatable("justdirethings.lowenergy"));
-            player.playSound(SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
+            com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
             return;
         }
         PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType, true, portalDestination);

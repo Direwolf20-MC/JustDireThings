@@ -111,12 +111,12 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
         float failurePitch = 0.5F; // G# - lower pitch for failure sound
         if (!FluidContainingItem.hasEnoughFluid(itemStack, fluidCost)) {
             player.sendOverlayMessage(Component.translatable("justdirethings.lowtimefluid"));
-            player.playSound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1.0F, failurePitch);
+            com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1.0F, failurePitch);
             return false;
         }
         if (!PoweredItem.hasEnoughEnergy(itemStack, feCost)) {
             player.sendOverlayMessage(Component.translatable("justdirethings.lowenergy"));
-            player.playSound(SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1.0F, failurePitch);
+            com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, SoundEvents.NOTE_BLOCK_IRON_XYLOPHONE.value(), 1.0F, failurePitch);
             return false;
         }
         return true;
@@ -157,7 +157,7 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
                     fluidHandler.insert(0, resource, 1000, tx);
                     tx.commit();
                 }
-                timeFluidBlock.getPickupSound().ifPresent(p_150709_ -> player.playSound(p_150709_, 1.0F, 1.0F));
+                timeFluidBlock.getPickupSound().ifPresent(p_150709_ -> com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, p_150709_, 1.0F, 1.0F));
                 if (!level.isClientSide()) {
                     CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, itemstack2);
                 }

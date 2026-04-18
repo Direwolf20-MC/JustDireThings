@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.items;
 import com.direwolf20.justdirethings.common.blockentities.BlockSwapperT1BE;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -41,7 +42,7 @@ public class FerricoreWrench extends Item {
             return InteractionResult.PASS;
         removeBoundTo(itemstack);
         player.sendOverlayMessage(Component.translatable("justdirethings.bindremoved"));
-        player.playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
+        Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
 
         return InteractionResult.PASS;
     }
@@ -80,15 +81,15 @@ public class FerricoreWrench extends Item {
                 GlobalPos newBind = GlobalPos.of(level.dimension(), blockPos);
                 setBoundTo(itemStack, newBind);
                 player.sendOverlayMessage(Component.translatable("justdirethings.boundto", Component.translatable(newBind.dimension().identifier().getPath()), "[" + newBind.pos().toShortString() + "]"));
-                player.playSound(SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
+                Helpers.playSoundToAll(player, SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
             } else {
                 boolean bound = blockSwapperT1BE.handleConnection(boundPos);
                 if (bound) {
                     player.sendOverlayMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundPos.dimension().identifier().getPath()), "[" + boundPos.pos().toShortString() + "]"));
-                    player.playSound(SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
+                    Helpers.playSoundToAll(player, SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
                 } else {
                     player.sendOverlayMessage(Component.translatable("justdirethings.bindremoved"));
-                    player.playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
+                    Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
                 }
                 removeBoundTo(itemStack);
             }

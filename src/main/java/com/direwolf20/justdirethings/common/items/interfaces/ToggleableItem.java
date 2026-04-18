@@ -16,9 +16,9 @@ public interface ToggleableItem {
         boolean nowEnabled = stack.getOrDefault(JustDireDataComponents.TOOL_ENABLED, true);
         player.sendOverlayMessage(Component.translatable("justdirethings.toolenabled", stack.getDisplayName(), nowEnabled ? Component.translatable("justdirethings.enabled") : Component.translatable("justdirethings.disabled")));
         if (nowEnabled)
-            player.playSound(SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
         else
-            player.playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 0.5F);
+            Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 0.5F);
     }
 
     static ItemStack getToggleableItem(Player player) {

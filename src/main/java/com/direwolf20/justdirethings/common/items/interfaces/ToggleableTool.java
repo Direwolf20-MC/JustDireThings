@@ -23,7 +23,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -330,7 +329,7 @@ public interface ToggleableTool extends ToggleableItem {
                                 abilityCooldown.abilityName(), abilityParams.cooldown, false
                         );
                         abilityCooldowns.set(i, updatedCooldown);
-                        player.playSound(SoundEvents.CONDUIT_DEACTIVATE, 1.0F, 1.0F);
+                        Helpers.playSoundToAll(player, SoundEvents.CONDUIT_DEACTIVATE, 1.0F, 1.0F);
                         cooldownDataClear(itemStack, ability);
                     }
                 }
@@ -343,7 +342,7 @@ public interface ToggleableTool extends ToggleableItem {
         }
         for (ToolRecords.AbilityCooldown cooldown : cooldownsToRemove) {
             abilityCooldowns.remove(cooldown);
-            player.playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
         }
         if (abilityCooldowns.isEmpty())
             itemStack.remove(JustDireDataComponents.ABILITY_COOLDOWNS);
@@ -505,11 +504,11 @@ public interface ToggleableTool extends ToggleableItem {
         if (boundInventory != null && boundInventory.equals(newBind)) {
             removeBoundInventory(pStack);
             pContext.getPlayer().sendOverlayMessage(Component.translatable("justdirethings.bindremoved"));
-            player.playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
         } else {
             setBoundInventory(pStack, newBind);
             pContext.getPlayer().sendOverlayMessage(Component.translatable("justdirethings.boundto", Component.translatable(pLevel.dimension().identifier().getPath()), "[" + pPos.toShortString() + "]"));
-            player.playSound(SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
         }
         return true;
     }
@@ -533,7 +532,7 @@ public interface ToggleableTool extends ToggleableItem {
                                     gooSoilBE.bindInventory(boundInventory);
                                     gooSoilBE.invalidateHandler();
                                     pContext.getPlayer().sendOverlayMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundInventory.globalPos().dimension().identifier().getPath()), "[" + boundInventory.globalPos().pos().toShortString() + "]"));
-                                    player.playSound(SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
+                                    Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
                                     Helpers.damageTool(heldItem, player, Ability.DROPTELEPORT);
                                     bindingSuccess = true;
                                 }
@@ -541,7 +540,7 @@ public interface ToggleableTool extends ToggleableItem {
                         }
                         if (!bindingSuccess) {
                             pContext.getPlayer().sendOverlayMessage(Component.translatable("justdirethings.bindfailed").withStyle(ChatFormatting.RED));
-                            player.playSound(SoundEvents.ANVIL_BREAK, 1.0F, 1.0F);
+                            Helpers.playSoundToAll(player, SoundEvents.ANVIL_BREAK, 1.0F, 1.0F);
                         }
                     }
                 }
