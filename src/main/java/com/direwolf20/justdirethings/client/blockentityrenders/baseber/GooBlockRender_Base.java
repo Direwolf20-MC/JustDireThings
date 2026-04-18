@@ -144,32 +144,44 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         float startOfCurrentStage = tensDigit * PERCENT_DIVISOR;
         float stageFrac = (percentComplete - startOfCurrentStage) / PERCENT_DIVISOR; // 0..1 inside this stage
 
+        // Base scale & rotation shared by every stage-pass. Each stage then adds its own tiny
+        // outward nudge so its pattern stamps to a unique depth — that way each stage's real-block
+        // EQUAL-depth pass only paints its own silhouette instead of inheriting larger later stamps.
+        float baseScale = 1F + (float) state.tier / 1000F;
+        float baseTranslate = -(float) state.tier / 2000F;
+
+        // Prior completed stages render fully opaque so they "stay consumed". They sit slightly
+        // closer to the camera than the current stage (slot 1 vs slot 0), so their pattern stamp
+        // wins the LEQUAL depth test — the current-stage pattern only stamps the "ring" outside
+        // the prior silhouette, and its EQUAL-depth real-block pass can only paint that ring.
+        if (tensDigit > 0) {
+            submitStage(state, poseStack, collector, direction, tensDigit - 1, 1.0F, baseScale, baseTranslate, 1);
+        }
+        // Current stage fades in from transparent to opaque, confined to the delta silhouette.
+        submitStage(state, poseStack, collector, direction, tensDigit, stageFrac, baseScale, baseTranslate, 0);
+    }
+
+    private void submitStage(GooBlockRenderState state, PoseStack poseStack, SubmitNodeCollector collector,
+                             Direction direction, int stage, float alpha,
+                             float baseScale, float baseTranslate, int depthSlot) {
         poseStack.pushPose();
         // Offset to the direction we're crafting at (render on neighbor block).
         net.minecraft.core.Vec3i normal = direction.getUnitVec3i();
         poseStack.translate(normal.getX(), normal.getY(), normal.getZ());
-        // Slightly larger than a normal block to prevent z-fighting, scaled per tier.
-        float translateF = (float) state.tier / 2000F;
-        poseStack.translate(-translateF, -translateF, -translateF);
-        float scaleF = (float) state.tier / 1000F;
-        poseStack.scale(1F + scaleF, 1F + scaleF, 1F + scaleF);
+        // Per-stage depth slot: nudge outward by a small epsilon so prior vs current stage
+        // produce distinct depth values. The prior stage (slot 0) sits slightly farther out;
+        // the current stage (slot 1) is closer to the real block surface. Each pattern stamp
+        // therefore lands at its own Z, and the EQUAL-depth real-block pass for each stage
+        // only paints the pixels its own pattern stamped.
+        float slotEps = depthSlot * 0.0005F;
+        float translateF = baseTranslate - slotEps;
+        poseStack.translate(translateF, translateF, translateF);
+        float scaleF = baseScale + slotEps * 2F;
+        poseStack.scale(scaleF, scaleF, scaleF);
         // Rotate so pattern + real block align.
         poseStack.translate(0.5, 0.5, 0.5);
         poseStack.mulPose(direction.getRotation());
         poseStack.translate(-0.5, -0.5, -0.5);
-
-        // Prior completed stages render fully opaque so they "stay consumed".
-        if (tensDigit > 0) {
-            submitStage(state, poseStack, collector, tensDigit - 1, 1.0F);
-        }
-        // Current stage fades in from transparent to opaque.
-        submitStage(state, poseStack, collector, tensDigit, stageFrac);
-
-        poseStack.popPose();
-    }
-
-    private void submitStage(GooBlockRenderState state, PoseStack poseStack, SubmitNodeCollector collector,
-                             int stage, float alpha) {
         int alphaByte = Math.max(0, Math.min(255, Math.round(alpha * 255F)));
         int packedColor = (alphaByte << 24) | 0x00FFFFFF;
         BlockState patternState = JDTRegistration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, stage);
@@ -187,6 +199,8 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
             collector.submitCustomGeometry(poseStack, OurRenderTypes.RenderBlockBackface,
                     (pose, buffer) -> writeModelQuads(realParts, pose, buffer, packedColor, state.lightCoords));
         }
+
+        poseStack.popPose();
     }
 
     private static List<BlockStateModelPart> collectModelParts(BlockState state) {
