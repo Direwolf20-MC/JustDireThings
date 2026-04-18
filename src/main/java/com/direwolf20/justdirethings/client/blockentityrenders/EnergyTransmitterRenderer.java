@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.client.blockentityrenders;
 
 import com.direwolf20.justdirethings.client.blockentityrenders.baseber.AreaAffectingBER;
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 public class EnergyTransmitterRenderer extends AreaAffectingBER<EnergyTransmitterBE, EnergyTransmitterRenderer.EnergyTransmitterRenderState> {
-    public static final ItemStack itemStack = new ItemStack(Registration.Celestigem.get());
+    public static final ItemStack itemStack = new ItemStack(JDTRegistration.Celestigem.get());
 
     public static class EnergyTransmitterRenderState extends AreaAffectingRenderState {
         public Direction facing = Direction.UP;

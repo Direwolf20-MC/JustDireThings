@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.entities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,7 +39,7 @@ public class PortalProjectile extends Projectile {
     }
 
     public PortalProjectile(Level world, Player player, UUID portalGunUUID, boolean isPrimaryType, boolean isAdvanced) {
-        this(Registration.PortalProjectile.get(), world);
+        this(JDTRegistration.PortalProjectile.get(), world);
         setOwner(player);
         setPos(player.getEyePosition());
         this.portalGunUUID = portalGunUUID;
@@ -48,7 +48,7 @@ public class PortalProjectile extends Projectile {
     }
 
     public PortalProjectile(Level world, Player player, UUID portalGunUUID, boolean isPrimaryType, boolean isAdvanced, NBTHelpers.PortalDestination portalDestination) {
-        this(Registration.PortalProjectile.get(), world);
+        this(JDTRegistration.PortalProjectile.get(), world);
         setOwner(player);
         setPos(player.getEyePosition());
         this.portalGunUUID = portalGunUUID;
@@ -101,7 +101,7 @@ public class PortalProjectile extends Projectile {
     protected List<? extends PortalEntity> findMatchingPortal(MinecraftServer server, boolean isPrimaryType) {
         List<PortalEntity> returnList = new ArrayList<>();
         for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID) && k.getIsPrimary() == isPrimaryType);
+            List<? extends PortalEntity> customEntities = serverLevel.getEntities(JDTRegistration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID) && k.getIsPrimary() == isPrimaryType);
             if (!customEntities.isEmpty())
                 returnList.addAll(customEntities);
         }
@@ -110,7 +110,7 @@ public class PortalProjectile extends Projectile {
 
     public void closeMyPortals(MinecraftServer server) {
         for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
+            List<? extends PortalEntity> customEntities = serverLevel.getEntities(JDTRegistration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
 
             for (PortalEntity entity : customEntities) {
                 entity.setDying();

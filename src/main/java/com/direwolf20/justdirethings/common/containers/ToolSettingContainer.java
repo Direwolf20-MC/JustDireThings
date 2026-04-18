@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
 import com.direwolf20.justdirethings.common.items.PotionCanister;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -41,7 +41,7 @@ public class ToolSettingContainer extends BaseContainer {
     }
 
     public ToolSettingContainer(int windowId, Inventory playerInventory, Player player) {
-        super(Registration.Tool_Settings_Container.get(), windowId);
+        super(JDTRegistration.Tool_Settings_Container.get(), windowId);
         playerEntity = player;
 
         addPlayerSlots(playerInventory, 8, 84);

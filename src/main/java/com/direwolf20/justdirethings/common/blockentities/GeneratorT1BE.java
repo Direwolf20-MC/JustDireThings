@@ -10,7 +10,7 @@ import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -76,12 +76,12 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
     }
 
     public GeneratorT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.GeneratorT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.GeneratorT1BE.get(), pPos, pBlockState);
     }
 
     @Override
     public GeneratorItemHandler getMachineHandler() {
-        return getData(Registration.GENERATOR_ITEM_HANDLER);
+        return getData(JDTRegistration.GENERATOR_ITEM_HANDLER);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_GENERATORS);
+        return getData(JDTRegistration.ENERGYSTORAGE_GENERATORS);
     }
 
     @Override

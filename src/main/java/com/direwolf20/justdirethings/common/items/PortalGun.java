@@ -6,7 +6,7 @@ import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataCom
 import com.direwolf20.justdirethings.common.items.interfaces.BasePoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -48,7 +48,7 @@ public class PortalGun extends BasePoweredItem implements PoweredItem {
         UUID portalGunUUID = getUUID(itemStack);
         MinecraftServer server = level.getServer();
         for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getOwner() == player.getUUID() || k.getPortalGunUUID().equals(portalGunUUID));
+            List<? extends PortalEntity> customEntities = serverLevel.getEntities(JDTRegistration.PortalEntity.get(), k -> k.getOwner() == player.getUUID() || k.getPortalGunUUID().equals(portalGunUUID));
 
             for (PortalEntity entity : customEntities) {
                 entity.setDying();

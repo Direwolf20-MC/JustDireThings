@@ -1,10 +1,10 @@
 package com.direwolf20.justdirethings.common.fluids.xpfluid;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.world.level.block.LiquidBlock;
 
 public class XPFluidBlock extends LiquidBlock {
     public XPFluidBlock(Properties properties) {
-        super(Registration.XP_FLUID_SOURCE.get(), properties);
+        super(JDTRegistration.XP_FLUID_SOURCE.get(), properties);
     }
 }

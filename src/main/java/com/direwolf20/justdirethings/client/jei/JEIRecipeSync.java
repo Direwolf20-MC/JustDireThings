@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.client.jei;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -29,9 +29,9 @@ public class JEIRecipeSync {
     @SubscribeEvent
     public static void onDatapackSync(OnDatapackSyncEvent event) {
         event.sendRecipes(
-                Registration.GOO_SPREAD_RECIPE_TYPE.get(),
-                Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get(),
-                Registration.FLUID_DROP_RECIPE_TYPE.get()
+                JDTRegistration.GOO_SPREAD_RECIPE_TYPE.get(),
+                JDTRegistration.GOO_SPREAD_RECIPE_TYPE_TAG.get(),
+                JDTRegistration.FLUID_DROP_RECIPE_TYPE.get()
         );
     }
 

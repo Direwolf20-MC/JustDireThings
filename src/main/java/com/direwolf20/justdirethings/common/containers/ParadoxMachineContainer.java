@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,13 +16,13 @@ public class ParadoxMachineContainer extends BaseMachineContainer {
     }
 
     public ParadoxMachineContainer(int windowId, Inventory playerInventory, BlockPos blockPos) {
-        super(Registration.ParadoxMachine_Container.get(), windowId, playerInventory, blockPos);
+        super(JDTRegistration.ParadoxMachine_Container.get(), windowId, playerInventory, blockPos);
         addPlayerSlots(player.getInventory());
     }
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, Registration.ParadoxMachine.get());
+        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, JDTRegistration.ParadoxMachine.get());
     }
 
     @Override

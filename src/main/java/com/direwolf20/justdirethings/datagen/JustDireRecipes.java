@@ -4,20 +4,12 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
-import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipeBuilder;
-import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipeBuilder;
-import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
-import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeTagBuilder;
-import com.direwolf20.justdirethings.datagen.recipes.PaxelRecipeBuilder;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.datagen.recipes.*;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
-import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
@@ -45,7 +37,7 @@ public class JustDireRecipes extends RecipeProvider {
     @Override
     protected void buildRecipes() {
         //Goo Blocks
-        this.shaped(RecipeCategory.MISC, Registration.GooBlock_Tier1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.GooBlock_Tier1.get())
                 .pattern("csc")
                 .pattern("fdf")
                 .pattern("csc")
@@ -56,321 +48,321 @@ public class JustDireRecipes extends RecipeProvider {
                 .group("justdirethings")
                 .unlockedBy("has_coal", this.has(Items.COAL))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.GooBlock_Tier2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.GooBlock_Tier2.get())
                 .pattern("brb")
                 .pattern("wgw")
                 .pattern("brb")
-                .define('g', Registration.GooBlock_Tier1_ITEM.get())
+                .define('g', JDTRegistration.GooBlock_Tier1_ITEM.get())
                 .define('b', Items.BLAZE_POWDER)
                 .define('r', Tags.Items.DUSTS_REDSTONE)
                 .define('w', Items.NETHER_WART)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block1", this.has(Registration.GooBlock_Tier1_ITEM.get()))
+                .unlockedBy("has_goo_block1", this.has(JDTRegistration.GooBlock_Tier1_ITEM.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.GooBlock_Tier3.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.GooBlock_Tier3.get())
                 .pattern("brb")
                 .pattern("wgw")
                 .pattern("brb")
-                .define('g', Registration.GooBlock_Tier2_ITEM.get())
+                .define('g', JDTRegistration.GooBlock_Tier2_ITEM.get())
                 .define('b', Items.ENDER_PEARL)
                 .define('r', Items.END_STONE)
                 .define('w', Items.DRAGON_BREATH)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block2", this.has(Registration.GooBlock_Tier2_ITEM.get()))
+                .unlockedBy("has_goo_block2", this.has(JDTRegistration.GooBlock_Tier2_ITEM.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.GooBlock_Tier4.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.GooBlock_Tier4.get())
                 .pattern("brb")
                 .pattern("wgw")
                 .pattern("brb")
-                .define('g', Registration.GooBlock_Tier3_ITEM.get())
+                .define('g', JDTRegistration.GooBlock_Tier3_ITEM.get())
                 .define('b', Items.SCULK)
                 .define('r', Items.SCULK_SHRIEKER)
                 .define('w', Items.ECHO_SHARD)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block3", this.has(Registration.GooBlock_Tier3_ITEM.get()))
+                .unlockedBy("has_goo_block3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
 
         //Machines
-        this.shaped(RecipeCategory.MISC, Registration.ItemCollector.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.ItemCollector.get())
                 .pattern(" d ")
                 .pattern("heh")
                 .pattern("fff")
                 .define('e', Items.ENDER_PEARL)
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('d', Items.DIAMOND)
                 .define('h', Items.HOPPER)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.EnergyTransmitter.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EnergyTransmitter.get())
                 .pattern(" d ")
                 .pattern("heh")
                 .pattern("fff")
                 .define('e', Items.ENDER_PEARL)
-                .define('f', Registration.BlazegoldIngot.get())
-                .define('d', Registration.Celestigem.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
+                .define('d', JDTRegistration.Celestigem.get())
                 .define('h', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.ExperienceHolder.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.ExperienceHolder.get())
                 .pattern(" d ")
                 .pattern("heh")
                 .pattern("fff")
                 .define('e', Items.ENDER_PEARL)
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('d', Items.EMERALD)
                 .define('h', Items.BOOK)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlockBreakerT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlockBreakerT1.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.OBSERVER)
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('d', Items.DIAMOND)
                 .define('l', Items.LAPIS_LAZULI)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlockBreakerT2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlockBreakerT2.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.BlockBreakerT1_ITEM.get())
-                .define('f', Registration.Celestigem.get())
+                .define('o', JDTRegistration.BlockBreakerT1_ITEM.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlockPlacerT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlockPlacerT1.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.DISPENSER)
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('d', Items.DIAMOND)
                 .define('l', Items.LAPIS_LAZULI)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlockPlacerT2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlockPlacerT2.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.BlockPlacerT1_ITEM.get())
-                .define('f', Registration.Celestigem.get())
+                .define('o', JDTRegistration.BlockPlacerT1_ITEM.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.ClickerT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.ClickerT1.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.DISPENSER)
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('d', Items.ENDER_EYE)
                 .define('l', Items.LAPIS_LAZULI)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.ClickerT2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.ClickerT2.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.ClickerT1_ITEM.get())
-                .define('f', Registration.Celestigem.get())
+                .define('o', JDTRegistration.ClickerT1_ITEM.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.SensorT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.SensorT1.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.OBSERVER)
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('d', Items.ENDER_EYE)
                 .define('l', Items.LAPIS_LAZULI)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.SensorT2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.SensorT2.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.SensorT1_ITEM.get())
-                .define('f', Registration.Celestigem.get())
+                .define('o', JDTRegistration.SensorT1_ITEM.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.DropperT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.DropperT1.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.DROPPER)
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('d', Items.REDSTONE)
                 .define('l', Items.LAPIS_LAZULI)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.DropperT2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.DropperT2.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.DropperT1_ITEM.get())
-                .define('f', Registration.Celestigem.get())
+                .define('o', JDTRegistration.DropperT1_ITEM.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.GeneratorT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.GeneratorT1.get())
                 .pattern("iri")
                 .pattern("cfc")
                 .pattern("iri")
-                .define('i', Registration.FerricoreIngot.get())
+                .define('i', JDTRegistration.FerricoreIngot.get())
                 .define('c', Items.COAL)
                 .define('r', Items.REDSTONE)
                 .define('f', Items.BLAST_FURNACE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.GeneratorFluidT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.GeneratorFluidT1.get())
                 .pattern("grg")
                 .pattern("bfb")
                 .pattern("grg")
-                .define('g', Registration.BlazegoldIngot.get())
+                .define('g', JDTRegistration.BlazegoldIngot.get())
                 .define('b', Items.BUCKET)
                 .define('r', Items.REDSTONE)
                 .define('f', Items.BLAST_FURNACE)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlockSwapperT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlockSwapperT1.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.OBSERVER)
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('d', Items.ENDER_EYE)
                 .define('l', Items.LAPIS_LAZULI)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlockSwapperT2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlockSwapperT2.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.BlockSwapperT1_ITEM.get())
-                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('o', JDTRegistration.BlockSwapperT1_ITEM.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.PlayerAccessor.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.PlayerAccessor.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.DISPENSER)
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('d', Items.ENDER_EYE)
                 .define('l', Items.ENDER_PEARL)
                 .define('r', Items.LAPIS_LAZULI)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.InventoryHolder.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.InventoryHolder.get())
                 .pattern(" f ")
                 .pattern("fof")
                 .pattern(" f ")
                 .define('o', Items.ARMOR_STAND)
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FluidPlacerT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FluidPlacerT1.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.DROPPER)
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('d', Items.BUCKET)
                 .define('l', Items.LAPIS_LAZULI)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FluidPlacerT2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FluidPlacerT2.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.FluidPlacerT1_ITEM.get())
-                .define('f', Registration.Celestigem.get())
+                .define('o', JDTRegistration.FluidPlacerT1_ITEM.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FluidCollectorT1.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FluidCollectorT1.get())
                 .pattern("fdf")
                 .pattern("lol")
                 .pattern("frf")
                 .define('o', Items.DISPENSER)
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('d', Items.BUCKET)
                 .define('l', Items.LAPIS_LAZULI)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FluidCollectorT2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FluidCollectorT2.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.FluidCollectorT1_ITEM.get())
-                .define('f', Registration.Celestigem.get())
+                .define('o', JDTRegistration.FluidCollectorT1_ITEM.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('d', Items.ENDER_EYE)
                 .define('r', Items.REDSTONE)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.ParadoxMachine.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.ParadoxMachine.get())
                 .pattern("fdf")
                 .pattern("dod")
                 .pattern("frf")
-                .define('o', Registration.TimeCrystalBlock.get())
-                .define('f', Registration.EclipseAlloyIngot.get())
-                .define('d', Registration.TimeCrystal.get())
-                .define('r', Registration.TIME_FLUID_BUCKET.get())
+                .define('o', JDTRegistration.TimeCrystalBlock.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
+                .define('d', JDTRegistration.TimeCrystal.get())
+                .define('r', JDTRegistration.TIME_FLUID_BUCKET.get())
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
 
         //Resource
-        this.shapeless(RecipeCategory.MISC, Registration.PolymorphicCatalyst.get(), 4)
-                .requires(Registration.BlazegoldIngot.get())
+        this.shapeless(RecipeCategory.MISC, JDTRegistration.PolymorphicCatalyst.get(), 4)
+                .requires(JDTRegistration.BlazegoldIngot.get())
                 .requires(Items.NETHER_WART)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.PortalFluidCatalyst.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.PortalFluidCatalyst.get())
                 .pattern(" c ")
                 .pattern("clc")
                 .pattern(" c ")
@@ -381,1257 +373,1257 @@ public class JustDireRecipes extends RecipeProvider {
                 .save(this.output);
 
         //Items
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreWrench.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreWrench.get())
                 .pattern(" i ")
                 .pattern(" ii")
                 .pattern("i  ")
-                .define('i', Registration.FerricoreIngot.get())
+                .define('i', JDTRegistration.FerricoreIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.TotemOfDeathRecall.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.TotemOfDeathRecall.get())
                 .pattern("bdb")
                 .pattern("lel")
                 .pattern("bdb")
-                .define('b', Registration.BlazegoldIngot.get())
+                .define('b', JDTRegistration.BlazegoldIngot.get())
                 .define('e', Items.ENDER_PEARL)
                 .define('d', Items.DIAMOND)
                 .define('l', Items.LAPIS_LAZULI)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.Fuel_Canister.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.Fuel_Canister.get())
                 .pattern(" i ")
                 .pattern("ici")
                 .pattern(" i ")
-                .define('i', Registration.FerricoreIngot.get())
+                .define('i', JDTRegistration.FerricoreIngot.get())
                 .define('c', Items.COAL)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FluidCanister.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FluidCanister.get())
                 .pattern(" i ")
                 .pattern("igi")
                 .pattern(" i ")
-                .define('i', Registration.FerricoreIngot.get())
+                .define('i', JDTRegistration.FerricoreIngot.get())
                 .define('g', Items.GLASS)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.PotionCanister.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.PotionCanister.get())
                 .pattern(" i ")
                 .pattern("igi")
                 .pattern(" i ")
-                .define('i', Registration.FerricoreIngot.get())
+                .define('i', JDTRegistration.FerricoreIngot.get())
                 .define('g', Items.GLASS_BOTTLE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.Pocket_Generator.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.Pocket_Generator.get())
                 .pattern("iri")
                 .pattern("cfc")
                 .pattern("iri")
-                .define('i', Registration.FerricoreIngot.get())
+                .define('i', JDTRegistration.FerricoreIngot.get())
                 .define('c', Items.COAL)
                 .define('r', Items.REDSTONE_BLOCK)
                 .define('f', Items.FURNACE)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlazejetWand.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazejetWand.get())
                 .pattern("  b")
                 .pattern(" i ")
                 .pattern("i  ")
-                .define('i', Registration.FerricoreIngot.get())
-                .define('b', Registration.BlazegoldIngot.get())
+                .define('i', JDTRegistration.FerricoreIngot.get())
+                .define('b', JDTRegistration.BlazegoldIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.VoidshiftWand.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.VoidshiftWand.get())
                 .pattern("  c")
                 .pattern(" w ")
                 .pattern("b  ")
-                .define('b', Registration.BlazegoldIngot.get())
-                .define('w', Registration.BlazejetWand.get())
-                .define('c', Registration.Celestigem.get())
+                .define('b', JDTRegistration.BlazegoldIngot.get())
+                .define('w', JDTRegistration.BlazejetWand.get())
+                .define('c', JDTRegistration.Celestigem.get())
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.EclipsegateWand.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipsegateWand.get())
                 .pattern("  e")
                 .pattern(" w ")
                 .pattern("c  ")
-                .define('e', Registration.EclipseAlloyIngot.get())
-                .define('w', Registration.VoidshiftWand.get())
-                .define('c', Registration.Celestigem.get())
+                .define('e', JDTRegistration.EclipseAlloyIngot.get())
+                .define('w', JDTRegistration.VoidshiftWand.get())
+                .define('c', JDTRegistration.Celestigem.get())
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.PolymorphicWand.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.PolymorphicWand.get())
                 .pattern("  b")
                 .pattern(" r ")
                 .pattern("i  ")
-                .define('i', Registration.BlazegoldIngot.get())
-                .define('r', Registration.PolymorphicCatalyst.get())
-                .define('b', Registration.FluidCanister.get())
+                .define('i', JDTRegistration.BlazegoldIngot.get())
+                .define('r', JDTRegistration.PolymorphicCatalyst.get())
+                .define('b', JDTRegistration.FluidCanister.get())
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.PolymorphicWandV2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.PolymorphicWandV2.get())
                 .pattern("  b")
                 .pattern(" r ")
                 .pattern("i  ")
-                .define('i', Registration.Celestigem.get())
-                .define('r', Registration.PolymorphicWand.get())
-                .define('b', Registration.EclipseAlloyIngot.get())
+                .define('i', JDTRegistration.Celestigem.get())
+                .define('r', JDTRegistration.PolymorphicWand.get())
+                .define('b', JDTRegistration.EclipseAlloyIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.TimeWand.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.TimeWand.get())
                 .pattern(" bt")
                 .pattern(" ib")
                 .pattern("i  ")
-                .define('i', Registration.FerricoreIngot.get())
-                .define('b', Registration.BlazegoldIngot.get())
-                .define('t', Registration.TimeCrystal.get())
+                .define('i', JDTRegistration.FerricoreIngot.get())
+                .define('b', JDTRegistration.BlazegoldIngot.get())
+                .define('t', JDTRegistration.TimeCrystal.get())
                 .group("justdirethings")
-                .unlockedBy("has_time_crystal", this.has(Registration.TimeCrystal.get()))
+                .unlockedBy("has_time_crystal", this.has(JDTRegistration.TimeCrystal.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.CreatureCatcher.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CreatureCatcher.get())
                 .pattern(" b ")
                 .pattern("beb")
                 .pattern(" b ")
-                .define('b', Registration.BlazegoldIngot.get())
+                .define('b', JDTRegistration.BlazegoldIngot.get())
                 .define('e', Items.ENDER_PEARL)
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.MachineSettingsCopier.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.MachineSettingsCopier.get())
                 .pattern("  c")
                 .pattern(" p ")
                 .pattern("f  ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('p', Items.PAPER)
-                .define('c', Registration.Coal_T1.get())
+                .define('c', JDTRegistration.Coal_T1.get())
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.PortalGun.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.PortalGun.get())
                 .pattern(" bb")
                 .pattern("beb")
                 .pattern("b  ")
                 .define('e', Items.ENDER_EYE)
-                .define('b', Registration.BlazegoldIngot.get())
+                .define('b', JDTRegistration.BlazegoldIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.PortalGunV2.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.PortalGunV2.get())
                 .pattern(" bc")
                 .pattern("beb")
                 .pattern("bf ")
-                .define('e', Registration.PortalFluidCatalyst.get())
-                .define('b', Registration.BlazegoldIngot.get())
-                .define('c', Registration.Celestigem.get())
-                .define('f', Registration.FluidCanister.get())
+                .define('e', JDTRegistration.PortalFluidCatalyst.get())
+                .define('b', JDTRegistration.BlazegoldIngot.get())
+                .define('c', JDTRegistration.Celestigem.get())
+                .define('f', JDTRegistration.FluidCanister.get())
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
 
         //Upgrades
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_BASE.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_BASE.get())
                 .pattern(" f ")
                 .pattern("f f")
                 .pattern(" f ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.TEMPLATE_FERRICORE.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.TEMPLATE_FERRICORE.get())
                 .pattern("f f")
                 .pattern("fbf")
                 .pattern(" f ")
-                .define('b', Registration.UPGRADE_BASE.get())
-                .define('f', Registration.FerricoreIngot.get())
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shapeless(RecipeCategory.MISC, Registration.TEMPLATE_FERRICORE.get(), 2)
-                .requires(Registration.TEMPLATE_FERRICORE.get())
-                .requires(Registration.FerricoreIngot.get(), 2)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
-                .save(this.output, idPath(Registration.TEMPLATE_FERRICORE.get()) + "-duplicate");
-        this.shaped(RecipeCategory.MISC, Registration.TEMPLATE_BLAZEGOLD.get())
+        this.shapeless(RecipeCategory.MISC, JDTRegistration.TEMPLATE_FERRICORE.get(), 2)
+                .requires(JDTRegistration.TEMPLATE_FERRICORE.get())
+                .requires(JDTRegistration.FerricoreIngot.get(), 2)
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
+                .save(this.output, idPath(JDTRegistration.TEMPLATE_FERRICORE.get()) + "-duplicate");
+        this.shaped(RecipeCategory.MISC, JDTRegistration.TEMPLATE_BLAZEGOLD.get())
                 .pattern("f f")
                 .pattern("fbf")
                 .pattern(" f ")
-                .define('b', Registration.UPGRADE_BASE.get())
-                .define('f', Registration.BlazegoldIngot.get())
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shapeless(RecipeCategory.MISC, Registration.TEMPLATE_BLAZEGOLD.get(), 2)
-                .requires(Registration.TEMPLATE_BLAZEGOLD.get())
-                .requires(Registration.BlazegoldIngot.get(), 2)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
-                .save(this.output, idPath(Registration.TEMPLATE_BLAZEGOLD.get()) + "-duplicate");
-        this.shaped(RecipeCategory.MISC, Registration.TEMPLATE_CELESTIGEM.get())
+        this.shapeless(RecipeCategory.MISC, JDTRegistration.TEMPLATE_BLAZEGOLD.get(), 2)
+                .requires(JDTRegistration.TEMPLATE_BLAZEGOLD.get())
+                .requires(JDTRegistration.BlazegoldIngot.get(), 2)
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
+                .save(this.output, idPath(JDTRegistration.TEMPLATE_BLAZEGOLD.get()) + "-duplicate");
+        this.shaped(RecipeCategory.MISC, JDTRegistration.TEMPLATE_CELESTIGEM.get())
                 .pattern("f f")
                 .pattern("fbf")
                 .pattern(" f ")
-                .define('b', Registration.UPGRADE_BASE.get())
-                .define('f', Registration.Celestigem.get())
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
+                .define('f', JDTRegistration.Celestigem.get())
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shapeless(RecipeCategory.MISC, Registration.TEMPLATE_CELESTIGEM.get(), 2)
-                .requires(Registration.TEMPLATE_CELESTIGEM.get())
-                .requires(Registration.Celestigem.get(), 2)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
-                .save(this.output, idPath(Registration.TEMPLATE_CELESTIGEM.get()) + "-duplicate");
-        this.shaped(RecipeCategory.MISC, Registration.TEMPLATE_ECLIPSEALLOY.get())
+        this.shapeless(RecipeCategory.MISC, JDTRegistration.TEMPLATE_CELESTIGEM.get(), 2)
+                .requires(JDTRegistration.TEMPLATE_CELESTIGEM.get())
+                .requires(JDTRegistration.Celestigem.get(), 2)
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
+                .save(this.output, idPath(JDTRegistration.TEMPLATE_CELESTIGEM.get()) + "-duplicate");
+        this.shaped(RecipeCategory.MISC, JDTRegistration.TEMPLATE_ECLIPSEALLOY.get())
                 .pattern("f f")
                 .pattern("fbf")
                 .pattern(" f ")
-                .define('b', Registration.UPGRADE_BASE.get())
-                .define('f', Registration.EclipseAlloyIngot.get())
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shapeless(RecipeCategory.MISC, Registration.TEMPLATE_ECLIPSEALLOY.get(), 2)
-                .requires(Registration.TEMPLATE_ECLIPSEALLOY.get())
-                .requires(Registration.EclipseAlloyIngot.get(), 2)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
-                .save(this.output, idPath(Registration.TEMPLATE_ECLIPSEALLOY.get()) + "-duplicate");
-        this.shapeless(RecipeCategory.MISC, Registration.UPGRADE_ELYTRA.get())
-                .requires(Registration.UPGRADE_BASE.get())
+        this.shapeless(RecipeCategory.MISC, JDTRegistration.TEMPLATE_ECLIPSEALLOY.get(), 2)
+                .requires(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get())
+                .requires(JDTRegistration.EclipseAlloyIngot.get(), 2)
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
+                .save(this.output, idPath(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()) + "-duplicate");
+        this.shapeless(RecipeCategory.MISC, JDTRegistration.UPGRADE_ELYTRA.get())
+                .requires(JDTRegistration.UPGRADE_BASE.get())
                 .requires(Items.ELYTRA)
                 .group("justdirethings")
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_DEATHPROTECTION.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_DEATHPROTECTION.get())
                 .pattern("tet")
                 .pattern("fbf")
                 .pattern("tet")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.TOTEM_OF_UNDYING)
                 .define('e', Items.EMERALD)
-                .define('t', Registration.TimeCrystal.get())
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .define('t', JDTRegistration.TimeCrystal.get())
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_DEBUFFREMOVER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_DEBUFFREMOVER.get())
                 .pattern("mem")
                 .pattern("fbf")
                 .pattern("mem")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.GOLDEN_APPLE)
                 .define('m', Items.MILK_BUCKET)
                 .define('e', Items.HONEY_BOTTLE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_MOBSCANNER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_MOBSCANNER.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.AMETHYST_SHARD)
                 .define('e', Items.SPIDER_EYE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_OREMINER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_OREMINER.get())
                 .pattern("   ")
                 .pattern("fbf")
                 .pattern("   ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.IRON_PICKAXE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_ORESCANNER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_ORESCANNER.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.AMETHYST_SHARD)
                 .define('e', Items.REDSTONE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_LAWNMOWER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_LAWNMOWER.get())
                 .pattern("   ")
                 .pattern("fbf")
                 .pattern("   ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.SHORT_GRASS)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_SKYSWEEPER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_SKYSWEEPER.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.GRAVEL)
                 .define('e', Items.SAND)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_LEAFBREAKER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_LEAFBREAKER.get())
                 .pattern("   ")
                 .pattern("fbf")
                 .pattern("   ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', this.tag(ItemTags.LEAVES))
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_RUNSPEED.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_RUNSPEED.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.SUGAR)
                 .define('e', Items.POTATO)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_WALKSPEED.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_WALKSPEED.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.SUGAR)
                 .define('e', Items.CARROT)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_STEPHEIGHT.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_STEPHEIGHT.get())
                 .pattern(" f ")
                 .pattern("fbf")
                 .pattern(" f ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.LADDER)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_JUMPBOOST.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_JUMPBOOST.get())
                 .pattern("   ")
                 .pattern("fbf")
                 .pattern("   ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.PISTON)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_MINDFOG.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_MINDFOG.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.FERMENTED_SPIDER_EYE)
                 .define('e', Items.LAPIS_LAZULI)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_INVULNERABILITY.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_INVULNERABILITY.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.DIAMOND_CHESTPLATE)
                 .define('e', Items.SHIELD)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_TREEFELLER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_TREEFELLER.get())
                 .pattern("   ")
                 .pattern("fbf")
                 .pattern("   ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.DIAMOND_AXE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_SMELTER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_SMELTER.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.BLAST_FURNACE)
                 .define('e', Items.BLAZE_ROD)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_SMOKER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_SMOKER.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.SMOKER)
                 .define('e', Items.BLAZE_ROD)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_HAMMER.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_HAMMER.get())
                 .pattern("   ")
                 .pattern("fbf")
                 .pattern("   ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.DIAMOND_PICKAXE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_CAUTERIZEWOUNDS.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_CAUTERIZEWOUNDS.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.MAGMA_CREAM)
                 .define('e', Items.GOLDEN_APPLE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_SWIMSPEED.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_SWIMSPEED.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.SUGAR)
                 .define('e', Items.KELP)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_WATERBREATHING.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_WATERBREATHING.get())
                 .pattern("fep")
                 .pattern("gbg")
                 .pattern("pef")
-                .define('b', Registration.UPGRADE_BASE.get())
-                .define('g', Registration.BlazegoldIngot.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
+                .define('g', JDTRegistration.BlazegoldIngot.get())
                 .define('f', Items.PRISMARINE_SHARD)
                 .define('p', Items.PUFFERFISH)
                 .define('e', Items.KELP)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_GROUNDSTOMP.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_GROUNDSTOMP.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.SLIME_BLOCK)
                 .define('e', Items.PISTON)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_EXTINGUISH.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_EXTINGUISH.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.WATER_BUCKET)
                 .define('e', Items.BLAZE_ROD)
                 .define('a', Items.MAGMA_CREAM)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_STUPEFY.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_STUPEFY.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.FERMENTED_SPIDER_EYE)
                 .define('e', Items.POISONOUS_POTATO)
                 .define('a', Items.ENDER_EYE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_DROPTELEPORT.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_DROPTELEPORT.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.AMETHYST_SHARD)
                 .define('e', Items.ENDER_CHEST)
                 .define('a', Items.ENDER_PEARL)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_NEGATEFALLDAMAGE.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_NEGATEFALLDAMAGE.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', this.tag(ItemTags.WOOL))
                 .define('e', Items.LEATHER)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_NIGHTVISION.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_NIGHTVISION.get())
                 .pattern(" e ")
                 .pattern("fbf")
                 .pattern(" e ")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.GOLDEN_CARROT)
                 .define('e', Items.ENDER_EYE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_DECOY.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_DECOY.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.ARMOR_STAND)
                 .define('e', Items.WITHER_SKELETON_SKULL)
                 .define('a', Items.PHANTOM_MEMBRANE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_OREXRAY.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_OREXRAY.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.SCULK_SHRIEKER)
                 .define('e', Items.CALIBRATED_SCULK_SENSOR)
                 .define('a', Items.ENDER_EYE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_GLOWING.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_GLOWING.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.SCULK_SHRIEKER)
                 .define('e', Items.CALIBRATED_SCULK_SENSOR)
                 .define('a', Items.END_ROD)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_INSTABREAK.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_INSTABREAK.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.NETHERITE_PICKAXE)
                 .define('e', Items.NETHER_STAR)
-                .define('a', Registration.TimeCrystal.get())
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .define('a', JDTRegistration.TimeCrystal.get())
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_EARTHQUAKE.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_EARTHQUAKE.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.STICKY_PISTON)
                 .define('e', Items.FERMENTED_SPIDER_EYE)
                 .define('a', Items.SOUL_SAND)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_NOAI.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_NOAI.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
-                .define('f', Registration.TimeCrystal.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
+                .define('f', JDTRegistration.TimeCrystal.get())
                 .define('e', Items.END_ROD)
                 .define('a', Items.CALIBRATED_SCULK_SENSOR)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_FLIGHT.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_FLIGHT.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.FEATHER)
                 .define('e', Items.END_CRYSTAL)
                 .define('a', Items.PHANTOM_MEMBRANE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_LAVAIMMUNITY.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_LAVAIMMUNITY.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.MAGMA_CREAM)
                 .define('e', Items.LAVA_BUCKET)
                 .define('a', Items.NETHERITE_SCRAP)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_PHASE.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_PHASE.get())
                 .pattern("aea")
                 .pattern("fbf")
                 .pattern("aea")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('f', Items.DRAGON_BREATH)
                 .define('e', Items.PHANTOM_MEMBRANE)
                 .define('a', Items.SHULKER_SHELL)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_TIMEPROTECTION.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_TIMEPROTECTION.get())
                 .pattern(" s ")
                 .pattern("fbf")
                 .pattern(" s ")
-                .define('b', Registration.UPGRADE_BASE.get())
-                .define('f', Registration.TimeCrystal.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
+                .define('f', JDTRegistration.TimeCrystal.get())
                 .define('s', Items.SHIELD)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_SPLASH.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_SPLASH.get())
                 .pattern("p p")
                 .pattern("gbg")
                 .pattern("p p")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('g', Items.GLASS_BOTTLE)
                 .define('p', Items.GUNPOWDER)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_LINGERING.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_LINGERING.get())
                 .pattern("p p")
                 .pattern("gbg")
                 .pattern("p p")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('g', Items.GLASS_BOTTLE)
                 .define('p', Items.DRAGON_BREATH)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_POTIONARROW.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_POTIONARROW.get())
                 .pattern("p p")
                 .pattern("gbg")
                 .pattern("p p")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('g', Items.GLASS_BOTTLE)
                 .define('p', Items.NETHER_WART)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_HOMING.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_HOMING.get())
                 .pattern("p p")
                 .pattern("gbg")
                 .pattern("p p")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('g', Items.TARGET)
                 .define('p', Items.ENDER_EYE)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.UPGRADE_EPICARROW.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.UPGRADE_EPICARROW.get())
                 .pattern("psp")
                 .pattern("gbg")
                 .pattern("psp")
-                .define('b', Registration.UPGRADE_BASE.get())
+                .define('b', JDTRegistration.UPGRADE_BASE.get())
                 .define('g', Items.PHANTOM_MEMBRANE)
                 .define('p', Items.ENDER_EYE)
                 .define('s', Items.NETHER_STAR)
-                .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                 .save(this.output);
 
         //GooSpread Recipes
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), Registration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), JDTRegistration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t1", this.has(Registration.GooBlock_Tier1_ITEM.get()))
+                .unlockedBy("has_goo_block_t1", this.has(JDTRegistration.GooBlock_Tier1_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), Registration.RawBlazegoldOre.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), JDTRegistration.RawBlazegoldOre.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t2", this.has(Registration.GooBlock_Tier2_ITEM.get()))
+                .unlockedBy("has_goo_block_t2", this.has(JDTRegistration.GooBlock_Tier2_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_diamond_block"), Blocks.DIAMOND_BLOCK.defaultBlockState(), Registration.RawCelestigemOre.get().defaultBlockState(), 3, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_diamond_block"), Blocks.DIAMOND_BLOCK.defaultBlockState(), JDTRegistration.RawCelestigemOre.get().defaultBlockState(), 3, 4800)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t3", this.has(Registration.GooBlock_Tier3_ITEM.get()))
+                .unlockedBy("has_goo_block_t3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_netherite_block"), Blocks.NETHERITE_BLOCK.defaultBlockState(), Registration.RawEclipseAlloyOre.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_netherite_block"), Blocks.NETHERITE_BLOCK.defaultBlockState(), JDTRegistration.RawEclipseAlloyOre.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t4", this.has(Registration.GooBlock_Tier4_ITEM.get()))
+                .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output);
 
         //GooSpread Coal
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), Blocks.COAL_BLOCK.defaultBlockState(), Registration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), Blocks.COAL_BLOCK.defaultBlockState(), JDTRegistration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t1", this.has(Registration.GooBlock_Tier1_ITEM.get()))
+                .unlockedBy("has_goo_block_t1", this.has(JDTRegistration.GooBlock_Tier1_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeTagBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), new BlockTagIngredient(ModTags.Blocks.CHARCOAL), Registration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeTagBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), new BlockTagIngredient(ModTags.Blocks.CHARCOAL), JDTRegistration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t1", this.has(Registration.GooBlock_Tier1_ITEM.get()))
+                .unlockedBy("has_goo_block_t1", this.has(JDTRegistration.GooBlock_Tier1_ITEM.get()))
                 .save(this.output);
 
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t2"), Registration.CoalBlock_T1.get().defaultBlockState(), Registration.RawCoal_T2.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t2"), JDTRegistration.CoalBlock_T1.get().defaultBlockState(), JDTRegistration.RawCoal_T2.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t2", this.has(Registration.GooBlock_Tier2_ITEM.get()))
+                .unlockedBy("has_goo_block_t2", this.has(JDTRegistration.GooBlock_Tier2_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t3"), Registration.CoalBlock_T2.get().defaultBlockState(), Registration.RawCoal_T3.get().defaultBlockState(), 3, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t3"), JDTRegistration.CoalBlock_T2.get().defaultBlockState(), JDTRegistration.RawCoal_T3.get().defaultBlockState(), 3, 4800)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t3", this.has(Registration.GooBlock_Tier3_ITEM.get()))
+                .unlockedBy("has_goo_block_t3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t4"), Registration.CoalBlock_T3.get().defaultBlockState(), Registration.RawCoal_T4.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t4"), JDTRegistration.CoalBlock_T3.get().defaultBlockState(), JDTRegistration.RawCoal_T4.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t4", this.has(Registration.GooBlock_Tier4_ITEM.get()))
+                .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output);
 
         //GooSpread Misc
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "portal_fluid"), Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), Registration.PORTAL_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "portal_fluid"), JDTRegistration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PORTAL_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t3", this.has(Registration.GooBlock_Tier3_ITEM.get()))
+                .unlockedBy("has_goo_block_t3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t2_fluid"), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t2_fluid"), JDTRegistration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t2", this.has(Registration.GooBlock_Tier2_ITEM.get()))
+                .unlockedBy("has_goo_block_t2", this.has(JDTRegistration.GooBlock_Tier2_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t3_fluid"), Registration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t3_fluid"), JDTRegistration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t3", this.has(Registration.GooBlock_Tier3_ITEM.get()))
+                .unlockedBy("has_goo_block_t3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t4_fluid"), Registration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), Registration.REFINED_T4_FLUID_BLOCK.get().defaultBlockState(), 4, 2400)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t4_fluid"), JDTRegistration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T4_FLUID_BLOCK.get().defaultBlockState(), 4, 2400)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t4", this.has(Registration.GooBlock_Tier4_ITEM.get()))
+                .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"), Blocks.BUDDING_AMETHYST.defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"), Blocks.BUDDING_AMETHYST.defaultBlockState(), JDTRegistration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t4", this.has(Registration.GooBlock_Tier4_ITEM.get()))
+                .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output, "budding_time_amethyst");
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"), Registration.TimeCrystalBlock.get().defaultBlockState(), Registration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"), JDTRegistration.TimeCrystalBlock.get().defaultBlockState(), JDTRegistration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
-                .unlockedBy("has_goo_block_t4", this.has(Registration.GooBlock_Tier4_ITEM.get()))
+                .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output, "budding_time_timeblock");
 
         //FluidDrop Recipes
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.PolymorphicCatalyst.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PolymorphicCatalyst.get())
                 .group("justdirethings")
-                .unlockedBy("has_polymorphic_catalyst", this.has(Registration.PolymorphicCatalyst.get()))
+                .unlockedBy("has_polymorphic_catalyst", this.has(JDTRegistration.PolymorphicCatalyst.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unstable_portal_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), Registration.PortalFluidCatalyst.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unstable_portal_fluid"), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PortalFluidCatalyst.get())
                 .group("justdirethings")
-                .unlockedBy("has_portal_catalyst", this.has(Registration.PortalFluidCatalyst.get()))
+                .unlockedBy("has_portal_catalyst", this.has(JDTRegistration.PortalFluidCatalyst.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t2_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T2.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t2_fluid"), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T2.get())
                 .group("justdirethings")
-                .unlockedBy("has_coal_t2", this.has(Registration.Coal_T2.get()))
+                .unlockedBy("has_coal_t2", this.has(JDTRegistration.Coal_T2.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t3_fluid"), Registration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T3.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t3_fluid"), JDTRegistration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T3.get())
                 .group("justdirethings")
-                .unlockedBy("has_coal_t3", this.has(Registration.Coal_T3.get()))
+                .unlockedBy("has_coal_t3", this.has(JDTRegistration.Coal_T3.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t4_fluid"), Registration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), Registration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), Registration.Coal_T4.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t4_fluid"), JDTRegistration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T4.get())
                 .group("justdirethings")
-                .unlockedBy("has_coal_t4", this.has(Registration.Coal_T4.get()))
+                .unlockedBy("has_coal_t4", this.has(JDTRegistration.Coal_T4.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "time_fluid"), Registration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), Registration.TIME_FLUID_BLOCK.get().defaultBlockState(), Registration.TimeCrystal.get())
+        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "time_fluid"), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.TIME_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.TimeCrystal.get())
                 .group("justdirethings")
-                .unlockedBy("has_time_crystal", this.has(Registration.TimeCrystal.get()))
+                .unlockedBy("has_time_crystal", this.has(JDTRegistration.TimeCrystal.get()))
                 .save(this.output);
 
         //Smelting
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
-                        Registration.FerricoreIngot.get(), 1.0f, 200)
-                .unlockedBy("has_ferricore_raw", this.has(Registration.RawFerricore.get()))
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(JDTRegistration.RawFerricore.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                        JDTRegistration.FerricoreIngot.get(), 1.0f, 200)
+                .unlockedBy("has_ferricore_raw", this.has(JDTRegistration.RawFerricore.get()))
                 .save(this.output, "ferricore_ingot_smelted");
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawBlazegold.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
-                        Registration.BlazegoldIngot.get(), 1.0f, 200)
-                .unlockedBy("has_blazegold_raw", this.has(Registration.RawBlazegold.get()))
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(JDTRegistration.RawBlazegold.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                        JDTRegistration.BlazegoldIngot.get(), 1.0f, 200)
+                .unlockedBy("has_blazegold_raw", this.has(JDTRegistration.RawBlazegold.get()))
                 .save(this.output, "blazegold_ingot_smelted");
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(Registration.RawEclipseAlloy.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
-                        Registration.EclipseAlloyIngot.get(), 1.0f, 200)
-                .unlockedBy("has_eclipsealloy_raw", this.has(Registration.RawEclipseAlloy.get()))
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(JDTRegistration.RawEclipseAlloy.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                        JDTRegistration.EclipseAlloyIngot.get(), 1.0f, 200)
+                .unlockedBy("has_eclipsealloy_raw", this.has(JDTRegistration.RawEclipseAlloy.get()))
                 .save(this.output, "eclipsealloy_ingot_smelted");
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawFerricore.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
-                        Registration.FerricoreIngot.get(), 1.0f, 100)
-                .unlockedBy("has_ferricore_raw", this.has(Registration.RawFerricore.get()))
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(JDTRegistration.RawFerricore.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                        JDTRegistration.FerricoreIngot.get(), 1.0f, 100)
+                .unlockedBy("has_ferricore_raw", this.has(JDTRegistration.RawFerricore.get()))
                 .save(this.output, "ferricore_ingot_blasted");
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawBlazegold.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
-                        Registration.BlazegoldIngot.get(), 1.0f, 100)
-                .unlockedBy("has_blazegold_raw", this.has(Registration.RawBlazegold.get()))
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(JDTRegistration.RawBlazegold.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                        JDTRegistration.BlazegoldIngot.get(), 1.0f, 100)
+                .unlockedBy("has_blazegold_raw", this.has(JDTRegistration.RawBlazegold.get()))
                 .save(this.output, "blazegold_ingot_blasted");
-        SimpleCookingRecipeBuilder.blasting(Ingredient.of(Registration.RawEclipseAlloy.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
-                        Registration.EclipseAlloyIngot.get(), 1.0f, 100)
-                .unlockedBy("has_eclipsealloy_raw", this.has(Registration.RawEclipseAlloy.get()))
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(JDTRegistration.RawEclipseAlloy.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                        JDTRegistration.EclipseAlloyIngot.get(), 1.0f, 100)
+                .unlockedBy("has_eclipsealloy_raw", this.has(JDTRegistration.RawEclipseAlloy.get()))
                 .save(this.output, "eclipsealloy_ingot_blasted");
 
         //Tools
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreSword.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreSword.get())
                 .pattern(" f ")
                 .pattern(" f ")
                 .pattern(" s ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FerricorePickaxe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricorePickaxe.get())
                 .pattern("fff")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreShovel.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreShovel.get())
                 .pattern(" f ")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreAxe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreAxe.get())
                 .pattern("ff ")
                 .pattern("fs ")
                 .pattern(" s ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreHoe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreHoe.get())
                 .pattern("ff ")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreBow.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreBow.get())
                 .pattern("sf ")
                 .pattern("s f")
                 .pattern("sf ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .define('s', Items.STRING)
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldBow.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldBow.get())
                 .pattern("sf ")
                 .pattern("s f")
                 .pattern("sf ")
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('s', Items.STRING)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreBow.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldBow.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldBow.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemBow.get())
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreBow.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldBow.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldBow.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemBow.get())
                 .pattern("sf ")
                 .pattern("s f")
                 .pattern("sf ")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('s', Items.STRING)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldBow.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemBow.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemBow.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyBow.get())
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldBow.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemBow.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemBow.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyBow.get())
                 .pattern("sf ")
                 .pattern("s f")
                 .pattern("sf ")
-                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
                 .define('s', Items.STRING)
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemBow.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyBow.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyBow.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemBow.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyBow.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyBow.get().asItem()) + "-templateupgrade").toString());
 
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldSword.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldSword.get())
                 .pattern(" f ")
                 .pattern(" f ")
                 .pattern(" s ")
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldPickaxe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldPickaxe.get())
                 .pattern("fff")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldShovel.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldShovel.get())
                 .pattern(" f ")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldAxe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldAxe.get())
                 .pattern("ff ")
                 .pattern("fs ")
                 .pattern(" s ")
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldHoe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldHoe.get())
                 .pattern("ff ")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreSword.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldSword.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldSword.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricorePickaxe.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldPickaxe.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldPickaxe.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreShovel.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldShovel.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldShovel.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreAxe.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldAxe.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldAxe.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreHoe.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldHoe.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldHoe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreSword.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldSword.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldSword.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricorePickaxe.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldPickaxe.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldPickaxe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreShovel.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldShovel.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldShovel.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreAxe.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldAxe.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldAxe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreHoe.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldHoe.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldHoe.get().asItem()) + "-templateupgrade").toString());
 
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemSword.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemSword.get())
                 .pattern(" f ")
                 .pattern(" f ")
                 .pattern(" s ")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemPickaxe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemPickaxe.get())
                 .pattern("fff")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemShovel.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemShovel.get())
                 .pattern(" f ")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemAxe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemAxe.get())
                 .pattern("ff ")
                 .pattern("fs ")
                 .pattern(" s ")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemHoe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemHoe.get())
                 .pattern("ff ")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.Celestigem.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
                 .save(this.output);
-        PaxelRecipeBuilder.shapeless(Ingredient.of(Registration.CelestigemPickaxe.get()), Ingredient.of(Registration.CelestigemAxe.get()),
-                        Ingredient.of(Registration.CelestigemShovel.get()), Registration.CelestigemPaxel.get())
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemPaxel.get().asItem())).toString());
+        PaxelRecipeBuilder.shapeless(Ingredient.of(JDTRegistration.CelestigemPickaxe.get()), Ingredient.of(JDTRegistration.CelestigemAxe.get()),
+                        Ingredient.of(JDTRegistration.CelestigemShovel.get()), JDTRegistration.CelestigemPaxel.get())
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemPaxel.get().asItem())).toString());
 
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldSword.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemSword.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemSword.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldPickaxe.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemPickaxe.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemPickaxe.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldShovel.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemShovel.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemShovel.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldAxe.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemAxe.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemAxe.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldHoe.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemHoe.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemHoe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldSword.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemSword.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemSword.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldPickaxe.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemPickaxe.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemPickaxe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldShovel.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemShovel.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemShovel.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldAxe.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemAxe.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemAxe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldHoe.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemHoe.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemHoe.get().asItem()) + "-templateupgrade").toString());
 
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloySword.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloySword.get())
                 .pattern(" f ")
                 .pattern(" f ")
                 .pattern(" s ")
-                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyPickaxe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyPickaxe.get())
                 .pattern("fff")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyShovel.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyShovel.get())
                 .pattern(" f ")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyAxe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyAxe.get())
                 .pattern("ff ")
                 .pattern("fs ")
                 .pattern(" s ")
-                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyHoe.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyHoe.get())
                 .pattern("ff ")
                 .pattern(" s ")
                 .pattern(" s ")
-                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
                 .define('s', Items.STICK)
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
                 .save(this.output);
-        PaxelRecipeBuilder.shapeless(Ingredient.of(Registration.EclipseAlloyPickaxe.get()), Ingredient.of(Registration.EclipseAlloyAxe.get()),
-                        Ingredient.of(Registration.EclipseAlloyShovel.get()), Registration.EclipseAlloyPaxel.get())
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyPaxel.get().asItem())).toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemSword.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloySword.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloySword.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemPickaxe.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyPickaxe.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyPickaxe.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemShovel.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyShovel.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyShovel.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemAxe.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyAxe.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyAxe.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemHoe.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyHoe.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyHoe.get().asItem()) + "-templateupgrade").toString());
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemPaxel.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyPaxel.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyPaxel.get().asItem()) + "-templateupgrade").toString());
+        PaxelRecipeBuilder.shapeless(Ingredient.of(JDTRegistration.EclipseAlloyPickaxe.get()), Ingredient.of(JDTRegistration.EclipseAlloyAxe.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyShovel.get()), JDTRegistration.EclipseAlloyPaxel.get())
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyPaxel.get().asItem())).toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemSword.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloySword.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloySword.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemPickaxe.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyPickaxe.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyPickaxe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemShovel.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyShovel.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyShovel.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemAxe.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyAxe.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyAxe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemHoe.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyHoe.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyHoe.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemPaxel.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyPaxel.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyPaxel.get().asItem()) + "-templateupgrade").toString());
 
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreBoots.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreBoots.get())
                 .pattern("f f")
                 .pattern("f f")
                 .pattern("   ")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreLeggings.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreLeggings.get())
                 .pattern("fff")
                 .pattern("f f")
                 .pattern("f f")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreChestplate.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreChestplate.get())
                 .pattern("f f")
                 .pattern("fff")
                 .pattern("fff")
-                .define('f', Registration.FerricoreIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.FerricoreHelmet.get())
-                .pattern("fff")
-                .pattern("f f")
-                .pattern("   ")
-                .define('f', Registration.FerricoreIngot.get())
-                .group("justdirethings")
-                .unlockedBy("has_ferricore_ingot", this.has(Registration.FerricoreIngot.get()))
-                .save(this.output);
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldBoots.get())
-                .pattern("f f")
-                .pattern("f f")
-                .pattern("   ")
-                .define('f', Registration.BlazegoldIngot.get())
-                .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
-                .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreBoots.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldBoots.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldBoots.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldLeggings.get())
-                .pattern("fff")
-                .pattern("f f")
-                .pattern("f f")
-                .define('f', Registration.BlazegoldIngot.get())
-                .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
-                .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreLeggings.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldLeggings.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldLeggings.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldChestplate.get())
-                .pattern("f f")
-                .pattern("fff")
-                .pattern("fff")
-                .define('f', Registration.BlazegoldIngot.get())
-                .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
-                .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreChestplate.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldChestplate.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldChestplate.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.BlazegoldHelmet.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.FerricoreHelmet.get())
                 .pattern("fff")
                 .pattern("f f")
                 .pattern("   ")
-                .define('f', Registration.BlazegoldIngot.get())
+                .define('f', JDTRegistration.FerricoreIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_blazegold_ingot", this.has(Registration.BlazegoldIngot.get()))
+                .unlockedBy("has_ferricore_ingot", this.has(JDTRegistration.FerricoreIngot.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(Registration.FerricoreHelmet.get()),
-                        Ingredient.of(Registration.BlazegoldIngot.get()), RecipeCategory.MISC, Registration.BlazegoldHelmet.get())
-                .unlocks("has_template_blazegold", this.has(Registration.TEMPLATE_BLAZEGOLD.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.BlazegoldHelmet.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemBoots.get())
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldBoots.get())
                 .pattern("f f")
                 .pattern("f f")
                 .pattern("   ")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldBoots.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemBoots.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemBoots.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemLeggings.get())
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreBoots.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldBoots.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldBoots.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldLeggings.get())
                 .pattern("fff")
                 .pattern("f f")
                 .pattern("f f")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldLeggings.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemLeggings.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemLeggings.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemChestplate.get())
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreLeggings.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldLeggings.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldLeggings.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldChestplate.get())
                 .pattern("f f")
                 .pattern("fff")
                 .pattern("fff")
-                .define('f', Registration.Celestigem.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldChestplate.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemChestplate.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemChestplate.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.CelestigemHelmet.get())
-                .pattern("fff")
-                .pattern("f f")
-                .pattern("   ")
-                .define('f', Registration.Celestigem.get())
-                .group("justdirethings")
-                .unlockedBy("has_celestigem", this.has(Registration.Celestigem.get()))
-                .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(Registration.BlazegoldHelmet.get()),
-                        Ingredient.of(Registration.Celestigem.get()), RecipeCategory.MISC, Registration.CelestigemHelmet.get())
-                .unlocks("has_template_celestigem", this.has(Registration.TEMPLATE_CELESTIGEM.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.CelestigemHelmet.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyBoots.get())
-                .pattern("f f")
-                .pattern("f f")
-                .pattern("   ")
-                .define('f', Registration.EclipseAlloyIngot.get())
-                .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
-                .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemBoots.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyBoots.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyBoots.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyLeggings.get())
-                .pattern("fff")
-                .pattern("f f")
-                .pattern("f f")
-                .define('f', Registration.EclipseAlloyIngot.get())
-                .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
-                .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemLeggings.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyLeggings.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyLeggings.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyChestplate.get())
-                .pattern("f f")
-                .pattern("fff")
-                .pattern("fff")
-                .define('f', Registration.EclipseAlloyIngot.get())
-                .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
-                .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemChestplate.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyChestplate.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyChestplate.get().asItem()) + "-templateupgrade").toString());
-        this.shaped(RecipeCategory.MISC, Registration.EclipseAlloyHelmet.get())
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreChestplate.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldChestplate.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldChestplate.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.BlazegoldHelmet.get())
                 .pattern("fff")
                 .pattern("f f")
                 .pattern("   ")
-                .define('f', Registration.EclipseAlloyIngot.get())
+                .define('f', JDTRegistration.BlazegoldIngot.get())
                 .group("justdirethings")
-                .unlockedBy("has_eclipsealloy_ingot", this.has(Registration.EclipseAlloyIngot.get()))
+                .unlockedBy("has_blazegold_ingot", this.has(JDTRegistration.BlazegoldIngot.get()))
                 .save(this.output);
-        SmithingTransformRecipeBuilder.smithing(Ingredient.of(Registration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(Registration.CelestigemHelmet.get()),
-                        Ingredient.of(Registration.EclipseAlloyIngot.get()), RecipeCategory.MISC, Registration.EclipseAlloyHelmet.get())
-                .unlocks("has_template_eclipsealloy", this.has(Registration.TEMPLATE_ECLIPSEALLOY.get()))
-                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(Registration.EclipseAlloyHelmet.get().asItem()) + "-templateupgrade").toString());
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_BLAZEGOLD.get()), Ingredient.of(JDTRegistration.FerricoreHelmet.get()),
+                        Ingredient.of(JDTRegistration.BlazegoldIngot.get()), RecipeCategory.MISC, JDTRegistration.BlazegoldHelmet.get())
+                .unlocks("has_template_blazegold", this.has(JDTRegistration.TEMPLATE_BLAZEGOLD.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.BlazegoldHelmet.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemBoots.get())
+                .pattern("f f")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', JDTRegistration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
+                .save(this.output);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldBoots.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemBoots.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemBoots.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemLeggings.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("f f")
+                .define('f', JDTRegistration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
+                .save(this.output);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldLeggings.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemLeggings.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemLeggings.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemChestplate.get())
+                .pattern("f f")
+                .pattern("fff")
+                .pattern("fff")
+                .define('f', JDTRegistration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
+                .save(this.output);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldChestplate.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemChestplate.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemChestplate.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.CelestigemHelmet.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', JDTRegistration.Celestigem.get())
+                .group("justdirethings")
+                .unlockedBy("has_celestigem", this.has(JDTRegistration.Celestigem.get()))
+                .save(this.output);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_CELESTIGEM.get()), Ingredient.of(JDTRegistration.BlazegoldHelmet.get()),
+                        Ingredient.of(JDTRegistration.Celestigem.get()), RecipeCategory.MISC, JDTRegistration.CelestigemHelmet.get())
+                .unlocks("has_template_celestigem", this.has(JDTRegistration.TEMPLATE_CELESTIGEM.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.CelestigemHelmet.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyBoots.get())
+                .pattern("f f")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
+                .save(this.output);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemBoots.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyBoots.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyBoots.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyLeggings.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("f f")
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
+                .save(this.output);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemLeggings.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyLeggings.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyLeggings.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyChestplate.get())
+                .pattern("f f")
+                .pattern("fff")
+                .pattern("fff")
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
+                .save(this.output);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemChestplate.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyChestplate.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyChestplate.get().asItem()) + "-templateupgrade").toString());
+        this.shaped(RecipeCategory.MISC, JDTRegistration.EclipseAlloyHelmet.get())
+                .pattern("fff")
+                .pattern("f f")
+                .pattern("   ")
+                .define('f', JDTRegistration.EclipseAlloyIngot.get())
+                .group("justdirethings")
+                .unlockedBy("has_eclipsealloy_ingot", this.has(JDTRegistration.EclipseAlloyIngot.get()))
+                .save(this.output);
+        SmithingTransformRecipeBuilder.smithing(Ingredient.of(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()), Ingredient.of(JDTRegistration.CelestigemHelmet.get()),
+                        Ingredient.of(JDTRegistration.EclipseAlloyIngot.get()), RecipeCategory.MISC, JDTRegistration.EclipseAlloyHelmet.get())
+                .unlocks("has_template_eclipsealloy", this.has(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get()))
+                .save(this.output, Identifier.fromNamespaceAndPath(JustDireThings.MODID, idPath(JDTRegistration.EclipseAlloyHelmet.get().asItem()) + "-templateupgrade").toString());
 
 
         //Resource Conversions
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.FerricoreBlock.get(),
-                Registration.FerricoreIngot.getId().toString() + "_9x9", "justdirethings",
-                Registration.FerricoreBlock.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.BlazegoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.BlazeGoldBlock.get(),
-                Registration.BlazegoldIngot.getId().toString() + "_9x9", "justdirethings",
-                Registration.BlazeGoldBlock.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.Celestigem.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CelestigemBlock.get(),
-                Registration.Celestigem.getId().toString() + "_9x9", "justdirethings",
-                Registration.CelestigemBlock.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.EclipseAlloyIngot.get(), RecipeCategory.BUILDING_BLOCKS, Registration.EclipseAlloyBlock.get(),
-                Registration.EclipseAlloyIngot.getId().toString() + "_9x9", "justdirethings",
-                Registration.EclipseAlloyBlock.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.Coal_T1.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T1.get(),
-                Registration.Coal_T1.getId().toString() + "_9x9", "justdirethings",
-                Registration.CoalBlock_T1.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.Coal_T2.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T2.get(),
-                Registration.Coal_T2.getId().toString() + "_9x9", "justdirethings",
-                Registration.CoalBlock_T2.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.Coal_T3.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T3.get(),
-                Registration.Coal_T3.getId().toString() + "_9x9", "justdirethings",
-                Registration.CoalBlock_T3.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.Coal_T4.get(), RecipeCategory.BUILDING_BLOCKS, Registration.CoalBlock_T4.get(),
-                Registration.Coal_T4.getId().toString() + "_9x9", "justdirethings",
-                Registration.CoalBlock_T4.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Registration.TimeCrystal.get(), RecipeCategory.BUILDING_BLOCKS, Registration.TimeCrystalBlock.get(),
-                Registration.TimeCrystal.getId().toString() + "_9x9", "justdirethings",
-                Registration.TimeCrystalBlock.getId().toString() + "_9x9", "justdirethings");
-        this.nineBlockStorageRecipes(RecipeCategory.MISC, Items.CHARCOAL, RecipeCategory.BUILDING_BLOCKS, Registration.CharcoalBlock.get(),
-                Registration.CharcoalBlock_ITEM.getId().toString() + "_9x9", "justdirethings",
-                Registration.CharcoalBlock.getId().toString() + "_block_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.FerricoreIngot.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.FerricoreBlock.get(),
+                JDTRegistration.FerricoreIngot.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.FerricoreBlock.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.BlazegoldIngot.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.BlazeGoldBlock.get(),
+                JDTRegistration.BlazegoldIngot.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.BlazeGoldBlock.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.Celestigem.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.CelestigemBlock.get(),
+                JDTRegistration.Celestigem.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.CelestigemBlock.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.EclipseAlloyIngot.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.EclipseAlloyBlock.get(),
+                JDTRegistration.EclipseAlloyIngot.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.EclipseAlloyBlock.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.Coal_T1.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.CoalBlock_T1.get(),
+                JDTRegistration.Coal_T1.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.CoalBlock_T1.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.Coal_T2.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.CoalBlock_T2.get(),
+                JDTRegistration.Coal_T2.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.CoalBlock_T2.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.Coal_T3.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.CoalBlock_T3.get(),
+                JDTRegistration.Coal_T3.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.CoalBlock_T3.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.Coal_T4.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.CoalBlock_T4.get(),
+                JDTRegistration.Coal_T4.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.CoalBlock_T4.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, JDTRegistration.TimeCrystal.get(), RecipeCategory.BUILDING_BLOCKS, JDTRegistration.TimeCrystalBlock.get(),
+                JDTRegistration.TimeCrystal.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.TimeCrystalBlock.getId().toString() + "_9x9", "justdirethings");
+        this.nineBlockStorageRecipes(RecipeCategory.MISC, Items.CHARCOAL, RecipeCategory.BUILDING_BLOCKS, JDTRegistration.CharcoalBlock.get(),
+                JDTRegistration.CharcoalBlock_ITEM.getId().toString() + "_9x9", "justdirethings",
+                JDTRegistration.CharcoalBlock.getId().toString() + "_block_9x9", "justdirethings");
 
         //NBT Clear
-        for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
+        for (var sidedBlock : JDTRegistration.SIDEDBLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
-                if (sidedBlock.equals(Registration.ParadoxMachine))
+                if (sidedBlock.equals(JDTRegistration.ParadoxMachine))
                     continue; //Skip paradox machine, no reseting paradox energy
                 this.shapeless(RecipeCategory.MISC, sidedBlock.get())
                         .requires(sidedBlock.get())
@@ -1640,7 +1632,7 @@ public class JustDireRecipes extends RecipeProvider {
                         .save(this.output, sidedBlock.getId().toString() + "_nbtclear");
             }
         }
-        for (var sidedBlock : Registration.BLOCKS.getEntries()) {
+        for (var sidedBlock : JDTRegistration.BLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock baseMachineBlock) {
                 this.shapeless(RecipeCategory.MISC, sidedBlock.get())
                         .requires(sidedBlock.get())
@@ -1654,41 +1646,41 @@ public class JustDireRecipes extends RecipeProvider {
     }
 
     public void registerUpgrades() {
-        for (var upgrade : Registration.UPGRADES.getEntries()) {
+        for (var upgrade : JDTRegistration.UPGRADES.getEntries()) {
             Ability ability = Ability.getAbilityFromUpgradeItem(upgrade.get());
             if (ability != null) {
-                for (var armor : Registration.ARMORS.getEntries()) {
+                for (var armor : JDTRegistration.ARMORS.getEntries()) {
                     Item armorItem = armor.get();
                     if (armorItem instanceof ToggleableTool toggleableTool) {
                         EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
                         if (abilities.contains(ability)) {
                             AbilityRecipeBuilder.shapeless(Optional.empty(), Ingredient.of(armor.get()), Ingredient.of(upgrade.get()))
                                     .group("justdirethings")
-                                    .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                                    .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                                     .save(this.output);
                         }
                     }
                 }
-                for (var tool : Registration.TOOLS.getEntries()) {
+                for (var tool : JDTRegistration.TOOLS.getEntries()) {
                     Item toolItem = tool.get();
                     if (toolItem instanceof ToggleableTool toggleableTool) {
                         EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
                         if (abilities.contains(ability)) {
                             AbilityRecipeBuilder.shapeless(Optional.empty(), Ingredient.of(tool.get()), Ingredient.of(upgrade.get()))
                                     .group("justdirethings")
-                                    .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                                    .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                                     .save(this.output);
                         }
                     }
                 }
-                for (var bow : Registration.BOWS.getEntries()) {
+                for (var bow : JDTRegistration.BOWS.getEntries()) {
                     Item bowItem = bow.get();
                     if (bowItem instanceof ToggleableTool toggleableTool) {
                         EnumSet<Ability> abilities = toggleableTool.getAllAbilities();
                         if (abilities.contains(ability)) {
                             AbilityRecipeBuilder.shapeless(Optional.empty(), Ingredient.of(bow.get()), Ingredient.of(upgrade.get()))
                                     .group("justdirethings")
-                                    .unlockedBy("has_upgrade_base", this.has(Registration.UPGRADE_BASE.get()))
+                                    .unlockedBy("has_upgrade_base", this.has(JDTRegistration.UPGRADE_BASE.get()))
                                     .save(this.output);
                         }
                     }

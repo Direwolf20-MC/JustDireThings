@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.client.jei;
 
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class GooSpreadRecipeCategory implements IRecipeCategory<RecipeHolder<GooSpreadRecipe>> {
     public static final IRecipeHolderType<GooSpreadRecipe> TYPE =
-            IRecipeHolderType.create(Registration.GOO_SPREAD_RECIPE_TYPE.get());
+            IRecipeHolderType.create(JDTRegistration.GOO_SPREAD_RECIPE_TYPE.get());
 
     public static final int width = 120;
     public static final int height = 40;
@@ -38,7 +38,7 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<RecipeHolder<Goo
     private final IDrawableStatic arrow;
 
     public GooSpreadRecipeCategory(IGuiHelper guiHelper) {
-        icon = guiHelper.createDrawableItemStack(new ItemStack(Registration.GooBlock_Tier1.get()));
+        icon = guiHelper.createDrawableItemStack(new ItemStack(JDTRegistration.GooBlock_Tier1.get()));
         localizedName = Component.translatable("justdirethings.goospreadrecipe.title");
         this.arrow = guiHelper.getRecipeArrow();
     }

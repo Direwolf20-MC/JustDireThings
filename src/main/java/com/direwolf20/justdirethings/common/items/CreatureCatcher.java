@@ -40,8 +40,7 @@ public class CreatureCatcher extends Item {
                 0.4F / (pLevel.getRandom().nextFloat() * 0.4F + 0.8F)
         );
         if (!pLevel.isClientSide()) {
-            CreatureCatcherEntity creatureCatcherEntity = new CreatureCatcherEntity(pLevel, pPlayer);
-            creatureCatcherEntity.setItem(itemStack);
+            CreatureCatcherEntity creatureCatcherEntity = new CreatureCatcherEntity(pLevel, pPlayer, itemStack);
             creatureCatcherEntity.shootFromRotation(pPlayer, pPlayer.getXRot(), pPlayer.getYRot(), 0.0F, 1.5F, 1.0F);
             pLevel.addFreshEntity(creatureCatcherEntity);
         }

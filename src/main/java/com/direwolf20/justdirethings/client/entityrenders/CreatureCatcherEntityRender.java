@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.client.entityrenders;
 
 import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -88,7 +88,7 @@ public class CreatureCatcherEntityRender extends ThrownItemRenderer<CreatureCatc
         // the shell item is drawn as an empty CreatureCatcher (captured mob has been released).
         s.showEmptyCatcherItem = !s.capturing && s.renderTick > 0;
         if (s.showEmptyCatcherItem) {
-            ItemStack emptyCatcher = new ItemStack(Registration.CreatureCatcher.get());
+            ItemStack emptyCatcher = new ItemStack(JDTRegistration.CreatureCatcher.get());
             this.itemModelResolver.updateForNonLiving(s.emptyCatcherItem, emptyCatcher, ItemDisplayContext.GROUND, entity);
         }
 

@@ -7,7 +7,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.BasePoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.FluidContainingItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.NBTHelpers;
@@ -94,7 +94,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
         if (blockstate1.getBlock() instanceof PortalFluidBlock portalFluidBlock) {
             ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
             if (fluidHandler == null) return true;
-            FluidResource resource = FluidResource.of(Registration.PORTAL_FLUID_SOURCE.get());
+            FluidResource resource = FluidResource.of(JDTRegistration.PORTAL_FLUID_SOURCE.get());
             int filledAmt;
             try (Transaction probe = Transaction.openRoot()) {
                 filledAmt = fluidHandler.insert(0, resource, 1000, probe);

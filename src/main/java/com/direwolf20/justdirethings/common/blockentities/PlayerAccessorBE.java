@@ -3,7 +3,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.containers.handlers.PlayerHandler;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,7 +42,7 @@ public class PlayerAccessorBE extends BaseMachineBE {
     }
 
     public PlayerAccessorBE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.PlayerAccessorBE.get(), pPos, pBlockState);
+        this(JDTRegistration.PlayerAccessorBE.get(), pPos, pBlockState);
     }
 
     public void clearCache() {

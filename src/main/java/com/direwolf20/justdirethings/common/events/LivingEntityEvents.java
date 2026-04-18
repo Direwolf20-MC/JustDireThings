@@ -3,7 +3,7 @@ package com.direwolf20.justdirethings.common.events;
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
 import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import net.minecraft.core.component.DataComponents;
@@ -244,7 +244,7 @@ public class LivingEntityEvents {
             if (!totemStack.isEmpty()) {
                 CompoundTag deathData = new CompoundTag();
                 deathData.put("direDeathData", NBTHelpers.globalVec3ToNBT(player.level().dimension(), player.position()));
-                player.setData(Registration.DEATH_DATA, deathData);
+                player.setData(JDTRegistration.DEATH_DATA, deathData);
                 totemStack.shrink(1);
             }
         }
@@ -252,7 +252,7 @@ public class LivingEntityEvents {
 
     private static ItemStack findTotem(ServerPlayer player) {
         for (ItemStack itemStack : player.getInventory().getNonEquipmentItems()) {
-            if (itemStack.getItem() == Registration.TotemOfDeathRecall.get() && TotemOfDeathRecall.getBoundTo(itemStack) == null) {
+            if (itemStack.getItem() == JDTRegistration.TotemOfDeathRecall.get() && TotemOfDeathRecall.getBoundTo(itemStack) == null) {
                 return itemStack;
             }
         }
@@ -264,11 +264,11 @@ public class LivingEntityEvents {
         ServerPlayer oldPlayer = (ServerPlayer) event.getOriginal();
         if (oldPlayer.level().isClientSide() || !event.isWasDeath()) return;
         ServerPlayer newPlayer = (ServerPlayer) event.getEntity();
-        CompoundTag deathData = oldPlayer.getData(Registration.DEATH_DATA);
+        CompoundTag deathData = oldPlayer.getData(JDTRegistration.DEATH_DATA);
 
         if (deathData.contains("direDeathData")) {
             NBTHelpers.GlobalVec3 boundTo = NBTHelpers.nbtToGlobalVec3(deathData.getCompoundOrEmpty("direDeathData"));
-            ItemStack totemStack = new ItemStack(Registration.TotemOfDeathRecall.get());
+            ItemStack totemStack = new ItemStack(JDTRegistration.TotemOfDeathRecall.get());
             TotemOfDeathRecall.setBoundTo(totemStack, boundTo);
             newPlayer.getInventory().add(totemStack);
         }

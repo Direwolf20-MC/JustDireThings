@@ -9,6 +9,7 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
@@ -31,7 +32,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     public final PoweredMachineContainerData poweredMachineData;
 
     public BlockBreakerT2BE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.BlockBreakerT2BE.get(), pPos, pBlockState);
+        super(JDTRegistration.BlockBreakerT2BE.get(), pPos, pBlockState);
         poweredMachineData = new PoweredMachineContainerData(this);
     }
 
@@ -42,7 +43,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(JDTRegistration.ENERGYSTORAGE_MACHINES);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     @Override

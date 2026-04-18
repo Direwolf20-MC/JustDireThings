@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.blocks.resources;
 
 import com.direwolf20.justdirethings.client.particles.glitterparticle.GlitterParticleData;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -94,13 +94,13 @@ public class TimeCrystalBuddingBlock extends BuddingAmethystBlock {
             BlockState blockstate = level.getBlockState(blockpos);
             Block block = null;
             if (canClusterGrowAtState(blockstate)) {
-                block = Registration.TimeCrystalCluster_Small.get();
-            } else if (blockstate.is(Registration.TimeCrystalCluster_Small.get()) && blockstate.getValue(AmethystClusterBlock.FACING) == direction) {
-                block = Registration.TimeCrystalCluster_Medium.get();
-            } else if (blockstate.is(Registration.TimeCrystalCluster_Medium.get()) && blockstate.getValue(AmethystClusterBlock.FACING) == direction) {
-                block = Registration.TimeCrystalCluster_Large.get();
-            } else if (blockstate.is(Registration.TimeCrystalCluster_Large.get()) && blockstate.getValue(AmethystClusterBlock.FACING) == direction) {
-                block = Registration.TimeCrystalCluster.get();
+                block = JDTRegistration.TimeCrystalCluster_Small.get();
+            } else if (blockstate.is(JDTRegistration.TimeCrystalCluster_Small.get()) && blockstate.getValue(AmethystClusterBlock.FACING) == direction) {
+                block = JDTRegistration.TimeCrystalCluster_Medium.get();
+            } else if (blockstate.is(JDTRegistration.TimeCrystalCluster_Medium.get()) && blockstate.getValue(AmethystClusterBlock.FACING) == direction) {
+                block = JDTRegistration.TimeCrystalCluster_Large.get();
+            } else if (blockstate.is(JDTRegistration.TimeCrystalCluster_Large.get()) && blockstate.getValue(AmethystClusterBlock.FACING) == direction) {
+                block = JDTRegistration.TimeCrystalCluster.get();
             }
 
             if (block != null) {

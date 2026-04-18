@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.entities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ColorParticleOption;
@@ -70,12 +70,12 @@ public class JustDireArrow extends AbstractArrow {
     }
 
     public JustDireArrow(Level level, double x, double y, double z, ItemStack pickupItemStack, @Nullable ItemStack itemStack) {
-        super(Registration.JustDireArrow.get(), x, y, z, level, pickupItemStack, itemStack);
+        super(JDTRegistration.JustDireArrow.get(), x, y, z, level, pickupItemStack, itemStack);
         this.updateColor();
     }
 
     public JustDireArrow(Level level, LivingEntity owner, ItemStack pickupItemStack, @Nullable ItemStack itemStack) {
-        super(Registration.JustDireArrow.get(), owner, level, pickupItemStack, itemStack);
+        super(JDTRegistration.JustDireArrow.get(), owner, level, pickupItemStack, itemStack);
         this.updateColor();
     }
 

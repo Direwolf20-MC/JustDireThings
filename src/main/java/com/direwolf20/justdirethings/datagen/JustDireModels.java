@@ -6,7 +6,7 @@ import com.direwolf20.justdirethings.common.blocks.BlockBreakerT1;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
 import com.direwolf20.justdirethings.common.blocks.resources.TimeCrystalBuddingBlock;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -45,57 +45,57 @@ public class JustDireModels extends ModelProvider {
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         // Goo Blocks (ALIVE boolean)
-        gooBlock(blockModels, Registration.GooBlock_Tier1.get());
-        gooBlock(blockModels, Registration.GooBlock_Tier2.get());
-        gooBlock(blockModels, Registration.GooBlock_Tier3.get());
-        gooBlock(blockModels, Registration.GooBlock_Tier4.get());
+        gooBlock(blockModels, JDTRegistration.GooBlock_Tier1.get());
+        gooBlock(blockModels, JDTRegistration.GooBlock_Tier2.get());
+        gooBlock(blockModels, JDTRegistration.GooBlock_Tier3.get());
+        gooBlock(blockModels, JDTRegistration.GooBlock_Tier4.get());
         // Goo block items: point at the "_dead" variant's model
-        blockModels.registerSimpleItemModel(Registration.GooBlock_Tier1_ITEM.get(),
-                modLoc("block/" + Registration.GooBlock_Tier1.getId().getPath() + "_dead"));
-        blockModels.registerSimpleItemModel(Registration.GooBlock_Tier2_ITEM.get(),
-                modLoc("block/" + Registration.GooBlock_Tier2.getId().getPath() + "_dead"));
-        blockModels.registerSimpleItemModel(Registration.GooBlock_Tier3_ITEM.get(),
-                modLoc("block/" + Registration.GooBlock_Tier3.getId().getPath() + "_dead"));
-        blockModels.registerSimpleItemModel(Registration.GooBlock_Tier4_ITEM.get(),
-                modLoc("block/" + Registration.GooBlock_Tier4.getId().getPath() + "_dead"));
+        blockModels.registerSimpleItemModel(JDTRegistration.GooBlock_Tier1_ITEM.get(),
+                modLoc("block/" + JDTRegistration.GooBlock_Tier1.getId().getPath() + "_dead"));
+        blockModels.registerSimpleItemModel(JDTRegistration.GooBlock_Tier2_ITEM.get(),
+                modLoc("block/" + JDTRegistration.GooBlock_Tier2.getId().getPath() + "_dead"));
+        blockModels.registerSimpleItemModel(JDTRegistration.GooBlock_Tier3_ITEM.get(),
+                modLoc("block/" + JDTRegistration.GooBlock_Tier3.getId().getPath() + "_dead"));
+        blockModels.registerSimpleItemModel(JDTRegistration.GooBlock_Tier4_ITEM.get(),
+                modLoc("block/" + JDTRegistration.GooBlock_Tier4.getId().getPath() + "_dead"));
 
         // Simple storage/ore cube-all blocks
-        simpleCubeAll(blockModels, Registration.FerricoreBlock.get());
-        simpleCubeAll(blockModels, Registration.BlazeGoldBlock.get());
-        simpleCubeAll(blockModels, Registration.CelestigemBlock.get());
-        simpleCubeAll(blockModels, Registration.EclipseAlloyBlock.get());
-        simpleCubeAll(blockModels, Registration.CoalBlock_T1.get());
-        simpleCubeAll(blockModels, Registration.CharcoalBlock.get());
-        simpleCubeAll(blockModels, Registration.CoalBlock_T2.get());
-        simpleCubeAll(blockModels, Registration.CoalBlock_T3.get());
-        simpleCubeAll(blockModels, Registration.CoalBlock_T4.get());
-        simpleCubeAll(blockModels, Registration.PlayerAccessor.get());
-        simpleCubeAll(blockModels, Registration.TimeCrystalBlock.get());
-        simpleCubeAll(blockModels, Registration.InventoryHolder.get());
+        simpleCubeAll(blockModels, JDTRegistration.FerricoreBlock.get());
+        simpleCubeAll(blockModels, JDTRegistration.BlazeGoldBlock.get());
+        simpleCubeAll(blockModels, JDTRegistration.CelestigemBlock.get());
+        simpleCubeAll(blockModels, JDTRegistration.EclipseAlloyBlock.get());
+        simpleCubeAll(blockModels, JDTRegistration.CoalBlock_T1.get());
+        simpleCubeAll(blockModels, JDTRegistration.CharcoalBlock.get());
+        simpleCubeAll(blockModels, JDTRegistration.CoalBlock_T2.get());
+        simpleCubeAll(blockModels, JDTRegistration.CoalBlock_T3.get());
+        simpleCubeAll(blockModels, JDTRegistration.CoalBlock_T4.get());
+        simpleCubeAll(blockModels, JDTRegistration.PlayerAccessor.get());
+        simpleCubeAll(blockModels, JDTRegistration.TimeCrystalBlock.get());
+        simpleCubeAll(blockModels, JDTRegistration.InventoryHolder.get());
         // Eclipse gate uses cutout render-layer but model-wise is just cubeAll
-        simpleCubeAll(blockModels, Registration.EclipseGateBlock.get());
+        simpleCubeAll(blockModels, JDTRegistration.EclipseGateBlock.get());
 
         // Time crystal clusters: cross
-        timeCrystalCluster(blockModels, Registration.TimeCrystalCluster_Small);
-        timeCrystalCluster(blockModels, Registration.TimeCrystalCluster_Medium);
-        timeCrystalCluster(blockModels, Registration.TimeCrystalCluster_Large);
-        timeCrystalCluster(blockModels, Registration.TimeCrystalCluster);
+        timeCrystalCluster(blockModels, JDTRegistration.TimeCrystalCluster_Small);
+        timeCrystalCluster(blockModels, JDTRegistration.TimeCrystalCluster_Medium);
+        timeCrystalCluster(blockModels, JDTRegistration.TimeCrystalCluster_Large);
+        timeCrystalCluster(blockModels, JDTRegistration.TimeCrystalCluster);
 
         // Goo soil (MOISTURE 0-7 → dry/moist)
-        soilBlock(blockModels, Registration.GooSoil_Tier1);
-        soilBlock(blockModels, Registration.GooSoil_Tier2);
-        soilBlock(blockModels, Registration.GooSoil_Tier3);
-        soilBlock(blockModels, Registration.GooSoil_Tier4);
+        soilBlock(blockModels, JDTRegistration.GooSoil_Tier1);
+        soilBlock(blockModels, JDTRegistration.GooSoil_Tier2);
+        soilBlock(blockModels, JDTRegistration.GooSoil_Tier3);
+        soilBlock(blockModels, JDTRegistration.GooSoil_Tier4);
 
         // Raw ores: cube models with palette replacement
-        oreBlock(blockModels, Registration.RawBlazegoldOre);
-        oreBlock(blockModels, Registration.RawCelestigemOre);
-        oreBlock(blockModels, Registration.RawEclipseAlloyOre);
-        oreBlock(blockModels, Registration.RawFerricoreOre);
-        oreBlock(blockModels, Registration.RawCoal_T1);
-        oreBlock(blockModels, Registration.RawCoal_T2);
-        oreBlock(blockModels, Registration.RawCoal_T3);
-        oreBlock(blockModels, Registration.RawCoal_T4);
+        oreBlock(blockModels, JDTRegistration.RawBlazegoldOre);
+        oreBlock(blockModels, JDTRegistration.RawCelestigemOre);
+        oreBlock(blockModels, JDTRegistration.RawEclipseAlloyOre);
+        oreBlock(blockModels, JDTRegistration.RawFerricoreOre);
+        oreBlock(blockModels, JDTRegistration.RawCoal_T1);
+        oreBlock(blockModels, JDTRegistration.RawCoal_T2);
+        oreBlock(blockModels, JDTRegistration.RawCoal_T3);
+        oreBlock(blockModels, JDTRegistration.RawCoal_T4);
 
         // GooPatternBlock (GOOSTAGE 0-11)
         gooPatternBlock(blockModels);
@@ -107,107 +107,107 @@ public class JustDireModels extends ModelProvider {
         timeCrystalBudding(blockModels);
 
         // Fluid blocks (particle-only)
-        for (var fluidBlock : Registration.FLUID_BLOCKS.getEntries()) {
+        for (var fluidBlock : JDTRegistration.FLUID_BLOCKS.getEntries()) {
             fluidBlockModel(blockModels, fluidBlock.get());
         }
 
         // -----------------------------------------------------------------
         // BLOCK ITEMS that reference their block model by parent
         // -----------------------------------------------------------------
-        registerBlockItemParent(blockModels, Registration.GooSoil_ITEM_Tier1.get(), "block/goosoil_tier1");
-        registerBlockItemParent(blockModels, Registration.GooSoil_ITEM_Tier2.get(), "block/goosoil_tier2");
-        registerBlockItemParent(blockModels, Registration.GooSoil_ITEM_Tier3.get(), "block/goosoil_tier3");
-        registerBlockItemParent(blockModels, Registration.GooSoil_ITEM_Tier4.get(), "block/goosoil_tier4");
-        registerBlockItemParent(blockModels, Registration.FerricoreBlock_ITEM.get(), "block/ferricore_block");
-        registerBlockItemParent(blockModels, Registration.RawFerricoreOre_ITEM.get(), "block/raw_ferricore_ore");
-        registerBlockItemParent(blockModels, Registration.BlazeGoldBlock_ITEM.get(), "block/blazegold_block");
-        registerBlockItemParent(blockModels, Registration.RawBlazegoldOre_ITEM.get(), "block/raw_blazegold_ore");
-        registerBlockItemParent(blockModels, Registration.CelestigemBlock_ITEM.get(), "block/celestigem_block");
-        registerBlockItemParent(blockModels, Registration.RawCelestigemOre_ITEM.get(), "block/raw_celestigem_ore");
-        registerBlockItemParent(blockModels, Registration.EclipseAlloyBlock_ITEM.get(), "block/eclipsealloy_block");
-        registerBlockItemParent(blockModels, Registration.RawEclipseAlloyOre_ITEM.get(), "block/raw_eclipsealloy_ore");
-        registerBlockItemParent(blockModels, Registration.ItemCollector_ITEM.get(), "block/itemcollector");
-        registerBlockItemParent(blockModels, Registration.BlockBreakerT1_ITEM.get(), "block/blockbreakert1");
-        registerBlockItemParent(blockModels, Registration.BlockPlacerT1_ITEM.get(), "block/blockplacert1");
-        registerBlockItemParent(blockModels, Registration.BlockBreakerT2_ITEM.get(), "block/blockbreakert2");
-        registerBlockItemParent(blockModels, Registration.BlockPlacerT2_ITEM.get(), "block/blockplacert2");
-        registerBlockItemParent(blockModels, Registration.ClickerT1_ITEM.get(), "block/clickert1");
-        registerBlockItemParent(blockModels, Registration.ClickerT2_ITEM.get(), "block/clickert2");
-        registerBlockItemParent(blockModels, Registration.SensorT1_ITEM.get(), "block/sensort1");
-        registerBlockItemParent(blockModels, Registration.SensorT2_ITEM.get(), "block/sensort2");
-        registerBlockItemParent(blockModels, Registration.DropperT1_ITEM.get(), "block/droppert1");
-        registerBlockItemParent(blockModels, Registration.DropperT2_ITEM.get(), "block/droppert2");
-        registerBlockItemParent(blockModels, Registration.GeneratorT1_ITEM.get(), "block/generatort1");
-        registerBlockItemParent(blockModels, Registration.GeneratorFluidT1_ITEM.get(), "block/generatorfluidt1");
-        registerBlockItemParent(blockModels, Registration.EnergyTransmitter_ITEM.get(), "block/energytransmitter");
-        registerBlockItemParent(blockModels, Registration.CharcoalBlock_ITEM.get(), "block/charcoal");
-        registerBlockItemParent(blockModels, Registration.RawCoal_T1_ITEM.get(), "block/raw_coal_t1_ore");
-        registerBlockItemParent(blockModels, Registration.RawCoal_T2_ITEM.get(), "block/raw_coal_t2_ore");
-        registerBlockItemParent(blockModels, Registration.RawCoal_T3_ITEM.get(), "block/raw_coal_t3_ore");
-        registerBlockItemParent(blockModels, Registration.RawCoal_T4_ITEM.get(), "block/raw_coal_t4_ore");
-        registerBlockItemParent(blockModels, Registration.CoalBlock_T1_ITEM.get(), "block/coalblock_t1");
-        registerBlockItemParent(blockModels, Registration.CoalBlock_T2_ITEM.get(), "block/coalblock_t2");
-        registerBlockItemParent(blockModels, Registration.CoalBlock_T3_ITEM.get(), "block/coalblock_t3");
-        registerBlockItemParent(blockModels, Registration.CoalBlock_T4_ITEM.get(), "block/coalblock_t4");
-        registerBlockItemParent(blockModels, Registration.BlockSwapperT1_ITEM.get(), "block/blockswappert1");
-        registerBlockItemParent(blockModels, Registration.BlockSwapperT2_ITEM.get(), "block/blockswappert2");
-        registerBlockItemParent(blockModels, Registration.PlayerAccessor_ITEM.get(), "block/playeraccessor");
-        registerBlockItemParent(blockModels, Registration.FluidPlacerT1_ITEM.get(), "block/fluidplacert1");
-        registerBlockItemParent(blockModels, Registration.FluidPlacerT2_ITEM.get(), "block/fluidplacert2");
-        registerBlockItemParent(blockModels, Registration.FluidCollectorT1_ITEM.get(), "block/fluidcollectort1");
-        registerBlockItemParent(blockModels, Registration.FluidCollectorT2_ITEM.get(), "block/fluidcollectort2");
-        registerBlockItemParent(blockModels, Registration.TimeCrystalBlock_ITEM.get(), "block/time_crystal_block");
-        registerBlockItemParent(blockModels, Registration.TimeCrystalBuddingBlock_ITEM.get(), "block/time_crystal_budding_block_state_0");
-        registerBlockItemParent(blockModels, Registration.TimeCrystalCluster_ITEM.get(), "block/time_crystal_cluster");
-        registerBlockItemParent(blockModels, Registration.TimeCrystalCluster_Small_ITEM.get(), "block/time_crystal_cluster_small");
-        registerBlockItemParent(blockModels, Registration.TimeCrystalCluster_Medium_ITEM.get(), "block/time_crystal_cluster_medium");
-        registerBlockItemParent(blockModels, Registration.TimeCrystalCluster_Large_ITEM.get(), "block/time_crystal_cluster_large");
-        registerBlockItemParent(blockModels, Registration.ParadoxMachine_ITEM.get(), "block/paradoxmachine");
-        registerBlockItemParent(blockModels, Registration.InventoryHolder_ITEM.get(), "block/inventory_holder");
-        registerBlockItemParent(blockModels, Registration.ExperienceHolder_ITEM.get(), "block/experienceholder");
+        registerBlockItemParent(blockModels, JDTRegistration.GooSoil_ITEM_Tier1.get(), "block/goosoil_tier1");
+        registerBlockItemParent(blockModels, JDTRegistration.GooSoil_ITEM_Tier2.get(), "block/goosoil_tier2");
+        registerBlockItemParent(blockModels, JDTRegistration.GooSoil_ITEM_Tier3.get(), "block/goosoil_tier3");
+        registerBlockItemParent(blockModels, JDTRegistration.GooSoil_ITEM_Tier4.get(), "block/goosoil_tier4");
+        registerBlockItemParent(blockModels, JDTRegistration.FerricoreBlock_ITEM.get(), "block/ferricore_block");
+        registerBlockItemParent(blockModels, JDTRegistration.RawFerricoreOre_ITEM.get(), "block/raw_ferricore_ore");
+        registerBlockItemParent(blockModels, JDTRegistration.BlazeGoldBlock_ITEM.get(), "block/blazegold_block");
+        registerBlockItemParent(blockModels, JDTRegistration.RawBlazegoldOre_ITEM.get(), "block/raw_blazegold_ore");
+        registerBlockItemParent(blockModels, JDTRegistration.CelestigemBlock_ITEM.get(), "block/celestigem_block");
+        registerBlockItemParent(blockModels, JDTRegistration.RawCelestigemOre_ITEM.get(), "block/raw_celestigem_ore");
+        registerBlockItemParent(blockModels, JDTRegistration.EclipseAlloyBlock_ITEM.get(), "block/eclipsealloy_block");
+        registerBlockItemParent(blockModels, JDTRegistration.RawEclipseAlloyOre_ITEM.get(), "block/raw_eclipsealloy_ore");
+        registerBlockItemParent(blockModels, JDTRegistration.ItemCollector_ITEM.get(), "block/itemcollector");
+        registerBlockItemParent(blockModels, JDTRegistration.BlockBreakerT1_ITEM.get(), "block/blockbreakert1");
+        registerBlockItemParent(blockModels, JDTRegistration.BlockPlacerT1_ITEM.get(), "block/blockplacert1");
+        registerBlockItemParent(blockModels, JDTRegistration.BlockBreakerT2_ITEM.get(), "block/blockbreakert2");
+        registerBlockItemParent(blockModels, JDTRegistration.BlockPlacerT2_ITEM.get(), "block/blockplacert2");
+        registerBlockItemParent(blockModels, JDTRegistration.ClickerT1_ITEM.get(), "block/clickert1");
+        registerBlockItemParent(blockModels, JDTRegistration.ClickerT2_ITEM.get(), "block/clickert2");
+        registerBlockItemParent(blockModels, JDTRegistration.SensorT1_ITEM.get(), "block/sensort1");
+        registerBlockItemParent(blockModels, JDTRegistration.SensorT2_ITEM.get(), "block/sensort2");
+        registerBlockItemParent(blockModels, JDTRegistration.DropperT1_ITEM.get(), "block/droppert1");
+        registerBlockItemParent(blockModels, JDTRegistration.DropperT2_ITEM.get(), "block/droppert2");
+        registerBlockItemParent(blockModels, JDTRegistration.GeneratorT1_ITEM.get(), "block/generatort1");
+        registerBlockItemParent(blockModels, JDTRegistration.GeneratorFluidT1_ITEM.get(), "block/generatorfluidt1");
+        registerBlockItemParent(blockModels, JDTRegistration.EnergyTransmitter_ITEM.get(), "block/energytransmitter");
+        registerBlockItemParent(blockModels, JDTRegistration.CharcoalBlock_ITEM.get(), "block/charcoal");
+        registerBlockItemParent(blockModels, JDTRegistration.RawCoal_T1_ITEM.get(), "block/raw_coal_t1_ore");
+        registerBlockItemParent(blockModels, JDTRegistration.RawCoal_T2_ITEM.get(), "block/raw_coal_t2_ore");
+        registerBlockItemParent(blockModels, JDTRegistration.RawCoal_T3_ITEM.get(), "block/raw_coal_t3_ore");
+        registerBlockItemParent(blockModels, JDTRegistration.RawCoal_T4_ITEM.get(), "block/raw_coal_t4_ore");
+        registerBlockItemParent(blockModels, JDTRegistration.CoalBlock_T1_ITEM.get(), "block/coalblock_t1");
+        registerBlockItemParent(blockModels, JDTRegistration.CoalBlock_T2_ITEM.get(), "block/coalblock_t2");
+        registerBlockItemParent(blockModels, JDTRegistration.CoalBlock_T3_ITEM.get(), "block/coalblock_t3");
+        registerBlockItemParent(blockModels, JDTRegistration.CoalBlock_T4_ITEM.get(), "block/coalblock_t4");
+        registerBlockItemParent(blockModels, JDTRegistration.BlockSwapperT1_ITEM.get(), "block/blockswappert1");
+        registerBlockItemParent(blockModels, JDTRegistration.BlockSwapperT2_ITEM.get(), "block/blockswappert2");
+        registerBlockItemParent(blockModels, JDTRegistration.PlayerAccessor_ITEM.get(), "block/playeraccessor");
+        registerBlockItemParent(blockModels, JDTRegistration.FluidPlacerT1_ITEM.get(), "block/fluidplacert1");
+        registerBlockItemParent(blockModels, JDTRegistration.FluidPlacerT2_ITEM.get(), "block/fluidplacert2");
+        registerBlockItemParent(blockModels, JDTRegistration.FluidCollectorT1_ITEM.get(), "block/fluidcollectort1");
+        registerBlockItemParent(blockModels, JDTRegistration.FluidCollectorT2_ITEM.get(), "block/fluidcollectort2");
+        registerBlockItemParent(blockModels, JDTRegistration.TimeCrystalBlock_ITEM.get(), "block/time_crystal_block");
+        registerBlockItemParent(blockModels, JDTRegistration.TimeCrystalBuddingBlock_ITEM.get(), "block/time_crystal_budding_block_state_0");
+        registerBlockItemParent(blockModels, JDTRegistration.TimeCrystalCluster_ITEM.get(), "block/time_crystal_cluster");
+        registerBlockItemParent(blockModels, JDTRegistration.TimeCrystalCluster_Small_ITEM.get(), "block/time_crystal_cluster_small");
+        registerBlockItemParent(blockModels, JDTRegistration.TimeCrystalCluster_Medium_ITEM.get(), "block/time_crystal_cluster_medium");
+        registerBlockItemParent(blockModels, JDTRegistration.TimeCrystalCluster_Large_ITEM.get(), "block/time_crystal_cluster_large");
+        registerBlockItemParent(blockModels, JDTRegistration.ParadoxMachine_ITEM.get(), "block/paradoxmachine");
+        registerBlockItemParent(blockModels, JDTRegistration.InventoryHolder_ITEM.get(), "block/inventory_holder");
+        registerBlockItemParent(blockModels, JDTRegistration.ExperienceHolder_ITEM.get(), "block/experienceholder");
         // GooPatternBlock has no BlockItem (creative-only placement), so nothing to register.
 
         // -----------------------------------------------------------------
         // PLAIN ITEM MODELS (flat_item / handheld)
         // -----------------------------------------------------------------
-        itemModels.generateFlatItem(Registration.Fuel_Canister.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.RawFerricore.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.FerricoreIngot.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.RawBlazegold.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.BlazegoldIngot.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.Celestigem.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.RawEclipseAlloy.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.EclipseAlloyIngot.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.Coal_T1.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.Coal_T2.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.Coal_T3.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.Coal_T4.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.PolymorphicCatalyst.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.PortalFluidCatalyst.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.TimeCrystal.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.TotemOfDeathRecall.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.MachineSettingsCopier.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.TEMPLATE_FERRICORE.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.TEMPLATE_BLAZEGOLD.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.TEMPLATE_CELESTIGEM.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(Registration.TEMPLATE_ECLIPSEALLOY.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.Fuel_Canister.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.RawFerricore.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.FerricoreIngot.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.RawBlazegold.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.BlazegoldIngot.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.Celestigem.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.RawEclipseAlloy.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.EclipseAlloyIngot.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.Coal_T1.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.Coal_T2.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.Coal_T3.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.Coal_T4.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.PolymorphicCatalyst.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.PortalFluidCatalyst.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.TimeCrystal.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.TotemOfDeathRecall.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.MachineSettingsCopier.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.TEMPLATE_FERRICORE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.TEMPLATE_BLAZEGOLD.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.TEMPLATE_CELESTIGEM.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.TEMPLATE_ECLIPSEALLOY.get(), ModelTemplates.FLAT_ITEM);
 
         // Handheld wands / tools (flat_handheld)
-        itemModels.generateFlatItem(Registration.FerricoreWrench.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(Registration.BlazejetWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(Registration.VoidshiftWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(Registration.EclipsegateWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(Registration.TimeWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(Registration.PolymorphicWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
-        itemModels.generateFlatItem(Registration.PolymorphicWandV2.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.FerricoreWrench.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.BlazejetWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.VoidshiftWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.EclipsegateWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.TimeWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.PolymorphicWand.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        itemModels.generateFlatItem(JDTRegistration.PolymorphicWandV2.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
         // CreatureCatcher uses a hand-written Blockbench model at models/item/creaturecatcher_base.json.
         // Emit a plain client-item JSON pointing at it. Captured-mob visual happens via the entity renderer.
-        itemModels.itemModelOutput.accept(Registration.CreatureCatcher.get(),
+        itemModels.itemModelOutput.accept(JDTRegistration.CreatureCatcher.get(),
                 ItemModelUtils.plainModel(modLoc("item/creaturecatcher_base")));
 
         // Upgrades (flat_item, all textures under item/abilityupgrades/<suffix>)
-        for (var upgrade : Registration.UPGRADES.getEntries()) {
+        for (var upgrade : JDTRegistration.UPGRADES.getEntries()) {
             Item u = upgrade.get();
             String path = upgrade.getId().getPath();
             String suffix = path.substring(path.indexOf("_") + 1);
@@ -221,11 +221,11 @@ public class JustDireModels extends ModelProvider {
 
         // Tools: enabled-state texture swap via ConditionalItemModelProperty dispatch.
         // Emit two handheld models per tool: <tool> (disabled/default) and <tool>_active (enabled).
-        for (var tool : Registration.TOOLS.getEntries()) {
+        for (var tool : JDTRegistration.TOOLS.getEntries()) {
             emitEnabledSwapItem(itemModels, tool.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
         }
         // Pocket generator — enabled-state swap, flat handheld.
-        emitEnabledSwapItem(itemModels, Registration.Pocket_Generator.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
+        emitEnabledSwapItem(itemModels, JDTRegistration.Pocket_Generator.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
         // Fluid canister (8 fullness levels) — RangeSelectItemModelProperty dispatch with tint source on the fluid layer.
         emitFluidCanisterModels(itemModels);
@@ -234,14 +234,14 @@ public class JustDireModels extends ModelProvider {
         emitPotionCanisterModels(itemModels);
 
         // Portal Gun V1 — uses a hand-written Blockbench model at models/item/portalgun.json.
-        itemModels.itemModelOutput.accept(Registration.PortalGun.get(),
+        itemModels.itemModelOutput.accept(JDTRegistration.PortalGun.get(),
                 ItemModelUtils.plainModel(modLoc("item/portalgun")));
 
         // Portal Gun V2 (4 fullness levels: 0/33/66/100) — reuses existing hand-written models.
         emitPortalGunV2Model(itemModels);
 
         // Bows: full pulling-stage dispatch via vanilla generateBow
-        for (var bow : Registration.BOWS.getEntries()) {
+        for (var bow : JDTRegistration.BOWS.getEntries()) {
             // Note: vanilla generateBow looks at item/<id> for base and item/<id>_pulling_{0,1,2}.
             // Our bow textures live under item/bows/<id>; emit a model at item/<id> that points at the bows/ texture,
             // then delegate the stage models + dispatch to vanilla.
@@ -277,7 +277,7 @@ public class JustDireModels extends ModelProvider {
         // Armors: dynamic-trim wrapper (Neo extension). 26.1 deleted ArmorItem —
         // armor is plain Item with components — so we route the trim prefix by the
         // registry-name suffix (_helmet/_chestplate/_leggings/_boots).
-        for (var armor : Registration.ARMORS.getEntries()) {
+        for (var armor : JDTRegistration.ARMORS.getEntries()) {
             Item armorItem = armor.get();
             String armorPath = armor.getId().getPath();
             Identifier prefix;
@@ -301,7 +301,7 @@ public class JustDireModels extends ModelProvider {
 
         // Buckets: flat item with BucketFluidTintSource. Emit a bucket model with two layers
         // (shell + fluid) so the tint source can paint the fluid layer while leaving the shell untinted.
-        for (var bucket : Registration.BUCKET_ITEMS.getEntries()) {
+        for (var bucket : JDTRegistration.BUCKET_ITEMS.getEntries()) {
             Item bucketItem = bucket.get();
             Identifier modelId = ModelLocationUtils.getModelLocation(bucketItem);
             // Single-layer flat item model; the tint source colors the whole sprite.
@@ -332,7 +332,7 @@ public class JustDireModels extends ModelProvider {
     }
 
     private static void emitFluidCanisterModels(ItemModelGenerators itemModels) {
-        Item canister = Registration.FluidCanister.get();
+        Item canister = JDTRegistration.FluidCanister.get();
         ItemTintSource tint = new FluidCanisterTintSource();
 
         // Base fluid-canister model uses a neoforge:fluid_container loader with tinted layer1.
@@ -398,7 +398,7 @@ public class JustDireModels extends ModelProvider {
     }
 
     private static void emitPotionCanisterModels(ItemModelGenerators itemModels) {
-        Item canister = Registration.PotionCanister.get();
+        Item canister = JDTRegistration.PotionCanister.get();
         ItemTintSource tint = new PotionCanisterTintSource();
 
         // Empty (no fluid layer visible)
@@ -427,7 +427,7 @@ public class JustDireModels extends ModelProvider {
     private static void emitPortalGunV2Model(ItemModelGenerators itemModels) {
         // PortalGunV2 uses hand-written Blockbench models (portalgun_v2_0/33/66/100.json) at assets/justdirethings/models/item/.
         // The fullness property returns 0/1/2/3; emit a range-select dispatch pointing at those models.
-        Item gun = Registration.PortalGunV2.get();
+        Item gun = JDTRegistration.PortalGunV2.get();
         ItemModel.Unbaked m0 = ItemModelUtils.plainModel(modLoc("item/portalgun_v2_0"));
         ItemModel.Unbaked m1 = ItemModelUtils.plainModel(modLoc("item/portalgun_v2_33"));
         ItemModel.Unbaked m2 = ItemModelUtils.plainModel(modLoc("item/portalgun_v2_66"));
@@ -517,7 +517,7 @@ public class JustDireModels extends ModelProvider {
     private static final TextureSlot PALETTE_SLOT = TextureSlot.create("palette");
 
     private static void gooPatternBlock(BlockModelGenerators blockModels) {
-        Block block = Registration.GooPatternBlock.get();
+        Block block = JDTRegistration.GooPatternBlock.get();
         String basePath = BuiltInRegistries.BLOCK.getKey(block).getPath();
         PropertyDispatch<net.minecraft.client.data.models.MultiVariant> dispatch =
                 PropertyDispatch.initial(GooPatternBlock.GOOSTAGE).generate(stage -> {
@@ -562,7 +562,7 @@ public class JustDireModels extends ModelProvider {
     }
 
     private static void timeCrystalBudding(BlockModelGenerators blockModels) {
-        Block block = Registration.TimeCrystalBuddingBlock.get();
+        Block block = JDTRegistration.TimeCrystalBuddingBlock.get();
         PropertyDispatch<net.minecraft.client.data.models.MultiVariant> dispatch =
                 PropertyDispatch.initial(TimeCrystalBuddingBlock.STAGE).generate(stage -> {
                     String suffix = (stage < 3) ? "_state_" + stage : "";
@@ -589,10 +589,10 @@ public class JustDireModels extends ModelProvider {
     }
 
     private static void sidedBlocks(BlockModelGenerators blockModels) {
-        for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
+        for (var sidedBlock : JDTRegistration.SIDEDBLOCKS.getEntries()) {
             Block block = sidedBlock.get();
             String path = sidedBlock.getId().getPath();
-            if (sidedBlock.equals(Registration.BlockBreakerT1)) {
+            if (sidedBlock.equals(JDTRegistration.BlockBreakerT1)) {
                 sidedBlockActiveDispatch(blockModels, block, path);
             } else {
                 sidedBlockPlain(blockModels, block, path);

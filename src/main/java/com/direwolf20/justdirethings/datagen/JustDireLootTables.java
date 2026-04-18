@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.datagen;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.packs.VanillaBlockLoot;
 import net.minecraft.world.item.Items;
@@ -21,126 +21,126 @@ public class JustDireLootTables extends VanillaBlockLoot {
 
     @Override
     protected void generate() {
-        dropSelf(Registration.GooBlock_Tier1.get());
-        dropSelf(Registration.GooBlock_Tier2.get());
-        dropSelf(Registration.GooBlock_Tier3.get());
-        dropSelf(Registration.GooBlock_Tier4.get());
-        dropSelf(Registration.FerricoreBlock.get());
-        dropSelf(Registration.BlazeGoldBlock.get());
-        dropSelf(Registration.CelestigemBlock.get());
-        dropSelf(Registration.EclipseAlloyBlock.get());
-        dropSelf(Registration.CharcoalBlock.get());
-        dropSelf(Registration.CoalBlock_T1.get());
-        dropSelf(Registration.CoalBlock_T2.get());
-        dropSelf(Registration.CoalBlock_T3.get());
-        dropSelf(Registration.CoalBlock_T4.get());
-        dropSelf(Registration.GooPatternBlock.get());
-        dropSelf(Registration.ItemCollector.get());
-        dropSelf(Registration.BlockBreakerT1.get());
-        dropSelf(Registration.BlockBreakerT2.get());
-        dropSelf(Registration.BlockPlacerT1.get());
-        dropSelf(Registration.BlockPlacerT2.get());
-        dropSelf(Registration.ClickerT1.get());
-        dropSelf(Registration.ClickerT2.get());
-        dropSelf(Registration.SensorT1.get());
-        dropSelf(Registration.SensorT2.get());
-        dropSelf(Registration.DropperT1.get());
-        dropSelf(Registration.DropperT2.get());
-        dropSelf(Registration.GeneratorT1.get());
-        dropSelf(Registration.GeneratorFluidT1.get());
-        dropSelf(Registration.EnergyTransmitter.get());
-        dropSelf(Registration.PlayerAccessor.get());
-        dropOther(Registration.GooSoil_Tier1.get(), Items.DIRT);
-        dropOther(Registration.GooSoil_Tier2.get(), Items.DIRT);
-        dropOther(Registration.GooSoil_Tier3.get(), Items.DIRT);
-        dropOther(Registration.GooSoil_Tier4.get(), Items.DIRT);
-        dropSelf(Registration.BlockSwapperT1.get());
-        dropSelf(Registration.BlockSwapperT2.get());
-        add(Registration.EclipseGateBlock.get(), noDrop());
-        dropSelf(Registration.FluidPlacerT1.get());
-        dropSelf(Registration.FluidPlacerT2.get());
-        dropSelf(Registration.FluidCollectorT1.get());
-        dropSelf(Registration.FluidCollectorT2.get());
-        dropSelf(Registration.TimeCrystalBlock.get());
+        dropSelf(JDTRegistration.GooBlock_Tier1.get());
+        dropSelf(JDTRegistration.GooBlock_Tier2.get());
+        dropSelf(JDTRegistration.GooBlock_Tier3.get());
+        dropSelf(JDTRegistration.GooBlock_Tier4.get());
+        dropSelf(JDTRegistration.FerricoreBlock.get());
+        dropSelf(JDTRegistration.BlazeGoldBlock.get());
+        dropSelf(JDTRegistration.CelestigemBlock.get());
+        dropSelf(JDTRegistration.EclipseAlloyBlock.get());
+        dropSelf(JDTRegistration.CharcoalBlock.get());
+        dropSelf(JDTRegistration.CoalBlock_T1.get());
+        dropSelf(JDTRegistration.CoalBlock_T2.get());
+        dropSelf(JDTRegistration.CoalBlock_T3.get());
+        dropSelf(JDTRegistration.CoalBlock_T4.get());
+        dropSelf(JDTRegistration.GooPatternBlock.get());
+        dropSelf(JDTRegistration.ItemCollector.get());
+        dropSelf(JDTRegistration.BlockBreakerT1.get());
+        dropSelf(JDTRegistration.BlockBreakerT2.get());
+        dropSelf(JDTRegistration.BlockPlacerT1.get());
+        dropSelf(JDTRegistration.BlockPlacerT2.get());
+        dropSelf(JDTRegistration.ClickerT1.get());
+        dropSelf(JDTRegistration.ClickerT2.get());
+        dropSelf(JDTRegistration.SensorT1.get());
+        dropSelf(JDTRegistration.SensorT2.get());
+        dropSelf(JDTRegistration.DropperT1.get());
+        dropSelf(JDTRegistration.DropperT2.get());
+        dropSelf(JDTRegistration.GeneratorT1.get());
+        dropSelf(JDTRegistration.GeneratorFluidT1.get());
+        dropSelf(JDTRegistration.EnergyTransmitter.get());
+        dropSelf(JDTRegistration.PlayerAccessor.get());
+        dropOther(JDTRegistration.GooSoil_Tier1.get(), Items.DIRT);
+        dropOther(JDTRegistration.GooSoil_Tier2.get(), Items.DIRT);
+        dropOther(JDTRegistration.GooSoil_Tier3.get(), Items.DIRT);
+        dropOther(JDTRegistration.GooSoil_Tier4.get(), Items.DIRT);
+        dropSelf(JDTRegistration.BlockSwapperT1.get());
+        dropSelf(JDTRegistration.BlockSwapperT2.get());
+        add(JDTRegistration.EclipseGateBlock.get(), noDrop());
+        dropSelf(JDTRegistration.FluidPlacerT1.get());
+        dropSelf(JDTRegistration.FluidPlacerT2.get());
+        dropSelf(JDTRegistration.FluidCollectorT1.get());
+        dropSelf(JDTRegistration.FluidCollectorT2.get());
+        dropSelf(JDTRegistration.TimeCrystalBlock.get());
         //dropOther(Registration.TimeCrystalCluster.get(), Registration.TimeCrystal.get());
         //dropOther(Registration.TimeCrystalBuddingBlock.get(), Registration.TimeCrystalBlock.get());
-        add(Registration.TimeCrystalCluster.get(), createSilkTouchDispatchTable(
-                Registration.TimeCrystalCluster.get(),
+        add(JDTRegistration.TimeCrystalCluster.get(), createSilkTouchDispatchTable(
+                JDTRegistration.TimeCrystalCluster.get(),
                 this.applyExplosionDecay(
-                        Registration.TimeCrystalCluster.get(),
-                        LootItem.lootTableItem(Registration.TimeCrystal.get())
+                        JDTRegistration.TimeCrystalCluster.get(),
+                        LootItem.lootTableItem(JDTRegistration.TimeCrystal.get())
                 )
         ));
-        add(Registration.TimeCrystalCluster_Small.get(), createSilkTouchOnlyTable(Registration.TimeCrystalCluster_Small_ITEM.get()));
-        add(Registration.TimeCrystalCluster_Medium.get(), createSilkTouchOnlyTable(Registration.TimeCrystalCluster_Medium_ITEM.get()));
-        add(Registration.TimeCrystalCluster_Large.get(), createSilkTouchOnlyTable(Registration.TimeCrystalCluster_Large_ITEM.get()));
-        add(Registration.TimeCrystalBuddingBlock.get(), noDrop());
-        dropSelf(Registration.ParadoxMachine.get());
-        dropSelf(Registration.InventoryHolder.get());
-        dropSelf(Registration.ExperienceHolder.get());
+        add(JDTRegistration.TimeCrystalCluster_Small.get(), createSilkTouchOnlyTable(JDTRegistration.TimeCrystalCluster_Small_ITEM.get()));
+        add(JDTRegistration.TimeCrystalCluster_Medium.get(), createSilkTouchOnlyTable(JDTRegistration.TimeCrystalCluster_Medium_ITEM.get()));
+        add(JDTRegistration.TimeCrystalCluster_Large.get(), createSilkTouchOnlyTable(JDTRegistration.TimeCrystalCluster_Large_ITEM.get()));
+        add(JDTRegistration.TimeCrystalBuddingBlock.get(), noDrop());
+        dropSelf(JDTRegistration.ParadoxMachine.get());
+        dropSelf(JDTRegistration.InventoryHolder.get());
+        dropSelf(JDTRegistration.ExperienceHolder.get());
 
         //Raw Ores
-        add(Registration.RawFerricoreOre.get(), createSilkTouchDispatchTable(
-                Registration.RawFerricoreOre.get(),
+        add(JDTRegistration.RawFerricoreOre.get(), createSilkTouchDispatchTable(
+                JDTRegistration.RawFerricoreOre.get(),
                 this.applyExplosionDecay(
-                        Registration.RawFerricoreOre.get(),
-                        LootItem.lootTableItem(Registration.RawFerricore.get())
+                        JDTRegistration.RawFerricoreOre.get(),
+                        LootItem.lootTableItem(JDTRegistration.RawFerricore.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
-        add(Registration.RawBlazegoldOre.get(), createSilkTouchDispatchTable(
-                Registration.RawBlazegoldOre.get(),
+        add(JDTRegistration.RawBlazegoldOre.get(), createSilkTouchDispatchTable(
+                JDTRegistration.RawBlazegoldOre.get(),
                 this.applyExplosionDecay(
-                        Registration.RawBlazegoldOre.get(),
-                        LootItem.lootTableItem(Registration.RawBlazegold.get())
+                        JDTRegistration.RawBlazegoldOre.get(),
+                        LootItem.lootTableItem(JDTRegistration.RawBlazegold.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
-        add(Registration.RawCelestigemOre.get(), createSilkTouchDispatchTable(
-                Registration.RawCelestigemOre.get(),
+        add(JDTRegistration.RawCelestigemOre.get(), createSilkTouchDispatchTable(
+                JDTRegistration.RawCelestigemOre.get(),
                 this.applyExplosionDecay(
-                        Registration.RawCelestigemOre.get(),
-                        LootItem.lootTableItem(Registration.Celestigem.get())
+                        JDTRegistration.RawCelestigemOre.get(),
+                        LootItem.lootTableItem(JDTRegistration.Celestigem.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
-        add(Registration.RawEclipseAlloyOre.get(), createSilkTouchDispatchTable(
-                Registration.RawEclipseAlloyOre.get(),
+        add(JDTRegistration.RawEclipseAlloyOre.get(), createSilkTouchDispatchTable(
+                JDTRegistration.RawEclipseAlloyOre.get(),
                 this.applyExplosionDecay(
-                        Registration.RawEclipseAlloyOre.get(),
-                        LootItem.lootTableItem(Registration.RawEclipseAlloy.get())
+                        JDTRegistration.RawEclipseAlloyOre.get(),
+                        LootItem.lootTableItem(JDTRegistration.RawEclipseAlloy.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
-        add(Registration.RawCoal_T1.get(), createSilkTouchDispatchTable(
-                Registration.RawCoal_T1.get(),
+        add(JDTRegistration.RawCoal_T1.get(), createSilkTouchDispatchTable(
+                JDTRegistration.RawCoal_T1.get(),
                 this.applyExplosionDecay(
-                        Registration.RawCoal_T1.get(),
-                        LootItem.lootTableItem(Registration.Coal_T1.get())
+                        JDTRegistration.RawCoal_T1.get(),
+                        LootItem.lootTableItem(JDTRegistration.Coal_T1.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
-        add(Registration.RawCoal_T2.get(), createSilkTouchDispatchTable(
-                Registration.RawCoal_T2.get(),
+        add(JDTRegistration.RawCoal_T2.get(), createSilkTouchDispatchTable(
+                JDTRegistration.RawCoal_T2.get(),
                 this.applyExplosionDecay(
-                        Registration.RawCoal_T2.get(),
-                        LootItem.lootTableItem(Registration.Coal_T2.get())
+                        JDTRegistration.RawCoal_T2.get(),
+                        LootItem.lootTableItem(JDTRegistration.Coal_T2.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
-        add(Registration.RawCoal_T3.get(), createSilkTouchDispatchTable(
-                Registration.RawCoal_T3.get(),
+        add(JDTRegistration.RawCoal_T3.get(), createSilkTouchDispatchTable(
+                JDTRegistration.RawCoal_T3.get(),
                 this.applyExplosionDecay(
-                        Registration.RawCoal_T3.get(),
-                        LootItem.lootTableItem(Registration.Coal_T3.get())
+                        JDTRegistration.RawCoal_T3.get(),
+                        LootItem.lootTableItem(JDTRegistration.Coal_T3.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
-        add(Registration.RawCoal_T4.get(), createSilkTouchDispatchTable(
-                Registration.RawCoal_T4.get(),
+        add(JDTRegistration.RawCoal_T4.get(), createSilkTouchDispatchTable(
+                JDTRegistration.RawCoal_T4.get(),
                 this.applyExplosionDecay(
-                        Registration.RawCoal_T4.get(),
-                        LootItem.lootTableItem(Registration.Coal_T4.get())
+                        JDTRegistration.RawCoal_T4.get(),
+                        LootItem.lootTableItem(JDTRegistration.Coal_T4.get())
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(3.0F, 4.0F)))
                 )
         ));
@@ -149,8 +149,8 @@ public class JustDireLootTables extends VanillaBlockLoot {
     @Override
     protected Iterable<Block> getKnownBlocks() {
         List<Block> knownBlocks = new ArrayList<>();
-        knownBlocks.addAll(Registration.BLOCKS.getEntries().stream().map(DeferredHolder::get).toList());
-        knownBlocks.addAll(Registration.SIDEDBLOCKS.getEntries().stream().map(DeferredHolder::get).toList());
+        knownBlocks.addAll(JDTRegistration.BLOCKS.getEntries().stream().map(DeferredHolder::get).toList());
+        knownBlocks.addAll(JDTRegistration.SIDEDBLOCKS.getEntries().stream().map(DeferredHolder::get).toList());
         return knownBlocks;
     }
 }

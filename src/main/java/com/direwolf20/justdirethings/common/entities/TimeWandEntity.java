@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.entities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -24,7 +24,7 @@ public class TimeWandEntity extends Entity {
     }
 
     public TimeWandEntity(Level level, BlockPos blockPos) {
-        this(Registration.TimeWandEntity.get(), level);
+        this(JDTRegistration.TimeWandEntity.get(), level);
         this.blockPos = blockPos;
         this.snapTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
     }

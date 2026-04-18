@@ -6,7 +6,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -42,7 +42,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     public boolean showParticles = true;
 
     public ItemCollectorBE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.ItemCollectorBE.get(), pPos, pBlockState);
+        super(JDTRegistration.ItemCollectorBE.get(), pPos, pBlockState);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     public void doParticles(ItemStack itemStack, Vec3 sourcePos) {

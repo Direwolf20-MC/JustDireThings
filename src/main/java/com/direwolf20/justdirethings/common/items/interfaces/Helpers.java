@@ -2,13 +2,12 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParticleData;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
-import com.direwolf20.justdirethings.setup.Registration;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -567,7 +566,7 @@ public class Helpers {
     private static void doParticles(ItemStack itemStack, ItemEntity entity) {
         Random random = new Random();
         BlockPos pos = getLavaPos(itemStack);
-        ItemFlowParticleData data = new ItemFlowParticleData(new ItemStack(Registration.GooBlock_Tier2.get()), entity.getX(), entity.getY() + 0.75, entity.getZ(), 3);
+        ItemFlowParticleData data = new ItemFlowParticleData(new ItemStack(JDTRegistration.GooBlock_Tier2.get()), entity.getX(), entity.getY() + 0.75, entity.getZ(), 3);
         for (int i = 0; i < 5; i++) {
             double d0 = (double) pos.getX() + random.nextDouble();
             double d1 = (double) pos.getY() + 0.95;

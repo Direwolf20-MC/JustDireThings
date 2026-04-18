@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +20,7 @@ public class GooSoilBE extends BlockEntity {
     protected BlockCapabilityCache<ResourceHandler<ItemResource>, Direction> attachedInventory;
 
     public GooSoilBE(BlockPos pos, BlockState state) {
-        super(Registration.GooSoilBE.get(), pos, state);
+        super(JDTRegistration.GooSoilBE.get(), pos, state);
     }
 
     public void bindInventory(NBTHelpers.BoundInventory boundInventory) {

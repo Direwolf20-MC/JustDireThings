@@ -5,7 +5,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.FluidContainerD
 import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
@@ -41,7 +41,7 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     }
 
     public FluidPlacerT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.FluidPlacerT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.FluidPlacerT1BE.get(), pPos, pBlockState);
     }
 
     public int getMaxMB() {
@@ -130,7 +130,7 @@ public class FluidPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     }
 
     public JustDireFluidTank getFluidTank() {
-        return getData(Registration.MACHINE_FLUID_HANDLER);
+        return getData(JDTRegistration.MACHINE_FLUID_HANDLER);
     }
 
     public boolean isStackValid(FluidStack fluidStack) {

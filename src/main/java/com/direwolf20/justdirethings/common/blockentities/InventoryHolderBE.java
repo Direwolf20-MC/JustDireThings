@@ -3,7 +3,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.capabilities.InventoryHolderItemHandler;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ItemStackKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +36,7 @@ public class InventoryHolderBE extends BaseMachineBE {
     }
 
     public InventoryHolderBE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.InventoryHolderBE.get(), pPos, pBlockState);
+        this(JDTRegistration.InventoryHolderBE.get(), pPos, pBlockState);
     }
 
     public void addSavedItem(int slot) {

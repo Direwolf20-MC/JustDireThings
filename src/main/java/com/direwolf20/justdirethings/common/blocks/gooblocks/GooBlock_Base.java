@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.blocks.gooblocks;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
-import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -93,6 +93,6 @@ public class GooBlock_Base extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new GooBlockBE_Base(Registration.GooBlockBE_Tier1.get(), pos, state);
+        return new GooBlockBE_Base(JDTRegistration.GooBlockBE_Tier1.get(), pos, state);
     }
 }

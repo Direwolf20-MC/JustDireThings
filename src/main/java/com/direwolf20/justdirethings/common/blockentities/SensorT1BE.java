@@ -3,6 +3,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -67,7 +68,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     public SensorT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.SensorT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.SensorT1BE.get(), pPos, pBlockState);
     }
 
     public void addBlockStateProperty(int slot, Map<Property<?>, Comparable<?>> properties) {
@@ -166,7 +167,7 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER_ANYSIZE);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER_ANYSIZE);
     }
 
     @Override

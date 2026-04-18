@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -29,16 +29,16 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
                 .add(EntityType.WITHER)
                 .add(EntityType.WARDEN);
         tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)
-                .add(Registration.TimeWandEntity.get())
-                .add(Registration.ParadoxEntity.get());
+                .add(JDTRegistration.TimeWandEntity.get())
+                .add(JDTRegistration.ParadoxEntity.get());
         tag(ModTags.Entities.PARADOX_DENY)
-                .add(Registration.TimeWandEntity.get())
-                .add(Registration.ParadoxEntity.get());
+                .add(JDTRegistration.TimeWandEntity.get())
+                .add(JDTRegistration.ParadoxEntity.get());
         tag(ModTags.Entities.PARADOX_ABSORB_DENY)
-                .add(Registration.TimeWandEntity.get())
-                .add(Registration.ParadoxEntity.get());
+                .add(JDTRegistration.TimeWandEntity.get())
+                .add(JDTRegistration.ParadoxEntity.get());
         tag(EntityTypeTags.ARROWS)
-                .add(Registration.JustDireArrow.get());
+                .add(JDTRegistration.JustDireArrow.get());
         tag(ModTags.Entities.POLYMORPHIC_PEACEFUL).add(
                 EntityType.SHEEP,
                 EntityType.PIG,

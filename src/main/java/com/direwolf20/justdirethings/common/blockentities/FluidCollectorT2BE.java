@@ -6,7 +6,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineContainerData;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,7 @@ public class FluidCollectorT2BE extends FluidCollectorT1BE implements PoweredMac
     public final PoweredMachineContainerData poweredMachineData;
 
     public FluidCollectorT2BE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.FluidCollectorT2BE.get(), pPos, pBlockState);
+        super(JDTRegistration.FluidCollectorT2BE.get(), pPos, pBlockState);
         poweredMachineData = new PoweredMachineContainerData(this);
     }
 
@@ -42,7 +42,7 @@ public class FluidCollectorT2BE extends FluidCollectorT1BE implements PoweredMac
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(JDTRegistration.ENERGYSTORAGE_MACHINES);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class FluidCollectorT2BE extends FluidCollectorT1BE implements PoweredMac
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     @Override

@@ -1,10 +1,9 @@
 package com.direwolf20.justdirethings.common.entities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.util.ARGB;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -12,6 +11,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -56,7 +56,7 @@ public class JustDireAreaEffectCloud extends Entity implements TraceableEntity {
     }
 
     public JustDireAreaEffectCloud(Level level, double x, double y, double z) {
-        this(Registration.JustDireAreaEffectCloud.get(), level);
+        this(JDTRegistration.JustDireAreaEffectCloud.get(), level);
         this.setPos(x, y, z);
     }
 

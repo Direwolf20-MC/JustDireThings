@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.fluids.unstableportalfluid;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
@@ -14,7 +14,7 @@ public class UnstablePortalFluidBlock extends LiquidBlock {
     public static final Random random = new Random();
 
     public UnstablePortalFluidBlock(Properties properties) {
-        super(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), properties);
+        super(JDTRegistration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), properties);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.entities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.Direction;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
@@ -58,7 +58,7 @@ public class PortalEntity extends Entity {
     }
 
     public PortalEntity(Level world, Direction direction, Direction.Axis axis, UUID portalGunUUID, boolean isPrimary, boolean isAdvanced, UUID owner) {
-        this(Registration.PortalEntity.get(), world);
+        this(JDTRegistration.PortalEntity.get(), world);
         this.entityData.set(DIRECTION, (byte) direction.ordinal());
         this.portalGunUUID = portalGunUUID;
         this.entityData.set(ALIGNMENT, (byte) axis.ordinal());
@@ -228,14 +228,14 @@ public class PortalEntity extends Entity {
         if (!level().isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
             ChunkPos chunkPos = ChunkPos.containing(this.blockPosition());
-            Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), true, false);
+            JDTRegistration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), true, false);
 
             level().playSound(
                     null,
                     getX(),
                     getY(),
                     getZ(),
-                    Registration.PORTAL_GUN_OPEN.get(),
+                    JDTRegistration.PORTAL_GUN_OPEN.get(),
                     SoundSource.NEUTRAL,
                     0.75F,
                     0.4F
@@ -250,7 +250,7 @@ public class PortalEntity extends Entity {
                 getX(),
                 getY(),
                 getZ(),
-                Registration.PORTAL_GUN_CLOSE.get(),
+                JDTRegistration.PORTAL_GUN_CLOSE.get(),
                 SoundSource.NEUTRAL,
                 0.5F,
                 0.2F
@@ -263,7 +263,7 @@ public class PortalEntity extends Entity {
         if (!level().isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
             ChunkPos chunkPos = ChunkPos.containing(this.blockPosition());
-            Registration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), false, false);
+            JDTRegistration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), false, false);
         }
     }
 
@@ -316,7 +316,7 @@ public class PortalEntity extends Entity {
 
     public PortalEntity findPartnerPortal(MinecraftServer server) {
         for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(Registration.PortalEntity.get(), k -> k.getUUID().equals(this.linkedPortalUUID));
+            List<? extends PortalEntity> customEntities = serverLevel.getEntities(JDTRegistration.PortalEntity.get(), k -> k.getUUID().equals(this.linkedPortalUUID));
             if (!customEntities.isEmpty())
                 return customEntities.getFirst();
         }
@@ -445,7 +445,7 @@ public class PortalEntity extends Entity {
     }
 
     public boolean isValidEntity(Entity entity) {
-        if (entity.getType().equals(Registration.PortalEntity.get()))
+        if (entity.getType().equals(JDTRegistration.PortalEntity.get()))
             return false;
         if (entityCooldowns.containsKey(entity.getUUID()))
             return false; // Skip entities with active cooldown

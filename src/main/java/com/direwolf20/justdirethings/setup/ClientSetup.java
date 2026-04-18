@@ -89,76 +89,76 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(Registration.FuelCanister_Container.get(), FuelCanisterScreen::new);
-        event.register(Registration.PocketGenerator_Container.get(), PocketGeneratorScreen::new);
-        event.register(Registration.Tool_Settings_Container.get(), ToolSettingScreen::new);
-        event.register(Registration.Item_Collector_Container.get(), ItemCollectorScreen::new);
-        event.register(Registration.BlockBreakerT1_Container.get(), BlockBreakerT1Screen::new);
-        event.register(Registration.BlockBreakerT2_Container.get(), BlockBreakerT2Screen::new);
-        event.register(Registration.BlockPlacerT1_Container.get(), BlockPlacerT1Screen::new);
-        event.register(Registration.BlockPlacerT2_Container.get(), BlockPlacerT2Screen::new);
-        event.register(Registration.ClickerT1_Container.get(), ClickerT1Screen::new);
-        event.register(Registration.ClickerT2_Container.get(), ClickerT2Screen::new);
-        event.register(Registration.SensorT1_Container.get(), SensorT1Screen::new);
-        event.register(Registration.SensorT2_Container.get(), SensorT2Screen::new);
-        event.register(Registration.DropperT1_Container.get(), DropperT1Screen::new);
-        event.register(Registration.DropperT2_Container.get(), DropperT2Screen::new);
-        event.register(Registration.GeneratorT1_Container.get(), GeneratorT1Screen::new);
-        event.register(Registration.GeneratorFluidT1_Container.get(), GeneratorFluidT1Screen::new);
-        event.register(Registration.EnergyTransmitter_Container.get(), EnergyTransmitterScreen::new);
-        event.register(Registration.BlockSwapperT1_Container.get(), BlockSwapperT1Screen::new);
-        event.register(Registration.BlockSwapperT2_Container.get(), BlockSwapperT2Screen::new);
-        event.register(Registration.PlayerAccessor_Container.get(), PlayerAccessorScreen::new);
-        event.register(Registration.FluidPlacerT1_Container.get(), FluidPlacerT1Screen::new);
-        event.register(Registration.FluidPlacerT2_Container.get(), FluidPlacerT2Screen::new);
-        event.register(Registration.FluidCollectorT1_Container.get(), FluidCollectorT1Screen::new);
-        event.register(Registration.FluidCollectorT2_Container.get(), FluidCollectorT2Screen::new);
-        event.register(Registration.PotionCanister_Container.get(), PotionCanisterScreen::new);
-        event.register(Registration.ParadoxMachine_Container.get(), ParadoxMachineScreen::new);
-        event.register(Registration.InventoryHolder_Container.get(), InventoryHolderScreen::new);
-        event.register(Registration.Experience_Holder_Container.get(), ExperienceHolderScreen::new);
+        event.register(JDTRegistration.FuelCanister_Container.get(), FuelCanisterScreen::new);
+        event.register(JDTRegistration.PocketGenerator_Container.get(), PocketGeneratorScreen::new);
+        event.register(JDTRegistration.Tool_Settings_Container.get(), ToolSettingScreen::new);
+        event.register(JDTRegistration.Item_Collector_Container.get(), ItemCollectorScreen::new);
+        event.register(JDTRegistration.BlockBreakerT1_Container.get(), BlockBreakerT1Screen::new);
+        event.register(JDTRegistration.BlockBreakerT2_Container.get(), BlockBreakerT2Screen::new);
+        event.register(JDTRegistration.BlockPlacerT1_Container.get(), BlockPlacerT1Screen::new);
+        event.register(JDTRegistration.BlockPlacerT2_Container.get(), BlockPlacerT2Screen::new);
+        event.register(JDTRegistration.ClickerT1_Container.get(), ClickerT1Screen::new);
+        event.register(JDTRegistration.ClickerT2_Container.get(), ClickerT2Screen::new);
+        event.register(JDTRegistration.SensorT1_Container.get(), SensorT1Screen::new);
+        event.register(JDTRegistration.SensorT2_Container.get(), SensorT2Screen::new);
+        event.register(JDTRegistration.DropperT1_Container.get(), DropperT1Screen::new);
+        event.register(JDTRegistration.DropperT2_Container.get(), DropperT2Screen::new);
+        event.register(JDTRegistration.GeneratorT1_Container.get(), GeneratorT1Screen::new);
+        event.register(JDTRegistration.GeneratorFluidT1_Container.get(), GeneratorFluidT1Screen::new);
+        event.register(JDTRegistration.EnergyTransmitter_Container.get(), EnergyTransmitterScreen::new);
+        event.register(JDTRegistration.BlockSwapperT1_Container.get(), BlockSwapperT1Screen::new);
+        event.register(JDTRegistration.BlockSwapperT2_Container.get(), BlockSwapperT2Screen::new);
+        event.register(JDTRegistration.PlayerAccessor_Container.get(), PlayerAccessorScreen::new);
+        event.register(JDTRegistration.FluidPlacerT1_Container.get(), FluidPlacerT1Screen::new);
+        event.register(JDTRegistration.FluidPlacerT2_Container.get(), FluidPlacerT2Screen::new);
+        event.register(JDTRegistration.FluidCollectorT1_Container.get(), FluidCollectorT1Screen::new);
+        event.register(JDTRegistration.FluidCollectorT2_Container.get(), FluidCollectorT2Screen::new);
+        event.register(JDTRegistration.PotionCanister_Container.get(), PotionCanisterScreen::new);
+        event.register(JDTRegistration.ParadoxMachine_Container.get(), ParadoxMachineScreen::new);
+        event.register(JDTRegistration.InventoryHolder_Container.get(), InventoryHolderScreen::new);
+        event.register(JDTRegistration.Experience_Holder_Container.get(), ExperienceHolderScreen::new);
     }
 
     @SubscribeEvent
     public static void registerItemDecorators(RegisterItemDecorationsEvent event) {
-        event.register(Registration.TimeWand.get(), new FluidbarDecorator());
-        event.register(Registration.PortalGunV2.get(), new FluidbarDecorator());
-        event.register(Registration.FluidCanister.get(), new FluidbarDecorator());
-        event.register(Registration.PolymorphicWand.get(), new FluidbarDecorator());
-        event.register(Registration.PolymorphicWandV2.get(), new FluidbarDecorator());
+        event.register(JDTRegistration.TimeWand.get(), new FluidbarDecorator());
+        event.register(JDTRegistration.PortalGunV2.get(), new FluidbarDecorator());
+        event.register(JDTRegistration.FluidCanister.get(), new FluidbarDecorator());
+        event.register(JDTRegistration.PolymorphicWand.get(), new FluidbarDecorator());
+        event.register(JDTRegistration.PolymorphicWandV2.get(), new FluidbarDecorator());
     }
 
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         //Register Block Entity Renders
-        event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier1.get(), GooBlockRender_Tier1::new);
-        event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier2.get(), GooBlockRender_Tier2::new);
-        event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier3.get(), GooBlockRender_Tier3::new);
-        event.registerBlockEntityRenderer(Registration.GooBlockBE_Tier4.get(), GooBlockRender_Tier4::new);
-        event.registerBlockEntityRenderer(Registration.ItemCollectorBE.get(), ItemCollectorRenderer::new);
-        event.registerBlockEntityRenderer(Registration.BlockBreakerT2BE.get(), BlockBreakerT2BER::new);
-        event.registerBlockEntityRenderer(Registration.BlockPlacerT2BE.get(), BlockPlacerT2BER::new);
-        event.registerBlockEntityRenderer(Registration.ClickerT2BE.get(), ClickerT2BER::new);
-        event.registerBlockEntityRenderer(Registration.SensorT2BE.get(), SensorT2BER::new);
-        event.registerBlockEntityRenderer(Registration.DropperT2BE.get(), DropperT2BER::new);
-        event.registerBlockEntityRenderer(Registration.EnergyTransmitterBE.get(), EnergyTransmitterRenderer::new);
-        event.registerBlockEntityRenderer(Registration.BlockSwapperT2BE.get(), BlockSwapperT2BER::new);
-        event.registerBlockEntityRenderer(Registration.EclipseGateBE.get(), EclipseGateRenderer::new);
-        event.registerBlockEntityRenderer(Registration.FluidPlacerT2BE.get(), FluidPlacerT2BER::new);
-        event.registerBlockEntityRenderer(Registration.FluidCollectorT2BE.get(), FluidCollectorT2BER::new);
-        event.registerBlockEntityRenderer(Registration.ParadoxMachineBE.get(), ParadoxMachineBER::new);
-        event.registerBlockEntityRenderer(Registration.InventoryHolderBE.get(), InventoryHolderBER::new);
-        event.registerBlockEntityRenderer(Registration.ExperienceHolderBE.get(), ExperienceHolderBER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.GooBlockBE_Tier1.get(), GooBlockRender_Tier1::new);
+        event.registerBlockEntityRenderer(JDTRegistration.GooBlockBE_Tier2.get(), GooBlockRender_Tier2::new);
+        event.registerBlockEntityRenderer(JDTRegistration.GooBlockBE_Tier3.get(), GooBlockRender_Tier3::new);
+        event.registerBlockEntityRenderer(JDTRegistration.GooBlockBE_Tier4.get(), GooBlockRender_Tier4::new);
+        event.registerBlockEntityRenderer(JDTRegistration.ItemCollectorBE.get(), ItemCollectorRenderer::new);
+        event.registerBlockEntityRenderer(JDTRegistration.BlockBreakerT2BE.get(), BlockBreakerT2BER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.BlockPlacerT2BE.get(), BlockPlacerT2BER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.ClickerT2BE.get(), ClickerT2BER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.SensorT2BE.get(), SensorT2BER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.DropperT2BE.get(), DropperT2BER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.EnergyTransmitterBE.get(), EnergyTransmitterRenderer::new);
+        event.registerBlockEntityRenderer(JDTRegistration.BlockSwapperT2BE.get(), BlockSwapperT2BER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.EclipseGateBE.get(), EclipseGateRenderer::new);
+        event.registerBlockEntityRenderer(JDTRegistration.FluidPlacerT2BE.get(), FluidPlacerT2BER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.FluidCollectorT2BE.get(), FluidCollectorT2BER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.ParadoxMachineBE.get(), ParadoxMachineBER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.InventoryHolderBE.get(), InventoryHolderBER::new);
+        event.registerBlockEntityRenderer(JDTRegistration.ExperienceHolderBE.get(), ExperienceHolderBER::new);
 
         //Entities
-        event.registerEntityRenderer(Registration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);
-        event.registerEntityRenderer(Registration.PortalEntity.get(), PortalEntityRender::new);
-        event.registerEntityRenderer(Registration.PortalProjectile.get(), PortalProjectileRender::new);
-        event.registerEntityRenderer(Registration.DecoyEntity.get(), DecoyEntityRender::new);
-        event.registerEntityRenderer(Registration.JustDireArrow.get(), JustDireArrowRenderer::new);
-        event.registerEntityRenderer(Registration.JustDireAreaEffectCloud.get(), NoopRenderer::new);
-        event.registerEntityRenderer(Registration.TimeWandEntity.get(), TimeWandEntityRender::new);
-        event.registerEntityRenderer(Registration.ParadoxEntity.get(), ParadoxEntityRender::new);
+        event.registerEntityRenderer(JDTRegistration.CreatureCatcherEntity.get(), CreatureCatcherEntityRender::new);
+        event.registerEntityRenderer(JDTRegistration.PortalEntity.get(), PortalEntityRender::new);
+        event.registerEntityRenderer(JDTRegistration.PortalProjectile.get(), PortalProjectileRender::new);
+        event.registerEntityRenderer(JDTRegistration.DecoyEntity.get(), DecoyEntityRender::new);
+        event.registerEntityRenderer(JDTRegistration.JustDireArrow.get(), JustDireArrowRenderer::new);
+        event.registerEntityRenderer(JDTRegistration.JustDireAreaEffectCloud.get(), NoopRenderer::new);
+        event.registerEntityRenderer(JDTRegistration.TimeWandEntity.get(), TimeWandEntityRender::new);
+        event.registerEntityRenderer(JDTRegistration.ParadoxEntity.get(), ParadoxEntityRender::new);
     }
 
     @SubscribeEvent
@@ -170,16 +170,16 @@ public class ClientSetup {
                 return UNDERWATER_LOCATION;
             }
         };
-        event.registerFluidType(underwaterOverlay, Registration.POLYMORPHIC_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.PORTAL_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.UNSTABLE_PORTAL_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.REFINED_T2_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.REFINED_T3_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.REFINED_T4_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.UNREFINED_T2_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.UNREFINED_T3_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.UNREFINED_T4_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.TIME_FLUID_TYPE.get());
-        event.registerFluidType(underwaterOverlay, Registration.XP_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.POLYMORPHIC_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.PORTAL_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.UNSTABLE_PORTAL_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.REFINED_T2_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.REFINED_T3_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.REFINED_T4_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.UNREFINED_T2_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.UNREFINED_T3_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.UNREFINED_T4_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.TIME_FLUID_TYPE.get());
+        event.registerFluidType(underwaterOverlay, JDTRegistration.XP_FLUID_TYPE.get());
     }
 }

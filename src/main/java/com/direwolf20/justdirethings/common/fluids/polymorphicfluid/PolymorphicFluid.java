@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.fluids.polymorphicfluid;
 
-import com.direwolf20.justdirethings.setup.Registration;
-import net.minecraft.world.item.Item;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -10,10 +10,10 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
 public abstract class PolymorphicFluid extends BaseFlowingFluid {
     public static final Properties PROPERTIES = new Properties(
-            Registration.POLYMORPHIC_FLUID_TYPE,
-            Registration.POLYMORPHIC_FLUID_FLOWING,
-            Registration.POLYMORPHIC_FLUID_SOURCE
-    ).bucket(Registration.POLYMORPHIC_FLUID_BUCKET).block(Registration.POLYMORPHIC_FLUID_BLOCK);
+            JDTRegistration.POLYMORPHIC_FLUID_TYPE,
+            JDTRegistration.POLYMORPHIC_FLUID_FLOWING,
+            JDTRegistration.POLYMORPHIC_FLUID_SOURCE
+    ).bucket(JDTRegistration.POLYMORPHIC_FLUID_BUCKET).block(JDTRegistration.POLYMORPHIC_FLUID_BLOCK);
 
     protected PolymorphicFluid(Properties properties) {
         super(properties);
@@ -21,17 +21,17 @@ public abstract class PolymorphicFluid extends BaseFlowingFluid {
 
     @Override
     public Fluid getFlowing() {
-        return Registration.POLYMORPHIC_FLUID_FLOWING.get();
+        return JDTRegistration.POLYMORPHIC_FLUID_FLOWING.get();
     }
 
     @Override
     public Fluid getSource() {
-        return Registration.POLYMORPHIC_FLUID_SOURCE.get();
+        return JDTRegistration.POLYMORPHIC_FLUID_SOURCE.get();
     }
 
     @Override
     public Item getBucket() {
-        return Registration.POLYMORPHIC_FLUID_BUCKET.get();
+        return JDTRegistration.POLYMORPHIC_FLUID_BUCKET.get();
     }
 
     @Override

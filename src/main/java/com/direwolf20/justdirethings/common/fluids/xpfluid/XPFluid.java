@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.fluids.xpfluid;
 
-import com.direwolf20.justdirethings.setup.Registration;
-import net.minecraft.world.item.Item;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -10,10 +10,10 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
 public abstract class XPFluid extends BaseFlowingFluid {
     public static final Properties PROPERTIES = new Properties(
-            Registration.XP_FLUID_TYPE,
-            Registration.XP_FLUID_FLOWING,
-            Registration.XP_FLUID_SOURCE
-    ).bucket(Registration.XP_FLUID_BUCKET).block(Registration.XP_FLUID_BLOCK);
+            JDTRegistration.XP_FLUID_TYPE,
+            JDTRegistration.XP_FLUID_FLOWING,
+            JDTRegistration.XP_FLUID_SOURCE
+    ).bucket(JDTRegistration.XP_FLUID_BUCKET).block(JDTRegistration.XP_FLUID_BLOCK);
 
     protected XPFluid(Properties properties) {
         super(properties);
@@ -21,17 +21,17 @@ public abstract class XPFluid extends BaseFlowingFluid {
 
     @Override
     public Fluid getFlowing() {
-        return Registration.XP_FLUID_FLOWING.get();
+        return JDTRegistration.XP_FLUID_FLOWING.get();
     }
 
     @Override
     public Fluid getSource() {
-        return Registration.XP_FLUID_SOURCE.get();
+        return JDTRegistration.XP_FLUID_SOURCE.get();
     }
 
     @Override
     public Item getBucket() {
-        return Registration.XP_FLUID_BUCKET.get();
+        return JDTRegistration.XP_FLUID_BUCKET.get();
     }
 
     @Override

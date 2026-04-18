@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.datagen.recipes;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -11,12 +11,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.PlacementInfo;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +36,7 @@ public class FluidDropRecipe implements CraftingRecipe {
     @Override
     @SuppressWarnings("unchecked")
     public RecipeType<CraftingRecipe> getType() {
-        return (RecipeType<CraftingRecipe>) (RecipeType<?>) Registration.FLUID_DROP_RECIPE_TYPE.get();
+        return (RecipeType<CraftingRecipe>) (RecipeType<?>) JDTRegistration.FLUID_DROP_RECIPE_TYPE.get();
     }
 
     public boolean matches(BlockState blockState, ItemStack catalystStack) {
@@ -106,7 +101,7 @@ public class FluidDropRecipe implements CraftingRecipe {
 
     @Override
     public RecipeSerializer<? extends CraftingRecipe> getSerializer() {
-        return Registration.FLUID_DROP_RECIPE_SERIALIZER.get();
+        return JDTRegistration.FLUID_DROP_RECIPE_SERIALIZER.get();
     }
 
     public static final MapCodec<FluidDropRecipe> CODEC = RecordCodecBuilder.mapCodec(

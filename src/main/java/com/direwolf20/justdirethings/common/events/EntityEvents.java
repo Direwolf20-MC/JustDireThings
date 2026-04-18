@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -75,7 +75,7 @@ public class EntityEvents {
         if (!(entity.level() instanceof ServerLevel serverLevel))
             return null;
 
-        for (RecipeHolder<FluidDropRecipe> recipe : serverLevel.getServer().getRecipeManager().recipeMap().byType(Registration.FLUID_DROP_RECIPE_TYPE.get())) {
+        for (RecipeHolder<FluidDropRecipe> recipe : serverLevel.getServer().getRecipeManager().recipeMap().byType(JDTRegistration.FLUID_DROP_RECIPE_TYPE.get())) {
             FluidDropRecipe fluidDropRecipe = recipe.value();
             if (fluidDropRecipe.matches(blockState, entity.getItem())) {
                 fluidCraftCache.put(fluidInputs, fluidDropRecipe.getOutput());

@@ -5,7 +5,7 @@ import com.direwolf20.justdirethings.client.jei.ghostfilters.GhostFilterBasic;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseScreen;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.datagen.recipes.*;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -41,12 +41,12 @@ public class JEIIntegration implements IModPlugin {
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         IRecipeManager recipeRegistry = jeiRuntime.getRecipeManager();
         List<RecipeHolder<CraftingRecipe>> hiddenRecipes = new ArrayList<>();
-        for (var sidedBlock : Registration.SIDEDBLOCKS.getEntries()) {
+        for (var sidedBlock : JDTRegistration.SIDEDBLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock) {
                 addHiddenNbtClear(hiddenRecipes, sidedBlock.getId());
             }
         }
-        for (var sidedBlock : Registration.BLOCKS.getEntries()) {
+        for (var sidedBlock : JDTRegistration.BLOCKS.getEntries()) {
             if (sidedBlock.get() instanceof BaseMachineBlock) {
                 addHiddenNbtClear(hiddenRecipes, sidedBlock.getId());
             }
@@ -79,25 +79,25 @@ public class JEIIntegration implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        Collection<RecipeHolder<GooSpreadRecipe>> gooSpreadRecipes = JEIRecipeSync.byType(Registration.GOO_SPREAD_RECIPE_TYPE.get());
+        Collection<RecipeHolder<GooSpreadRecipe>> gooSpreadRecipes = JEIRecipeSync.byType(JDTRegistration.GOO_SPREAD_RECIPE_TYPE.get());
         registration.addRecipes(GooSpreadRecipeCategory.TYPE, List.copyOf(gooSpreadRecipes));
 
-        Collection<RecipeHolder<GooSpreadRecipeTag>> gooSpreadTagRecipes = JEIRecipeSync.byType(Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get());
+        Collection<RecipeHolder<GooSpreadRecipeTag>> gooSpreadTagRecipes = JEIRecipeSync.byType(JDTRegistration.GOO_SPREAD_RECIPE_TYPE_TAG.get());
         registration.addRecipes(GooSpreadRecipeTagCategory.TYPE, List.copyOf(gooSpreadTagRecipes));
 
-        Collection<RecipeHolder<FluidDropRecipe>> fluidDropRecipes = JEIRecipeSync.byType(Registration.FLUID_DROP_RECIPE_TYPE.get());
+        Collection<RecipeHolder<FluidDropRecipe>> fluidDropRecipes = JEIRecipeSync.byType(JDTRegistration.FLUID_DROP_RECIPE_TYPE.get());
         registration.addRecipes(FluidDropRecipeCategory.TYPE, List.copyOf(fluidDropRecipes));
 
         //Ore to Resources
         registration.addRecipes(OreToResourceCategory.TYPE,
-                List.of(new OreToResourceRecipe(Registration.RawFerricoreOre.get(), new ItemStack(Registration.RawFerricore)),
-                        new OreToResourceRecipe(Registration.RawBlazegoldOre.get(), new ItemStack(Registration.RawBlazegold)),
-                        new OreToResourceRecipe(Registration.RawCelestigemOre.get(), new ItemStack(Registration.Celestigem)),
-                        new OreToResourceRecipe(Registration.RawEclipseAlloyOre.get(), new ItemStack(Registration.RawEclipseAlloy)),
-                        new OreToResourceRecipe(Registration.RawCoal_T1.get(), new ItemStack(Registration.Coal_T1)),
-                        new OreToResourceRecipe(Registration.RawCoal_T2.get(), new ItemStack(Registration.Coal_T2)),
-                        new OreToResourceRecipe(Registration.RawCoal_T3.get(), new ItemStack(Registration.Coal_T3)),
-                        new OreToResourceRecipe(Registration.RawCoal_T4.get(), new ItemStack(Registration.Coal_T4))
+                List.of(new OreToResourceRecipe(JDTRegistration.RawFerricoreOre.get(), new ItemStack(JDTRegistration.RawFerricore)),
+                        new OreToResourceRecipe(JDTRegistration.RawBlazegoldOre.get(), new ItemStack(JDTRegistration.RawBlazegold)),
+                        new OreToResourceRecipe(JDTRegistration.RawCelestigemOre.get(), new ItemStack(JDTRegistration.Celestigem)),
+                        new OreToResourceRecipe(JDTRegistration.RawEclipseAlloyOre.get(), new ItemStack(JDTRegistration.RawEclipseAlloy)),
+                        new OreToResourceRecipe(JDTRegistration.RawCoal_T1.get(), new ItemStack(JDTRegistration.Coal_T1)),
+                        new OreToResourceRecipe(JDTRegistration.RawCoal_T2.get(), new ItemStack(JDTRegistration.Coal_T2)),
+                        new OreToResourceRecipe(JDTRegistration.RawCoal_T3.get(), new ItemStack(JDTRegistration.Coal_T3)),
+                        new OreToResourceRecipe(JDTRegistration.RawCoal_T4.get(), new ItemStack(JDTRegistration.Coal_T4))
                 ));
 
     }
@@ -112,16 +112,16 @@ public class JEIIntegration implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
         registry.addCraftingStation(GooSpreadRecipeCategory.TYPE,
-                new ItemStack(Registration.GooBlock_Tier1.get()),
-                new ItemStack(Registration.GooBlock_Tier2.get()),
-                new ItemStack(Registration.GooBlock_Tier3.get()),
-                new ItemStack(Registration.GooBlock_Tier4.get()));
+                new ItemStack(JDTRegistration.GooBlock_Tier1.get()),
+                new ItemStack(JDTRegistration.GooBlock_Tier2.get()),
+                new ItemStack(JDTRegistration.GooBlock_Tier3.get()),
+                new ItemStack(JDTRegistration.GooBlock_Tier4.get()));
 
         registry.addCraftingStation(GooSpreadRecipeTagCategory.TYPE,
-                new ItemStack(Registration.GooBlock_Tier1.get()),
-                new ItemStack(Registration.GooBlock_Tier2.get()),
-                new ItemStack(Registration.GooBlock_Tier3.get()),
-                new ItemStack(Registration.GooBlock_Tier4.get()));
+                new ItemStack(JDTRegistration.GooBlock_Tier1.get()),
+                new ItemStack(JDTRegistration.GooBlock_Tier2.get()),
+                new ItemStack(JDTRegistration.GooBlock_Tier3.get()),
+                new ItemStack(JDTRegistration.GooBlock_Tier4.get()));
     }
 
     @Override

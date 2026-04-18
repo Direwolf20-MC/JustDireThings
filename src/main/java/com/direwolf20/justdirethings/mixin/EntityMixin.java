@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.mixin;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +19,6 @@ public abstract class EntityMixin {
     }
 
     private boolean shouldPassThroughWalls(Player player) {
-        return player.getAttributeValue(Registration.PHASE) > 0;
+        return player.getAttributeValue(JDTRegistration.PHASE) > 0;
     }
 }

@@ -7,7 +7,7 @@ import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,7 +43,7 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
     }
 
     public GeneratorFluidT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.GeneratorFluidT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.GeneratorFluidT1BE.get(), pPos, pBlockState);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
     }
 
     public JustDireFluidTank getFluidTank() {
-        return getData(Registration.GENERATOR_FLUID_HANDLER);
+        return getData(JDTRegistration.GENERATOR_FLUID_HANDLER);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_GENERATORS);
+        return getData(JDTRegistration.ENERGYSTORAGE_GENERATORS);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class GeneratorFluidT1BE extends BaseMachineBE implements RedstoneControl
 
     @Override
     public GeneratorFluidItemHandler getMachineHandler() {
-        return getData(Registration.GENERATOR_FLUID_ITEM_HANDLER);
+        return getData(JDTRegistration.GENERATOR_FLUID_ITEM_HANDLER);
     }
 
     public boolean isStackValid(ItemStack itemStack) {

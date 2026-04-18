@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.datagen.recipes;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,12 +11,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.PlacementInfo;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,7 +35,7 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
     @Override
     @SuppressWarnings("unchecked")
     public RecipeType<CraftingRecipe> getType() {
-        return (RecipeType<CraftingRecipe>) (RecipeType<?>) Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get();
+        return (RecipeType<CraftingRecipe>) (RecipeType<?>) JDTRegistration.GOO_SPREAD_RECIPE_TYPE_TAG.get();
     }
 
     public boolean matches(GooBlockBE_Base gooBlockBE_base, BlockState sourceState) {
@@ -100,7 +95,7 @@ public class GooSpreadRecipeTag implements CraftingRecipe {
 
     @Override
     public RecipeSerializer<? extends CraftingRecipe> getSerializer() {
-        return Registration.GOO_SPREAD_RECIPE_SERIALIZER_TAG.get();
+        return JDTRegistration.GOO_SPREAD_RECIPE_SERIALIZER_TAG.get();
     }
 
     public static final MapCodec<GooSpreadRecipeTag> CODEC = RecordCodecBuilder.mapCodec(

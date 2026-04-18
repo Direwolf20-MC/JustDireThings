@@ -29,29 +29,29 @@ public class ModSetup {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB_JUSTDIRETHINGS = CREATIVE_MODE_TABS.register(MODID, () -> CreativeModeTab.builder()
             .title(Component.literal("Just Dire Things"))
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
-            .icon(() -> new ItemStack(Registration.Fuel_Canister.get()))
+            .icon(() -> new ItemStack(JDTRegistration.Fuel_Canister.get()))
             .displayItems((parameters, output) -> {
-                Registration.ITEMS.getEntries().forEach(e -> {
+                JDTRegistration.ITEMS.getEntries().forEach(e -> {
                     Item item = e.get();
                     output.accept(item);
                 });
-                Registration.BUCKET_ITEMS.getEntries().forEach(e -> {
+                JDTRegistration.BUCKET_ITEMS.getEntries().forEach(e -> {
                     Item item = e.get();
                     output.accept(item);
                 });
-                Registration.TOOLS.getEntries().forEach(e -> {
+                JDTRegistration.TOOLS.getEntries().forEach(e -> {
                     Item item = e.get();
                     output.accept(item);
                 });
-                Registration.BOWS.getEntries().forEach(e -> {
+                JDTRegistration.BOWS.getEntries().forEach(e -> {
                     Item item = e.get();
                     output.accept(item);
                 });
-                Registration.ARMORS.getEntries().forEach(e -> {
+                JDTRegistration.ARMORS.getEntries().forEach(e -> {
                     Item item = e.get();
                     output.accept(item);
                 });
-                Registration.UPGRADES.getEntries().forEach(e -> {
+                JDTRegistration.UPGRADES.getEntries().forEach(e -> {
                     Item item = e.get();
                     output.accept(item);
                 });

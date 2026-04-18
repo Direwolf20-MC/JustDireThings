@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.common.capabilities.TransmitterEnergyStorag
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.items.PocketGenerator;
 import com.direwolf20.justdirethings.setup.Config;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -54,7 +55,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
     }
 
     public EnergyTransmitterBE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.EnergyTransmitterBE.get(), pPos, pBlockState);
+        this(JDTRegistration.EnergyTransmitterBE.get(), pPos, pBlockState);
     }
 
     public void setEnergyTransmitterSettings(boolean showParticles) {
@@ -64,7 +65,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
 
     @Override
     public TransmitterEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_TRANSMITTERS);
+        return getData(JDTRegistration.ENERGYSTORAGE_TRANSMITTERS);
     }
 
     @Override
@@ -272,7 +273,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         var tempStorage = transmitterHandlers.get(blockPos);
         if (tempStorage == null) {
             BlockState blockState = level.getBlockState(blockPos);
-            if (blockState.is(Registration.EnergyTransmitter.get())) {
+            if (blockState.is(JDTRegistration.EnergyTransmitter.get())) {
                 tempStorage = BlockCapabilityCache.create(
                         Capabilities.Energy.BLOCK,
                         (ServerLevel) level,

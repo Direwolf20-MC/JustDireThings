@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -24,58 +24,58 @@ public class JustDireBlockTags extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_SHOVEL)
-                .add(Registration.GooBlock_Tier1.get())
-                .add(Registration.GooBlock_Tier2.get())
-                .add(Registration.GooBlock_Tier3.get())
-                .add(Registration.GooBlock_Tier4.get())
-                .add(Registration.GooSoil_Tier1.get())
-                .add(Registration.GooSoil_Tier2.get())
-                .add(Registration.GooSoil_Tier3.get())
-                .add(Registration.GooSoil_Tier4.get());
+                .add(JDTRegistration.GooBlock_Tier1.get())
+                .add(JDTRegistration.GooBlock_Tier2.get())
+                .add(JDTRegistration.GooBlock_Tier3.get())
+                .add(JDTRegistration.GooBlock_Tier4.get())
+                .add(JDTRegistration.GooSoil_Tier1.get())
+                .add(JDTRegistration.GooSoil_Tier2.get())
+                .add(JDTRegistration.GooSoil_Tier3.get())
+                .add(JDTRegistration.GooSoil_Tier4.get());
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(Registration.FerricoreBlock.get())
-                .add(Registration.RawFerricoreOre.get())
-                .add(Registration.BlazeGoldBlock.get())
-                .add(Registration.RawBlazegoldOre.get())
-                .add(Registration.CelestigemBlock.get())
-                .add(Registration.RawCelestigemOre.get())
-                .add(Registration.EclipseAlloyBlock.get())
-                .add(Registration.RawEclipseAlloyOre.get())
-                .add(Registration.ItemCollector.get())
-                .add(Registration.BlockBreakerT1.get())
-                .add(Registration.BlockBreakerT2.get())
-                .add(Registration.BlockPlacerT1.get())
-                .add(Registration.BlockPlacerT2.get())
-                .add(Registration.ClickerT1.get())
-                .add(Registration.ClickerT2.get())
-                .add(Registration.SensorT1.get())
-                .add(Registration.SensorT2.get())
-                .add(Registration.DropperT1.get())
-                .add(Registration.DropperT2.get())
-                .add(Registration.GeneratorT1.get())
-                .add(Registration.GeneratorFluidT1.get())
-                .add(Registration.EnergyTransmitter.get())
-                .add(Registration.RawCoal_T1.get())
-                .add(Registration.RawCoal_T2.get())
-                .add(Registration.RawCoal_T3.get())
-                .add(Registration.RawCoal_T4.get())
-                .add(Registration.CoalBlock_T1.get())
-                .add(Registration.CoalBlock_T2.get())
-                .add(Registration.CoalBlock_T3.get())
-                .add(Registration.CoalBlock_T4.get())
-                .add(Registration.BlockSwapperT1.get())
-                .add(Registration.BlockSwapperT2.get())
-                .add(Registration.PlayerAccessor.get())
-                .add(Registration.FluidPlacerT1.get())
-                .add(Registration.FluidPlacerT2.get())
-                .add(Registration.FluidCollectorT1.get())
-                .add(Registration.FluidCollectorT2.get())
-                .add(Registration.TimeCrystalCluster.get())
-                .add(Registration.TimeCrystalBlock.get())
-                .add(Registration.ParadoxMachine.get())
-                .add(Registration.InventoryHolder.get())
-                .add(Registration.ExperienceHolder.get())
-                .add(Registration.CharcoalBlock.get());
+                .add(JDTRegistration.FerricoreBlock.get())
+                .add(JDTRegistration.RawFerricoreOre.get())
+                .add(JDTRegistration.BlazeGoldBlock.get())
+                .add(JDTRegistration.RawBlazegoldOre.get())
+                .add(JDTRegistration.CelestigemBlock.get())
+                .add(JDTRegistration.RawCelestigemOre.get())
+                .add(JDTRegistration.EclipseAlloyBlock.get())
+                .add(JDTRegistration.RawEclipseAlloyOre.get())
+                .add(JDTRegistration.ItemCollector.get())
+                .add(JDTRegistration.BlockBreakerT1.get())
+                .add(JDTRegistration.BlockBreakerT2.get())
+                .add(JDTRegistration.BlockPlacerT1.get())
+                .add(JDTRegistration.BlockPlacerT2.get())
+                .add(JDTRegistration.ClickerT1.get())
+                .add(JDTRegistration.ClickerT2.get())
+                .add(JDTRegistration.SensorT1.get())
+                .add(JDTRegistration.SensorT2.get())
+                .add(JDTRegistration.DropperT1.get())
+                .add(JDTRegistration.DropperT2.get())
+                .add(JDTRegistration.GeneratorT1.get())
+                .add(JDTRegistration.GeneratorFluidT1.get())
+                .add(JDTRegistration.EnergyTransmitter.get())
+                .add(JDTRegistration.RawCoal_T1.get())
+                .add(JDTRegistration.RawCoal_T2.get())
+                .add(JDTRegistration.RawCoal_T3.get())
+                .add(JDTRegistration.RawCoal_T4.get())
+                .add(JDTRegistration.CoalBlock_T1.get())
+                .add(JDTRegistration.CoalBlock_T2.get())
+                .add(JDTRegistration.CoalBlock_T3.get())
+                .add(JDTRegistration.CoalBlock_T4.get())
+                .add(JDTRegistration.BlockSwapperT1.get())
+                .add(JDTRegistration.BlockSwapperT2.get())
+                .add(JDTRegistration.PlayerAccessor.get())
+                .add(JDTRegistration.FluidPlacerT1.get())
+                .add(JDTRegistration.FluidPlacerT2.get())
+                .add(JDTRegistration.FluidCollectorT1.get())
+                .add(JDTRegistration.FluidCollectorT2.get())
+                .add(JDTRegistration.TimeCrystalCluster.get())
+                .add(JDTRegistration.TimeCrystalBlock.get())
+                .add(JDTRegistration.ParadoxMachine.get())
+                .add(JDTRegistration.InventoryHolder.get())
+                .add(JDTRegistration.ExperienceHolder.get())
+                .add(JDTRegistration.CharcoalBlock.get());
         tag(ModTags.Blocks.LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
@@ -85,28 +85,28 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Blocks.FERN)
                 .add(Blocks.LARGE_FERN);
         tag(Tags.Blocks.ORES)
-                .add(Registration.RawFerricoreOre.get())
-                .add(Registration.RawBlazegoldOre.get())
-                .add(Registration.RawCelestigemOre.get())
-                .add(Registration.RawEclipseAlloyOre.get())
-                .add(Registration.RawCoal_T1.get())
-                .add(Registration.RawCoal_T2.get())
-                .add(Registration.RawCoal_T3.get())
-                .add(Registration.RawCoal_T4.get());
+                .add(JDTRegistration.RawFerricoreOre.get())
+                .add(JDTRegistration.RawBlazegoldOre.get())
+                .add(JDTRegistration.RawCelestigemOre.get())
+                .add(JDTRegistration.RawEclipseAlloyOre.get())
+                .add(JDTRegistration.RawCoal_T1.get())
+                .add(JDTRegistration.RawCoal_T2.get())
+                .add(JDTRegistration.RawCoal_T3.get())
+                .add(JDTRegistration.RawCoal_T4.get());
         tag(Tags.Blocks.STORAGE_BLOCKS)
-                .add(Registration.FerricoreBlock.get())
-                .add(Registration.BlazeGoldBlock.get())
-                .add(Registration.CelestigemBlock.get())
-                .add(Registration.EclipseAlloyBlock.get())
-                .add(Registration.CoalBlock_T1.get())
-                .add(Registration.CoalBlock_T2.get())
-                .add(Registration.CoalBlock_T3.get())
-                .add(Registration.CoalBlock_T4.get());
+                .add(JDTRegistration.FerricoreBlock.get())
+                .add(JDTRegistration.BlazeGoldBlock.get())
+                .add(JDTRegistration.CelestigemBlock.get())
+                .add(JDTRegistration.EclipseAlloyBlock.get())
+                .add(JDTRegistration.CoalBlock_T1.get())
+                .add(JDTRegistration.CoalBlock_T2.get())
+                .add(JDTRegistration.CoalBlock_T3.get())
+                .add(JDTRegistration.CoalBlock_T4.get());
         tag(BlockTags.SUPPORTS_BAMBOO)
-                .add(Registration.GooSoil_Tier1.get())
-                .add(Registration.GooSoil_Tier2.get())
-                .add(Registration.GooSoil_Tier3.get())
-                .add(Registration.GooSoil_Tier4.get());
+                .add(JDTRegistration.GooSoil_Tier1.get())
+                .add(JDTRegistration.GooSoil_Tier2.get())
+                .add(JDTRegistration.GooSoil_Tier3.get())
+                .add(JDTRegistration.GooSoil_Tier4.get());
         tag(ModTags.Blocks.NO_AUTO_CLICK);
         tag(ModTags.Blocks.SWAPPERDENY)
                 .add(Blocks.PISTON_HEAD)
@@ -131,19 +131,19 @@ public class JustDireBlockTags extends BlockTagsProvider {
                         Blocks.STRUCTURE_BLOCK,
                         Blocks.JIGSAW);
         tag(Tags.Blocks.BUDDING_BLOCKS)
-                .add(Registration.TimeCrystalBuddingBlock.get());
+                .add(JDTRegistration.TimeCrystalBuddingBlock.get());
         tag(Tags.Blocks.BUDS)
-                .add(Registration.TimeCrystalCluster_Small.get())
-                .add(Registration.TimeCrystalCluster_Medium.get())
-                .add(Registration.TimeCrystalCluster_Large.get());
+                .add(JDTRegistration.TimeCrystalCluster_Small.get())
+                .add(JDTRegistration.TimeCrystalCluster_Medium.get())
+                .add(JDTRegistration.TimeCrystalCluster_Large.get());
         tag(Tags.Blocks.CLUSTERS)
-                .add(Registration.TimeCrystalCluster.get());
+                .add(JDTRegistration.TimeCrystalCluster.get());
         tag(ModTags.Blocks.TICK_SPEED_DENY);
         tag(ModTags.Blocks.PARADOX_ALLOW)
                 .addTag(Tags.Blocks.ORES);
         tag(ModTags.Blocks.PARADOX_ABSORB_DENY)
                 .add(Blocks.BEDROCK);
         tag(ModTags.Blocks.CHARCOAL)
-                .add(Registration.CharcoalBlock.get());
+                .add(JDTRegistration.CharcoalBlock.get());
     }
 }

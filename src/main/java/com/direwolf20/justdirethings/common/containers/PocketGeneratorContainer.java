@@ -3,7 +3,7 @@ package com.direwolf20.justdirethings.common.containers;
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
 import com.direwolf20.justdirethings.common.containers.slots.FuelSlot;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +27,7 @@ public class PocketGeneratorContainer extends BaseContainer {
     }
 
     public PocketGeneratorContainer(int windowId, Inventory playerInventory, Player player, ItemStack pocketGenerator) {
-        super(Registration.PocketGenerator_Container.get(), windowId);
+        super(JDTRegistration.PocketGenerator_Container.get(), windowId);
         playerEntity = player;
         handler = new ItemAccessItemHandler(ItemAccess.forStack(pocketGenerator), JustDireDataComponents.ITEMSTACK_HANDLER.get(), 1);
         this.pocketGeneratorItemStack = pocketGenerator;

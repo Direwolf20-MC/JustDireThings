@@ -7,7 +7,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -59,7 +59,7 @@ public class PlayerEvents {
             if (toggleableTool.canUseAbilityAndDurability(itemStack, Ability.FLIGHT))
                 event.addModifier(NeoForgeMod.CREATIVE_FLIGHT, creativeFlight, EquipmentSlotGroup.CHEST);
             if (toggleableTool.canUseAbility(itemStack, Ability.PHASE))
-                event.addModifier(Registration.PHASE, phase, EquipmentSlotGroup.LEGS);
+                event.addModifier(JDTRegistration.PHASE, phase, EquipmentSlotGroup.LEGS);
         }
         //A catch all for unpowered itemse
         if (itemStack.getItem() instanceof PoweredTool poweredTool && PoweredItem.getAvailableEnergy(itemStack) < poweredTool.getBlockBreakFECost()) {

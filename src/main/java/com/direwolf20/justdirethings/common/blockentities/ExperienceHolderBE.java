@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParti
 import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ExperienceUtils;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
@@ -44,7 +44,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     public boolean showParticles = true;
 
     public ExperienceHolderBE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.ExperienceHolderBE.get(), pPos, pBlockState);
+        super(JDTRegistration.ExperienceHolderBE.get(), pPos, pBlockState);
     }
 
     @Override

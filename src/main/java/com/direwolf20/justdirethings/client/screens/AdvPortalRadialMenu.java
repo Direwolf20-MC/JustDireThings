@@ -14,7 +14,7 @@ import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.network.data.PortalGunFavoriteChangePayload;
 import com.direwolf20.justdirethings.common.network.data.PortalGunFavoritePayload;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
@@ -255,7 +255,7 @@ public class AdvPortalRadialMenu extends Screen {
     public void saveFavorite() {
         slotSelected = slotHovered;
         ClientPacketDistributor.sendToServer(new PortalGunFavoritePayload(slotSelected, staysOpen));
-        OurSounds.playSound(Registration.BEEP.get());
+        OurSounds.playSound(JDTRegistration.BEEP.get());
     }
 
     public void addFavorite() {

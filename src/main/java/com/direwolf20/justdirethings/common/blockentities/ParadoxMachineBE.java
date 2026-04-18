@@ -6,10 +6,10 @@ import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.entities.ParadoxEntity;
 import com.direwolf20.justdirethings.common.network.data.ParadoxSyncPayload;
-import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
@@ -66,7 +66,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
     private final static Random random = new Random();
 
     public ParadoxMachineBE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.ParadoxMachineBE.get(), pPos, pBlockState);
+        super(JDTRegistration.ParadoxMachineBE.get(), pPos, pBlockState);
         poweredMachineData = new PoweredMachineContainerData(this);
         fluidContainerData = new FluidContainerData(this);
     }
@@ -319,7 +319,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     @Override
     public JustDireFluidTank getFluidTank() {
-        return getData(Registration.PARADOX_FLUID_HANDLER);
+        return getData(JDTRegistration.PARADOX_FLUID_HANDLER);
     }
 
     @Override
@@ -349,7 +349,7 @@ public class ParadoxMachineBE extends BaseMachineBE implements PoweredMachineBE,
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(JDTRegistration.ENERGYSTORAGE_MACHINES);
     }
 
     @Override

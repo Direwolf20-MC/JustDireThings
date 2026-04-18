@@ -7,10 +7,10 @@ import com.direwolf20.justdirethings.common.events.BlockEvents;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.common.network.data.ClientSoundPayload;
-import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscTools;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -46,9 +46,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -157,9 +157,9 @@ public class AbilityMethods {
             if (testUseTool(pStack, Ability.ECLIPSEGATE) < 0)
                 break;
             BlockState blockState = level.getBlockState(blockPos);
-            boolean placed = level.setBlockAndUpdate(blockPos, Registration.EclipseGateBlock.get().defaultBlockState());
+            boolean placed = level.setBlockAndUpdate(blockPos, JDTRegistration.EclipseGateBlock.get().defaultBlockState());
             if (!placed) continue;
-            level.sendBlockUpdated(blockPos, blockState, Registration.EclipseGateBlock.get().defaultBlockState(), 3);
+            level.sendBlockUpdated(blockPos, blockState, JDTRegistration.EclipseGateBlock.get().defaultBlockState(), 3);
             BlockEntity be = level.getBlockEntity(blockPos);
             if (be instanceof EclipseGateBE eclipseGateBE) {
                 eclipseGateBE.setSourceBlock(blockState);
@@ -200,7 +200,7 @@ public class AbilityMethods {
     public static boolean isValidGateBlock(ServerLevel serverLevel, BlockPos blockPos, Player player) {
         if (serverLevel.getBlockEntity(blockPos) != null) return false;
         BlockState blockState = serverLevel.getBlockState(blockPos);
-        if (blockState.is(Registration.EclipseGateBlock.get())) return false;
+        if (blockState.is(JDTRegistration.EclipseGateBlock.get())) return false;
         if (blockState.isAir()) return false;
         if (blockState.getDestroySpeed(serverLevel, blockPos) < 0) return false;
         if (blockState.is(ModTags.Blocks.ECLISEGATEDENY)) return false;

@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.common.items.CreatureCatcher;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
-import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -61,8 +61,8 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
 
     }
 
-    public CreatureCatcherEntity(Level pLevel, LivingEntity pShooter) {
-        super(Registration.CreatureCatcherEntity.get(), pShooter, pLevel);
+    public CreatureCatcherEntity(Level pLevel, LivingEntity pShooter, ItemStack pItemStack) {
+        super(JDTRegistration.CreatureCatcherEntity.get(), pShooter, pLevel, pItemStack);
     }
 
     public boolean hasHitEntity() {
@@ -103,7 +103,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return Registration.CreatureCatcher.get();
+        return JDTRegistration.CreatureCatcher.get();
     }
 
     @Override

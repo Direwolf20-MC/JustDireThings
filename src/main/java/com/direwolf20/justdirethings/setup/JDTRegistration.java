@@ -104,7 +104,7 @@ import java.util.function.Supplier;
 import static com.direwolf20.justdirethings.JustDireThings.MODID;
 import static com.direwolf20.justdirethings.client.particles.ModParticles.PARTICLE_TYPES;
 
-public class Registration {
+public class JDTRegistration {
     public static final TicketController TICKET_CONTROLLER = new TicketController(Identifier.fromNamespaceAndPath(MODID, "chunk_loader"), null);
 
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
@@ -225,7 +225,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> POLYMORPHIC_FLUID_BUCKET = BUCKET_ITEMS.registerItem("polymorphic_fluid_bucket",
-            props -> new BucketItem(Registration.POLYMORPHIC_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.POLYMORPHIC_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Portal Fluid
@@ -240,7 +240,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> PORTAL_FLUID_BUCKET = BUCKET_ITEMS.registerItem("portal_fluid_bucket",
-            props -> new BucketItem(Registration.PORTAL_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.PORTAL_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Time Fluid
@@ -255,7 +255,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> TIME_FLUID_BUCKET = BUCKET_ITEMS.registerItem("time_fluid_bucket",
-            props -> new BucketItem(Registration.TIME_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.TIME_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Unstable Portal Fluid
@@ -270,7 +270,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> UNSTABLE_PORTAL_FLUID_BUCKET = BUCKET_ITEMS.registerItem("unstable_portal_fluid_bucket",
-            props -> new BucketItem(Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.UNSTABLE_PORTAL_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Unrefined T2 Fuel
@@ -285,7 +285,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> UNREFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.registerItem("unrefined_t2_fluid_bucket",
-            props -> new BucketItem(Registration.UNREFINED_T2_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.UNREFINED_T2_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Refined T2 Fuel
@@ -300,7 +300,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> REFINED_T2_FLUID_BUCKET = BUCKET_ITEMS.registerItem("refined_t2_fluid_bucket",
-            props -> new BucketItem(Registration.REFINED_T2_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.REFINED_T2_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Unrefined T3 Fuel
@@ -315,7 +315,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> UNREFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.registerItem("unrefined_t3_fluid_bucket",
-            props -> new BucketItem(Registration.UNREFINED_T3_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.UNREFINED_T3_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Refined T3 Fuel
@@ -330,7 +330,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> REFINED_T3_FLUID_BUCKET = BUCKET_ITEMS.registerItem("refined_t3_fluid_bucket",
-            props -> new BucketItem(Registration.REFINED_T3_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.REFINED_T3_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Unrefined T4 Fuel
@@ -345,7 +345,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> UNREFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.registerItem("unrefined_t4_fluid_bucket",
-            props -> new BucketItem(Registration.UNREFINED_T4_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.UNREFINED_T4_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //Refined T4 Fuel
@@ -360,7 +360,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> REFINED_T4_FLUID_BUCKET = BUCKET_ITEMS.registerItem("refined_t4_fluid_bucket",
-            props -> new BucketItem(Registration.REFINED_T4_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.REFINED_T4_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //XP Fluid
@@ -375,7 +375,7 @@ public class Registration {
             () -> BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).replaceable().noCollision().strength(100.0F)
                     .pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
     public static final DeferredHolder<Item, BucketItem> XP_FLUID_BUCKET = BUCKET_ITEMS.registerItem("xp_fluid_bucket",
-            props -> new BucketItem(Registration.XP_FLUID_SOURCE.get(), props),
+            props -> new BucketItem(JDTRegistration.XP_FLUID_SOURCE.get(), props),
             () -> new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
 

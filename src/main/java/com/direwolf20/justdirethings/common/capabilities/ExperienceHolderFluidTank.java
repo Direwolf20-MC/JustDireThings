@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.capabilities;
 
 import com.direwolf20.justdirethings.common.blockentities.ExperienceHolderBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -29,7 +29,7 @@ public class ExperienceHolderFluidTank implements ResourceHandler<FluidResource>
 
     @Override
     public FluidResource getResource(int index) {
-        return FluidResource.of(Registration.XP_FLUID_SOURCE.get());
+        return FluidResource.of(JDTRegistration.XP_FLUID_SOURCE.get());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ExperienceHolderFluidTank implements ResourceHandler<FluidResource>
     @Override
     public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
         TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-        if (!resource.is(Registration.XP_FLUID_SOURCE.get())) return 0;
+        if (!resource.is(JDTRegistration.XP_FLUID_SOURCE.get())) return 0;
         int drainable = amount - (amount % MB_PER_XP);
         if (drainable <= 0) return 0;
         int xpNeeded = drainable / MB_PER_XP;

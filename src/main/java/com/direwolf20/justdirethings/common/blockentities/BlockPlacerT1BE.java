@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.FakePlayerUtil;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
@@ -36,7 +36,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     }
 
     public BlockPlacerT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.BlockPlacerT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.BlockPlacerT1BE.get(), pPos, pBlockState);
     }
 
     @Override

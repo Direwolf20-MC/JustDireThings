@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -18,7 +18,7 @@ public class JustDireFluidTags extends FluidTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(ModTags.Fluids.EXPERIENCE)
-                .add(Registration.XP_FLUID_SOURCE.get())
-                .add(Registration.XP_FLUID_FLOWING.get());
+                .add(JDTRegistration.XP_FLUID_SOURCE.get())
+                .add(JDTRegistration.XP_FLUID_FLOWING.get());
     }
 }

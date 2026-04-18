@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooBlock_Base;
 import com.direwolf20.justdirethings.common.blocks.gooblocks.GooPatternBlock;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.QuadInstance;
@@ -147,7 +147,7 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         int alphaByte = Math.max(0, Math.min(255, Math.round(alpha * 255F)));
         int packedColor = (alphaByte << 24) | 0x00FFFFFF;
 
-        BlockState patternState = Registration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, tensDigit);
+        BlockState patternState = JDTRegistration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, tensDigit);
 
         poseStack.pushPose();
         // Offset to the direction we're crafting at (render on neighbor block).

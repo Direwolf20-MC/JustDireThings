@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
@@ -170,7 +170,7 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     public ItemStacksResourceHandler getMachineHandler() {
-        return getData(Registration.MACHINE_HANDLER);
+        return getData(JDTRegistration.MACHINE_HANDLER);
     }
 
     @Override

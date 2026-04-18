@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityMethods;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -10,7 +10,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
@@ -34,7 +37,7 @@ public class DecoyEntity extends LivingEntity {
     }
 
     public DecoyEntity(Level level) {
-        this(Registration.DecoyEntity.get(), level);
+        this(JDTRegistration.DecoyEntity.get(), level);
     }
 
     public static AttributeSupplier.Builder createAttributes() {

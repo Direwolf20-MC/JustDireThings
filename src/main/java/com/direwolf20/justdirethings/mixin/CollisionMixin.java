@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.mixin;
 
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
-import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -63,6 +63,6 @@ public interface CollisionMixin {
     }
 
     default boolean shouldPassThroughWalls(Player player) {
-        return player.getAttributeValue(Registration.PHASE) > 0;
+        return player.getAttributeValue(JDTRegistration.PHASE) > 0;
     }
 }

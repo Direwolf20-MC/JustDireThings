@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +24,7 @@ public class EclipseGateBE extends BlockEntity {
     public BlockState sourceBlock;
 
     public EclipseGateBE(BlockPos pos, BlockState state) {
-        super(Registration.EclipseGateBE.get(), pos, state);
+        super(JDTRegistration.EclipseGateBE.get(), pos, state);
     }
 
     public void tickClient() {

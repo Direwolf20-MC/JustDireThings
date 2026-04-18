@@ -3,7 +3,7 @@ package com.direwolf20.justdirethings.common.containers;
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +26,7 @@ public class PotionCanisterContainer extends BaseContainer {
     }
 
     public PotionCanisterContainer(int windowId, Inventory playerInventory, Player player, ItemStack potionCanister) {
-        super(Registration.PotionCanister_Container.get(), windowId);
+        super(JDTRegistration.PotionCanister_Container.get(), windowId);
         playerEntity = player;
         handler = new PotionCanisterHandler(potionCanister, JustDireDataComponents.TOOL_CONTENTS.get(), 1);
         this.potionCanister = potionCanister;

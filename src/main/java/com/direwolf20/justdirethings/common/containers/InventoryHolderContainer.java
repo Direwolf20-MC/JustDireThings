@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.common.blockentities.InventoryHolderBE;
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.common.containers.slots.InventoryHolderSlot;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ItemStackKey;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,7 +37,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
     }
 
     public InventoryHolderContainer(int windowId, Inventory playerInventory, BlockPos blockPos) {
-        super(Registration.InventoryHolder_Container.get(), windowId, playerInventory, blockPos);
+        super(JDTRegistration.InventoryHolder_Container.get(), windowId, playerInventory, blockPos);
         addPlayerSlots(player.getInventory());
         addArmorSlots(player, player.getInventory());
         if (this.baseMachineBE instanceof InventoryHolderBE inventoryHolderBE)
@@ -53,7 +53,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, Registration.InventoryHolder.get());
+        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, JDTRegistration.InventoryHolder.get());
     }
 
     public void sendAllItemsToMachine() {

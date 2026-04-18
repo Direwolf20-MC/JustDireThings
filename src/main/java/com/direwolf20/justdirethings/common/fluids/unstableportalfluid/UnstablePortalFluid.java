@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.fluids.unstableportalfluid;
 
-import com.direwolf20.justdirethings.setup.Registration;
-import net.minecraft.world.item.Item;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -10,10 +10,10 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
 public abstract class UnstablePortalFluid extends BaseFlowingFluid {
     public static final Properties PROPERTIES = new Properties(
-            Registration.UNSTABLE_PORTAL_FLUID_TYPE,
-            Registration.UNSTABLE_PORTAL_FLUID_FLOWING,
-            Registration.UNSTABLE_PORTAL_FLUID_SOURCE
-    ).bucket(Registration.UNSTABLE_PORTAL_FLUID_BUCKET).block(Registration.UNSTABLE_PORTAL_FLUID_BLOCK);
+            JDTRegistration.UNSTABLE_PORTAL_FLUID_TYPE,
+            JDTRegistration.UNSTABLE_PORTAL_FLUID_FLOWING,
+            JDTRegistration.UNSTABLE_PORTAL_FLUID_SOURCE
+    ).bucket(JDTRegistration.UNSTABLE_PORTAL_FLUID_BUCKET).block(JDTRegistration.UNSTABLE_PORTAL_FLUID_BLOCK);
 
     protected UnstablePortalFluid(Properties properties) {
         super(properties);
@@ -21,17 +21,17 @@ public abstract class UnstablePortalFluid extends BaseFlowingFluid {
 
     @Override
     public Fluid getFlowing() {
-        return Registration.UNSTABLE_PORTAL_FLUID_FLOWING.get();
+        return JDTRegistration.UNSTABLE_PORTAL_FLUID_FLOWING.get();
     }
 
     @Override
     public Fluid getSource() {
-        return Registration.UNSTABLE_PORTAL_FLUID_SOURCE.get();
+        return JDTRegistration.UNSTABLE_PORTAL_FLUID_SOURCE.get();
     }
 
     @Override
     public Item getBucket() {
-        return Registration.UNSTABLE_PORTAL_FLUID_BUCKET.get();
+        return JDTRegistration.UNSTABLE_PORTAL_FLUID_BUCKET.get();
     }
 
     @Override

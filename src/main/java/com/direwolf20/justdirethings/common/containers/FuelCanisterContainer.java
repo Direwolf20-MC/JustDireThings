@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
 import com.direwolf20.justdirethings.common.containers.handlers.FuelCanisterHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +26,7 @@ public class FuelCanisterContainer extends BaseContainer {
     }
 
     public FuelCanisterContainer(int windowId, Inventory playerInventory, Player player, ItemStack fuelCanister) {
-        super(Registration.FuelCanister_Container.get(), windowId);
+        super(JDTRegistration.FuelCanister_Container.get(), windowId);
         playerEntity = player;
         this.handler = new FuelCanisterHandler(SLOTS, fuelCanister, resolveFuelValues(player));
         this.fuelCanisterItemstack = fuelCanister;

@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.fluids.portalfluid;
 
-import com.direwolf20.justdirethings.setup.Registration;
-import net.minecraft.world.item.Item;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -10,10 +10,10 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
 public abstract class PortalFluid extends BaseFlowingFluid {
     public static final BaseFlowingFluid.Properties PROPERTIES = new BaseFlowingFluid.Properties(
-            Registration.PORTAL_FLUID_TYPE,
-            Registration.PORTAL_FLUID_FLOWING,
-            Registration.PORTAL_FLUID_SOURCE
-    ).bucket(Registration.PORTAL_FLUID_BUCKET).block(Registration.PORTAL_FLUID_BLOCK);
+            JDTRegistration.PORTAL_FLUID_TYPE,
+            JDTRegistration.PORTAL_FLUID_FLOWING,
+            JDTRegistration.PORTAL_FLUID_SOURCE
+    ).bucket(JDTRegistration.PORTAL_FLUID_BUCKET).block(JDTRegistration.PORTAL_FLUID_BLOCK);
 
     protected PortalFluid(Properties properties) {
         super(properties);
@@ -21,17 +21,17 @@ public abstract class PortalFluid extends BaseFlowingFluid {
 
     @Override
     public Fluid getFlowing() {
-        return Registration.PORTAL_FLUID_FLOWING.get();
+        return JDTRegistration.PORTAL_FLUID_FLOWING.get();
     }
 
     @Override
     public Fluid getSource() {
-        return Registration.PORTAL_FLUID_SOURCE.get();
+        return JDTRegistration.PORTAL_FLUID_SOURCE.get();
     }
 
     @Override
     public Item getBucket() {
-        return Registration.PORTAL_FLUID_BUCKET.get();
+        return JDTRegistration.PORTAL_FLUID_BUCKET.get();
     }
 
     @Override

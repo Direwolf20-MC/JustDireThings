@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.client.particles.paradoxparticle.ParadoxParticleData;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
-import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -60,7 +60,7 @@ public class ParadoxEntity extends Entity {
     }
 
     public ParadoxEntity(Level level, BlockPos blockPos) {
-        this(Registration.ParadoxEntity.get(), level);
+        this(JDTRegistration.ParadoxEntity.get(), level);
         this.snapTo(blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5);
     }
 
@@ -81,7 +81,7 @@ public class ParadoxEntity extends Entity {
             }
 
             if (tickCount == 1 || tickCount % 600 == 0)
-                level().playSound(null, getX(), getY(), getZ(), Registration.PARADOX_AMBIENT.get(), SoundSource.HOSTILE, 1F, 1f);
+                level().playSound(null, getX(), getY(), getZ(), JDTRegistration.PARADOX_AMBIENT.get(), SoundSource.HOSTILE, 1F, 1f);
 
             // Calculate the exact target radius based on the growth timer
             int calculatedTargetRadius = Math.min(maxRadius, Math.max(0, radiusGrowthTimer / radiusGrowthTime));
@@ -107,7 +107,7 @@ public class ParadoxEntity extends Entity {
             handleItemAbsorption(currentRadius);
         } else {
             if (getShrinkScale() < 1.0f) {
-                Minecraft.getInstance().getSoundManager().stop(Registration.PARADOX_AMBIENT.get().location(), SoundSource.HOSTILE);
+                Minecraft.getInstance().getSoundManager().stop(JDTRegistration.PARADOX_AMBIENT.get().location(), SoundSource.HOSTILE);
             }
         }
     }
@@ -248,7 +248,7 @@ public class ParadoxEntity extends Entity {
             // Check if the item is close enough to be voided
             if (position().closerThan(item.position(), 0.25)) {
                 ItemStack itemStack = item.getItem();
-                if (itemStack.is(Registration.TimeCrystal.get()))
+                if (itemStack.is(JDTRegistration.TimeCrystal.get()))
                     collapse();
                 else {
                     incRadiusGrowthTimer(growthPerItem * itemStack.getCount());

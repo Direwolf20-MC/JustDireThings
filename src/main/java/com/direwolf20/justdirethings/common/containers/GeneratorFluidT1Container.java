@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
 import com.direwolf20.justdirethings.common.containers.slots.RefinedFuelSlot;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,7 +20,7 @@ public class GeneratorFluidT1Container extends BaseMachineContainer {
     }
 
     public GeneratorFluidT1Container(int windowId, Inventory playerInventory, BlockPos blockPos) {
-        super(Registration.GeneratorFluidT1_Container.get(), windowId, playerInventory, blockPos);
+        super(JDTRegistration.GeneratorFluidT1_Container.get(), windowId, playerInventory, blockPos);
         addPlayerSlots(player.getInventory());
     }
 
@@ -41,7 +41,7 @@ public class GeneratorFluidT1Container extends BaseMachineContainer {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, Registration.GeneratorFluidT1.get());
+        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, JDTRegistration.GeneratorFluidT1.get());
     }
 
     @Override

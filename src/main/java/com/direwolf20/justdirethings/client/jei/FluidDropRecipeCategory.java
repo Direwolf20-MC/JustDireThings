@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.client.jei;
 
 import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class FluidDropRecipeCategory implements IRecipeCategory<RecipeHolder<FluidDropRecipe>> {
     public static final IRecipeHolderType<FluidDropRecipe> TYPE =
-            IRecipeHolderType.create(Registration.FLUID_DROP_RECIPE_TYPE.get());
+            IRecipeHolderType.create(JDTRegistration.FLUID_DROP_RECIPE_TYPE.get());
 
     public static final int width = 120;
     public static final int height = 40;
@@ -32,7 +32,7 @@ public class FluidDropRecipeCategory implements IRecipeCategory<RecipeHolder<Flu
     private final IDrawableStatic arrow;
 
     public FluidDropRecipeCategory(IGuiHelper guiHelper) {
-        icon = guiHelper.createDrawableItemStack(new ItemStack(Registration.PolymorphicCatalyst.get()));
+        icon = guiHelper.createDrawableItemStack(new ItemStack(JDTRegistration.PolymorphicCatalyst.get()));
         localizedName = Component.translatable("justdirethings.fluiddroprecipe.title");
         this.arrow = guiHelper.getRecipeArrow();
     }
