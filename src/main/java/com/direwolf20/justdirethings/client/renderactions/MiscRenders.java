@@ -68,7 +68,7 @@ public class MiscRenders {
 
         Identifier texture = renderer.getTextureLocation(state);
         int tintedColor = ARGB.color(127, 255, 255, 255);
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderTypes.entityTranslucent(texture));
+        VertexConsumer vertexConsumer = buffer.getBuffer(RenderTypes.entityTranslucentCullItemTarget(texture));
         model.renderToBuffer(matrixStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, tintedColor);
 
         matrixStack.popPose();

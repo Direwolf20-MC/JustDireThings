@@ -225,6 +225,8 @@ public class AbilityMethods {
             } else {
                 player.teleportTo(shiftPosition.x, shiftPosition.y, shiftPosition.z);
             }
+            player.setDeltaMovement(Vec3.ZERO);
+            player.hurtMarked = true;
             player.resetFallDistance();
             PacketDistributor.sendToPlayer((ServerPlayer) player, new ClientSoundPayload(SoundEvents.PLAYER_TELEPORT.location(), 1f, 1f));
             level.playSound(player, BlockPos.containing(shiftPosition), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 1F, 1.0F);

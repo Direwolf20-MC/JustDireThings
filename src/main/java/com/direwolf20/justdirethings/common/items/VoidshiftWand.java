@@ -6,6 +6,6 @@ public class VoidshiftWand extends BaseToggleableTool implements PoweredItem, Le
     public VoidshiftWand(Properties pProperties) {
         super(pProperties);
         registerAbility(Ability.AIRBURST, new AbilityParams(1, 4, 1, 4));
-        registerAbility(Ability.VOIDSHIFT, new AbilityParams(1, 15, 1, 15));
+        registerAbility(Ability.VOIDSHIFT, new AbilityParams(1, 30, 1, 30));
     }
 }
