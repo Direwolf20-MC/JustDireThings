@@ -23,6 +23,7 @@ public class ValueButtonsDouble {
     private final double maxValue;
     private final StringWidget valueDisplay;
     private final StringWidget labelDisplay;
+    private final int valueCenterX;
     public List<AbstractWidget> widgetList = new ArrayList<>();
     private BiConsumer<ValueButtonsDouble, Double> onPress;
 
@@ -37,11 +38,13 @@ public class ValueButtonsDouble {
         this.font = font;
         this.onPress = onPress;
 
-        // Value Display
-        this.valueDisplay = new StringWidget(x + 11, y + 2, 20, font.lineHeight, Component.literal(String.valueOf(startingValue)), font);
+        // Value Display — StringWidget is left-aligned in 26.1, so center it on the gap between
+        // the -/+ buttons (midpoint at x + 21) by sizing the widget to the text's actual width.
+        this.valueCenterX = x + 21;
+        this.valueDisplay = centeredStringWidget(valueCenterX, y + 2, Component.literal(String.valueOf(startingValue)), font);
         widgetList.add(this.valueDisplay);
 
-        this.labelDisplay = new StringWidget(x, y - 8, 40, font.lineHeight, label, font);
+        this.labelDisplay = centeredStringWidget(valueCenterX, y - 8, label, font);
         widgetList.add(this.labelDisplay);
 
         // Minus Button
@@ -72,7 +75,16 @@ public class ValueButtonsDouble {
     }
 
     private void updateDisplay() {
-        this.valueDisplay.setMessage(Component.literal(String.valueOf(value)));
+        Component msg = Component.literal(String.valueOf(value));
+        this.valueDisplay.setMessage(msg);
+        int width = font.width(msg);
+        this.valueDisplay.setWidth(width);
+        this.valueDisplay.setX(valueCenterX - width / 2);
+    }
+
+    private static StringWidget centeredStringWidget(int centerX, int y, Component message, Font font) {
+        int width = font.width(message);
+        return new StringWidget(centerX - width / 2, y, width, font.lineHeight, message, font);
     }
 
     public double getValue() {
