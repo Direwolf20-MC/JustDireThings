@@ -17,7 +17,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
@@ -239,19 +238,19 @@ public class BaseMachineBE extends BlockEntity {
             return false;
         if (this instanceof RedstoneControlledBE redstoneControlledBE && !redstoneControlledBE.getRedstoneControlData().equals(getDefaultRedstoneData()))
             return false;
+        ItemStacksResourceHandler machineHandler = getMachineHandler();
+        for (int i = 0; i < machineHandler.size(); i++) {
+            if (!machineHandler.getResource(i).isEmpty())
+                return false;
+        }
         return true;
     }
 
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        // Inventory is preserved inside the dropped block item via BaseMachineBlock.getDrops
+        // (CUSTOM_DATA_1 NBT). Do NOT drop slot contents here — that would dupe them.
         super.preRemoveSideEffects(pos, state);
-        if (this.level != null) {
-            ItemStacksResourceHandler handler = getMachineHandler();
-            for (int i = 0; i < handler.size(); i++) {
-                ItemStack stack = handler.getResource(i).toStack(handler.getAmountAsInt(i));
-                Containers.dropItemStack(this.level, pos.getX(), pos.getY(), pos.getZ(), stack);
-            }
-        }
     }
 
     @Override

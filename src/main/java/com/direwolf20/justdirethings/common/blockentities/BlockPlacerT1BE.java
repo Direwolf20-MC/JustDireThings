@@ -107,8 +107,17 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             BlockPos blockPos = positionsToPlace.remove(0);
             Direction placing = getDirectionValue();
             FakePlayerUtil.setupFakePlayerForUse(fakePlayer, blockPos, placing, placeStack, false);
-            //setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue());
             placeBlock(placeStack, fakePlayer, blockPos);
+            // useOn decrements the held stack; sync the (possibly shrunk/emptied) stack back into
+            // slot 0. Without this the detached getPlaceStack() copy's decrement is lost and the
+            // cleanup step's dropAll() would spill leftover items on the ground.
+            ItemStack postUse = fakePlayer.getMainHandItem();
+            if (postUse.isEmpty()) {
+                getMachineHandler().set(0, net.neoforged.neoforge.transfer.item.ItemResource.EMPTY, 0);
+            } else {
+                getMachineHandler().set(0, net.neoforged.neoforge.transfer.item.ItemResource.of(postUse), postUse.getCount());
+            }
+            setChanged();
             FakePlayerUtil.cleanupFakePlayerFromUse(fakePlayer, fakePlayer.getMainHandItem());
         }
     }
