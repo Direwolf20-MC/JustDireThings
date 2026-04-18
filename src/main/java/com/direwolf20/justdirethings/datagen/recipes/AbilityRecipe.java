@@ -105,6 +105,11 @@ public class AbilityRecipe implements SmithingRecipe {
     }
 
     @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
+    @Override
     public RecipeSerializer<? extends SmithingRecipe> getSerializer() {
         return JDTRegistration.ABILITY_RECIPE_SERIALIZER.get();
     }
