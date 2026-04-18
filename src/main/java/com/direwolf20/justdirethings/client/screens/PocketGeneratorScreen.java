@@ -106,7 +106,7 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         super.extractBackground(graphics, mouseX, mouseY, partialTicks);
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, relX, relY, 0.0F, 0.0F, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, relX, relY, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
 
         this.pocketGenerator = container.playerEntity.getMainHandItem();
         if (pocketGenerator.isEmpty() || !(pocketGenerator.getItem() instanceof PocketGenerator))
@@ -119,14 +119,14 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         int maxHeight = 13;
         if (maxBurn > 0) {
             int remaining = (counter * maxHeight) / maxBurn;
-            graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, leftPos + 80, topPos + 17 + 13 - remaining, 176.0F, 13.0F - remaining, 14, remaining + 1, this.imageWidth, this.imageHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, leftPos + 80, topPos + 17 + 13 - remaining, 176.0F, 13.0F - remaining, 14, remaining + 1, 256, 256);
         }
 
         int maxEnergy = energyStorage.getCapacityAsInt();
         int height = 70;
         if (maxEnergy > 0) {
             int remaining = (energyStorage.getAmountAsInt() * height) / maxEnergy;
-            graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, leftPos + 8, topPos + 78 - remaining, 176.0F, 84.0F - remaining, 16, remaining + 1, this.imageWidth, this.imageHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, leftPos + 8, topPos + 78 - remaining, 176.0F, 84.0F - remaining, 16, remaining + 1, 256, 256);
         }
     }
 

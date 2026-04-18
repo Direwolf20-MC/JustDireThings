@@ -8,6 +8,7 @@ package com.direwolf20.justdirethings.client.screens;
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.OurSounds;
+import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.client.screens.standardbuttons.ToggleButtonFactory;
 import com.direwolf20.justdirethings.client.screens.widgets.BaseButton;
 import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
@@ -16,19 +17,27 @@ import com.direwolf20.justdirethings.common.network.data.PortalGunFavoriteChange
 import com.direwolf20.justdirethings.common.network.data.PortalGunFavoritePayload;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
+import org.jspecify.annotations.Nullable;
+
 
 public class AdvPortalRadialMenu extends Screen {
     private static final int WHITE_ARGB = 0xFFFFFFFF;
@@ -117,7 +126,8 @@ public class AdvPortalRadialMenu extends Screen {
         totalDeg = 0;
         float delayBetweenSegments = 1f;
         float speedOfSegmentGrowth = 25f;
-        float innerRatio = 1F / 2.3F;
+        Matrix3x2f capturedPose = new Matrix3x2f(graphics.pose());
+        ScreenRectangle scissor = graphics.peekScissorStack();
         for (int seg = 0; seg < SEGMENTS; seg++) {
             boolean mouseInSector = this.isCursorInSlice(angle, totalDeg, degPer, inRange);
             float radius = Math.max(0F, Math.min((this.timeIn + partialTicks - seg * delayBetweenSegments / SEGMENTS) * speedOfSegmentGrowth, radiusMax));
@@ -132,10 +142,12 @@ public class AdvPortalRadialMenu extends Screen {
             }
             if (seg == slotSelected) {
                 r = g = 255;
+                b = (int) (gs * 255);
                 a = (int) (0.6F * 255);
             }
-            int sliceColor = (a << 24) | (r << 16) | (g << 8) | b;
-            drawPieSlice(graphics, x, y, totalDeg, degPer, radius * innerRatio, radius, sliceColor);
+            int color = (a << 24) | (r << 16) | (g << 8) | b;
+            graphics.submitGuiElementRenderState(new PieSliceRenderState(
+                    OurRenderTypes.TRIANGLE_STRIP_PIPELINE, capturedPose, x, y, totalDeg, degPer, radius, color, scissor));
             totalDeg += degPer;
         }
 
@@ -182,31 +194,6 @@ public class AdvPortalRadialMenu extends Screen {
             if (renderable instanceof BaseButton button && !button.getLocalization(mouseX, mouseY).equals(Component.empty())) {
                 graphics.setTooltipForNextFrame(font, button.getLocalization(), mouseX, mouseY);
             }
-        }
-    }
-
-    private void drawPieSlice(GuiGraphicsExtractor graphics, int cx, int cy, float startDeg, float spanDeg, float innerRadius, float outerRadius, int color) {
-        if (outerRadius <= 0F || spanDeg <= 0F) return;
-        float thickness = outerRadius - innerRadius;
-        if (thickness <= 0F) return;
-
-        int steps = Math.max(8, (int) Math.ceil(spanDeg));
-        float stepRad = (spanDeg * (float) Math.PI / 180F) / steps;
-        float startRad = startDeg * (float) Math.PI / 180F;
-        float midRadius = (innerRadius + outerRadius) * 0.5F;
-        float chord = 2F * midRadius * (float) Math.tan(stepRad * 0.5F);
-        int quadHeight = Math.max(1, (int) Math.ceil(chord));
-
-        Matrix3x2fStack pose = graphics.pose();
-        for (int i = 0; i < steps; i++) {
-            float segCenterRad = startRad + (i + 0.5F) * stepRad;
-            pose.pushMatrix();
-            pose.translate(cx, cy);
-            pose.rotate(segCenterRad);
-            int y0 = -quadHeight / 2;
-            int y1 = y0 + quadHeight;
-            graphics.fill((int) innerRadius, y0, (int) Math.ceil(outerRadius), y1, color);
-            pose.popMatrix();
         }
     }
 
@@ -272,6 +259,55 @@ public class AdvPortalRadialMenu extends Screen {
 
     public NBTHelpers.PortalDestination getFavorite(int slot) {
         return PortalGunV2.getFavorite(portalGun, slot);
+    }
+
+    private record PieSliceRenderState(
+            RenderPipeline pipeline,
+            Matrix3x2f pose,
+            int cx,
+            int cy,
+            float startDeg,
+            float spanDeg,
+            float outerRadius,
+            int color,
+            @Nullable ScreenRectangle scissorArea
+    ) implements GuiElementRenderState {
+        private static final float INNER_RATIO = 1F / 2.3F;
+
+        @Override
+        public void buildVertices(VertexConsumer buffer) {
+            if (outerRadius <= 0F || spanDeg <= 0F) return;
+            float innerRadius = outerRadius * INNER_RATIO;
+            for (float i = spanDeg; i >= 0; i--) {
+                float rad = (i + startDeg) * (float) Math.PI / 180F;
+                float cos = (float) Math.cos(rad);
+                float sin = (float) Math.sin(rad);
+                buffer.addVertexWith2DPose(pose, cx + cos * innerRadius, cy + sin * innerRadius).setColor(color);
+                buffer.addVertexWith2DPose(pose, cx + cos * outerRadius, cy + sin * outerRadius).setColor(color);
+            }
+        }
+
+        @Override
+        public RenderPipeline pipeline() {
+            return pipeline;
+        }
+
+        @Override
+        public TextureSetup textureSetup() {
+            return TextureSetup.noTexture();
+        }
+
+        @Override
+        public @Nullable ScreenRectangle scissorArea() {
+            return scissorArea;
+        }
+
+        @Override
+        public @Nullable ScreenRectangle bounds() {
+            int r = (int) Math.ceil(outerRadius) + 1;
+            ScreenRectangle rect = new ScreenRectangle(cx - r, cy - r, r * 2, r * 2).transformMaxBounds(pose);
+            return scissorArea != null ? scissorArea.intersection(rect) : rect;
+        }
     }
 
     private static class Vector2f {

@@ -38,7 +38,7 @@ public final class OurRenderTypes {
             .withColorTargetState(new ColorTargetState(Optional.empty(), ColorTargetState.WRITE_NONE))
             .build();
 
-    public static final RenderPipeline TRIANGLE_STRIP_PIPELINE = RenderPipelines.DEBUG_QUADS.toBuilder()
+    public static final RenderPipeline TRIANGLE_STRIP_PIPELINE = RenderPipeline.builder(RenderPipelines.GUI_SNIPPET)
             .withLocation(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pipeline/triangle_strip"))
             .withCull(false)
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP)

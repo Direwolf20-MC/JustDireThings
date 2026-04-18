@@ -12,7 +12,6 @@ import com.direwolf20.justdirethings.common.network.data.ToggleToolRefreshSlots;
 import com.direwolf20.justdirethings.common.network.data.ToggleToolSlotPayload;
 import com.direwolf20.justdirethings.util.MiscTools;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -306,7 +305,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         super.extractBackground(graphics, mouseX, mouseY, partialTicks);
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, relX, relY, 0.0F, 0.0F, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, relX, relY, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
         if (renderablesChanged)
             updateRenderables();
         for (Slot slot : container.dynamicSlots) {
