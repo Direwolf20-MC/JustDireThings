@@ -199,9 +199,21 @@ public class JustDireModels extends ModelProvider {
         itemModels.generateFlatItem(JDTRegistration.Coal_T4.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(JDTRegistration.PolymorphicCatalyst.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(JDTRegistration.PortalFluidCatalyst.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(JDTRegistration.TimeCrystal.get(), ModelTemplates.FLAT_ITEM);
+        // Time Crystal uses the time_crystal_shard.png texture (registered id is "time_crystal").
+        ModelTemplates.FLAT_ITEM.create(
+                ModelLocationUtils.getModelLocation(JDTRegistration.TimeCrystal.get()),
+                new TextureMapping().put(TextureSlot.LAYER0, new Material(modLoc("item/time_crystal_shard"))),
+                itemModels.modelOutput);
+        itemModels.itemModelOutput.accept(JDTRegistration.TimeCrystal.get(),
+                ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(JDTRegistration.TimeCrystal.get())));
         itemModels.generateFlatItem(JDTRegistration.TotemOfDeathRecall.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(JDTRegistration.MachineSettingsCopier.get(), ModelTemplates.FLAT_ITEM);
+        // Machine Settings Copier: registered id is "machinesettingscopier" but the texture is "machine_settings_copier.png".
+        ModelTemplates.FLAT_ITEM.create(
+                ModelLocationUtils.getModelLocation(JDTRegistration.MachineSettingsCopier.get()),
+                new TextureMapping().put(TextureSlot.LAYER0, new Material(modLoc("item/machine_settings_copier"))),
+                itemModels.modelOutput);
+        itemModels.itemModelOutput.accept(JDTRegistration.MachineSettingsCopier.get(),
+                ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(JDTRegistration.MachineSettingsCopier.get())));
         itemModels.generateFlatItem(JDTRegistration.TEMPLATE_FERRICORE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(JDTRegistration.TEMPLATE_BLAZEGOLD.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(JDTRegistration.TEMPLATE_CELESTIGEM.get(), ModelTemplates.FLAT_ITEM);
@@ -355,88 +367,59 @@ public class JustDireModels extends ModelProvider {
     }
 
     private static void emitFluidCanisterModels(ItemModelGenerators itemModels) {
+        // neoforge:fluid_container is an *item-model type* (goes into items/*.json), not a block-model loader.
+        // Emit one DynamicFluidContainerModel.Unbaked per fullness level, each with a different mask texture.
         Item canister = JDTRegistration.FluidCanister.get();
-        ItemTintSource tint = new FluidCanisterTintSource();
+        Material baseTex = new Material(modLoc("item/fluidcanister/fluid_canister"));
 
-        // Base fluid-canister model uses a neoforge:fluid_container loader with tinted layer1.
-        Identifier baseModelId = ModelLocationUtils.getModelLocation(canister);
-        itemModels.modelOutput.accept(baseModelId, () -> fluidCanisterBaseJson(0));
+        // Empty (fullness 0): base shell only. Use layer_0 mask, which is the empty canister sprite.
+        ItemModel.Unbaked fallback = fluidCanisterLevelModel(baseTex, 0);
 
-        // Eight fullness-level models (layers 1..8); each is tinted by FluidCanisterTintSource at runtime.
+        // Fullness 1-8: each level uses its matching fluid_canister_fluid_layer_N mask.
         List<RangeSelectItemModel.Entry> entries = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
-            final int level = i;
-            Identifier levelModelId = ModelLocationUtils.getModelLocation(canister, "_" + i);
-            itemModels.modelOutput.accept(levelModelId, () -> fluidCanisterBaseJson(level));
-            ItemModel.Unbaked submodel = ItemModelUtils.tintedModel(levelModelId, tint);
-            entries.add(ItemModelUtils.override(submodel, i));
+            entries.add(ItemModelUtils.override(fluidCanisterLevelModel(baseTex, i), i));
         }
 
-        ItemModel.Unbaked fallback = ItemModelUtils.tintedModel(baseModelId, tint);
         itemModels.itemModelOutput.accept(canister,
                 ItemModelUtils.rangeSelect(new FluidCanisterFullnessProperty(), fallback, entries));
     }
 
-    private static com.google.gson.JsonObject fluidCanisterBaseJson(int level) {
-        // Reproduces the hand-written models/item/fluid_canister[_N].json using the neoforge fluid_container
-        // loader. Level 0 uses fluid_canister_fluid_layer_0 (empty); 1-8 use the matching layer texture.
-        com.google.gson.JsonObject obj = new com.google.gson.JsonObject();
-        obj.addProperty("loader", "neoforge:fluid_container");
-        obj.addProperty("fluid", "minecraft:water");
-        obj.addProperty("flip_gas", true);
-        obj.addProperty("cover_is_mask", false);
-        obj.addProperty("apply_fluid_luminosity", true);
-        com.google.gson.JsonObject textures = new com.google.gson.JsonObject();
-        textures.addProperty("base", "justdirethings:item/fluidcanister/fluid_canister");
-        textures.addProperty("fluid", "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_" + level);
-        obj.add("textures", textures);
-        com.google.gson.JsonObject display = new com.google.gson.JsonObject();
-        addDisplayEntry(display, "thirdperson_righthand", new float[]{75, 45, 0}, new float[]{0, 2.5F, 0}, new float[]{0.375F, 0.375F, 0.375F});
-        addDisplayEntry(display, "thirdperson_lefthand", new float[]{75, 45, 0}, new float[]{0, 2.5F, 0}, new float[]{0.5F, 0.5F, 0.5F});
-        addDisplayEntry(display, "firstperson_righthand", new float[]{0, -30, 0}, new float[]{0, 3.5F, 0}, new float[]{0.5F, 0.5F, 0.5F});
-        addDisplayEntry(display, "firstperson_lefthand", new float[]{0, -30, 0}, new float[]{0, 3.5F, 0}, new float[]{0.5F, 0.5F, 0.5F});
-        addDisplayEntry(display, "ground", null, new float[]{0, 1.5F, 0}, new float[]{0.5F, 0.5F, 0.5F});
-        obj.add("display", display);
-        return obj;
-    }
-
-    private static void addDisplayEntry(com.google.gson.JsonObject parent, String name, float[] rotation, float[] translation, float[] scale) {
-        com.google.gson.JsonObject entry = new com.google.gson.JsonObject();
-        if (rotation != null) {
-            com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
-            for (float v : rotation) arr.add(v);
-            entry.add("rotation", arr);
-        }
-        if (translation != null) {
-            com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
-            for (float v : translation) arr.add(v);
-            entry.add("translation", arr);
-        }
-        if (scale != null) {
-            com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
-            for (float v : scale) arr.add(v);
-            entry.add("scale", arr);
-        }
-        parent.add(name, entry);
+    private static ItemModel.Unbaked fluidCanisterLevelModel(Material base, int level) {
+        Material mask = new Material(modLoc("item/fluidcanister/fluid_canister_fluid_layer_" + level));
+        net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel.Textures textures =
+                new net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel.Textures(
+                        Optional.empty(),
+                        Optional.of(base),
+                        Optional.of(mask),
+                        Optional.empty());
+        // Default fluid = minecraft:empty so the empty canister renders only the base shell.
+        // When filled, the model reads the actual fluid from the item's fluid capability.
+        return new net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel.Unbaked(
+                textures, net.minecraft.world.level.material.Fluids.EMPTY, true, false, true);
     }
 
     private static void emitPotionCanisterModels(ItemModelGenerators itemModels) {
+        // Textures live directly at item/potion_canister.png and item/potion_canister_layer_{0..4}.png
+        // (no subdirectory — matches the 1.21.1 layout).
         Item canister = JDTRegistration.PotionCanister.get();
         ItemTintSource tint = new PotionCanisterTintSource();
+        Material shell = new Material(modLoc("item/potion_canister"));
 
-        // Empty (no fluid layer visible)
+        // Empty (fullness 0): shell + layer_0 (plain fluid sprite, no tint needed).
         Identifier emptyModelId = ModelLocationUtils.getModelLocation(canister);
-        ModelTemplates.FLAT_ITEM.create(emptyModelId,
-                new TextureMapping().put(TextureSlot.LAYER0, new Material(modLoc("item/potioncanister/potion_canister"))),
-                itemModels.modelOutput);
+        TextureMapping emptyMapping = new TextureMapping()
+                .put(TextureSlot.LAYER0, shell)
+                .put(TextureSlot.LAYER1, new Material(modLoc("item/potion_canister_layer_0")));
+        ModelTemplates.TWO_LAYERED_ITEM.create(emptyModelId, emptyMapping, itemModels.modelOutput);
 
-        // 4 fullness levels — each model has a background layer0 (canister shell) + layer1 (fluid — tinted).
+        // Fullness 1-4: shell + tinted layer_N.
         List<RangeSelectItemModel.Entry> entries = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {
             Identifier levelModelId = ModelLocationUtils.getModelLocation(canister, "_" + i);
             TextureMapping mapping = new TextureMapping()
-                    .put(TextureSlot.LAYER0, new Material(modLoc("item/potioncanister/potion_canister")))
-                    .put(TextureSlot.LAYER1, new Material(modLoc("item/potioncanister/potion_canister_fluid_layer_" + i)));
+                    .put(TextureSlot.LAYER0, shell)
+                    .put(TextureSlot.LAYER1, new Material(modLoc("item/potion_canister_layer_" + i)));
             ModelTemplates.TWO_LAYERED_ITEM.create(levelModelId, mapping, itemModels.modelOutput);
             ItemModel.Unbaked submodel = ItemModelUtils.tintedModel(levelModelId, ItemModelUtils.constantTint(-1), tint);
             entries.add(ItemModelUtils.override(submodel, i));

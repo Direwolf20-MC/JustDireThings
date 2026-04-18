@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "justdirethings:item/potioncanister/potion_canister",
-    "layer1": "justdirethings:item/potioncanister/potion_canister_fluid_layer_2"
+    "layer0": "justdirethings:item/potion_canister",
+    "layer1": "justdirethings:item/potion_canister_layer_2"
   }
 }
