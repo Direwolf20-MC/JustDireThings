@@ -191,16 +191,16 @@ public class JDTRegistration {
 
     public static final DeferredHolder<Block, GooBlock_Tier1> GooBlock_Tier1 = BLOCKS.registerBlock("gooblock_tier1", GooBlock_Tier1::new, gooBlockProps());
     public static final DeferredHolder<Item, GooBlock_Item> GooBlock_Tier1_ITEM = ITEMS.registerItem("gooblock_tier1",
-            props -> new GooBlock_Item(GooBlock_Tier1.get(), props), Item.Properties::new);
+            props -> new GooBlock_Item(GooBlock_Tier1.get(), props), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredHolder<Block, GooBlock_Tier2> GooBlock_Tier2 = BLOCKS.registerBlock("gooblock_tier2", GooBlock_Tier2::new, gooBlockProps());
     public static final DeferredHolder<Item, GooBlock_Item> GooBlock_Tier2_ITEM = ITEMS.registerItem("gooblock_tier2",
-            props -> new GooBlock_Item(GooBlock_Tier2.get(), props), Item.Properties::new);
+            props -> new GooBlock_Item(GooBlock_Tier2.get(), props), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredHolder<Block, GooBlock_Tier3> GooBlock_Tier3 = BLOCKS.registerBlock("gooblock_tier3", GooBlock_Tier3::new, gooBlockProps());
     public static final DeferredHolder<Item, GooBlock_Item> GooBlock_Tier3_ITEM = ITEMS.registerItem("gooblock_tier3",
-            props -> new GooBlock_Item(GooBlock_Tier3.get(), props), Item.Properties::new);
+            props -> new GooBlock_Item(GooBlock_Tier3.get(), props), () -> new Item.Properties().useBlockDescriptionPrefix());
     public static final DeferredHolder<Block, GooBlock_Tier4> GooBlock_Tier4 = BLOCKS.registerBlock("gooblock_tier4", GooBlock_Tier4::new, gooBlockProps());
     public static final DeferredHolder<Item, GooBlock_Item> GooBlock_Tier4_ITEM = ITEMS.registerItem("gooblock_tier4",
-            props -> new GooBlock_Item(GooBlock_Tier4.get(), props), Item.Properties::new);
+            props -> new GooBlock_Item(GooBlock_Tier4.get(), props), () -> new Item.Properties().useBlockDescriptionPrefix());
 
     public static final DeferredHolder<Block, GooPatternBlock> GooPatternBlock = BLOCKS.registerBlock("goopatternblock", GooPatternBlock::new, gooBlockProps());
 

@@ -516,7 +516,8 @@ public class JustDireModels extends ModelProvider {
         TextureMapping mapping = new TextureMapping().put(PALETTE_SLOT, blockTexture(basePath));
         ORE_TEMPLATE.create(modelId, mapping, blockModels.modelOutput);
         net.minecraft.client.data.models.MultiVariant variant = BlockModelGenerators.plainVariant(modelId);
-        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, variant));
+        blockModels.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(block, variant).with(BlockModelGenerators.ROTATIONS_COLUMN_WITH_FACING));
     }
 
     // Custom texture slot named "palette" matching the hand-written raw_ore_template.json.
@@ -615,7 +616,7 @@ public class JustDireModels extends ModelProvider {
         Identifier modelId = ModelTemplates.CUBE_ORIENTABLE_TOP_BOTTOM.create(block, mapping, blockModels.modelOutput);
         net.minecraft.client.data.models.MultiVariant model = BlockModelGenerators.plainVariant(modelId);
         blockModels.blockStateOutput.accept(
-                MultiVariantGenerator.dispatch(block, model).with(BlockModelGenerators.ROTATION_FACING));
+                MultiVariantGenerator.dispatch(block, model).with(BlockModelGenerators.ROTATIONS_COLUMN_WITH_FACING));
     }
 
     private static void sidedBlockActiveDispatch(BlockModelGenerators blockModels, Block block, String path) {
@@ -637,7 +638,7 @@ public class JustDireModels extends ModelProvider {
         blockModels.blockStateOutput.accept(
                 MultiVariantGenerator.dispatch(block)
                         .with(BlockModelGenerators.createBooleanModelDispatch(BlockBreakerT1.ACTIVE, activeModel, inactiveModel))
-                        .with(BlockModelGenerators.ROTATION_FACING));
+                        .with(BlockModelGenerators.ROTATIONS_COLUMN_WITH_FACING));
     }
 
     // -----------------------------------------------------------------

@@ -2,25 +2,28 @@
   "variants": {
     "facing=down": {
       "model": "justdirethings:block/blockplacert1",
-      "x": 90
+      "x": 180
     },
     "facing=east": {
       "model": "justdirethings:block/blockplacert1",
+      "x": 90,
       "y": 90
     },
     "facing=north": {
-      "model": "justdirethings:block/blockplacert1"
+      "model": "justdirethings:block/blockplacert1",
+      "x": 90
     },
     "facing=south": {
       "model": "justdirethings:block/blockplacert1",
+      "x": 90,
       "y": 180
     },
     "facing=up": {
-      "model": "justdirethings:block/blockplacert1",
-      "x": 270
+      "model": "justdirethings:block/blockplacert1"
     },
     "facing=west": {
       "model": "justdirethings:block/blockplacert1",
+      "x": 90,
       "y": 270
     }
   }
