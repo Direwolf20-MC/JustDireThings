@@ -314,15 +314,23 @@ public class JustDireModels extends ModelProvider {
             itemModels.generateDynamicTrimmableItem(armorItem, prefix);
         }
 
-        // Buckets: flat item with BucketFluidTintSource. Emit a bucket model with two layers
-        // (shell + fluid) so the tint source can paint the fluid layer while leaving the shell untinted.
+        // Buckets: neoforge:fluid_container dynamic model.
+        // Shell from vanilla item/bucket, fluid mask from neoforge item/mask/bucket_fluid_drip.
+        // The registered FluidModel's fluidTintSource supplies the tint automatically.
         for (var bucket : JDTRegistration.BUCKET_ITEMS.getEntries()) {
             Item bucketItem = bucket.get();
-            Identifier modelId = ModelLocationUtils.getModelLocation(bucketItem);
-            // Single-layer flat item model; the tint source colors the whole sprite.
-            ModelTemplates.FLAT_ITEM.create(modelId, TextureMapping.layer0(bucketItem), itemModels.modelOutput);
+            net.minecraft.world.level.material.Fluid fluid = ((net.minecraft.world.item.BucketItem) bucketItem).content;
+            Material bucketShell = new Material(Identifier.withDefaultNamespace("item/bucket"));
+            Material fluidMask = new Material(Identifier.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid_drip"));
+            net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel.Textures textures =
+                    new net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel.Textures(
+                            Optional.empty(),
+                            Optional.of(bucketShell),
+                            Optional.of(fluidMask),
+                            Optional.empty());
             itemModels.itemModelOutput.accept(bucketItem,
-                    ItemModelUtils.tintedModel(modelId, new BucketFluidTintSource()));
+                    new net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel.Unbaked(
+                            textures, fluid, false, false, true));
         }
     }
 

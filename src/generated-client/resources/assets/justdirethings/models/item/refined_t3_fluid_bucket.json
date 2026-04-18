@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "justdirethings:item/refined_t3_fluid_bucket"
-  }
-}

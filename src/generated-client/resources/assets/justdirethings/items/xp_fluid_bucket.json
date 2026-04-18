@@ -1,11 +1,11 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "justdirethings:item/xp_fluid_bucket",
-    "tints": [
-      {
-        "type": "justdirethings:bucket_fluid"
-      }
-    ]
+    "type": "neoforge:fluid_container",
+    "cover_is_mask": false,
+    "fluid": "justdirethings:xp_fluid_source",
+    "textures": {
+      "base": "minecraft:item/bucket",
+      "fluid": "neoforge:item/mask/bucket_fluid_drip"
+    }
   }
 }
