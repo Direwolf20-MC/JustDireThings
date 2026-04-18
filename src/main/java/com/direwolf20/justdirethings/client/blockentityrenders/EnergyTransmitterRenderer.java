@@ -21,7 +21,12 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 public class EnergyTransmitterRenderer extends AreaAffectingBER<EnergyTransmitterBE, EnergyTransmitterRenderer.EnergyTransmitterRenderState> {
-    public static final ItemStack itemStack = new ItemStack(JDTRegistration.Celestigem.get());
+    private static ItemStack itemStack;
+
+    private static ItemStack itemStack() {
+        if (itemStack == null) itemStack = new ItemStack(JDTRegistration.Celestigem.get());
+        return itemStack;
+    }
 
     public static class EnergyTransmitterRenderState extends AreaAffectingRenderState {
         public Direction facing = Direction.UP;
@@ -46,7 +51,7 @@ public class EnergyTransmitterRenderer extends AreaAffectingBER<EnergyTransmitte
         super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         state.facing = blockEntity.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
         state.millis = System.currentTimeMillis();
-        this.itemModelResolver.updateForTopItem(state.item, itemStack, ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
+        this.itemModelResolver.updateForTopItem(state.item, itemStack(), ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
     }
 
     @Override
