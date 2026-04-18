@@ -75,7 +75,7 @@ public class MachineSettingsCopierScreen extends Screen {
     public void setPositions() {
         topSectionWidth = 140;
         topSectionHeight = 60;
-        topSectionLeft = getGuiLeft() - 20 / 2;
+        topSectionLeft = getGuiLeft() + (176 - topSectionWidth) / 2;
         topSectionTop = getGuiHeight();
     }
 

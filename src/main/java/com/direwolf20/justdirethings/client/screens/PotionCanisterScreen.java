@@ -54,7 +54,7 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
         super.extractBackground(graphics, mouseX, mouseY, partialTicks);
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, relX, relY, 0.0F, 0.0F, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, relX, relY, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
 
         int offset = 5;
         graphics.blit(RenderPipelines.GUI_TEXTURED, FLUIDBAR, leftPos + offset, topPos + 5, 0.0F, 0.0F, 18, 72, 36, 72);
