@@ -229,7 +229,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
         if (energyStorage == null) return;
         if (itemStack.getItem() instanceof PocketGenerator pocketGenerator) {
             if (energyStorage instanceof EnergyStorageItemStackNoReceive noReceive) {
-                pocketGenerator.tryBurn(noReceive, itemStack);
+                pocketGenerator.tryBurn(noReceive, itemStack, (ServerLevel) level);
             }
         }
         if (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())

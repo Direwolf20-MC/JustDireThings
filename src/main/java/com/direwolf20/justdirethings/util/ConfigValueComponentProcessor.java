@@ -1,5 +1,5 @@
 package com.direwolf20.justdirethings.util;
-
+/*
 import com.direwolf20.justdirethings.setup.Config;
 import java.util.List;
 import net.minecraft.world.level.Level;
@@ -37,4 +37,4 @@ public class ConfigValueComponentProcessor implements IComponentProcessor {
 
         return IVariable.wrap(result, level.registryAccess());
     }
-}
+}*/
