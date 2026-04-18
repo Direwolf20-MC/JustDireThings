@@ -240,20 +240,35 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
         setFakePlayerData(tool, fakePlayer, breakPos, getFacing());
         BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
-        if (NeoForge.EVENT_BUS.post(event).isCanceled()) return false;
-        breakBlock(fakePlayer, breakPos, tool, blockState);
-        return true;
+        boolean cancelled = NeoForge.EVENT_BUS.post(event).isCanceled();
+        if (!cancelled) {
+            breakBlock(fakePlayer, breakPos, tool, blockState);
+        }
+        // ToggleableTool.mineBlocksAbility (triggered by the BreakEvent listener) drains energy/durability
+        // on the detached tool stack. Either way, sync the (possibly mutated) stack back to the slot so
+        // energy/durability changes aren't lost to the throwaway copy — see TRANSFER_API.md §4.
+        writeToolBack(tool);
+        return !cancelled;
     }
 
     public void breakBlock(FakePlayer player, BlockPos breakPos, ItemStack itemStack, BlockState state) {
-        //itemStack.onBlockStartBreak(breakPos, player);
         BlockEntity blockEntity = level.getBlockEntity(breakPos);
         boolean success = level.destroyBlock(breakPos, false, player);
         if (success) {
             Block.dropResources(state, level, breakPos, blockEntity, player, itemStack);
-            if (state.getDestroySpeed(level, breakPos) != 0.0F)
+            if (state.getDestroySpeed(level, breakPos) != 0.0F) {
                 itemStack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+            }
         }
+    }
+
+    private void writeToolBack(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            getMachineHandler().set(0, net.neoforged.neoforge.transfer.item.ItemResource.EMPTY, 0);
+        } else {
+            getMachineHandler().set(0, net.neoforged.neoforge.transfer.item.ItemResource.of(itemStack), itemStack.getCount());
+        }
+        setChanged();
     }
 
     public void sendPackets(int pBreakerId, BlockPos pPos, int pProgress) {
