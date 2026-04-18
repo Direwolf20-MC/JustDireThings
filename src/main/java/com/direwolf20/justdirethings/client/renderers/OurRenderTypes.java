@@ -22,7 +22,7 @@ public final class OurRenderTypes {
 
     public static final RenderPipeline ORE_XRAY_PIPELINE = RenderPipelines.SOLID_BLOCK.toBuilder()
             .withLocation(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pipeline/ore_xray"))
-            .withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN, true))
+            .withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN, false))
             .build();
 
     public static final RenderPipeline RENDER_BLOCK_BACKFACE_PIPELINE = RenderPipelines.TRANSLUCENT_BLOCK.toBuilder()
@@ -49,6 +49,7 @@ public final class OurRenderTypes {
                     .withTexture("Sampler0", TextureAtlas.LOCATION_BLOCKS)
                     .useLightmap()
                     .useOverlay()
+                    .sortOnUpload()
                     .createRenderSetup());
 
     public static final RenderType RenderBlockBackface = RenderType.create("GadgetRenderBlockBackface",
