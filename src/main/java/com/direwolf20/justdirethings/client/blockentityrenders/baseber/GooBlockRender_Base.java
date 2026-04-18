@@ -143,11 +143,6 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         if (tensDigit >= TOTAL_STAGES) tensDigit = TOTAL_STAGES - 1;
         float startOfCurrentStage = tensDigit * PERCENT_DIVISOR;
         float stageFrac = (percentComplete - startOfCurrentStage) / PERCENT_DIVISOR; // 0..1 inside this stage
-        float alpha = (tensDigit + stageFrac) / (float) TOTAL_STAGES; // monotonic 0..1 across all stages
-        int alphaByte = Math.max(0, Math.min(255, Math.round(alpha * 255F)));
-        int packedColor = (alphaByte << 24) | 0x00FFFFFF;
-
-        BlockState patternState = JDTRegistration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, tensDigit);
 
         poseStack.pushPose();
         // Offset to the direction we're crafting at (render on neighbor block).
@@ -163,6 +158,22 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         poseStack.mulPose(direction.getRotation());
         poseStack.translate(-0.5, -0.5, -0.5);
 
+        // Prior completed stages render fully opaque so they "stay consumed".
+        if (tensDigit > 0) {
+            submitStage(state, poseStack, collector, tensDigit - 1, 1.0F);
+        }
+        // Current stage fades in from transparent to opaque.
+        submitStage(state, poseStack, collector, tensDigit, stageFrac);
+
+        poseStack.popPose();
+    }
+
+    private void submitStage(GooBlockRenderState state, PoseStack poseStack, SubmitNodeCollector collector,
+                             int stage, float alpha) {
+        int alphaByte = Math.max(0, Math.min(255, Math.round(alpha * 255F)));
+        int packedColor = (alphaByte << 24) | 0x00FFFFFF;
+        BlockState patternState = JDTRegistration.GooPatternBlock.get().defaultBlockState().setValue(GooPatternBlock.GOOSTAGE, stage);
+
         List<BlockStateModelPart> patternParts = collectModelParts(patternState);
         if (!patternParts.isEmpty()) {
             // Pass 1 (depth-only): stamp the pattern silhouette into the depth buffer.
@@ -173,12 +184,9 @@ public class GooBlockRender_Base<T extends GooBlockBE_Base> implements BlockEnti
         List<BlockStateModelPart> realParts = collectModelParts(state.renderBlockState);
         if (!realParts.isEmpty()) {
             // Pass 2 (color): depth-EQUAL test; real block shows only where pattern stamped.
-            // QuadInstance carries the alpha via packed ARGB; putBakedQuad multiplies instance color × baked color per vertex.
             collector.submitCustomGeometry(poseStack, OurRenderTypes.RenderBlockBackface,
                     (pose, buffer) -> writeModelQuads(realParts, pose, buffer, packedColor, state.lightCoords));
         }
-
-        poseStack.popPose();
     }
 
     private static List<BlockStateModelPart> collectModelParts(BlockState state) {
