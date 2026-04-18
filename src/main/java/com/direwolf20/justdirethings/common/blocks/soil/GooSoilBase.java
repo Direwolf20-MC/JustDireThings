@@ -156,7 +156,7 @@ public class GooSoilBase extends FarmlandBlock {
 
     public static List<ItemStack> harvestCrop(ServerLevel pLevel, BlockPos cropPos, BlockState crop) {
         List<ItemStack> drops = new ArrayList<>();
-        if (crop.getBlock() instanceof BushBlock) {
+        if (crop.getBlock() instanceof VegetationBlock) {
             BlockEntity blockEntity = pLevel.getBlockEntity(cropPos);
             List<ItemStack> potentialDrops = Block.getDrops(crop, pLevel, cropPos, blockEntity);
             if (potentialDrops.isEmpty())
@@ -246,7 +246,7 @@ public class GooSoilBase extends FarmlandBlock {
     public static void autoHarvest(ServerLevel pLevel, BlockPos pPos) {
         BlockPos cropPos = pPos.above();
         BlockState crop = pLevel.getBlockState(cropPos);
-        if (crop.getBlock() instanceof BushBlock) {
+        if (crop.getBlock() instanceof VegetationBlock) {
             if (crop.getBlock() instanceof AttachedStemBlock) {
                 List<ItemStack> drops = harvestStemCrop(pLevel, cropPos, crop);
                 if (!drops.isEmpty()) {
