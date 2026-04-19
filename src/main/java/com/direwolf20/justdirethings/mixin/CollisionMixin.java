@@ -11,6 +11,7 @@ import net.minecraft.world.level.CollisionGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,6 +34,19 @@ public interface CollisionMixin {
 
     @Inject(method = "getBlockCollisions", at = @At("HEAD"), cancellable = true)
     private void onGetBlockCollisions(Entity entity, AABB collisionBox, CallbackInfoReturnable<Iterable<VoxelShape>> cir) {
+        if (entity instanceof Player player && shouldPassThroughWalls(player)) {
+            Iterable<VoxelShape> originalBlockCollisions = getOriginalBlockCollisions(entity, collisionBox);
+
+            List<VoxelShape> filteredBlockCollisions = StreamSupport.stream(originalBlockCollisions.spliterator(), false)
+                    .filter(shape -> isVerticalCollision(shape, collisionBox, player))
+                    .collect(Collectors.toList());
+
+            cir.setReturnValue(filteredBlockCollisions);
+        }
+    }
+
+    @Inject(method = "getPreMoveCollisions", at = @At("HEAD"), cancellable = true)
+    private void onGetPreMoveCollisions(Entity entity, AABB collisionBox, Vec3 oldPos, CallbackInfoReturnable<Iterable<VoxelShape>> cir) {
         if (entity instanceof Player player && shouldPassThroughWalls(player)) {
             Iterable<VoxelShape> originalBlockCollisions = getOriginalBlockCollisions(entity, collisionBox);
 
