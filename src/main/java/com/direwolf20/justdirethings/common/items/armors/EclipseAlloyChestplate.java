@@ -9,11 +9,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyChestplate extends BaseChestplate implements PoweredTool {
-    // 26.1: gliding is component-driven via DataComponents.GLIDER. See CelestigemChestplate for details.
-    // TODO: restore toggle-gated gliding. The GLIDER component is static here, so the ELYTRA toggle
-    //   no longer actually stops gliding. Re-wire via a LivingTickEvent handler that adds/removes
-    //   DataComponents.GLIDER based on canUseAbilityAndDurability(stack, Ability.ELYTRA), and calls
-    //   entity.stopFallFlying() when toggling off mid-flight.
     public EclipseAlloyChestplate(Item.Properties pProperties) {
         super(pProperties);
         registerAbility(Ability.INVULNERABILITY, new AbilityParams(1, 1, 1, 1, 200, 400));

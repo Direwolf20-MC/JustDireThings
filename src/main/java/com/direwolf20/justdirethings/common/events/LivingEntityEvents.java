@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +30,7 @@ import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
@@ -105,6 +107,27 @@ public class LivingEntityEvents {
             ItemStack boots = player.getItemBySlot(EquipmentSlot.FEET);
             if (boots.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(boots, Ability.JUMPBOOST))
                 Ability.JUMPBOOST.action.execute(player.level(), player, boots);
+        }
+    }
+
+    // Vanilla LivingEntity#canGlideUsing only checks DataComponents.GLIDER presence, and NeoForge 26.1
+    // no longer exposes canElytraFly/elytraFlightTick. Sync the GLIDER component onto the equipped
+    // chestplate per server tick so the ELYTRA toggle + upgrade gate actually govern gliding; vanilla's
+    // updateFallFlying drops the fall-flying flag the next tick when the component disappears.
+    @SubscribeEvent
+    public static void syncElytraComponent(EntityTickEvent.Post e) {
+        if (e.getEntity().level().isClientSide()) return;
+        if (!(e.getEntity() instanceof Player player)) return;
+        ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+        if (!(chest.getItem() instanceof ToggleableTool toggleableTool)) return;
+        if (!toggleableTool.hasAbility(Ability.ELYTRA)) return;
+
+        boolean shouldGlide = toggleableTool.canUseAbilityAndDurability(chest, Ability.ELYTRA);
+        boolean hasComponent = chest.has(DataComponents.GLIDER);
+        if (shouldGlide && !hasComponent) {
+            chest.set(DataComponents.GLIDER, Unit.INSTANCE);
+        } else if (!shouldGlide && hasComponent) {
+            chest.remove(DataComponents.GLIDER);
         }
     }
 

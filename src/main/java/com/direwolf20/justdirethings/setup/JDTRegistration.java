@@ -67,13 +67,11 @@ import com.direwolf20.justdirethings.common.items.tools.*;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
 import com.direwolf20.justdirethings.datagen.recipes.*;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -633,12 +631,12 @@ public class JDTRegistration {
     public static final DeferredHolder<Item, BlazegoldBoots> BlazegoldBoots = ARMORS.registerItem("blazegold_boots", BlazegoldBoots::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.BLAZEGOLD, ArmorType.BOOTS).fireResistant().durability(ArmorType.BOOTS.getDurability(25)));
 
     public static final DeferredHolder<Item, CelestigemHelmet> CelestigemHelmet = ARMORS.registerItem("celestigem_helmet", CelestigemHelmet::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.HELMET).fireResistant().durability(ArmorType.HELMET.getDurability(25)));
-    public static final DeferredHolder<Item, CelestigemChestplate> CelestigemChestplate = ARMORS.registerItem("celestigem_chestplate", CelestigemChestplate::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.CHESTPLATE).fireResistant().durability(ArmorType.CHESTPLATE.getDurability(25)).component(DataComponents.GLIDER, Unit.INSTANCE));
+    public static final DeferredHolder<Item, CelestigemChestplate> CelestigemChestplate = ARMORS.registerItem("celestigem_chestplate", CelestigemChestplate::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.CHESTPLATE).fireResistant().durability(ArmorType.CHESTPLATE.getDurability(25)));
     public static final DeferredHolder<Item, CelestigemLeggings> CelestigemLeggings = ARMORS.registerItem("celestigem_leggings", CelestigemLeggings::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.LEGGINGS).fireResistant().durability(ArmorType.LEGGINGS.getDurability(25)));
     public static final DeferredHolder<Item, CelestigemBoots> CelestigemBoots = ARMORS.registerItem("celestigem_boots", CelestigemBoots::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.CELESTIGEM, ArmorType.BOOTS).fireResistant().durability(ArmorType.BOOTS.getDurability(25)));
 
     public static final DeferredHolder<Item, EclipseAlloyHelmet> EclipseAlloyHelmet = ARMORS.registerItem("eclipsealloy_helmet", EclipseAlloyHelmet::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.HELMET).fireResistant().durability(ArmorType.HELMET.getDurability(25)));
-    public static final DeferredHolder<Item, EclipseAlloyChestplate> EclipseAlloyChestplate = ARMORS.registerItem("eclipsealloy_chestplate", EclipseAlloyChestplate::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.CHESTPLATE).fireResistant().durability(ArmorType.CHESTPLATE.getDurability(25)).component(DataComponents.GLIDER, Unit.INSTANCE));
+    public static final DeferredHolder<Item, EclipseAlloyChestplate> EclipseAlloyChestplate = ARMORS.registerItem("eclipsealloy_chestplate", EclipseAlloyChestplate::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.CHESTPLATE).fireResistant().durability(ArmorType.CHESTPLATE.getDurability(25)));
     public static final DeferredHolder<Item, EclipseAlloyLeggings> EclipseAlloyLeggings = ARMORS.registerItem("eclipsealloy_leggings", EclipseAlloyLeggings::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.LEGGINGS).fireResistant().durability(ArmorType.LEGGINGS.getDurability(25)));
     public static final DeferredHolder<Item, EclipseAlloyBoots> EclipseAlloyBoots = ARMORS.registerItem("eclipsealloy_boots", EclipseAlloyBoots::new, () -> new Item.Properties().humanoidArmor(ArmorTiers.ECLIPSEALLOY, ArmorType.BOOTS).fireResistant().durability(ArmorType.BOOTS.getDurability(25)));
 
