@@ -5,8 +5,8 @@ import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.BasePoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
+import com.direwolf20.justdirethings.common.worlddata.PortalRegistryData;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
 import java.util.UUID;
 
 public class PortalGun extends BasePoweredItem implements PoweredItem {
@@ -46,12 +45,10 @@ public class PortalGun extends BasePoweredItem implements PoweredItem {
     public static void closeMyPortals(ServerLevel level, ItemStack itemStack, Player player) {
         UUID portalGunUUID = getUUID(itemStack);
         MinecraftServer server = level.getServer();
-        for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(JDTRegistration.PortalEntity.get(), k -> k.getOwner() == player.getUUID() || k.getPortalGunUUID().equals(portalGunUUID));
-
-            for (PortalEntity entity : customEntities) {
-                entity.setDying();
-            }
+        PortalRegistryData reg = PortalRegistryData.get(server);
+        for (PortalRegistryData.Entry e : reg.findByOwnerOrGun(player.getUUID(), portalGunUUID)) {
+            PortalEntity pe = PortalRegistryData.resolveEntityForceLoad(server, e);
+            if (pe != null && !pe.isDying()) pe.setDying();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.entities;
 
+import com.direwolf20.justdirethings.common.worlddata.PortalRegistryData;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import net.minecraft.core.BlockPos;
@@ -100,21 +101,19 @@ public class PortalProjectile extends Projectile {
 
     protected List<? extends PortalEntity> findMatchingPortal(MinecraftServer server, boolean isPrimaryType) {
         List<PortalEntity> returnList = new ArrayList<>();
-        for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(JDTRegistration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID) && k.getIsPrimary() == isPrimaryType);
-            if (!customEntities.isEmpty())
-                returnList.addAll(customEntities);
+        PortalRegistryData reg = PortalRegistryData.get(server);
+        for (PortalRegistryData.Entry e : reg.findByGunAndPrimary(portalGunUUID, isPrimaryType)) {
+            PortalEntity pe = PortalRegistryData.resolveEntityForceLoad(server, e);
+            if (pe != null) returnList.add(pe);
         }
         return returnList;
     }
 
     public void closeMyPortals(MinecraftServer server) {
-        for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(JDTRegistration.PortalEntity.get(), k -> k.getPortalGunUUID().equals(portalGunUUID));
-
-            for (PortalEntity entity : customEntities) {
-                entity.setDying();
-            }
+        PortalRegistryData reg = PortalRegistryData.get(server);
+        for (PortalRegistryData.Entry e : reg.findByGun(portalGunUUID)) {
+            PortalEntity pe = PortalRegistryData.resolveEntityForceLoad(server, e);
+            if (pe != null && !pe.isDying()) pe.setDying();
         }
     }
 

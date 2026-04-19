@@ -33,6 +33,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -114,7 +115,7 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             if (noPotionAbilitiesActive(itemStack))
                 return customArrow(justDireArrow, stack, itemStack);
 
-            ResourceHandler<ItemResource> handler = itemStack.getCapability(Capabilities.Item.ITEM, null);
+            ResourceHandler<ItemResource> handler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
             if (handler != null) {
                 PotionContents potionContents = PotionContents.EMPTY;
                 for (int slot = 0; slot < handler.size(); slot++) {
@@ -265,7 +266,7 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
         if (stack.getItem() instanceof PoweredTool) {
-            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, null);
+            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
             if (energyStorage == null) return amount;
             double reductionFactor = 0;
             if (entity != null && entity.level().getServer() != null) {

@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.FuelValues;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         super(container, inv, name);
         this.container = container;
         this.pocketGenerator = container.playerEntity.getMainHandItem();
-        this.energyStorage = pocketGenerator.getCapability(Capabilities.Energy.ITEM, null);
+        this.energyStorage = pocketGenerator.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(pocketGenerator));
     }
 
     @Override
@@ -111,7 +112,7 @@ public class PocketGeneratorScreen extends AbstractContainerScreen<PocketGenerat
         this.pocketGenerator = container.playerEntity.getMainHandItem();
         if (pocketGenerator.isEmpty() || !(pocketGenerator.getItem() instanceof PocketGenerator))
             return;
-        this.energyStorage = pocketGenerator.getCapability(Capabilities.Energy.ITEM, null);
+        this.energyStorage = pocketGenerator.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(pocketGenerator));
         if (energyStorage == null)
             return;
         int maxBurn = pocketGenerator.getOrDefault(JustDireDataComponents.POCKETGEN_MAXBURN, 0);

@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.common.entities;
 
+import com.direwolf20.justdirethings.common.worlddata.PortalRegistryData;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.Direction;
 import net.minecraft.core.UUIDUtil;
@@ -94,7 +95,10 @@ public class PortalEntity extends Entity {
         refreshDimensions();
         if (!level().isClientSide()) {
             tickCooldowns();
-            if (getLinkedPortal() != null) {
+            // We no longer gate on a cached partner — the partner's chunk may be unloaded.
+            // teleportCollidingEntities loads it on demand when an entity is actually colliding;
+            // captureVelocity just records positions and doesn't need the partner.
+            if (linkedPortalUUID != null) {
                 teleportCollidingEntities();
                 captureVelocity();
             }
@@ -227,8 +231,18 @@ public class PortalEntity extends Entity {
         super.onAddedToLevel();
         if (!level().isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
-            ChunkPos chunkPos = ChunkPos.containing(this.blockPosition());
-            JDTRegistration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), true, false);
+            if (isAdvanced) {
+                // Advanced portals must keep ticking so their expirationTime runs down.
+                ChunkPos chunkPos = ChunkPos.containing(this.blockPosition());
+                JDTRegistration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), true, false);
+            }
+
+            MinecraftServer server = serverLevel.getServer();
+            if (server != null) {
+                PortalRegistryData.get(server).addOrUpdate(
+                        this.getUUID(), serverLevel.dimension(), ChunkPos.containing(this.blockPosition()),
+                        this.linkedPortalUUID, this.portalGunUUID, this.ownerUUID, getIsPrimary());
+            }
 
             level().playSound(
                     null,
@@ -262,8 +276,29 @@ public class PortalEntity extends Entity {
         super.remove(pReason);
         if (!level().isClientSide()) {
             ServerLevel serverLevel = (ServerLevel) this.level();
-            ChunkPos chunkPos = ChunkPos.containing(this.blockPosition());
-            JDTRegistration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), false, false);
+            if (isAdvanced) {
+                ChunkPos chunkPos = ChunkPos.containing(this.blockPosition());
+                JDTRegistration.TICKET_CONTROLLER.forceChunk(serverLevel, this, chunkPos.x(), chunkPos.z(), false, false);
+            }
+
+            MinecraftServer server = serverLevel.getServer();
+            if (server != null) {
+                PortalRegistryData reg = PortalRegistryData.get(server);
+                // Use the registry's current partner, not this.linkedPortalUUID — if the partner
+                // was re-linked to another portal after we saved our field, the registry has been
+                // updated and our field is stale. Cascading based on the stale field would kill
+                // a portal that is no longer ours.
+                PortalRegistryData.Entry selfEntry = reg.getEntry(this.getUUID());
+                UUID partnerUuid = selfEntry != null ? selfEntry.partnerUuid() : null;
+                reg.removePortal(this.getUUID());
+                if (partnerUuid != null) {
+                    PortalRegistryData.Entry partnerEntry = reg.getEntry(partnerUuid);
+                    if (partnerEntry != null) {
+                        PortalEntity partner = PortalRegistryData.resolveEntityForceLoad(server, partnerEntry);
+                        if (partner != null && !partner.isDying()) partner.setDying();
+                    }
+                }
+            }
         }
     }
 
@@ -314,26 +349,54 @@ public class PortalEntity extends Entity {
         return new AABB(x - halfWidth, y, z - halfDepth, x + halfWidth, y + height, z + halfDepth);
     }
 
-    public PortalEntity findPartnerPortal(MinecraftServer server) {
-        for (ServerLevel serverLevel : server.getAllLevels()) {
-            List<? extends PortalEntity> customEntities = serverLevel.getEntities(JDTRegistration.PortalEntity.get(), k -> k.getUUID().equals(this.linkedPortalUUID));
-            if (!customEntities.isEmpty())
-                return customEntities.getFirst();
+    public PortalEntity getLinkedPortal() {
+        return resolveLinkedPortal(false);
+    }
+
+    /**
+     * Resolve partner, blocking-loading its chunk if necessary. Use only when a teleport is imminent.
+     */
+    public PortalEntity getOrLoadLinkedPortal() {
+        return resolveLinkedPortal(true);
+    }
+
+    private PortalEntity resolveLinkedPortal(boolean loadIfNeeded) {
+        if (level().isClientSide()) return null;
+        if (linkedPortalUUID == null) return null;
+        MinecraftServer server = level().getServer();
+        if (server == null) return null;
+
+        if (linkedPortal != null && !linkedPortal.isRemoved() && linkedPortal.getUUID().equals(linkedPortalUUID))
+            return linkedPortal;
+
+        PortalRegistryData reg = PortalRegistryData.get(server);
+        PortalRegistryData.Entry partnerEntry = reg.getEntry(linkedPortalUUID);
+        if (partnerEntry != null) {
+            PortalEntity resolved = loadIfNeeded
+                    ? PortalRegistryData.resolveEntityForceLoad(server, partnerEntry)
+                    : PortalRegistryData.resolveEntity(server, partnerEntry);
+            if (resolved != null) {
+                linkedPortal = resolved;
+                return resolved;
+            }
         }
+        linkedPortal = null;
         return null;
     }
 
-    public PortalEntity getLinkedPortal() {
-        if (level().isClientSide()) return null;
-        if (linkedPortal == null && linkedPortalUUID != null) {
-            linkedPortal = findPartnerPortal(level().getServer());
-        }
-        return linkedPortal;
-    }
-
-    public void setLinkedPortal(PortalEntity linkedPortal) {
-        this.linkedPortalUUID = linkedPortal.getUUID();
+    public void setLinkedPortal(PortalEntity other) {
+        this.linkedPortalUUID = other.getUUID();
         this.linkedPortal = null;
+        if (!level().isClientSide()) {
+            MinecraftServer server = level().getServer();
+            if (server != null) {
+                PortalRegistryData.get(server).linkPair(
+                        this.getUUID(), level().dimension(), ChunkPos.containing(this.blockPosition()),
+                        this.portalGunUUID, this.ownerUUID, getIsPrimary(),
+                        other.getUUID(), other.level().dimension(), ChunkPos.containing(other.blockPosition()),
+                        other.getPortalGunUUID(), other.getOwner(), other.getIsPrimary());
+            }
+        }
     }
 
     public Vec3 getTeleportTo(Entity entity, PortalEntity matchingPortal) {
@@ -416,7 +479,7 @@ public class PortalEntity extends Entity {
 
     public void teleport(Entity entity) {
         if (entity.level().isClientSide()) return;
-        if (getLinkedPortal() != null) {
+        if (getOrLoadLinkedPortal() != null) {
             Vec3 teleportTo = getTeleportTo(entity, linkedPortal);
             // Adjust the entity's rotation to match the exit portal's direction
             Vec2 newLookAngle = transformLookAngle(entity, linkedPortal);

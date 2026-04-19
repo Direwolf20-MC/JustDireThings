@@ -44,6 +44,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
@@ -114,7 +115,7 @@ public class FluidCanister extends Item implements FluidContainingItem {
         FillMode fillMode = getFillMode(itemStack);
         if (fillMode == FillMode.NONE) return;
         if (entity instanceof Player player) {
-            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
             if (fluidHandler == null) return;
             FluidResource stored = fluidHandler.getResource(0);
             if (stored.isEmpty()) return;
@@ -126,7 +127,7 @@ public class FluidCanister extends Item implements FluidContainingItem {
                 if (fillMode == FillMode.JDTONLY
                         && !slotStack.getItem().getCreatorModId(world.registryAccess(), slotStack).equals(JustDireThings.MODID))
                     continue;
-                ResourceHandler<FluidResource> slotFluidHandler = slotStack.getCapability(Capabilities.Fluid.ITEM, null);
+                ResourceHandler<FluidResource> slotFluidHandler = slotStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(slotStack));
                 if (slotFluidHandler == null) continue;
                 int amtToFill = Math.min(storedAmt, 100);
                 if (amtToFill <= 0) continue;
@@ -161,7 +162,7 @@ public class FluidCanister extends Item implements FluidContainingItem {
             return;
         }
 
-        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler == null) {
             return;
         }
@@ -185,7 +186,7 @@ public class FluidCanister extends Item implements FluidContainingItem {
         BlockPos blockpos = blockhitresult.getBlockPos();
         BlockState blockstate = level.getBlockState(blockpos);
         if (blockstate.getBlock() instanceof LiquidBlock && !player.isShiftKeyDown()) return false;
-        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
         if (fluidHandler == null) return false;
         FluidResource fluidResource = fluidHandler.getResource(0);
         int amount = fluidHandler.getAmountAsInt(0);
@@ -208,7 +209,7 @@ public class FluidCanister extends Item implements FluidContainingItem {
         BlockPos blockpos = blockhitresult.getBlockPos();
         BlockState blockstate1 = level.getBlockState(blockpos);
         if (blockstate1.getBlock() instanceof LiquidBlock liquidBlock) {
-            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
             if (fluidHandler == null) return false;
             Fluid fluid = liquidBlock.fluid;
             FluidResource stored = fluidHandler.getResource(0);

@@ -3,12 +3,13 @@ package com.direwolf20.justdirethings.common.items.interfaces;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public interface PoweredItem {
     static int getAvailableEnergy(ItemStack stack) {
-        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, null);
+        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
         if (energy == null) {
             return -1;
         }
@@ -16,7 +17,7 @@ public interface PoweredItem {
     }
 
     static int getMaxEnergyFor(ItemStack stack) {
-        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, null);
+        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
         if (energy == null) {
             return 0;
         }
@@ -24,7 +25,7 @@ public interface PoweredItem {
     }
 
     default boolean isPowerBarVisible(ItemStack stack) {
-        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, null);
+        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
         if (energy == null) {
             return false;
         }
@@ -32,7 +33,7 @@ public interface PoweredItem {
     }
 
     default int getPowerBarWidth(ItemStack stack) {
-        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, null);
+        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
         if (energy == null) {
             return 13;
         }
@@ -42,7 +43,7 @@ public interface PoweredItem {
     }
 
     default int getPowerBarColor(ItemStack stack) {
-        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, null);
+        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
         if (energy == null) {
             return -1; //Tell caller to call super
         }
@@ -60,7 +61,7 @@ public interface PoweredItem {
     }
 
     static boolean consumeEnergy(ItemStack itemStack, int amt) {
-        EnergyHandler energy = itemStack.getCapability(Capabilities.Energy.ITEM, null);
+        EnergyHandler energy = itemStack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(itemStack));
         if (energy == null) return false;
         int amtExtracted;
         try (Transaction tx = Transaction.openRoot()) {

@@ -36,6 +36,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -78,7 +79,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
         if (level == null) {
             return;
         }
-        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler == null) {
             return;
         }
@@ -91,7 +92,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
         BlockPos blockpos = blockhitresult.getBlockPos();
         BlockState blockstate1 = level.getBlockState(blockpos);
         if (blockstate1.getBlock() instanceof PortalFluidBlock portalFluidBlock) {
-            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
             if (fluidHandler == null) return true;
             FluidResource resource = FluidResource.of(JDTRegistration.PORTAL_FLUID_SOURCE.get());
             int filledAmt;
@@ -148,7 +149,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
     }
 
     public static boolean hasEnoughFluid(ItemStack itemStack, int amt) {
-        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
         if (fluidHandler == null) {
             return false;
         }
@@ -156,7 +157,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
     }
 
     public static void consumeFluid(ItemStack itemStack, int amt) {
-        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
         if (fluidHandler == null) {
             return;
         }
@@ -268,7 +269,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
     }
 
     public static int getFullness(ItemStack itemStack) {
-        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
         if (fluidHandler != null && !fluidHandler.getResource(0).isEmpty()) {
             float percentFull = ((float) fluidHandler.getAmountAsInt(0) / maxMB) * 100;
             if (percentFull > 0 && percentFull <= 33) {

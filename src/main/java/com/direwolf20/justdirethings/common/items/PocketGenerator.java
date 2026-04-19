@@ -27,6 +27,7 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.PlayerInventoryWrapper;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,22 +65,20 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
     @Override
     public void inventoryTick(@NotNull ItemStack itemStack, @NotNull ServerLevel world, @NotNull Entity entity, @Nullable EquipmentSlot slot) {
         if (entity instanceof Player player && itemStack.getItem() instanceof ToggleableItem toggleableItem && toggleableItem.getEnabled(itemStack)) {
-            EnergyHandler energyStorage = itemStack.getCapability(Capabilities.Energy.ITEM, null);
+            EnergyHandler energyStorage = itemStack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(itemStack));
             if (energyStorage == null) return;
             if (energyStorage instanceof EnergyStorageItemStackNoReceive pocketEnergy) {
                 tryBurn(pocketEnergy, itemStack, world);
                 if (pocketEnergy.getAmountAsInt() >= (getFEPerTick() / 10)) { //If we have 1/10th the max transfer speed, go ahead and let it rip
-                    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-                        ItemStack slotStack = player.getInventory().getItem(i);
-                        transferEnergy(slotStack, pocketEnergy);
+                    PlayerInventoryWrapper inventory = PlayerInventoryWrapper.of(player);
+                    for (int i = 0; i < inventory.size(); i++) {
+                        transferEnergy(ItemAccess.forHandlerIndex(inventory, i), pocketEnergy);
                     }
                     ResourceHandler<ItemResource> curios = player.getCapability(CURIOS_INVENTORY);
                     if (curios != null) {
                         for (int i = 0; i < curios.size(); i++) {
-                            ItemResource resource = curios.getResource(i);
-                            if (resource.isEmpty()) continue;
-                            ItemStack slotStack = resource.toStack(curios.getAmountAsInt(i));
-                            transferEnergy(slotStack, pocketEnergy);
+                            if (curios.getResource(i).isEmpty()) continue;
+                            transferEnergy(ItemAccess.forHandlerIndex(curios, i), pocketEnergy);
                         }
                     }
                 }
@@ -87,8 +86,8 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
         }
     }
 
-    private void transferEnergy(ItemStack slotStack, EnergyHandler energyStorage) {
-        EnergyHandler slotEnergy = slotStack.getCapability(Capabilities.Energy.ITEM, null);
+    private void transferEnergy(ItemAccess slotAccess, EnergyHandler energyStorage) {
+        EnergyHandler slotEnergy = slotAccess.getCapability(Capabilities.Energy.ITEM);
         if (slotEnergy == null) return;
         int acceptedEnergy;
         try (Transaction probe = Transaction.openRoot()) {

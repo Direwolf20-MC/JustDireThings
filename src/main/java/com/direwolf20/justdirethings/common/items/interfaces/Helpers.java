@@ -38,6 +38,7 @@ import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemUtil;
@@ -215,7 +216,7 @@ public class Helpers {
 
     public static int testUseTool(ItemStack stack) {
         if (stack.getItem() instanceof PoweredTool poweredTool) {
-            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, null);
+            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getAmountAsInt() - poweredTool.getBlockBreakFECost();
         } else {
@@ -226,7 +227,7 @@ public class Helpers {
 
     public static int testUseTool(ItemStack stack, int cost) {
         if (stack.getItem() instanceof PoweredItem) {
-            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, null);
+            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getAmountAsInt() - cost;
         } else {
@@ -236,7 +237,7 @@ public class Helpers {
 
     public static int testUseTool(ItemStack stack, Ability ability) {
         if (stack.getItem() instanceof PoweredItem) {
-            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, null);
+            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getAmountAsInt() - ability.getFeCost();
         } else {
@@ -246,7 +247,7 @@ public class Helpers {
 
     public static int testUseTool(ItemStack stack, Ability ability, int multiplier) {
         if (stack.getItem() instanceof PoweredItem) {
-            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, null);
+            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
             if (energyStorage == null) return -1; //Shouldn't Happen!
             return energyStorage.getAmountAsInt() - (ability.getFeCost() * multiplier);
         } else {

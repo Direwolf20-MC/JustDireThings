@@ -35,6 +35,7 @@ import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -144,7 +145,7 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
         BlockPos blockpos = blockhitresult.getBlockPos();
         BlockState blockstate1 = level.getBlockState(blockpos);
         if (blockstate1.getBlock() instanceof TimeFluidBlock timeFluidBlock) {
-            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
             if (fluidHandler == null) return true;
             FluidResource resource = FluidResource.of(JDTRegistration.TIME_FLUID_SOURCE.get());
             int filledAmt;
@@ -208,7 +209,7 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
         if (level == null) {
             return;
         }
-        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler == null) {
             return;
         }

@@ -26,7 +26,7 @@ public class TooltipHelpers {
         if (!(stack.getItem() instanceof PoweredItem poweredItem))
             return;
 
-        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, null);
+        EnergyHandler energy = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
         if (energy == null) {
             return;
         }

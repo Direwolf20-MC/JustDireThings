@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -21,7 +22,7 @@ public interface FluidContainingItem {
     }
 
     static int getAvailableFluid(ItemStack stack) {
-        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler == null) {
             return -1;
         }
@@ -29,7 +30,7 @@ public interface FluidContainingItem {
     }
 
     default boolean isFluidBarVisible(ItemStack stack) {
-        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler == null) {
             return false;
         }
@@ -37,7 +38,7 @@ public interface FluidContainingItem {
     }
 
     default int getFluidBarWidth(ItemStack stack) {
-        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler == null) {
             return 13;
         }
@@ -47,7 +48,7 @@ public interface FluidContainingItem {
     }
 
     default int getFluidBarColor(ItemStack stack) {
-        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler == null) {
             return -1; //Tell caller to call super
         }
@@ -58,7 +59,7 @@ public interface FluidContainingItem {
     }
 
     static boolean hasEnoughFluid(ItemStack itemStack, int amt) {
-        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
         if (fluidHandler == null) {
             return false;
         }
@@ -66,7 +67,7 @@ public interface FluidContainingItem {
     }
 
     static void consumeFluid(ItemStack itemStack, int amt) {
-        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
         if (fluidHandler == null) {
             return;
         }
@@ -87,7 +88,7 @@ public interface FluidContainingItem {
         BlockState blockstate1 = level.getBlockState(blockpos);
         LiquidBlock liquidBlock = getLiquidBlockAt(player.level(), blockpos);
         if (liquidBlock == null) return false;
-        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, null);
+        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
         if (fluidHandler == null) return false;
         FluidResource fluidResource = FluidResource.of(liquidBlock.fluid);
         int filledAmt;
