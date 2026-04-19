@@ -312,21 +312,11 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         // Tile the fluid sprite vertically. The sprite's native size is 16 texels; scale to our box.
         int tileSize = 16;
         int remaining = height;
-        int y = startY + height; // fill from bottom up
+        int y = startY; // fill from bottom up; startY is the bar's bottom edge
         while (remaining > 0) {
             int drawHeight = Math.min(tileSize, remaining);
             int drawY = y - drawHeight;
-            if (drawHeight == tileSize) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, startX, drawY, width, drawHeight, colorARGB);
-            } else {
-                // Partial tile — clamp UV so we don't squish the texture
-                float u0 = sprite.getU0();
-                float u1 = sprite.getU1();
-                float v0 = sprite.getV0();
-                float v1 = sprite.getV0() + (sprite.getV1() - sprite.getV0()) * drawHeight / (float) tileSize;
-                graphics.blit(sprite.atlasLocation(), startX, drawY,
-                        startX + width, drawY + drawHeight, u0, u1, v0, v1);
-            }
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, startX, drawY, width, drawHeight, colorARGB);
             remaining -= drawHeight;
             y -= drawHeight;
         }
