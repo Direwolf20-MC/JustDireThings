@@ -99,7 +99,9 @@ public class PlayerEvents {
     private static float incrementDestroyProgress(Level level, BlockState pState, BlockPos pPos, Player player, ToggleableTool toggleableTool, ItemStack toggleableToolStack) {
         Set<BlockPos> breakBlockPositions = toggleableTool.getBreakBlockPositions(toggleableToolStack, level, pPos, player, pState);
         int i = gameTicksMining;
-        float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) (i + 1);
+        // 0.5F: in 26.1 vanilla's destroyProgress accumulates at half the rate this formula predicts,
+        // so without this the extras finish crumbling in half the time of the center block.
+        float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) (i + 1) * 0.5F;
         int j = (int) (f * 10.0F);
         for (BlockPos blockPos : breakBlockPositions) {
             if (blockPos.equals(pPos)) continue; //Let the vanilla mechanics handle the block we're hitting
