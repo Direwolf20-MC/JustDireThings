@@ -57,11 +57,14 @@ public class ParadoxMachineBER extends AreaAffectingBER<ParadoxMachineBE, Parado
         public final LivingEntityRenderState state;
         public final EntityModel<LivingEntityRenderState> model;
         public final Identifier texture;
+        public final LivingEntityRenderer<LivingEntity, LivingEntityRenderState, EntityModel<LivingEntityRenderState>> renderer;
 
-        public PreparedMob(LivingEntityRenderState state, EntityModel<LivingEntityRenderState> model, Identifier texture) {
+        public PreparedMob(LivingEntityRenderState state, EntityModel<LivingEntityRenderState> model, Identifier texture,
+                           LivingEntityRenderer<LivingEntity, LivingEntityRenderState, EntityModel<LivingEntityRenderState>> renderer) {
             this.state = state;
             this.model = model;
             this.texture = texture;
+            this.renderer = renderer;
         }
     }
 
@@ -148,7 +151,7 @@ public class ParadoxMachineBER extends AreaAffectingBER<ParadoxMachineBE, Parado
             EntityModel<LivingEntityRenderState> model = renderer.getModel();
             Identifier texture = renderer.getTextureLocation(state);
             if (texture == null) return null;
-            return new PreparedMob(state, model, texture);
+            return new PreparedMob(state, model, texture, renderer);
         } catch (Throwable ignored) {
             return null;
         }
@@ -267,6 +270,10 @@ public class ParadoxMachineBER extends AreaAffectingBER<ParadoxMachineBE, Parado
 
             collector.submitModel(mob.model, mob.state, poseStack, renderType,
                     mob.state.lightCoords, overlayCoords, tintedColor, null, 0, null);
+
+            // Intentionally skipping RenderLayer submission (wool, armor, eyes, etc.) — layers submit
+            // their own models with their own colors and ignore our alpha, so they'd appear fully opaque
+            // over the faded body. Matches the 1.21.1 behavior which also only rendered the base model.
 
             poseStack.popPose();
         }

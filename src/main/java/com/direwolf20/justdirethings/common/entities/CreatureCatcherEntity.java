@@ -211,35 +211,17 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         level().addFreshEntity(entity);
     }
 
-    public static boolean DEBUG_VERBOSE = false;
-
     public static Mob getEntityFromItemStack(ItemStack itemStack, Level level) {
-        boolean hasType = itemStack.has(ENTITIYTYPE);
-        boolean hasData = itemStack.has(DataComponents.ENTITY_DATA);
-        if (DEBUG_VERBOSE)
-            System.out.println("[CCR] getEntityFromItemStack: item=" + itemStack.getItem() + " count=" + itemStack.getCount()
-                    + " hasEntityType=" + hasType + " hasEntityData=" + hasData);
-        if (!hasType) return null;
-        String typeKey = itemStack.get(ENTITIYTYPE);
-        if (DEBUG_VERBOSE) System.out.println("[CCR] getEntityFromItemStack: typeKey=" + typeKey);
-        EntityType<?> type = EntityType.byString(typeKey).orElse(null);
-        if (type == null) {
-            if (DEBUG_VERBOSE) System.out.println("[CCR] getEntityFromItemStack: EntityType.byString returned null");
-            return null;
-        }
+        if (!itemStack.has(ENTITIYTYPE)) return null;
+        EntityType<?> type = EntityType.byString(itemStack.get(ENTITIYTYPE)).orElse(null);
+        if (type == null) return null;
         Entity entity = type.create(level, net.minecraft.world.entity.EntitySpawnReason.LOAD);
-        if (!(entity instanceof Mob)) {
-            if (DEBUG_VERBOSE)
-                System.out.println("[CCR] getEntityFromItemStack: created entity is NOT a Mob: " + (entity == null ? "null" : entity.getClass().getName()));
-            return null;
-        }
-        net.minecraft.nbt.CompoundTag tag = hasData
+        if (!(entity instanceof Mob)) return null;
+        net.minecraft.nbt.CompoundTag tag = itemStack.has(DataComponents.ENTITY_DATA)
                 ? itemStack.get(DataComponents.ENTITY_DATA).copyTagWithoutId()
                 : new net.minecraft.nbt.CompoundTag();
         ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag);
         entity.load(input);
-        if (DEBUG_VERBOSE)
-            System.out.println("[CCR] getEntityFromItemStack: loaded " + entity.getClass().getSimpleName() + " tagKeys=" + tag.keySet());
         return (Mob) entity;
     }
 
