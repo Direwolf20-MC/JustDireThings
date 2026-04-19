@@ -30,7 +30,7 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
     public PotionCanisterScreen(PotionCanisterContainer container, Inventory inv, Component name) {
         super(container, inv, name);
         this.container = container;
-        this.potionCanister = container.potionCanister;
+        this.potionCanister = container.playerEntity.getMainHandItem();
     }
 
     @Override
@@ -56,6 +56,7 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
         int relY = (this.height - this.imageHeight) / 2;
         graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, relX, relY, 0.0F, 0.0F, this.imageWidth, this.imageHeight, 256, 256);
 
+        this.potionCanister = container.playerEntity.getMainHandItem();
         int offset = 5;
         graphics.blit(RenderPipelines.GUI_TEXTURED, FLUIDBAR, leftPos + offset, topPos + 5, 0.0F, 0.0F, 18, 72, 36, 72);
         int maxMB = PotionCanister.getMaxMB(), height = 70;
@@ -84,16 +85,7 @@ public class PotionCanisterScreen extends AbstractContainerScreen<PotionCanister
         while (remaining > 0) {
             int drawHeight = Math.min(tileSize, remaining);
             int drawY = y - drawHeight;
-            if (drawHeight == tileSize) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, startX, drawY, width, drawHeight, tint);
-            } else {
-                float u0 = sprite.getU0();
-                float u1 = sprite.getU1();
-                float v0 = sprite.getV0();
-                float v1 = sprite.getV0() + (sprite.getV1() - sprite.getV0()) * drawHeight / (float) tileSize;
-                graphics.blit(sprite.atlasLocation(), startX, drawY,
-                        startX + width, drawY + drawHeight, u0, u1, v0, v1);
-            }
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, startX, drawY, width, drawHeight, tint);
             remaining -= drawHeight;
             y -= drawHeight;
         }
