@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.client.events;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.screens.AdvPortalRadialMenu;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
@@ -16,15 +15,13 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -34,7 +31,6 @@ import java.util.List;
 
 import static com.direwolf20.justdirethings.util.MiscTools.getHitResult;
 
-@EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
 public class EventKeyInput {
 
     @SubscribeEvent

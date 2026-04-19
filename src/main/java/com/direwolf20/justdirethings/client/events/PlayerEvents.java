@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.client.events;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.items.PortalGun;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
@@ -22,14 +21,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.Set;
 
-@EventBusSubscriber(modid = JustDireThings.MODID)
 public class PlayerEvents {
     private static BlockPos destroyPos = BlockPos.ZERO;
     private static int gameTicksMining = 0;
@@ -99,9 +96,7 @@ public class PlayerEvents {
     private static float incrementDestroyProgress(Level level, BlockState pState, BlockPos pPos, Player player, ToggleableTool toggleableTool, ItemStack toggleableToolStack) {
         Set<BlockPos> breakBlockPositions = toggleableTool.getBreakBlockPositions(toggleableToolStack, level, pPos, player, pState);
         int i = gameTicksMining;
-        // 0.5F: in 26.1 vanilla's destroyProgress accumulates at half the rate this formula predicts,
-        // so without this the extras finish crumbling in half the time of the center block.
-        float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) (i + 1) * 0.5F;
+        float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) (i + 1);
         int j = (int) (f * 10.0F);
         for (BlockPos blockPos : breakBlockPositions) {
             if (blockPos.equals(pPos)) continue; //Let the vanilla mechanics handle the block we're hitting
