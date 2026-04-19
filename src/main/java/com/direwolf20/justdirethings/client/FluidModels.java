@@ -31,6 +31,10 @@ public final class FluidModels {
 
     @SubscribeEvent
     static void onRegisterFluidModels(RegisterFluidModelsEvent event) {
+        // The polymorphic fluid block renders with a white tint so the per-frame overlay
+        // (see PolymorphicFluidOverlayRenderer) can supply the shifting rainbow color without
+        // requiring chunk remeshes. Bucket / GUI contexts still get the animated rainbow via
+        // color(FluidState).
         register(event, JDTRegistration.POLYMORPHIC_FLUID_SOURCE, JDTRegistration.POLYMORPHIC_FLUID_FLOWING, rainbowTint());
         register(event, JDTRegistration.PORTAL_FLUID_SOURCE, JDTRegistration.PORTAL_FLUID_FLOWING, FluidTintSources.constant(0xFF00DD00));
         register(event, JDTRegistration.UNSTABLE_PORTAL_FLUID_SOURCE, JDTRegistration.UNSTABLE_PORTAL_FLUID_FLOWING, FluidTintSources.constant(0xFF9400D3));
@@ -55,24 +59,33 @@ public final class FluidModels {
         return new Material(Identifier.fromNamespaceAndPath(JustDireThings.MODID, path));
     }
 
+    /**
+     * Cycles per tick of the rainbow hue. One full cycle every 1 / (HUE_SPEED * 20) seconds.
+     */
+    public static final float HUE_SPEED = 4.0f / 1000.0f;
+
     private static FluidTintSource rainbowTint() {
         return new FluidTintSource() {
             @Override
             public int color(FluidState state) {
-                return currentRainbowArgb();
+                return currentRainbowArgb(0f);
             }
 
             @Override
             public int colorInWorld(FluidState fluidState, BlockState blockState, BlockAndTintGetter level, BlockPos pos) {
-                return currentRainbowArgb();
+                // Baked into the chunk mesh — must stay constant or we'd trigger remeshes.
+                // Dark gray so the per-frame overlay in PolymorphicFluidOverlayRenderer can
+                // saturate cleanly; pure white washes the overlay color out into pastels.
+                return 0xFF404040;
             }
         };
     }
 
-    private static int currentRainbowArgb() {
+    public static int currentRainbowArgb(float partialTicks) {
         var level = Minecraft.getInstance().level;
-        long time = level != null ? level.getGameTime() : 0L;
-        float hue = (time * 0.5f / 1000.0f) % 1.0f;
+        float time = level != null ? level.getGameTime() + partialTicks : 0f;
+        float hue = (time * HUE_SPEED) % 1.0f;
+        if (hue < 0f) hue += 1.0f;
         int rgb = Color.HSBtoRGB(hue, 1.0f, 1.0f);
         return 0xFF000000 | (rgb & 0x00FFFFFF);
     }
