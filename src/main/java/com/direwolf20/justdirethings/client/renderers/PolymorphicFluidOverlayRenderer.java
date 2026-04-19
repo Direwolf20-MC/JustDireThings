@@ -46,8 +46,10 @@ public final class PolymorphicFluidOverlayRenderer {
     private static final int SCAN_CHUNK_RADIUS = 8;
     /**
      * Alpha of the overlay tint; low enough that the underlying fluid texture shows through.
+     * Temporarily non-final + refreshed every tick so the value can be edited in-place and
+     * picked up via hotswap without relaunching Minecraft.
      */
-    private static final float OVERLAY_ALPHA = 1f;
+    private static float OVERLAY_ALPHA = 0.5f;
 
     private static final Set<BlockPos> sources = new HashSet<>();
     private static int ticksUntilRescan = 0;
@@ -57,6 +59,8 @@ public final class PolymorphicFluidOverlayRenderer {
 
     @SubscribeEvent
     static void onClientTick(ClientTickEvent.Post event) {
+        // Re-read the literal every tick so hotswap picks it up without a restart.
+        OVERLAY_ALPHA = currentOverlayAlpha();
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) {
             sources.clear();
@@ -66,6 +70,13 @@ public final class PolymorphicFluidOverlayRenderer {
         if (ticksUntilRescan-- > 0) return;
         ticksUntilRescan = RESCAN_INTERVAL_TICKS;
         rescan(mc.level, mc.player);
+    }
+
+    /**
+     * Edit this return value and hotswap — the tick handler picks it up live.
+     */
+    private static float currentOverlayAlpha() {
+        return 0.3f;
     }
 
     private static void rescan(ClientLevel level, Player player) {

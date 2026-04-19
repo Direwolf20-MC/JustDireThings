@@ -76,7 +76,7 @@ public final class FluidModels {
                 // Baked into the chunk mesh — must stay constant or we'd trigger remeshes.
                 // Dark gray so the per-frame overlay in PolymorphicFluidOverlayRenderer can
                 // saturate cleanly; pure white washes the overlay color out into pastels.
-                return 0xFF404040;
+                return 0x4D404040;
             }
         };
     }
