@@ -2,6 +2,7 @@ package com.direwolf20.justdirethings.mixin;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.player.LocalPlayer;
@@ -25,6 +26,9 @@ public abstract class LightTextureMixin {
         if (helmet.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(helmet, Ability.NIGHTVISION)) {
             return true; // Custom night vision effect
         }
+        if (instance.getAttributeValue(JDTRegistration.PHASE) > 0) {
+            return true; // Phase: behave like spectator for lightmap purposes
+        }
 
         return original.call(instance, holder);
     }
@@ -37,6 +41,9 @@ public abstract class LightTextureMixin {
         ItemStack helmet = livingEntity.getItemBySlot(EquipmentSlot.HEAD);
         if (helmet.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(helmet, Ability.NIGHTVISION)) {
             return 1f; // Custom night vision effect
+        }
+        if (livingEntity.getAttributeValue(JDTRegistration.PHASE) > 0) {
+            return 1f; // Phase: behave like spectator for lightmap purposes
         }
 
         return original.call(livingEntity, nanoTime);

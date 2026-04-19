@@ -10,10 +10,7 @@ import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBloc
 import com.direwolf20.justdirethings.client.blockentityrenders.gooblocks.GooBlockRender_Tier4;
 import com.direwolf20.justdirethings.client.entitymodels.PortalProjectileModel;
 import com.direwolf20.justdirethings.client.entityrenders.*;
-import com.direwolf20.justdirethings.client.events.EventKeyInput;
-import com.direwolf20.justdirethings.client.events.PlayerEvents;
-import com.direwolf20.justdirethings.client.events.RenderHighlight;
-import com.direwolf20.justdirethings.client.events.RenderLevelLast;
+import com.direwolf20.justdirethings.client.events.*;
 import com.direwolf20.justdirethings.client.itemcustomrenders.*;
 import com.direwolf20.justdirethings.client.overlays.AbilityCooldownOverlay;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
@@ -42,6 +39,7 @@ public class ClientSetup {
         NeoForge.EVENT_BUS.register(EventKeyInput.class);
         NeoForge.EVENT_BUS.register(RenderHighlight.class);
         NeoForge.EVENT_BUS.register(PlayerEvents.class);
+        NeoForge.EVENT_BUS.register(RenderEvents.class);
 
         // Item model properties (tool enabled-state swap, fluid/potion/portal fullness range-select dispatches,
         // bucket/canister tint sources) are registered via the RegisterConditionalItemModelPropertyEvent /
