@@ -103,6 +103,10 @@ public class InventoryHolderContainer extends BaseMachineContainer {
                 }
             } else if (!machineStack.isEmpty()) {
                 moveItemStackTo(machineStack, playerSlot, playerSlot + 1, false);
+                // StackCopySlot caches the stack returned by getItem(); moveItemStackTo mutated
+                // that cached copy but only called setChanged() on the destination. Flush the
+                // source side so the machine handler sees the reduced count.
+                machineInventorySlot.setChanged();
             }
         }
     }

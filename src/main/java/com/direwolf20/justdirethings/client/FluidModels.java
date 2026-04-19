@@ -34,8 +34,8 @@ public final class FluidModels {
         register(event, JDTRegistration.POLYMORPHIC_FLUID_SOURCE, JDTRegistration.POLYMORPHIC_FLUID_FLOWING, rainbowTint());
         register(event, JDTRegistration.PORTAL_FLUID_SOURCE, JDTRegistration.PORTAL_FLUID_FLOWING, FluidTintSources.constant(0xFF00DD00));
         register(event, JDTRegistration.UNSTABLE_PORTAL_FLUID_SOURCE, JDTRegistration.UNSTABLE_PORTAL_FLUID_FLOWING, FluidTintSources.constant(0xFF9400D3));
-        register(event, JDTRegistration.TIME_FLUID_SOURCE, JDTRegistration.TIME_FLUID_FLOWING, FluidTintSources.constant(0xFFFFFFFF));
-        register(event, JDTRegistration.XP_FLUID_SOURCE, JDTRegistration.XP_FLUID_FLOWING, FluidTintSources.constant(0xFFFFFFFF));
+        register(event, JDTRegistration.TIME_FLUID_SOURCE, JDTRegistration.TIME_FLUID_FLOWING, FluidTintSources.constant(0x7700FF00));
+        register(event, JDTRegistration.XP_FLUID_SOURCE, JDTRegistration.XP_FLUID_FLOWING, FluidTintSources.constant(0xFF32CD32));
         register(event, JDTRegistration.UNREFINED_T2_FLUID_SOURCE, JDTRegistration.UNREFINED_T2_FLUID_FLOWING, FluidTintSources.constant(0xFF8B4500));
         register(event, JDTRegistration.REFINED_T2_FLUID_SOURCE, JDTRegistration.REFINED_T2_FLUID_FLOWING, FluidTintSources.constant(0xFF8B0000));
         register(event, JDTRegistration.UNREFINED_T3_FLUID_SOURCE, JDTRegistration.UNREFINED_T3_FLUID_FLOWING, FluidTintSources.constant(0xFF64D5AD));
