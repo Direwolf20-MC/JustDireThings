@@ -393,7 +393,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.timecrystaltooltiptwo", "Timey Wimey");
 
         //Keys
-        add("justdirethings.key.category", "Just Dire Things");
+        add("key.category.justdirethings.category", "Just Dire Things");
         add("justdirethings.key.toggle_tool", "Toggle Tool Abilities");
         add("justdirethings.key.toolUI", "Open Tool Settings UI");
 
