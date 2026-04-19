@@ -96,7 +96,7 @@ public class PlayerEvents {
     private static float incrementDestroyProgress(Level level, BlockState pState, BlockPos pPos, Player player, ToggleableTool toggleableTool, ItemStack toggleableToolStack) {
         Set<BlockPos> breakBlockPositions = toggleableTool.getBreakBlockPositions(toggleableToolStack, level, pPos, player, pState);
         int i = gameTicksMining;
-        float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) (i + 1);
+        float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) i;
         int j = (int) (f * 10.0F);
         for (BlockPos blockPos : breakBlockPositions) {
             if (blockPos.equals(pPos)) continue; //Let the vanilla mechanics handle the block we're hitting
