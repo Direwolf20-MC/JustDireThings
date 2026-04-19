@@ -102,7 +102,7 @@ public class CreatureCatcherSpecialRenderer implements SpecialModelRenderer<Crea
         // The base item model's display transforms are already applied by the LayerRenderState; we're
         // rendering inside a 1x1x1 item cube in local item-model space. Center on the cube, then scale
         // the mob to fit while keeping a consistent visual size regardless of mob dimensions.
-        poseStack.translate(0.5F, 0.5F, 0.5F);
+        poseStack.translate(0.5F, 0.125F, 0.5F);
 
         float maxDim = Math.max(mob.bbWidth, mob.bbHeight);
         float scale = maxDim <= 0.0F ? 0.5F : 0.5F / maxDim;
