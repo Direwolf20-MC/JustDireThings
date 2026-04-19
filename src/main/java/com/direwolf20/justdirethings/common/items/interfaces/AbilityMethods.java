@@ -98,11 +98,11 @@ public class AbilityMethods {
     public static boolean scanFor(Level level, Player player, ItemStack itemStack, Ability toolAbility) {
         if (level.isClientSide()) {
             ThingFinder.discover(player, toolAbility, itemStack);
+        } else { //ServerSide
             if (toolAbility.equals(Ability.OREXRAY))
                 Helpers.playSoundToAll(player, SoundEvents.SCULK_CLICKING, 1.0F, 1.0F);
             else
                 Helpers.playSoundToAll(player, SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
-        } else { //ServerSide
             damageTool(itemStack, player, toolAbility);
         }
         return false;

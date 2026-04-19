@@ -44,6 +44,14 @@ public final class OurRenderTypes {
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP)
             .build();
 
+    // Particle pipeline with depth test disabled — used by the ore/mob scanner so the marker particles
+    // are visible through blocks. Replaces the 1.21.1 RenderSystem.disableDepthTest() trick that went
+    // away with the particle rewrite.
+    public static final RenderPipeline ALWAYS_VISIBLE_PARTICLE_PIPELINE = RenderPipelines.OPAQUE_PARTICLE.toBuilder()
+            .withLocation(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pipeline/always_visible_particle"))
+            .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
+            .build();
+
     public static final RenderType OreXRAY = RenderType.create("OreXRAY",
             RenderSetup.builder(ORE_XRAY_PIPELINE)
                     .withTexture("Sampler0", TextureAtlas.LOCATION_BLOCKS)
@@ -112,6 +120,7 @@ public final class OurRenderTypes {
         event.registerPipeline(RENDER_BLOCK_BACKFACE_PIPELINE);
         event.registerPipeline(GOO_PATTERN_PIPELINE);
         event.registerPipeline(TRIANGLE_STRIP_PIPELINE);
+        event.registerPipeline(ALWAYS_VISIBLE_PARTICLE_PIPELINE);
     }
 
     private OurRenderTypes() {}
