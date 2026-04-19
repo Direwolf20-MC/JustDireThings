@@ -229,9 +229,13 @@ public class JustDireModels extends ModelProvider {
         itemModels.generateFlatItem(JDTRegistration.PolymorphicWandV2.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
         // CreatureCatcher uses a hand-written Blockbench model at models/item/creaturecatcher_base.json.
-        // Emit a plain client-item JSON pointing at it. Captured-mob visual happens via the entity renderer.
+        // The client item JSON composites the base model with a special renderer that draws the
+        // captured mob on top of the catcher when one is stored in the ItemStack.
         itemModels.itemModelOutput.accept(JDTRegistration.CreatureCatcher.get(),
-                ItemModelUtils.plainModel(modLoc("item/creaturecatcher_base")));
+                ItemModelUtils.composite(
+                        ItemModelUtils.plainModel(modLoc("item/creaturecatcher_base")),
+                        ItemModelUtils.specialModel(modLoc("item/creaturecatcher_base"),
+                                new CreatureCatcherSpecialRenderer.Unbaked())));
 
         // Upgrades (flat_item, all textures under item/abilityupgrades/<suffix>)
         for (var upgrade : JDTRegistration.UPGRADES.getEntries()) {

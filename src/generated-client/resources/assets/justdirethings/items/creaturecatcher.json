@@ -1,6 +1,18 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "justdirethings:item/creaturecatcher_base"
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "justdirethings:item/creaturecatcher_base"
+      },
+      {
+        "type": "minecraft:special",
+        "base": "justdirethings:item/creaturecatcher_base",
+        "model": {
+          "type": "justdirethings:creature_catcher"
+        }
+      }
+    ]
   }
 }

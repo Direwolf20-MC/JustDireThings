@@ -77,6 +77,11 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
+    public static void onRegisterSpecialModelRenderers(RegisterSpecialModelRendererEvent event) {
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "creature_catcher"), CreatureCatcherSpecialRenderer.Unbaked.MAP_CODEC);
+    }
+
+    @SubscribeEvent
     public static void onRegisterLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(PortalProjectileModel.Portal_Projectile_Layer, PortalProjectileModel::createBodyLayer);
     }

@@ -1,4 +1,4 @@
-// 26.1.2	2026-04-18T12:50:40.6329101	Model Definitions - justdirethings
+// 26.1.2	2026-04-19T13:12:24.7573506	Model Definitions - justdirethings
 e5976480ed9485e0bae43d4edde0c8aecaabe8a5 assets/justdirethings/blockstates/blazegold_block.json
 6580258682ab076313135ecb0c16dc2595a1a0df assets/justdirethings/blockstates/blockbreakert1.json
 0db1a53fd80ee5aed746843da439bd30b131ac55 assets/justdirethings/blockstates/blockbreakert2.json
@@ -107,7 +107,7 @@ f9a5013e6daace10d3aeb81c546d5ffe0a42aafc assets/justdirethings/items/coalblock_t
 f079d989c4dcfb23601c8394222d97516f4a0226 assets/justdirethings/items/coal_t2.json
 c0747d286107607f487a23895a03c5b73553280d assets/justdirethings/items/coal_t3.json
 5443a60a35d2735fd55ce243483fb859b2434cda assets/justdirethings/items/coal_t4.json
-ff6d80567bff56cc0c20632afda2932b1e98d98c assets/justdirethings/items/creaturecatcher.json
+959106c849cc2725766be36758828b3e983f4b19 assets/justdirethings/items/creaturecatcher.json
 a6c977dbd461f899f11502f7a61b744d723fcd56 assets/justdirethings/items/droppert1.json
 d2eb725dc7d422558673f4ea7887031fcfdf0fd3 assets/justdirethings/items/droppert2.json
 c87a997c3c23ffd5a92c91db5965cbf2b2f8006e assets/justdirethings/items/eclipsealloy_axe.json
