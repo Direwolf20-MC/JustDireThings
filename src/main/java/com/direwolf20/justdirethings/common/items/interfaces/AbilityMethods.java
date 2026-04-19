@@ -339,7 +339,7 @@ public class AbilityMethods {
             }
             if (!breakBlocks.isEmpty()) {
                 BlockPos firstPos = breakBlocks.iterator().next();
-                handleDrops(itemStack, (ServerLevel) level, firstPos, player, breakBlocks, drops, level.getBlockState(firstPos), 0);
+                handleDrops(itemStack, (ServerLevel) level, player.blockPosition(), player, breakBlocks, drops, level.getBlockState(firstPos), 0);
             }
 
             return true;

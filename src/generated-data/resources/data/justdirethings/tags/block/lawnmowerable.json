@@ -6,6 +6,11 @@
     "minecraft:dead_bush",
     "minecraft:sweet_berry_bush",
     "minecraft:fern",
-    "minecraft:large_fern"
+    "minecraft:large_fern",
+    "minecraft:leaf_litter",
+    "minecraft:bush",
+    "minecraft:short_dry_grass",
+    "minecraft:tall_dry_grass",
+    "minecraft:firefly_bush"
   ]
 }

@@ -83,7 +83,12 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .add(Blocks.DEAD_BUSH)
                 .add(Blocks.SWEET_BERRY_BUSH)
                 .add(Blocks.FERN)
-                .add(Blocks.LARGE_FERN);
+                .add(Blocks.LARGE_FERN)
+                .add(Blocks.LEAF_LITTER)
+                .add(Blocks.BUSH)
+                .add(Blocks.SHORT_DRY_GRASS)
+                .add(Blocks.TALL_DRY_GRASS)
+                .add(Blocks.FIREFLY_BUSH);
         tag(Tags.Blocks.ORES)
                 .add(JDTRegistration.RawFerricoreOre.get())
                 .add(JDTRegistration.RawBlazegoldOre.get())
