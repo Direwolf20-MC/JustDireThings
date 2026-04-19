@@ -8,14 +8,13 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.FuelValues;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
-import org.jetbrains.annotations.Nullable;
 
 public class FuelCanisterHandler extends ItemStacksResourceHandler {
     public ItemStack stack;
-    @Nullable
     private final FuelValues fuelValues;
+    private boolean consuming;
 
-    public FuelCanisterHandler(int size, ItemStack itemStack, @Nullable FuelValues fuelValues) {
+    public FuelCanisterHandler(int size, ItemStack itemStack, FuelValues fuelValues) {
         super(size);
         this.stack = itemStack;
         this.fuelValues = fuelValues;
@@ -23,9 +22,23 @@ public class FuelCanisterHandler extends ItemStacksResourceHandler {
 
     @Override
     protected void onContentsChanged(int slot, ItemStack previousContents) {
-        ItemStack fuelStack = getResource(slot).toStack(getAmountAsInt(slot));
-        if (!stack.isEmpty() && !fuelStack.isEmpty() && fuelValues != null) {
-            FuelCanister.incrementFuel(stack, fuelStack, fuelValues);
+        if (consuming) return;
+        ItemResource resource = getResource(slot);
+        int amount = getAmountAsInt(slot);
+        if (stack.isEmpty() || resource.isEmpty() || amount <= 0) return;
+        ItemStack fuelStack = resource.toStack(amount);
+        int consumed = FuelCanister.incrementFuel(stack, fuelStack, fuelValues);
+        if (consumed <= 0) return;
+        int remaining = amount - consumed;
+        consuming = true;
+        try {
+            if (remaining <= 0) {
+                set(slot, ItemResource.EMPTY, 0);
+            } else {
+                set(slot, resource, remaining);
+            }
+        } finally {
+            consuming = false;
         }
     }
 
@@ -36,8 +49,6 @@ public class FuelCanisterHandler extends ItemStacksResourceHandler {
         ItemStack probe = resource.toStack();
         if (probe.is(ModTags.Items.FUEL_CANISTER_DENY)) return false;
         if (resource.getItem().getCraftingRemainder() != null) return false;
-        // Client-side fallback: no FuelValues, permit; server enforces burn-time check.
-        if (fuelValues == null) return true;
         return probe.getBurnTime(RecipeType.SMELTING, fuelValues) > 0;
     }
 

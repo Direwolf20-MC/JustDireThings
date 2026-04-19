@@ -108,10 +108,10 @@ public class FuelCanister extends Item {
         return newBurnSpeedMultiplier;
     }
 
-    public static void incrementFuel(ItemStack stack, ItemStack fuelStack, FuelValues fuelValues) {
+    public static int incrementFuel(ItemStack stack, ItemStack fuelStack, FuelValues fuelValues) {
         int currentFuel = getFuelLevel(stack);
         int fuelPerPiece = fuelStack.getBurnTime(RecipeType.SMELTING, fuelValues);
-        if (fuelPerPiece == 0) return;
+        if (fuelPerPiece == 0) return 0;
         double currentBurnSpeedMultiplier = getBurnSpeed(stack);
         int fuelMultiplier = 1;
         if (fuelStack.getItem() instanceof Coal_T1 direCoal)
@@ -119,9 +119,10 @@ public class FuelCanister extends Item {
         else if (fuelStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CoalBlock_T1 coalBlock)
             fuelMultiplier = coalBlock.getBurnSpeedMultiplier();
         int totalNewFuel = 0;
-        while ((currentFuel + totalNewFuel) + fuelPerPiece <= Config.FUEL_CANISTER_MAXIMUM_FUEL.get() && !fuelStack.isEmpty()) {
+        int consumed = 0;
+        while ((currentFuel + totalNewFuel) + fuelPerPiece <= Config.FUEL_CANISTER_MAXIMUM_FUEL.get() && consumed < fuelStack.getCount()) {
             totalNewFuel += fuelPerPiece;
-            fuelStack.shrink(1); // Consume one unit of the fuel stack.
+            consumed++;
         }
 
         if (totalNewFuel > 0) {
@@ -130,6 +131,7 @@ public class FuelCanister extends Item {
 
         setFuelLevel(stack, currentFuel + totalNewFuel);
         setBurnSpeed(stack, currentBurnSpeedMultiplier);
+        return consumed;
     }
 
 }

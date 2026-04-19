@@ -4,16 +4,13 @@ import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContai
 import com.direwolf20.justdirethings.common.containers.handlers.FuelCanisterHandler;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.FuelValues;
 import net.neoforged.neoforge.transfer.item.PlayerInventoryWrapper;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.Nullable;
 
 public class FuelCanisterContainer extends BaseContainer {
     public static final int SLOTS = 1;
@@ -28,17 +25,12 @@ public class FuelCanisterContainer extends BaseContainer {
     public FuelCanisterContainer(int windowId, Inventory playerInventory, Player player, ItemStack fuelCanister) {
         super(JDTRegistration.FuelCanister_Container.get(), windowId);
         playerEntity = player;
-        this.handler = new FuelCanisterHandler(SLOTS, fuelCanister, resolveFuelValues(player));
+        this.handler = new FuelCanisterHandler(SLOTS, fuelCanister, player.level().fuelValues());
         this.fuelCanisterItemstack = fuelCanister;
         if (handler != null)
             addSlotRange(handler, handler::set, 0, 80, 35, 1, 18);
 
         addPlayerSlots(playerInventory, 8, 84);
-    }
-
-    private static @Nullable FuelValues resolveFuelValues(Player player) {
-        MinecraftServer server = player.level().getServer();
-        return server == null ? null : server.fuelValues();
     }
 
     @Override
