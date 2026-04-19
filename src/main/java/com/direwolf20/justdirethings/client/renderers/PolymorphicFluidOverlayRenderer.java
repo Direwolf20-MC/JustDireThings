@@ -222,6 +222,54 @@ public final class PolymorphicFluidOverlayRenderer {
                 bx, by + sw - 0.002f, bz + 1.0f,
                 bx + 1.0f, by + se - 0.002f, bz + 1.0f,
                 bx + 1.0f, by + ne - 0.002f, bz);
+
+        // Side faces, from baseline up to the two neighboring corner heights. Only emit a side
+        // when the block in that direction isn't also polymorphic fluid — otherwise we'd paint
+        // a seam between two adjacent overlays. (Baseline sits a hair above the floor to avoid
+        // Z-fighting the block below; sideInset pulls the face slightly inward off the block
+        // boundary to avoid Z-fighting the neighboring block's face.)
+        float baseY = by + 0.001f;
+        float sideInset = 0.001f;
+        // North (-Z): NW (left) to NE (right), viewed from outside
+        if (!sources.contains(pos.north())) {
+            quad(pose, buffer, r, g, b, alpha,
+                    bx + 1.0f, baseY, bz + sideInset,
+                    bx, baseY, bz + sideInset,
+                    bx, by + nw - 0.002f, bz + sideInset,
+                    bx + 1.0f, by + ne - 0.002f, bz + sideInset);
+        }
+        // South (+Z): SW (left) to SE (right), viewed from outside
+        if (!sources.contains(pos.south())) {
+            quad(pose, buffer, r, g, b, alpha,
+                    bx, baseY, bz + 1.0f - sideInset,
+                    bx + 1.0f, baseY, bz + 1.0f - sideInset,
+                    bx + 1.0f, by + se - 0.002f, bz + 1.0f - sideInset,
+                    bx, by + sw - 0.002f, bz + 1.0f - sideInset);
+        }
+        // West (-X): SW (left) to NW (right), viewed from outside
+        if (!sources.contains(pos.west())) {
+            quad(pose, buffer, r, g, b, alpha,
+                    bx + sideInset, baseY, bz,
+                    bx + sideInset, baseY, bz + 1.0f,
+                    bx + sideInset, by + sw - 0.002f, bz + 1.0f,
+                    bx + sideInset, by + nw - 0.002f, bz);
+        }
+        // East (+X): NE (left) to SE (right), viewed from outside
+        if (!sources.contains(pos.east())) {
+            quad(pose, buffer, r, g, b, alpha,
+                    bx + 1.0f - sideInset, baseY, bz + 1.0f,
+                    bx + 1.0f - sideInset, baseY, bz,
+                    bx + 1.0f - sideInset, by + ne - 0.002f, bz,
+                    bx + 1.0f - sideInset, by + se - 0.002f, bz + 1.0f);
+        }
+        // Bottom face, viewed from below. Only emit if the block below isn't also polymorphic.
+        if (!sources.contains(pos.below())) {
+            quad(pose, buffer, r, g, b, alpha,
+                    bx, baseY, bz,
+                    bx + 1.0f, baseY, bz,
+                    bx + 1.0f, baseY, bz + 1.0f,
+                    bx, baseY, bz + 1.0f);
+        }
     }
 
     private static void quad(PoseStack.Pose pose, VertexConsumer buffer,
