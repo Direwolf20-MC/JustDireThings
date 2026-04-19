@@ -49,7 +49,7 @@ public class PlayerEvents {
                 activateAbilities(itemStack, toggleableTool, event.getEntity(), event.getHand(), false, event.getPos(), event.getFace());
             }
         }
-        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && !(itemStack.getItem() instanceof BaseHoe) && (toggleableTool.hasAbility(Ability.HAMMER) || toggleableTool.hasAbility(Ability.OREMINER)) && event.getFace() != null) {
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && !(itemStack.getItem() instanceof BaseHoe) && (toggleableTool.hasAbility(Ability.HAMMER) || toggleableTool.hasAbility(Ability.OREMINER) || toggleableTool.hasAbility(Ability.TREEFELLER)) && event.getFace() != null) {
             doExtraCrumblings(event, itemStack, toggleableTool);
         }
         if (event.getEntity().level().isClientSide() && itemStack.getItem() instanceof PortalGun && event.getAction().equals(PlayerInteractEvent.LeftClickBlock.Action.START))
