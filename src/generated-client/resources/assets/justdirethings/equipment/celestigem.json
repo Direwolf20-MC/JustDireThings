@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "justdirethings:celestigem"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "justdirethings:celestigem"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "justdirethings:celestigem"
+      }
+    ]
+  }
+}

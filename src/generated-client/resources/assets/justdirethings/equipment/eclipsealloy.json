@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "justdirethings:eclipsealloy"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "justdirethings:eclipsealloy"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "justdirethings:eclipsealloy"
+      }
+    ]
+  }
+}

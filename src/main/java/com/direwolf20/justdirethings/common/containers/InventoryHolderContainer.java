@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -22,13 +23,9 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class InventoryHolderContainer extends BaseMachineContainer {
-    public static final Identifier EMPTY_ARMOR_SLOT_HELMET = Identifier.parse("item/empty_armor_slot_helmet");
-    public static final Identifier EMPTY_ARMOR_SLOT_CHESTPLATE = Identifier.parse("item/empty_armor_slot_chestplate");
-    public static final Identifier EMPTY_ARMOR_SLOT_LEGGINGS = Identifier.parse("item/empty_armor_slot_leggings");
-    public static final Identifier EMPTY_ARMOR_SLOT_BOOTS = Identifier.parse("item/empty_armor_slot_boots");
-    public static final Identifier EMPTY_ARMOR_SLOT_SHIELD = Identifier.parse("item/empty_armor_slot_shield");
     static final Identifier[] TEXTURE_EMPTY_SLOTS = new Identifier[]{
-            EMPTY_ARMOR_SLOT_BOOTS, EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET
+            InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS,
+            InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET
     };
     private static final EquipmentSlot[] SLOT_IDS = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public InventoryHolderBE inventoryHolderBE;
@@ -237,7 +234,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
             }
 
             InventoryHolderSlot shieldSlot = new InventoryHolderSlot(itemHandler, slotModifier, index + 4, x + 4 * 18, y, inventoryHolderBE);
-            shieldSlot.setBackground(EMPTY_ARMOR_SLOT_SHIELD);
+            shieldSlot.setBackground(InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
             this.addSlot(shieldSlot);
         }
     }
@@ -279,7 +276,7 @@ public class InventoryHolderContainer extends BaseMachineContainer {
                 super.setByPlayer(p_270479_, p_299920_);
             }
         };
-        shieldSlot.setBackground(EMPTY_ARMOR_SLOT_SHIELD);
+        shieldSlot.setBackground(InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
         this.addSlot(shieldSlot);
     }
 

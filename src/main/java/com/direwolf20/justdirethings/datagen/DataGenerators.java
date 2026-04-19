@@ -40,6 +40,7 @@ public class DataGenerators {
         PackOutput packOutput = generator.getPackOutput();
 
         generator.addProvider(true, new JustDireModels(packOutput));
+        generator.addProvider(true, new JustDireEquipmentAssets(packOutput));
         generator.addProvider(true, new JustDireLanguageProvider(packOutput, "en_us"));
         generator.addProvider(true, new JustDireSounds(packOutput));
     }
