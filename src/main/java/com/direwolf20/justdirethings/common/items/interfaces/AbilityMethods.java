@@ -542,6 +542,18 @@ public class AbilityMethods {
                 if (newMob != null) {
                     EventHooks.finalizeMobSpawn(newMob, (ServerLevel) level, ((ServerLevel) level).getCurrentDifficultyAt(player.blockPosition()), EntitySpawnReason.SPAWNER, null);
 
+                    // Apply the source mob's cosmetic identity (variant / colour) on top of finalizeMobSpawn's
+                    // biome-based random roll. finalizeMobSpawn unconditionally re-rolls variant on cow/pig/etc.,
+                    // so loading the stored NBT must happen *after* it.
+                    if (itemStack.has(net.minecraft.core.component.DataComponents.ENTITY_DATA)) {
+                        net.minecraft.nbt.CompoundTag cosmetic = itemStack.get(net.minecraft.core.component.DataComponents.ENTITY_DATA).copyTagWithoutId();
+                        if (!cosmetic.isEmpty()) {
+                            net.minecraft.world.level.storage.ValueInput cosmeticInput = net.minecraft.world.level.storage.TagValueInput.create(
+                                    net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess(), cosmetic);
+                            newMob.load(cosmeticInput);
+                        }
+                    }
+
                     newMob.snapTo(mob.getX(), mob.getY(), mob.getZ(), mob.getYRot(), mob.getXRot());
                     newMob.setHealth(newMob.getMaxHealth()); // Reset health to maximum
                     ((ServerLevel) level).addFreshEntity(newMob);

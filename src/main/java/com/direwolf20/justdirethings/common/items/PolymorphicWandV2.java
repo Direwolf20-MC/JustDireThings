@@ -5,8 +5,12 @@ import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
 import com.direwolf20.justdirethings.util.ModTags;
+import com.direwolf20.justdirethings.util.PolymorphicEntitySanitizer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -18,9 +22,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -88,9 +94,15 @@ public class PolymorphicWandV2 extends BaseToggleableTool implements LeftClickab
     }
 
     public static void savePolymorphTarget(ItemStack stack, Player player, LivingEntity interactionTarget) {
-        if (interactionTarget instanceof Mob && !interactionTarget.getType().builtInRegistryHolder().is(ModTags.Entities.POLYMORPHIC_TARGET_DENY)) {
-            stack.set(ENTITIYTYPE, EntityType.getKey(interactionTarget.getType()).toString());
-            player.sendOverlayMessage(Component.translatable("justdirethings.polymorphset", interactionTarget.getType().getDescription()));
+        if (interactionTarget instanceof Mob mob && !interactionTarget.getType().builtInRegistryHolder().is(ModTags.Entities.POLYMORPHIC_TARGET_DENY)) {
+            stack.set(ENTITIYTYPE, EntityType.getKey(mob.getType()).toString());
+
+            TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, mob.registryAccess());
+            mob.save(output);
+            CompoundTag cosmetic = PolymorphicEntitySanitizer.cosmeticOnly(output.buildResult());
+            stack.set(DataComponents.ENTITY_DATA, TypedEntityData.of(mob.getType(), cosmetic));
+
+            player.sendOverlayMessage(Component.translatable("justdirethings.polymorphset", mob.getType().getDescription()));
         } else {
             player.sendOverlayMessage(Component.translatable("justdirethings.invalidpolymorphentity"));
         }
