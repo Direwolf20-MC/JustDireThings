@@ -513,7 +513,7 @@ public class AbilityMethods {
                         mob.discard();
 
                         // Damage the tool
-                        FluidContainingItem.consumeFluid(itemStack, fuelAmt);
+                        FluidContainingItem.consumeFluid(player, itemStack, fuelAmt);
                         Helpers.damageTool(itemStack, player, Ability.POLYMORPH_RANDOM);
                     }
                 }
@@ -571,7 +571,7 @@ public class AbilityMethods {
                     mob.discard();
 
                     // Damage the tool
-                    FluidContainingItem.consumeFluid(itemStack, fuelAmt);
+                    FluidContainingItem.consumeFluid(player, itemStack, fuelAmt);
                     Helpers.damageTool(itemStack, player, Ability.POLYMORPH_RANDOM);
                 }
             }

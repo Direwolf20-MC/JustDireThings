@@ -100,9 +100,12 @@ public abstract class BaseToggleableTool extends BasePoweredItem implements Togg
         if (stack.getItem() instanceof PoweredItem) {
             EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
             if (energyStorage == null) return amount;
-            HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-            int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
-            double reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
+            double reductionFactor = 0;
+            if (entity != null && entity.level().getServer() != null) {
+                HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+                int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
+                reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
+            }
             int finalEnergyCost = (int) Math.max(0, amount - (amount * reductionFactor));
             try (Transaction tx = Transaction.openRoot()) {
                 energyStorage.extract(finalEnergyCost, tx);

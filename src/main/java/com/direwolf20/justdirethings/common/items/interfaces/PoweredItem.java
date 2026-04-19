@@ -1,6 +1,8 @@
 package com.direwolf20.justdirethings.common.items.interfaces;
 
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
@@ -60,8 +62,8 @@ public interface PoweredItem {
         return getAvailableEnergy(stack) >= requiredAmt;
     }
 
-    static boolean consumeEnergy(ItemStack itemStack, int amt) {
-        EnergyHandler energy = itemStack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(itemStack));
+    static boolean consumeEnergy(Player player, ItemStack itemStack, int amt) {
+        EnergyHandler energy = accessFor(player, itemStack).getCapability(Capabilities.Energy.ITEM);
         if (energy == null) return false;
         int amtExtracted;
         try (Transaction tx = Transaction.openRoot()) {
@@ -69,5 +71,15 @@ public interface PoweredItem {
             tx.commit();
         }
         return amtExtracted == amt;
+    }
+
+    static ItemAccess accessFor(Player player, ItemStack itemStack) {
+        if (player != null) {
+            if (player.getMainHandItem() == itemStack)
+                return ItemAccess.forPlayerInteraction(player, InteractionHand.MAIN_HAND);
+            if (player.getOffhandItem() == itemStack)
+                return ItemAccess.forPlayerInteraction(player, InteractionHand.OFF_HAND);
+        }
+        return ItemAccess.forStack(itemStack);
     }
 }

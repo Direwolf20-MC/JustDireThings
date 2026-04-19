@@ -92,8 +92,8 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
         BlockPos blockpos = blockhitresult.getBlockPos();
         BlockState blockstate1 = level.getBlockState(blockpos);
         if (blockstate1.getBlock() instanceof PortalFluidBlock portalFluidBlock) {
-            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
-            if (fluidHandler == null) return true;
+            ResourceHandler<FluidResource> fluidHandler = FluidContainingItem.accessFor(player, itemStack).getCapability(Capabilities.Fluid.ITEM);
+            if (fluidHandler == null) return false;
             FluidResource resource = FluidResource.of(JDTRegistration.PORTAL_FLUID_SOURCE.get());
             int filledAmt;
             try (Transaction probe = Transaction.openRoot()) {
@@ -124,7 +124,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
             com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
             return;
         }
-        if (!PoweredItem.consumeEnergy(itemStack, Config.PORTAL_GUN_V2_RF_COST.get())) {
+        if (!PoweredItem.consumeEnergy(player, itemStack, Config.PORTAL_GUN_V2_RF_COST.get())) {
             player.sendOverlayMessage(Component.translatable("justdirethings.lowenergy"));
             com.direwolf20.justdirethings.common.items.interfaces.Helpers.playSoundToAll(player, SoundEvents.VAULT_INSERT_ITEM_FAIL, 1.0F, 1.0F);
             return;
@@ -132,7 +132,7 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
         PortalProjectile projectile = new PortalProjectile(level, player, getUUID(itemStack), isPrimaryType, true, portalDestination);
         projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1F, 1.0F);
         level.addFreshEntity(projectile);
-        consumeFluid(itemStack, cost);
+        consumeFluid(player, itemStack, cost);
         setPrevious(player, itemStack);
     }
 
@@ -156,8 +156,8 @@ public class PortalGunV2 extends BasePoweredItem implements PoweredItem, FluidCo
         return fluidHandler.getAmountAsInt(0) >= amt;
     }
 
-    public static void consumeFluid(ItemStack itemStack, int amt) {
-        ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
+    public static void consumeFluid(Player player, ItemStack itemStack, int amt) {
+        ResourceHandler<FluidResource> fluidHandler = FluidContainingItem.accessFor(player, itemStack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandler == null) {
             return;
         }

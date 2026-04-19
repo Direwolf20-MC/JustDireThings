@@ -87,8 +87,8 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
                 int timeExisted = timeWandEntity.getTotalTime() - timeWandEntity.getRemainingTime();
                 int moreTime = timeExisted / 2;
                 timeWandEntity.addTime(moreTime);
-                FluidContainingItem.consumeFluid(itemStack, cost);
-                PoweredItem.consumeEnergy(itemStack, feCost);
+                FluidContainingItem.consumeFluid(player, itemStack, cost);
+                PoweredItem.consumeEnergy(player, itemStack, feCost);
                 playTimeWandSound(level, blockPos, setRate); // Play sound based on the click count
                 return true;
             }
@@ -99,8 +99,8 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
             if (hasResources(player, itemStack, feCost, cost)) {
                 TimeWandEntity timeWandEntity = new TimeWandEntity(level, blockPos);
                 level.addFreshEntity(timeWandEntity);
-                FluidContainingItem.consumeFluid(itemStack, cost);
-                PoweredItem.consumeEnergy(itemStack, feCost);
+                FluidContainingItem.consumeFluid(player, itemStack, cost);
+                PoweredItem.consumeEnergy(player, itemStack, feCost);
                 playTimeWandSound(level, blockPos, setRate); // Play sound based on the click count
                 return true;
             }
@@ -145,8 +145,8 @@ public class TimeWand extends BasePoweredItem implements PoweredItem, FluidConta
         BlockPos blockpos = blockhitresult.getBlockPos();
         BlockState blockstate1 = level.getBlockState(blockpos);
         if (blockstate1.getBlock() instanceof TimeFluidBlock timeFluidBlock) {
-            ResourceHandler<FluidResource> fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
-            if (fluidHandler == null) return true;
+            ResourceHandler<FluidResource> fluidHandler = FluidContainingItem.accessFor(player, itemStack).getCapability(Capabilities.Fluid.ITEM);
+            if (fluidHandler == null) return false;
             FluidResource resource = FluidResource.of(JDTRegistration.TIME_FLUID_SOURCE.get());
             int filledAmt;
             try (Transaction probe = Transaction.openRoot()) {
