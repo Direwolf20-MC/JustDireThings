@@ -1,6 +1,7 @@
 package com.direwolf20.justdirethings.client;
 
 import com.direwolf20.justdirethings.JustDireThings;
+import com.direwolf20.justdirethings.client.fluid.RainbowFluidSpriteSource;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
@@ -14,6 +15,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
+import net.neoforged.neoforge.client.event.RegisterSpriteSourcesEvent;
 import net.neoforged.neoforge.client.fluid.FluidTintSource;
 import net.neoforged.neoforge.client.fluid.FluidTintSources;
 
@@ -25,17 +27,30 @@ public final class FluidModels {
     private static final Material STILL = material("block/fluid_source");
     private static final Material FLOW = material("block/fluid_flowing");
     private static final Material OVERLAY = material("block/fluid_overlay");
+    // Separate sprite IDs for polymorphic fluid so RainbowFluidSpriteSource can override only
+    // these (not the shared fluid_source/fluid_flowing used by every other fluid in the mod).
+    // Backed by the same PNGs on disk — see assets/minecraft/atlases/blocks.json.
+    private static final Material STILL_POLYMORPHIC = material("block/fluid_source_polymorphic");
+    private static final Material FLOW_POLYMORPHIC = material("block/fluid_flowing_polymorphic");
 
     private FluidModels() {
     }
 
     @SubscribeEvent
+    static void onRegisterSpriteSources(RegisterSpriteSourcesEvent event) {
+        event.register(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "rainbow_fluid"),
+                RainbowFluidSpriteSource.CODEC);
+    }
+
+    @SubscribeEvent
     static void onRegisterFluidModels(RegisterFluidModelsEvent event) {
-        // The polymorphic fluid block renders with a white tint so the per-frame overlay
-        // (see PolymorphicFluidOverlayRenderer) can supply the shifting rainbow color without
-        // requiring chunk remeshes. Bucket / GUI contexts still get the animated rainbow via
+        // Polymorphic fluid textures are injected by RainbowFluidSpriteSource (see
+        // atlases/blocks.json); the SpriteContents re-tints them each tick from
+        // currentRainbowArgb(). The fluid model uses a neutral white tint so the already-tinted
+        // atlas pixels show through. Bucket / GUI contexts still get the animated rainbow via
         // color(FluidState).
-        register(event, JDTRegistration.POLYMORPHIC_FLUID_SOURCE, JDTRegistration.POLYMORPHIC_FLUID_FLOWING, rainbowTint());
+        registerWithMaterials(event, JDTRegistration.POLYMORPHIC_FLUID_SOURCE, JDTRegistration.POLYMORPHIC_FLUID_FLOWING,
+                STILL_POLYMORPHIC, FLOW_POLYMORPHIC, rainbowTint());
         register(event, JDTRegistration.PORTAL_FLUID_SOURCE, JDTRegistration.PORTAL_FLUID_FLOWING, FluidTintSources.constant(0xFF00DD00));
         register(event, JDTRegistration.UNSTABLE_PORTAL_FLUID_SOURCE, JDTRegistration.UNSTABLE_PORTAL_FLUID_FLOWING, FluidTintSources.constant(0xFF9400D3));
         register(event, JDTRegistration.TIME_FLUID_SOURCE, JDTRegistration.TIME_FLUID_FLOWING, FluidTintSources.constant(0x7700FF00));
@@ -55,6 +70,15 @@ public final class FluidModels {
         event.register(new FluidModel.Unbaked(STILL, FLOW, OVERLAY, tint), still, flowing);
     }
 
+    private static void registerWithMaterials(RegisterFluidModelsEvent event,
+                                              Supplier<? extends net.minecraft.world.level.material.Fluid> still,
+                                              Supplier<? extends net.minecraft.world.level.material.Fluid> flowing,
+                                              Material stillMaterial,
+                                              Material flowMaterial,
+                                              FluidTintSource tint) {
+        event.register(new FluidModel.Unbaked(stillMaterial, flowMaterial, OVERLAY, tint), still, flowing);
+    }
+
     private static Material material(String path) {
         return new Material(Identifier.fromNamespaceAndPath(JustDireThings.MODID, path));
     }
@@ -68,15 +92,15 @@ public final class FluidModels {
         return new FluidTintSource() {
             @Override
             public int color(FluidState state) {
+                // Bucket / GUI contexts: live rainbow so the bucket item still cycles.
                 return currentRainbowArgb(0f);
             }
 
             @Override
             public int colorInWorld(FluidState fluidState, BlockState blockState, BlockAndTintGetter level, BlockPos pos) {
-                // Baked into the chunk mesh — must stay constant or we'd trigger remeshes.
-                // Dark gray so the per-frame overlay in PolymorphicFluidOverlayRenderer can
-                // saturate cleanly; pure white washes the overlay color out into pastels.
-                return 0x4D404040;
+                // Neutral white — the atlas sprite is already re-tinted per tick by
+                // RainbowFluidAnimationState, so this tint must not modify those pixels.
+                return -1;
             }
         };
     }

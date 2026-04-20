@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.client.renderers;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.FluidModels;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,9 +15,7 @@ import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
@@ -33,8 +30,14 @@ import java.util.Set;
  * Positions are refreshed every {@link #RESCAN_INTERVAL_TICKS} ticks by walking loaded chunks
  * around the player and filtering sections via {@code LevelChunkSection.maybeHas}, which is
  * a cheap palette-level check.
+ * <p>
+ * <b>Currently unwired.</b> Polymorphic fluid coloring was moved to a sprite-source approach
+ * (see {@code com.direwolf20.justdirethings.client.fluid.RainbowFluidSpriteSource}) that
+ * re-tints the atlas sprite each tick, which avoids the per-tick chunk scan and per-frame
+ * custom geometry this class used. Kept in place for easy rollback — to restore, re-add
+ * {@code @EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)} above the
+ * class and drop the sprite-source wiring.
  */
-@EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
 public final class PolymorphicFluidOverlayRenderer {
     /**
      * How often (in ticks) to rescan nearby chunks for polymorphic fluid source positions.
