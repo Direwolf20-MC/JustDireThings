@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.util.LevelPosMap;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -28,10 +29,13 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static net.minecraft.world.entity.Entity.RemovalReason.DISCARDED;
 
 public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, AreaAffectingBE, RedstoneControlledBE {
+    public static LevelPosMap<ItemCollectorBE> ITEM_COLLECTORS = new LevelPosMap<>(ItemCollectorBE.class);
     protected BlockCapabilityCache<IItemHandler, Direction> attachedInventory;
     public FilterData filterData = new FilterData();
     public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
@@ -94,6 +98,12 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
         ((ServerLevel) level).sendParticles(data, d0, d1, d2, 10, 0, 0, 0, 0);
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        ITEM_COLLECTORS.addPosition(level, getBlockPos());
+    }
+
     private void findItemsAndStore() {
         if (!isActiveRedstone() || !canRun()) return;
         assert level != null;
@@ -109,23 +119,29 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
         if (handler == null) return;
 
         for (ItemEntity itemEntity : entityList) {
-            if (respectPickupDelay && itemEntity.hasPickUpDelay())
-                continue;
-            ItemStack stack = itemEntity.getItem();
-            if (stack.isEmpty() || !isStackValidFilter(stack)) continue;
-            ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, stack, false);
-            if (leftover.isEmpty()) {
-                // If the stack is now empty, remove the ItemEntity from the collection
+            storeItem(handler, itemEntity, () -> {
                 doParticles(itemEntity.getItem(), itemEntity.getPosition(0));
                 itemEntity.remove(DISCARDED);
-            } else {
-                // Otherwise, update the ItemEntity with the modified stack
-                itemEntity.setItem(leftover);
-            }
+            });
         }
     }
 
-    private IItemHandler getAttachedInventory() {
+    public void storeItem(IItemHandler handler, ItemEntity itemEntity, Runnable onEmpty) {
+        if (respectPickupDelay && itemEntity.hasPickUpDelay()) return;
+
+        ItemStack stack = itemEntity.getItem();
+        if (stack.isEmpty() || !isStackValidFilter(stack)) return;
+
+        ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, stack, false);
+        if (leftover.isEmpty()) {
+            onEmpty.run();
+        } else {
+            // Otherwise, update the ItemEntity with the modified stack
+            itemEntity.setItem(leftover);
+        }
+    }
+
+    public IItemHandler getAttachedInventory() {
         if (attachedInventory == null) {
             assert this.level != null;
             BlockState state = level.getBlockState(getBlockPos());
