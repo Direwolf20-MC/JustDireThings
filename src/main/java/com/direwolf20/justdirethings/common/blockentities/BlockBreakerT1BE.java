@@ -26,7 +26,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 import java.util.*;
 
@@ -239,7 +239,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
         setFakePlayerData(tool, fakePlayer, breakPos, getFacing());
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
+        BreakBlockEvent event = new BreakBlockEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
         boolean cancelled = NeoForge.EVENT_BUS.post(event).isCanceled();
         if (!cancelled) {
             breakBlock(fakePlayer, breakPos, tool, blockState);

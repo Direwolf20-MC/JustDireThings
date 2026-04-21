@@ -827,9 +827,12 @@ public class JDTRegistration {
             }).build());
     public static final Supplier<AttachmentType<GeneratorItemHandler>> GENERATOR_ITEM_HANDLER = ATTACHMENT_TYPES.register(
             "generator_item_handler", () -> AttachmentType.serializable(holder -> {
-                if (holder instanceof BaseMachineBE baseMachineBE)
-                    return new GeneratorItemHandler(baseMachineBE.MACHINE_SLOTS);
-                return new GeneratorItemHandler(1);
+                GeneratorItemHandler handler = holder instanceof BaseMachineBE baseMachineBE
+                        ? new GeneratorItemHandler(baseMachineBE.MACHINE_SLOTS)
+                        : new GeneratorItemHandler(1);
+                if (holder instanceof net.minecraft.world.level.block.entity.BlockEntity be)
+                    handler.setHolder(be);
+                return handler;
             }).build());
     /*public static final Supplier<AttachmentType<InventoryHolderItemHandler>> INVENTORY_HOLDER_ITEM_HANDLER = ATTACHMENT_TYPES.register(
             "inventory_holder_item_handler", () -> AttachmentType.serializable(holder -> {

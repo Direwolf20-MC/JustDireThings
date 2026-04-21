@@ -48,7 +48,7 @@ import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -214,7 +214,7 @@ public class AbilityMethods {
         if (player.blockActionRestricted(serverLevel, blockPos, type)) return false;
         if (!serverLevel.getWorldBorder().isWithinBounds(blockPos)) return false;
         if (player instanceof ServerPlayer sp) {
-            BlockEvent.BreakEvent ev = CommonHooks.fireBlockBreak(serverLevel, type, sp, blockPos, blockState);
+            BreakBlockEvent ev = CommonHooks.fireBlockBreak(serverLevel, type, sp, blockPos, blockState);
             if (ev.isCanceled()) return false;
         }
         return true;

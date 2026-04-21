@@ -36,7 +36,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
@@ -66,7 +66,7 @@ public class Helpers {
         if (pPlayer instanceof ServerPlayer player && level instanceof ServerLevel serverLevel) {
             BlockState state = level.getBlockState(pos);
             GameType type = player.getAbilities().instabuild ? GameType.CREATIVE : GameType.SURVIVAL;
-            BlockEvent.BreakEvent exp = CommonHooks.fireBlockBreak(serverLevel, type, player, pos, state);
+            BreakBlockEvent exp = CommonHooks.fireBlockBreak(serverLevel, type, player, pos, state);
             if (exp.isCanceled()) {
                 return;
             }

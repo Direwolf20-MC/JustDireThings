@@ -20,6 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,8 @@ public class BlockEvents {
     }
 
     @SubscribeEvent
-    public static void BlockBreakEvent(BlockEvent.BreakEvent event) {
+    public static void BlockBreakEvent(BreakBlockEvent event) {
+        if (event.getLevel().isClientSide()) return;
         ItemStack itemStack = event.getPlayer().getMainHandItem();
         if (!alreadyBreaking && itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.isCorrectToolForDrops(event.getState())) {
             alreadyBreaking = true;
