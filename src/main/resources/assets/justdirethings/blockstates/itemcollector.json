@@ -29,9 +29,7 @@
     },
     "facing=up": {
       "model": "justdirethings:block/itemcollector",
-      "x": -180,
-      "y": 180,
-      "z": 180
+      "x": 180
     }
   }
 }
