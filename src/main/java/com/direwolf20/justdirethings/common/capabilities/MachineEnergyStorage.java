@@ -26,6 +26,9 @@ public class MachineEnergyStorage extends SimpleEnergyHandler {
         return getCapacityAsInt();
     }
 
+    // Convenience shims wrapping the journalled insert/extract in a root transaction.
+    // Used internally by PoweredMachineBE and friends to keep machine code concise —
+    // this is not the capability API, which is insert/extract(int, TransactionContext).
     public int receiveEnergy(int maxReceive, boolean simulate) {
         try (Transaction tx = Transaction.openRoot()) {
             int inserted = insert(maxReceive, tx);

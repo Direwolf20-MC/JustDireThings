@@ -5,7 +5,6 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineBE;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageItemStackNoReceive;
-import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
 import com.direwolf20.justdirethings.common.capabilities.FluidHandlerItemStack;
 import com.direwolf20.justdirethings.common.containers.handlers.PotionCanisterHandler;
 import com.direwolf20.justdirethings.common.entities.DecoyEntity;
@@ -17,7 +16,6 @@ import com.direwolf20.justdirethings.setup.ClientSetup;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.setup.ModSetup;
-import com.direwolf20.justdirethings.util.ModTags;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -329,7 +327,7 @@ public class JustDireThings {
         event.registerBlock(Capabilities.Fluid.BLOCK,
                 (level, pos, state, be, side) -> {
                     if (be instanceof ExperienceHolderBE experienceHolderBE) {
-                        return new ExperienceHolderFluidTank(experienceHolderBE, fluidResource -> fluidResource.is(ModTags.Fluids.EXPERIENCE));
+                        return experienceHolderBE.getFluidTank();
                     }
                     return null;
                 },

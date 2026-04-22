@@ -4,9 +4,11 @@ import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParti
 import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
+import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ExperienceUtils;
 import com.direwolf20.justdirethings.util.MiscHelpers;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
@@ -24,15 +26,10 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
-
 import java.util.List;
 
 public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE, RedstoneControlledBE {
-    protected BlockCapabilityCache<ResourceHandler<FluidResource>, Direction> attachedTank;
+    private ExperienceHolderFluidTank fluidTank;
     public FilterData filterData = new FilterData();
     public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
     public RedstoneControlData redstoneControlData = getDefaultRedstoneData();
@@ -252,20 +249,11 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         }
     }
 
-    private ResourceHandler<FluidResource> getAttachedTank() {
-        if (attachedTank == null) {
-            assert this.level != null;
-            BlockState state = level.getBlockState(getBlockPos());
-            Direction facing = state.getValue(BlockStateProperties.FACING);
-            BlockPos inventoryPos = getBlockPos().relative(facing);
-            attachedTank = BlockCapabilityCache.create(
-                    Capabilities.Fluid.BLOCK,
-                    (ServerLevel) this.level,
-                    inventoryPos,
-                    facing.getOpposite()
-            );
+    public ExperienceHolderFluidTank getFluidTank() {
+        if (fluidTank == null) {
+            fluidTank = new ExperienceHolderFluidTank(this, fluidResource -> fluidResource.is(ModTags.Fluids.EXPERIENCE));
         }
-        return attachedTank.getCapability();
+        return fluidTank;
     }
 
     @Override

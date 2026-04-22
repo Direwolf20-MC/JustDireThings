@@ -3,8 +3,6 @@ package com.direwolf20.justdirethings.common.capabilities;
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
-import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class TransmitterEnergyStorage extends MachineEnergyStorage {
     private final EnergyTransmitterBE energyTransmitterBE;
@@ -16,6 +14,9 @@ public class TransmitterEnergyStorage extends MachineEnergyStorage {
 
     @Override
     public void setEnergy(int energy) {
+        // Direct write, bypassing SimpleEnergyHandler.set so onEnergyChanged is NOT fired.
+        // balanceEnergy() calls this to redistribute inside the network; re-triggering the
+        // distribute hook here would undo the balance and recurse.
         this.energy = energy;
     }
 
@@ -28,13 +29,6 @@ public class TransmitterEnergyStorage extends MachineEnergyStorage {
             energyTransmitterBE.distributeEnergy(energyReceived);
         }
         return energyReceived;
-    }
-
-    @Override
-    public int receiveEnergy(int maxReceive, TransactionContext tx) {
-        // Keep shim behavior: forward to network distribution. Transactions are not used by
-        // the transmitter's custom accounting, so we simulate + commit only for side-effects.
-        return receiveEnergy(maxReceive, false);
     }
 
     public int realReceiveEnergy(int maxReceive, boolean simulate) {
@@ -57,11 +51,6 @@ public class TransmitterEnergyStorage extends MachineEnergyStorage {
         return energyExtracted;
     }
 
-    @Override
-    public int extractEnergy(int maxExtract, TransactionContext tx) {
-        return extractEnergy(maxExtract, false);
-    }
-
     public int realExtractEnergy(int maxExtract, boolean simulate) {
         if (!canExtract())
             return 0;
@@ -71,37 +60,22 @@ public class TransmitterEnergyStorage extends MachineEnergyStorage {
         return energyExtracted;
     }
 
-    @Override
-    public int insert(int amount, TransactionContext tx) {
-        // Match receiveEnergy semantics: route through network distribution on commit.
-        // Use a simulate-first pattern: we compute the acceptable amount from the local
-        // buffer, then on commit forward the real distribution call.
-        if (!canReceive()) return 0;
-        int received = Math.min(capacity - energy, Math.min(this.maxInsert, amount));
-        if (received > 0) {
-            // Note: distribution happens outside transaction semantics. For most transmitter
-            // call sites we use receiveEnergy(int, boolean) directly; this override exists
-            // only so Transaction-based callers (Capabilities.Energy.BLOCK lookups) get
-            // consistent behavior.
-            try (Transaction nested = Transaction.open(tx)) {
-                energyTransmitterBE.distributeEnergy(received);
-                nested.commit();
-            }
-        }
-        return received;
-    }
+    // insert/extract inherit SimpleEnergyHandler's journalled implementations.
+    // Network rebalancing is deferred to onEnergyChanged, which fires only after
+    // a real commit — so simulations don't leak side effects into other transmitters.
 
     @Override
-    public int extract(int amount, TransactionContext tx) {
-        if (!canExtract()) return 0;
-        int extracted = Math.min(getEnergyStored(), Math.min(this.maxExtract, amount));
-        if (extracted > 0) {
-            try (Transaction nested = Transaction.open(tx)) {
-                energyTransmitterBE.extractEnergy(extracted);
-                nested.commit();
-            }
+    protected void onEnergyChanged(int previousAmount) {
+        int delta = energy - previousAmount;
+        if (delta == 0) return;
+        // Undo the local change, then route it through the network so all transmitters stay balanced.
+        if (delta > 0) {
+            energy = previousAmount;
+            energyTransmitterBE.distributeEnergy(delta);
+        } else {
+            energy = previousAmount;
+            energyTransmitterBE.extractEnergy(-delta);
         }
-        return extracted;
     }
 
     @Override

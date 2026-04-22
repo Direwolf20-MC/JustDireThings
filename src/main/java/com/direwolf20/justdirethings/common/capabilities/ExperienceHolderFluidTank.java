@@ -29,6 +29,7 @@ public class ExperienceHolderFluidTank implements ResourceHandler<FluidResource>
 
     @Override
     public FluidResource getResource(int index) {
+        if (experienceHolderBE.exp <= 0) return FluidResource.EMPTY;
         return FluidResource.of(JDTRegistration.XP_FLUID_SOURCE.get());
     }
 

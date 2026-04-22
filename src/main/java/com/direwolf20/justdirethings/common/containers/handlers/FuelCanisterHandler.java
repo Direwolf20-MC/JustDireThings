@@ -22,6 +22,10 @@ public class FuelCanisterHandler extends ItemStacksResourceHandler {
 
     @Override
     protected void onContentsChanged(int slot, ItemStack previousContents) {
+        // incrementFuel mutates the parent canister's data components directly, outside any journal.
+        // This handler is only wired into the FuelCanisterContainer UI (1 slot, player-driven real
+        // commits) — do not expose it via a capability or call into it mid-transaction, or the
+        // parent-stack mutation will leak across rollbacks.
         if (consuming) return;
         ItemResource resource = getResource(slot);
         int amount = getAmountAsInt(slot);
