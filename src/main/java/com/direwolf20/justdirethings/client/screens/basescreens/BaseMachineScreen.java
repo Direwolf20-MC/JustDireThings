@@ -104,6 +104,10 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         setTopSection();
         calculateTopSection();
         valueButtonsList.clear();
+        valueButtonsDoubleList.clear();
+        widgetsToAdd.clear();
+        widgetsToRemove.clear();
+        renderablesChanged = false;
         if (baseMachineBE instanceof AreaAffectingBE)
             addAreaButtons();
         if (baseMachineBE instanceof RedstoneControlledBE)
