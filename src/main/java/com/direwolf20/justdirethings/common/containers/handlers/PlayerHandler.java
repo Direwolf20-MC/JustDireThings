@@ -16,7 +16,9 @@ public class PlayerHandler extends DelegatingResourceHandler<ItemResource> {
     public enum InventoryType {
         Inventory,
         Armor,
-        Offhand;
+        Offhand,
+        MainInventory,
+        Hotbar;
 
         public InventoryType next() {
             InventoryType[] values = values();
@@ -37,6 +39,8 @@ public class PlayerHandler extends DelegatingResourceHandler<ItemResource> {
             case Inventory -> RangedResourceHandler.of(wrapper, 0, Inventory.INVENTORY_SIZE);
             case Armor -> RangedResourceHandler.of(wrapper, Inventory.INVENTORY_SIZE, Inventory.SLOT_OFFHAND);
             case Offhand -> RangedResourceHandler.ofSingleIndex(wrapper, Inventory.SLOT_OFFHAND);
+            case MainInventory -> RangedResourceHandler.of(wrapper, Inventory.SELECTION_SIZE, Inventory.INVENTORY_SIZE);
+            case Hotbar -> RangedResourceHandler.of(wrapper, 0, Inventory.SELECTION_SIZE);
         };
     }
 

@@ -513,9 +513,11 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.requireequipped", "Activate if Equipped");
         add("justdirethings.screen.notrequireequipped", "Activate from Inventory");
         add("justdirethings.screen.click-hold-for", "Hold Click For (ticks)");
-        add("justdirethings.screen.inv-normal", "Inventory Slots");
+        add("justdirethings.screen.inv-normal", "Full Inventory");
         add("justdirethings.screen.inv-armor", "Armor Slots");
         add("justdirethings.screen.inv-offhand", "Offhand Slots");
+        add("justdirethings.screen.inv-main", "Main Inventory");
+        add("justdirethings.screen.inv-hotbar", "Hotbar Only");
         add("justdirethings.screen.rightclicksettings", "Right Click for Settings");
         add("justdirethings.screen.copy_area", "Copy Area");
         add("justdirethings.screen.copy_offset", "Copy Offset");
