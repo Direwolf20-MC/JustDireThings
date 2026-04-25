@@ -3,12 +3,12 @@
 #define PI 3.1415926538
 #define Layers 15
 
-#moj_import <minecraft:globals.glsl>
 #moj_import <minecraft:matrix.glsl>
 
 uniform sampler2D Sampler0;
 
 in vec2 texCoord0;
+in float wallTime;
 
 out vec4 fragColor;
 
@@ -114,7 +114,7 @@ vec3(0.098955, 0.294821, 0.621491)
 void main() {
     vec2 st = texCoord0;
     vec3 color = vec3(0);
-    float time = sin((2 * PI) * GameTime * 1.5);
+    float time = sin((2 * PI) * wallTime * 0.002);
     for (int i = 0; i < Layers; i++) {
         float index = i + 1.;
 

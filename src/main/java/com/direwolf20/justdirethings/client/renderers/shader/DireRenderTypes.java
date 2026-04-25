@@ -7,12 +7,12 @@ import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.util.Util;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.TextureTransform;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -59,11 +59,20 @@ public class DireRenderTypes {
     });
 
     private static Matrix4f buildSwirlMatrix() {
-        long time = (long) ((double) Util.getMillis() * 8.0);
-        float horizontal = (time % 110000L) / 110000.0F;
-        float vertical = (time % 60000L) / 60000.0F;
+        long millis = Util.getMillis();
+        // Use unbounded continuous offsets instead of modulo wraps. The 1.21.1 code wrapped at
+        // 110000/60000ms intervals, which produced visible UV jumps on 26.1 (the previous wrap
+        // values weren't exactly integer multiples of the texture period after the rotate/scale
+        // transform). Float precision is fine here for many days of session length.
+        float horizontal = (float) (millis * 8L) / 110000.0F;
+        float vertical = (float) (millis * 8L) / 60000.0F;
         Matrix4f transformation = new Matrix4f().setTranslation(-horizontal, vertical, 0.0F);
-        transformation.rotateZ(Math.sin((float) Util.getMillis() / 2000.0f) / 18).scale(1.2f);
+        transformation.rotateZ(Math.sin((float) millis / 2000.0f) / 18).scale(1.2f);
+        // Smuggle a wallclock seconds value through an unused slot of the 2D UV texture matrix
+        // so the fragment shader has a smooth time source. Vanilla's GameTime uniform wraps every
+        // 20 minutes and pauses with the world, which caused visible stutter/reset.
+        float seconds = (float) ((millis % 600000L) / 1000.0);
+        transformation.m32(seconds);
         return transformation;
     }
 
