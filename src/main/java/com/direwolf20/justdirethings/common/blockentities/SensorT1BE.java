@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
@@ -53,7 +54,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         CHILD,
         PLAYER,
         LIVING,
-        ITEM;
+        ITEM,
+        MOB;
 
         public SENSE_TARGET next() {
             SENSE_TARGET[] values = values();
@@ -276,6 +278,8 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
         if (sense_target.equals(SENSE_TARGET.PLAYER) && !(entity instanceof Player))
             return false;
         if (sense_target.equals(SENSE_TARGET.ITEM) && !(entity instanceof ItemEntity))
+            return false;
+        if (sense_target.equals(SENSE_TARGET.MOB) && (!(entity instanceof LivingEntity) || entity instanceof Player))
             return false;
         return isEntityValidFilter(entity, this.level);
     }

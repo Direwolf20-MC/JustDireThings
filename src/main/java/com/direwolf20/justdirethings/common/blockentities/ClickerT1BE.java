@@ -50,7 +50,8 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         ADULT,
         CHILD,
         PLAYER,
-        LIVING;
+        LIVING,
+        MOB;
 
         public CLICK_TARGET next() {
             CLICK_TARGET[] values = values();
@@ -242,6 +243,8 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         if (clickTarget.equals(CLICK_TARGET.CHILD) && (entity instanceof Animal animal) && !(animal.isBaby()))
             return false;
         if (clickTarget.equals(CLICK_TARGET.PLAYER) && !(entity instanceof Player))
+            return false;
+        if (clickTarget.equals(CLICK_TARGET.MOB) && (!(entity instanceof LivingEntity) || entity instanceof Player))
             return false;
         return true;
     }

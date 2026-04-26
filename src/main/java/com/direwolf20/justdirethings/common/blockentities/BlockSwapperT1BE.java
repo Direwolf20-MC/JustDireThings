@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
@@ -60,7 +61,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         PLAYER,
         LIVING,
         ITEM,
-        ALL;
+        ALL,
+        MOB;
 
         public SWAP_ENTITY_TYPE next() {
             SWAP_ENTITY_TYPE[] values = values();
@@ -338,6 +340,8 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.PLAYER) && !(entity instanceof Player))
             return false;
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.ITEM) && !(entity instanceof ItemEntity))
+            return false;
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.MOB) && (!(entity instanceof LivingEntity) || entity instanceof Player))
             return false;
         return true;
     }

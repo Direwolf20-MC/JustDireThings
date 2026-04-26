@@ -494,6 +494,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.target-player", "Target Player");
         add("justdirethings.screen.target-living", "Target All Living");
         add("justdirethings.screen.target-item", "Target Items");
+        add("justdirethings.screen.target-mob", "Mobs");
         add("justdirethings.screen.entity-none", "No Entities");
         add("justdirethings.screen.entity-all", "All Entities");
         add("justdirethings.screen.sneak-click", "Sneak Click");

@@ -456,6 +456,7 @@
   "justdirethings.screen.target-hostile": "Target Hostile",
   "justdirethings.screen.target-item": "Target Items",
   "justdirethings.screen.target-living": "Target All Living",
+  "justdirethings.screen.target-mob": "Mobs",
   "justdirethings.screen.target-noblock": "Ignore Blocks",
   "justdirethings.screen.target-passive": "Target Passive",
   "justdirethings.screen.target-player": "Target Player",
