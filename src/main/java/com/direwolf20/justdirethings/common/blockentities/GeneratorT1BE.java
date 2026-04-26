@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -187,8 +188,9 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
         }
         if (this.fuelBurnMultiplier != oldMultiplier)
             markDirtyClient();
-        if (fuelStack.getItem().getCraftingRemainder() != null) {
-            ItemStack remainder = fuelStack.getItem().getCraftingRemainder().create();
+        ItemStackTemplate remainderTemplate = fuelStack.getCraftingRemainder();
+        if (remainderTemplate != null) {
+            ItemStack remainder = remainderTemplate.create();
             if (remainder.isEmpty())
                 getMachineHandler().set(0, ItemResource.EMPTY, 0);
             else

@@ -148,7 +148,7 @@ public class PocketGenerator extends Item implements PoweredItem, ToggleableItem
             } else {
                 setFuelMultiplier(itemStack, 1);
             }
-            ItemStackTemplate remainderTemplate = fuelStack.getItem().getCraftingRemainder();
+            ItemStackTemplate remainderTemplate = fuelStack.getCraftingRemainder();
             try (Transaction tx = Transaction.openRoot()) {
                 handler.extract(0, fuelResource, 1, tx);
                 if (remainderTemplate != null) {
