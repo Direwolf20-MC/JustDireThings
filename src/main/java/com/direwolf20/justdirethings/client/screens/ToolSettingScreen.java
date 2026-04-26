@@ -49,6 +49,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected final Map<Button, ToggleButton> leftRightClickButtons = new HashMap<>();
     protected final Map<Button, GrayscaleButton> bindingButtons = new HashMap<>();
     protected final Map<Button, ToggleButton> customSettingsButtons = new HashMap<>();
+    protected final Map<Button, ToggleButton> customSettingsButtons2 = new HashMap<>();
     protected final Map<Button, ToggleButton> requireEquippedButtons = new HashMap<>();
     protected final Map<Button, Ability> buttonToAbilityMap = new HashMap<>();
     protected Map<ToggleButton, ToolRecords.AbilityBinding> bindingMap = new HashMap<>();
@@ -76,6 +77,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         leftRightClickButtons.clear();
         bindingButtons.clear();
         customSettingsButtons.clear();
+        customSettingsButtons2.clear();
         buttonToAbilityMap.clear();
         bindingMap.clear();
         bindingEnabled = false;
@@ -214,6 +216,16 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                     this.customSettingsButtons.put(button, particlesButton);
                 }
             }
+            if (button != null && toolAbility.hasCustomSetting2()) {
+                Ability.CustomSettingType2 type2 = toolAbility.getCustomSetting2();
+                int value2 = ToggleableTool.getCustomSetting2(tool, toolAbility.getName());
+                if (type2 == Ability.CustomSettingType2.PARTICLES) {
+                    ToggleButton particlesButton = ToggleButtonFactory.PARTICLES_ABILITY_BUTTON(buttonsStartX + 143, buttonsStartY + 18, value2, (clicked) -> {
+                        setCustomSetting2(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition());
+                    });
+                    this.customSettingsButtons2.put(button, particlesButton);
+                }
+            }
             if (button != null)
                 buttonToAbilityMap.put(button, toolAbility);
         }
@@ -228,6 +240,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         widgetsToRemove.addAll(leftRightClickButtons.values());
         widgetsToRemove.addAll(bindingButtons.values());
         widgetsToRemove.addAll(customSettingsButtons.values());
+        widgetsToRemove.addAll(customSettingsButtons2.values());
         widgetsToRemove.addAll(requireEquippedButtons.values());
     }
 
@@ -247,6 +260,10 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         ClientPacketDistributor.sendToServer(new ToggleToolSlotPayload(settingName, toolSlot, 3, value));
     }
 
+    public void setCustomSetting2(String settingName, int value) {
+        ClientPacketDistributor.sendToServer(new ToggleToolSlotPayload(settingName, toolSlot, 4, value));
+    }
+
     @Override
     public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         super.extractContents(graphics, mouseX, mouseY, partialTicks);
@@ -262,7 +279,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractTooltip(graphics, mouseX, mouseY);
         for (Renderable renderable : this.renderables) {
-            if (renderable instanceof ToggleButton button && showCustomBinding() && !button.getLocalization(mouseX, mouseY).equals(Component.empty()) && !requireEquippedButtons.containsValue(button) && !customSettingsButtons.containsValue(button)) {
+            if (renderable instanceof ToggleButton button && showCustomBinding() && !button.getLocalization(mouseX, mouseY).equals(Component.empty()) && !requireEquippedButtons.containsValue(button) && !customSettingsButtons.containsValue(button) && !customSettingsButtons2.containsValue(button)) {
                 List<Component> lines = new ArrayList<>();
                 lines.add(button.getLocalization());
                 if (bindingMap.get(button) == null) {
@@ -372,7 +389,7 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
         }
         if (btn == 1) {
             for (Renderable renderable : new ArrayList<>(renderables)) {
-                if (renderable instanceof Button button && (sliders.containsKey(button) || leftRightClickButtons.containsKey(button) || bindingButtons.containsKey(button) || customSettingsButtons.containsKey(button)) && MiscTools.inBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight(), x, y)) {
+                if (renderable instanceof Button button && (sliders.containsKey(button) || leftRightClickButtons.containsKey(button) || bindingButtons.containsKey(button) || customSettingsButtons.containsKey(button) || customSettingsButtons2.containsKey(button)) && MiscTools.inBounds(button.getX(), button.getY(), button.getWidth(), button.getHeight(), x, y)) {
                     collectButtonsToRemove();
                     if (button.equals(shownAbilityButton))
                         shownAbilityButton = null;
@@ -393,6 +410,9 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                     }
                     if (customSettingsButtons.containsKey(shownAbilityButton)) {
                         widgetsToAdd.add(customSettingsButtons.get(shownAbilityButton));
+                    }
+                    if (customSettingsButtons2.containsKey(shownAbilityButton)) {
+                        widgetsToAdd.add(customSettingsButtons2.get(shownAbilityButton));
                     }
                     button.playDownSound(Minecraft.getInstance().getSoundManager());
                 }

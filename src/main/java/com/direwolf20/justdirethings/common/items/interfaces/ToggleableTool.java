@@ -629,6 +629,16 @@ public interface ToggleableTool extends ToggleableItem {
         return stack.getOrDefault(JustDireDataComponents.ABILITY_CUSTOM_SETTINGS.get(toolAbility), 0);
     }
 
+    static void setCustomSetting2(ItemStack stack, String setting, int value) {
+        Ability toolAbility = Ability.byName(setting);
+        stack.set(JustDireDataComponents.ABILITY_CUSTOM_SETTINGS_2.get(toolAbility), value);
+    }
+
+    static int getCustomSetting2(ItemStack stack, String setting) {
+        Ability toolAbility = Ability.byName(setting);
+        return stack.getOrDefault(JustDireDataComponents.ABILITY_CUSTOM_SETTINGS_2.get(toolAbility), 0);
+    }
+
     static void setToolValue(ItemStack stack, String setting, int value) {
         Ability toolAbility = Ability.byName(setting);
         AbilityParams abilityParams = ((ToggleableTool) stack.getItem()).getAbilityParams(toolAbility);

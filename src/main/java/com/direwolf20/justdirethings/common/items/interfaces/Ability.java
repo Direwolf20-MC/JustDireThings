@@ -67,7 +67,9 @@ public enum Ability {
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_random.png")),
 
     //Tier 3
-    DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.RENDER, JDTRegistration.UPGRADE_DROPTELEPORT),
+    DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.RENDER, JDTRegistration.UPGRADE_DROPTELEPORT) {{
+        customSettingType2 = CustomSettingType2.PARTICLES;
+    }},
     VOIDSHIFT(SettingType.SLIDER, 1, 50, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::voidShift, CustomSettingType.RENDER), //FE Per block traveled
     NEGATEFALLDAMAGE(SettingType.SLIDER, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_NEGATEFALLDAMAGE),
@@ -126,6 +128,11 @@ public enum Ability {
         PARTICLES
     }
 
+    public enum CustomSettingType2 {
+        NONE,
+        PARTICLES
+    }
+
     public enum UseType {
         USE,
         USE_ON,
@@ -150,6 +157,7 @@ public enum Ability {
     final int feCost;
     final BindingType bindingType;
     final CustomSettingType customSettingType;
+    CustomSettingType2 customSettingType2 = CustomSettingType2.NONE;
     final UseType useType;
     private Holder<Item> upgradeItem;
     // Dynamic parameter map
@@ -273,6 +281,14 @@ public enum Ability {
 
     public CustomSettingType getCustomSetting() {
         return customSettingType;
+    }
+
+    public boolean hasCustomSetting2() {
+        return customSettingType2 != CustomSettingType2.NONE;
+    }
+
+    public CustomSettingType2 getCustomSetting2() {
+        return customSettingType2;
     }
 
     public static Ability byName(String name) {

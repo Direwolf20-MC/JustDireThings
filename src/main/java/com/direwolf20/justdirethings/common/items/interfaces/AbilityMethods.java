@@ -380,7 +380,7 @@ public class AbilityMethods {
                 ResourceHandler<ItemResource> handler = getBoundHandler(serverLevel, pStack);
                 if (handler != null && pEntityLiving instanceof Player player) {
                     teleportDrops(drops, handler, pStack, player);
-                    if (drops.isEmpty()) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
+                    if (drops.isEmpty() && ToggleableTool.getCustomSetting2(pStack, Ability.DROPTELEPORT.getName()) == 0) //Only spawn particles if we teleported everything - granted this isn't perfect, but way better than exhaustive testing
                         teleportParticles(serverLevel, breakBlockPositions);
                 }
             }
