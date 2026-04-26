@@ -6,12 +6,17 @@ import com.direwolf20.justdirethings.common.items.CreatureCatcher;
 import com.direwolf20.justdirethings.util.ItemStackKey;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -81,6 +86,17 @@ public interface FilterableBE {
         for (int i = 0; i < filteredItems.size(); i++) {
             ItemStack stack = filteredItems.getResource(i).toStack(filteredItems.getAmountAsInt(i));
             if (stack.isEmpty()) continue;
+            if (entity instanceof ItemEntity itemEntity) {
+                ItemStack droppedStack = itemEntity.getItem();
+                if (droppedStack.isEmpty()) continue;
+                ItemStackKey filterKey = new ItemStackKey(stack, getFilterData().compareNBT);
+                ItemStackKey droppedKey = new ItemStackKey(droppedStack, getFilterData().compareNBT);
+                if (filterKey.equals(droppedKey)) {
+                    getFilterData().entityCache.put(entity, getFilterData().allowlist);
+                    return getFilterData().allowlist;
+                }
+                continue;
+            }
             if (stack.getItem() instanceof SpawnEggItem) {
                 Optional<Holder<Item>> entityEgg = SpawnEggItem.byId(entity.getType());
                 if (entityEgg.isEmpty()) continue;
@@ -104,6 +120,15 @@ public interface FilterableBE {
                         getFilterData().entityCache.put(entity, getFilterData().allowlist);
                         return getFilterData().allowlist;
                     }
+                }
+            } else if (stack.getItem() == Items.NAME_TAG && entity instanceof Player player) {
+                Component customName = stack.get(DataComponents.CUSTOM_NAME);
+                if (customName == null) continue;
+                String filterName = customName.getString();
+                if (filterName.isEmpty()) continue;
+                if (filterName.equalsIgnoreCase(player.getGameProfile().name())) {
+                    getFilterData().entityCache.put(entity, getFilterData().allowlist);
+                    return getFilterData().allowlist;
                 }
             }
 
