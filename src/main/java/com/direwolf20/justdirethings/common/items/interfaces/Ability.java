@@ -41,29 +41,29 @@ public enum Ability {
     POTIONARROW(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_POTIONARROW),
 
     //Tier 2
-    SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_SMELTER),
-    SMOKER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_SMOKER),
+    SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.PARTICLES, JDTRegistration.UPGRADE_SMELTER),
+    SMOKER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.PARTICLES, JDTRegistration.UPGRADE_SMOKER),
     HAMMER(SettingType.CYCLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_HAMMER),
     LAVAREPAIR(SettingType.TOGGLE, 0, 0, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500, UseType.USE_COOLDOWN, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::cauterizeWounds, CustomSettingType.NONE,
+            AbilityMethods::cauterizeWounds, CustomSettingType.PARTICLES,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/cauterizewounds.png"), JDTRegistration.UPGRADE_CAUTERIZEWOUNDS),
     AIRBURST(SettingType.SLIDER, 1, 250, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::airBurst, CustomSettingType.NONE),
     SWIMSPEED(SettingType.SLIDER, 1, 5, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
             AbilityMethods::swimSpeed, CustomSettingType.NONE, JDTRegistration.UPGRADE_SWIMSPEED),
     GROUNDSTOMP(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::groundstomp, CustomSettingType.NONE,
+            AbilityMethods::groundstomp, CustomSettingType.PARTICLES,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/groundstomp.png"), JDTRegistration.UPGRADE_GROUNDSTOMP),
     EXTINGUISH(SettingType.SLIDER, 25, 5000, UseType.PASSIVE_TICK_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::extinguish, CustomSettingType.NONE,
+            AbilityMethods::extinguish, CustomSettingType.PARTICLES,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/extinguish.png"), JDTRegistration.UPGRADE_EXTINGUISH),
     STUPEFY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::stupefy, CustomSettingType.NONE,
+            AbilityMethods::stupefy, CustomSettingType.PARTICLES,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/stupefy.png"), JDTRegistration.UPGRADE_STUPEFY),
     SPLASH(SettingType.TOGGLE, 20, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_SPLASH),
     POLYMORPH_RANDOM(SettingType.TOGGLE, 10, 1000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::polymorphRandom, CustomSettingType.NONE,
+            AbilityMethods::polymorphRandom, CustomSettingType.PARTICLES,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_random.png")),
 
     //Tier 3
@@ -95,10 +95,10 @@ public enum Ability {
             AbilityMethods::debuffRemover, CustomSettingType.NONE,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/debuffremover.png"), JDTRegistration.UPGRADE_DEBUFFREMOVER),
     EARTHQUAKE(SettingType.SLIDER, 25, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::earthquake, CustomSettingType.NONE,
+            AbilityMethods::earthquake, CustomSettingType.PARTICLES,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/earthquake.png"), JDTRegistration.UPGRADE_EARTHQUAKE),
     NOAI(SettingType.SLIDER, 25, 100000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::noAI, CustomSettingType.NONE,
+            AbilityMethods::noAI, CustomSettingType.PARTICLES,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/noai.png"), JDTRegistration.UPGRADE_NOAI),
     FLIGHT(SettingType.SLIDER, 1, 100, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
             AbilityMethods::flight, CustomSettingType.NONE, JDTRegistration.UPGRADE_FLIGHT),
@@ -106,7 +106,7 @@ public enum Ability {
     PHASE(SettingType.SLIDER, 1, 50000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_PHASE),
     TIMEPROTECTION(SettingType.SLIDER, 1, 5000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_TIMEPROTECTION),
     POLYMORPH_TARGET(SettingType.TOGGLE, 10, 50000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::polymorphTarget, CustomSettingType.NONE,
+            AbilityMethods::polymorphTarget, CustomSettingType.PARTICLES,
             Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_target.png")),
     EPICARROW(SettingType.SLIDER, 25, 100000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::epicArrow, CustomSettingType.NONE,
@@ -122,7 +122,8 @@ public enum Ability {
     public enum CustomSettingType {
         NONE,
         RENDER,
-        TARGET
+        TARGET,
+        PARTICLES
     }
 
     public enum UseType {

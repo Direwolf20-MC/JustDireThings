@@ -315,13 +315,15 @@ public class AbilityMethods {
                 ToggleableTool.addCooldown(itemStack, Ability.CAUTERIZEWOUNDS, abilityParams.cooldown, false);
                 player.heal(6f);
                 Helpers.playSoundToAll(player, SoundEvents.LAVA_EXTINGUISH, 1.0F, 1.0F);
-                Random random = new Random();
-                Vec3 pos = player.getEyePosition();
-                for (int i = 0; i < 10; i++) {
-                    double d0 = pos.x() + random.nextDouble();
-                    double d1 = pos.y() + random.nextDouble();
-                    double d2 = pos.z() + random.nextDouble();
-                    ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+                if (ToggleableTool.getCustomSetting(itemStack, Ability.CAUTERIZEWOUNDS.getName()) == 0) {
+                    Random random = new Random();
+                    Vec3 pos = player.getEyePosition();
+                    for (int i = 0; i < 10; i++) {
+                        double d0 = pos.x() + random.nextDouble();
+                        double d1 = pos.y() + random.nextDouble();
+                        double d2 = pos.z() + random.nextDouble();
+                        ((ServerLevel) level).sendParticles(ParticleTypes.FLAME, d0, d1, d2, 1, 0.0, 0.0, 0.0, 0);
+                    }
                 }
                 damageTool(itemStack, player, Ability.CAUTERIZEWOUNDS);
                 return true;
@@ -371,7 +373,7 @@ public class AbilityMethods {
             if (toggleableTool.canUseAbility(pStack, Ability.SMELTER) && pStack.getDamageValue() < pStack.getMaxDamage()) {
                 boolean[] smeltedItemsFlag = new boolean[1]; // Array to hold the smelting flag
                 drops = smeltDrops(serverLevel, drops, pStack, pEntityLiving, smeltedItemsFlag);
-                if (smeltedItemsFlag[0])
+                if (smeltedItemsFlag[0] && ToggleableTool.getCustomSetting(pStack, Ability.SMELTER.getName()) == 0)
                     smelterParticles(serverLevel, breakBlockPositions);
             }
             if (!drops.isEmpty() && toggleableTool.canUseAbility(pStack, Ability.DROPTELEPORT)) {
@@ -448,7 +450,8 @@ public class AbilityMethods {
                 ToggleableTool.addCooldown(itemStack, Ability.EXTINGUISH, abilityParams.cooldown, false);
                 player.clearFire();
                 Helpers.playSoundToAll(player, SoundEvents.LAVA_EXTINGUISH, .5F, 1.0F);
-                ((ServerLevel) level).sendParticles(ParticleTypes.SOUL_FIRE_FLAME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 1.5, 0.5, 0);
+                if (ToggleableTool.getCustomSetting(itemStack, Ability.EXTINGUISH.getName()) == 0)
+                    ((ServerLevel) level).sendParticles(ParticleTypes.SOUL_FIRE_FLAME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 1.5, 0.5, 0);
                 Helpers.damageTool(itemStack, player, Ability.EXTINGUISH);
             }
         }
@@ -480,7 +483,8 @@ public class AbilityMethods {
                 AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.STUPEFY);
                 ToggleableTool.addCooldown(itemStack, Ability.STUPEFY, abilityParams.activeCooldown, true);
                 Helpers.playSoundToAll(player, SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
-                ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
+                if (ToggleableTool.getCustomSetting(itemStack, Ability.STUPEFY.getName()) == 0)
+                    ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
                 Helpers.damageTool(itemStack, player, Ability.STUPEFY);
             }
         }
@@ -517,9 +521,10 @@ public class AbilityMethods {
 
                         // Play effects
                         Helpers.playSoundToAll(player, SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
-                        ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
-                                mob.getX(), mob.getEyeY(), mob.getZ(),
-                                20, 0.25, 0.2, 0.25, 0);
+                        if (ToggleableTool.getCustomSetting(itemStack, Ability.POLYMORPH_RANDOM.getName()) == 0)
+                            ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
+                                    mob.getX(), mob.getEyeY(), mob.getZ(),
+                                    20, 0.25, 0.2, 0.25, 0);
 
                         // Remove the old mob
                         mob.discard();
@@ -575,9 +580,10 @@ public class AbilityMethods {
 
                     // Play effects
                     Helpers.playSoundToAll(player, SoundEvents.ILLUSIONER_CAST_SPELL, 0.5F, 0.75F);
-                    ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
-                            mob.getX(), mob.getEyeY(), mob.getZ(),
-                            20, 0.25, 0.2, 0.25, 0);
+                    if (ToggleableTool.getCustomSetting(itemStack, Ability.POLYMORPH_TARGET.getName()) == 0)
+                        ((ServerLevel) level).sendParticles(ParticleTypes.WHITE_SMOKE,
+                                mob.getX(), mob.getEyeY(), mob.getZ(),
+                                20, 0.25, 0.2, 0.25, 0);
 
                     // Remove the old mob
                     mob.discard();
@@ -618,7 +624,8 @@ public class AbilityMethods {
                 }
             }
             Helpers.playSoundToAll(player, SoundEvents.MACE_SMASH_GROUND, .5F, 1.0F);
-            ((ServerLevel) level).sendParticles(ParticleTypes.DUST_PLUME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 0.2, 0.5, 0);
+            if (ToggleableTool.getCustomSetting(itemStack, Ability.GROUNDSTOMP.getName()) == 0)
+                ((ServerLevel) level).sendParticles(ParticleTypes.DUST_PLUME, player.getX(), player.getY(), player.getZ(), 20, 0.5, 0.2, 0.5, 0);
             Helpers.damageTool(itemStack, player, Ability.GROUNDSTOMP);
         }
         return false;
@@ -680,11 +687,14 @@ public class AbilityMethods {
 
             List<Mob> earthquakeList = new ArrayList<>(level.getEntitiesOfClass(Mob.class, aabb, AbilityMethods::isValidEarthquake));
 
+            boolean earthquakeShowParticles = ToggleableTool.getCustomSetting(itemStack, Ability.EARTHQUAKE.getName()) == 0;
             for (Mob mob : earthquakeList) {
                 if (toggleableTool.canUseAbilityAndDurability(itemStack, Ability.EARTHQUAKE)) {
                     mob.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 3), mob);
-                    ((ServerLevel) level).sendParticles(ParticleTypes.END_ROD, mob.getX(), mob.getY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
-                    ((ServerLevel) level).sendParticles(ParticleTypes.ENCHANT, mob.getX(), mob.getY(), mob.getZ(), 20, 0.5, 0.2, 0.5, 0);
+                    if (earthquakeShowParticles) {
+                        ((ServerLevel) level).sendParticles(ParticleTypes.END_ROD, mob.getX(), mob.getY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
+                        ((ServerLevel) level).sendParticles(ParticleTypes.ENCHANT, mob.getX(), mob.getY(), mob.getZ(), 20, 0.5, 0.2, 0.5, 0);
+                    }
                     Helpers.damageTool(itemStack, player, Ability.EARTHQUAKE);
                 }
             }
@@ -705,11 +715,14 @@ public class AbilityMethods {
 
             List<Mob> AIList = new ArrayList<>(level.getEntitiesOfClass(Mob.class, aabb, AbilityMethods::isValidNOAIEntity));
 
+            boolean noaiShowParticles = ToggleableTool.getCustomSetting(itemStack, Ability.NOAI.getName()) == 0;
             for (Mob mob : AIList) {
                 if (toggleableTool.canUseAbilityAndDurability(itemStack, Ability.NOAI)) {
                     mob.setNoAi(true);
-                    ((ServerLevel) level).sendParticles(ParticleTypes.END_ROD, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
-                    ((ServerLevel) level).sendParticles(ParticleTypes.ENCHANT, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.5, 0.2, 0.5, 0);
+                    if (noaiShowParticles) {
+                        ((ServerLevel) level).sendParticles(ParticleTypes.END_ROD, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.25, 0.2, 0.25, 0);
+                        ((ServerLevel) level).sendParticles(ParticleTypes.ENCHANT, mob.getX(), mob.getEyeY(), mob.getZ(), 20, 0.5, 0.2, 0.5, 0);
+                    }
                     Helpers.damageTool(itemStack, player, Ability.NOAI);
                 }
             }

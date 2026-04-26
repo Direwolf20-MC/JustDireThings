@@ -506,6 +506,7 @@ public class JustDireLanguageProvider extends net.neoforged.neoforge.common.data
         add("justdirethings.screen.equals", "Equals");
         add("justdirethings.screen.dropcount", "Drop Amount");
         add("justdirethings.screen.showparticles", "Show Particles");
+        add("justdirethings.screen.hideparticles", "Hide Particles");
         add("justdirethings.screen.showrender", "Show Render");
         add("justdirethings.screen.hiderender", "Hide Render");
         add("justdirethings.screen.burnspeedmultiplier", "Burn Speed Multiplier: %s");

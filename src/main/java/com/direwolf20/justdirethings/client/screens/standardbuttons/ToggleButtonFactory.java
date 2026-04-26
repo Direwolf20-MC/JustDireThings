@@ -404,6 +404,17 @@ public class ToggleButtonFactory {
         return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, HIDE_RENDER_BUTTON, startingValue, onPress);
     }
 
+    private static final Identifier WATERBREATHING_ICON = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/waterbreathing.png");
+    private static final List<TextureLocalization> PARTICLES_ABILITY_TEXTURES = List.of(
+            new TextureLocalization(WATERBREATHING_ICON, Component.translatable("justdirethings.screen.showparticles")),
+            new TextureLocalization(WATERBREATHING_ICON, Component.translatable("justdirethings.screen.hideparticles"))
+    );
+    private static final int[] PARTICLES_ABILITY_TINTS = new int[]{0xFFFFFFFF, 0xFF545454};
+
+    public static ToggleButton PARTICLES_ABILITY_BUTTON(int x, int y, int startingValue, Button.OnPress onPress) {
+        return new ToggleButton(x, y, STANDARD_WIDTH, STANDARD_HEIGHT, PARTICLES_ABILITY_TEXTURES, PARTICLES_ABILITY_TINTS, startingValue, onPress);
+    }
+
     private static final List<TextureLocalization> SNAPSHOT_AREA_BUTTON = List.of(
             new TextureLocalization(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/positionswap.png"), Component.translatable("justdirethings.screen.snapshotarea"))
     );

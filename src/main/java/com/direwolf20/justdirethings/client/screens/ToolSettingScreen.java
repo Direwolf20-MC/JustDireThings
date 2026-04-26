@@ -207,6 +207,11 @@ public class ToolSettingScreen extends AbstractContainerScreen<ToolSettingContai
                         toggleRender(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition());
                     });
                     this.customSettingsButtons.put(button, targetButton);
+                } else if (customSettingType == Ability.CustomSettingType.PARTICLES) {
+                    ToggleButton particlesButton = ToggleButtonFactory.PARTICLES_ABILITY_BUTTON(buttonsStartX + 143, buttonsStartY, value, (clicked) -> {
+                        toggleRender(toolAbility.getName(), ((ToggleButton) clicked).getTexturePosition());
+                    });
+                    this.customSettingsButtons.put(button, particlesButton);
                 }
             }
             if (button != null)

@@ -187,7 +187,7 @@ public class LivingEntityEvents {
                         boolean[] dropSmoked = new boolean[1];
                         Helpers.smokeDrop((ServerLevel) player.level(), itemEntity, mainHand, event.getEntity(), dropSmoked);
 
-                        if (dropSmoked[0]) {
+                        if (dropSmoked[0] && ToggleableTool.getCustomSetting(mainHand, Ability.SMOKER.getName()) == 0) {
                             ToggleableTool.smokerParticles((ServerLevel) player.level(), itemEntity.blockPosition(), itemEntity.getItem().getCount());
                         }
                     }

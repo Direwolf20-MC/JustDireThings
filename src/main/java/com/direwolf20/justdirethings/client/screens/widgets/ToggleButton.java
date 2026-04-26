@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ToggleButton extends BaseButton {
     private List<TextureLocalization> textureLocalizations;
+    private int[] tints;
     private int texturePosition;
     private int maxValue = -1;
 
@@ -19,6 +20,14 @@ public class ToggleButton extends BaseButton {
         super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
 
         this.textureLocalizations = textureLocalizations;
+        setTexturePosition(texturePosition);
+    }
+
+    public ToggleButton(int x, int y, int width, int height, List<TextureLocalization> textureLocalizations, int[] tints, int texturePosition, OnPress onPress) {
+        super(x, y, width, height, Component.empty(), onPress, Button.DEFAULT_NARRATION);
+
+        this.textureLocalizations = textureLocalizations;
+        this.tints = tints;
         setTexturePosition(texturePosition);
     }
 
@@ -39,8 +48,9 @@ public class ToggleButton extends BaseButton {
 
     @Override
     protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        int color = tints != null ? tints[getTexturePosition()] : ARGB.white(this.alpha);
         graphics.blit(RenderPipelines.GUI_TEXTURED, textureLocalizations.get(getTexturePosition()).texture(),
-                this.getX(), this.getY(), 0.0F, 0.0F, width, height, width, height, ARGB.white(this.alpha));
+                this.getX(), this.getY(), 0.0F, 0.0F, width, height, width, height, color);
     }
 
     public int getTexturePosition() {
