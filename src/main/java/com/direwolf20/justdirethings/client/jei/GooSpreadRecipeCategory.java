@@ -1,5 +1,6 @@
 package com.direwolf20.justdirethings.client.jei;
 
+import com.direwolf20.justdirethings.datagen.recipes.BlockOrTagInput;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
@@ -16,15 +17,22 @@ import mezz.jei.api.recipe.types.IRecipeHolderType;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GooSpreadRecipeCategory implements IRecipeCategory<RecipeHolder<GooSpreadRecipe>> {
     public static final IRecipeHolderType<GooSpreadRecipe> TYPE =
@@ -75,12 +83,22 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<RecipeHolder<Goo
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<GooSpreadRecipe> recipe, IFocusGroup focuses) {
-        BlockState input = recipe.value().getInput();
+        BlockOrTagInput input = recipe.value().getInput();
         IRecipeSlotBuilder inputSlotBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 9, 12);
-        if (input.getBlock().asItem() != Items.AIR) {
-            inputSlotBuilder.add(new ItemStack(input.getBlock()));
-        } else if (input.getBlock() instanceof LiquidBlock liquidBlock) {
-            inputSlotBuilder.add(liquidBlock.fluid, 1000);
+        if (input instanceof BlockOrTagInput.OfBlock(BlockState state)) {
+            if (state.getBlock().asItem() != Items.AIR) {
+                inputSlotBuilder.add(new ItemStack(state.getBlock()));
+            } else if (state.getBlock() instanceof LiquidBlock liquidBlock) {
+                inputSlotBuilder.add(liquidBlock.fluid, 1000);
+            }
+        } else if (input instanceof BlockOrTagInput.OfTag(TagKey<Block> tag)) {
+            List<ItemStack> stacks = new ArrayList<>();
+            for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(tag)) {
+                if (blockHolder.value().asItem() != Items.AIR) {
+                    stacks.add(new ItemStack(blockHolder.value()));
+                }
+            }
+            inputSlotBuilder.addItemStacks(stacks);
         }
 
         HolderLookup.Provider registries = Minecraft.getInstance().level.registryAccess();

@@ -65,7 +65,10 @@ import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataCom
 import com.direwolf20.justdirethings.common.items.resources.*;
 import com.direwolf20.justdirethings.common.items.tools.*;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
-import com.direwolf20.justdirethings.datagen.recipes.*;
+import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.PaxelRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -130,14 +133,12 @@ public class JDTRegistration {
 
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, MODID);
     public static final Supplier<RecipeType<GooSpreadRecipe>> GOO_SPREAD_RECIPE_TYPE = RECIPE_TYPES.register("goospreadrecipe", () -> RecipeType.simple(Identifier.fromNamespaceAndPath(MODID, "goospreadrecipe")));
-    public static final Supplier<RecipeType<GooSpreadRecipeTag>> GOO_SPREAD_RECIPE_TYPE_TAG = RECIPE_TYPES.register("goospreadrecipe_tag", () -> RecipeType.simple(Identifier.fromNamespaceAndPath(MODID, "goospreadrecipe_tag")));
     public static final Supplier<RecipeType<FluidDropRecipe>> FLUID_DROP_RECIPE_TYPE = RECIPE_TYPES.register("fluiddroprecipe", () -> RecipeType.simple(Identifier.fromNamespaceAndPath(MODID, "fluiddroprecipe")));
     public static final Supplier<RecipeType<AbilityRecipe>> ABILITY_RECIPE_TYPE = RECIPE_TYPES.register("abilityrecipe", () -> RecipeType.simple(Identifier.fromNamespaceAndPath(MODID, "abilityrecipe")));
     public static final Supplier<RecipeType<PaxelRecipe>> PAXEL_RECIPE_TYPE = RECIPE_TYPES.register("paxelrecipe", () -> RecipeType.simple(Identifier.fromNamespaceAndPath(MODID, "paxelrecipe")));
 
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, JustDireThings.MODID);
     public static final Supplier<RecipeSerializer<GooSpreadRecipe>> GOO_SPREAD_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("goospread", () -> new RecipeSerializer<>(GooSpreadRecipe.CODEC, GooSpreadRecipe.STREAM_CODEC));
-    public static final Supplier<RecipeSerializer<GooSpreadRecipeTag>> GOO_SPREAD_RECIPE_SERIALIZER_TAG = RECIPE_SERIALIZERS.register("goospread_tag", () -> new RecipeSerializer<>(GooSpreadRecipeTag.CODEC, GooSpreadRecipeTag.STREAM_CODEC));
     public static final Supplier<RecipeSerializer<FluidDropRecipe>> FLUID_DROP_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("fluiddrop", () -> new RecipeSerializer<>(FluidDropRecipe.CODEC, FluidDropRecipe.STREAM_CODEC));
     public static final Supplier<RecipeSerializer<AbilityRecipe>> ABILITY_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("ability", () -> new RecipeSerializer<>(AbilityRecipe.CODEC, AbilityRecipe.STREAM_CODEC));
     public static final Supplier<RecipeSerializer<PaxelRecipe>> PAXEL_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("paxel", () -> new RecipeSerializer<>(PaxelRecipe.CODEC, PaxelRecipe.STREAM_CODEC));

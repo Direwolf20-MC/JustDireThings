@@ -13,7 +13,9 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
@@ -25,23 +27,25 @@ public class GooSpreadRecipeBuilder implements RecipeBuilder {
     @Nullable
     private String group;
 
-    private final Identifier id;
-    protected final BlockState input;
+    protected final BlockOrTagInput input;
     protected final BlockState output;
     protected final int tierRequirement;
     protected final int craftingDuration;
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public GooSpreadRecipeBuilder(Identifier id, BlockState input, BlockState output, int tierRequirement, int craftingDuration) {
-        this.id = id;
+    public GooSpreadRecipeBuilder(BlockOrTagInput input, BlockState output, int tierRequirement, int craftingDuration) {
         this.input = input;
         this.output = output;
         this.tierRequirement = tierRequirement;
         this.craftingDuration = craftingDuration;
     }
 
-    public static GooSpreadRecipeBuilder shapeless(Identifier id, BlockState input, BlockState output, int tierRequirement, int craftingDuration) {
-        return new GooSpreadRecipeBuilder(id, input, output, tierRequirement, craftingDuration);
+    public static GooSpreadRecipeBuilder shapeless(BlockState input, BlockState output, int tierRequirement, int craftingDuration) {
+        return new GooSpreadRecipeBuilder(BlockOrTagInput.of(input), output, tierRequirement, craftingDuration);
+    }
+
+    public static GooSpreadRecipeBuilder shapeless(TagKey<Block> input, BlockState output, int tierRequirement, int craftingDuration) {
+        return new GooSpreadRecipeBuilder(BlockOrTagInput.of(input), output, tierRequirement, craftingDuration);
     }
 
     @Override
@@ -72,7 +76,6 @@ public class GooSpreadRecipeBuilder implements RecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement$builder::addCriterion);
         GooSpreadRecipe recipe = new GooSpreadRecipe(
-                this.id,
                 this.input,
                 this.output,
                 this.tierRequirement,

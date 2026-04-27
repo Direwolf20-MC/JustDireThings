@@ -7,7 +7,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -15,14 +14,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class GooSpreadRecipe implements CraftingRecipe {
-    private final Identifier id;
-    protected final BlockState input;
+    protected final BlockOrTagInput input;
     protected final BlockState output;
-    protected int tierRequirement;
-    protected int craftingDuration;
+    protected final int tierRequirement;
+    protected final int craftingDuration;
 
-    public GooSpreadRecipe(Identifier id, BlockState input, BlockState output, int tierRequirement, int craftingDuration) {
-        this.id = id;
+    public GooSpreadRecipe(BlockOrTagInput input, BlockState output, int tierRequirement, int craftingDuration) {
         this.input = input;
         this.output = output;
         this.tierRequirement = tierRequirement;
@@ -36,14 +33,14 @@ public class GooSpreadRecipe implements CraftingRecipe {
     }
 
     public boolean matches(GooBlockBE_Base gooBlockBE_base, BlockState sourceState) {
-        return sourceState.equals(input) && gooBlockBE_base.getTier() >= tierRequirement;
+        return input.matches(sourceState) && gooBlockBE_base.getTier() >= tierRequirement;
     }
 
     public BlockState getOutput() {
         return output;
     }
 
-    public BlockState getInput() {
+    public BlockOrTagInput getInput() {
         return input;
     }
 
@@ -97,9 +94,8 @@ public class GooSpreadRecipe implements CraftingRecipe {
 
     public static final MapCodec<GooSpreadRecipe> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
-                            Identifier.CODEC.fieldOf("id").forGetter(r -> r.id),
-                            BlockState.CODEC.fieldOf("input").forGetter(r -> r.input),
-                            BlockState.CODEC.fieldOf("output").forGetter(r -> r.output),
+                            BlockOrTagInput.CODEC.fieldOf("input").forGetter(r -> r.input),
+                            RecipeCodecs.BLOCK_STATE.fieldOf("output").forGetter(r -> r.output),
                             Codec.INT.fieldOf("tierRequirement").forGetter(r -> r.tierRequirement),
                             Codec.INT.fieldOf("craftingDuration").forGetter(r -> r.craftingDuration)
                     )
@@ -111,18 +107,16 @@ public class GooSpreadRecipe implements CraftingRecipe {
     );
 
     public static GooSpreadRecipe fromNetwork(RegistryFriendlyByteBuf pBuffer) {
-        Identifier resourceLocation = pBuffer.readIdentifier();
-        BlockState inputState = Block.stateById(pBuffer.readInt());
+        BlockOrTagInput inputValue = BlockOrTagInput.STREAM_CODEC.decode(pBuffer);
         BlockState outputState = Block.stateById(pBuffer.readInt());
         int tierRequirement = pBuffer.readInt();
         int craftingDuration = pBuffer.readInt();
 
-        return new GooSpreadRecipe(resourceLocation, inputState, outputState, tierRequirement, craftingDuration);
+        return new GooSpreadRecipe(inputValue, outputState, tierRequirement, craftingDuration);
     }
 
     public static void toNetwork(RegistryFriendlyByteBuf pBuffer, GooSpreadRecipe pRecipe) {
-        pBuffer.writeIdentifier(pRecipe.id);
-        pBuffer.writeInt(Block.getId(pRecipe.input));
+        BlockOrTagInput.STREAM_CODEC.encode(pBuffer, pRecipe.input);
         pBuffer.writeInt(Block.getId(pRecipe.output));
         pBuffer.writeInt(pRecipe.tierRequirement);
         pBuffer.writeInt(pRecipe.craftingDuration);

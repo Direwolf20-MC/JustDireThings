@@ -1,16 +1,15 @@
 {
   "type": "justdirethings:goospread",
   "craftingDuration": 2400,
-  "id": "justdirethings:portal_fluid",
   "input": {
-    "Name": "justdirethings:unstable_portal_fluid_block",
-    "Properties": {
+    "id": "justdirethings:unstable_portal_fluid_block",
+    "properties": {
       "level": "0"
     }
   },
   "output": {
-    "Name": "justdirethings:portal_fluid_block",
-    "Properties": {
+    "id": "justdirethings:portal_fluid_block",
+    "properties": {
       "level": "0"
     }
   },

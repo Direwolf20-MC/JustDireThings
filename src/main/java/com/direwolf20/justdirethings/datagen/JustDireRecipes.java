@@ -4,7 +4,10 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
-import com.direwolf20.justdirethings.datagen.recipes.*;
+import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipeBuilder;
+import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipeBuilder;
+import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeBuilder;
+import com.direwolf20.justdirethings.datagen.recipes.PaxelRecipeBuilder;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
@@ -18,7 +21,6 @@ import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.crafting.BlockTagIngredient;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -986,94 +988,94 @@ public class JustDireRecipes extends RecipeProvider {
                 .save(this.output);
 
         //GooSpread Recipes
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_iron_block"), Blocks.IRON_BLOCK.defaultBlockState(), JDTRegistration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(Blocks.IRON_BLOCK.defaultBlockState(), JDTRegistration.RawFerricoreOre.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", this.has(JDTRegistration.GooBlock_Tier1_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_gold_block"), Blocks.GOLD_BLOCK.defaultBlockState(), JDTRegistration.RawBlazegoldOre.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(Blocks.GOLD_BLOCK.defaultBlockState(), JDTRegistration.RawBlazegoldOre.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", this.has(JDTRegistration.GooBlock_Tier2_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_diamond_block"), Blocks.DIAMOND_BLOCK.defaultBlockState(), JDTRegistration.RawCelestigemOre.get().defaultBlockState(), 3, 4800)
+        GooSpreadRecipeBuilder.shapeless(Blocks.DIAMOND_BLOCK.defaultBlockState(), JDTRegistration.RawCelestigemOre.get().defaultBlockState(), 3, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "dire_netherite_block"), Blocks.NETHERITE_BLOCK.defaultBlockState(), JDTRegistration.RawEclipseAlloyOre.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Blocks.NETHERITE_BLOCK.defaultBlockState(), JDTRegistration.RawEclipseAlloyOre.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output);
 
         //GooSpread Coal
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), Blocks.COAL_BLOCK.defaultBlockState(), JDTRegistration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(Blocks.COAL_BLOCK.defaultBlockState(), JDTRegistration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", this.has(JDTRegistration.GooBlock_Tier1_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeTagBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t1"), new BlockTagIngredient(ModTags.Blocks.CHARCOAL), JDTRegistration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
+        GooSpreadRecipeBuilder.shapeless(ModTags.Blocks.CHARCOAL, JDTRegistration.RawCoal_T1.get().defaultBlockState(), 1, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t1", this.has(JDTRegistration.GooBlock_Tier1_ITEM.get()))
-                .save(this.output);
+                .save(this.output, JustDireThings.MODID + ":raw_coal_t1_ore-goospread_charcoal");
 
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t2"), JDTRegistration.CoalBlock_T1.get().defaultBlockState(), JDTRegistration.RawCoal_T2.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(JDTRegistration.CoalBlock_T1.get().defaultBlockState(), JDTRegistration.RawCoal_T2.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", this.has(JDTRegistration.GooBlock_Tier2_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t3"), JDTRegistration.CoalBlock_T2.get().defaultBlockState(), JDTRegistration.RawCoal_T3.get().defaultBlockState(), 3, 4800)
+        GooSpreadRecipeBuilder.shapeless(JDTRegistration.CoalBlock_T2.get().defaultBlockState(), JDTRegistration.RawCoal_T3.get().defaultBlockState(), 3, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "coal_block_t4"), JDTRegistration.CoalBlock_T3.get().defaultBlockState(), JDTRegistration.RawCoal_T4.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(JDTRegistration.CoalBlock_T3.get().defaultBlockState(), JDTRegistration.RawCoal_T4.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output);
 
         //GooSpread Misc
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "portal_fluid"), JDTRegistration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PORTAL_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
+        GooSpreadRecipeBuilder.shapeless(JDTRegistration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PORTAL_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t2_fluid"), JDTRegistration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), 2, 2400)
+        GooSpreadRecipeBuilder.shapeless(JDTRegistration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), 2, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t2", this.has(JDTRegistration.GooBlock_Tier2_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t3_fluid"), JDTRegistration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
+        GooSpreadRecipeBuilder.shapeless(JDTRegistration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), 3, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t3", this.has(JDTRegistration.GooBlock_Tier3_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "refined_t4_fluid"), JDTRegistration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T4_FLUID_BLOCK.get().defaultBlockState(), 4, 2400)
+        GooSpreadRecipeBuilder.shapeless(JDTRegistration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.REFINED_T4_FLUID_BLOCK.get().defaultBlockState(), 4, 2400)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output);
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_amethyst"), Blocks.BUDDING_AMETHYST.defaultBlockState(), JDTRegistration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(Blocks.BUDDING_AMETHYST.defaultBlockState(), JDTRegistration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output, "budding_time_amethyst");
-        GooSpreadRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "budding_time_timeblock"), JDTRegistration.TimeCrystalBlock.get().defaultBlockState(), JDTRegistration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
+        GooSpreadRecipeBuilder.shapeless(JDTRegistration.TimeCrystalBlock.get().defaultBlockState(), JDTRegistration.TimeCrystalBuddingBlock.get().defaultBlockState(), 4, 4800)
                 .group("justdirethings")
                 .unlockedBy("has_goo_block_t4", this.has(JDTRegistration.GooBlock_Tier4_ITEM.get()))
                 .save(this.output, "budding_time_timeblock");
 
         //FluidDrop Recipes
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_fluid"), Blocks.WATER.defaultBlockState(), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PolymorphicCatalyst.get())
+        FluidDropRecipeBuilder.shapeless(Blocks.WATER.defaultBlockState(), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PolymorphicCatalyst.get())
                 .group("justdirethings")
                 .unlockedBy("has_polymorphic_catalyst", this.has(JDTRegistration.PolymorphicCatalyst.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unstable_portal_fluid"), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PortalFluidCatalyst.get())
+        FluidDropRecipeBuilder.shapeless(JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNSTABLE_PORTAL_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.PortalFluidCatalyst.get())
                 .group("justdirethings")
                 .unlockedBy("has_portal_catalyst", this.has(JDTRegistration.PortalFluidCatalyst.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t2_fluid"), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T2.get())
+        FluidDropRecipeBuilder.shapeless(JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T2.get())
                 .group("justdirethings")
                 .unlockedBy("has_coal_t2", this.has(JDTRegistration.Coal_T2.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t3_fluid"), JDTRegistration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T3.get())
+        FluidDropRecipeBuilder.shapeless(JDTRegistration.REFINED_T2_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T3.get())
                 .group("justdirethings")
                 .unlockedBy("has_coal_t3", this.has(JDTRegistration.Coal_T3.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "unrefined_t4_fluid"), JDTRegistration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T4.get())
+        FluidDropRecipeBuilder.shapeless(JDTRegistration.REFINED_T3_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.UNREFINED_T4_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.Coal_T4.get())
                 .group("justdirethings")
                 .unlockedBy("has_coal_t4", this.has(JDTRegistration.Coal_T4.get()))
                 .save(this.output);
-        FluidDropRecipeBuilder.shapeless(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "time_fluid"), JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.TIME_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.TimeCrystal.get())
+        FluidDropRecipeBuilder.shapeless(JDTRegistration.POLYMORPHIC_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.TIME_FLUID_BLOCK.get().defaultBlockState(), JDTRegistration.TimeCrystal.get())
                 .group("justdirethings")
                 .unlockedBy("has_time_crystal", this.has(JDTRegistration.TimeCrystal.get()))
                 .save(this.output);

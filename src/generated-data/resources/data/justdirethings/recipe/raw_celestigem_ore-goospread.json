@@ -1,13 +1,12 @@
 {
   "type": "justdirethings:goospread",
   "craftingDuration": 4800,
-  "id": "justdirethings:dire_diamond_block",
   "input": {
-    "Name": "minecraft:diamond_block"
+    "id": "minecraft:diamond_block"
   },
   "output": {
-    "Name": "justdirethings:raw_celestigem_ore",
-    "Properties": {
+    "id": "justdirethings:raw_celestigem_ore",
+    "properties": {
       "facing": "north"
     }
   },

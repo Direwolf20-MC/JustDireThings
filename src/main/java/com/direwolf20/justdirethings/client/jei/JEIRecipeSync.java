@@ -30,7 +30,6 @@ public class JEIRecipeSync {
     public static void onDatapackSync(OnDatapackSyncEvent event) {
         event.sendRecipes(
                 JDTRegistration.GOO_SPREAD_RECIPE_TYPE.get(),
-                JDTRegistration.GOO_SPREAD_RECIPE_TYPE_TAG.get(),
                 JDTRegistration.FLUID_DROP_RECIPE_TYPE.get()
         );
     }

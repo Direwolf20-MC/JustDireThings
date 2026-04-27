@@ -1,16 +1,15 @@
 {
   "type": "justdirethings:fluiddrop",
   "catalyst": "justdirethings:coal_t2",
-  "id": "justdirethings:unrefined_t2_fluid",
   "input": {
-    "Name": "justdirethings:polymorphic_fluid_block",
-    "Properties": {
+    "id": "justdirethings:polymorphic_fluid_block",
+    "properties": {
       "level": "0"
     }
   },
   "output": {
-    "Name": "justdirethings:unrefined_t2_fluid_block",
-    "Properties": {
+    "id": "justdirethings:unrefined_t2_fluid_block",
+    "properties": {
       "level": "0"
     }
   }

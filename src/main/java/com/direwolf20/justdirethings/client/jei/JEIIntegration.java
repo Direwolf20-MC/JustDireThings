@@ -4,7 +4,10 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.jei.ghostfilters.GhostFilterBasic;
 import com.direwolf20.justdirethings.client.screens.basescreens.BaseScreen;
 import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
-import com.direwolf20.justdirethings.datagen.recipes.*;
+import com.direwolf20.justdirethings.datagen.recipes.AbilityRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
+import com.direwolf20.justdirethings.datagen.recipes.PaxelRecipe;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -71,7 +74,6 @@ public class JEIIntegration implements IModPlugin {
         IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
         registration.addRecipeCategories(
                 new GooSpreadRecipeCategory(guiHelper),
-                new GooSpreadRecipeTagCategory(guiHelper),
                 new FluidDropRecipeCategory(guiHelper)
         );
         registration.addRecipeCategories(new OreToResourceCategory(registration.getJeiHelpers().getGuiHelper()));
@@ -81,9 +83,6 @@ public class JEIIntegration implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         Collection<RecipeHolder<GooSpreadRecipe>> gooSpreadRecipes = JEIRecipeSync.byType(JDTRegistration.GOO_SPREAD_RECIPE_TYPE.get());
         registration.addRecipes(GooSpreadRecipeCategory.TYPE, List.copyOf(gooSpreadRecipes));
-
-        Collection<RecipeHolder<GooSpreadRecipeTag>> gooSpreadTagRecipes = JEIRecipeSync.byType(JDTRegistration.GOO_SPREAD_RECIPE_TYPE_TAG.get());
-        registration.addRecipes(GooSpreadRecipeTagCategory.TYPE, List.copyOf(gooSpreadTagRecipes));
 
         Collection<RecipeHolder<FluidDropRecipe>> fluidDropRecipes = JEIRecipeSync.byType(JDTRegistration.FLUID_DROP_RECIPE_TYPE.get());
         registration.addRecipes(FluidDropRecipeCategory.TYPE, List.copyOf(fluidDropRecipes));
@@ -112,12 +111,6 @@ public class JEIIntegration implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
         registry.addCraftingStation(GooSpreadRecipeCategory.TYPE,
-                new ItemStack(JDTRegistration.GooBlock_Tier1.get()),
-                new ItemStack(JDTRegistration.GooBlock_Tier2.get()),
-                new ItemStack(JDTRegistration.GooBlock_Tier3.get()),
-                new ItemStack(JDTRegistration.GooBlock_Tier4.get()));
-
-        registry.addCraftingStation(GooSpreadRecipeTagCategory.TYPE,
                 new ItemStack(JDTRegistration.GooBlock_Tier1.get()),
                 new ItemStack(JDTRegistration.GooBlock_Tier2.get()),
                 new ItemStack(JDTRegistration.GooBlock_Tier3.get()),

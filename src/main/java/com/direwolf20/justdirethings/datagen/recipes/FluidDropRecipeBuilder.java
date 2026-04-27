@@ -26,21 +26,19 @@ public class FluidDropRecipeBuilder implements RecipeBuilder {
     @Nullable
     private String group;
 
-    private final Identifier id;
     protected final BlockState input;
     protected final BlockState output;
     protected final Item catalyst;
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
 
-    public FluidDropRecipeBuilder(Identifier id, BlockState input, BlockState output, Item catalyst) {
-        this.id = id;
+    public FluidDropRecipeBuilder(BlockState input, BlockState output, Item catalyst) {
         this.input = input;
         this.output = output;
         this.catalyst = catalyst;
     }
 
-    public static FluidDropRecipeBuilder shapeless(Identifier id, BlockState input, BlockState output, Item catalyst) {
-        return new FluidDropRecipeBuilder(id, input, output, catalyst);
+    public static FluidDropRecipeBuilder shapeless(BlockState input, BlockState output, Item catalyst) {
+        return new FluidDropRecipeBuilder(input, output, catalyst);
     }
 
     @Override
@@ -71,7 +69,6 @@ public class FluidDropRecipeBuilder implements RecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement$builder::addCriterion);
         FluidDropRecipe recipe = new FluidDropRecipe(
-                this.id,
                 this.input,
                 this.output,
                 this.catalyst

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "justdirethings:raw_coal_t1_ore-goospread_tag"
+        "recipe": "justdirethings:raw_coal_t1_ore-goospread_charcoal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "justdirethings:raw_coal_t1_ore-goospread_tag"
+      "justdirethings:raw_coal_t1_ore-goospread_charcoal"
     ]
   }
 }

@@ -1,13 +1,12 @@
 {
   "type": "justdirethings:goospread",
   "craftingDuration": 4800,
-  "id": "justdirethings:dire_netherite_block",
   "input": {
-    "Name": "minecraft:netherite_block"
+    "id": "minecraft:netherite_block"
   },
   "output": {
-    "Name": "justdirethings:raw_eclipsealloy_ore",
-    "Properties": {
+    "id": "justdirethings:raw_eclipsealloy_ore",
+    "properties": {
       "facing": "north"
     }
   },
