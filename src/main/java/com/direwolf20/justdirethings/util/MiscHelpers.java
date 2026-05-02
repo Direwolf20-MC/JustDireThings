@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -40,9 +40,7 @@ public class MiscHelpers {
     }
 
     public static boolean isPassiveLiving(Entity entity) {
-        return entity instanceof LivingEntity
-                && !(entity instanceof Player)
-                && !(entity instanceof Enemy);
+        return entity instanceof Mob && !(entity instanceof Enemy);
     }
 
     public static boolean isAdult(Entity entity) {
@@ -57,7 +55,7 @@ public class MiscHelpers {
     }
 
     public static boolean isMob(Entity entity) {
-        return entity instanceof LivingEntity && !(entity instanceof Player);
+        return entity instanceof Mob;
     }
 
     public static ResourceHandler<ItemResource> getAttachedInventory(Level level, BlockPos blockPos, Direction side) {
