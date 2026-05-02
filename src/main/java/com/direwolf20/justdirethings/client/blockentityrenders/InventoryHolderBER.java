@@ -6,113 +6,114 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
-public class InventoryHolderBER extends AreaAffectingBER {
-    public static AbstractClientPlayer mockPlayer;
-    public InventoryHolderBER(BlockEntityRendererProvider.Context context) {
+public class InventoryHolderBER extends AreaAffectingBER<InventoryHolderBE, InventoryHolderBER.InventoryHolderRenderState> {
 
+    public static class InventoryHolderRenderState extends AreaAffectingRenderState {
+        public @Nullable EntityRenderState mockPlayerState;
+        public boolean shouldRender;
+    }
+
+    private final EntityRenderDispatcher dispatcher;
+
+    public InventoryHolderBER(BlockEntityRendererProvider.Context context) {
+        this.dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
     }
 
     @Override
-    public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
-        if (blockentity instanceof InventoryHolderBE inventoryHolderBE && inventoryHolderBE.renderPlayer) {
-            // Create a fake player entity
-            if (mockPlayer == null || !mockPlayer.getUUID().equals(inventoryHolderBE.placedByUUID))
-                mockPlayer = createMockPlayer(inventoryHolderBE);
-            if (mockPlayer == null) return;
-            mockPlayer.yHeadRot = 0;
-            mockPlayer.yHeadRotO = 0;
-            // Equip the mock player with items
-            equipMockPlayer(mockPlayer, inventoryHolderBE);
+    public InventoryHolderRenderState createRenderState() {
+        return new InventoryHolderRenderState();
+    }
 
-            // Render the mock player model above the block
-            renderMockPlayerEntity(matrixStackIn, bufferIn, mockPlayer, combinedLightsIn, partialTicks);
-            //UnEquip items, so the fake player is ready for the next inventory holder (In case theres more than one)
-            unEquipMockPlayer(mockPlayer, inventoryHolderBE);
+    @Override
+    public void extractRenderState(InventoryHolderBE blockEntity, InventoryHolderRenderState state, float partialTicks, Vec3 cameraPosition,
+                                    ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        state.shouldRender = false;
+        state.mockPlayerState = null;
+
+        if (!blockEntity.renderPlayer) return;
+        UUID placedBy = blockEntity.placedByUUID;
+        if (placedBy == null) return;
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) return;
+
+        AbstractClientPlayer mockPlayer = new AbstractClientPlayer(level, new GameProfile(placedBy, "MockPlayer")) {
+        };
+        mockPlayer.yHeadRot = 0F;
+        mockPlayer.yHeadRotO = 0F;
+        mockPlayer.yBodyRot = 0F;
+        mockPlayer.yBodyRotO = 0F;
+        equipMockPlayer(mockPlayer, blockEntity);
+
+        try {
+            state.mockPlayerState = this.dispatcher.extractEntity(mockPlayer, partialTicks);
+            state.shouldRender = true;
+        } catch (Throwable ignored) {
+            state.mockPlayerState = null;
+            state.shouldRender = false;
         }
     }
 
-    public AbstractClientPlayer createMockPlayer(InventoryHolderBE blockEntity) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.level == null) return null;
-        UUID placedByUUID = blockEntity.placedByUUID;
-        if (placedByUUID == null) return null;
-        // Create a mock AbstractClientPlayer using the current level and a GameProfile
-        GameProfile gameProfile = new GameProfile(placedByUUID, "MockPlayer");
+    private static void equipMockPlayer(AbstractClientPlayer mockPlayer, InventoryHolderBE blockEntity) {
+        ItemStacksResourceHandler handler = blockEntity.getMachineHandler();
 
-        // AbstractClientPlayer does not need the full connection setup like LocalPlayer
-        return new AbstractClientPlayer(minecraft.level, gameProfile) {
-            @Override
-            public boolean isSpectator() {
-                return false;
-            }
+        ItemStack mainHand = readSlot(handler, blockEntity.renderedSlot);
+        if (!mainHand.isEmpty()) mockPlayer.setItemInHand(InteractionHand.MAIN_HAND, mainHand);
 
-            @Override
-            public boolean isCreative() {
-                return false;
-            }
-        };
+        ItemStack offHand = readSlot(handler, 40);
+        if (!offHand.isEmpty()) mockPlayer.setItemInHand(InteractionHand.OFF_HAND, offHand);
+
+        ItemStack head = readSlot(handler, 36);
+        if (!head.isEmpty()) mockPlayer.setItemSlot(EquipmentSlot.HEAD, head);
+
+        ItemStack chest = readSlot(handler, 37);
+        if (!chest.isEmpty()) mockPlayer.setItemSlot(EquipmentSlot.CHEST, chest);
+
+        ItemStack legs = readSlot(handler, 38);
+        if (!legs.isEmpty()) mockPlayer.setItemSlot(EquipmentSlot.LEGS, legs);
+
+        ItemStack feet = readSlot(handler, 39);
+        if (!feet.isEmpty()) mockPlayer.setItemSlot(EquipmentSlot.FEET, feet);
     }
 
-    public void equipMockPlayer(AbstractClientPlayer mockPlayer, InventoryHolderBE blockEntity) {
-        ItemStackHandler itemStackHandler = blockEntity.getMachineHandler();
-        // Equip the pickaxe in the main hand
-        if (!itemStackHandler.getStackInSlot(blockEntity.renderedSlot).isEmpty())
-            mockPlayer.setItemInHand(InteractionHand.MAIN_HAND, itemStackHandler.getStackInSlot(blockEntity.renderedSlot));
-
-        // Equip the offhand
-        if (!itemStackHandler.getStackInSlot(40).isEmpty())
-            mockPlayer.setItemInHand(InteractionHand.OFF_HAND, itemStackHandler.getStackInSlot(40));
-
-        if (!itemStackHandler.getStackInSlot(36).isEmpty())
-            mockPlayer.setItemSlot(EquipmentSlot.HEAD, itemStackHandler.getStackInSlot(36));
-        if (!itemStackHandler.getStackInSlot(37).isEmpty())
-            mockPlayer.setItemSlot(EquipmentSlot.CHEST, itemStackHandler.getStackInSlot(37));
-        if (!itemStackHandler.getStackInSlot(38).isEmpty())
-            mockPlayer.setItemSlot(EquipmentSlot.LEGS, itemStackHandler.getStackInSlot(38));
-        if (!itemStackHandler.getStackInSlot(39).isEmpty())
-            mockPlayer.setItemSlot(EquipmentSlot.FEET, itemStackHandler.getStackInSlot(39));
+    private static ItemStack readSlot(ItemStacksResourceHandler handler, int slot) {
+        if (slot < 0 || slot >= handler.size()) return ItemStack.EMPTY;
+        ItemResource resource = handler.getResource(slot);
+        if (resource.isEmpty()) return ItemStack.EMPTY;
+        int amount = handler.getAmountAsInt(slot);
+        if (amount <= 0) return ItemStack.EMPTY;
+        return resource.toStack(amount);
     }
 
-    public void unEquipMockPlayer(AbstractClientPlayer mockPlayer, InventoryHolderBE blockEntity) {
-        ItemStackHandler itemStackHandler = blockEntity.getMachineHandler();
-        // Equip the pickaxe in the main hand
-        mockPlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+    @Override
+    public void submit(InventoryHolderRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        super.submit(state, poseStack, submitNodeCollector, camera);
+        if (!state.shouldRender || state.mockPlayerState == null) return;
 
-        // Equip the offhand
-        mockPlayer.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
-
-        mockPlayer.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-        mockPlayer.setItemSlot(EquipmentSlot.CHEST, ItemStack.EMPTY);
-        mockPlayer.setItemSlot(EquipmentSlot.LEGS, ItemStack.EMPTY);
-        mockPlayer.setItemSlot(EquipmentSlot.FEET, ItemStack.EMPTY);
-    }
-
-    public void renderMockPlayerEntity(PoseStack matrixStackIn, MultiBufferSource bufferIn, AbstractClientPlayer mockPlayer, int combinedLightsIn, float partialTicks) {
-        matrixStackIn.pushPose();
-
-        // Position the player rendering above the block
-        matrixStackIn.translate(0.5, 1f, 0.5); // Adjust Y for height
-        matrixStackIn.scale(0.5f, 0.5f, 0.5f);
-
-        // Add Y-axis rotation
-        long gameTime = System.currentTimeMillis();
-        float rotation = (gameTime % 7200L) / 20.0F;
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(rotation));
-
-        // Render the mock player using Minecraft's built-in rendering system
-        Minecraft.getInstance().getEntityRenderDispatcher().render(mockPlayer, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, matrixStackIn, bufferIn, 15728880);
-
-        matrixStackIn.popPose();
+        poseStack.pushPose();
+        poseStack.translate(0.5, 1.0, 0.5);
+        poseStack.scale(0.5F, 0.5F, 0.5F);
+        float rotation = (System.currentTimeMillis() % 7200L) / 20.0F;
+        poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
+        this.dispatcher.submit(state.mockPlayerState, camera, 0.0, 0.0, 0.0, poseStack, submitNodeCollector);
+        poseStack.popPose();
     }
 }

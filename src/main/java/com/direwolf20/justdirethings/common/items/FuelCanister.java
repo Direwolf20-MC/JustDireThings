@@ -7,73 +7,70 @@ import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.FuelValues;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class FuelCanister extends Item {
-    public FuelCanister() {
-        super(new Properties()
-                .stacksTo(1));
+    public FuelCanister(Properties pProperties) {
+        super(pProperties);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
         Level level = context.level();
         if (level == null) {
             return;
         }
 
-        boolean sneakPressed = Screen.hasShiftDown();
+        List<Component> buffer = new ArrayList<>();
+        boolean sneakPressed = Minecraft.getInstance().hasShiftDown();
         if (sneakPressed)
-            tooltip.add(Component.translatable("justdirethings.fuelcanisteramt", MagicHelpers.formatted(getFuelLevel(stack))).withStyle(ChatFormatting.AQUA));
+            buffer.add(Component.translatable("justdirethings.fuelcanisteramt", MagicHelpers.formatted(getFuelLevel(stack))).withStyle(ChatFormatting.AQUA));
         else
-            tooltip.add(Component.translatable("justdirethings.fuelcanisteritemsamt", MagicHelpers.formatted(((float) getFuelLevel(stack) / 200))).withStyle(ChatFormatting.AQUA));
-
+            buffer.add(Component.translatable("justdirethings.fuelcanisteritemsamt", MagicHelpers.formatted(((float) getFuelLevel(stack) / 200))).withStyle(ChatFormatting.AQUA));
+        buffer.forEach(tooltip);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (level.isClientSide()) return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
+        if (level.isClientSide()) return InteractionResult.PASS;
 
         player.openMenu(new SimpleMenuProvider(
                 (windowId, playerInventory, playerEntity) -> new FuelCanisterContainer(windowId, playerInventory, player, itemstack), Component.translatable("")), (buf -> {
             ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, itemstack);
         }));
 
-        return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
+        return InteractionResult.PASS;
     }
 
     @Override
-    public int getBurnTime(ItemStack stack, @Nullable RecipeType<?> recipeType) {
+    public int getBurnTime(ItemStack stack, @Nullable RecipeType<?> recipeType, FuelValues fuelValues) {
         return getFuelLevel(stack) >= Config.FUEL_CANISTER_MINIMUM_TICKS_CONSUMED.get() ? Config.FUEL_CANISTER_MINIMUM_TICKS_CONSUMED.get() : 0;
     }
 
     @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public ItemStack getCraftingRemainingItem(ItemStack stack) {
-        ItemStack copy = stack.copy();
+    public @Nullable ItemStackTemplate getCraftingRemainder(net.minecraft.world.item.ItemInstance instance) {
+        // Retain crafting-remainder semantics: return a decremented-fuel copy of this canister.
+        if (!(instance instanceof ItemStack source)) return null;
+        ItemStack copy = source.copy();
         decrementFuel(copy);
-        return copy;
+        return ItemStackTemplate.fromNonEmptyStack(copy);
     }
 
     public static int getFuelLevel(ItemStack stack) {
@@ -111,10 +108,10 @@ public class FuelCanister extends Item {
         return newBurnSpeedMultiplier;
     }
 
-    public static void incrementFuel(ItemStack stack, ItemStack fuelStack) {
+    public static int incrementFuel(ItemStack stack, ItemStack fuelStack, FuelValues fuelValues) {
         int currentFuel = getFuelLevel(stack);
-        int fuelPerPiece = fuelStack.getBurnTime(RecipeType.SMELTING);
-        if (fuelPerPiece == 0) return;
+        int fuelPerPiece = fuelStack.getBurnTime(RecipeType.SMELTING, fuelValues);
+        if (fuelPerPiece == 0) return 0;
         double currentBurnSpeedMultiplier = getBurnSpeed(stack);
         int fuelMultiplier = 1;
         if (fuelStack.getItem() instanceof Coal_T1 direCoal)
@@ -122,9 +119,10 @@ public class FuelCanister extends Item {
         else if (fuelStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof CoalBlock_T1 coalBlock)
             fuelMultiplier = coalBlock.getBurnSpeedMultiplier();
         int totalNewFuel = 0;
-        while ((currentFuel + totalNewFuel) + fuelPerPiece <= Config.FUEL_CANISTER_MAXIMUM_FUEL.get() && !fuelStack.isEmpty()) {
+        int consumed = 0;
+        while ((currentFuel + totalNewFuel) + fuelPerPiece <= Config.FUEL_CANISTER_MAXIMUM_FUEL.get() && consumed < fuelStack.getCount()) {
             totalNewFuel += fuelPerPiece;
-            fuelStack.shrink(1); // Consume one unit of the fuel stack.
+            consumed++;
         }
 
         if (totalNewFuel > 0) {
@@ -133,6 +131,7 @@ public class FuelCanister extends Item {
 
         setFuelLevel(stack, currentFuel + totalNewFuel);
         setBurnSpeed(stack, currentBurnSpeedMultiplier);
+        return consumed;
     }
 
 }

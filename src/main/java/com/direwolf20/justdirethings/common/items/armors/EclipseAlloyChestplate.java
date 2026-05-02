@@ -1,15 +1,16 @@
 package com.direwolf20.justdirethings.common.items.armors;
 
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseChestplate;
-import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
-import com.direwolf20.justdirethings.common.items.interfaces.*;
+import com.direwolf20.justdirethings.common.items.interfaces.Ability;
+import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
+import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
+import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyChestplate extends BaseChestplate implements PoweredTool {
-    public EclipseAlloyChestplate() {
-        super(ArmorTiers.ECLIPSEALLOY, new Properties()
-                .fireResistant()
-                .durability(Type.CHESTPLATE.getDurability(25)));
+    public EclipseAlloyChestplate(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.INVULNERABILITY, new AbilityParams(1, 1, 1, 1, 200, 400));
         registerAbility(Ability.EXTINGUISH, new AbilityParams(1, 1, 1, 1, 0, 40));
         registerAbility(Ability.ELYTRA);
@@ -39,25 +40,6 @@ public class EclipseAlloyChestplate extends BaseChestplate implements PoweredToo
 
     public static boolean isFlyEnabled(ItemStack elytraStack) {
         return elytraStack.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(elytraStack, Ability.ELYTRA);
-    }
-
-    @Override
-    public boolean canElytraFly(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
-        return isFlyEnabled(stack);
-    }
-
-    @Override
-    public boolean elytraFlightTick(ItemStack stack, net.minecraft.world.entity.LivingEntity entity, int flightTicks) {
-        if (!entity.level().isClientSide) {
-            int nextFlightTick = flightTicks + 1;
-            if (nextFlightTick % 10 == 0) {
-                if (nextFlightTick % 20 == 0) {
-                    Helpers.damageTool(stack, entity, Ability.ELYTRA);
-                }
-                entity.gameEvent(net.minecraft.world.level.gameevent.GameEvent.ELYTRA_GLIDE);
-            }
-        }
-        return true;
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.FluidContainerD
 import com.direwolf20.justdirethings.common.blockentities.basebe.FluidMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.capabilities.JustDireFluidTank;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -24,8 +23,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
     }
 
     public FluidCollectorT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.FluidCollectorT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.FluidCollectorT1BE.get(), pPos, pBlockState);
     }
 
     public int getMaxMB() {
@@ -82,19 +83,32 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
         if (fluidStack.isEmpty()) return;
         ItemStack itemStack = getItemStack();
         if (!isStackValid(itemStack, fluidStack)) return;
-        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        int insertAmt = fluidHandlerItem.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
-        if (insertAmt > 0) {
-            FluidStack extractedStack = getFluidTank().drain(Math.min(insertAmt, 1000), IFluidHandler.FluidAction.EXECUTE);
-            fluidHandlerItem.fill(extractedStack, IFluidHandler.FluidAction.EXECUTE);
-            if (itemStack.getItem() instanceof BucketItem)
-                getMachineHandler().setStackInSlot(0, fluidHandlerItem.getContainer());
+        ItemAccess itemAccess = ItemAccess.forHandlerIndex(getMachineHandler(), 0);
+        ResourceHandler<FluidResource> fluidHandler = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null) return;
 
+        FluidResource tankResource = getFluidTank().getResource(0);
+        if (tankResource.isEmpty()) return;
+
+        // Find a slot on the item-side handler that will accept our fluid
+        for (int i = 0; i < fluidHandler.size(); i++) {
+            int capacityFit;
+            try (Transaction simTx = Transaction.openRoot()) {
+                capacityFit = fluidHandler.insert(i, tankResource, Math.min(fluidStack.getAmount(), 1000), simTx);
+            }
+            if (capacityFit <= 0) continue;
+            try (Transaction tx = Transaction.openRoot()) {
+                int extracted = getFluidTank().extract(0, tankResource, capacityFit, tx);
+                if (extracted <= 0) return;
+                int inserted = fluidHandler.insert(i, tankResource, extracted, tx);
+                if (inserted > 0) tx.commit();
+            }
+            return;
         }
     }
 
     public ItemStack getItemStack() {
-        return getMachineHandler().getStackInSlot(0);
+        return getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
     }
 
     public boolean isStackValid(ItemStack itemStack, FluidStack fluidStack) {
@@ -102,21 +116,25 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
             return false;
         if (fluidStack.isEmpty())
             return false;
-        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (fluidHandlerItem == null)
+        ResourceHandler<FluidResource> fluidHandler = ItemAccess.forStack(itemStack).getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null)
             return false;
-        int amtFilled = fluidHandlerItem.fill(fluidStack, IFluidHandler.FluidAction.SIMULATE);
-        if (amtFilled == 0)
-            return false;
-        return true;
+        FluidResource resource = FluidResource.of(fluidStack);
+        try (Transaction tx = Transaction.openRoot()) {
+            for (int i = 0; i < fluidHandler.size(); i++) {
+                if (fluidHandler.insert(i, resource, fluidStack.getAmount(), tx) > 0)
+                    return true;
+            }
+        }
+        return false;
     }
 
     public FluidStack getTankStack() {
-        return getFluidTank().getFluid();
+        return getFluidStack();
     }
 
     public JustDireFluidTank getFluidTank() {
-        return getData(Registration.MACHINE_FLUID_HANDLER);
+        return getData(JDTRegistration.MACHINE_FLUID_HANDLER);
     }
 
     public boolean isStackValid(FluidStack fluidStack) {
@@ -168,11 +186,18 @@ public class FluidCollectorT1BE extends BaseMachineBE implements RedstoneControl
         LiquidBlock liquidBlock = getLiquidBlockAt(blockPos);
         if (liquidBlock == null) return false;
         if (!isBlockValidForTank(liquidBlock))
-            return false; //Check again here, in case we picked up water, and now we are operating on lava, before clearing the area list
-        FluidStack fluidStack = new FluidStack(liquidBlock.fluid, 1000);
-        if (getFluidTank().fill(fluidStack, IFluidHandler.FluidAction.SIMULATE) < 1000) return false;
+            return false;
+        FluidResource resource = FluidResource.of(liquidBlock.fluid);
+        int canInsert;
+        try (Transaction simTx = Transaction.openRoot()) {
+            canInsert = getFluidTank().insert(0, resource, 1000, simTx);
+        }
+        if (canInsert < 1000) return false;
         if (level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3)) {
-            getFluidTank().fill(fluidStack, IFluidHandler.FluidAction.EXECUTE);
+            try (Transaction tx = Transaction.openRoot()) {
+                getFluidTank().insert(0, resource, 1000, tx);
+                tx.commit();
+            }
             level.playSound(null, blockPos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1F, 1.0F);
             return true;
         }

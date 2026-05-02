@@ -8,7 +8,7 @@ import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class GhostFilterBasic implements IGhostIngredientHandler<BaseScreen> {
                     @Override
                     public void accept(I ingredient) {
                         slot.set((ItemStack) ingredient);
-                        PacketDistributor.sendToServer(new GhostSlotPayload(slot.index, (ItemStack) ingredient, ((ItemStack) ingredient).getCount(), -1));
+                        ClientPacketDistributor.sendToServer(new GhostSlotPayload(slot.index, (ItemStack) ingredient, ((ItemStack) ingredient).getCount(), -1));
                     }
                 });
             }

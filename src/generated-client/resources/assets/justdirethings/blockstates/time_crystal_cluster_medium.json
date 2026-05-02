@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "justdirethings:block/time_crystal_cluster_medium",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "justdirethings:block/time_crystal_cluster_medium",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "justdirethings:block/time_crystal_cluster_medium",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "justdirethings:block/time_crystal_cluster_medium",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "justdirethings:block/time_crystal_cluster_medium"
+    },
+    "facing=west": {
+      "model": "justdirethings:block/time_crystal_cluster_medium",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

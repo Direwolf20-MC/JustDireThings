@@ -12,7 +12,7 @@ import com.direwolf20.justdirethings.common.network.data.DirectionSettingPayload
 import com.direwolf20.justdirethings.common.network.data.TickSpeedPayload;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
     public int clickType;
@@ -47,14 +47,14 @@ public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
         if (tickSpeedButton != null && renderables.contains(tickSpeedButton))
             widgetsToRemove.add(tickSpeedButton);
         if (clickType == 2) {
-            tickSpeedButton = ToggleButtonFactory.TICKSPEEDBUTTON(getGuiLeft() + 144, topSectionTop + 40, tickSpeed, maxHoldTicks + 1, b -> {
-                tickSpeed = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
-                PacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
+            tickSpeedButton = ToggleButtonFactory.TICKSPEEDBUTTON(leftPos + 144, topSectionTop + 40, tickSpeed, maxHoldTicks + 1, b -> {
+                tickSpeed = ((NumberButton) b).getValue();
+                ClientPacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
             });
         } else {
-            tickSpeedButton = ToggleButtonFactory.TICKSPEEDBUTTON(getGuiLeft() + 144, topSectionTop + 40, tickSpeed, b -> {
-                tickSpeed = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
-                PacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
+            tickSpeedButton = ToggleButtonFactory.TICKSPEEDBUTTON(leftPos + 144, topSectionTop + 40, tickSpeed, b -> {
+                tickSpeed = ((NumberButton) b).getValue();
+                ClientPacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
             });
         }
         widgetsToAdd.add(tickSpeedButton);
@@ -64,32 +64,32 @@ public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(getGuiLeft() + 116, topSectionTop + 62, direction, b -> {
+        addRenderableWidget(ToggleButtonFactory.DIRECTIONBUTTON(leftPos + 116, topSectionTop + 62, direction, b -> {
             direction = ((ToggleButton) b).getTexturePosition();
-            PacketDistributor.sendToServer(new DirectionSettingPayload(direction));
+            ClientPacketDistributor.sendToServer(new DirectionSettingPayload(direction));
         }));
 
-        addRenderableWidget(ToggleButtonFactory.CLICKTARGETBUTTON(getGuiLeft() + 44, topSectionTop + 62, clickTarget, b -> {
+        addRenderableWidget(ToggleButtonFactory.CLICKTARGETBUTTON(leftPos + 44, topSectionTop + 62, clickTarget, b -> {
             clickTarget = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
 
-        addRenderableWidget(ToggleButtonFactory.LEFTRIGHTCLICKBUTTON(getGuiLeft() + 44, topSectionTop + 44, clickType, b -> {
+        addRenderableWidget(ToggleButtonFactory.LEFTRIGHTCLICKBUTTON(leftPos + 44, topSectionTop + 44, clickType, b -> {
             clickType = ((ToggleButton) b).getTexturePosition();
             if (clickType == 2) {
                 tickSpeed = Math.max(tickSpeed, maxHoldTicks + 1);
-                PacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
+                ClientPacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
             }
             addTickSpeedButton();
             saveSettings();
             showHoldClicksButton();
         }));
 
-        maxHoldTicksButton = new NumberButton(getGuiLeft() + 64, topSectionTop + 46, 24, 12, maxHoldTicks, 1, 1200, Component.translatable("justdirethings.screen.click-hold-for"), b -> {
-            maxHoldTicks = ((NumberButton) b).getValue(); //The value is updated in the mouseClicked method below
+        maxHoldTicksButton = new NumberButton(leftPos + 64, topSectionTop + 46, 24, 12, maxHoldTicks, 1, 1200, Component.translatable("justdirethings.screen.click-hold-for"), b -> {
+            maxHoldTicks = ((NumberButton) b).getValue();
             if (clickType == 2) {
                 tickSpeed = Math.max(tickSpeed, maxHoldTicks + 1);
-                PacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
+                ClientPacketDistributor.sendToServer(new TickSpeedPayload(tickSpeed));
             }
             addTickSpeedButton();
             saveSettings();
@@ -97,13 +97,13 @@ public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
 
         showHoldClicksButton();
 
-        addRenderableWidget(ToggleButtonFactory.SNEAKCLICKBUTTON(getGuiLeft() + 26, topSectionTop + 44, sneaking, b -> {
+        addRenderableWidget(ToggleButtonFactory.SNEAKCLICKBUTTON(leftPos + 26, topSectionTop + 44, sneaking, b -> {
             sneaking = !sneaking;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
 
-        addRenderableWidget(ToggleButtonFactory.SHOWFAKEPLAYERBUTTON(getGuiLeft() + 8, topSectionTop + 44, showFakePlayer, b -> {
+        addRenderableWidget(ToggleButtonFactory.SHOWFAKEPLAYERBUTTON(leftPos + 8, topSectionTop + 44, showFakePlayer, b -> {
             showFakePlayer = !showFakePlayer;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
@@ -120,6 +120,6 @@ public class ClickerT2Screen extends BaseMachineScreen<ClickerT2Container> {
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new ClickerPayload(clickType, clickTarget, sneaking, showFakePlayer, maxHoldTicks));
+        ClientPacketDistributor.sendToServer(new ClickerPayload(clickType, clickTarget, sneaking, showFakePlayer, maxHoldTicks));
     }
 }

@@ -6,8 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import net.minecraft.resources.Identifier;
 
 public record LeftClickPayload(
         int clickType, //0 for empty, 1 for block
@@ -18,14 +17,14 @@ public record LeftClickPayload(
         int keyCode, //-1 for left click
         boolean isMouse
 ) implements CustomPacketPayload {
-    public static final Type<LeftClickPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "left_click_packet"));
+    public static final Type<LeftClickPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "left_click_packet"));
 
     @Override
     public Type<LeftClickPayload> type() {
         return TYPE;
     }
 
-    public static final StreamCodec<FriendlyByteBuf, LeftClickPayload> STREAM_CODEC = NeoForgeStreamCodecs.composite(
+    public static final StreamCodec<FriendlyByteBuf, LeftClickPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, LeftClickPayload::clickType,
             ByteBufCodecs.BOOL, LeftClickPayload::mainHand,
             BlockPos.STREAM_CODEC, LeftClickPayload::blockPos,

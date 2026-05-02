@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.util;
 
-import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,8 +38,8 @@ public class MiscTools {
                     ticker.tick(serverLevel, blockPos, blockEntity.getBlockState(), blockEntity);
                 }
             } else if (blockState.isRandomlyTicking()) {
-                if (serverLevel.random.nextInt(1365) == 0) { //Average Random Tick Rate
-                    blockState.randomTick(serverLevel, blockPos, serverLevel.random);
+                if (serverLevel.getRandom().nextInt(1365) == 0) { //Average Random Tick Rate
+                    blockState.randomTick(serverLevel, blockPos, serverLevel.getRandom());
                 }
             }
         }
@@ -54,7 +53,7 @@ public class MiscTools {
             if (ticker == null)
                 return false;
         }
-        if (blockState.is(JustDireBlockTags.TICK_SPEED_DENY))
+        if (blockState.is(ModTags.Blocks.TICK_SPEED_DENY))
             return false;
         return true;
     }
@@ -188,8 +187,8 @@ public class MiscTools {
     public static List<String> NBTToStringList(ListTag nbtList) {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < nbtList.size(); i++) {
-            CompoundTag tag = nbtList.getCompound(i);
-            list.add(tag.getString("list"));
+            CompoundTag tag = nbtList.getCompound(i).orElse(new CompoundTag());
+            list.add(tag.getStringOr("list", ""));
         }
         return list;
     }

@@ -5,28 +5,30 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.blocks.resources.CoalBlock_T1;
 import com.direwolf20.justdirethings.common.capabilities.EnergyStorageNoReceive;
+import com.direwolf20.justdirethings.common.capabilities.GeneratorItemHandler;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.common.items.resources.Coal_T1;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +40,7 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
     public int maxBurn = 0;
     public int burnRemaining = 0;
     public int feRemaining = 0;
-    private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyHandlers = new HashMap<>();
+    private final Map<Direction, BlockCapabilityCache<EnergyHandler, Direction>> energyHandlers = new HashMap<>();
     int fuelBurnMultiplier = 1;
 
     public GeneratorT1BE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
@@ -75,12 +77,12 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
     }
 
     public GeneratorT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.GeneratorT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.GeneratorT1BE.get(), pPos, pBlockState);
     }
 
     @Override
-    public ItemStackHandler getMachineHandler() {
-        return getData(Registration.GENERATOR_ITEM_HANDLER);
+    public GeneratorItemHandler getMachineHandler() {
+        return getData(JDTRegistration.GENERATOR_ITEM_HANDLER);
     }
 
     @Override
@@ -100,7 +102,7 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_GENERATORS);
+        return getData(JDTRegistration.ENERGYSTORAGE_GENERATORS);
     }
 
     @Override
@@ -127,15 +129,15 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
         return 0;
     }
 
-    public IEnergyStorage getHandler(Direction direction) {
+    public EnergyHandler getHandler(Direction direction) {
         var tempStorage = energyHandlers.get(direction);
         if (tempStorage == null) {
             BlockPos targetPos = getBlockPos().relative(direction);
             tempStorage = BlockCapabilityCache.create(
-                    Capabilities.EnergyStorage.BLOCK, // capability to cache
-                    (ServerLevel) level, // level
-                    targetPos, // target position
-                    direction.getOpposite() // context (The side of the block we're trying to pull/push from?)
+                    Capabilities.Energy.BLOCK,
+                    (ServerLevel) level,
+                    targetPos,
+                    direction.getOpposite()
             );
             energyHandlers.put(direction, tempStorage);
         }
@@ -145,12 +147,18 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
     public void providePowerAdjacent() {
         if (getEnergyStorage().getEnergyStored() <= 0) return; //Don't bother if we're empty!
         for (Direction direction : Direction.values()) {
-            IEnergyStorage iEnergyStorage = getHandler(direction);
-            if (iEnergyStorage == null) continue;
-            int amtFit = iEnergyStorage.receiveEnergy(getFEPerTick() * 10, true);
+            EnergyHandler energyHandler = getHandler(direction);
+            if (energyHandler == null) continue;
+            int amtFit;
+            try (Transaction simTx = Transaction.openRoot()) {
+                amtFit = energyHandler.insert(getFEPerTick() * 10, simTx);
+            }
             if (amtFit <= 0) continue;
-            int extractAmt = extractEnergy(amtFit, false);
-            iEnergyStorage.receiveEnergy(extractAmt, false);
+            try (Transaction tx = Transaction.openRoot()) {
+                int extractAmt = getEnergyStorage().extract(amtFit, tx);
+                energyHandler.insert(extractAmt, tx);
+                tx.commit();
+            }
         }
     }
 
@@ -161,11 +169,13 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
 
         boolean canInsertEnergy = insertEnergy(fePerTick(), true) > 0;
         if (!canInsertEnergy) return; //Don't burn if the buffer is full
-        ItemStack fuelStack = getMachineHandler().getStackInSlot(0);
+        ItemResource fuelResource = getMachineHandler().getResource(0);
+        int fuelAmount = getMachineHandler().getAmountAsInt(0);
+        ItemStack fuelStack = fuelResource.toStack(fuelAmount);
         if (fuelStack.isEmpty())
             return; //Stop if we have no fuel! The slot only accepts burnables, so this should be a good enough check
         int oldMultiplier = this.fuelBurnMultiplier;
-        int burnTime = fuelStack.getBurnTime(RecipeType.SMELTING);
+        int burnTime = fuelStack.getBurnTime(null, level.fuelValues());
         if (burnTime <= 0) return; //Should be impossible, but lets be sure!
         if (fuelStack.getItem() instanceof Coal_T1 direCoal) {
             this.fuelBurnMultiplier = direCoal.getBurnSpeedMultiplier();
@@ -178,10 +188,19 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
         }
         if (this.fuelBurnMultiplier != oldMultiplier)
             markDirtyClient();
-        if (fuelStack.hasCraftingRemainingItem())
-            getMachineHandler().setStackInSlot(0, fuelStack.getCraftingRemainingItem());
-        else
-            fuelStack.shrink(1);
+        ItemStackTemplate remainderTemplate = fuelStack.getCraftingRemainder();
+        if (remainderTemplate != null) {
+            ItemStack remainder = remainderTemplate.create();
+            if (remainder.isEmpty())
+                getMachineHandler().set(0, ItemResource.EMPTY, 0);
+            else
+                getMachineHandler().set(0, ItemResource.of(remainder), remainder.getCount());
+        } else {
+            try (Transaction tx = Transaction.openRoot()) {
+                getMachineHandler().extract(0, fuelResource, 1, tx);
+                tx.commit();
+            }
+        }
 
         feRemaining = burnTime * getFePerFuelTick();
         maxBurn = (int) (Math.floor(burnTime) / getBurnSpeedMultiplier());
@@ -256,21 +275,20 @@ public class GeneratorT1BE extends BaseMachineBE implements RedstoneControlledBE
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("burnRemaining", burnRemaining);
-        tag.putInt("maxBurn", maxBurn);
-        tag.putInt("feRemaining", feRemaining);
-        tag.putInt("fuelBurnMultiplier", fuelBurnMultiplier);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("burnRemaining", burnRemaining);
+        output.putInt("maxBurn", maxBurn);
+        output.putInt("feRemaining", feRemaining);
+        output.putInt("fuelBurnMultiplier", fuelBurnMultiplier);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        this.burnRemaining = tag.getInt("burnRemaining");
-        this.maxBurn = tag.getInt("maxBurn");
-        this.feRemaining = tag.getInt("feRemaining");
-        if (tag.contains("fuelBurnMultiplier"))
-            this.fuelBurnMultiplier = tag.getInt("fuelBurnMultiplier");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.burnRemaining = input.getIntOr("burnRemaining", burnRemaining);
+        this.maxBurn = input.getIntOr("maxBurn", maxBurn);
+        this.feRemaining = input.getIntOr("feRemaining", feRemaining);
+        this.fuelBurnMultiplier = input.getIntOr("fuelBurnMultiplier", fuelBurnMultiplier);
     }
 }

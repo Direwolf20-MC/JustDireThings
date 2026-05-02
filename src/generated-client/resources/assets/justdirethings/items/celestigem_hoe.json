@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/celestigem_hoe"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/celestigem_hoe_active"
+    },
+    "property": "justdirethings:tool_enabled"
+  }
+}

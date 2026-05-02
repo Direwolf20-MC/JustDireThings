@@ -7,9 +7,9 @@ import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -32,9 +32,9 @@ import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTo
 import static com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool.getToolValue;
 
 public class PlayerEvents {
-    public static final AttributeModifier stepHeight = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdirestepassist"), 1.0, AttributeModifier.Operation.ADD_VALUE);
-    public static final AttributeModifier creativeFlight = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdireflight"), 1.0, AttributeModifier.Operation.ADD_VALUE);
-    public static final AttributeModifier phase = new AttributeModifier(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "justdirephase"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+    public static final AttributeModifier stepHeight = new AttributeModifier(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "justdirestepassist"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+    public static final AttributeModifier creativeFlight = new AttributeModifier(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "justdireflight"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+    public static final AttributeModifier phase = new AttributeModifier(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "justdirephase"), 1.0, AttributeModifier.Operation.ADD_VALUE);
 
     @SubscribeEvent
     public static void PlayerDestroyItem(PlayerDestroyItemEvent event) {
@@ -59,7 +59,7 @@ public class PlayerEvents {
             if (toggleableTool.canUseAbilityAndDurability(itemStack, Ability.FLIGHT))
                 event.addModifier(NeoForgeMod.CREATIVE_FLIGHT, creativeFlight, EquipmentSlotGroup.CHEST);
             if (toggleableTool.canUseAbility(itemStack, Ability.PHASE))
-                event.addModifier(Registration.PHASE, phase, EquipmentSlotGroup.LEGS);
+                event.addModifier(JDTRegistration.PHASE, phase, EquipmentSlotGroup.LEGS);
         }
         //A catch all for unpowered itemse
         if (itemStack.getItem() instanceof PoweredTool poweredTool && PoweredItem.getAvailableEnergy(itemStack) < poweredTool.getBlockBreakFECost()) {

@@ -2,14 +2,15 @@ package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseContainer;
 import com.direwolf20.justdirethings.common.containers.handlers.FuelCanisterHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.PlayerInventoryWrapper;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class FuelCanisterContainer extends BaseContainer {
     public static final int SLOTS = 1;
@@ -22,12 +23,12 @@ public class FuelCanisterContainer extends BaseContainer {
     }
 
     public FuelCanisterContainer(int windowId, Inventory playerInventory, Player player, ItemStack fuelCanister) {
-        super(Registration.FuelCanister_Container.get(), windowId);
+        super(JDTRegistration.FuelCanister_Container.get(), windowId);
         playerEntity = player;
-        this.handler = new FuelCanisterHandler(SLOTS, fuelCanister);
+        this.handler = new FuelCanisterHandler(SLOTS, fuelCanister, player.level().fuelValues());
         this.fuelCanisterItemstack = fuelCanister;
         if (handler != null)
-            addSlotRange(handler, 0, 80, 35, 1, 18);
+            addSlotRange(handler, handler::set, 0, 80, 35, 1, 18);
 
         addPlayerSlots(playerInventory, 8, 84);
     }
@@ -72,10 +73,14 @@ public class FuelCanisterContainer extends BaseContainer {
     @Override
     public void removed(Player playerIn) {
         Level world = playerIn.level();
-        if (!world.isClientSide) {
-            ItemStack containerItem = handler.getStackInSlot(0);
-            if (!containerItem.isEmpty())
-                ItemHandlerHelper.giveItemToPlayer(playerIn, containerItem);
+        if (!world.isClientSide()) {
+            ItemStack containerItem = handler.getResource(0).toStack(handler.getAmountAsInt(0));
+            if (!containerItem.isEmpty()) {
+                try (Transaction tx = Transaction.openRoot()) {
+                    PlayerInventoryWrapper.of(playerIn).placeItemBackInInventory(handler.getResource(0), handler.getAmountAsInt(0), tx);
+                    tx.commit();
+                }
+            }
         }
         super.removed(playerIn);
     }

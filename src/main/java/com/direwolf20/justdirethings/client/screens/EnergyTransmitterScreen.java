@@ -8,7 +8,7 @@ import com.direwolf20.justdirethings.common.containers.EnergyTransmitterContaine
 import com.direwolf20.justdirethings.common.network.data.EnergyTransmitterSettingPayload;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class EnergyTransmitterScreen extends BaseMachineScreen<EnergyTransmitterContainer> {
     public boolean showParticles;
@@ -22,7 +22,7 @@ public class EnergyTransmitterScreen extends BaseMachineScreen<EnergyTransmitter
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.SHOWPARTICLESBUTTON(getGuiLeft() + 116, topSectionTop + 62, showParticles, b -> {
+        addRenderableWidget(ToggleButtonFactory.SHOWPARTICLESBUTTON(leftPos + 116, topSectionTop + 62, showParticles, b -> {
             showParticles = !showParticles;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
@@ -48,6 +48,6 @@ public class EnergyTransmitterScreen extends BaseMachineScreen<EnergyTransmitter
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new EnergyTransmitterSettingPayload(showParticles));
+        ClientPacketDistributor.sendToServer(new EnergyTransmitterSettingPayload(showParticles));
     }
 }

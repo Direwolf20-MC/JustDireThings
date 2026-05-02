@@ -5,6 +5,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -14,37 +15,38 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class TimeCrystal extends Item {
-    public TimeCrystal() {
-        super(new Item.Properties());
+    public TimeCrystal(Item.Properties pProperties) {
+        super(pProperties);
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level world, @NotNull Entity entity, int itemSlot, boolean isSelected) {
-        if (world.isClientSide) return;
+    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull ServerLevel world, @NotNull Entity entity, @Nullable EquipmentSlot slot) {
         if (entity instanceof LivingEntity livingEntity) {
             // 5% chance to trigger an effect
-            if (world.random.nextFloat() < 0.005f) {
+            if (world.getRandom().nextFloat() < 0.005f) {
                 if (timeProtection(entity))
                     return;
-                boolean applySlowness = world.random.nextBoolean();
+                boolean applySlowness = world.getRandom().nextBoolean();
 
                 if (applySlowness) {
                     // Check if the entity does not already have Speed before applying Slowness
-                    if (!livingEntity.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                    if (!livingEntity.hasEffect(MobEffects.SPEED)) {
                         // Apply Slowness 3 for 10 seconds, disable particles
-                        livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 5, false, false));
+                        livingEntity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 5, false, false));
                     }
                 } else {
                     // Check if the entity does not already have Slowness before applying Speed
-                    if (!livingEntity.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) {
+                    if (!livingEntity.hasEffect(MobEffects.SLOWNESS)) {
                         // Apply Speed 3 for 10 seconds, disable particles
-                        livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 100, 5, false, false));
+                        livingEntity.addEffect(new MobEffectInstance(MobEffects.SPEED, 100, 5, false, false));
                     }
                 }
             }
@@ -63,8 +65,8 @@ public class TimeCrystal extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
         Level level = context.level();
         if (level == null) {
             return;
@@ -76,9 +78,9 @@ public class TimeCrystal extends Item {
 
         // Add the appropriate tooltip message based on the calculated state
         if (showFirstTooltip) {
-            tooltip.add(Component.translatable("justdirethings.timecrystaltooltip").withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.accept(Component.translatable("justdirethings.timecrystaltooltip").withStyle(ChatFormatting.DARK_AQUA));
         } else {
-            tooltip.add(Component.translatable("justdirethings.timecrystaltooltiptwo").withStyle(ChatFormatting.DARK_AQUA));
+            tooltip.accept(Component.translatable("justdirethings.timecrystaltooltiptwo").withStyle(ChatFormatting.DARK_AQUA));
         }
     }
 }

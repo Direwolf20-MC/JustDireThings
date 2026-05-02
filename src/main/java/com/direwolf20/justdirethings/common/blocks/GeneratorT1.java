@@ -31,12 +31,8 @@ public class GeneratorT1 extends BaseMachineBlock {
             Block.box(0, 14, 0, 16, 16, 16)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
-    public GeneratorT1() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public GeneratorT1(Properties properties) {
+        super(properties);
     }
 
     @Nullable

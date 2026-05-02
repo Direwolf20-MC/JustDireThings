@@ -2,22 +2,18 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.FakePlayerUtil;
 import com.direwolf20.justdirethings.util.MiscHelpers;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,8 +21,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,8 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
         ADULT,
         CHILD,
         PLAYER,
-        LIVING;
+        LIVING,
+        MOB;
 
         public CLICK_TARGET next() {
             CLICK_TARGET[] values = values();
@@ -64,7 +64,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public ClickerT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.ClickerT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.ClickerT1BE.get(), pPos, pBlockState);
     }
 
     public void setClickerSettings(int clickType, int clickTarget, boolean sneaking, boolean showFakePlayer, int maxHoldTicks) {
@@ -99,11 +99,14 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public ItemStack getClickStack() {
-        return getMachineHandler().getStackInSlot(0);
+        return getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
     }
 
     public void setClickStack(ItemStack stack) {
-        getMachineHandler().setStackInSlot(0, stack);
+        if (stack.isEmpty())
+            getMachineHandler().set(0, ItemResource.EMPTY, 0);
+        else
+            getMachineHandler().set(0, ItemResource.of(stack), stack.getCount());
     }
 
     public boolean isStackValid(ItemStack itemStack) {
@@ -203,7 +206,7 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
             return false;
         if (!level.getBlockState(blockPos).isAir() && clickTarget.equals(CLICK_TARGET.AIR))
             return false;
-        if (level.getBlockState(blockPos).is(JustDireBlockTags.NO_AUTO_CLICK))
+        if (level.getBlockState(blockPos).is(ModTags.Blocks.NO_AUTO_CLICK))
             return false;
         if (!canPlaceAt(level, blockPos, fakePlayer))
             return false;
@@ -229,15 +232,17 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public boolean isValidEntity(Entity entity) {
-        if (clickTarget.equals(CLICK_TARGET.HOSTILE) && !(entity instanceof Monster))
+        if (clickTarget.equals(CLICK_TARGET.HOSTILE) && !MiscHelpers.isHostile(entity))
             return false;
-        if (((clickTarget.equals(CLICK_TARGET.PASSIVE)) || (clickTarget.equals(CLICK_TARGET.ADULT)) || (clickTarget.equals(CLICK_TARGET.CHILD))) && !(entity instanceof Animal))
+        if (clickTarget.equals(CLICK_TARGET.PASSIVE) && !MiscHelpers.isPassiveLiving(entity))
             return false;
-        if (clickTarget.equals(CLICK_TARGET.ADULT) && (entity instanceof Animal animal) && (animal.isBaby()))
+        if (clickTarget.equals(CLICK_TARGET.ADULT) && !MiscHelpers.isAdult(entity))
             return false;
-        if (clickTarget.equals(CLICK_TARGET.CHILD) && (entity instanceof Animal animal) && !(animal.isBaby()))
+        if (clickTarget.equals(CLICK_TARGET.CHILD) && !MiscHelpers.isChild(entity))
             return false;
         if (clickTarget.equals(CLICK_TARGET.PLAYER) && !(entity instanceof Player))
+            return false;
+        if (clickTarget.equals(CLICK_TARGET.MOB) && !MiscHelpers.isMob(entity))
             return false;
         return true;
     }
@@ -260,23 +265,22 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("clickType", clickType);
-        tag.putInt("clickTarget", clickTarget.ordinal());
-        tag.putBoolean("sneaking", sneaking);
-        tag.putBoolean("showFakePlayer", showFakePlayer);
-        tag.putInt("maxHoldTicks", maxHoldTicks);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("clickType", clickType);
+        output.putInt("clickTarget", clickTarget.ordinal());
+        output.putBoolean("sneaking", sneaking);
+        output.putBoolean("showFakePlayer", showFakePlayer);
+        output.putInt("maxHoldTicks", maxHoldTicks);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        this.clickType = tag.getInt("clickType");
-        this.clickTarget = CLICK_TARGET.values()[tag.getInt("clickTarget")];
-        this.sneaking = tag.getBoolean("sneaking");
-        this.showFakePlayer = tag.getBoolean("showFakePlayer");
-        if (tag.contains("maxHoldTicks"))
-            maxHoldTicks = tag.getInt("maxHoldTicks");
-        super.loadAdditional(tag, provider);
+    protected void loadAdditional(ValueInput input) {
+        this.clickType = input.getIntOr("clickType", clickType);
+        this.clickTarget = CLICK_TARGET.values()[input.getIntOr("clickTarget", 0)];
+        this.sneaking = input.getBooleanOr("sneaking", sneaking);
+        this.showFakePlayer = input.getBooleanOr("showFakePlayer", showFakePlayer);
+        maxHoldTicks = input.getIntOr("maxHoldTicks", maxHoldTicks);
+        super.loadAdditional(input);
     }
 }

@@ -5,21 +5,24 @@ import com.direwolf20.justdirethings.common.items.PotionCanister;
 import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -29,16 +32,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.items.ComponentItemHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -57,25 +58,26 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (level.isClientSide) return InteractionResultHolder.pass(stack);
+        if (level.isClientSide()) return InteractionResult.PASS;
         if (player.isShiftKeyDown()) {
             openSettings(player);
-            return InteractionResultHolder.success(player.getItemInHand(hand));
+            return InteractionResult.SUCCESS.heldItemTransformedTo(player.getItemInHand(hand));
         }
         if (stack.getItem() instanceof PoweredTool poweredTool && PoweredItem.getAvailableEnergy(stack) < poweredTool.getBlockBreakFECost())
-            return InteractionResultHolder.pass(stack);
+            return InteractionResult.PASS;
         return super.use(level, player, hand);
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack itemStack, @NotNull Level level, @NotNull Entity entity, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack itemStack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
         if ((!getPassiveTickAbilities(itemStack).isEmpty() || !getCooldownAbilities().isEmpty()) && entity instanceof Player player) {
             ToggleableTool.tickCooldowns(level, itemStack, player);
         }
     }
 
+    @Override
     protected Projectile createProjectile(Level level, LivingEntity livingEntity, ItemStack itemStack, ItemStack stack, boolean crit) {
         ArrowItem arrowitem = stack.getItem() instanceof ArrowItem arrowitem1 ? arrowitem1 : (ArrowItem) Items.ARROW;
         ToggleableTool toggleableTool = (ToggleableTool) itemStack.getItem();
@@ -113,29 +115,32 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
             if (noPotionAbilitiesActive(itemStack))
                 return customArrow(justDireArrow, stack, itemStack);
 
-            IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
-            if (itemHandler instanceof ComponentItemHandler componentItemHandler) {
+            ResourceHandler<ItemResource> handler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+            if (handler != null) {
                 PotionContents potionContents = PotionContents.EMPTY;
-                for (int slot = 0; slot < componentItemHandler.getSlots(); slot++) {
-                    ItemStack potionCanister = componentItemHandler.getStackInSlot(slot);
-                    if (potionCanister.getItem() instanceof PotionCanister) {
-                        int potionAmt = PotionCanister.getPotionAmount(potionCanister);
-                        PotionContents slotPotionContents = PotionCanister.getPotionContents(potionCanister);
-                        if (!slotPotionContents.equals(PotionContents.EMPTY)) {
-                            int neededAmt = 0;
-                            if (canUseAbilityAndDurability(itemStack, Ability.POTIONARROW))
-                                neededAmt = neededAmt + 25;
-                            if (canUseAbilityAndDurability(itemStack, Ability.SPLASH))
-                                neededAmt = neededAmt + 25;
-                            if (canUseAbilityAndDurability(itemStack, Ability.LINGERING))
-                                neededAmt = neededAmt + 50;
-                            if (potionAmt >= neededAmt) {
-                                for (MobEffectInstance mobEffectInstance : slotPotionContents.getAllEffects())
-                                    potionContents = potionContents.withEffectAdded(mobEffectInstance);
-                                PotionCanister.setPotionAmount(potionCanister, potionAmt - neededAmt);
-                                componentItemHandler.setStackInSlot(slot, potionCanister);
-                            }
-                        }
+                for (int slot = 0; slot < handler.size(); slot++) {
+                    ItemResource slotResource = handler.getResource(slot);
+                    if (slotResource.isEmpty() || !(slotResource.getItem() instanceof PotionCanister)) continue;
+                    ItemStack potionCanister = slotResource.toStack(handler.getAmountAsInt(slot));
+                    int potionAmt = PotionCanister.getPotionAmount(potionCanister);
+                    PotionContents slotPotionContents = PotionCanister.getPotionContents(potionCanister);
+                    if (slotPotionContents.equals(PotionContents.EMPTY)) continue;
+                    int neededAmt = 0;
+                    if (canUseAbilityAndDurability(itemStack, Ability.POTIONARROW))
+                        neededAmt += 25;
+                    if (canUseAbilityAndDurability(itemStack, Ability.SPLASH))
+                        neededAmt += 25;
+                    if (canUseAbilityAndDurability(itemStack, Ability.LINGERING))
+                        neededAmt += 50;
+                    if (potionAmt < neededAmt) continue;
+                    for (MobEffectInstance mobEffectInstance : slotPotionContents.getAllEffects())
+                        potionContents = potionContents.withEffectAdded(mobEffectInstance);
+                    PotionCanister.setPotionAmount(potionCanister, potionAmt - neededAmt);
+                    ItemResource newResource = ItemResource.of(potionCanister);
+                    try (Transaction tx = Transaction.openRoot()) {
+                        handler.extract(slot, slotResource, handler.getAmountAsInt(slot), tx);
+                        handler.insert(slot, newResource, potionCanister.getCount(), tx);
+                        tx.commit();
                     }
                 }
                 if (!potionContents.equals(PotionContents.EMPTY)) {
@@ -239,37 +244,41 @@ public class BaseBow extends BowItem implements ToggleableTool, LeftClickableToo
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
         Level level = context.level();
         if (level == null) {
             return;
         }
-
-        boolean sneakPressed = Screen.hasShiftDown();
-        appendFEText(stack, tooltip);
+        List<Component> buffer = new ArrayList<>();
+        boolean sneakPressed = Minecraft.getInstance().hasShiftDown();
+        appendFEText(stack, buffer);
         if (sneakPressed) {
-            appendToolEnabled(stack, tooltip);
-            appendAbilityList(stack, tooltip);
+            appendToolEnabled(stack, buffer);
+            appendAbilityList(stack, buffer);
         } else {
-            appendToolEnabled(stack, tooltip);
-            appendShiftForInfo(stack, tooltip);
+            appendToolEnabled(stack, buffer);
+            appendShiftForInfo(stack, buffer);
         }
+        buffer.forEach(tooltip);
     }
 
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
-        if (stack.getItem() instanceof PoweredTool poweredTool) {
-            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (stack.getItem() instanceof PoweredTool) {
+            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
             if (energyStorage == null) return amount;
             double reductionFactor = 0;
-            if (entity != null) {
+            if (entity != null && entity.level().getServer() != null) {
                 HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
                 int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
                 reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
             }
             int finalEnergyCost = (int) Math.max(0, amount - (amount * reductionFactor));
-            energyStorage.extractEnergy(finalEnergyCost, false);
+            try (Transaction tx = Transaction.openRoot()) {
+                energyStorage.extract(finalEnergyCost, tx);
+                tx.commit();
+            }
             return 0;
         }
         return amount;

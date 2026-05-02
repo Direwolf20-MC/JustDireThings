@@ -2,12 +2,17 @@ package com.direwolf20.justdirethings.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.Random;
 
@@ -30,13 +35,37 @@ public class MiscHelpers {
         return min + (max - min) * rand.nextDouble();
     }
 
-    public static IItemHandler getAttachedInventory(Level level, BlockPos blockPos, Direction side) {
+    public static boolean isHostile(Entity entity) {
+        return entity instanceof Enemy;
+    }
+
+    public static boolean isPassiveLiving(Entity entity) {
+        return entity instanceof LivingEntity
+                && !(entity instanceof Player)
+                && !(entity instanceof Enemy);
+    }
+
+    public static boolean isAdult(Entity entity) {
+        return isPassiveLiving(entity)
+                && (!(entity instanceof AgeableMob ageable) || !ageable.isBaby());
+    }
+
+    public static boolean isChild(Entity entity) {
+        return isPassiveLiving(entity)
+                && entity instanceof AgeableMob ageable
+                && ageable.isBaby();
+    }
+
+    public static boolean isMob(Entity entity) {
+        return entity instanceof LivingEntity && !(entity instanceof Player);
+    }
+
+    public static ResourceHandler<ItemResource> getAttachedInventory(Level level, BlockPos blockPos, Direction side) {
         if (level == null) return null;
         BlockEntity be = level.getBlockEntity(blockPos);
         // if we have a TE and its an item handler, try extracting from that
         if (be != null) {
-            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, blockPos, side);
-            return handler;
+            return level.getCapability(Capabilities.Item.BLOCK, blockPos, side);
         }
         return null;
     }

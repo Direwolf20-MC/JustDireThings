@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": "minecraft:phantom_membrane",
+    "b": "justdirethings:upgrade_blank",
+    "e": "minecraft:end_crystal",
+    "f": "minecraft:feather"
+  },
+  "pattern": [
+    "aea",
+    "fbf",
+    "aea"
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_flight"
+  }
+}

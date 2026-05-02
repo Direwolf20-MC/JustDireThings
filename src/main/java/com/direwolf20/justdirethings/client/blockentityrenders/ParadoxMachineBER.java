@@ -1,197 +1,281 @@
 package com.direwolf20.justdirethings.client.blockentityrenders;
 
 import com.direwolf20.justdirethings.client.blockentityrenders.baseber.AreaAffectingBER;
-import com.direwolf20.justdirethings.client.renderers.DireVertexConsumer;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
 import com.direwolf20.justdirethings.common.blockentities.ParadoxMachineBE;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.QuadInstance;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import org.jspecify.annotations.Nullable;
 
-import java.util.BitSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class ParadoxMachineBER extends AreaAffectingBER {
+public class ParadoxMachineBER extends AreaAffectingBER<ParadoxMachineBE, ParadoxMachineBER.ParadoxMachineRenderState> {
+
+    public static class ParadoxMachineRenderState extends AreaAffectingRenderState {
+        public boolean isRunning;
+        public boolean renderParadox;
+        public int targetType;
+        public float runningAlpha = 1f;
+        public int runningIntAlpha = 255;
+        public @Nullable Map<BlockPos, BlockState> blocks;
+        public @Nullable Map<Vec3, PreparedMob> entities;
+        public @Nullable Set<Vec3> restoringEntities; // Used only while running, membership test.
+        public BlockPos machinePos = BlockPos.ZERO;
+    }
+
+    /**
+     * Pre-extracted render state + model accessors for one captured/restored mob.
+     */
+    public static final class PreparedMob {
+        public final LivingEntityRenderState state;
+        public final EntityModel<LivingEntityRenderState> model;
+        public final Identifier texture;
+        public final LivingEntityRenderer<LivingEntity, LivingEntityRenderState, EntityModel<LivingEntityRenderState>> renderer;
+
+        public PreparedMob(LivingEntityRenderState state, EntityModel<LivingEntityRenderState> model, Identifier texture,
+                           LivingEntityRenderer<LivingEntity, LivingEntityRenderState, EntityModel<LivingEntityRenderState>> renderer) {
+            this.state = state;
+            this.model = model;
+            this.texture = texture;
+            this.renderer = renderer;
+        }
+    }
+
+    private final EntityRenderDispatcher dispatcher;
+
     public ParadoxMachineBER(BlockEntityRendererProvider.Context context) {
-
+        this.dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
     }
 
     @Override
-    public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
-        super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
-        if (!(blockentity instanceof ParadoxMachineBE paradoxMachineBE)) return;
-        // Render blocks
-        if (paradoxMachineBE.isRunning) {
-            float alpha = Mth.clamp(0.05f + (paradoxMachineBE.timeRunning / (float) paradoxMachineBE.getRunTime()) * 0.95f, 0.05f, 1.0f);
-            int intAlpha = (int) (alpha * 255);
-            renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, alpha, paradoxMachineBE.restoringBlocks);
-            renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, intAlpha);
-        } else {
-        if (paradoxMachineBE.renderParadox) {
-            int targetType = paradoxMachineBE.targetType;
-            if (targetType == 0 || targetType == 1)
-                renderBlocks(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, 0.5f, paradoxMachineBE.getBlocksFromNBT());
-            if (targetType == 0 || targetType == 2)
-                renderEntities(paradoxMachineBE, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn, 175);
-        }
-        }
+    public ParadoxMachineRenderState createRenderState() {
+        return new ParadoxMachineRenderState();
     }
 
-    private void renderBlocks(ParadoxMachineBE paradoxMachineBE, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn, float alpha, Map<BlockPos, BlockState> blocksToRestore) {
-        BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-        Level level = paradoxMachineBE.getLevel();
-        if (level == null) return;
-        BlockColors blockColors = Minecraft.getInstance().getBlockColors();
-        ModelBlockRenderer modelBlockRenderer = new ModelBlockRenderer(blockColors);
-        BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
+    @Override
+    public void extractRenderState(ParadoxMachineBE blockEntity, ParadoxMachineRenderState state, float partialTicks, Vec3 cameraPosition,
+                                    ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        state.isRunning = blockEntity.isRunning;
+        state.renderParadox = blockEntity.renderParadox;
+        state.targetType = blockEntity.targetType;
+        state.machinePos = blockEntity.getBlockPos();
 
-        for (Map.Entry<BlockPos, BlockState> entry : blocksToRestore.entrySet()) {
-            BlockPos blockPos = entry.getKey();
-            BlockState renderState = entry.getValue();
+        Level level = blockEntity.getLevel();
+        Map<BlockPos, BlockState> blocks;
+        Map<Vec3, LivingEntity> rawEntities;
 
-            if (!level.getBlockState(blockPos).canBeReplaced())
-                continue;
+        if (state.isRunning) {
+            float alpha = Mth.clamp(0.05f + (blockEntity.timeRunning / (float) blockEntity.getRunTime()) * 0.95f, 0.05f, 1.0f);
+            state.runningAlpha = alpha;
+            state.runningIntAlpha = (int) (alpha * 255);
+            blocks = blockEntity.restoringBlocks;
+            rawEntities = blockEntity.getEntitiesFromNBT();
+            state.restoringEntities = new HashSet<>(blockEntity.restoringEntites);
+        } else {
+            state.runningAlpha = 0.5f;
+            state.runningIntAlpha = 175;
+            blocks = blockEntity.getBlocksFromNBT();
+            rawEntities = blockEntity.getEntitiesFromNBT();
+            state.restoringEntities = null;
+        }
 
-            float[] afloat = new float[Direction.values().length * 2];
-            BitSet bitset = new BitSet(3);
-            RandomSource randomSource = RandomSource.create();
-            BlockPos.MutableBlockPos blockpos$mutableblockpos = blockPos.mutable();
-            BakedModel ibakedmodel = blockrendererdispatcher.getBlockModel(renderState);
-
-            matrixStackIn.pushPose();
-            matrixStackIn.translate(blockPos.getX() - paradoxMachineBE.getBlockPos().getX(),
-                    blockPos.getY() - paradoxMachineBE.getBlockPos().getY(),
-                    blockPos.getZ() - paradoxMachineBE.getBlockPos().getZ());
-
-            // Render the block as semi-transparent
-            VertexConsumer builder = renderState.isSolidRender(level, blockPos) ? bufferIn.getBuffer(OurRenderTypes.RenderBlockFade) : bufferIn.getBuffer(OurRenderTypes.RenderBlockFadeNoCull);
-            DireVertexConsumer direVertexConsumer = new DireVertexConsumer(builder, alpha);
-
-            ModelBlockRenderer.AmbientOcclusionFace modelblockrenderer$ambientocclusionface = new ModelBlockRenderer.AmbientOcclusionFace();
-            for (Direction direction : Direction.values()) {
-                randomSource.setSeed(renderState.getSeed(blockPos));
-                List<BakedQuad> list = ibakedmodel.getQuads(renderState, direction, randomSource, ModelData.EMPTY, null);
-                if (!list.isEmpty()) {
-                    blockpos$mutableblockpos.setWithOffset(blockPos, direction);
-                    BlockPos testPos = blockPos.relative(direction);
-                    boolean renderAdjacent = true;
-                    if (blocksToRestore.containsKey(testPos)) {
-                        BlockState otherState = blocksToRestore.get(testPos);
-                        if (otherState.isSolidRender(level, testPos))
-                            renderAdjacent = false;
-                    }
-                    if (renderAdjacent) {
-                        modelBlockRenderer.renderModelFaceAO(level, renderState, blockPos, matrixStackIn, direVertexConsumer, list, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
-                    }
+        // Filter blocks against replaceability on the client level, so we don't draw previews over
+        // blocks that couldn't be restored anyway (matches the old `canBeReplaced()` guard).
+        Map<BlockPos, BlockState> filteredBlocks = new HashMap<>();
+        if (blocks != null && level != null) {
+            for (Map.Entry<BlockPos, BlockState> e : blocks.entrySet()) {
+                BlockPos pos = e.getKey();
+                if (level.getBlockState(pos).canBeReplaced()) {
+                    filteredBlocks.put(pos, e.getValue());
                 }
             }
-            randomSource.setSeed(renderState.getSeed(blockPos));
-            List<BakedQuad> list = ibakedmodel.getQuads(renderState, null, randomSource, ModelData.EMPTY, null);
-            if (!list.isEmpty()) {
-                modelBlockRenderer.renderModelFaceAO(level, renderState, blockPos, matrixStackIn, direVertexConsumer, list, afloat, bitset, modelblockrenderer$ambientocclusionface, combinedOverlayIn);
+        }
+        state.blocks = filteredBlocks;
+
+        // Pre-extract each mob's LivingEntityRenderState + capture its renderer's model/texture so
+        // submit() can call submitModel(...) with a fade-enabled tintedColor.
+        Map<Vec3, PreparedMob> preparedEntities = new HashMap<>();
+        if (rawEntities != null) {
+            for (Map.Entry<Vec3, LivingEntity> e : rawEntities.entrySet()) {
+                Vec3 pos = e.getKey();
+                if (state.isRunning && state.restoringEntities != null && !state.restoringEntities.contains(pos))
+                    continue;
+                LivingEntity entity = e.getValue();
+                if (entity == null) continue;
+                // Keep yBodyRotO / yHeadRotO in sync with the NBT-loaded current values so the extracted
+                // state doesn't interpolate from a stale previous frame (the mob is transient per frame).
+                entity.yBodyRotO = entity.yBodyRot;
+                entity.yHeadRotO = entity.yHeadRot;
+                PreparedMob prepared = prepareMob(entity, partialTicks);
+                if (prepared != null) preparedEntities.put(pos, prepared);
+            }
+        }
+        state.entities = preparedEntities;
+    }
+
+    @SuppressWarnings("unchecked")
+    private @Nullable PreparedMob prepareMob(LivingEntity entity, float partialTicks) {
+        EntityRenderer<?, ?> rawRenderer = this.dispatcher.getRenderer(entity);
+        if (!(rawRenderer instanceof LivingEntityRenderer<?, ?, ?> livingRenderer)) return null;
+        try {
+            var state = ((EntityRenderer<LivingEntity, LivingEntityRenderState>) rawRenderer).createRenderState(entity, partialTicks);
+            var renderer = (LivingEntityRenderer<LivingEntity, LivingEntityRenderState, EntityModel<LivingEntityRenderState>>) livingRenderer;
+            EntityModel<LivingEntityRenderState> model = renderer.getModel();
+            Identifier texture = renderer.getTextureLocation(state);
+            if (texture == null) return null;
+            return new PreparedMob(state, model, texture, renderer);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    @Override
+    public void submit(ParadoxMachineRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        super.submit(state, poseStack, submitNodeCollector, camera);
+
+        if (!shouldRenderPreview(state)) return;
+
+        // Blocks.
+        if (state.blocks != null && !state.blocks.isEmpty() && (state.isRunning || state.targetType == 0 || state.targetType == 1)) {
+            renderBlocks(state, poseStack, submitNodeCollector);
+        }
+        // Entities.
+        if (state.entities != null && !state.entities.isEmpty() && (state.isRunning || state.targetType == 0 || state.targetType == 2)) {
+            renderEntities(state, poseStack, submitNodeCollector);
+        }
+    }
+
+    private static boolean shouldRenderPreview(ParadoxMachineRenderState state) {
+        return state.isRunning || state.renderParadox;
+    }
+
+    private void renderBlocks(ParadoxMachineRenderState state, PoseStack poseStack, SubmitNodeCollector collector) {
+        Map<BlockPos, BlockState> blocks = state.blocks;
+        if (blocks == null) return;
+
+        int alphaByte = Math.max(0, Math.min(255, Math.round(state.runningAlpha * 255F)));
+        int packedColor = (alphaByte << 24) | 0x00FFFFFF;
+        RandomSource random = RandomSource.create();
+
+        for (Map.Entry<BlockPos, BlockState> entry : blocks.entrySet()) {
+            BlockPos pos = entry.getKey();
+            BlockState blockState = entry.getValue();
+
+            BlockStateModel model = Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(blockState);
+            random.setSeed(blockState.getSeed(pos));
+            List<BlockStateModelPart> parts = new ArrayList<>();
+            model.collectParts(random, parts);
+            if (parts.isEmpty()) continue;
+
+            boolean solidRender = blockState.isSolidRender();
+            RenderType rt = solidRender ? OurRenderTypes.RenderBlockFade : OurRenderTypes.RenderBlockFadeNoCull;
+
+            poseStack.pushPose();
+            poseStack.translate(pos.getX() - state.machinePos.getX(),
+                    pos.getY() - state.machinePos.getY(),
+                    pos.getZ() - state.machinePos.getZ());
+
+            // Build the per-direction skip set: if a neighbor is also a restoring block and it's solid-render,
+            // skip this block's face toward that neighbor (prevents double-drawing interior faces).
+            boolean[] skipDirection = new boolean[6];
+            for (Direction dir : Direction.values()) {
+                BlockPos neighbor = pos.relative(dir);
+                BlockState neighborState = blocks.get(neighbor);
+                if (neighborState != null && neighborState.isSolidRender()) {
+                    skipDirection[dir.get3DDataValue()] = true;
+                }
             }
 
-            matrixStackIn.popPose();
+            collector.submitCustomGeometry(poseStack, rt,
+                    (pose, buffer) -> writeBlockQuads(parts, pose, buffer, packedColor, state.lightCoords, skipDirection));
+            poseStack.popPose();
         }
     }
 
-    private void renderEntities(ParadoxMachineBE paradoxMachineBE, PoseStack matrixStackIn, MultiBufferSource bufferIn, float partialTicks, int combinedLightsIn, int alpha) {
-        Level level = paradoxMachineBE.getLevel();
-        if (level == null) return;
-
-        for (Map.Entry<Vec3, LivingEntity> entry : paradoxMachineBE.getEntitiesFromNBT().entrySet()) {
-            Vec3 entityPos = entry.getKey();
-            if (paradoxMachineBE.isRunning && !paradoxMachineBE.restoringEntites.contains(entityPos))
-                continue;
-            LivingEntity entity = entry.getValue();
-
-            // Apply transformations and translate to entity position
-            matrixStackIn.pushPose();
-            matrixStackIn.translate(entityPos.x - paradoxMachineBE.getBlockPos().getX(),
-                    entityPos.y - paradoxMachineBE.getBlockPos().getY(),
-                    entityPos.z - paradoxMachineBE.getBlockPos().getZ());
-
-            // Render the entity with transparency
-            renderTransparentEntity(matrixStackIn, bufferIn, entity, partialTicks, combinedLightsIn, alpha);
-
-            matrixStackIn.popPose();
+    private static void writeBlockQuads(List<BlockStateModelPart> parts, PoseStack.Pose pose, VertexConsumer buffer,
+                                        int packedColor, int lightCoords, boolean[] skipDirection) {
+        QuadInstance instance = new QuadInstance();
+        instance.setColor(packedColor);
+        instance.setLightCoords(lightCoords);
+        for (BlockStateModelPart part : parts) {
+            writeQuads(part.getQuads(null), pose, buffer, instance);
+            for (Direction d : Direction.values()) {
+                if (skipDirection[d.get3DDataValue()]) continue;
+                writeQuads(part.getQuads(d), pose, buffer, instance);
+            }
         }
     }
 
-    private void renderTransparentEntity(PoseStack matrixStackIn, MultiBufferSource bufferIn, LivingEntity entity, float partialTicks, int combinedLightsIn, int alpha) {
-        EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
-        EntityRenderer<? super LivingEntity> renderer = renderManager.getRenderer(entity);
-
-        // Set up render type for transparency
-        ResourceLocation resourceLocation = renderer.getTextureLocation(entity);
-        if (resourceLocation == null) return; //Caused soaryn to crash without this
-        RenderType renderType = RenderType.itemEntityTranslucentCull(resourceLocation);
-        VertexConsumer vertexconsumer = bufferIn.getBuffer(renderType);
-
-        // Calculate overlay and lighting
-        int overlayCoords = LivingEntityRenderer.getOverlayCoords(entity, 0);
-
-        // Ensure proper rotation and scaling
-        float f = Mth.rotLerp(partialTicks, entity.yBodyRot, entity.yBodyRot);
-        float f1 = Mth.rotLerp(partialTicks, entity.yHeadRot, entity.yHeadRot);
-        float f2 = f1 - f;
-        float f5 = Mth.lerp(partialTicks, entity.getXRot(), entity.getXRot());
-        float f7 = 0;
-        setupRotations(entity, matrixStackIn, f7, f, partialTicks);
-        matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
-        matrixStackIn.translate(0.0F, -1.501F, 0.0F);
-        float f8 = 0.0F;
-        float f4 = 0.0F;
-
-        // Set transparency
-        int packedARGB = (alpha << 24) | (255 << 16) | (255 << 8) | 255;
-
-        // Render entity model with transparency
-        if (renderer instanceof LivingEntityRenderer<?, ?> livingRenderer) {
-            EntityModel<LivingEntity> entityModel = (EntityModel<LivingEntity>) livingRenderer.getModel();
-            entityModel.attackTime = 0f;
-            entityModel.riding = false;
-            entityModel.young = entity.isBaby();
-            entityModel.prepareMobModel(entity, f4, f8, partialTicks);
-            entityModel.setupAnim(entity, f4, f8, f7, f2, f5);
-            entityModel.renderToBuffer(matrixStackIn, vertexconsumer, combinedLightsIn, overlayCoords, packedARGB);
+    private static void writeQuads(List<BakedQuad> quads, PoseStack.Pose pose, VertexConsumer buffer, QuadInstance instance) {
+        for (BakedQuad quad : quads) {
+            buffer.putBakedQuad(pose, quad, instance);
         }
     }
 
-    protected static void setupRotations(LivingEntity pEntityLiving, PoseStack pPoseStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks) {
-        if (!pEntityLiving.hasPose(Pose.SLEEPING)) {
-            pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F - pRotationYaw));
-        }
-    }
+    private void renderEntities(ParadoxMachineRenderState state, PoseStack poseStack, SubmitNodeCollector collector) {
+        Map<Vec3, PreparedMob> entities = state.entities;
+        if (entities == null) return;
 
-    protected static void scaleEntity(LivingEntity entity, PoseStack matrixStackIn) {
-        float scale = 1F; // Adjust scale if needed
-        matrixStackIn.scale(scale, scale, scale);
+        int alphaByte = Math.max(0, Math.min(255, state.runningIntAlpha));
+        int tintedColor = (alphaByte << 24) | 0x00FFFFFF;
+
+        for (Map.Entry<Vec3, PreparedMob> entry : entities.entrySet()) {
+            Vec3 worldPos = entry.getKey();
+            PreparedMob mob = entry.getValue();
+
+            poseStack.pushPose();
+            poseStack.translate(worldPos.x - state.machinePos.getX(),
+                    worldPos.y - state.machinePos.getY(),
+                    worldPos.z - state.machinePos.getZ());
+
+            // Replicate LivingEntityRenderer.submit transform chain for the model-only body render.
+            float scale = mob.state.scale;
+            poseStack.scale(scale, scale, scale);
+            if (!mob.state.hasPose(Pose.SLEEPING)) {
+                poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - mob.state.bodyRot));
+            }
+            poseStack.scale(-1.0F, -1.0F, 1.0F);
+            poseStack.translate(0.0F, -1.501F, 0.0F);
+
+            RenderType renderType = RenderTypes.entityTranslucent(mob.texture);
+            int overlayCoords = LivingEntityRenderer.getOverlayCoords(mob.state, 0.0F);
+
+            collector.submitModel(mob.model, mob.state, poseStack, renderType,
+                    mob.state.lightCoords, overlayCoords, tintedColor, null, 0, null);
+
+            // Intentionally skipping RenderLayer submission (wool, armor, eyes, etc.) — layers submit
+            // their own models with their own colors and ignore our alpha, so they'd appear fully opaque
+            // over the faded body. Matches the 1.21.1 behavior which also only rendered the base model.
+
+            poseStack.popPose();
+        }
     }
 }

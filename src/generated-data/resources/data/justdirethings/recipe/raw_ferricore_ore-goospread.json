@@ -1,0 +1,14 @@
+{
+  "type": "justdirethings:goospread",
+  "craftingDuration": 2400,
+  "input": {
+    "id": "minecraft:iron_block"
+  },
+  "output": {
+    "id": "justdirethings:raw_ferricore_ore",
+    "properties": {
+      "facing": "north"
+    }
+  },
+  "tierRequirement": 1
+}

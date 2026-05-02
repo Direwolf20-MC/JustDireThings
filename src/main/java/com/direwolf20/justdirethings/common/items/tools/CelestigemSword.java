@@ -2,21 +2,25 @@ package com.direwolf20.justdirethings.common.items.tools;
 
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
+import com.direwolf20.justdirethings.common.items.interfaces.GooTieredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseSword;
 import com.direwolf20.justdirethings.common.items.tools.utils.GooTier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 
-public class CelestigemSword extends BaseSword implements PoweredTool {
-    public CelestigemSword() {
-        super(GooTier.CELESTIGEM, new Properties()
-                .attributes(SwordItem.createAttributes(GooTier.CELESTIGEM, 3, -2.0F))
-                .fireResistant());
+public class CelestigemSword extends BaseSword implements PoweredTool, GooTieredItem {
+    public CelestigemSword(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.MOBSCANNER);
         registerAbility(Ability.CAUTERIZEWOUNDS, new AbilityParams(1, 1, 1, 1, 0, 1200));
         registerAbility(Ability.DROPTELEPORT);
         registerAbility(Ability.SMOKER);
+    }
+
+    @Override
+    public GooTier getGooTier() {
+        return GooTier.CELESTIGEM;
     }
 
     @Override

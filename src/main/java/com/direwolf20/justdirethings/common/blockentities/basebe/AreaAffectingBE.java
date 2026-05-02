@@ -3,8 +3,9 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 
 public interface AreaAffectingBE {
@@ -77,53 +78,50 @@ public interface AreaAffectingBE {
             baseMachineBE.markDirtyClient();
     }
 
-    default void saveAreaSettings(CompoundTag tag) {
-        tag.putDouble("xRadiusDouble", getAreaAffectingData().xRadius);
-        tag.putDouble("yRadiusDouble", getAreaAffectingData().yRadius);
-        tag.putDouble("zRadiusDouble", getAreaAffectingData().zRadius);
-        tag.putInt("xOffset", getAreaAffectingData().xOffset);
-        tag.putInt("yOffset", getAreaAffectingData().yOffset);
-        tag.putInt("zOffset", getAreaAffectingData().zOffset);
-        tag.putBoolean("renderArea", getAreaAffectingData().renderArea);
+    default void saveAreaSettings(ValueOutput output) {
+        output.putDouble("xRadiusDouble", getAreaAffectingData().xRadius);
+        output.putDouble("yRadiusDouble", getAreaAffectingData().yRadius);
+        output.putDouble("zRadiusDouble", getAreaAffectingData().zRadius);
+        output.putInt("xOffset", getAreaAffectingData().xOffset);
+        output.putInt("yOffset", getAreaAffectingData().yOffset);
+        output.putInt("zOffset", getAreaAffectingData().zOffset);
+        output.putBoolean("renderArea", getAreaAffectingData().renderArea);
     }
 
-    default void saveAreaOnly(CompoundTag tag) {
-        tag.putDouble("xRadiusDouble", getAreaAffectingData().xRadius);
-        tag.putDouble("yRadiusDouble", getAreaAffectingData().yRadius);
-        tag.putDouble("zRadiusDouble", getAreaAffectingData().zRadius);
+    default void saveAreaOnly(ValueOutput output) {
+        output.putDouble("xRadiusDouble", getAreaAffectingData().xRadius);
+        output.putDouble("yRadiusDouble", getAreaAffectingData().yRadius);
+        output.putDouble("zRadiusDouble", getAreaAffectingData().zRadius);
     }
 
-    default void saveOffsetOnly(CompoundTag tag) {
-        tag.putInt("xOffset", getAreaAffectingData().xOffset);
-        tag.putInt("yOffset", getAreaAffectingData().yOffset);
-        tag.putInt("zOffset", getAreaAffectingData().zOffset);
+    default void saveOffsetOnly(ValueOutput output) {
+        output.putInt("xOffset", getAreaAffectingData().xOffset);
+        output.putInt("yOffset", getAreaAffectingData().yOffset);
+        output.putInt("zOffset", getAreaAffectingData().zOffset);
     }
 
-    default void loadAreaSettings(CompoundTag tag) {
-        if (tag.contains("xRadiusDouble")) { //Assume all the others are there too...
-            getAreaAffectingData().xRadius = tag.getDouble("xRadiusDouble");
-            getAreaAffectingData().yRadius = tag.getDouble("yRadiusDouble");
-            getAreaAffectingData().zRadius = tag.getDouble("zRadiusDouble");
-            getAreaAffectingData().xOffset = tag.getInt("xOffset");
-            getAreaAffectingData().yOffset = tag.getInt("yOffset");
-            getAreaAffectingData().zOffset = tag.getInt("zOffset");
-            getAreaAffectingData().renderArea = tag.getBoolean("renderArea");
-        }
+    default void loadAreaSettings(ValueInput input) {
+        AreaAffectingData data = getAreaAffectingData();
+        data.xRadius = input.getDoubleOr("xRadiusDouble", data.xRadius);
+        data.yRadius = input.getDoubleOr("yRadiusDouble", data.yRadius);
+        data.zRadius = input.getDoubleOr("zRadiusDouble", data.zRadius);
+        data.xOffset = input.getIntOr("xOffset", data.xOffset);
+        data.yOffset = input.getIntOr("yOffset", data.yOffset);
+        data.zOffset = input.getIntOr("zOffset", data.zOffset);
+        data.renderArea = input.getBooleanOr("renderArea", data.renderArea);
     }
 
-    default void loadAreaOnly(CompoundTag tag) {
-        if (tag.contains("xRadiusDouble")) { //Assume all the others are there too...
-            getAreaAffectingData().xRadius = tag.getDouble("xRadiusDouble");
-            getAreaAffectingData().yRadius = tag.getDouble("yRadiusDouble");
-            getAreaAffectingData().zRadius = tag.getDouble("zRadiusDouble");
-        }
+    default void loadAreaOnly(ValueInput input) {
+        AreaAffectingData data = getAreaAffectingData();
+        data.xRadius = input.getDoubleOr("xRadiusDouble", data.xRadius);
+        data.yRadius = input.getDoubleOr("yRadiusDouble", data.yRadius);
+        data.zRadius = input.getDoubleOr("zRadiusDouble", data.zRadius);
     }
 
-    default void loadOffsetOnly(CompoundTag tag) {
-        if (tag.contains("xOffset")) { //Assume all the others are there too...
-            getAreaAffectingData().xOffset = tag.getInt("xOffset");
-            getAreaAffectingData().yOffset = tag.getInt("yOffset");
-            getAreaAffectingData().zOffset = tag.getInt("zOffset");
-        }
+    default void loadOffsetOnly(ValueInput input) {
+        AreaAffectingData data = getAreaAffectingData();
+        data.xOffset = input.getIntOr("xOffset", data.xOffset);
+        data.yOffset = input.getIntOr("yOffset", data.yOffset);
+        data.zOffset = input.getIntOr("zOffset", data.zOffset);
     }
 }

@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.common.fluids.unrefinedt3fuel;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -10,10 +10,10 @@ import net.neoforged.neoforge.fluids.BaseFlowingFluid;
 
 public abstract class UnrefinedT3Fuel extends BaseFlowingFluid {
     public static final Properties PROPERTIES = new Properties(
-            Registration.UNREFINED_T3_FLUID_TYPE,
-            Registration.UNREFINED_T3_FLUID_FLOWING,
-            Registration.UNREFINED_T3_FLUID_SOURCE
-    ).bucket(Registration.UNREFINED_T3_FLUID_BUCKET).block(Registration.UNREFINED_T3_FLUID_BLOCK);
+            JDTRegistration.UNREFINED_T3_FLUID_TYPE,
+            JDTRegistration.UNREFINED_T3_FLUID_FLOWING,
+            JDTRegistration.UNREFINED_T3_FLUID_SOURCE
+    ).bucket(JDTRegistration.UNREFINED_T3_FLUID_BUCKET).block(JDTRegistration.UNREFINED_T3_FLUID_BLOCK);
 
     protected UnrefinedT3Fuel(Properties properties) {
         super(properties);
@@ -21,21 +21,21 @@ public abstract class UnrefinedT3Fuel extends BaseFlowingFluid {
 
     @Override
     public Fluid getFlowing() {
-        return Registration.UNREFINED_T3_FLUID_FLOWING.get();
+        return JDTRegistration.UNREFINED_T3_FLUID_FLOWING.get();
     }
 
     @Override
     public Fluid getSource() {
-        return Registration.UNREFINED_T3_FLUID_SOURCE.get();
+        return JDTRegistration.UNREFINED_T3_FLUID_SOURCE.get();
     }
 
     @Override
     public Item getBucket() {
-        return Registration.UNREFINED_T3_FLUID_BUCKET.get();
+        return JDTRegistration.UNREFINED_T3_FLUID_BUCKET.get();
     }
 
     @Override
-    protected boolean canConvertToSource(Level pLevel) {
+    protected boolean canConvertToSource(ServerLevel pLevel) {
         return false;
     }
 

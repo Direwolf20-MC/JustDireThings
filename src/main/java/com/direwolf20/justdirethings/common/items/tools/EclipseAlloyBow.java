@@ -7,8 +7,8 @@ import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import net.minecraft.world.item.ItemStack;
 
 public class EclipseAlloyBow extends BaseBow implements PoweredTool {
-    public EclipseAlloyBow() {
-        super(new Properties().durability(450).fireResistant());
+    public EclipseAlloyBow(Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.POTIONARROW);
         registerAbility(Ability.SPLASH);
         registerAbility(Ability.LINGERING);

@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.137'
+    id 'net.neoforged.moddev' version '2.0.141'
     id "me.modmuss50.mod-publish-plugin" version "1.1.0"
 }
 
@@ -42,13 +42,6 @@ repositories {
         }
     }
 
-    maven { //Curios
-        url = "https://maven.theillusivec4.top/"
-        content {
-            includeGroup "top.theillusivec4.curios"
-        }
-    }
-
     maven { // mek
         url = 'https://modmaven.dev/'
         content {
@@ -67,19 +60,14 @@ repositories {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-        vendor.set(JvmVendorSpec.JETBRAINS)
+        languageVersion.set(JavaLanguageVersion.of(25))
+//        vendor.set(JvmVendorSpec.JETBRAINS)
     }
 }
 
 
 neoForge {
     version = project.neo_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
 
     runs {
         configureEach {
@@ -103,16 +91,26 @@ neoForge {
 
         server {
             server()
-            programArgument '--nogui'
         }
 
         gameTestServer {
             type = "gameTestServer"
         }
 
-        data {
-            data()
-            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        clientData {
+            clientData()
+            programArguments.addAll '--mod', project.mod_id, '--all',
+                    '--output', file('src/generated-client/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath(),
+                    '--existing', file('src/generated-data/resources/').getAbsolutePath()
+        }
+
+        serverData {
+            serverData()
+            programArguments.addAll '--mod', project.mod_id, '--all',
+                    '--output', file('src/generated-data/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath(),
+                    '--existing', file('src/generated-client/resources/').getAbsolutePath()
         }
     }
 
@@ -123,7 +121,10 @@ neoForge {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.resources {
+    srcDir 'src/generated-client/resources'
+    srcDir 'src/generated-data/resources'
+}
 
 configurations {
     runtimeClasspath.extendsFrom localRuntime
@@ -134,10 +135,12 @@ dependencies {
 
     compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${jei_mc_version}-neoforge-api:${jei_version}"
-    localRuntime "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
-    
-    compileOnly "vazkii.patchouli:Patchouli:${patchouli_version}:api"
-    localRuntime "vazkii.patchouli:Patchouli:${patchouli_version}"
+    runtimeOnly "mezz.jei:jei-${jei_mc_version}-neoforge:${jei_version}"
+
+    implementation "curse.maven:curios-309927:${curios_file_id}"
+
+    compileOnly "vazkii.patchouli:patchouli-neoforge:${patchouli_version}:api"
+    localRuntime "vazkii.patchouli:patchouli-neoforge:${patchouli_version}"
 
     addLocalArtifacts('localRuntime', extraModsDir)
     addLocalArtifacts('compileOnly', extraAPIDir, "extra-api")
@@ -173,6 +176,7 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+    options.compilerArgs << '-Xmaxerrs' << '10000' << '-Xmaxwarns' << '10000'
 }
 
 publishMods {
@@ -189,7 +193,7 @@ publishMods {
         displayName = "JustDireThings-${mod_version}"
         modLoaders.add("neoforge")
         minecraftVersions.add("${minecraft_version}")
-        javaVersions.add(JavaVersion.VERSION_21)
+        javaVersions.add(JavaVersion.VERSION_25)
     }
 }
 

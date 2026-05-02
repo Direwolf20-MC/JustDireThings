@@ -5,7 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record ToggleToolSlotPayload(
         String settingName,
@@ -13,7 +13,7 @@ public record ToggleToolSlotPayload(
         int typeTool,
         int value
 ) implements CustomPacketPayload {
-    public static final Type<ToggleToolSlotPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "toggle_tool_slot_setting"));
+    public static final Type<ToggleToolSlotPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "toggle_tool_slot_setting"));
 
     @Override
     public Type<ToggleToolSlotPayload> type() {

@@ -4,19 +4,26 @@ import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.entitymodels.PortalProjectileModel;
 import com.direwolf20.justdirethings.common.entities.PortalProjectile;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
-public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
-    protected static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/portal_projectile.png");
+public class PortalProjectileRender extends EntityRenderer<PortalProjectile, PortalProjectileRender.PortalProjectileRenderState> {
+    protected static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/portal_projectile.png");
     protected final PortalProjectileModel model;
+
+    public static class PortalProjectileRenderState extends EntityRenderState {
+        public float yRot;
+        public float xRot;
+        public float ageTicks;
+    }
 
     public PortalProjectileRender(EntityRendererProvider.Context pContext) {
         super(pContext);
@@ -24,29 +31,36 @@ public class PortalProjectileRender extends EntityRenderer<PortalProjectile> {
     }
 
     @Override
-    public void render(PortalProjectile pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
-        pPoseStack.pushPose();
-        //RenderHelpers.renderLines(pPoseStack, pEntity.getBoundingBox().move(-pEntity.getX(), -pEntity.getY(), -pEntity.getZ()), Color.BLUE, pBuffer);
-        float f = Mth.rotLerp(pPartialTicks, pEntity.yRotO, pEntity.getYRot());
-        float f1 = Mth.lerp(pPartialTicks, pEntity.xRotO, pEntity.getXRot());
-        float f2 = (float) pEntity.tickCount + pPartialTicks;
-        pPoseStack.translate(0.0D, (double) 0.15F, 0.0D);
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(f2 * 0.1F) * 180.0F));
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(Mth.cos(f2 * 0.1F) * 180.0F));
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(f2 * 0.15F) * 360.0F));
-        //pPoseStack.mulPose(Axis.YP.rotationDegrees(f2 % 360 * 20));
-        //pPoseStack.mulPose(Vector3f.YP.rotationDegrees(f2 % 360 * 20));
-        pPoseStack.scale(0.5f, 0.5f, 0.5f);
-
-        this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
-        VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(TEXTURE));
-        this.model.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY);
-        pPoseStack.popPose();
-        super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
+    public PortalProjectileRenderState createRenderState() {
+        return new PortalProjectileRenderState();
     }
 
     @Override
-    public ResourceLocation getTextureLocation(PortalProjectile pEntity) {
-        return TEXTURE;
+    public void extractRenderState(PortalProjectile entity, PortalProjectileRenderState state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+        state.yRot = Mth.rotLerp(partialTicks, entity.yRotO, entity.getYRot());
+        state.xRot = Mth.lerp(partialTicks, entity.xRotO, entity.getXRot());
+        state.ageTicks = entity.tickCount + partialTicks;
+    }
+
+    @Override
+    public void submit(PortalProjectileRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        poseStack.pushPose();
+        float f2 = state.ageTicks;
+        poseStack.translate(0.0D, 0.15F, 0.0D);
+        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(f2 * 0.1F) * 180.0F));
+        poseStack.mulPose(Axis.XP.rotationDegrees(Mth.cos(f2 * 0.1F) * 180.0F));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(f2 * 0.15F) * 360.0F));
+        poseStack.scale(0.5f, 0.5f, 0.5f);
+
+        this.model.setupAnim(state);
+        submitNodeCollector.submitModel(
+                this.model, state, poseStack,
+                RenderTypes.entityTranslucent(TEXTURE),
+                state.lightCoords, OverlayTexture.NO_OVERLAY,
+                state.outlineColor, null);
+
+        poseStack.popPose();
+        super.submit(state, poseStack, submitNodeCollector, camera);
     }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "justdirethings:block/time_crystal_cluster_large"
+  }
+}

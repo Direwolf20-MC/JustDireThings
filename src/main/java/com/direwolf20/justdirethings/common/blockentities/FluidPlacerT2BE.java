@@ -6,7 +6,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineContainerData;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
@@ -14,8 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -29,7 +27,7 @@ public class FluidPlacerT2BE extends FluidPlacerT1BE implements PoweredMachineBE
     public final PoweredMachineContainerData poweredMachineData;
 
     public FluidPlacerT2BE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.FluidPlacerT2BE.get(), pPos, pBlockState);
+        super(JDTRegistration.FluidPlacerT2BE.get(), pPos, pBlockState);
         poweredMachineData = new PoweredMachineContainerData(this);
     }
 
@@ -45,7 +43,7 @@ public class FluidPlacerT2BE extends FluidPlacerT1BE implements PoweredMachineBE
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(JDTRegistration.ENERGYSTORAGE_MACHINES);
     }
 
     @Override
@@ -60,7 +58,7 @@ public class FluidPlacerT2BE extends FluidPlacerT1BE implements PoweredMachineBE
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     @Override
@@ -95,7 +93,7 @@ public class FluidPlacerT2BE extends FluidPlacerT1BE implements PoweredMachineBE
     public boolean isBlockPosValid(BlockPos blockPos, FakePlayer fakePlayer) {
         if (!super.isBlockPosValid(blockPos, fakePlayer))
             return false; //Do the same checks as normal, then check the filters
-        ItemStack blockItemStack = level.getBlockState(blockPos.relative(getDirectionValue())).getCloneItemStack(new BlockHitResult(Vec3.ZERO, getDirectionValue(), blockPos, false), level, blockPos, null);
+        ItemStack blockItemStack = level.getBlockState(blockPos.relative(getDirectionValue())).getCloneItemStack(blockPos, level, false, null);
         return isStackValidFilter(blockItemStack);
     }
 }

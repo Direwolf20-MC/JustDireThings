@@ -7,17 +7,20 @@ import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.items.MachineSettingsCopier;
 import com.direwolf20.justdirethings.common.network.data.CopyMachineSettingsPayload;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class MachineSettingsCopierScreen extends Screen {
-    public static final ResourceLocation SOCIALBACKGROUND = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "background");
+    private static final int TITLE_TEXT_ARGB = 0xFF404040;
+
+    public static final Identifier SOCIALBACKGROUND = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "background");
     private ItemStack copyMachineSettingsItemstack;
     boolean area, offset, filter, redstone;
     int topSectionWidth, topSectionHeight, topSectionLeft, topSectionTop;
@@ -72,33 +75,32 @@ public class MachineSettingsCopierScreen extends Screen {
     public void setPositions() {
         topSectionWidth = 140;
         topSectionHeight = 60;
-        topSectionLeft = getGuiLeft() - 20 / 2;
+        topSectionLeft = getGuiLeft() + (176 - topSectionWidth) / 2;
         topSectionTop = getGuiHeight();
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        guiGraphics.blitSprite(SOCIALBACKGROUND, topSectionLeft, topSectionTop - 20, topSectionWidth, 20);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        guiGraphics.blitSprite(SOCIALBACKGROUND, topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, topSectionLeft, topSectionTop - 20, topSectionWidth, 20);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight);
 
         Component title = copyMachineSettingsItemstack.getItem().getName(copyMachineSettingsItemstack);
         int titleX = topSectionLeft + 20 + ((topSectionWidth - 40) / 2) - this.font.width(title) / 2;
-        guiGraphics.drawString(this.font, title, titleX, topSectionTop - 14, 4210752, false);
+        graphics.text(this.font, title, titleX, topSectionTop - 14, TITLE_TEXT_ARGB, false);
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
         for (Renderable renderable : this.renderables) {
             if (renderable instanceof BaseButton button && !button.getLocalization(mouseX, mouseY).equals(Component.empty()))
-                guiGraphics.renderTooltip(font, button.getLocalization(mouseX, mouseY), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, button.getLocalization(mouseX, mouseY), mouseX, mouseY);
         }
     }
 
     public void saveSettings() {
-        PacketDistributor.sendToServer(new CopyMachineSettingsPayload(area, offset, filter, redstone));
+        ClientPacketDistributor.sendToServer(new CopyMachineSettingsPayload(area, offset, filter, redstone));
     }
 
     @Override
@@ -107,9 +109,9 @@ public class MachineSettingsCopierScreen extends Screen {
     }
 
     @Override
-    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        InputConstants.Key mouseKey = InputConstants.getKey(pKeyCode, pScanCode);
-        if (super.keyPressed(pKeyCode, pScanCode, pModifiers)) {
+    public boolean keyPressed(KeyEvent event) {
+        InputConstants.Key mouseKey = InputConstants.getKey(event);
+        if (super.keyPressed(event)) {
             return true;
         } else if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
             this.onClose();

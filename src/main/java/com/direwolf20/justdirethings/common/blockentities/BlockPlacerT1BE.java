@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.FakePlayerUtil;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
@@ -36,7 +36,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     }
 
     public BlockPlacerT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.BlockPlacerT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.BlockPlacerT1BE.get(), pPos, pBlockState);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
     }
 
     public ItemStack getPlaceStack() {
-        return getMachineHandler().getStackInSlot(0);
+        return getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
     }
 
     public boolean isStackValid(ItemStack itemStack) {
@@ -107,8 +107,17 @@ public class BlockPlacerT1BE extends BaseMachineBE implements RedstoneControlled
             BlockPos blockPos = positionsToPlace.remove(0);
             Direction placing = getDirectionValue();
             FakePlayerUtil.setupFakePlayerForUse(fakePlayer, blockPos, placing, placeStack, false);
-            //setFakePlayerData(placeStack, fakePlayer, blockPos, getDirectionValue());
             placeBlock(placeStack, fakePlayer, blockPos);
+            // useOn decrements the held stack; sync the (possibly shrunk/emptied) stack back into
+            // slot 0. Without this the detached getPlaceStack() copy's decrement is lost and the
+            // cleanup step's dropAll() would spill leftover items on the ground.
+            ItemStack postUse = fakePlayer.getMainHandItem();
+            if (postUse.isEmpty()) {
+                getMachineHandler().set(0, net.neoforged.neoforge.transfer.item.ItemResource.EMPTY, 0);
+            } else {
+                getMachineHandler().set(0, net.neoforged.neoforge.transfer.item.ItemResource.of(postUse), postUse.getCount());
+            }
+            setChanged();
             FakePlayerUtil.cleanupFakePlayerFromUse(fakePlayer, fakePlayer.getMainHandItem());
         }
     }

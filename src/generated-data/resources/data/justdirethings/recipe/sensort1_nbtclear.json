@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "justdirethings",
+  "ingredients": [
+    "justdirethings:sensort1"
+  ],
+  "result": {
+    "id": "justdirethings:sensort1"
+  }
+}

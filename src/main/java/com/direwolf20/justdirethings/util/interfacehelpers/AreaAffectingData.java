@@ -16,9 +16,9 @@ public class AreaAffectingData {
     }
 
     public AreaAffectingData(Direction facing) {
-        xOffset = facing.getNormal().getX();
-        yOffset = facing.getNormal().getY();
-        zOffset = facing.getNormal().getZ();
+        xOffset = facing.getUnitVec3i().getX();
+        yOffset = facing.getUnitVec3i().getY();
+        zOffset = facing.getUnitVec3i().getZ();
     }
 
     public AreaAffectingData(double xRadius, double yRadius, double zRadius, int xOffset, int yOffset, int zOffset) {

@@ -2,180 +2,192 @@ package com.direwolf20.justdirethings.client.entityrenders;
 
 import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.renderers.OurRenderTypes;
-import com.direwolf20.justdirethings.client.renderers.RenderHelpers;
 import com.direwolf20.justdirethings.common.entities.ParadoxEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import java.awt.*;
 import java.util.Random;
 
-public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity> {
-    private static final Random random = new Random();  // Use entity's tickCount to seed the randomness
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/vortex1.png");
+public class ParadoxEntityRender extends EntityRenderer<ParadoxEntity, ParadoxEntityRender.ParadoxEntityRenderState> {
+    private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/entity/vortex1.png");
 
-    private float savedPulseScale = -1;
+    public static class ParadoxEntityRenderState extends EntityRenderState {
+        public float currentRadius;
+        public float targetRadius;
+        public int growthTicks;
+        public int growthDuration;
+        public float shrinkScale;
+        public int tickCount;
+        public float partialTicks;
+        public float savedPulseScale = -1F;
+    }
 
     public ParadoxEntityRender(EntityRendererProvider.Context pContext) {
         super(pContext);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(ParadoxEntity pEntity) {
-        return TEXTURE;
+    public ParadoxEntityRenderState createRenderState() {
+        return new ParadoxEntityRenderState();
     }
 
     @Override
-    public void render(ParadoxEntity paradoxEntity, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
-        matrixStackIn.pushPose();
-
-        matrixStackIn.pushPose();
-        // Calculate the current scale based on the interpolated radius
-        float currentRadius = paradoxEntity.getRadius() + 1;
-        float targetRadius = paradoxEntity.getTargetRadius() + 1;
-        int pulseCycleDuration = 50; // Number of ticks for one full pulse cycle
-        float tickProgress = (paradoxEntity.tickCount + partialTicks) % pulseCycleDuration;
-        float pulsePhase = tickProgress / pulseCycleDuration;
-
-        // Use the phase to create a pulse effect that smoothly goes up and down
-        float pulseScale = 0.25f + 0.025f * (1 - Math.abs(2 * pulsePhase - 1));
-        if (paradoxEntity.getGrowthTicks() > 0) {
-            if (savedPulseScale == -1)
-                savedPulseScale = pulseScale;
-            // Properly interpolate between the current and target radius
-            float growthProgress = (float) paradoxEntity.getGrowthTicks() / (float) paradoxEntity.growthDuration;
-            currentRadius = Mth.lerp(growthProgress, currentRadius, targetRadius);
-        } else {
-            savedPulseScale = -1;
-        }
-        if (savedPulseScale != -1)
-            pulseScale = savedPulseScale;
-        // Calculate the scale for pulsing
-        matrixStackIn.translate(0, 0.5, 0);
-        float shrinkScale = paradoxEntity.getShrinkScale(); // Get the current shrink scale
-
-        // Apply the scale transformation for pulsing
-        matrixStackIn.scale(pulseScale * shrinkScale, pulseScale * shrinkScale, pulseScale * shrinkScale);
-        RenderHelpers.renderSphere(matrixStackIn, bufferIn, Color.BLACK, 0.25f * (float) Math.pow(currentRadius, 1.25), packedLightIn);
-        matrixStackIn.popPose();
-
-        // Render the lightning arcs
-        // Base colors for dark red and dark purple
-        Color baseRed = new Color(100, 0, 0, 255);   // Dark red
-        Color basePurple = new Color(75, 0, 0, 255); // Dark purple
-
-        // Randomly interpolate between dark red and dark purple
-        float mixRatio = random.nextFloat();
-        int red = (int) (baseRed.getRed() * (1 - mixRatio) + basePurple.getRed() * mixRatio);
-        int green = (int) (baseRed.getGreen() * (1 - mixRatio) + basePurple.getGreen() * mixRatio);
-        int blue = (int) (baseRed.getBlue() * (1 - mixRatio) + basePurple.getBlue() * mixRatio);
-
-        renderLightning(paradoxEntity, matrixStackIn, bufferIn, packedLightIn, new Color(red, green, blue, 255), 0.025f, (float) Math.pow(paradoxEntity.getRadius() + 1, 1.25), 20, 0.7f, 5, 0.25f, 5, true);
-
-        matrixStackIn.popPose();
-
-        /*AABB renderBounds = paradoxEntity.getBoundingBox().move(-paradoxEntity.getX(), -paradoxEntity.getY(), -paradoxEntity.getZ());
-        matrixStackIn.pushPose();
-        Color color = new Color(0, 153, 255, 255);
-        RenderHelpers.renderLines(matrixStackIn, renderBounds, color, bufferIn);
-        matrixStackIn.popPose();*/
+    public void extractRenderState(ParadoxEntity entity, ParadoxEntityRenderState state, float partialTicks) {
+        super.extractRenderState(entity, state, partialTicks);
+        state.currentRadius = entity.getRadius();
+        state.targetRadius = entity.getTargetRadius();
+        state.growthTicks = entity.getGrowthTicks();
+        state.growthDuration = entity.growthDuration;
+        state.shrinkScale = entity.getShrinkScale();
+        state.tickCount = entity.tickCount;
+        state.partialTicks = partialTicks;
     }
 
-    private void renderLightning(ParadoxEntity paradoxEntity, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Color color, float frequency, float maxLength, int duration, float thickness, int numBranches, float branchChance, int segments, boolean branchAnywhere) {
-        Random random = new Random(paradoxEntity.tickCount);  // Use entity's tickCount to seed the randomness
+    @Override
+    public void submit(ParadoxEntityRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        super.submit(state, poseStack, submitNodeCollector, camera);
 
-        for (int i = 0; i < frequency * 100; i++) {
-            if (random.nextFloat() > frequency)
-                continue;  // Randomly decide whether to render a lightning arc based on frequency
+        float currentRadius = state.currentRadius + 1F;
+        float targetRadius = state.targetRadius + 1F;
 
-            matrixStackIn.pushPose();
-            matrixStackIn.translate(0, 0.5, 0);  // Translate to the center of the entity
+        int pulseCycleDuration = 50;
+        float tickProgress = (state.tickCount + state.partialTicks) % pulseCycleDuration;
+        float pulsePhase = tickProgress / pulseCycleDuration;
+        float pulseScale = 0.25F + 0.025F * (1F - Math.abs(2F * pulsePhase - 1F));
 
-            float angle = random.nextFloat() * 360.0f;  // Random angle in 360 degrees
-            float pitch = random.nextFloat() * 180.0f - 90.0f;  // Random pitch between -90 and 90 degrees
-            float length = random.nextFloat() * maxLength;  // Random length of the lightning arc
+        if (state.growthTicks > 0) {
+            if (state.savedPulseScale == -1F) state.savedPulseScale = pulseScale;
+            float growthProgress = state.growthDuration > 0 ? (float) state.growthTicks / (float) state.growthDuration : 0F;
+            currentRadius = Mth.lerp(growthProgress, currentRadius, targetRadius);
+        } else {
+            state.savedPulseScale = -1F;
+        }
+        if (state.savedPulseScale != -1F) pulseScale = state.savedPulseScale;
 
-            // Start position
-            float startX = 0.0F, startY = 0.0F, startZ = 0.0F;
+        final float finalPulseScale = pulseScale;
+        final float sphereRadius = 0.25F * (float) Math.pow(currentRadius, 1.25);
 
+        // Vortex sphere — TRIANGLE_STRIP pipeline.
+        poseStack.pushPose();
+        poseStack.translate(0F, 0.5F, 0F);
+        poseStack.scale(finalPulseScale * state.shrinkScale, finalPulseScale * state.shrinkScale, finalPulseScale * state.shrinkScale);
+        submitNodeCollector.submitCustomGeometry(poseStack, OurRenderTypes.TRIANGLE_STRIP,
+                (pose, buffer) -> writeSphere(pose, buffer, Color.BLACK, sphereRadius));
+        poseStack.popPose();
+
+        // Lightning arcs — LINES render type. Color mixes dark red ↔ dark purple per segment.
+        Random mixRandom = new Random(state.tickCount * 31L);
+        float mixRatio = mixRandom.nextFloat();
+        int red = (int) (100 * (1F - mixRatio) + 75 * mixRatio);
+        int green = 0;
+        int blue = 0;
+        Color arcColor = new Color(red, green, blue, 255);
+
+        final float arcMaxLength = (float) Math.pow(state.currentRadius + 1F, 1.25);
+        final int tickCountFinal = state.tickCount;
+
+        submitNodeCollector.submitCustomGeometry(poseStack, OurRenderTypes.lines(),
+                (pose, buffer) -> writeLightning(pose, buffer, tickCountFinal, arcColor,
+                        0.025F, arcMaxLength, 5, 0.25F, 5, true, state.lightCoords));
+    }
+
+    // --- Vortex sphere (TRIANGLE_STRIP) -------------------------------------------------
+
+    private static void writeSphere(PoseStack.Pose pose, VertexConsumer buffer, Color color, float radius) {
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        int a = color.getAlpha();
+        int lat = 16;
+        int lon = 16;
+        for (int latNumber = 0; latNumber <= lat; latNumber++) {
+            float theta1 = (float) (latNumber * Math.PI / lat);
+            float theta2 = (float) ((latNumber + 1) * Math.PI / lat);
+            float sinTheta1 = Mth.sin(theta1);
+            float cosTheta1 = Mth.cos(theta1);
+            float sinTheta2 = Mth.sin(theta2);
+            float cosTheta2 = Mth.cos(theta2);
+            for (int longNumber = 0; longNumber <= lon; longNumber++) {
+                float phi = (float) (longNumber * 2 * Math.PI / lon);
+                float sinPhi = Mth.sin(phi);
+                float cosPhi = Mth.cos(phi);
+                float x1 = cosPhi * sinTheta1;
+                float y1 = cosTheta1;
+                float z1 = sinPhi * sinTheta1;
+                float x2 = cosPhi * sinTheta2;
+                float y2 = cosTheta2;
+                float z2 = sinPhi * sinTheta2;
+                buffer.addVertex(pose.pose(), x1 * radius, y1 * radius, z1 * radius).setColor(r, g, b, a);
+                buffer.addVertex(pose.pose(), x2 * radius, y2 * radius, z2 * radius).setColor(r, g, b, a);
+            }
+        }
+    }
+
+    // --- Lightning arcs (LINES with per-vertex LineWidth) -------------------------------
+
+    private static void writeLightning(PoseStack.Pose pose, VertexConsumer buffer, int tickCountSeed, Color color,
+                                       float frequency, float maxLength, int numBranches, float branchChance,
+                                       int segments, boolean branchAnywhere, int lightCoords) {
+        Random rand = new Random(tickCountSeed);
+        int r = color.getRed();
+        int g = color.getGreen();
+        int b = color.getBlue();
+        int a = color.getAlpha();
+
+        int iterations = (int) (frequency * 100F);
+        for (int i = 0; i < iterations; i++) {
+            if (rand.nextFloat() > frequency) continue;
+
+            float angle = rand.nextFloat() * 360F;
+            float pitch = rand.nextFloat() * 180F - 90F;
+            float length = rand.nextFloat() * maxLength;
+
+            float sx = 0F, sy = 0.5F, sz = 0F;
             for (int segment = 0; segment < segments; segment++) {
                 float segmentLength = length / segments;
+                float x = sx + segmentLength * Mth.cos((float) Math.toRadians(angle)) * Mth.cos((float) Math.toRadians(pitch));
+                float y = sy + segmentLength * Mth.sin((float) Math.toRadians(pitch));
+                float z = sz + segmentLength * Mth.sin((float) Math.toRadians(angle)) * Mth.cos((float) Math.toRadians(pitch));
 
-                // Calculate the endpoint of the lightning arc segment
-                float x = startX + segmentLength * Mth.cos((float) Math.toRadians(angle)) * Mth.cos((float) Math.toRadians(pitch));
-                float y = startY + segmentLength * Mth.sin((float) Math.toRadians(pitch));
-                float z = startZ + segmentLength * Mth.sin((float) Math.toRadians(angle)) * Mth.cos((float) Math.toRadians(pitch));
+                line(pose, buffer, r, g, b, a, sx, sy, sz, x, y, z);
 
-                VertexConsumer vertexConsumer = bufferIn.getBuffer(OurRenderTypes.LINE_STRIP);
-                Matrix4f matrix = matrixStackIn.last().pose();
-                Vector3f normal = new Vector3f(0.0F, 1.0F, 0.0F);
+                sx = x;
+                sy = y;
+                sz = z;
 
-                // Draw the lightning arc segment
-                vertexConsumer.addVertex(matrix, startX, startY, startZ)
-                        .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                        .setUv(0.0F, 0.0F)
-                        .setOverlay(OverlayTexture.NO_OVERLAY)
-                        .setLight(packedLightIn)
-                        .setNormal(matrixStackIn.last(), normal.x(), normal.y(), normal.z());
-
-                vertexConsumer.addVertex(matrix, x, y, z)
-                        .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                        .setUv(1.0F, 1.0F)
-                        .setOverlay(OverlayTexture.NO_OVERLAY)
-                        .setLight(packedLightIn)
-                        .setNormal(matrixStackIn.last(), normal.x(), normal.y(), normal.z());
-
-                // Update the start position for the next segment
-                startX = x;
-                startY = y;
-                startZ = z;
-
-                // Generate branches
                 for (int branch = 0; branch < numBranches; branch++) {
-                    if (random.nextFloat() < branchChance && (branchAnywhere || segment == segments - 1)) {
-                        renderBranch(matrixStackIn, bufferIn, packedLightIn, color, startX, startY, startZ, segmentLength, branchAnywhere ? random.nextInt(segments) : segment, random, normal);
+                    if (rand.nextFloat() < branchChance && (branchAnywhere || segment == segments - 1)) {
+                        float branchAngle = rand.nextFloat() * 360F;
+                        float branchPitch = rand.nextFloat() * 180F - 90F;
+                        float branchLength = segmentLength * (0.5F + rand.nextFloat() * 0.5F);
+                        float bx = sx + branchLength * Mth.cos((float) Math.toRadians(branchAngle)) * Mth.cos((float) Math.toRadians(branchPitch));
+                        float by = sy + branchLength * Mth.sin((float) Math.toRadians(branchPitch));
+                        float bz = sz + branchLength * Mth.sin((float) Math.toRadians(branchAngle)) * Mth.cos((float) Math.toRadians(branchPitch));
+                        line(pose, buffer, r, g, b, a, sx, sy, sz, bx, by, bz);
                     }
                 }
             }
-
-            matrixStackIn.popPose();
         }
     }
 
-    private void renderBranch(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, Color color, float startX, float startY, float startZ, float segmentLength, int segment, Random random, Vector3f normal) {
-        float branchAngle = random.nextFloat() * 360.0f;
-        float branchPitch = random.nextFloat() * 180.0f - 90.0f;
-        float branchLength = segmentLength * (0.5f + random.nextFloat() * 0.5f);  // Branches are shorter
-
-        // Calculate the endpoint of the branch
-        float bx = startX + branchLength * Mth.cos((float) Math.toRadians(branchAngle)) * Mth.cos((float) Math.toRadians(branchPitch));
-        float by = startY + branchLength * Mth.sin((float) Math.toRadians(branchPitch));
-        float bz = startZ + branchLength * Mth.sin((float) Math.toRadians(branchAngle)) * Mth.cos((float) Math.toRadians(branchPitch));
-
-        VertexConsumer vertexConsumer = bufferIn.getBuffer(OurRenderTypes.LINE_STRIP);
-        Matrix4f matrix = matrixStackIn.last().pose();
-
-        // Draw the branch
-        vertexConsumer.addVertex(matrix, startX, startY, startZ)
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setUv(0.0F, 0.0F)
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(packedLightIn)
-                .setNormal(matrixStackIn.last(), normal.x(), normal.y(), normal.z());
-
-        vertexConsumer.addVertex(matrix, bx, by, bz)
-                .setColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha())
-                .setUv(1.0F, 1.0F)
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(packedLightIn)
-                .setNormal(matrixStackIn.last(), normal.x(), normal.y(), normal.z());
+    private static void line(PoseStack.Pose pose, VertexConsumer buffer, int r, int g, int b, int a,
+                             float x0, float y0, float z0, float x1, float y1, float z1) {
+        float dx = x1 - x0, dy = y1 - y0, dz = z1 - z0;
+        float len = Mth.sqrt(dx * dx + dy * dy + dz * dz);
+        if (len > 0F) {
+            dx /= len;
+            dy /= len;
+            dz /= len;
+        }
+        buffer.addVertex(pose.pose(), x0, y0, z0).setColor(r, g, b, a).setNormal(pose, dx, dy, dz).setLineWidth(2.0F);
+        buffer.addVertex(pose.pose(), x1, y1, z1).setColor(r, g, b, a).setNormal(pose, dx, dy, dz).setLineWidth(2.0F);
     }
 }

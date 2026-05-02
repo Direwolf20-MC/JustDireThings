@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.client.events;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.common.items.PortalGun;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.LeftClickableTool;
@@ -13,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -21,13 +21,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.Set;
 
-@EventBusSubscriber(modid = JustDireThings.MODID)
 public class PlayerEvents {
     private static BlockPos destroyPos = BlockPos.ZERO;
     private static int gameTicksMining = 0;
@@ -39,7 +38,7 @@ public class PlayerEvents {
             activateAbilities(itemStack, toggleableTool, event.getEntity(), event.getHand(), true, BlockPos.ZERO, Direction.DOWN);
         }
         if (itemStack.getItem() instanceof PortalGun)
-            PacketDistributor.sendToServer(new PortalGunLeftClickPayload());
+            ClientPacketDistributor.sendToServer(new PortalGunLeftClickPayload());
     }
 
     @SubscribeEvent
@@ -50,11 +49,23 @@ public class PlayerEvents {
                 activateAbilities(itemStack, toggleableTool, event.getEntity(), event.getHand(), false, event.getPos(), event.getFace());
             }
         }
-        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && !(itemStack.getItem() instanceof BaseHoe) && (toggleableTool.hasAbility(Ability.HAMMER) || toggleableTool.hasAbility(Ability.OREMINER)) && event.getFace() != null) {
+        if (itemStack.getItem() instanceof ToggleableTool toggleableTool && !(itemStack.getItem() instanceof BaseHoe) && (toggleableTool.hasAbility(Ability.HAMMER) || toggleableTool.hasAbility(Ability.OREMINER) || toggleableTool.hasAbility(Ability.TREEFELLER)) && event.getFace() != null) {
             doExtraCrumblings(event, itemStack, toggleableTool);
         }
         if (event.getEntity().level().isClientSide() && itemStack.getItem() instanceof PortalGun && event.getAction().equals(PlayerInteractEvent.LeftClickBlock.Action.START))
-            PacketDistributor.sendToServer(new PortalGunLeftClickPayload());
+            ClientPacketDistributor.sendToServer(new PortalGunLeftClickPayload());
+    }
+
+    @SubscribeEvent
+    public static void onPlayerTick(PlayerTickEvent.Pre event) {
+        Player player = event.getEntity();
+        if (!player.level().isClientSide() || !player.isLocalPlayer()) return;
+        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
+            ItemStack stack = player.getItemBySlot(slot);
+            if (stack.getItem() instanceof ToggleableTool toggleableTool && !toggleableTool.getPassiveTickAbilities(stack).isEmpty()) {
+                toggleableTool.armorTick(player.level(), player, stack);
+            }
+        }
     }
 
     private static void doExtraCrumblings(PlayerInteractEvent.LeftClickBlock event, ItemStack itemStack, ToggleableTool toggleableTool) {
@@ -63,7 +74,7 @@ public class PlayerEvents {
         BlockPos blockPos = event.getPos();
         BlockState blockState = level.getBlockState(blockPos);
         if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START) { //Client and Server
-            if (level.isClientSide) {
+            if (level.isClientSide()) {
                 gameTicksMining = 0;
                 destroyPos = blockPos;
             }
@@ -85,11 +96,11 @@ public class PlayerEvents {
     private static float incrementDestroyProgress(Level level, BlockState pState, BlockPos pPos, Player player, ToggleableTool toggleableTool, ItemStack toggleableToolStack) {
         Set<BlockPos> breakBlockPositions = toggleableTool.getBreakBlockPositions(toggleableToolStack, level, pPos, player, pState);
         int i = gameTicksMining;
-        float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) (i + 1);
+        float f = pState.getDestroyProgress(player, player.level(), pPos) * (float) i;
         int j = (int) (f * 10.0F);
         for (BlockPos blockPos : breakBlockPositions) {
             if (blockPos.equals(pPos)) continue; //Let the vanilla mechanics handle the block we're hitting
-            if (level.isClientSide)
+            if (level.isClientSide())
                 level.destroyBlockProgress(player.getId() + generatePosHash(blockPos), blockPos, j);
             else
                 sendDestroyBlockProgress(player.getId() + generatePosHash(blockPos), blockPos, -1, (ServerPlayer) player);
@@ -119,7 +130,7 @@ public class PlayerEvents {
             //Do them client side and Server side, since some abilities (like ore scanner) are client side activated.
             if (air) { //Air
                 toggleableTool.useAbility(player.level(), player, hand, false);
-                PacketDistributor.sendToServer(new LeftClickPayload(0, hand == InteractionHand.MAIN_HAND, BlockPos.ZERO, -1, -1, -1, false)); //Type 0 == air
+                ClientPacketDistributor.sendToServer(new LeftClickPayload(0, hand == InteractionHand.MAIN_HAND, BlockPos.ZERO, -1, -1, -1, false)); //Type 0 == air
             } else { //Block - No need for a packet since this will run both client and server side! (See above!)
                 UseOnContext useoncontext = new UseOnContext(player.level(), player, hand, itemStack, new BlockHitResult(Vec3.atCenterOf(blockPos), direction, blockPos, false));
                 toggleableTool.useOnAbility(useoncontext, false);

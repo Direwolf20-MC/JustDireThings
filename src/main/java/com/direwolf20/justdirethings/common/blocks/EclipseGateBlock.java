@@ -1,7 +1,6 @@
 package com.direwolf20.justdirethings.common.blocks;
 
 import com.direwolf20.justdirethings.common.blockentities.EclipseGateBE;
-import com.direwolf20.justdirethings.common.blocks.baseblocks.BaseMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -11,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -19,15 +17,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import javax.annotation.Nullable;
 
 public class EclipseGateBlock extends Block implements EntityBlock {
-    public EclipseGateBlock() {
-        super(Properties.of()
-                .strength(20f, 3600000.0F)
-                .noOcclusion()
-                .noCollission()
-                .forceSolidOn() //This appears to prevent water from flowing into my block...
-                .isSuffocating(BaseMachineBlock::never)
-                .isViewBlocking(BaseMachineBlock::never)
-                .pushReaction(PushReaction.BLOCK));
+    public EclipseGateBlock(Properties properties) {
+        super(properties);
     }
 
     @Nullable
@@ -56,7 +47,7 @@ public class EclipseGateBlock extends Block implements EntityBlock {
 
     //These 2 methods after the shadows under the block
     @Override
-    public boolean propagatesSkylightDown(BlockState p_48740_, BlockGetter p_48741_, BlockPos p_48742_) {
+    public boolean propagatesSkylightDown(BlockState p_48740_) {
         return true;
     }
 

@@ -1,9 +1,9 @@
 package com.direwolf20.justdirethings.common.items.interfaces;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,100 +17,102 @@ import java.util.Map;
 public enum Ability {
     //Tier 1
     MOBSCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::scanForMobScanner, CustomSettingType.NONE, Registration.UPGRADE_MOBSCANNER),
-    OREMINER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_OREMINER),
+            AbilityMethods::scanForMobScanner, CustomSettingType.NONE, JDTRegistration.UPGRADE_MOBSCANNER),
+    OREMINER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_OREMINER),
     ORESCANNER(SettingType.TOGGLE, 10, 500, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::scanForOreScanner, CustomSettingType.NONE, Registration.UPGRADE_ORESCANNER),
+            AbilityMethods::scanForOreScanner, CustomSettingType.NONE, JDTRegistration.UPGRADE_ORESCANNER),
     LAWNMOWER(SettingType.TOGGLE, 1, 50, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::lawnmower, CustomSettingType.NONE, Registration.UPGRADE_LAWNMOWER),
-    SKYSWEEPER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SKYSWEEPER),
-    TREEFELLER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_TREEFELLER),
+            AbilityMethods::lawnmower, CustomSettingType.NONE, JDTRegistration.UPGRADE_LAWNMOWER),
+    SKYSWEEPER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_SKYSWEEPER),
+    TREEFELLER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_TREEFELLER),
     LEAFBREAKER(SettingType.TOGGLE, 1, 50, UseType.USE_ON, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::leafbreaker, CustomSettingType.NONE, Registration.UPGRADE_LEAFBREAKER),
+            AbilityMethods::leafbreaker, CustomSettingType.NONE, JDTRegistration.UPGRADE_LEAFBREAKER),
     RUNSPEED(SettingType.SLIDER, 1, 5, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
-            AbilityMethods::runSpeed, CustomSettingType.NONE, Registration.UPGRADE_RUNSPEED),
+            AbilityMethods::runSpeed, CustomSettingType.NONE, JDTRegistration.UPGRADE_RUNSPEED),
     WALKSPEED(SettingType.SLIDER, 1, 5, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
-            AbilityMethods::walkSpeed, CustomSettingType.NONE, Registration.UPGRADE_WALKSPEED),
-    STEPHEIGHT(SettingType.TOGGLE, 1, 5, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_STEPHEIGHT),
+            AbilityMethods::walkSpeed, CustomSettingType.NONE, JDTRegistration.UPGRADE_WALKSPEED),
+    STEPHEIGHT(SettingType.TOGGLE, 1, 5, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_STEPHEIGHT),
     JUMPBOOST(SettingType.SLIDER, 1, 5, UseType.PASSIVE, BindingType.CUSTOM_ONLY,
-            AbilityMethods::jumpBoost, CustomSettingType.NONE, Registration.UPGRADE_JUMPBOOST),
-    MINDFOG(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_MINDFOG),
+            AbilityMethods::jumpBoost, CustomSettingType.NONE, JDTRegistration.UPGRADE_JUMPBOOST),
+    MINDFOG(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_MINDFOG),
     INVULNERABILITY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::invulnerability, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/invulnerability.png"), Registration.UPGRADE_INVULNERABILITY),
-    POTIONARROW(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_POTIONARROW),
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/invulnerability.png"), JDTRegistration.UPGRADE_INVULNERABILITY),
+    POTIONARROW(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_POTIONARROW),
 
     //Tier 2
-    SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SMELTER),
-    SMOKER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SMOKER),
-    HAMMER(SettingType.CYCLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_HAMMER),
+    SMELTER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.PARTICLES, JDTRegistration.UPGRADE_SMELTER),
+    SMOKER(SettingType.TOGGLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.PARTICLES, JDTRegistration.UPGRADE_SMOKER),
+    HAMMER(SettingType.CYCLE, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_HAMMER),
     LAVAREPAIR(SettingType.TOGGLE, 0, 0, UseType.PASSIVE, BindingType.CUSTOM_ONLY),
     CAUTERIZEWOUNDS(SettingType.TOGGLE, 30, 1500, UseType.USE_COOLDOWN, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::cauterizeWounds, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/cauterizewounds.png"), Registration.UPGRADE_CAUTERIZEWOUNDS),
+            AbilityMethods::cauterizeWounds, CustomSettingType.PARTICLES,
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/cauterizewounds.png"), JDTRegistration.UPGRADE_CAUTERIZEWOUNDS),
     AIRBURST(SettingType.SLIDER, 1, 250, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::airBurst, CustomSettingType.NONE),
     SWIMSPEED(SettingType.SLIDER, 1, 5, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
-            AbilityMethods::swimSpeed, CustomSettingType.NONE, Registration.UPGRADE_SWIMSPEED),
+            AbilityMethods::swimSpeed, CustomSettingType.NONE, JDTRegistration.UPGRADE_SWIMSPEED),
     GROUNDSTOMP(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::groundstomp, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/groundstomp.png"), Registration.UPGRADE_GROUNDSTOMP),
+            AbilityMethods::groundstomp, CustomSettingType.PARTICLES,
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/groundstomp.png"), JDTRegistration.UPGRADE_GROUNDSTOMP),
     EXTINGUISH(SettingType.SLIDER, 25, 5000, UseType.PASSIVE_TICK_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::extinguish, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/extinguish.png"), Registration.UPGRADE_EXTINGUISH),
+            AbilityMethods::extinguish, CustomSettingType.PARTICLES,
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/extinguish.png"), JDTRegistration.UPGRADE_EXTINGUISH),
     STUPEFY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::stupefy, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/stupefy.png"), Registration.UPGRADE_STUPEFY),
-    SPLASH(SettingType.TOGGLE, 20, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_SPLASH),
+            AbilityMethods::stupefy, CustomSettingType.PARTICLES,
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/stupefy.png"), JDTRegistration.UPGRADE_STUPEFY),
+    SPLASH(SettingType.TOGGLE, 20, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_SPLASH),
     POLYMORPH_RANDOM(SettingType.TOGGLE, 10, 1000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::polymorphRandom, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_random.png")),
+            AbilityMethods::polymorphRandom, CustomSettingType.PARTICLES,
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_random.png")),
 
     //Tier 3
-    DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.RENDER, Registration.UPGRADE_DROPTELEPORT),
+    DROPTELEPORT(SettingType.TOGGLE, 2, 100, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.RENDER, JDTRegistration.UPGRADE_DROPTELEPORT) {{
+        customSettingType2 = CustomSettingType2.PARTICLES;
+    }},
     VOIDSHIFT(SettingType.SLIDER, 1, 50, UseType.USE, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::voidShift, CustomSettingType.RENDER), //FE Per block traveled
-    NEGATEFALLDAMAGE(SettingType.SLIDER, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_NEGATEFALLDAMAGE),
-    NIGHTVISION(SettingType.SLIDER, 1, 25, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_NIGHTVISION),
-    ELYTRA(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_ELYTRA),
+    NEGATEFALLDAMAGE(SettingType.SLIDER, 1, 50, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_NEGATEFALLDAMAGE),
+    NIGHTVISION(SettingType.SLIDER, 1, 25, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_NIGHTVISION),
+    ELYTRA(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_ELYTRA),
     DECOY(SettingType.SLIDER, 25, 5000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::decoy, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/decoy.png"), Registration.UPGRADE_DECOY),
-    LINGERING(SettingType.TOGGLE, 50, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_LINGERING),
-    HOMING(SettingType.TOGGLE, 50, 2000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.TARGET, Registration.UPGRADE_HOMING),
-    WATERBREATHING(SettingType.TOGGLE, 50, 500, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY, AbilityMethods::waterBreathing, CustomSettingType.NONE, Registration.UPGRADE_WATERBREATHING),
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/decoy.png"), JDTRegistration.UPGRADE_DECOY),
+    LINGERING(SettingType.TOGGLE, 50, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_LINGERING),
+    HOMING(SettingType.TOGGLE, 50, 2000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, CustomSettingType.TARGET, JDTRegistration.UPGRADE_HOMING),
+    WATERBREATHING(SettingType.TOGGLE, 50, 500, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY, AbilityMethods::waterBreathing, CustomSettingType.NONE, JDTRegistration.UPGRADE_WATERBREATHING),
 
     //Tier 4
     OREXRAY(SettingType.TOGGLE, 100, 5000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::scanForOreXRAY, CustomSettingType.NONE, Registration.UPGRADE_OREXRAY),
+            AbilityMethods::scanForOreXRAY, CustomSettingType.NONE, JDTRegistration.UPGRADE_OREXRAY),
     GLOWING(SettingType.TOGGLE, 100, 5000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::glowing, CustomSettingType.NONE, Registration.UPGRADE_GLOWING),
-    INSTABREAK(SettingType.TOGGLE, 2, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_INSTABREAK),
+            AbilityMethods::glowing, CustomSettingType.NONE, JDTRegistration.UPGRADE_GLOWING),
+    INSTABREAK(SettingType.TOGGLE, 2, 250, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_INSTABREAK),
     ECLIPSEGATE(SettingType.SLIDER, 1, 250, UseType.USE_ON, BindingType.LEFT_AND_CUSTOM,
             AbilityMethods::eclipseGate, CustomSettingType.NONE), //FE Per block Removed
     DEATHPROTECTION(SettingType.SLIDER, 25, 450000, UseType.PASSIVE_COOLDOWN, BindingType.CUSTOM_ONLY,
             CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/deathprotection.png"), Registration.UPGRADE_DEATHPROTECTION),
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/deathprotection.png"), JDTRegistration.UPGRADE_DEATHPROTECTION),
     DEBUFFREMOVER(SettingType.SLIDER, 25, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::debuffRemover, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/debuffremover.png"), Registration.UPGRADE_DEBUFFREMOVER),
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/debuffremover.png"), JDTRegistration.UPGRADE_DEBUFFREMOVER),
     EARTHQUAKE(SettingType.SLIDER, 25, 50000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::earthquake, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/earthquake.png"), Registration.UPGRADE_EARTHQUAKE),
+            AbilityMethods::earthquake, CustomSettingType.PARTICLES,
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/earthquake.png"), JDTRegistration.UPGRADE_EARTHQUAKE),
     NOAI(SettingType.SLIDER, 25, 100000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
-            AbilityMethods::noAI, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/noai.png"), Registration.UPGRADE_NOAI),
+            AbilityMethods::noAI, CustomSettingType.PARTICLES,
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/noai.png"), JDTRegistration.UPGRADE_NOAI),
     FLIGHT(SettingType.SLIDER, 1, 100, UseType.PASSIVE_TICK, BindingType.CUSTOM_ONLY,
-            AbilityMethods::flight, CustomSettingType.NONE, Registration.UPGRADE_FLIGHT),
-    LAVAIMMUNITY(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_LAVAIMMUNITY),
-    PHASE(SettingType.SLIDER, 1, 50000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_PHASE),
-    TIMEPROTECTION(SettingType.SLIDER, 1, 5000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, Registration.UPGRADE_TIMEPROTECTION),
+            AbilityMethods::flight, CustomSettingType.NONE, JDTRegistration.UPGRADE_FLIGHT),
+    LAVAIMMUNITY(SettingType.SLIDER, 1, 1000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_LAVAIMMUNITY),
+    PHASE(SettingType.SLIDER, 1, 50000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_PHASE),
+    TIMEPROTECTION(SettingType.SLIDER, 1, 5000, UseType.PASSIVE, BindingType.CUSTOM_ONLY, JDTRegistration.UPGRADE_TIMEPROTECTION),
     POLYMORPH_TARGET(SettingType.TOGGLE, 10, 50000, UseType.USE, BindingType.LEFT_AND_CUSTOM,
-            AbilityMethods::polymorphTarget, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_target.png")),
+            AbilityMethods::polymorphTarget, CustomSettingType.PARTICLES,
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/polymorph_target.png")),
     EPICARROW(SettingType.SLIDER, 25, 100000, UseType.USE_COOLDOWN, BindingType.CUSTOM_ONLY,
             AbilityMethods::epicArrow, CustomSettingType.NONE,
-            ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/epicarrow.png"), Registration.UPGRADE_EPICARROW);
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/overlay/epicarrow.png"), JDTRegistration.UPGRADE_EPICARROW);
 
 
     public enum SettingType {
@@ -122,7 +124,13 @@ public enum Ability {
     public enum CustomSettingType {
         NONE,
         RENDER,
-        TARGET
+        TARGET,
+        PARTICLES
+    }
+
+    public enum CustomSettingType2 {
+        NONE,
+        PARTICLES
     }
 
     public enum UseType {
@@ -144,25 +152,26 @@ public enum Ability {
     final String name;
     final String localization;
     final SettingType settingType;
-    final ResourceLocation iconLocation;
+    final Identifier iconLocation;
     final int durabilityCost;
     final int feCost;
     final BindingType bindingType;
     final CustomSettingType customSettingType;
+    CustomSettingType2 customSettingType2 = CustomSettingType2.NONE;
     final UseType useType;
     private Holder<Item> upgradeItem;
     // Dynamic parameter map
     private static final Map<Ability, AbilityParams> dynamicParams = new EnumMap<>(Ability.class);
     public AbilityAction action;  // Functional interface for action
     public UseOnAbilityAction useOnAction;  // Additional functional interface for use-on action
-    private ResourceLocation cooldownIcon;
+    private Identifier cooldownIcon;
 
 
     Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, CustomSettingType customSettingType) {
         this.name = this.name().toLowerCase(Locale.ROOT);
         this.settingType = settingType;
         this.localization = "justdirethings.ability." + name;
-        this.iconLocation = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/" + name + ".png");
+        this.iconLocation = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/" + name + ".png");
         this.durabilityCost = durabilityCost;
         this.feCost = feCost;
         this.bindingType = bindingType;
@@ -195,24 +204,24 @@ public enum Ability {
         this.upgradeItem = upgradeItem;
     }
 
-    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, CustomSettingType customSettingType, ResourceLocation cooldownIcon) {
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, CustomSettingType customSettingType, Identifier cooldownIcon) {
         this(settingType, durabilityCost, feCost, useType, bindingType, customSettingType);
         this.cooldownIcon = cooldownIcon;
     }
 
-    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, CustomSettingType customSettingType, ResourceLocation cooldownIcon, Holder<Item> upgradeItem) {
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, CustomSettingType customSettingType, Identifier cooldownIcon, Holder<Item> upgradeItem) {
         this(settingType, durabilityCost, feCost, useType, bindingType, customSettingType);
         this.cooldownIcon = cooldownIcon;
         this.upgradeItem = upgradeItem;
     }
 
-    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, CustomSettingType customSettingType, ResourceLocation cooldownIcon) {
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, CustomSettingType customSettingType, Identifier cooldownIcon) {
         this(settingType, durabilityCost, feCost, useType, bindingType, customSettingType);
         this.action = action;
         this.cooldownIcon = cooldownIcon;
     }
 
-    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, CustomSettingType customSettingType, ResourceLocation cooldownIcon, Holder<Item> upgradeItem) {
+    Ability(SettingType settingType, int durabilityCost, int feCost, UseType useType, BindingType bindingType, AbilityAction action, CustomSettingType customSettingType, Identifier cooldownIcon, Holder<Item> upgradeItem) {
         this(settingType, durabilityCost, feCost, useType, bindingType, customSettingType);
         this.action = action;
         this.cooldownIcon = cooldownIcon;
@@ -246,7 +255,7 @@ public enum Ability {
         return settingType;
     }
 
-    public ResourceLocation getIconLocation() {
+    public Identifier getIconLocation() {
         return iconLocation;
     }
 
@@ -274,11 +283,19 @@ public enum Ability {
         return customSettingType;
     }
 
+    public boolean hasCustomSetting2() {
+        return customSettingType2 != CustomSettingType2.NONE;
+    }
+
+    public CustomSettingType2 getCustomSetting2() {
+        return customSettingType2;
+    }
+
     public static Ability byName(String name) {
         return Ability.valueOf(name.toUpperCase(Locale.ROOT));
     }
 
-    public ResourceLocation getCooldownIcon() {
+    public Identifier getCooldownIcon() {
         return cooldownIcon;
     }
 

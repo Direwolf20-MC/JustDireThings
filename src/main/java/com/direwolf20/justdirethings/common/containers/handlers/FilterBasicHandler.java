@@ -1,22 +1,15 @@
 package com.direwolf20.justdirethings.common.containers.handlers;
 
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
-import javax.annotation.Nonnull;
-
-public class FilterBasicHandler extends ItemStackHandler {
+public class FilterBasicHandler extends ItemStacksResourceHandler {
     public FilterBasicHandler(int size) {
         super(size);
     }
 
     @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return super.isItemValid(slot, stack);
-    }
-
-    @Override
-    public int getSlotLimit(int slot) {
+    protected int getCapacity(int index, ItemResource resource) {
         return 1;
     }
 }

@@ -9,7 +9,7 @@ import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandl
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
@@ -20,8 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     public final PoweredMachineContainerData poweredMachineData;
 
     public BlockBreakerT2BE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.BlockBreakerT2BE.get(), pPos, pBlockState);
+        super(JDTRegistration.BlockBreakerT2BE.get(), pPos, pBlockState);
         poweredMachineData = new PoweredMachineContainerData(this);
     }
 
@@ -45,7 +43,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(JDTRegistration.ENERGYSTORAGE_MACHINES);
     }
 
     @Override
@@ -60,7 +58,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     @Override
@@ -76,7 +74,7 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
     @Override
     public void tickServer() {
         super.tickServer();
-        chargeItemStack(getMachineHandler().getStackInSlot(0));
+        chargeItemStack(getMachineHandler(), 0);
     }
 
     @Override
@@ -123,14 +121,14 @@ public class BlockBreakerT2BE extends BlockBreakerT1BE implements PoweredMachine
         if (!super.isBlockValid(fakePlayer, blockPos))
             return false; //Do the same checks as normal, then check the filters
         if (filterData.blockItemFilter == 0) { //Block Comparison
-            ItemStack blockItemStack = level.getBlockState(blockPos).getCloneItemStack(new BlockHitResult(Vec3.ZERO, Direction.UP, blockPos, false), level, blockPos, fakePlayer);
+            ItemStack blockItemStack = level.getBlockState(blockPos).getCloneItemStack(blockPos, level, false, fakePlayer);
             return isStackValidFilter(blockItemStack);
         } else { //Item Drop Comparison
             ItemStack tool = getTool();
             List<ItemStack> drops = Block.getDrops(level.getBlockState(blockPos), (ServerLevel) level, blockPos, level.getBlockEntity(blockPos), fakePlayer, tool);
             for (ItemStack drop : drops) {
                 if (tool.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbility(tool, Ability.SMELTER)) {
-                    if (isStackValidFilter(Helpers.getSmeltedItem(level, drop))) return true;
+                    if (isStackValidFilter(Helpers.getSmeltedItem((ServerLevel) level, drop))) return true;
                 } else {
                     if (isStackValidFilter(drop)) return true;
                 }

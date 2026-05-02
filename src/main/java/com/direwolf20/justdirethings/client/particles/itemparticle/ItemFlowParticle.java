@@ -4,8 +4,14 @@ package com.direwolf20.justdirethings.client.particles.itemparticle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.BreakingItemParticle;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.data.AtlasIds;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -17,8 +23,8 @@ public class ItemFlowParticle extends BreakingItemParticle {
     private double targetX, targetY, targetZ;
     Random random = new Random();
 
-    public ItemFlowParticle(ClientLevel world, double x, double y, double z, double targetX, double targetY, double targetZ, ItemStack itemStack, int ticksPerBlock) {
-        this(world, x, y, z, itemStack);
+    public ItemFlowParticle(ClientLevel world, double x, double y, double z, double targetX, double targetY, double targetZ, TextureAtlasSprite sprite, int ticksPerBlock) {
+        this(world, x, y, z, sprite);
         this.xd = 0;
         this.yd = 0;
         this.zd = 0;
@@ -30,27 +36,21 @@ public class ItemFlowParticle extends BreakingItemParticle {
         Vec3 path = target.subtract(source).normalize().multiply(1, 1, 1);
         this.gravity = 0.0f;
         double distance = target.distanceTo(source);
-        //System.out.println(source +":"+target);
         this.hasPhysics = false;
         float minSize = 0.1f;
         float maxSize = 0.2f;
         float partSize = minSize + random.nextFloat() * (maxSize - minSize);
         float speedModifier = (1f - 0.5f) * (partSize - minSize) / (maxSize - minSize) + 0.25f;
-        //float speedModifier = (0.5f - 1f) * (partSize - maxSize) / (minSize - maxSize) + 1f;
         float speedAdjust = ticksPerBlock * (1 / speedModifier);
         this.xd += path.x / speedAdjust;
         this.yd += path.y / speedAdjust;
         this.zd += path.z / speedAdjust;
         this.lifetime = (int) (distance * speedAdjust);
         this.scale(partSize);
-        if (this.sprite == null) {
-            this.setSprite(Minecraft.getInstance().getItemRenderer().getModel(new ItemStack(Blocks.COBBLESTONE), world, (LivingEntity) null, 0).getParticleIcon());
-        }
-
     }
 
-    public ItemFlowParticle(ClientLevel world, double x, double y, double z, ItemStack itemStack) {
-        super(world, x, y, z, itemStack);
+    public ItemFlowParticle(ClientLevel world, double x, double y, double z, TextureAtlasSprite sprite) {
+        super(world, x, y, z, sprite);
     }
 
     @Override
@@ -66,8 +66,19 @@ public class ItemFlowParticle extends BreakingItemParticle {
         }
     }
 
-    public static ParticleProvider<ItemFlowParticleData> FACTORY =
-            (data, world, x, y, z, xSpeed, ySpeed, zSpeed) ->
-                    new ItemFlowParticle(world, x, y, z, data.targetX, data.targetY, data.targetZ, data.getItemStack(), data.ticksPerBlock);
-}
+    private static TextureAtlasSprite resolveSprite(ClientLevel world, ItemStack stack, RandomSource random) {
+        Minecraft mc = Minecraft.getInstance();
+        ItemStack target = stack.isEmpty() ? new ItemStack(Blocks.COBBLESTONE) : stack;
+        ItemStackRenderState state = new ItemStackRenderState();
+        mc.getItemModelResolver().updateForTopItem(state, target, ItemDisplayContext.GROUND, world, null, 0);
+        Material.Baked material = state.pickParticleMaterial(random);
+        if (material != null) return material.sprite();
+        return mc.getAtlasManager().getAtlasOrThrow(AtlasIds.ITEMS).missingSprite();
+    }
 
+    public static ParticleProvider<ItemFlowParticleData> FACTORY =
+            (data, world, x, y, z, xAux, yAux, zAux, random) -> {
+                TextureAtlasSprite sprite = resolveSprite(world, data.getItemStack(), random);
+                return new ItemFlowParticle(world, x, y, z, data.targetX, data.targetY, data.targetZ, sprite, data.ticksPerBlock);
+            };
+}

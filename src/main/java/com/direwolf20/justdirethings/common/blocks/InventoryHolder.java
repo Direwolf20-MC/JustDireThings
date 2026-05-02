@@ -8,6 +8,7 @@ import com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataCom
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -19,12 +20,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
@@ -32,12 +35,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class InventoryHolder extends BaseMachineBlock {
-    public InventoryHolder() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public InventoryHolder(Properties properties) {
+        super(properties);
     }
 
     @Nullable
@@ -60,22 +59,16 @@ public class InventoryHolder extends BaseMachineBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.hasBlockEntity() && !state.is(newState.getBlock())) { //Replica of Default Block onRemove - to skip dropping items.
-            level.removeBlockEntity(pos);
-        }
-    }
-
-    @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
-        if (!world.isClientSide && entity instanceof Player player) {
+        if (!world.isClientSide() && entity instanceof Player player) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof InventoryHolderBE inventoryHolderBE) {
                 if (stack.has(JustDireDataComponents.CUSTOM_DATA_1)) {
                     CompoundTag compound = stack.get(JustDireDataComponents.CUSTOM_DATA_1).copyTag();
                     if (!compound.isEmpty()) {
-                        inventoryHolderBE.loadInventory(compound, world.registryAccess());
+                        ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, world.registryAccess(), compound);
+                        inventoryHolderBE.loadInventory(input);
                     }
                 }
             }
@@ -89,9 +82,10 @@ public class InventoryHolder extends BaseMachineBlock {
 
         if (blockEntity instanceof BaseMachineBE baseMachineBE && !baseMachineBE.isDefaultSettings()) {
             ItemStack itemStack = new ItemStack(Item.byBlock(this));
-            CompoundTag compoundTag = new CompoundTag();
-            ((BaseMachineBE) blockEntity).saveAdditional(compoundTag, builder.getLevel().registryAccess());
-            ((InventoryHolderBE) blockEntity).saveInventory(compoundTag, builder.getLevel().registryAccess());
+            TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, builder.getLevel().registryAccess());
+            baseMachineBE.saveCustomOnly(output);
+            ((InventoryHolderBE) blockEntity).saveInventory(output);
+            CompoundTag compoundTag = output.buildResult();
             if (!compoundTag.isEmpty()) {
                 itemStack.set(JustDireDataComponents.CUSTOM_DATA_1, CustomData.of(compoundTag));
             }

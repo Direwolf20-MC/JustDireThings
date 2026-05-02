@@ -2,16 +2,13 @@ package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.client.particles.gooexplodeparticle.GooExplodeParticleData;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
-import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipeTag;
 import com.direwolf20.justdirethings.setup.Config;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +21,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -51,7 +50,7 @@ public class GooBlockBE_Base extends BlockEntity {
     public boolean updateSideCounter(Direction direction, int newCounter) {
         int oldCounter = sidedCounters.get(direction);
         sidedCounters.put(direction, newCounter);
-        if (oldCounter >= 0 && newCounter == -1 && level.isClientSide) {
+        if (oldCounter >= 0 && newCounter == -1 && level.isClientSide()) {
             spawnParticles(direction);
         }
         int duration = sidedDurations.get(direction);
@@ -94,9 +93,9 @@ public class GooBlockBE_Base extends BlockEntity {
         GooExplodeParticleData data = new GooExplodeParticleData(itemStack);
         for (Direction direction : Direction.values()) {
             for (int i = 0; i < 100; i++) {
-                double randomX = 0.5 + (0.6 * direction.getNormal().getX()) + (direction.getNormal().getX() == 0 ? random.nextDouble() - 0.5 : 0);
-                double randomY = 0.5 + (0.6 * direction.getNormal().getY()) + (direction.getNormal().getY() == 0 ? random.nextDouble() - 0.5 : 0);
-                double randomZ = 0.5 + (0.6 * direction.getNormal().getZ()) + (direction.getNormal().getZ() == 0 ? random.nextDouble() - 0.5 : 0);
+                double randomX = 0.5 + (0.6 * direction.getUnitVec3i().getX()) + (direction.getUnitVec3i().getX() == 0 ? random.nextDouble() - 0.5 : 0);
+                double randomY = 0.5 + (0.6 * direction.getUnitVec3i().getY()) + (direction.getUnitVec3i().getY() == 0 ? random.nextDouble() - 0.5 : 0);
+                double randomZ = 0.5 + (0.6 * direction.getUnitVec3i().getZ()) + (direction.getUnitVec3i().getZ() == 0 ? random.nextDouble() - 0.5 : 0);
                 level.addParticle(data, startPos.getX() + randomX, startPos.getY() + randomY, startPos.getZ() + randomZ, 0, 0, 0);
             }
         }
@@ -112,7 +111,7 @@ public class GooBlockBE_Base extends BlockEntity {
                     needsUpdate = true;
             }
         }
-        if (needsUpdate && !level.isClientSide)
+        if (needsUpdate && !level.isClientSide())
             markDirtyClient();
     }
 
@@ -157,11 +156,11 @@ public class GooBlockBE_Base extends BlockEntity {
 
     private void killGoo() {
         if (!Config.GOO_CAN_DIE.get()) return;
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             BlockState state = this.getBlockState();
 
             // Ensure the block is currently alive and perform the 10% chance check
-            if (state.getValue(ALIVE) && level.random.nextFloat() < Config.GOO_DEATH_CHANCE.get().floatValue()) {
+            if (state.getValue(ALIVE) && level.getRandom().nextFloat() < Config.GOO_DEATH_CHANCE.get().floatValue()) {
                 // Update the block state to dead
                 level.setBlock(worldPosition, state.setValue(ALIVE, false), 3);
                 level.playSound(null, getBlockPos(), SoundEvents.VEX_DEATH, SoundSource.BLOCKS, 1.0F, 0.25F);
@@ -188,12 +187,6 @@ public class GooBlockBE_Base extends BlockEntity {
         if (gooSpreadRecipe != null) {
             output = gooSpreadRecipe.getOutput();
             duration = gooSpreadRecipe.getCraftingDuration();
-        } else {
-            GooSpreadRecipeTag gooSpreadRecipeTag = findRecipeTag(input);
-            if (gooSpreadRecipeTag != null) {
-                output = gooSpreadRecipeTag.getOutput();
-                duration = gooSpreadRecipeTag.getCraftingDuration();
-            }
         }
         outputCache.put(input, output);
         durationCache.put(input, duration);
@@ -201,10 +194,12 @@ public class GooBlockBE_Base extends BlockEntity {
 
     @Nullable
     private GooSpreadRecipe findRecipe(BlockState state) {
-        RecipeManager recipeManager = getLevel().getRecipeManager();
+        if (!(getLevel() instanceof net.minecraft.server.level.ServerLevel serverLevel)) return null;
+        RecipeManager recipeManager = serverLevel.recipeAccess();
 
-        for (RecipeHolder<?> recipe : recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE.get())) {
-            if (recipe.value() instanceof GooSpreadRecipe gooSpreadRecipe && gooSpreadRecipe.matches(this, state)) {
+        for (RecipeHolder<GooSpreadRecipe> recipe : recipeManager.recipeMap().byType(JDTRegistration.GOO_SPREAD_RECIPE_TYPE.get())) {
+            GooSpreadRecipe gooSpreadRecipe = recipe.value();
+            if (gooSpreadRecipe.matches(this, state)) {
                 return gooSpreadRecipe;
             }
         }
@@ -212,85 +207,61 @@ public class GooBlockBE_Base extends BlockEntity {
         return null;
     }
 
-    @Nullable
-    private GooSpreadRecipeTag findRecipeTag(BlockState state) {
-        RecipeManager recipeManager = getLevel().getRecipeManager();
-
-        for (RecipeHolder<?> recipe : recipeManager.getAllRecipesFor(Registration.GOO_SPREAD_RECIPE_TYPE_TAG.get())) {
-            if (recipe.value() instanceof GooSpreadRecipeTag gooSpreadRecipeTag && gooSpreadRecipeTag.matches(this, state)) {
-                return gooSpreadRecipeTag;
-            }
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        ValueOutput.ValueOutputList counterList = output.childrenList("sideCounters");
+        for (Direction direction : Direction.values()) {
+            ValueOutput counter = counterList.addChild();
+            counter.putInt("side", direction.ordinal());
+            counter.putInt("counter", sidedCounters.get(direction));
         }
 
-        return null;
+        ValueOutput.ValueOutputList durationList = output.childrenList("sideDurations");
+        for (Direction direction : Direction.values()) {
+            ValueOutput duration = durationList.addChild();
+            duration.putInt("side", direction.ordinal());
+            duration.putInt("duration", sidedDurations.get(direction));
+        }
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        ListTag counterListTag = new ListTag();
-        for (Direction direction : Direction.values()) {
-            CompoundTag counterTag = new CompoundTag();
-            counterTag.putInt("side", direction.ordinal());
-            counterTag.putInt("counter", sidedCounters.get(direction));
-            counterListTag.add(counterTag);
-        }
-        tag.put("sideCounters", counterListTag);
-
-        ListTag durationListTag = new ListTag();
-        for (Direction direction : Direction.values()) {
-            CompoundTag durationTag = new CompoundTag();
-            durationTag.putInt("side", direction.ordinal());
-            durationTag.putInt("duration", sidedDurations.get(direction));
-            durationListTag.add(durationTag);
-        }
-        tag.put("sideDurations", durationListTag);
-    }
-
-    @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        if (tag.contains("sideCounters")) {
-            ListTag listNBT = tag.getList("sideCounters", Tag.TAG_COMPOUND);
-            for (int i = 0; i < listNBT.size(); i++) {
-                CompoundTag sideCounterTag = listNBT.getCompound(i);
-                int direction = sideCounterTag.getInt("side");
-                int counter = sideCounterTag.getInt("counter");
-                this.updateSideCounter(Direction.values()[direction], counter);
+    protected void loadAdditional(ValueInput input) {
+        input.childrenList("sideCounters").ifPresent(list -> {
+            for (ValueInput child : list) {
+                int dir = child.getIntOr("side", 0);
+                int counter = child.getIntOr("counter", -1);
+                this.updateSideCounter(Direction.values()[dir], counter);
             }
-        }
-        if (tag.contains("sideDurations")) {
-            ListTag listNBT = tag.getList("sideDurations", Tag.TAG_COMPOUND);
-            for (int i = 0; i < listNBT.size(); i++) {
-                CompoundTag sideCounterTag = listNBT.getCompound(i);
-                int direction = sideCounterTag.getInt("side");
-                int duration = sideCounterTag.getInt("duration");
-                this.sidedDurations.put(Direction.values()[direction], duration);
+        });
+        input.childrenList("sideDurations").ifPresent(list -> {
+            for (ValueInput child : list) {
+                int dir = child.getIntOr("side", 0);
+                int duration = child.getIntOr("duration", -1);
+                this.sidedDurations.put(Direction.values()[dir], duration);
             }
-        }
-        super.loadAdditional(tag, provider);
+        });
+        super.loadAdditional(input);
     }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        // Vanilla uses the type parameter to indicate which type of tile entity (command block, skull, or beacon?) is receiving the packet, but it seems like Forge has overridden this behavior
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        this.loadAdditional(tag, lookupProvider);
+    public void handleUpdateTag(ValueInput input) {
+        this.loadWithComponents(input);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider p_323910_) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, p_323910_);
-        return tag;
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return saveCustomOnly(provider);
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        this.loadAdditional(pkt.getTag(), lookupProvider);
+    public void onDataPacket(Connection net, ValueInput input) {
+        this.loadWithComponents(input);
     }
 
     public void markDirtyClient() {

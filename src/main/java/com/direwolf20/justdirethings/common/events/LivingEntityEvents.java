@@ -3,14 +3,17 @@ package com.direwolf20.justdirethings.common.events;
 import com.direwolf20.justdirethings.common.items.TotemOfDeathRecall;
 import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -19,14 +22,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.equipment.EquipmentAsset;
+import net.minecraft.world.item.equipment.Equippable;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -57,7 +63,7 @@ public class LivingEntityEvents {
             if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.hasAbility(Ability.INVULNERABILITY)) {
                 int activeCooldown = ToggleableTool.getCooldown(chestplate, Ability.INVULNERABILITY, true);
                 if (activeCooldown == -1) return;
-                player.playNotifySound(SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 1.0F);
                 e.setInvulnerable(true);
             }
         }
@@ -76,13 +82,17 @@ public class LivingEntityEvents {
                     double distance = source.position().distanceTo(target.position());
                     double defaultRange = source.getAttributes().hasAttribute(Attributes.FOLLOW_RANGE) ? source.getAttribute(Attributes.FOLLOW_RANGE).getValue() : 16;
                     int denominator = 2;
-                    if (helmet.getItem() instanceof ArmorItem armorItem) {
-                        if (armorItem.getMaterial().equals(ArmorTiers.BLAZEGOLD))
-                            denominator = 3;
-                        else if (armorItem.getMaterial().equals(ArmorTiers.CELESTIGEM))
-                            denominator = 4;
-                        else if (armorItem.getMaterial().equals(ArmorTiers.ECLIPSEALLOY))
-                            denominator = 5;
+                    Equippable equippable = helmet.get(DataComponents.EQUIPPABLE);
+                    if (equippable != null) {
+                        ResourceKey<EquipmentAsset> assetId = equippable.assetId().orElse(null);
+                        if (assetId != null) {
+                            if (assetId.equals(ArmorTiers.BLAZEGOLD.assetId()))
+                                denominator = 3;
+                            else if (assetId.equals(ArmorTiers.CELESTIGEM.assetId()))
+                                denominator = 4;
+                            else if (assetId.equals(ArmorTiers.ECLIPSEALLOY.assetId()))
+                                denominator = 5;
+                        }
                     }
                     if (distance > (defaultRange / denominator))
                         e.setCanceled(true);
@@ -97,6 +107,27 @@ public class LivingEntityEvents {
             ItemStack boots = player.getItemBySlot(EquipmentSlot.FEET);
             if (boots.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(boots, Ability.JUMPBOOST))
                 Ability.JUMPBOOST.action.execute(player.level(), player, boots);
+        }
+    }
+
+    // Vanilla LivingEntity#canGlideUsing only checks DataComponents.GLIDER presence, and NeoForge 26.1
+    // no longer exposes canElytraFly/elytraFlightTick. Sync the GLIDER component onto the equipped
+    // chestplate per server tick so the ELYTRA toggle + upgrade gate actually govern gliding; vanilla's
+    // updateFallFlying drops the fall-flying flag the next tick when the component disappears.
+    @SubscribeEvent
+    public static void syncElytraComponent(EntityTickEvent.Post e) {
+        if (e.getEntity().level().isClientSide()) return;
+        if (!(e.getEntity() instanceof Player player)) return;
+        ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+        if (!(chest.getItem() instanceof ToggleableTool toggleableTool)) return;
+        if (!toggleableTool.hasAbility(Ability.ELYTRA)) return;
+
+        boolean shouldGlide = toggleableTool.canUseAbilityAndDurability(chest, Ability.ELYTRA);
+        boolean hasComponent = chest.has(DataComponents.GLIDER);
+        if (shouldGlide && !hasComponent) {
+            chest.set(DataComponents.GLIDER, Unit.INSTANCE);
+        } else if (!shouldGlide && hasComponent) {
+            chest.remove(DataComponents.GLIDER);
         }
     }
 
@@ -156,13 +187,13 @@ public class LivingEntityEvents {
                         boolean[] dropSmoked = new boolean[1];
                         Helpers.smokeDrop((ServerLevel) player.level(), itemEntity, mainHand, event.getEntity(), dropSmoked);
 
-                        if (dropSmoked[0]) {
+                        if (dropSmoked[0] && ToggleableTool.getCustomSetting(mainHand, Ability.SMOKER.getName()) == 0) {
                             ToggleableTool.smokerParticles((ServerLevel) player.level(), itemEntity.blockPosition(), itemEntity.getItem().getCount());
                         }
                     }
                 }
                 if (toggleableTool.canUseAbility(mainHand, Ability.DROPTELEPORT)) {
-                    IItemHandler handler = ToggleableTool.getBoundHandler((ServerLevel) player.level(), mainHand);
+                    ResourceHandler<ItemResource> handler = ToggleableTool.getBoundHandler((ServerLevel) player.level(), mainHand);
                     if (handler != null) {
                         Iterator<ItemEntity> iterator = event.getDrops().iterator();
                         while (iterator.hasNext()) {
@@ -180,7 +211,8 @@ public class LivingEntityEvents {
                             }
                         }
                         if (event.getDrops().isEmpty()) { //Only spawn particles if we teleported everything - not perfect but better than exhaustive testing
-                            ToggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
+                            if (ToggleableTool.getCustomSetting2(mainHand, Ability.DROPTELEPORT.getName()) == 0)
+                                ToggleableTool.teleportParticles((ServerLevel) player.level(), event.getEntity().getPosition(0f));
                             event.setCanceled(true);
                         }
                     }
@@ -224,7 +256,7 @@ public class LivingEntityEvents {
                 if (chestplate.getItem() instanceof ToggleableTool toggleableTool && toggleableTool.canUseAbilityAndDurability(chestplate, Ability.DEATHPROTECTION)) {
                     AbilityParams abilityParams = toggleableTool.getAbilityParams(Ability.DEATHPROTECTION);
                     ToggleableTool.addCooldown(chestplate, Ability.DEATHPROTECTION, abilityParams.cooldown, false);
-                    player.playNotifySound(SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.TOTEM_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
                     Helpers.damageTool(chestplate, player, Ability.DEATHPROTECTION);
                     player.setHealth(10.0F);
                     event.setCanceled(true);
@@ -236,15 +268,15 @@ public class LivingEntityEvents {
             if (!totemStack.isEmpty()) {
                 CompoundTag deathData = new CompoundTag();
                 deathData.put("direDeathData", NBTHelpers.globalVec3ToNBT(player.level().dimension(), player.position()));
-                player.setData(Registration.DEATH_DATA, deathData);
+                player.setData(JDTRegistration.DEATH_DATA, deathData);
                 totemStack.shrink(1);
             }
         }
     }
 
     private static ItemStack findTotem(ServerPlayer player) {
-        for (ItemStack itemStack : player.getInventory().items) {
-            if (itemStack.getItem() == Registration.TotemOfDeathRecall.get() && TotemOfDeathRecall.getBoundTo(itemStack) == null) {
+        for (ItemStack itemStack : player.getInventory().getNonEquipmentItems()) {
+            if (itemStack.getItem() == JDTRegistration.TotemOfDeathRecall.get() && TotemOfDeathRecall.getBoundTo(itemStack) == null) {
                 return itemStack;
             }
         }
@@ -254,13 +286,13 @@ public class LivingEntityEvents {
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         ServerPlayer oldPlayer = (ServerPlayer) event.getOriginal();
-        if (oldPlayer.level().isClientSide || !event.isWasDeath()) return;
+        if (oldPlayer.level().isClientSide() || !event.isWasDeath()) return;
         ServerPlayer newPlayer = (ServerPlayer) event.getEntity();
-        CompoundTag deathData = oldPlayer.getData(Registration.DEATH_DATA);
+        CompoundTag deathData = oldPlayer.getData(JDTRegistration.DEATH_DATA);
 
         if (deathData.contains("direDeathData")) {
-            NBTHelpers.GlobalVec3 boundTo = NBTHelpers.nbtToGlobalVec3(deathData.getCompound("direDeathData"));
-            ItemStack totemStack = new ItemStack(Registration.TotemOfDeathRecall.get());
+            NBTHelpers.GlobalVec3 boundTo = NBTHelpers.nbtToGlobalVec3(deathData.getCompoundOrEmpty("direDeathData"));
+            ItemStack totemStack = new ItemStack(JDTRegistration.TotemOfDeathRecall.get());
             TotemOfDeathRecall.setBoundTo(totemStack, boundTo);
             newPlayer.getInventory().add(totemStack);
         }

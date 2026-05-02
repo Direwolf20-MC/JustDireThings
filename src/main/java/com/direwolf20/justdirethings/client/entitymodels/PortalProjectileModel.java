@@ -1,8 +1,8 @@
 package com.direwolf20.justdirethings.client.entitymodels;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.common.entities.PortalProjectile;
-import net.minecraft.client.model.HierarchicalModel;
+import com.direwolf20.justdirethings.client.entityrenders.PortalProjectileRender;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -10,17 +10,17 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public class PortalProjectileModel extends HierarchicalModel<PortalProjectile> {
+public class PortalProjectileModel extends EntityModel<PortalProjectileRender.PortalProjectileRenderState> {
 
-    public static ModelLayerLocation Portal_Projectile_Layer = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_projectile"), "body");
-    private static final String MAIN = "main";
-    private final ModelPart root;
+    public static ModelLayerLocation Portal_Projectile_Layer = new ModelLayerLocation(
+            Identifier.fromNamespaceAndPath(JustDireThings.MODID, "portal_projectile"), "body");
+
     private final ModelPart main;
 
     public PortalProjectileModel(ModelPart pRoot) {
-        this.root = pRoot;
+        super(pRoot);
         this.main = pRoot.getChild("main");
     }
 
@@ -42,16 +42,9 @@ public class PortalProjectileModel extends HierarchicalModel<PortalProjectile> {
     }
 
     @Override
-    public ModelPart root() {
-        return this.root;
-    }
-
-    /**
-     * Sets this entity's model rotation angles
-     */
-    @Override
-    public void setupAnim(PortalProjectile pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        this.main.yRot = pNetHeadYaw * (float) (Math.PI / 180.0);
-        this.main.xRot = pHeadPitch * (float) (Math.PI / 180.0);
+    public void setupAnim(PortalProjectileRender.PortalProjectileRenderState state) {
+        super.setupAnim(state);
+        this.main.yRot = state.yRot * (float) (Math.PI / 180.0);
+        this.main.xRot = state.xRot * (float) (Math.PI / 180.0);
     }
 }

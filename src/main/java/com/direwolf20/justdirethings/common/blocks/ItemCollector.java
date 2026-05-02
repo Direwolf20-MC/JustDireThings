@@ -10,12 +10,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -94,16 +94,10 @@ public class ItemCollector extends BaseMachineBlock {
             ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get()//EAST
     };
 
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
 
-    public ItemCollector() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .noOcclusion()
-                .forceSolidOn()
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public ItemCollector(Properties properties) {
+        super(properties);
     }
 
     @Nullable
@@ -132,7 +126,7 @@ public class ItemCollector extends BaseMachineBlock {
 
     @SuppressWarnings("deprecation")
     @Override
-    public VoxelShape getOcclusionShape(BlockState state, BlockGetter reader, BlockPos pos) {
+    public VoxelShape getOcclusionShape(BlockState state) {
         return shapes[state.getValue(FACING).get3DDataValue()];
     }
 
@@ -152,7 +146,7 @@ public class ItemCollector extends BaseMachineBlock {
     }
 
     @Override
-    public boolean propagatesSkylightDown(BlockState p_48740_, BlockGetter p_48741_, BlockPos p_48742_) {
+    public boolean propagatesSkylightDown(BlockState p_48740_) {
         return true;
     }
 }

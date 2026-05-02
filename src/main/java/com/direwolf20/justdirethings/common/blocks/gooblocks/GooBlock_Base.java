@@ -1,20 +1,19 @@
 package com.direwolf20.justdirethings.common.blocks.gooblocks;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.GooBlockBE_Base;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,12 +28,8 @@ public class GooBlock_Base extends Block implements EntityBlock {
 
     public static final BooleanProperty ALIVE = BooleanProperty.create("alive");
 
-    public GooBlock_Base() {
-        super(Properties.of()
-                .sound(SoundType.FUNGUS)
-                .strength(2.0f)
-                .noOcclusion()
-        );
+    public GooBlock_Base(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(ALIVE, false));
     }
 
@@ -44,10 +39,10 @@ public class GooBlock_Base extends Block implements EntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         // Check if the item in hand is sugar and the block is in the dead state
         if (!state.getValue(ALIVE) && validRevivalItem(itemStack)) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 // Convert the block to alive
                 level.setBlock(pos, state.setValue(ALIVE, true), 3);
 
@@ -68,14 +63,14 @@ public class GooBlock_Base extends Block implements EntityBlock {
                     itemStack.shrink(1);
                 }
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         return super.useItemOn(itemStack, state, level, pos, player, hand, blockHitResult);
     }
 
     protected boolean validRevivalItem(ItemStack itemStack) {
-        return itemStack.is(JustDireItemTags.GOO_REVIVE_TIER_1);
+        return itemStack.is(ModTags.Items.GOO_REVIVE_TIER_1);
     }
 
     @Nullable
@@ -98,6 +93,6 @@ public class GooBlock_Base extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new GooBlockBE_Base(Registration.GooBlockBE_Tier1.get(), pos, state);
+        return new GooBlockBE_Base(JDTRegistration.GooBlockBE_Tier1.get(), pos, state);
     }
 }

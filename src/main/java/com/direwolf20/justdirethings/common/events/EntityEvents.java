@@ -2,8 +2,9 @@ package com.direwolf20.justdirethings.common.events;
 
 import com.direwolf20.justdirethings.common.items.tools.basetools.BaseBow;
 import com.direwolf20.justdirethings.datagen.recipes.FluidDropRecipe;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -11,14 +12,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.client.event.RecipesReceivedEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEntityUseItemEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -60,7 +60,7 @@ public class EntityEvents {
                     level.setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
                     fluidType.onVaporize(null, level, blockPos, fluidStack);
                 } else {
-                    if (!level.isClientSide)
+                    if (!level.isClientSide())
                         level.playSound(null, blockPos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
             }
@@ -72,10 +72,12 @@ public class EntityEvents {
         FluidInputs fluidInputs = new FluidInputs(blockState, entity.getItem().getItem());
         if (fluidCraftCache.containsKey(fluidInputs))
             return fluidCraftCache.get(fluidInputs);
-        RecipeManager recipeManager = entity.level().getRecipeManager();
+        if (!(entity.level() instanceof ServerLevel serverLevel))
+            return null;
 
-        for (RecipeHolder<?> recipe : recipeManager.getAllRecipesFor(Registration.FLUID_DROP_RECIPE_TYPE.get())) {
-            if (recipe.value() instanceof FluidDropRecipe fluidDropRecipe && fluidDropRecipe.matches(blockState, entity.getItem())) {
+        for (RecipeHolder<FluidDropRecipe> recipe : serverLevel.getServer().getRecipeManager().recipeMap().byType(JDTRegistration.FLUID_DROP_RECIPE_TYPE.get())) {
+            FluidDropRecipe fluidDropRecipe = recipe.value();
+            if (fluidDropRecipe.matches(blockState, entity.getItem())) {
                 fluidCraftCache.put(fluidInputs, fluidDropRecipe.getOutput());
                 break;
             }
@@ -95,12 +97,12 @@ public class EntityEvents {
     }
 
     @SubscribeEvent
-    public static void onReloadServerResources(AddReloadListenerEvent e) {
+    public static void onReloadServerResources(AddServerReloadListenersEvent e) {
         clearCache();
     }
 
     @SubscribeEvent
-    public static void onClientRecipesUpdated(RecipesUpdatedEvent e) {
+    public static void onClientRecipesUpdated(RecipesReceivedEvent e) {
         clearCache();
     }
 }

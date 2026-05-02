@@ -19,12 +19,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import javax.annotation.Nullable;
 
 public class PlayerAccessor extends BaseMachineBlock {
-    public PlayerAccessor() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public PlayerAccessor(Properties properties) {
+        super(properties);
     }
 
     @Nullable

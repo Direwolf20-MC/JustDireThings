@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_glowing",
+  "base": "justdirethings:eclipsealloy_sword"
+}

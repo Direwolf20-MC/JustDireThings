@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/blazegold_axe"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/blazegold_axe_active"
+    },
+    "property": "justdirethings:tool_enabled"
+  }
+}

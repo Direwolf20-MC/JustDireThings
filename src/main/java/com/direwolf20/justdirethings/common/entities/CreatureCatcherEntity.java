@@ -1,29 +1,34 @@
 package com.direwolf20.justdirethings.common.entities;
 
 import com.direwolf20.justdirethings.common.items.CreatureCatcher;
-import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.entity.PartEntity;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
 
@@ -32,7 +37,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
     private static final EntityDataAccessor<Boolean> CAPTURING = SynchedEntityData.defineId(CreatureCatcherEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> SHRINKING_TIME = SynchedEntityData.defineId(CreatureCatcherEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> RETURN_ITEM_STACK = SynchedEntityData.defineId(CreatureCatcherEntity.class, EntityDataSerializers.ITEM_STACK);
-    private static final EntityDataAccessor<Vector3f> ENTITY_POSITION = SynchedEntityData.defineId(CreatureCatcherEntity.class, EntityDataSerializers.VECTOR3);
+    private static final EntityDataAccessor<Vector3fc> ENTITY_POSITION = SynchedEntityData.defineId(CreatureCatcherEntity.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Float> ENTITY_BODY_ROT = SynchedEntityData.defineId(CreatureCatcherEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> ENTITY_HEAD_ROT = SynchedEntityData.defineId(CreatureCatcherEntity.class, EntityDataSerializers.FLOAT);
 
@@ -56,8 +61,8 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
 
     }
 
-    public CreatureCatcherEntity(Level pLevel, LivingEntity pShooter) {
-        super(Registration.CreatureCatcherEntity.get(), pShooter, pLevel);
+    public CreatureCatcherEntity(Level pLevel, LivingEntity pShooter, ItemStack pItemStack) {
+        super(JDTRegistration.CreatureCatcherEntity.get(), pShooter, pLevel, pItemStack);
     }
 
     public boolean hasHitEntity() {
@@ -80,7 +85,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         this.entityData.set(SHRINKING_TIME, this.entityData.get(SHRINKING_TIME) + 1);
     }
 
-    public Vector3f getMobPosition() {
+    public Vector3fc getMobPosition() {
         return this.entityData.get(ENTITY_POSITION);
     }
 
@@ -98,14 +103,14 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return Registration.CreatureCatcher.get();
+        return JDTRegistration.CreatureCatcher.get();
     }
 
     @Override
     public void tick() {
         super.tick();
         if (!hasHitEntity()) return;
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             if (hitEntity != null && !hitEntity.isDeadOrDying() && shrinkingTime() > 1) {
                 if (CreatureCatcher.hasEntity(getReturnStack())) {
                     hitEntity.remove(RemovalReason.DISCARDED);
@@ -131,7 +136,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         ItemStack itemStack = getItem();
-        if (level().isClientSide || CreatureCatcher.hasEntity(itemStack)) return;
+        if (level().isClientSide() || CreatureCatcher.hasEntity(itemStack)) return;
         Entity entity = pResult.getEntity();
         if (entity instanceof Mob mob && canCapture(mob)) {
             this.entityData.set(HAS_HIT, true);
@@ -150,7 +155,7 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
      */
     @Override
     protected void onHitBlock(BlockHitResult pResult) {
-        if (level().isClientSide) return;
+        if (level().isClientSide()) return;
         super.onHitBlock(pResult);
         ItemStack itemStack = getItem();
         if (CreatureCatcher.hasEntity(itemStack)) {
@@ -191,18 +196,18 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
     }
 
     protected ItemStack createItemStack(Mob entity) {
-        CompoundTag entityData = new CompoundTag();
-        entity.save(entityData);
+        TagValueOutput entityOutput = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess());
+        entity.save(entityOutput);
         ItemStack itemStack = new ItemStack(getDefaultItem());
         itemStack.set(ENTITIYTYPE, EntityType.getKey(entity.getType()).toString());
-        itemStack.set(DataComponents.ENTITY_DATA, CustomData.of(entityData));
+        itemStack.set(DataComponents.ENTITY_DATA, TypedEntityData.of(entity.getType(), entityOutput.buildResult()));
         return itemStack;
     }
 
     protected void releaseEntity(ItemStack itemStack) {
         Entity entity = getEntityFromItemStack(itemStack, this.level());
         Vec3 location = getPosition(0);
-        entity.moveTo(location);
+        entity.snapTo(location);
         level().addFreshEntity(entity);
     }
 
@@ -210,12 +215,13 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
         if (!itemStack.has(ENTITIYTYPE)) return null;
         EntityType<?> type = EntityType.byString(itemStack.get(ENTITIYTYPE)).orElse(null);
         if (type == null) return null;
-        Entity entity = type.create(level);
+        Entity entity = type.create(level, net.minecraft.world.entity.EntitySpawnReason.LOAD);
         if (!(entity instanceof Mob)) return null;
-        if (itemStack.has(DataComponents.ENTITY_DATA))
-            entity.load(itemStack.get(DataComponents.ENTITY_DATA).copyTag());
-        else
-            entity.load(new CompoundTag());
+        net.minecraft.nbt.CompoundTag tag = itemStack.has(DataComponents.ENTITY_DATA)
+                ? itemStack.get(DataComponents.ENTITY_DATA).copyTagWithoutId()
+                : new net.minecraft.nbt.CompoundTag();
+        ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag);
+        entity.load(input);
         return (Mob) entity;
     }
 
@@ -226,44 +232,44 @@ public class CreatureCatcherEntity extends ThrowableItemProjectile {
             return false;
         if (entity instanceof PartEntity<?>)
             return false;
-        if (entity.getType().is(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED))
+        if (entity.getType().builtInRegistryHolder().is(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED))
             return false;
-        if (entity.getType().is(JustDireEntityTags.CREATURE_CATCHER_DENY))
+        if (entity.getType().builtInRegistryHolder().is(ModTags.Entities.CREATURE_CATCHER_DENY))
             return false;
-        if (!entity.save(new CompoundTag()))
+        if (!entity.save(TagValueOutput.createWithContext(ProblemReporter.DISCARDING, entity.registryAccess())))
             return false;
         return true;
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        pCompound.putBoolean("HasHitEntity", this.entityData.get(HAS_HIT));
-        pCompound.putBoolean("Capturing", this.entityData.get(CAPTURING));
-        pCompound.putInt("ShrinkingTime", this.entityData.get(SHRINKING_TIME));
-        pCompound.put("ReturnItemStack", this.entityData.get(RETURN_ITEM_STACK).save(this.registryAccess()));
-        pCompound.putFloat("EntityPosX", this.entityData.get(ENTITY_POSITION).x());
-        pCompound.putFloat("EntityPosY", this.entityData.get(ENTITY_POSITION).y());
-        pCompound.putFloat("EntityPosZ", this.entityData.get(ENTITY_POSITION).z());
-        pCompound.putFloat("EntityBodyRot", this.entityData.get(ENTITY_BODY_ROT));
-        pCompound.putFloat("EntityHeadRot", this.entityData.get(ENTITY_HEAD_ROT));
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putBoolean("HasHitEntity", this.entityData.get(HAS_HIT));
+        output.putBoolean("Capturing", this.entityData.get(CAPTURING));
+        output.putInt("ShrinkingTime", this.entityData.get(SHRINKING_TIME));
+        output.store("ReturnItemStack", ItemStack.CODEC, this.entityData.get(RETURN_ITEM_STACK));
+        output.putFloat("EntityPosX", this.entityData.get(ENTITY_POSITION).x());
+        output.putFloat("EntityPosY", this.entityData.get(ENTITY_POSITION).y());
+        output.putFloat("EntityPosZ", this.entityData.get(ENTITY_POSITION).z());
+        output.putFloat("EntityBodyRot", this.entityData.get(ENTITY_BODY_ROT));
+        output.putFloat("EntityHeadRot", this.entityData.get(ENTITY_HEAD_ROT));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        this.entityData.set(HAS_HIT, pCompound.getBoolean("HasHitEntity"));
-        this.entityData.set(CAPTURING, pCompound.getBoolean("Capturing"));
-        this.entityData.set(SHRINKING_TIME, pCompound.getInt("ShrinkingTime"));
-        ItemStack stack = ItemStack.parse(this.registryAccess(), pCompound.getCompound("ReturnItemStack")).orElseGet(() -> new ItemStack(this.getDefaultItem()));
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.entityData.set(HAS_HIT, input.getBooleanOr("HasHitEntity", false));
+        this.entityData.set(CAPTURING, input.getBooleanOr("Capturing", false));
+        this.entityData.set(SHRINKING_TIME, input.getIntOr("ShrinkingTime", 0));
+        ItemStack stack = input.read("ReturnItemStack", ItemStack.CODEC).orElseGet(() -> new ItemStack(this.getDefaultItem()));
         this.entityData.set(RETURN_ITEM_STACK, stack);
         Vector3f position = new Vector3f(
-                pCompound.getFloat("EntityPosX"),
-                pCompound.getFloat("EntityPosY"),
-                pCompound.getFloat("EntityPosZ")
+                input.getFloatOr("EntityPosX", 0.0F),
+                input.getFloatOr("EntityPosY", 0.0F),
+                input.getFloatOr("EntityPosZ", 0.0F)
         );
         this.entityData.set(ENTITY_POSITION, position);
-        this.entityData.set(ENTITY_BODY_ROT, pCompound.getFloat("EntityBodyRot"));
-        this.entityData.set(ENTITY_HEAD_ROT, pCompound.getFloat("EntityHeadRot"));
+        this.entityData.set(ENTITY_BODY_ROT, input.getFloatOr("EntityBodyRot", 0.0F));
+        this.entityData.set(ENTITY_HEAD_ROT, input.getFloatOr("EntityHeadRot", 0.0F));
     }
 }

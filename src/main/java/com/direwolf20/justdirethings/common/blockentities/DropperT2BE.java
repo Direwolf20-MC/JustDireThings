@@ -6,7 +6,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineContainerData;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ItemStackKey;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
@@ -35,7 +35,7 @@ public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, Powered
     }
 
     public DropperT2BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.DropperT2BE.get(), pPos, pBlockState);
+        this(JDTRegistration.DropperT2BE.get(), pPos, pBlockState);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, Powered
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(JDTRegistration.ENERGYSTORAGE_MACHINES);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, Powered
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, Powered
     public List<ItemStack> getFilteredList() {
         if (filteredList == null) {
             filteredList = new ArrayList<>();
-            for (int slot = 0; slot < getFilterHandler().getSlots(); slot++) {
-                ItemStack itemStack = getFilterHandler().getStackInSlot(slot);
+            for (int slot = 0; slot < getFilterHandler().size(); slot++) {
+                ItemStack itemStack = getFilterHandler().getResource(slot).toStack(getFilterHandler().getAmountAsInt(slot));
                 if (!itemStack.isEmpty()) filteredList.add(itemStack);
             }
         }
@@ -83,8 +83,8 @@ public class DropperT2BE extends DropperT1BE implements AreaAffectingBE, Powered
         for (ItemStack filterStack : getFilteredList()) {
             ItemStackKey filterKey = new ItemStackKey(filterStack, getFilterData().compareNBT);
             boolean foundThisOne = false;
-            for (int machineSlot = 0; machineSlot < getMachineHandler().getSlots(); machineSlot++) {
-                ItemStack itemStack = getMachineHandler().getStackInSlot(machineSlot);
+            for (int machineSlot = 0; machineSlot < getMachineHandler().size(); machineSlot++) {
+                ItemStack itemStack = getMachineHandler().getResource(machineSlot).toStack(getMachineHandler().getAmountAsInt(machineSlot));
                 if (itemStack.isEmpty()) continue;
                 if (filterKey.equals(new ItemStackKey(itemStack, getFilterData().compareNBT))) {
                     foundThisOne = true;

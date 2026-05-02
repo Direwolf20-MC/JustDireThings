@@ -1,0 +1,122 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "entries": [
+      {
+        "model": {
+          "type": "neoforge:fluid_container",
+          "cover_is_mask": false,
+          "flip_gas": true,
+          "fluid": "minecraft:empty",
+          "textures": {
+            "base": "justdirethings:item/fluidcanister/fluid_canister",
+            "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_1"
+          }
+        },
+        "threshold": 1.0
+      },
+      {
+        "model": {
+          "type": "neoforge:fluid_container",
+          "cover_is_mask": false,
+          "flip_gas": true,
+          "fluid": "minecraft:empty",
+          "textures": {
+            "base": "justdirethings:item/fluidcanister/fluid_canister",
+            "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_2"
+          }
+        },
+        "threshold": 2.0
+      },
+      {
+        "model": {
+          "type": "neoforge:fluid_container",
+          "cover_is_mask": false,
+          "flip_gas": true,
+          "fluid": "minecraft:empty",
+          "textures": {
+            "base": "justdirethings:item/fluidcanister/fluid_canister",
+            "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_3"
+          }
+        },
+        "threshold": 3.0
+      },
+      {
+        "model": {
+          "type": "neoforge:fluid_container",
+          "cover_is_mask": false,
+          "flip_gas": true,
+          "fluid": "minecraft:empty",
+          "textures": {
+            "base": "justdirethings:item/fluidcanister/fluid_canister",
+            "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_4"
+          }
+        },
+        "threshold": 4.0
+      },
+      {
+        "model": {
+          "type": "neoforge:fluid_container",
+          "cover_is_mask": false,
+          "flip_gas": true,
+          "fluid": "minecraft:empty",
+          "textures": {
+            "base": "justdirethings:item/fluidcanister/fluid_canister",
+            "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_5"
+          }
+        },
+        "threshold": 5.0
+      },
+      {
+        "model": {
+          "type": "neoforge:fluid_container",
+          "cover_is_mask": false,
+          "flip_gas": true,
+          "fluid": "minecraft:empty",
+          "textures": {
+            "base": "justdirethings:item/fluidcanister/fluid_canister",
+            "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_6"
+          }
+        },
+        "threshold": 6.0
+      },
+      {
+        "model": {
+          "type": "neoforge:fluid_container",
+          "cover_is_mask": false,
+          "flip_gas": true,
+          "fluid": "minecraft:empty",
+          "textures": {
+            "base": "justdirethings:item/fluidcanister/fluid_canister",
+            "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_7"
+          }
+        },
+        "threshold": 7.0
+      },
+      {
+        "model": {
+          "type": "neoforge:fluid_container",
+          "cover_is_mask": false,
+          "flip_gas": true,
+          "fluid": "minecraft:empty",
+          "textures": {
+            "base": "justdirethings:item/fluidcanister/fluid_canister",
+            "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_8"
+          }
+        },
+        "threshold": 8.0
+      }
+    ],
+    "fallback": {
+      "type": "neoforge:fluid_container",
+      "cover_is_mask": false,
+      "flip_gas": true,
+      "fluid": "minecraft:empty",
+      "textures": {
+        "base": "justdirethings:item/fluidcanister/fluid_canister",
+        "fluid": "justdirethings:item/fluidcanister/fluid_canister_fluid_layer_0"
+      }
+    },
+    "property": "justdirethings:fluid_canister_fullness"
+  }
+}

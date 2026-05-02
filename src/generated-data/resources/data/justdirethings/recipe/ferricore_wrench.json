@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "i": "justdirethings:ferricore_ingot"
+  },
+  "pattern": [
+    " i ",
+    " ii",
+    "i  "
+  ],
+  "result": {
+    "id": "justdirethings:ferricore_wrench"
+  }
+}

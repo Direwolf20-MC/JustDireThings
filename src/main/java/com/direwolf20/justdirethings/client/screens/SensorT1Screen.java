@@ -13,16 +13,16 @@ import com.direwolf20.justdirethings.common.network.data.BlockStateFilterPayload
 import com.direwolf20.justdirethings.common.network.data.SensorPayload;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.locale.Language;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
 
     @Override
     public void addFilterButtons() {
-        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(getGuiLeft() + 38, topSectionTop + 38, filterData.allowlist, b -> {
+        addRenderableWidget(ToggleButtonFactory.ALLOWLISTBUTTON(leftPos + 38, topSectionTop + 38, filterData.allowlist, b -> {
             filterData.allowlist = !filterData.allowlist;
             saveSettings();
         }));
@@ -60,11 +60,11 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.SENSORTARGETBUTTON(getGuiLeft() + 56, topSectionTop + 38, senseTarget, b -> {
+        addRenderableWidget(ToggleButtonFactory.SENSORTARGETBUTTON(leftPos + 56, topSectionTop + 38, senseTarget, b -> {
             senseTarget = ((ToggleButton) b).getTexturePosition();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.STRONGWEAKREDSTONEBUTTON(getGuiLeft() + 20, topSectionTop + 38, strongSignal ? 1 : 0, b -> {
+        addRenderableWidget(ToggleButtonFactory.STRONGWEAKREDSTONEBUTTON(leftPos + 20, topSectionTop + 38, strongSignal ? 1 : 0, b -> {
             strongSignal = ((ToggleButton) b).getTexturePosition() == 1;
             saveSettings();
         }));
@@ -79,16 +79,16 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
     }
 
     @Override
-    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn, int mouseButton) {
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int guiLeftIn, int guiTopIn) {
         if (showBlockStates && MiscTools.inBounds(topSectionLeft - 101, topSectionTop, 100, topSectionHeight, mouseX, mouseY))
             return false;
-        return super.hasClickedOutside(mouseX, mouseY, guiLeftIn, guiTopIn, mouseButton);
+        return super.hasClickedOutside(mouseX, mouseY, guiLeftIn, guiTopIn);
     }
 
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new SensorPayload(senseTarget, strongSignal, 0, 0));
+        ClientPacketDistributor.sendToServer(new SensorPayload(senseTarget, strongSignal, 0, 0));
     }
 
     public Comparable<?> getValue(Property<?> property) {
@@ -113,16 +113,19 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
         blockStateProperties.put(slot, new HashMap<>());
     }
 
+    private ItemStack filterStack(int slot) {
+        return container.filterHandler.getResource(slot).toStack(container.filterHandler.getAmountAsInt(slot));
+    }
+
     public void populateItemStackCache() {
         for (int i = 0; i < container.FILTER_SLOTS; i++) {
-            ItemStack stack = container.filterHandler.getStackInSlot(i);
-            this.itemStackCache.put(i, stack);
+            this.itemStackCache.put(i, filterStack(i));
         }
     }
 
     public void validateItemStackCache() {
         for (int i = 0; i < container.FILTER_SLOTS; i++) {
-            ItemStack stack = container.filterHandler.getStackInSlot(i);
+            ItemStack stack = filterStack(i);
             ItemStack cachedStack = itemStackCache.get(i);
             if (!ItemStack.isSameItemSameComponents(stack, cachedStack)) { //If the stack has changed, clear the props!
                 clearStateProperties(i);
@@ -138,51 +141,51 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
         CompoundTag tag = new CompoundTag();
         ListTag listTag = SensorT1BE.saveBlockStateProperty(props);
         tag.put("tagList", listTag);
-        PacketDistributor.sendToServer(new BlockStateFilterPayload(slot, tag));
+        ClientPacketDistributor.sendToServer(new BlockStateFilterPayload(slot, tag));
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
-        super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
         validateItemStackCache();
         if (showBlockStates) {
-            guiGraphics.blitSprite(SOCIALBACKGROUND, topSectionLeft - 100, topSectionTop, 100, topSectionHeight);
-            if (blockStateSlot != -1 && !container.filterHandler.getStackInSlot(blockStateSlot).equals(scrollPanel.getStateStack()))
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, topSectionLeft - 100, topSectionTop, 100, topSectionHeight);
+            if (blockStateSlot != -1 && !filterStack(blockStateSlot).equals(scrollPanel.getStateStack()))
                 refreshStateWindow();
         }
     }
 
     public void refreshStateWindow() {
         if (!showBlockStates || blockStateSlot == -1) return;
-        stateItemStack = container.filterHandler.getStackInSlot(blockStateSlot);
+        stateItemStack = filterStack(blockStateSlot);
         scrollPanel.setStateStack(stateItemStack);
         scrollPanel.refreshList();
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (hoveredSlot != null && (hoveredSlot instanceof FilterBasicSlot)) {
-            if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+            if (this.menu.getCarried().isEmpty() && this.hoveredSlot.hasItem()) {
                 List<Component> components = new ArrayList<>();
                 ItemStack itemstack = this.hoveredSlot.getItem();
                 components.add(Component.translatable("justdirethings.screen.rightclicksettings").withStyle(ChatFormatting.RED));
                 components.addAll(this.getTooltipFromContainerItem(itemstack));
-                pGuiGraphics.renderTooltip(this.font, components, itemstack.getTooltipImage(), itemstack, pX, pY);
+                graphics.setTooltipForNextFrame(this.font, components, itemstack.getTooltipImage(), itemstack, mouseX, mouseY);
             } else {
-                List<FormattedText> components = new ArrayList<>();
-                components.add(Component.translatable("justdirethings.screen.rightclicksettings").withStyle(ChatFormatting.RED));
-                pGuiGraphics.renderTooltip(this.font, Language.getInstance().getVisualOrder(components), pX, pY);
+                graphics.setTooltipForNextFrame(this.font,
+                        Component.translatable("justdirethings.screen.rightclicksettings").withStyle(ChatFormatting.RED),
+                        mouseX, mouseY);
             }
         } else {
-            super.renderTooltip(pGuiGraphics, pX, pY);
+            super.extractTooltip(graphics, mouseX, mouseY);
         }
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int btn) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         if (baseMachineBE instanceof FilterableBE filterableBE) {
             if (hoveredSlot != null && (hoveredSlot instanceof FilterBasicSlot)) {
-                if (btn == 1) {
+                if (event.button() == 1) {
                     if (showBlockStates) {
                         blockStateSlot = -1;
                         stateItemStack = ItemStack.EMPTY;
@@ -200,6 +203,6 @@ public class SensorT1Screen extends BaseMachineScreen<SensorT1Container> impleme
                 }
             }
         }
-        return super.mouseClicked(x, y, btn);
+        return super.mouseClicked(event, doubleClick);
     }
 }

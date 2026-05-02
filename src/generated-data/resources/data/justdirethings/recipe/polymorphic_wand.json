@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "b": "justdirethings:fluid_canister",
+    "i": "justdirethings:blazegold_ingot",
+    "r": "justdirethings:polymorphic_catalyst"
+  },
+  "pattern": [
+    "  b",
+    " r ",
+    "i  "
+  ],
+  "result": {
+    "id": "justdirethings:polymorphic_wand"
+  }
+}

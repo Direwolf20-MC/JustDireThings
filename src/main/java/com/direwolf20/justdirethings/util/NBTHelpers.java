@@ -8,13 +8,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -69,9 +68,9 @@ public class NBTHelpers {
         public static BoundInventory fromNBT(CompoundTag tag) {
             BoundInventory boundInventory = null;
             if (tag.contains("boundinventory") && tag.contains("boundinventory_side")) {
-                GlobalPos globalPos = NBTHelpers.nbtToGlobalPos(tag.getCompound("boundinventory"));
+                GlobalPos globalPos = NBTHelpers.nbtToGlobalPos(tag.getCompoundOrEmpty("boundinventory"));
                 if (globalPos == null) return null;
-                boundInventory = new BoundInventory(globalPos, Direction.values()[tag.getInt("boundinventory_side")]);
+                boundInventory = new BoundInventory(globalPos, Direction.values()[tag.getIntOr("boundinventory_side", 0)]);
             }
             return boundInventory;
         }
@@ -107,9 +106,9 @@ public class NBTHelpers {
         public static PortalDestination fromNBT(CompoundTag tag) {
             PortalDestination portalDestination = null;
             if (tag.contains("globalVec3") && tag.contains("direction") && tag.contains("name")) {
-                GlobalVec3 globalVec = NBTHelpers.nbtToGlobalVec3(tag.getCompound("globalVec3"));
+                GlobalVec3 globalVec = NBTHelpers.nbtToGlobalVec3(tag.getCompoundOrEmpty("globalVec3"));
                 if (globalVec == null) return null;
-                portalDestination = new PortalDestination(globalVec, Direction.values()[tag.getInt("direction")], tag.getString("name"));
+                portalDestination = new PortalDestination(globalVec, Direction.values()[tag.getIntOr("direction", 0)], tag.getStringOr("name", ""));
             }
             return portalDestination;
         }
@@ -125,25 +124,25 @@ public class NBTHelpers {
 
     public static CompoundTag globalPosToNBT(GlobalPos globalPos) {
         CompoundTag tag = new CompoundTag();
-        tag.putString("dimension", globalPos.dimension().location().toString());
-        tag.put("blockpos", NbtUtils.writeBlockPos(globalPos.pos()));
+        tag.putString("dimension", globalPos.dimension().identifier().toString());
+        tag.putLong("blockpos", globalPos.pos().asLong());
         return tag;
     }
 
     public static GlobalPos nbtToGlobalPos(CompoundTag tag) {
         ResourceKey<Level> levelKey;
         if (tag.contains("dimension"))
-            levelKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("dimension")));
+            levelKey = ResourceKey.create(Registries.DIMENSION, Identifier.parse(tag.getStringOr("dimension", "")));
         else
             return null;
-        BlockPos blockPos = NbtUtils.readBlockPos(tag, "blockpos").orElse(BlockPos.ZERO);
+        BlockPos blockPos = BlockPos.of(tag.getLongOr("blockpos", 0L));
         return blockPos.equals(BlockPos.ZERO) ? null : GlobalPos.of(levelKey, blockPos);
     }
 
 
     public static CompoundTag globalVec3ToNBT(ResourceKey<Level> level, Vec3 position) {
         CompoundTag tag = new CompoundTag();
-        tag.putString("dimension", level.location().toString());
+        tag.putString("dimension", level.identifier().toString());
         tag.putDouble("vec3x", position.x);
         tag.putDouble("vec3y", position.y);
         tag.putDouble("vec3z", position.z);
@@ -152,7 +151,7 @@ public class NBTHelpers {
 
     public static CompoundTag globalVec3ToNBT(GlobalVec3 globalVec3) {
         CompoundTag tag = new CompoundTag();
-        tag.putString("dimension", globalVec3.dimension.location().toString());
+        tag.putString("dimension", globalVec3.dimension.identifier().toString());
         tag.putDouble("vec3x", globalVec3.position.x);
         tag.putDouble("vec3y", globalVec3.position.y);
         tag.putDouble("vec3z", globalVec3.position.z);
@@ -161,10 +160,10 @@ public class NBTHelpers {
 
     public static GlobalVec3 nbtToGlobalVec3(CompoundTag tag) {
         if (!tag.contains("dimension")) return null;
-        ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(tag.getString("dimension")));
-        double x = tag.getDouble("vec3x");
-        double y = tag.getDouble("vec3y");
-        double z = tag.getDouble("vec3z");
+        ResourceKey<Level> levelKey = ResourceKey.create(Registries.DIMENSION, Identifier.parse(tag.getStringOr("dimension", "")));
+        double x = tag.getDoubleOr("vec3x", 0.0);
+        double y = tag.getDoubleOr("vec3y", 0.0);
+        double z = tag.getDoubleOr("vec3z", 0.0);
         return new GlobalVec3(levelKey, new Vec3(x, y, z));
     }
 
@@ -177,9 +176,9 @@ public class NBTHelpers {
     }
 
     public static Vec3 nbtToVec3(CompoundTag tag) {
-        double x = tag.getDouble("vec3x");
-        double y = tag.getDouble("vec3y");
-        double z = tag.getDouble("vec3z");
+        double x = tag.getDoubleOr("vec3x", 0.0);
+        double y = tag.getDoubleOr("vec3y", 0.0);
+        double z = tag.getDoubleOr("vec3z", 0.0);
         return new Vec3(x, y, z);
     }
 }

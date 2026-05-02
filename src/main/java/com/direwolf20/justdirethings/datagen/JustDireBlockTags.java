@@ -1,135 +1,119 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
-
-import static com.direwolf20.justdirethings.JustDireThings.MODID;
 
 import java.util.concurrent.CompletableFuture;
 
 public class JustDireBlockTags extends BlockTagsProvider {
 
-    public JustDireBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, JustDireThings.MODID, existingFileHelper);
-    }
-
-    public static final TagKey<Block> LAWNMOWERABLE = ModTag( "lawnmowerable");
-    public static final TagKey<Block> NO_AUTO_CLICK = ModTag( "noautoclick");
-    public static final TagKey<Block> SWAPPERDENY = ModTag( "swapper_deny");
-    public static final TagKey<Block> ECLISEGATEDENY = ModTag( "eclipsegate_deny");
-    public static final TagKey<Block> PHASEDENY = ModTag( "phase_deny");
-    public static final TagKey<Block> TICK_SPEED_DENY = ModTag( "tick_speed_deny");
-    public static final TagKey<Block> PARADOX_ALLOW = ModTag( "paradox_allow");
-    public static final TagKey<Block> PARADOX_ABSORB_DENY = ModTag( "paradox_absorb_deny");
-    public static final TagKey<Block> CHARCOAL = forgeTag("storage_blocks/charcoal");
-
-    private static TagKey<Block> forgeTag(String name) {
-        return BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
-    }
-
-    private static TagKey<Block> ModTag(String name) {
-        return BlockTags.create(ResourceLocation.fromNamespaceAndPath(MODID, name));
+    public JustDireBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(output, lookupProvider, JustDireThings.MODID);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_SHOVEL)
-                .add(Registration.GooBlock_Tier1.get())
-                .add(Registration.GooBlock_Tier2.get())
-                .add(Registration.GooBlock_Tier3.get())
-                .add(Registration.GooBlock_Tier4.get())
-                .add(Registration.GooSoil_Tier1.get())
-                .add(Registration.GooSoil_Tier2.get())
-                .add(Registration.GooSoil_Tier3.get())
-                .add(Registration.GooSoil_Tier4.get());
+                .add(JDTRegistration.GooBlock_Tier1.get())
+                .add(JDTRegistration.GooBlock_Tier2.get())
+                .add(JDTRegistration.GooBlock_Tier3.get())
+                .add(JDTRegistration.GooBlock_Tier4.get())
+                .add(JDTRegistration.GooSoil_Tier1.get())
+                .add(JDTRegistration.GooSoil_Tier2.get())
+                .add(JDTRegistration.GooSoil_Tier3.get())
+                .add(JDTRegistration.GooSoil_Tier4.get());
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(Registration.FerricoreBlock.get())
-                .add(Registration.RawFerricoreOre.get())
-                .add(Registration.BlazeGoldBlock.get())
-                .add(Registration.RawBlazegoldOre.get())
-                .add(Registration.CelestigemBlock.get())
-                .add(Registration.RawCelestigemOre.get())
-                .add(Registration.EclipseAlloyBlock.get())
-                .add(Registration.RawEclipseAlloyOre.get())
-                .add(Registration.ItemCollector.get())
-                .add(Registration.BlockBreakerT1.get())
-                .add(Registration.BlockBreakerT2.get())
-                .add(Registration.BlockPlacerT1.get())
-                .add(Registration.BlockPlacerT2.get())
-                .add(Registration.ClickerT1.get())
-                .add(Registration.ClickerT2.get())
-                .add(Registration.SensorT1.get())
-                .add(Registration.SensorT2.get())
-                .add(Registration.DropperT1.get())
-                .add(Registration.DropperT2.get())
-                .add(Registration.GeneratorT1.get())
-                .add(Registration.GeneratorFluidT1.get())
-                .add(Registration.EnergyTransmitter.get())
-                .add(Registration.RawCoal_T1.get())
-                .add(Registration.RawCoal_T2.get())
-                .add(Registration.RawCoal_T3.get())
-                .add(Registration.RawCoal_T4.get())
-                .add(Registration.CoalBlock_T1.get())
-                .add(Registration.CoalBlock_T2.get())
-                .add(Registration.CoalBlock_T3.get())
-                .add(Registration.CoalBlock_T4.get())
-                .add(Registration.BlockSwapperT1.get())
-                .add(Registration.BlockSwapperT2.get())
-                .add(Registration.PlayerAccessor.get())
-                .add(Registration.FluidPlacerT1.get())
-                .add(Registration.FluidPlacerT2.get())
-                .add(Registration.FluidCollectorT1.get())
-                .add(Registration.FluidCollectorT2.get())
-                .add(Registration.TimeCrystalCluster.get())
-                .add(Registration.TimeCrystalBlock.get())
-                .add(Registration.ParadoxMachine.get())
-                .add(Registration.InventoryHolder.get())
-                .add(Registration.ExperienceHolder.get())
-                .add(Registration.CharcoalBlock.get());
-        tag(LAWNMOWERABLE)
+                .add(JDTRegistration.FerricoreBlock.get())
+                .add(JDTRegistration.RawFerricoreOre.get())
+                .add(JDTRegistration.BlazeGoldBlock.get())
+                .add(JDTRegistration.RawBlazegoldOre.get())
+                .add(JDTRegistration.CelestigemBlock.get())
+                .add(JDTRegistration.RawCelestigemOre.get())
+                .add(JDTRegistration.EclipseAlloyBlock.get())
+                .add(JDTRegistration.RawEclipseAlloyOre.get())
+                .add(JDTRegistration.ItemCollector.get())
+                .add(JDTRegistration.BlockBreakerT1.get())
+                .add(JDTRegistration.BlockBreakerT2.get())
+                .add(JDTRegistration.BlockPlacerT1.get())
+                .add(JDTRegistration.BlockPlacerT2.get())
+                .add(JDTRegistration.ClickerT1.get())
+                .add(JDTRegistration.ClickerT2.get())
+                .add(JDTRegistration.SensorT1.get())
+                .add(JDTRegistration.SensorT2.get())
+                .add(JDTRegistration.DropperT1.get())
+                .add(JDTRegistration.DropperT2.get())
+                .add(JDTRegistration.GeneratorT1.get())
+                .add(JDTRegistration.GeneratorFluidT1.get())
+                .add(JDTRegistration.EnergyTransmitter.get())
+                .add(JDTRegistration.RawCoal_T1.get())
+                .add(JDTRegistration.RawCoal_T2.get())
+                .add(JDTRegistration.RawCoal_T3.get())
+                .add(JDTRegistration.RawCoal_T4.get())
+                .add(JDTRegistration.CoalBlock_T1.get())
+                .add(JDTRegistration.CoalBlock_T2.get())
+                .add(JDTRegistration.CoalBlock_T3.get())
+                .add(JDTRegistration.CoalBlock_T4.get())
+                .add(JDTRegistration.BlockSwapperT1.get())
+                .add(JDTRegistration.BlockSwapperT2.get())
+                .add(JDTRegistration.PlayerAccessor.get())
+                .add(JDTRegistration.FluidPlacerT1.get())
+                .add(JDTRegistration.FluidPlacerT2.get())
+                .add(JDTRegistration.FluidCollectorT1.get())
+                .add(JDTRegistration.FluidCollectorT2.get())
+                .add(JDTRegistration.TimeCrystalCluster.get())
+                .add(JDTRegistration.TimeCrystalBlock.get())
+                .add(JDTRegistration.ParadoxMachine.get())
+                .add(JDTRegistration.InventoryHolder.get())
+                .add(JDTRegistration.ExperienceHolder.get())
+                .add(JDTRegistration.CharcoalBlock.get());
+        tag(ModTags.Blocks.LAWNMOWERABLE)
                 .addTag(BlockTags.FLOWERS)
                 .add(Blocks.TALL_GRASS)
                 .add(Blocks.SHORT_GRASS)
                 .add(Blocks.DEAD_BUSH)
                 .add(Blocks.SWEET_BERRY_BUSH)
                 .add(Blocks.FERN)
-                .add(Blocks.LARGE_FERN);
+                .add(Blocks.LARGE_FERN)
+                .add(Blocks.LEAF_LITTER)
+                .add(Blocks.BUSH)
+                .add(Blocks.SHORT_DRY_GRASS)
+                .add(Blocks.TALL_DRY_GRASS)
+                .add(Blocks.FIREFLY_BUSH);
         tag(Tags.Blocks.ORES)
-                .add(Registration.RawFerricoreOre.get())
-                .add(Registration.RawBlazegoldOre.get())
-                .add(Registration.RawCelestigemOre.get())
-                .add(Registration.RawEclipseAlloyOre.get())
-                .add(Registration.RawCoal_T1.get())
-                .add(Registration.RawCoal_T2.get())
-                .add(Registration.RawCoal_T3.get())
-                .add(Registration.RawCoal_T4.get());
+                .add(JDTRegistration.RawFerricoreOre.get())
+                .add(JDTRegistration.RawBlazegoldOre.get())
+                .add(JDTRegistration.RawCelestigemOre.get())
+                .add(JDTRegistration.RawEclipseAlloyOre.get())
+                .add(JDTRegistration.RawCoal_T1.get())
+                .add(JDTRegistration.RawCoal_T2.get())
+                .add(JDTRegistration.RawCoal_T3.get())
+                .add(JDTRegistration.RawCoal_T4.get());
         tag(Tags.Blocks.STORAGE_BLOCKS)
-                .add(Registration.FerricoreBlock.get())
-                .add(Registration.BlazeGoldBlock.get())
-                .add(Registration.CelestigemBlock.get())
-                .add(Registration.EclipseAlloyBlock.get())
-                .add(Registration.CoalBlock_T1.get())
-                .add(Registration.CoalBlock_T2.get())
-                .add(Registration.CoalBlock_T3.get())
-                .add(Registration.CoalBlock_T4.get());
-        tag(BlockTags.BAMBOO_PLANTABLE_ON)
-                .add(Registration.GooSoil_Tier1.get())
-                .add(Registration.GooSoil_Tier2.get())
-                .add(Registration.GooSoil_Tier3.get())
-                .add(Registration.GooSoil_Tier4.get());
-        tag(NO_AUTO_CLICK);
-        tag(SWAPPERDENY)
+                .add(JDTRegistration.FerricoreBlock.get())
+                .add(JDTRegistration.BlazeGoldBlock.get())
+                .add(JDTRegistration.CelestigemBlock.get())
+                .add(JDTRegistration.EclipseAlloyBlock.get())
+                .add(JDTRegistration.CoalBlock_T1.get())
+                .add(JDTRegistration.CoalBlock_T2.get())
+                .add(JDTRegistration.CoalBlock_T3.get())
+                .add(JDTRegistration.CoalBlock_T4.get());
+        tag(BlockTags.SUPPORTS_BAMBOO)
+                .add(JDTRegistration.GooSoil_Tier1.get())
+                .add(JDTRegistration.GooSoil_Tier2.get())
+                .add(JDTRegistration.GooSoil_Tier3.get())
+                .add(JDTRegistration.GooSoil_Tier4.get());
+        tag(ModTags.Blocks.NO_AUTO_CLICK);
+        tag(ModTags.Blocks.SWAPPERDENY)
                 .add(Blocks.PISTON_HEAD)
                 .add(Blocks.MOVING_PISTON)
                 .add(Blocks.BEDROCK)
@@ -138,11 +122,11 @@ public class JustDireBlockTags extends BlockTagsProvider {
                 .addTag(BlockTags.BEDS)
                 .addTag(BlockTags.PORTALS)
                 .addTag(BlockTags.DOORS);
-        tag(ECLISEGATEDENY)
+        tag(ModTags.Blocks.ECLISEGATEDENY)
                 .addTag(BlockTags.PORTALS)
                 .addTag(BlockTags.DOORS)
-                .addOptionalTag(ResourceLocation.fromNamespaceAndPath("powah", "player_transmitters"));
-        tag(PHASEDENY)
+                .addOptionalTag(TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("powah", "player_transmitters")));
+        tag(ModTags.Blocks.PHASEDENY)
                 .addTags(BlockTags.PORTALS)
                 .add(Blocks.BARRIER,
                         Blocks.BEDROCK,
@@ -152,24 +136,19 @@ public class JustDireBlockTags extends BlockTagsProvider {
                         Blocks.STRUCTURE_BLOCK,
                         Blocks.JIGSAW);
         tag(Tags.Blocks.BUDDING_BLOCKS)
-                .add(Registration.TimeCrystalBuddingBlock.get());
+                .add(JDTRegistration.TimeCrystalBuddingBlock.get());
         tag(Tags.Blocks.BUDS)
-                .add(Registration.TimeCrystalCluster_Small.get())
-                .add(Registration.TimeCrystalCluster_Medium.get())
-                .add(Registration.TimeCrystalCluster_Large.get());
+                .add(JDTRegistration.TimeCrystalCluster_Small.get())
+                .add(JDTRegistration.TimeCrystalCluster_Medium.get())
+                .add(JDTRegistration.TimeCrystalCluster_Large.get());
         tag(Tags.Blocks.CLUSTERS)
-                .add(Registration.TimeCrystalCluster.get());
-        tag(TICK_SPEED_DENY);
-        tag(PARADOX_ALLOW)
+                .add(JDTRegistration.TimeCrystalCluster.get());
+        tag(ModTags.Blocks.TICK_SPEED_DENY);
+        tag(ModTags.Blocks.PARADOX_ALLOW)
                 .addTag(Tags.Blocks.ORES);
-        tag(PARADOX_ABSORB_DENY)
+        tag(ModTags.Blocks.PARADOX_ABSORB_DENY)
                 .add(Blocks.BEDROCK);
-        tag(CHARCOAL)
-                .add(Registration.CharcoalBlock.get());
-    }
-
-    @Override
-    public String getName() {
-        return "JustDireThings Tags";
+        tag(ModTags.Blocks.CHARCOAL)
+                .add(JDTRegistration.CharcoalBlock.get());
     }
 }

@@ -1,17 +1,15 @@
 package com.direwolf20.justdirethings.common.items.armors;
 
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseLeggings;
-import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CelestigemLeggings extends BaseLeggings implements PoweredTool {
-    public CelestigemLeggings() {
-        super(ArmorTiers.CELESTIGEM, new Properties()
-                .fireResistant()
-                .durability(Type.LEGGINGS.getDurability(25)));
+    public CelestigemLeggings(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.RUNSPEED, new AbilityParams(1, 3, 1));
         registerAbility(Ability.WALKSPEED, new AbilityParams(1, 3, 1));
         registerAbility(Ability.SWIMSPEED, new AbilityParams(1, 3, 1));

@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,19 +16,19 @@ public class BlockBreakerT1Container extends BaseMachineContainer {
     }
 
     public BlockBreakerT1Container(int windowId, Inventory playerInventory, BlockPos blockPos) {
-        super(Registration.BlockBreakerT1_Container.get(), windowId, playerInventory, blockPos);
+        super(JDTRegistration.BlockBreakerT1_Container.get(), windowId, playerInventory, blockPos);
         addPlayerSlots(player.getInventory());
     }
 
     @Override
     public void addMachineSlots() {
         machineHandler = baseMachineBE.getMachineHandler();
-        addSlotRange(machineHandler, 0, 80, 13, 1, 18);
+        addSlotRange(machineHandler, machineHandler::set, 0, 80, 13, 1, 18);
     }
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, Registration.BlockBreakerT1.get());
+        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, JDTRegistration.BlockBreakerT1.get());
     }
 
     @Override

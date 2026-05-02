@@ -1,261 +1,228 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ItemTagsProvider;
 
-import static com.direwolf20.justdirethings.JustDireThings.MODID;
-
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class JustDireItemTags extends ItemTagsProvider {
-        public JustDireItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider,
-                        BlockTagsProvider blockTags, ExistingFileHelper helper) {
-                super(packOutput, lookupProvider, blockTags.contentsGetter(), JustDireThings.MODID, helper);
-        }
+    public JustDireItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider, JustDireThings.MODID);
+    }
 
-        public static final TagKey<Item> WRENCHES = forgeTag("wrenches");
-        public static final TagKey<Item> TOOLS_WRENCH = forgeTag("tools/wrench");
-        public static final TagKey<Item> RAW_FERRICORE = forgeTag("raw_materials/ferricore");
-        public static final TagKey<Item> RAW_BLAZEGOLD = forgeTag("raw_materials/blazegold");
-        public static final TagKey<Item> RAW_ECLIPSEALLOY = forgeTag("raw_materials/eclipsealloy");
-        public static final TagKey<Item> INGOT_FERRICORE = forgeTag("ingots/ferricore");
-        public static final TagKey<Item> INGOT_BLAZEGOLD = forgeTag("ingots/blazegold");
-        public static final TagKey<Item> INGOT_ECLIPSEALLOY = forgeTag("ingots/eclipsealloy");
+    private static TagKey<Item> toolRepairTag(String name) {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "repairs_" + name + "_tool"));
+    }
 
-        public static final TagKey<Item> BOWS = forgeTag("tools/bow");
-        public static final TagKey<Item> RANGED_WEAPON = forgeTag("tools/ranged_weapon");
-        public static final TagKey<Item> MELEE_WEAPON = forgeTag("tools/melee_weapon");
-        public static final TagKey<Item> MINING_TOOL = forgeTag("tools/mining_tool");
-        public static final TagKey<Item> PAXEL = forgeTag("tools/paxel");
-        public static final TagKey<Item> STORAGEBLOCKS = forgeTag("storage_blocks");
-        public static final TagKey<Item> CHARCOALBLOCKS = forgeTag("storage_blocks/charcoal");
+    private static TagKey<Item> armorRepairTag(String name) {
+        return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(JustDireThings.MODID, "repairs_" + name + "_armor"));
+    }
 
-        private static TagKey<Item> forgeTag(String name) {
-                return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name));
-        }
+    @Override
+    protected void addTags(HolderLookup.Provider provider) {
+        tag(ModTags.Items.AUTO_SMELT_DENY);
+        tag(ModTags.Items.AUTO_SMOKE_DENY);
+        tag(ModTags.Items.FUEL_CANISTER_DENY)
+                .add(Items.LAVA_BUCKET);
+        tag(ItemTags.SWORDS)
+                .add(JDTRegistration.FerricoreSword.get())
+                .add(JDTRegistration.BlazegoldSword.get())
+                .add(JDTRegistration.CelestigemSword.get())
+                .add(JDTRegistration.EclipseAlloySword.get());
+        tag(ItemTags.PICKAXES)
+                .add(JDTRegistration.FerricorePickaxe.get())
+                .add(JDTRegistration.BlazegoldPickaxe.get())
+                .add(JDTRegistration.CelestigemPickaxe.get())
+                .add(JDTRegistration.EclipseAlloyPickaxe.get())
+                .add(JDTRegistration.CelestigemPaxel.get())
+                .add(JDTRegistration.EclipseAlloyPaxel.get());
+        tag(ItemTags.SHOVELS)
+                .add(JDTRegistration.FerricoreShovel.get())
+                .add(JDTRegistration.BlazegoldShovel.get())
+                .add(JDTRegistration.CelestigemShovel.get())
+                .add(JDTRegistration.EclipseAlloyShovel.get())
+                .add(JDTRegistration.CelestigemPaxel.get())
+                .add(JDTRegistration.EclipseAlloyPaxel.get());
+        tag(ItemTags.AXES)
+                .add(JDTRegistration.FerricoreAxe.get())
+                .add(JDTRegistration.BlazegoldAxe.get())
+                .add(JDTRegistration.CelestigemAxe.get())
+                .add(JDTRegistration.EclipseAlloyAxe.get())
+                .add(JDTRegistration.CelestigemPaxel.get())
+                .add(JDTRegistration.EclipseAlloyPaxel.get());
+        tag(ItemTags.HOES)
+                .add(JDTRegistration.FerricoreHoe.get())
+                .add(JDTRegistration.BlazegoldHoe.get())
+                .add(JDTRegistration.CelestigemHoe.get())
+                .add(JDTRegistration.EclipseAlloyHoe.get());
+        tag(Tags.Items.INGOTS)
+                .add(JDTRegistration.FerricoreIngot.get())
+                .add(JDTRegistration.BlazegoldIngot.get())
+                .add(JDTRegistration.EclipseAlloyIngot.get());
+        tag(Tags.Items.RAW_MATERIALS)
+                .add(JDTRegistration.RawFerricore.get())
+                .add(JDTRegistration.RawBlazegold.get())
+                .add(JDTRegistration.RawEclipseAlloy.get());
+        tag(Tags.Items.GEMS)
+                .add(JDTRegistration.Celestigem.get());
+        tag(ModTags.Items.WRENCHES)
+                .add(JDTRegistration.FerricoreWrench.get());
+        tag(ModTags.Items.TOOLS_WRENCH)
+                .add(JDTRegistration.FerricoreWrench.get());
+        tag(Tags.Items.STORAGE_BLOCKS)
+                .add(JDTRegistration.FerricoreBlock_ITEM.get())
+                .add(JDTRegistration.BlazeGoldBlock_ITEM.get())
+                .add(JDTRegistration.CelestigemBlock_ITEM.get())
+                .add(JDTRegistration.EclipseAlloyBlock_ITEM.get());
+        tag(ItemTags.FOOT_ARMOR)
+                .add(JDTRegistration.FerricoreBoots.get())
+                .add(JDTRegistration.BlazegoldBoots.get())
+                .add(JDTRegistration.CelestigemBoots.get())
+                .add(JDTRegistration.EclipseAlloyBoots.get());
+        tag(ItemTags.LEG_ARMOR)
+                .add(JDTRegistration.FerricoreLeggings.get())
+                .add(JDTRegistration.BlazegoldLeggings.get())
+                .add(JDTRegistration.CelestigemLeggings.get())
+                .add(JDTRegistration.EclipseAlloyLeggings.get());
+        tag(ItemTags.CHEST_ARMOR)
+                .add(JDTRegistration.FerricoreChestplate.get())
+                .add(JDTRegistration.BlazegoldChestplate.get())
+                .add(JDTRegistration.CelestigemChestplate.get())
+                .add(JDTRegistration.EclipseAlloyChestplate.get());
+        tag(ItemTags.HEAD_ARMOR)
+                .add(JDTRegistration.FerricoreHelmet.get())
+                .add(JDTRegistration.BlazegoldHelmet.get())
+                .add(JDTRegistration.CelestigemHelmet.get())
+                .add(JDTRegistration.EclipseAlloyHelmet.get());
+        tag(ItemTags.FOOT_ARMOR_ENCHANTABLE)
+                .add(JDTRegistration.FerricoreBoots.get())
+                .add(JDTRegistration.BlazegoldBoots.get())
+                .add(JDTRegistration.CelestigemBoots.get())
+                .add(JDTRegistration.EclipseAlloyBoots.get());
+        tag(ItemTags.LEG_ARMOR_ENCHANTABLE)
+                .add(JDTRegistration.FerricoreLeggings.get())
+                .add(JDTRegistration.BlazegoldLeggings.get())
+                .add(JDTRegistration.CelestigemLeggings.get())
+                .add(JDTRegistration.EclipseAlloyLeggings.get());
+        tag(ItemTags.CHEST_ARMOR_ENCHANTABLE)
+                .add(JDTRegistration.FerricoreChestplate.get())
+                .add(JDTRegistration.BlazegoldChestplate.get())
+                .add(JDTRegistration.CelestigemChestplate.get())
+                .add(JDTRegistration.EclipseAlloyChestplate.get());
+        tag(ItemTags.HEAD_ARMOR_ENCHANTABLE)
+                .add(JDTRegistration.FerricoreHelmet.get())
+                .add(JDTRegistration.BlazegoldHelmet.get())
+                .add(JDTRegistration.CelestigemHelmet.get())
+                .add(JDTRegistration.EclipseAlloyHelmet.get());
+        tag(ItemTags.BOW_ENCHANTABLE)
+                .add(JDTRegistration.FerricoreBow.get())
+                .add(JDTRegistration.BlazegoldBow.get())
+                .add(JDTRegistration.CelestigemBow.get())
+                .add(JDTRegistration.EclipseAlloyBow.get());
+        tag(ItemTags.DURABILITY_ENCHANTABLE)
+                .add(JDTRegistration.FerricoreBow.get())
+                .add(JDTRegistration.BlazegoldBow.get())
+                .add(JDTRegistration.CelestigemBow.get())
+                .add(JDTRegistration.EclipseAlloyBow.get());
+        tag(ModTags.Items.RAW_FERRICORE)
+                .add(JDTRegistration.RawFerricore.get());
+        tag(ModTags.Items.RAW_BLAZEGOLD)
+                .add(JDTRegistration.RawBlazegold.get());
+        tag(ModTags.Items.RAW_ECLIPSEALLOY)
+                .add(JDTRegistration.RawEclipseAlloy.get());
+        tag(ModTags.Items.INGOT_FERRICORE)
+                .add(JDTRegistration.FerricoreIngot.get());
+        tag(ModTags.Items.INGOT_BLAZEGOLD)
+                .add(JDTRegistration.BlazegoldIngot.get());
+        tag(ModTags.Items.INGOT_ECLIPSEALLOY)
+                .add(JDTRegistration.EclipseAlloyIngot.get());
+        tag(ModTags.Items.GOO_REVIVE_TIER_1)
+                .add(Items.SUGAR)
+                .add(Items.ROTTEN_FLESH);
+        tag(ModTags.Items.GOO_REVIVE_TIER_2)
+                .add(Items.NETHER_WART)
+                .add(Items.BLAZE_POWDER);
+        tag(ModTags.Items.GOO_REVIVE_TIER_3)
+                .add(Items.CHORUS_FRUIT)
+                .add(Items.ENDER_PEARL);
+        tag(ModTags.Items.GOO_REVIVE_TIER_4)
+                .add(Items.SCULK)
+                .add(Items.SCULK_CATALYST);
+        tag(ModTags.Items.BOWS)
+                .add(JDTRegistration.FerricoreBow.get())
+                .add(JDTRegistration.BlazegoldBow.get())
+                .add(JDTRegistration.CelestigemPickaxe.get())
+                .add(JDTRegistration.EclipseAlloyBow.get());
+        tag(ModTags.Items.RANGED_WEAPON)
+                .add(JDTRegistration.FerricoreBow.get())
+                .add(JDTRegistration.BlazegoldBow.get())
+                .add(JDTRegistration.CelestigemPickaxe.get())
+                .add(JDTRegistration.EclipseAlloyBow.get());
+        tag(ModTags.Items.MELEE_WEAPON)
+                .add(JDTRegistration.FerricoreSword.get())
+                .add(JDTRegistration.FerricoreAxe.get())
+                .add(JDTRegistration.BlazegoldSword.get())
+                .add(JDTRegistration.BlazegoldAxe.get())
+                .add(JDTRegistration.CelestigemSword.get())
+                .add(JDTRegistration.CelestigemAxe.get())
+                .add(JDTRegistration.EclipseAlloySword.get())
+                .add(JDTRegistration.EclipseAlloyAxe.get())
+                .add(JDTRegistration.CelestigemPaxel.get())
+                .add(JDTRegistration.EclipseAlloyPaxel.get());
+        tag(ModTags.Items.MINING_TOOL)
+                .add(JDTRegistration.CelestigemPaxel.get())
+                .add(JDTRegistration.EclipseAlloyPaxel.get());
+        tag(ModTags.Items.PAXEL)
+                .add(JDTRegistration.CelestigemPaxel.get())
+                .add(JDTRegistration.EclipseAlloyPaxel.get());
+        tag(ItemTags.CLUSTER_MAX_HARVESTABLES)
+                .add(JDTRegistration.FerricorePickaxe.get())
+                .add(JDTRegistration.BlazegoldPickaxe.get())
+                .add(JDTRegistration.CelestigemPickaxe.get())
+                .add(JDTRegistration.EclipseAlloyPickaxe.get())
+                .add(JDTRegistration.CelestigemPaxel.get())
+                .add(JDTRegistration.EclipseAlloyPaxel.get());
+        tag(ModTags.Items.PARADOX_DENY)
+                .add(Items.BEDROCK);
+        tag(ModTags.Items.STORAGEBLOCKS)
+                .add(JDTRegistration.CharcoalBlock_ITEM.get());
+        tag(ModTags.Items.CHARCOALBLOCKS)
+                .add(JDTRegistration.CharcoalBlock_ITEM.get());
 
-        public static final TagKey<Item> FUEL_CANISTER_DENY = ModTag("deny_fuel_canister");
-        public static final TagKey<Item> AUTO_SMELT_DENY = ModTag("auto_smelt_deny");
-        public static final TagKey<Item> AUTO_SMOKE_DENY = ModTag("auto_smoke_deny");
-        public static final TagKey<Item> GOO_REVIVE_TIER_1 = ModTag("goo_revive_tier_1");
-        public static final TagKey<Item> GOO_REVIVE_TIER_2 = ModTag("goo_revive_tier_2");
-        public static final TagKey<Item> GOO_REVIVE_TIER_3 = ModTag("goo_revive_tier_3");
-        public static final TagKey<Item> GOO_REVIVE_TIER_4 = ModTag("goo_revive_tier_4");
-        public static final TagKey<Item> PARADOX_DENY = ModTag("paradox_deny");
-        public static final TagKey<Item> GOO_RECIPE_TIER_1 = ModTag("goorecipe_tier/1");
-        public static final TagKey<Item> GOO_RECIPE_TIER_2 = ModTag("goorecipe_tier/2");
-        public static final TagKey<Item> GOO_RECIPE_TIER_3 = ModTag("goorecipe_tier/3");
-        public static final TagKey<Item> GOO_RECIPE_TIER_4 = ModTag("goorecipe_tier/4");
+        tag(ModTags.Items.GOO_RECIPE_TIER_1)
+                .add(JDTRegistration.GooBlock_Tier1_ITEM.get())
+                .addOptionalTag(ModTags.Items.GOO_RECIPE_TIER_2);
 
-        public static final List<TagKey<Item>> GOO_RECIPE_TIERS = List.of(
-                        GOO_RECIPE_TIER_1, GOO_RECIPE_TIER_2, GOO_RECIPE_TIER_3, GOO_RECIPE_TIER_4);
+        tag(ModTags.Items.GOO_RECIPE_TIER_2)
+                .add(JDTRegistration.GooBlock_Tier2_ITEM.get())
+                .addOptionalTag(ModTags.Items.GOO_RECIPE_TIER_3);
 
-        private static TagKey<Item> ModTag(String name) {
-                return ItemTags.create(ResourceLocation.fromNamespaceAndPath(MODID, name));
-        }
+        tag(ModTags.Items.GOO_RECIPE_TIER_3)
+                .add(JDTRegistration.GooBlock_Tier3_ITEM.get())
+                .addOptionalTag(ModTags.Items.GOO_RECIPE_TIER_4);
 
-        @Override
-        protected void addTags(HolderLookup.Provider provider) {
-                tag(AUTO_SMELT_DENY);
-                tag(AUTO_SMOKE_DENY);
-                tag(FUEL_CANISTER_DENY)
-                                .add(Items.LAVA_BUCKET);
-                tag(ItemTags.SWORDS)
-                                .add(Registration.FerricoreSword.get())
-                                .add(Registration.BlazegoldSword.get())
-                                .add(Registration.CelestigemSword.get())
-                                .add(Registration.EclipseAlloySword.get());
-                tag(ItemTags.PICKAXES)
-                                .add(Registration.FerricorePickaxe.get())
-                                .add(Registration.BlazegoldPickaxe.get())
-                                .add(Registration.CelestigemPickaxe.get())
-                                .add(Registration.EclipseAlloyPickaxe.get())
-                                .add(Registration.CelestigemPaxel.get())
-                                .add(Registration.EclipseAlloyPaxel.get());
-                tag(ItemTags.SHOVELS)
-                                .add(Registration.FerricoreShovel.get())
-                                .add(Registration.BlazegoldShovel.get())
-                                .add(Registration.CelestigemShovel.get())
-                                .add(Registration.EclipseAlloyShovel.get())
-                                .add(Registration.CelestigemPaxel.get())
-                                .add(Registration.EclipseAlloyPaxel.get());
-                tag(ItemTags.AXES)
-                                .add(Registration.FerricoreAxe.get())
-                                .add(Registration.BlazegoldAxe.get())
-                                .add(Registration.CelestigemAxe.get())
-                                .add(Registration.EclipseAlloyAxe.get())
-                                .add(Registration.CelestigemPaxel.get())
-                                .add(Registration.EclipseAlloyPaxel.get());
-                tag(ItemTags.HOES)
-                                .add(Registration.FerricoreHoe.get())
-                                .add(Registration.BlazegoldHoe.get())
-                                .add(Registration.CelestigemHoe.get())
-                                .add(Registration.EclipseAlloyHoe.get());
-                tag(Tags.Items.INGOTS)
-                                .add(Registration.FerricoreIngot.get())
-                                .add(Registration.BlazegoldIngot.get())
-                                .add(Registration.EclipseAlloyIngot.get());
-                tag(Tags.Items.RAW_MATERIALS)
-                                .add(Registration.RawFerricore.get())
-                                .add(Registration.RawBlazegold.get())
-                                .add(Registration.RawEclipseAlloy.get());
-                tag(Tags.Items.GEMS)
-                                .add(Registration.Celestigem.get());
-                tag(WRENCHES)
-                                .add(Registration.FerricoreWrench.get());
-                tag(TOOLS_WRENCH)
-                                .add(Registration.FerricoreWrench.get());
-                tag(Tags.Items.STORAGE_BLOCKS)
-                                .add(Registration.FerricoreBlock_ITEM.get())
-                                .add(Registration.BlazeGoldBlock_ITEM.get())
-                                .add(Registration.CelestigemBlock_ITEM.get())
-                                .add(Registration.EclipseAlloyBlock_ITEM.get());
-                tag(ItemTags.FOOT_ARMOR)
-                                .add(Registration.FerricoreBoots.get())
-                                .add(Registration.BlazegoldBoots.get())
-                                .add(Registration.CelestigemBoots.get())
-                                .add(Registration.EclipseAlloyBoots.get());
-                tag(ItemTags.LEG_ARMOR)
-                                .add(Registration.FerricoreLeggings.get())
-                                .add(Registration.BlazegoldLeggings.get())
-                                .add(Registration.CelestigemLeggings.get())
-                                .add(Registration.EclipseAlloyLeggings.get());
-                tag(ItemTags.CHEST_ARMOR)
-                                .add(Registration.FerricoreChestplate.get())
-                                .add(Registration.BlazegoldChestplate.get())
-                                .add(Registration.CelestigemChestplate.get())
-                                .add(Registration.EclipseAlloyChestplate.get());
-                tag(ItemTags.HEAD_ARMOR)
-                                .add(Registration.FerricoreHelmet.get())
-                                .add(Registration.BlazegoldHelmet.get())
-                                .add(Registration.CelestigemHelmet.get())
-                                .add(Registration.EclipseAlloyHelmet.get());
-                tag(ItemTags.FOOT_ARMOR_ENCHANTABLE)
-                                .add(Registration.FerricoreBoots.get())
-                                .add(Registration.BlazegoldBoots.get())
-                                .add(Registration.CelestigemBoots.get())
-                                .add(Registration.EclipseAlloyBoots.get());
-                tag(ItemTags.LEG_ARMOR_ENCHANTABLE)
-                                .add(Registration.FerricoreLeggings.get())
-                                .add(Registration.BlazegoldLeggings.get())
-                                .add(Registration.CelestigemLeggings.get())
-                                .add(Registration.EclipseAlloyLeggings.get());
-                tag(ItemTags.CHEST_ARMOR_ENCHANTABLE)
-                                .add(Registration.FerricoreChestplate.get())
-                                .add(Registration.BlazegoldChestplate.get())
-                                .add(Registration.CelestigemChestplate.get())
-                                .add(Registration.EclipseAlloyChestplate.get());
-                tag(ItemTags.HEAD_ARMOR_ENCHANTABLE)
-                                .add(Registration.FerricoreHelmet.get())
-                                .add(Registration.BlazegoldHelmet.get())
-                                .add(Registration.CelestigemHelmet.get())
-                                .add(Registration.EclipseAlloyHelmet.get());
-                tag(ItemTags.BOW_ENCHANTABLE)
-                                .add(Registration.FerricoreBow.get())
-                                .add(Registration.BlazegoldBow.get())
-                                .add(Registration.CelestigemBow.get())
-                                .add(Registration.EclipseAlloyBow.get());
-                tag(ItemTags.DURABILITY_ENCHANTABLE)
-                                .add(Registration.FerricoreBow.get())
-                                .add(Registration.BlazegoldBow.get())
-                                .add(Registration.CelestigemBow.get())
-                                .add(Registration.EclipseAlloyBow.get());
-                tag(RAW_FERRICORE)
-                                .add(Registration.RawFerricore.get());
-                tag(RAW_BLAZEGOLD)
-                                .add(Registration.RawBlazegold.get());
-                tag(RAW_ECLIPSEALLOY)
-                                .add(Registration.RawEclipseAlloy.get());
-                tag(INGOT_FERRICORE)
-                                .add(Registration.FerricoreIngot.get());
-                tag(INGOT_BLAZEGOLD)
-                                .add(Registration.BlazegoldIngot.get());
-                tag(INGOT_ECLIPSEALLOY)
-                                .add(Registration.EclipseAlloyIngot.get());
-                tag(GOO_REVIVE_TIER_1)
-                                .add(Items.SUGAR)
-                                .add(Items.ROTTEN_FLESH);
-                tag(GOO_REVIVE_TIER_2)
-                                .add(Items.NETHER_WART)
-                                .add(Items.BLAZE_POWDER);
-                tag(GOO_REVIVE_TIER_3)
-                                .add(Items.CHORUS_FRUIT)
-                                .add(Items.ENDER_PEARL);
-                tag(GOO_REVIVE_TIER_4)
-                                .add(Items.SCULK)
-                                .add(Items.SCULK_CATALYST);
-                tag(BOWS)
-                                .add(Registration.FerricoreBow.get())
-                                .add(Registration.BlazegoldBow.get())
-                                .add(Registration.CelestigemPickaxe.get())
-                                .add(Registration.EclipseAlloyBow.get());
-                tag(RANGED_WEAPON)
-                                .add(Registration.FerricoreBow.get())
-                                .add(Registration.BlazegoldBow.get())
-                                .add(Registration.CelestigemPickaxe.get())
-                                .add(Registration.EclipseAlloyBow.get());
-                tag(MELEE_WEAPON)
-                                .add(Registration.FerricoreSword.get())
-                                .add(Registration.FerricoreAxe.get())
-                                .add(Registration.BlazegoldSword.get())
-                                .add(Registration.BlazegoldAxe.get())
-                                .add(Registration.CelestigemSword.get())
-                                .add(Registration.CelestigemAxe.get())
-                                .add(Registration.EclipseAlloySword.get())
-                                .add(Registration.EclipseAlloyAxe.get())
-                                .add(Registration.CelestigemPaxel.get())
-                                .add(Registration.EclipseAlloyPaxel.get());
-                tag(MINING_TOOL)
-                                .add(Registration.CelestigemPaxel.get())
-                                .add(Registration.EclipseAlloyPaxel.get());
-                tag(PAXEL)
-                                .add(Registration.CelestigemPaxel.get())
-                                .add(Registration.EclipseAlloyPaxel.get());
-                tag(ItemTags.CLUSTER_MAX_HARVESTABLES)
-                                .add(Registration.FerricorePickaxe.get())
-                                .add(Registration.BlazegoldPickaxe.get())
-                                .add(Registration.CelestigemPickaxe.get())
-                                .add(Registration.EclipseAlloyPickaxe.get())
-                                .add(Registration.CelestigemPaxel.get())
-                                .add(Registration.EclipseAlloyPaxel.get());
-                tag(PARADOX_DENY)
-                                .add(Items.BEDROCK);
-                tag(STORAGEBLOCKS)
-                                .add(Registration.CharcoalBlock_ITEM.get());
-                tag(CHARCOALBLOCKS)
-                                .add(Registration.CharcoalBlock_ITEM.get());
+        tag(ModTags.Items.GOO_RECIPE_TIER_4)
+                .add(JDTRegistration.GooBlock_Tier4_ITEM.get());
 
-                tag(GOO_RECIPE_TIER_1)
-                                .add(Registration.GooBlock_Tier1_ITEM.get())
-                                .addOptionalTag(GOO_RECIPE_TIER_2);
+        tag(toolRepairTag("ferricore")).add(JDTRegistration.FerricoreIngot.get());
+        tag(toolRepairTag("blazegold")).add(JDTRegistration.BlazegoldIngot.get());
+        tag(toolRepairTag("celestigem")).add(JDTRegistration.Celestigem.get());
+        tag(toolRepairTag("eclipsealloy")).add(JDTRegistration.EclipseAlloyIngot.get());
 
-                tag(GOO_RECIPE_TIER_2)
-                                .add(Registration.GooBlock_Tier2_ITEM.get())
-                                .addOptionalTag(GOO_RECIPE_TIER_3);
-
-                tag(GOO_RECIPE_TIER_3)
-                                .add(Registration.GooBlock_Tier3_ITEM.get())
-                                .addOptionalTag(GOO_RECIPE_TIER_4);
-
-                tag(GOO_RECIPE_TIER_4)
-                                .add(Registration.GooBlock_Tier4_ITEM.get());
-
-        }
-
-        @Override
-        public String getName() {
-                return "JustDireThings Item Tags";
-        }
+        tag(armorRepairTag("ferricore")).add(JDTRegistration.FerricoreIngot.get());
+        tag(armorRepairTag("blazegold")).add(JDTRegistration.BlazegoldIngot.get());
+        tag(armorRepairTag("celestigem")).add(JDTRegistration.Celestigem.get());
+        tag(armorRepairTag("eclipsealloy")).add(JDTRegistration.EclipseAlloyIngot.get());
+    }
 }

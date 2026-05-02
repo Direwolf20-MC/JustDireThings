@@ -1,21 +1,24 @@
 package com.direwolf20.justdirethings.common.containers.handlers;
 
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import net.neoforged.neoforge.transfer.RangedResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.PlayerInventoryWrapper;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class PlayerHandler extends ItemStackHandler {
+public class PlayerHandler extends DelegatingResourceHandler<ItemResource> {
     public final Player player;
     public final InventoryType inventoryType;
 
     public enum InventoryType {
         Inventory,
         Armor,
-        Offhand;
+        Offhand,
+        MainInventory,
+        Hotbar;
 
         public InventoryType next() {
             InventoryType[] values = values();
@@ -25,9 +28,20 @@ public class PlayerHandler extends ItemStackHandler {
     }
 
     public PlayerHandler(Player player, InventoryType inventoryType) {
-        super(inventoryType.equals(InventoryType.Inventory) ? player.getInventory().items : inventoryType.equals(InventoryType.Armor) ? player.getInventory().armor : player.getInventory().offhand);
+        super(buildDelegate(player, inventoryType));
         this.player = player;
         this.inventoryType = inventoryType;
+    }
+
+    private static ResourceHandler<ItemResource> buildDelegate(Player player, InventoryType inventoryType) {
+        PlayerInventoryWrapper wrapper = PlayerInventoryWrapper.of(player);
+        return switch (inventoryType) {
+            case Inventory -> RangedResourceHandler.of(wrapper, 0, Inventory.INVENTORY_SIZE);
+            case Armor -> RangedResourceHandler.of(wrapper, Inventory.INVENTORY_SIZE, Inventory.SLOT_OFFHAND);
+            case Offhand -> RangedResourceHandler.ofSingleIndex(wrapper, Inventory.SLOT_OFFHAND);
+            case MainInventory -> RangedResourceHandler.of(wrapper, Inventory.SELECTION_SIZE, Inventory.INVENTORY_SIZE);
+            case Hotbar -> RangedResourceHandler.of(wrapper, 0, Inventory.SELECTION_SIZE);
+        };
     }
 
     public Inventory getInventory() {
@@ -40,50 +54,32 @@ public class PlayerHandler extends ItemStackHandler {
     }
 
     @Override
-    public void setStackInSlot(int slot, ItemStack stack) {
-        if (isPlayerInvalid()) return;
-        super.setStackInSlot(slot, stack);
+    public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
+        if (isPlayerInvalid()) return 0;
+        return super.insert(index, resource, amount, transaction);
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
-        if (isPlayerInvalid()) return ItemStack.EMPTY;
-        return super.getStackInSlot(slot);
+    public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+        if (isPlayerInvalid()) return 0;
+        return super.extract(index, resource, amount, transaction);
     }
 
     @Override
-    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        if (isPlayerInvalid())
-            return stack;
-        return super.insertItem(slot, stack, simulate);
-    }
-
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (isPlayerInvalid()) return ItemStack.EMPTY;
-        if (inventoryType == InventoryType.Armor && EnchantmentHelper.has(super.getStackInSlot(slot), EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE))
-            return ItemStack.EMPTY;
-        return super.extractItem(slot, amount, simulate);
-    }
-
-    @Override
-    public boolean isItemValid(int slot, ItemStack stack) {
+    public boolean isValid(int index, ItemResource resource) {
         if (isPlayerInvalid()) return false;
-        if (inventoryType.equals(InventoryType.Inventory))
-            return true;
-        if (inventoryType.equals(InventoryType.Armor)) {
-            if (slot == 0)
-                return stack.canEquip(EquipmentSlot.FEET, player);
-            if (slot == 1)
-                return stack.canEquip(EquipmentSlot.LEGS, player);
-            if (slot == 2)
-                return stack.canEquip(EquipmentSlot.CHEST, player);
-            if (slot == 3)
-                return stack.canEquip(EquipmentSlot.HEAD, player);
-        }
-        if (inventoryType.equals(InventoryType.Offhand)) {
-            return true;
-        }
-        return false;
+        return super.isValid(index, resource);
+    }
+
+    @Override
+    public ItemResource getResource(int index) {
+        if (isPlayerInvalid()) return ItemResource.EMPTY;
+        return super.getResource(index);
+    }
+
+    @Override
+    public long getAmountAsLong(int index) {
+        if (isPlayerInvalid()) return 0;
+        return super.getAmountAsLong(index);
     }
 }

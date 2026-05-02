@@ -5,15 +5,27 @@ import com.direwolf20.justdirethings.common.entities.CreatureCatcherEntity;
 import com.direwolf20.justdirethings.common.items.CreatureCatcher;
 import com.direwolf20.justdirethings.util.ItemStackKey;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+
+import java.util.Optional;
 
 public interface FilterableBE {
     FilterBasicHandler getFilterHandler();
@@ -28,16 +40,16 @@ public interface FilterableBE {
     BlockEntity getBlockEntity();
 
 
-    default void saveFilterSettings(CompoundTag tag) {
-        tag.putBoolean("allowlist", getFilterData().allowlist);
-        tag.putBoolean("compareNBT", getFilterData().compareNBT);
-        tag.putInt("blockitemfilter", getFilterData().blockItemFilter);
+    default void saveFilterSettings(ValueOutput output) {
+        output.putBoolean("allowlist", getFilterData().allowlist);
+        output.putBoolean("compareNBT", getFilterData().compareNBT);
+        output.putInt("blockitemfilter", getFilterData().blockItemFilter);
     }
 
-    default void loadFilterSettings(CompoundTag tag) {
-        getFilterData().allowlist = tag.getBoolean("allowlist");
-        getFilterData().compareNBT = tag.getBoolean("compareNBT");
-        int blockItemFilter = tag.getInt("blockitemfilter");
+    default void loadFilterSettings(ValueInput input) {
+        getFilterData().allowlist = input.getBooleanOr("allowlist", getFilterData().allowlist);
+        getFilterData().compareNBT = input.getBooleanOr("compareNBT", getFilterData().compareNBT);
+        int blockItemFilter = input.getIntOr("blockitemfilter", getFilterData().blockItemFilter);
         if (blockItemFilter != -1 && getFilterData().blockItemFilter != -1)
             getFilterData().blockItemFilter = blockItemFilter;
     }
@@ -55,8 +67,8 @@ public interface FilterableBE {
         if (getFilterData().filterCache.containsKey(key)) return getFilterData().filterCache.get(key);
 
         FilterBasicHandler filteredItems = getFilterHandler();
-        for (int i = 0; i < filteredItems.getSlots(); i++) {
-            ItemStack stack = filteredItems.getStackInSlot(i);
+        for (int i = 0; i < filteredItems.size(); i++) {
+            ItemStack stack = filteredItems.getResource(i).toStack(filteredItems.getAmountAsInt(i));
             if (stack.isEmpty()) continue;
             if (key.equals(new ItemStackKey(stack, getFilterData().compareNBT))) {
                 getFilterData().filterCache.put(key, getFilterData().allowlist);
@@ -71,13 +83,24 @@ public interface FilterableBE {
         if (getFilterData().entityCache.containsKey(entity)) return getFilterData().entityCache.get(entity);
 
         FilterBasicHandler filteredItems = getFilterHandler();
-        for (int i = 0; i < filteredItems.getSlots(); i++) {
-            ItemStack stack = filteredItems.getStackInSlot(i);
+        for (int i = 0; i < filteredItems.size(); i++) {
+            ItemStack stack = filteredItems.getResource(i).toStack(filteredItems.getAmountAsInt(i));
             if (stack.isEmpty()) continue;
+            if (entity instanceof ItemEntity itemEntity) {
+                ItemStack droppedStack = itemEntity.getItem();
+                if (droppedStack.isEmpty()) continue;
+                ItemStackKey filterKey = new ItemStackKey(stack, getFilterData().compareNBT);
+                ItemStackKey droppedKey = new ItemStackKey(droppedStack, getFilterData().compareNBT);
+                if (filterKey.equals(droppedKey)) {
+                    getFilterData().entityCache.put(entity, getFilterData().allowlist);
+                    return getFilterData().allowlist;
+                }
+                continue;
+            }
             if (stack.getItem() instanceof SpawnEggItem) {
-                Item entityEgg = SpawnEggItem.byId(entity.getType());
-                if (entityEgg == null) continue;
-                if (stack.is(entityEgg)) {
+                Optional<Holder<Item>> entityEgg = SpawnEggItem.byId(entity.getType());
+                if (entityEgg.isEmpty()) continue;
+                if (stack.getItem() == entityEgg.get().value()) {
                     getFilterData().entityCache.put(entity, getFilterData().allowlist);
                     return getFilterData().allowlist;
                 }
@@ -98,6 +121,15 @@ public interface FilterableBE {
                         return getFilterData().allowlist;
                     }
                 }
+            } else if (stack.getItem() == Items.NAME_TAG && entity instanceof Player player) {
+                Component customName = stack.get(DataComponents.CUSTOM_NAME);
+                if (customName == null) continue;
+                String filterName = customName.getString();
+                if (filterName.isEmpty()) continue;
+                if (filterName.equalsIgnoreCase(player.getGameProfile().name())) {
+                    getFilterData().entityCache.put(entity, getFilterData().allowlist);
+                    return getFilterData().allowlist;
+                }
             }
 
         }
@@ -106,8 +138,9 @@ public interface FilterableBE {
     }
 
     default CompoundTag getNormalizedTag(Entity entity) {
-        CompoundTag tag = new CompoundTag();
-        entity.save(tag);
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        entity.save(output);
+        CompoundTag tag = output.buildResult();
         // Remove generic entity tags
         tag.remove("AbsorptionAmount");
         tag.remove("Age");
@@ -168,8 +201,8 @@ public interface FilterableBE {
         if (getFilterData().filterCache.containsKey(key)) return getFilterData().filterCache.get(key);
 
         FilterBasicHandler filteredItems = getFilterHandler();
-        for (int i = 0; i < filteredItems.getSlots(); i++) {
-            ItemStack stack = filteredItems.getStackInSlot(i);
+        for (int i = 0; i < filteredItems.size(); i++) {
+            ItemStack stack = filteredItems.getResource(i).toStack(filteredItems.getAmountAsInt(i));
             if (stack.isEmpty()) continue;
             if (key.equals(new ItemStackKey(stack, getFilterData().compareNBT))) {
                 getFilterData().filterCache.put(key, getFilterData().allowlist);

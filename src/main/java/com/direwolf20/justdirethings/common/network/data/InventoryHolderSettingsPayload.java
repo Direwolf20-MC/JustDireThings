@@ -5,8 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import net.minecraft.resources.Identifier;
 
 public record InventoryHolderSettingsPayload(
         boolean compareNBT,
@@ -17,14 +16,14 @@ public record InventoryHolderSettingsPayload(
         boolean renderPlayer,
         int renderedSlot
 ) implements CustomPacketPayload {
-    public static final Type<InventoryHolderSettingsPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "inventory_holder_settings"));
+    public static final Type<InventoryHolderSettingsPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "inventory_holder_settings"));
 
     @Override
     public Type<InventoryHolderSettingsPayload> type() {
         return TYPE;
     }
 
-    public static final StreamCodec<FriendlyByteBuf, InventoryHolderSettingsPayload> STREAM_CODEC = NeoForgeStreamCodecs.composite(
+    public static final StreamCodec<FriendlyByteBuf, InventoryHolderSettingsPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::compareNBT,
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::filtersOnly,
             ByteBufCodecs.BOOL, InventoryHolderSettingsPayload::compareCounts,

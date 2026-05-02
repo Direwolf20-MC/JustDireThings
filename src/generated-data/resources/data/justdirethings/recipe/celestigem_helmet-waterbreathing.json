@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_waterbreathing",
+  "base": "justdirethings:celestigem_helmet"
+}

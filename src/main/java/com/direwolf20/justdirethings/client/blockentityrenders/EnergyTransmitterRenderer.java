@@ -2,144 +2,71 @@ package com.direwolf20.justdirethings.client.blockentityrenders;
 
 import com.direwolf20.justdirethings.client.blockentityrenders.baseber.AreaAffectingBER;
 import com.direwolf20.justdirethings.common.blockentities.EnergyTransmitterBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.joml.Matrix4f;
+import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-public class EnergyTransmitterRenderer extends AreaAffectingBER {
-    public static final ItemStack itemStack = new ItemStack(Registration.Celestigem.get());
+public class EnergyTransmitterRenderer extends AreaAffectingBER<EnergyTransmitterBE, EnergyTransmitterRenderer.EnergyTransmitterRenderState> {
+    private static ItemStack itemStack;
+
+    private static ItemStack itemStack() {
+        if (itemStack == null) itemStack = new ItemStack(JDTRegistration.Celestigem.get());
+        return itemStack;
+    }
+
+    public static class EnergyTransmitterRenderState extends AreaAffectingRenderState {
+        public Direction facing = Direction.UP;
+        public long millis;
+        public final ItemStackRenderState item = new ItemStackRenderState();
+    }
+
+    private final ItemModelResolver itemModelResolver;
+
     public EnergyTransmitterRenderer(BlockEntityRendererProvider.Context context) {
-
+        this.itemModelResolver = context.itemModelResolver();
     }
 
     @Override
-    public void render(BlockEntity blockentity, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightsIn, int combinedOverlayIn) {
-        super.render(blockentity, partialTicks, matrixStackIn, bufferIn, combinedLightsIn, combinedOverlayIn);
-
-        if (blockentity instanceof EnergyTransmitterBE energyTransmitterBE)
-            this.renderItemStack(energyTransmitterBE, matrixStackIn, bufferIn, combinedOverlayIn);
+    public EnergyTransmitterRenderState createRenderState() {
+        return new EnergyTransmitterRenderState();
     }
 
-    private void renderItemStack(EnergyTransmitterBE blockEntity, PoseStack poseStack, MultiBufferSource bufferIn, int combinedOverlayIn) {
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        Direction direction = blockEntity.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
-        long millis = System.currentTimeMillis();
+    @Override
+    public void extractRenderState(EnergyTransmitterBE blockEntity, EnergyTransmitterRenderState state, float partialTicks, Vec3 cameraPosition,
+                                    ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
+        state.facing = blockEntity.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
+        state.millis = System.currentTimeMillis();
+        this.itemModelResolver.updateForTopItem(state.item, itemStack(), ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0);
+    }
 
+    @Override
+    public void submit(EnergyTransmitterRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+        super.submit(state, poseStack, submitNodeCollector, camera);
+        Direction direction = state.facing;
         poseStack.pushPose();
         poseStack.translate(0.5f + (direction.getStepX() * 0.3f), 0.5f + (direction.getStepY() * 0.3f), 0.5f + (direction.getStepZ() * 0.3f));
         poseStack.mulPose(Axis.XP.rotationDegrees(direction.getStepZ() * -90));
         poseStack.mulPose(Axis.ZP.rotationDegrees(direction.getStepX() * 90));
         poseStack.mulPose(Axis.XP.rotationDegrees(direction.getStepY() == 1 ? 0 : 180));
-        float angle = ((millis / 15) % 360);
+        float angle = ((state.millis / 15) % 360);
         poseStack.mulPose(Axis.YP.rotationDegrees(angle));
         poseStack.scale(.15f, .15f, .15f);
-        itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, LightTexture.FULL_BRIGHT, combinedOverlayIn, poseStack, bufferIn, Minecraft.getInstance().level, 0);
+        state.item.submit(poseStack, submitNodeCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
     }
-
-    private void renderCube(EnergyTransmitterBE blockEntity, Matrix4f matrixStack, VertexConsumer vertexConsumer, long gameTime, float partialTicks) {
-        Direction direction = blockEntity.getBlockState().getValue(BlockStateProperties.FACING).getOpposite();
-        float oneSmall = 0.53125f;
-        float zeroSmall = 0.46875f;
-        float oneBig = 0.5625f;
-        float zeroBig = 0.4375f;
-        int ticks = 80;
-        float f1 = (float) Math.floorMod(gameTime, ticks) + partialTicks;
-        float lerp = f1 / ticks;
-        float zero;
-        float one;
-        if (f1 < ticks / 2f) {
-            zero = Mth.lerp(lerp, zeroSmall, zeroBig);
-            one = Mth.lerp(lerp, oneSmall, oneBig);
-        } else {
-            zero = Mth.lerp(lerp, zeroBig, zeroSmall);
-            one = Mth.lerp(lerp, oneBig, oneSmall);
-        }
-        float diff = one - zero;
-        float f;
-        switch (direction) {
-            case UP:
-                f = 0.5f + 0.25f; //Center of cube up 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f + diff, one, one, one, one); //South
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f, zero, zero, zero, zero); //North
-                this.renderFace(matrixStack, vertexConsumer, one, one, f + diff, f, zero, one, one, zero); //East
-                this.renderFace(matrixStack, vertexConsumer, zero, zero, f, f + diff, zero, one, one, zero); //West
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f, zero, zero, one, one); //Down
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f + diff, f + diff, one, one, zero, zero); //Up
-                break;
-            case DOWN:
-                f = 0.5f - 0.25f; //Center of cube down 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f - diff, one, one, one, one); //South
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f - diff, f, zero, zero, zero, zero); //North
-                this.renderFace(matrixStack, vertexConsumer, one, one, f - diff, f, zero, one, one, zero); //East
-                this.renderFace(matrixStack, vertexConsumer, zero, zero, f, f - diff, zero, one, one, zero); //West
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f, f, zero, zero, one, one); //Down
-                this.renderFace(matrixStack, vertexConsumer, zero, one, f - diff, f - diff, one, one, zero, zero); //Up
-                break;
-            case NORTH:
-                f = 0.5f - 0.25f; //Center of cube up 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, one, f, f, f, f); //South
-                this.renderFace(matrixStack, vertexConsumer, zero, one, one, zero, f - diff, f - diff, f - diff, f - diff); //North
-                this.renderFace(matrixStack, vertexConsumer, one, one, one, zero, f - diff, f, f, f - diff); //East
-                this.renderFace(matrixStack, vertexConsumer, zero, zero, zero, one, f - diff, f, f, f - diff); //West
-                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, zero, f - diff, f - diff, f, f); //Down
-                this.renderFace(matrixStack, vertexConsumer, zero, one, one, one, f, f, f - diff, f - diff); //Up
-                break;
-            case SOUTH:
-                f = 0.5f + 0.25f; //Center of cube down 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, one, f, f, f, f); //South
-                this.renderFace(matrixStack, vertexConsumer, zero, one, one, zero, f + diff, f + diff, f + diff, f + diff); //North
-                this.renderFace(matrixStack, vertexConsumer, zero, zero, zero, one, f + diff, f, f, f + diff); //East
-                this.renderFace(matrixStack, vertexConsumer, one, one, one, zero, f + diff, f, f, f + diff); //West
-                this.renderFace(matrixStack, vertexConsumer, zero, one, one, one, f, f, f + diff, f + diff); //Down
-                this.renderFace(matrixStack, vertexConsumer, zero, one, zero, zero, f + diff, f + diff, f, f); //Up
-                break;
-            case EAST:
-                f = 0.5f + 0.25f; //Center of cube up 1/4 block
-                this.renderFace(matrixStack, vertexConsumer, f, f + diff, zero, one, one, one, one, one); //South
-                this.renderFace(matrixStack, vertexConsumer, f, f + diff, one, zero, zero, zero, zero, zero); //North
-                this.renderFace(matrixStack, vertexConsumer, f + diff, f + diff, one, zero, zero, one, one, zero); //East
-                this.renderFace(matrixStack, vertexConsumer, f, f, zero, one, zero, one, one, zero); //West
-                this.renderFace(matrixStack, vertexConsumer, f, f + diff, zero, zero, zero, zero, one, one); //Down
-                this.renderFace(matrixStack, vertexConsumer, f, f + diff, one, one, one, one, zero, zero); //Up
-                break;
-            case WEST:
-                f = 0.5f - 0.25f; //Center of cube shifted 1/4 block to the west
-                this.renderFace(matrixStack, vertexConsumer, f, f - diff, zero, one, one, one, one, one); //South
-                this.renderFace(matrixStack, vertexConsumer, f, f - diff, one, zero, zero, zero, zero, zero); //North
-                this.renderFace(matrixStack, vertexConsumer, f, f, zero, one, zero, one, one, zero); //East
-                this.renderFace(matrixStack, vertexConsumer, f - diff, f - diff, one, zero, zero, one, one, zero); //West
-                this.renderFace(matrixStack, vertexConsumer, f, f - diff, one, one, one, one, zero, zero); //Down
-                this.renderFace(matrixStack, vertexConsumer, f, f - diff, zero, zero, zero, zero, one, one); //Up
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void renderFace(Matrix4f matrixStack, VertexConsumer vertexConsumer, float x1, float x2, float y1, float y2, float z1, float z2, float z3, float z4) {
-        vertexConsumer.addVertex(matrixStack, x1, y1, z1);
-        vertexConsumer.addVertex(matrixStack, x2, y1, z2);
-        vertexConsumer.addVertex(matrixStack, x2, y2, z3);
-        vertexConsumer.addVertex(matrixStack, x1, y2, z4);
-    }
-
-    protected RenderType renderType() {
-        return RenderType.endPortal();
-    }
-
 }

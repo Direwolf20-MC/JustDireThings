@@ -5,25 +5,31 @@ import com.direwolf20.justdirethings.common.containers.FuelCanisterContainer;
 import com.direwolf20.justdirethings.common.items.FuelCanister;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.FuelValues;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FuelCanisterScreen extends AbstractContainerScreen<FuelCanisterContainer> {
-    private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fuelcanister.png");
+    private static final int DARK_GRAY_ARGB = 0xFF404040;
+    private static final int INVALID_SLOT_TINT_ARGB = 0x7FFF0000;
+
+    private final Identifier GUI = Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/fuelcanister.png");
 
     protected final FuelCanisterContainer container;
     private ItemStack fuelCanister;
@@ -37,57 +43,68 @@ public class FuelCanisterScreen extends AbstractContainerScreen<FuelCanisterCont
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
-        MutableComponent msg = Component.translatable("justdirethings.fuelcanisteritemsamt", MagicHelpers.formatted((float) FuelCanister.getFuelLevel(fuelCanister) / 200));
-        guiGraphics.drawString(font, msg, this.getGuiLeft() + this.imageWidth / 2 - font.width(msg) / 2, getGuiTop() + 5, Color.DARK_GRAY.getRGB(), false);
-        msg = Component.translatable("justdirethings.fuelcanisteramt", MagicHelpers.formatted(FuelCanister.getFuelLevel(fuelCanister)));
-        guiGraphics.drawString(font, msg, (this.getGuiLeft() + this.imageWidth / 2) - font.width(msg) / 2, getGuiTop() + 15, Color.DARK_GRAY.getRGB(), false);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+        int relX = (this.width - this.imageWidth) / 2;
+        int relY = (this.height - this.imageHeight) / 2;
+        graphics.blit(RenderPipelines.GUI_TEXTURED, GUI, relX, relY, 0.0F, 0.0F,
+                this.imageWidth, this.imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractContents(graphics, mouseX, mouseY, partialTicks);
+        MutableComponent msg = Component.translatable("justdirethings.fuelcanisteritemsamt",
+                MagicHelpers.formatted((float) FuelCanister.getFuelLevel(fuelCanister) / 200));
+        graphics.text(font, msg, this.leftPos + this.imageWidth / 2 - font.width(msg) / 2,
+                this.topPos + 5, DARK_GRAY_ARGB, false);
+        msg = Component.translatable("justdirethings.fuelcanisteramt",
+                MagicHelpers.formatted(FuelCanister.getFuelLevel(fuelCanister)));
+        graphics.text(font, msg, this.leftPos + this.imageWidth / 2 - font.width(msg) / 2,
+                this.topPos + 15, DARK_GRAY_ARGB, false);
+    }
+
+    @Override
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
             ItemStack itemstack = this.hoveredSlot.getItem();
-            int fuelPerPiece = itemstack.getBurnTime(RecipeType.SMELTING);
-            List<Component> tooltip = this.getTooltipFromContainerItem(itemstack);
-            if (container.handler.isItemValid(0, itemstack)) {
-                if (hasShiftDown()) {
-                    tooltip.add(Component.translatable("justdirethings.fuelcanisteramt", MagicHelpers.formatted(fuelPerPiece)).withStyle(ChatFormatting.AQUA));
-                    tooltip.add(Component.translatable("justdirethings.fuelcanisteramtstack", MagicHelpers.formatted(fuelPerPiece * itemstack.getCount())).withStyle(ChatFormatting.AQUA));
+            FuelValues fuelValues = minecraft != null && minecraft.level != null ? minecraft.level.fuelValues() : null;
+            int fuelPerPiece = fuelValues != null ? itemstack.getBurnTime(RecipeType.SMELTING, fuelValues) : 0;
+            List<Component> tooltip = new ArrayList<>(this.getTooltipFromContainerItem(itemstack));
+            if (container.handler.isValid(0, ItemResource.of(itemstack))) {
+                if (Minecraft.getInstance().hasShiftDown()) {
+                    tooltip.add(Component.translatable("justdirethings.fuelcanisteramt",
+                            MagicHelpers.formatted(fuelPerPiece)).withStyle(ChatFormatting.AQUA));
+                    tooltip.add(Component.translatable("justdirethings.fuelcanisteramtstack",
+                            MagicHelpers.formatted(fuelPerPiece * itemstack.getCount())).withStyle(ChatFormatting.AQUA));
                 } else {
-                    tooltip.add(Component.translatable("justdirethings.fuelcanisteritemsamt", MagicHelpers.formatted((float) fuelPerPiece / 200)).withStyle(ChatFormatting.AQUA));
-                    tooltip.add(Component.translatable("justdirethings.fuelcanisteritemsamtstack", MagicHelpers.formatted((float) (fuelPerPiece * itemstack.getCount()) / 200)).withStyle(ChatFormatting.AQUA));
+                    tooltip.add(Component.translatable("justdirethings.fuelcanisteritemsamt",
+                            MagicHelpers.formatted((float) fuelPerPiece / 200)).withStyle(ChatFormatting.AQUA));
+                    tooltip.add(Component.translatable("justdirethings.fuelcanisteritemsamtstack",
+                            MagicHelpers.formatted((float) (fuelPerPiece * itemstack.getCount()) / 200)).withStyle(ChatFormatting.AQUA));
                 }
             }
-            pGuiGraphics.renderTooltip(this.font, tooltip, itemstack.getTooltipImage(), itemstack, pX, pY);
+            graphics.setTooltipForNextFrame(this.font, tooltip, itemstack.getTooltipImage(), itemstack, mouseX, mouseY);
         }
     }
 
     @Override
-    protected void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
-        super.renderSlot(pGuiGraphics, pSlot);
-        if (!pSlot.getItem().isEmpty() && !container.handler.isItemValid(pSlot.getSlotIndex(), pSlot.getItem()))
-            pGuiGraphics.fill(RenderType.guiOverlay(), pSlot.x, pSlot.y, pSlot.x + 16, pSlot.y + Mth.ceil(16.0F), 0x7FFF0000);
+    protected void extractSlot(GuiGraphicsExtractor graphics, Slot slot, int mouseX, int mouseY) {
+        super.extractSlot(graphics, slot, mouseX, mouseY);
+        if (!slot.getItem().isEmpty()
+                && !container.handler.isValid(slot.getSlotIndex(), ItemResource.of(slot.getItem()))) {
+            graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, INVALID_SLOT_TINT_ARGB);
+        }
     }
 
     @Override
-    public void init() {
+    protected void init() {
         super.init();
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, mouseX, mouseY);
-    }
-
-    @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, GUI);
-        int relX = (this.width - this.imageWidth) / 2;
-        int relY = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(GUI, relX, relY, 0, 0, this.imageWidth, this.imageHeight);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        super.extractLabels(graphics, mouseX, mouseY);
     }
 
     @Override
@@ -101,24 +118,23 @@ public class FuelCanisterScreen extends AbstractContainerScreen<FuelCanisterCont
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        InputConstants.Key mouseKey = InputConstants.getKey(p_keyPressed_1_, p_keyPressed_2_);
-        if (p_keyPressed_1_ == 256 || minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
+    public boolean keyPressed(KeyEvent event) {
+        InputConstants.Key mouseKey = InputConstants.getKey(event);
+        if (event.key() == 256 || minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
             onClose();
-
             return true;
         }
-
-        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int btn) {
-        return super.mouseClicked(x, y, btn);
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        return super.mouseClicked(event, doubleClick);
     }
 
-    public boolean mouseReleased(double p_mouseReleased_1_, double p_mouseReleased_3_, int p_mouseReleased_5_) {
-        return super.mouseReleased(p_mouseReleased_1_, p_mouseReleased_3_, p_mouseReleased_5_);
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        return super.mouseReleased(event);
     }
 
     @Override

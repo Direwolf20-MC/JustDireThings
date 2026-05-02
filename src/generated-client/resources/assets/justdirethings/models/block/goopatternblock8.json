@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "justdirethings:block/goopatterns/goorender_full",
+    "front": "justdirethings:block/goopatterns/goorender_side8",
+    "side": "justdirethings:block/goopatterns/goorender_side8",
+    "top": "justdirethings:block/goopatterns/goorender_blank"
+  }
+}

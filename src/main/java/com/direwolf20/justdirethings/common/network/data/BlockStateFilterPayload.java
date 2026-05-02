@@ -6,13 +6,13 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record BlockStateFilterPayload(
         int slot,
         CompoundTag compoundTag
 ) implements CustomPacketPayload {
-    public static final Type<BlockStateFilterPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "block_state_filter_packet"));
+    public static final Type<BlockStateFilterPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "block_state_filter_packet"));
 
     @Override
     public Type<BlockStateFilterPayload> type() {

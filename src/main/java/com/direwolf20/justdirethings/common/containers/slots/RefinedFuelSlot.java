@@ -3,31 +3,36 @@ package com.direwolf20.justdirethings.common.containers.slots;
 import com.direwolf20.justdirethings.common.fluids.basefluids.RefinedFuel;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.IndexModifier;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
-import javax.annotation.Nonnull;
-
-public class RefinedFuelSlot extends SlotItemHandler {
-    public RefinedFuelSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-        super(itemHandler, index, xPosition, yPosition);
+public class RefinedFuelSlot extends ResourceHandlerSlot {
+    public RefinedFuelSlot(ResourceHandler<ItemResource> handler, IndexModifier<ItemResource> slotModifier, int index, int xPosition, int yPosition) {
+        super(handler, slotModifier, index, xPosition, yPosition);
     }
 
     @Override
-    public boolean mayPlace(@Nonnull ItemStack itemStack) {
+    public boolean mayPlace(ItemStack itemStack) {
         if (itemStack.isEmpty())
             return false;
-        IFluidHandlerItem fluidHandlerItem = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (fluidHandlerItem == null)
+        ResourceHandler<FluidResource> fluidHandler = ItemAccess.forStack(itemStack).getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null)
             return false;
-        FluidStack fluidStack = fluidHandlerItem.drain(1000, IFluidHandler.FluidAction.SIMULATE);
-        if (fluidStack.getAmount() == 0)
-            return false;
-        if (!(fluidStack.getFluid() instanceof RefinedFuel))
-            return false;
-        return true;
+        try (Transaction tx = Transaction.openRoot()) {
+            for (int i = 0; i < fluidHandler.size(); i++) {
+                FluidResource r = fluidHandler.getResource(i);
+                if (r.isEmpty()) continue;
+                int extracted = fluidHandler.extract(i, r, 1000, tx);
+                if (extracted > 0 && r.getFluid() instanceof RefinedFuel) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

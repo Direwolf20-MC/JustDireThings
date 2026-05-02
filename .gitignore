@@ -1,28 +1,15 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
+# Allowlist: ignore everything, then explicitly un-ignore what should be tracked.
+/*
 
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
-
-# gradle
-build
-.gradle
-
-# other
-eclipse
-run
-runs
-run-data
-extra-mods
-extra-api
-
-repo
+!/.github/
+!/.gitignore
+!/LICENSE
+!/README.md
+!/build.gradle
+!/gradle/
+!/gradle.properties
+!/gradlew
+!/gradlew.bat
+!/settings.gradle
+!/src/
+!/CHANGELOG.md

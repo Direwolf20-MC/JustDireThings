@@ -1,10 +1,8 @@
 package com.direwolf20.justdirethings.common.entities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -12,6 +10,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class TimeWandEntity extends Entity {
     private static final EntityDataAccessor<Integer> TICKSPEED = SynchedEntityData.defineId(TimeWandEntity.class, EntityDataSerializers.INT);
@@ -24,15 +24,15 @@ public class TimeWandEntity extends Entity {
     }
 
     public TimeWandEntity(Level level, BlockPos blockPos) {
-        this(Registration.TimeWandEntity.get(), level);
+        this(JDTRegistration.TimeWandEntity.get(), level);
         this.blockPos = blockPos;
-        this.moveTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
+        this.snapTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!level().isClientSide) {
+        if (!level().isClientSide()) {
             if (!canSurvive())
                 this.remove(RemovalReason.DISCARDED);
             doExtraTicks();
@@ -103,24 +103,23 @@ public class TimeWandEntity extends Entity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        if (compound.contains("tickSpeed"))
-            this.entityData.set(TICKSPEED, compound.getInt("tickSpeed"));
-        if (compound.contains("remainingTime"))
-            this.entityData.set(REMAINING_TIME, compound.getInt("remainingTime"));
-        if (compound.contains("totalTime"))
-            this.entityData.set(TOTAL_TIME, compound.getInt("totalTime"));
-        if (compound.contains("blockpos"))
-            this.blockPos = NbtUtils.readBlockPos(compound, "blockpos").orElse(null);
+    protected void readAdditionalSaveData(ValueInput input) {
+        input.getInt("tickSpeed").ifPresent(v -> this.entityData.set(TICKSPEED, v));
+        input.getInt("remainingTime").ifPresent(v -> this.entityData.set(REMAINING_TIME, v));
+        input.getInt("totalTime").ifPresent(v -> this.entityData.set(TOTAL_TIME, v));
+        this.blockPos = input.read("blockpos", BlockPos.CODEC).orElse(null);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt("tickSpeed", getTickSpeed());
-        compound.putInt("remainingTime", getRemainingTime());
-        if (blockPos != null)
-            compound.put("blockpos", NbtUtils.writeBlockPos(blockPos));
-        compound.putInt("totalTime", getTotalTime());
+    protected void addAdditionalSaveData(ValueOutput output) {
+        output.putInt("tickSpeed", getTickSpeed());
+        output.putInt("remainingTime", getRemainingTime());
+        output.storeNullable("blockpos", BlockPos.CODEC, blockPos);
+        output.putInt("totalTime", getTotalTime());
     }
 
+    @Override
+    public boolean hurtServer(ServerLevel level, net.minecraft.world.damagesource.DamageSource source, float damage) {
+        return false;
+    }
 }

@@ -1,11 +1,9 @@
 package com.direwolf20.justdirethings.common.blockentities;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +13,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class EclipseGateBE extends BlockEntity {
     public BlockState sourceBlock;
 
     public EclipseGateBE(BlockPos pos, BlockState state) {
-        super(Registration.EclipseGateBE.get(), pos, state);
+        super(JDTRegistration.EclipseGateBE.get(), pos, state);
     }
 
     public void tickClient() {
@@ -73,42 +73,39 @@ public class EclipseGateBE extends BlockEntity {
 
     /** Misc Methods for TE's */
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        this.sourceBlock = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound("sourceBlock"));
-        this.lifetime = tag.getByte("lifetime");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.sourceBlock = input.read("sourceBlock", BlockState.CODEC).orElse(null);
+        this.lifetime = input.getByteOr("lifetime", lifetime);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         if (this.sourceBlock != null) {
-            tag.put("sourceBlock", NbtUtils.writeBlockState(this.sourceBlock));
-            tag.putByte("lifetime", this.lifetime);
+            output.store("sourceBlock", BlockState.CODEC, this.sourceBlock);
+            output.putByte("lifetime", this.lifetime);
         }
     }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        // Vanilla uses the type parameter to indicate which type of tile entity (command block, skull, or beacon?) is receiving the packet, but it seems like Forge has overridden this behavior
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        this.loadAdditional(tag, lookupProvider);
+    public void handleUpdateTag(ValueInput input) {
+        this.loadWithComponents(input);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider p_323910_) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, p_323910_);
-        return tag;
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+        return saveCustomOnly(provider);
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        this.loadAdditional(pkt.getTag(), lookupProvider);
+    public void onDataPacket(Connection net, ValueInput input) {
+        this.loadWithComponents(input);
     }
 
     public void markDirtyClient() {

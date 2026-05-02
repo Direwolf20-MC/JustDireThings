@@ -29,11 +29,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.level.storage.TagValueInput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -50,13 +53,13 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         super.setPlacedBy(world, pos, state, entity, stack);
-        if (!world.isClientSide && entity instanceof Player player) {
+        if (!world.isClientSide() && entity instanceof Player player) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof BaseMachineBE baseMachineBE) {
                 if (stack.has(JustDireDataComponents.CUSTOM_DATA_1)) {
                     CompoundTag compound = stack.get(JustDireDataComponents.CUSTOM_DATA_1).copyTag();
                     if (!compound.isEmpty())
-                        blockEntity.loadCustomOnly(compound, world.registryAccess());
+                        blockEntity.loadCustomOnly(TagValueInput.create(ProblemReporter.DISCARDING, world.registryAccess(), compound));
                 }
                 baseMachineBE.setPlacedBy(player.getUUID());
             }
@@ -65,7 +68,7 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
 
     @Override
     public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult hit) {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return InteractionResult.SUCCESS;
 
         ItemStack itemStack = player.getMainHandItem();
@@ -102,8 +105,9 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
         };
     }
 
-    public void neighborChanged(BlockState blockState, Level level, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(blockState, level, pos, blockIn, fromPos, isMoving);
+    @Override
+    protected void neighborChanged(BlockState blockState, Level level, BlockPos pos, Block blockIn, @Nullable Orientation orientation, boolean movedByPiston) {
+        super.neighborChanged(blockState, level, pos, blockIn, orientation, movedByPiston);
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof RedstoneControlledBE redstoneControlledBE) {
             redstoneControlledBE.getRedstoneControlData().checkedRedstone = false;
@@ -120,17 +124,8 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (newState.getBlock() != this) {
-            BlockEntity blockEntity = worldIn.getBlockEntity(pos);
-            if (blockEntity instanceof BaseMachineBE baseMachineBE) {
-                IItemHandler iItemHandler = baseMachineBE.getMachineHandler();
-                for (int i = 0; i < iItemHandler.getSlots(); ++i) {
-                    Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), iItemHandler.getStackInSlot(i));
-                }
-            }
-        }
-        super.onRemove(state, worldIn, pos, newState, isMoving);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+        Containers.updateNeighboursAfterDestroy(state, level, pos);
     }
 
     @Override
@@ -140,8 +135,7 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
 
         if (blockEntity instanceof BaseMachineBE baseMachineBE && !baseMachineBE.isDefaultSettings()) {
             ItemStack itemStack = new ItemStack(Item.byBlock(this));
-            CompoundTag compoundTag = new CompoundTag();
-            ((BaseMachineBE) blockEntity).saveAdditional(compoundTag, builder.getLevel().registryAccess());
+            CompoundTag compoundTag = blockEntity.saveCustomOnly(builder.getLevel().registryAccess());
             if (!compoundTag.isEmpty()) {
                 itemStack.set(JustDireDataComponents.CUSTOM_DATA_1, CustomData.of(compoundTag));
             }
@@ -176,7 +170,7 @@ public abstract class BaseMachineBlock extends Block implements EntityBlock {
     }
 
     public BlockState direRotate(BlockState state, Rotation rotation) {
-        DirectionProperty prop = BlockStateProperties.FACING;
+        EnumProperty<Direction> prop = BlockStateProperties.FACING;
         Comparable<?> currentValue = state.getValue(prop);
         List<Direction> directions = prop.getPossibleValues().stream().toList();
         int currentDirectionIndex = directions.indexOf(currentValue);

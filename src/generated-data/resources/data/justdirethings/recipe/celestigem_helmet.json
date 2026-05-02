@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "f": "justdirethings:celestigem"
+  },
+  "pattern": [
+    "fff",
+    "f f",
+    "   "
+  ],
+  "result": {
+    "id": "justdirethings:celestigem_helmet"
+  }
+}

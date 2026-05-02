@@ -23,14 +23,12 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -40,7 +38,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -146,12 +145,13 @@ public interface ToggleableTool extends ToggleableItem {
     default Set<BlockPos> getBreakBlockPositions(ItemStack pStack, Level pLevel, BlockPos pPos, LivingEntity pEntityLiving, BlockState pState) {
         Set<BlockPos> breakBlockPositions = new HashSet<>();
         int maxBreak = Config.TOOL_MAX_BREAK_FERRICORE.get();
-        if (pStack.getItem() instanceof TieredItem tieredItem) {
-            if (tieredItem.getTier().equals(GooTier.BLAZEGOLD))
+        if (pStack.getItem() instanceof GooTieredItem tieredItem) {
+            GooTier tier = tieredItem.getGooTier();
+            if (tier == GooTier.BLAZEGOLD)
                 maxBreak = Config.TOOL_MAX_BREAK_BLAZEGOLD.get();
-            else if (tieredItem.getTier().equals(GooTier.CELESTIGEM))
+            else if (tier == GooTier.CELESTIGEM)
                 maxBreak = Config.TOOL_MAX_BREAK_CELESTIGEM.get();
-            else if (tieredItem.getTier().equals(GooTier.ECLIPSEALLOY))
+            else if (tier == GooTier.ECLIPSEALLOY)
                 maxBreak = Config.TOOL_MAX_BREAK_ECLIPSEALLOY.get();
         }
         if (canUseAbility(pStack, Ability.OREMINER) && oreCondition.test(pState) && pStack.isCorrectToolForDrops(pState)) {
@@ -310,7 +310,7 @@ public interface ToggleableTool extends ToggleableItem {
     }
 
     static void tickCooldowns(Level level, ItemStack itemStack, Player player) {
-        if (level.isClientSide || !itemStack.has(JustDireDataComponents.ABILITY_COOLDOWNS)) return;
+        if (level.isClientSide() || !itemStack.has(JustDireDataComponents.ABILITY_COOLDOWNS)) return;
         Set<ToolRecords.AbilityCooldown> cooldownsToRemove = new HashSet<>();
         List<ToolRecords.AbilityCooldown> abilityCooldowns = new ArrayList<>(itemStack.getOrDefault(JustDireDataComponents.ABILITY_COOLDOWNS, new ArrayList<>()));
         for (int i = 0; i < abilityCooldowns.size(); i++) {
@@ -329,7 +329,7 @@ public interface ToggleableTool extends ToggleableItem {
                                 abilityCooldown.abilityName(), abilityParams.cooldown, false
                         );
                         abilityCooldowns.set(i, updatedCooldown);
-                        player.playNotifySound(SoundEvents.CONDUIT_DEACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                        Helpers.playSoundToAll(player, SoundEvents.CONDUIT_DEACTIVATE, 1.0F, 1.0F);
                         cooldownDataClear(itemStack, ability);
                     }
                 }
@@ -342,7 +342,7 @@ public interface ToggleableTool extends ToggleableItem {
         }
         for (ToolRecords.AbilityCooldown cooldown : cooldownsToRemove) {
             abilityCooldowns.remove(cooldown);
-            player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
         }
         if (abilityCooldowns.isEmpty())
             itemStack.remove(JustDireDataComponents.ABILITY_COOLDOWNS);
@@ -392,7 +392,7 @@ public interface ToggleableTool extends ToggleableItem {
                 }
             }
         }
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             for (Ability ability : getAllPassiveAbilities()) {
                 if (customBindAbilities.contains(ability)) {
                     if (ability.settingType == Ability.SettingType.CYCLE) {
@@ -401,13 +401,13 @@ public interface ToggleableTool extends ToggleableItem {
                         boolean is_enabled = ToggleableTool.getSetting(itemStack, abilityName);
                         if (is_enabled) {
                             int currentValue = getToolValue(itemStack, abilityName);
-                            player.displayClientMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization() + "_" + currentValue), Component.translatable("justdirethings.enabled")), true);
+                            player.sendOverlayMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization() + "_" + currentValue), Component.translatable("justdirethings.enabled")));
                         } else {
-                            player.displayClientMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization()), Component.translatable("justdirethings.disabled")), true);
+                            player.sendOverlayMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization()), Component.translatable("justdirethings.disabled")));
                         }
                     } else {
                         ToggleableTool.toggleSetting(itemStack, ability.getName());
-                        player.displayClientMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization()), ToggleableTool.getSetting(itemStack, ability.getName()) ? Component.translatable("justdirethings.enabled") : Component.translatable("justdirethings.disabled")), true);
+                        player.sendOverlayMessage(Component.translatable("justdirethings.ability", Component.translatable(ability.getLocalization()), ToggleableTool.getSetting(itemStack, ability.getName()) ? Component.translatable("justdirethings.enabled") : Component.translatable("justdirethings.disabled")));
                     }
                 }
             }
@@ -496,26 +496,26 @@ public interface ToggleableTool extends ToggleableItem {
         BlockPos pPos = pContext.getClickedPos();
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (blockEntity == null) return false;
-        IItemHandler handler = pLevel.getCapability(Capabilities.ItemHandler.BLOCK, pPos, pContext.getClickedFace());
+        ResourceHandler<ItemResource> handler = pLevel.getCapability(Capabilities.Item.BLOCK, pPos, pContext.getClickedFace());
         if (handler == null) return false;
-        if (pContext.getLevel().isClientSide) return true;
+        if (pContext.getLevel().isClientSide()) return true;
         NBTHelpers.BoundInventory boundInventory = ToggleableTool.getBoundInventory(pStack);
         NBTHelpers.BoundInventory newBind = new NBTHelpers.BoundInventory(GlobalPos.of(pLevel.dimension(), pPos), pContext.getClickedFace());
         if (boundInventory != null && boundInventory.equals(newBind)) {
             removeBoundInventory(pStack);
-            pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.bindremoved"), true);
-            player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
+            pContext.getPlayer().sendOverlayMessage(Component.translatable("justdirethings.bindremoved"));
+            Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
         } else {
             setBoundInventory(pStack, newBind);
-            pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(pLevel.dimension().location().getPath()), "[" + pPos.toShortString() + "]"), true);
-            player.playNotifySound(SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.PLAYERS, 1.0F, 1.0F);
+            pContext.getPlayer().sendOverlayMessage(Component.translatable("justdirethings.boundto", Component.translatable(pLevel.dimension().identifier().getPath()), "[" + pPos.toShortString() + "]"));
+            Helpers.playSoundToAll(player, SoundEvents.END_PORTAL_FRAME_FILL, 1.0F, 1.0F);
         }
         return true;
     }
 
     default boolean bindSoil(UseOnContext pContext) {
         boolean bindingSuccess = false;
-        if (!pContext.getPlayer().level().isClientSide) {
+        if (!pContext.getPlayer().level().isClientSide()) {
             Level pLevel = pContext.getLevel();
             Player player = pContext.getPlayer();
             ItemStack heldItem = pContext.getItemInHand();
@@ -531,16 +531,16 @@ public interface ToggleableTool extends ToggleableItem {
                                 if (blockEntity instanceof GooSoilBE gooSoilBE) {
                                     gooSoilBE.bindInventory(boundInventory);
                                     gooSoilBE.invalidateHandler();
-                                    pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundInventory.globalPos().dimension().location().getPath()), "[" + boundInventory.globalPos().pos().toShortString() + "]"), true);
-                                    player.playNotifySound(SoundEvents.ENDER_EYE_DEATH, SoundSource.PLAYERS, 1.0F, 1.0F);
+                                    pContext.getPlayer().sendOverlayMessage(Component.translatable("justdirethings.boundto", Component.translatable(boundInventory.globalPos().dimension().identifier().getPath()), "[" + boundInventory.globalPos().pos().toShortString() + "]"));
+                                    Helpers.playSoundToAll(player, SoundEvents.ENDER_EYE_DEATH, 1.0F, 1.0F);
                                     Helpers.damageTool(heldItem, player, Ability.DROPTELEPORT);
                                     bindingSuccess = true;
                                 }
                             }
                         }
                         if (!bindingSuccess) {
-                            pContext.getPlayer().displayClientMessage(Component.translatable("justdirethings.bindfailed").withStyle(ChatFormatting.RED), true);
-                            player.playNotifySound(SoundEvents.ANVIL_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                            pContext.getPlayer().sendOverlayMessage(Component.translatable("justdirethings.bindfailed").withStyle(ChatFormatting.RED));
+                            Helpers.playSoundToAll(player, SoundEvents.ANVIL_BREAK, 1.0F, 1.0F);
                         }
                     }
                 }
@@ -597,7 +597,7 @@ public interface ToggleableTool extends ToggleableItem {
         return stack.getOrDefault(JustDireDataComponents.BOUND_INVENTORY, null);
     }
 
-    static IItemHandler getBoundHandler(ServerLevel serverLevel, ItemStack stack) {
+    static ResourceHandler<ItemResource> getBoundHandler(ServerLevel serverLevel, ItemStack stack) {
         NBTHelpers.BoundInventory boundInventory = getBoundInventory(stack);
         if (boundInventory != null)
             return MiscHelpers.getAttachedInventory(serverLevel.getServer().getLevel(boundInventory.globalPos().dimension()), boundInventory.globalPos().pos(), boundInventory.direction());
@@ -627,6 +627,16 @@ public interface ToggleableTool extends ToggleableItem {
     static int getCustomSetting(ItemStack stack, String setting) {
         Ability toolAbility = Ability.byName(setting);
         return stack.getOrDefault(JustDireDataComponents.ABILITY_CUSTOM_SETTINGS.get(toolAbility), 0);
+    }
+
+    static void setCustomSetting2(ItemStack stack, String setting, int value) {
+        Ability toolAbility = Ability.byName(setting);
+        stack.set(JustDireDataComponents.ABILITY_CUSTOM_SETTINGS_2.get(toolAbility), value);
+    }
+
+    static int getCustomSetting2(ItemStack stack, String setting) {
+        Ability toolAbility = Ability.byName(setting);
+        return stack.getOrDefault(JustDireDataComponents.ABILITY_CUSTOM_SETTINGS_2.get(toolAbility), 0);
     }
 
     static void setToolValue(ItemStack stack, String setting, int value) {

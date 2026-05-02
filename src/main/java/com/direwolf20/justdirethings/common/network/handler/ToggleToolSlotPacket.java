@@ -28,6 +28,8 @@ public class ToggleToolSlotPacket {
                     ToggleableTool.setToolValue(stack, payload.settingName(), payload.value());
                 else if (payload.typeTool() == 3) //Render
                     ToggleableTool.setCustomSetting(stack, payload.settingName(), payload.value());
+                else if (payload.typeTool() == 4) //CustomSetting2
+                    ToggleableTool.setCustomSetting2(stack, payload.settingName(), payload.value());
             }
         });
     }

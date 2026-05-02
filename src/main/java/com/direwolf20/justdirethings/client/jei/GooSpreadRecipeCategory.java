@@ -1,13 +1,9 @@
 package com.direwolf20.justdirethings.client.jei;
 
-import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.datagen.JustDireItemTags;
-import com.direwolf20.justdirethings.datagen.JustDireRecipes;
+import com.direwolf20.justdirethings.datagen.recipes.BlockOrTagInput;
 import com.direwolf20.justdirethings.datagen.recipes.GooSpreadRecipe;
-import com.direwolf20.justdirethings.setup.Registration;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.logging.LogUtils;
-
+import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.ModTags;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -16,53 +12,47 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.gui.GuiGraphics;
+import mezz.jei.api.recipe.types.IRecipeHolderType;
+import mezz.jei.api.recipe.types.IRecipeType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.crafting.RecipeHolder;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class GooSpreadRecipeCategory implements IRecipeCategory<RecipeHolder<GooSpreadRecipe>> {
-    public static final RecipeType<RecipeHolder<GooSpreadRecipe>> TYPE =
-    RecipeType.createFromVanilla(Registration.GOO_SPREAD_RECIPE_TYPE.get());
+    public static final IRecipeHolderType<GooSpreadRecipe> TYPE =
+            IRecipeHolderType.create(JDTRegistration.GOO_SPREAD_RECIPE_TYPE.get());
 
     public static final int width = 120;
     public static final int height = 40;
 
-    private final IDrawable background;
-    private final IDrawable slot;
     private final IDrawable icon;
     private final Component localizedName;
     private final IDrawableStatic arrow;
 
     public GooSpreadRecipeCategory(IGuiHelper guiHelper) {
-        background = guiHelper.createBlankDrawable(width, height);
-        slot = guiHelper.getSlotDrawable();
-        icon = guiHelper.createDrawableItemStack(new ItemStack(Registration.GooBlock_Tier1.get()));
+        icon = guiHelper.createDrawableItemStack(new ItemStack(JDTRegistration.GooBlock_Tier1.get()));
         localizedName = Component.translatable("justdirethings.goospreadrecipe.title");
         this.arrow = guiHelper.getRecipeArrow();
     }
 
     @Override
-    public RecipeType<RecipeHolder<GooSpreadRecipe>> getRecipeType() {
+    public IRecipeType<RecipeHolder<GooSpreadRecipe>> getRecipeType() {
         return TYPE;
     }
 
@@ -72,8 +62,13 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<RecipeHolder<Goo
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background;
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
     }
 
     @Override
@@ -82,37 +77,43 @@ public class GooSpreadRecipeCategory implements IRecipeCategory<RecipeHolder<Goo
     }
 
     @Override
-    public void draw(RecipeHolder<GooSpreadRecipe> recipe, IRecipeSlotsView slotsView, GuiGraphics gui, double mouseX, double mouseY) {
-        RenderSystem.enableBlend();
+    public void draw(RecipeHolder<GooSpreadRecipe> recipe, IRecipeSlotsView slotsView, GuiGraphicsExtractor gui, double mouseX, double mouseY) {
         arrow.draw(gui, 54, 12);
-        background.draw(gui, 17, 0);
-        RenderSystem.disableBlend();
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<GooSpreadRecipe> recipe, IFocusGroup focuses) {
-        BlockState input = recipe.value().getInput();
+        BlockOrTagInput input = recipe.value().getInput();
         IRecipeSlotBuilder inputSlotBuilder = builder.addSlot(RecipeIngredientRole.INPUT, 9, 12);
-        if (input.getBlock().asItem() != Items.AIR) {
-            inputSlotBuilder
-                    .addItemStack(new ItemStack(input.getBlock()));
-        } else if (input.getBlock() instanceof LiquidBlock liquidBlock) {
-            inputSlotBuilder
-                    .addFluidStack(liquidBlock.fluid, 1000);
+        if (input instanceof BlockOrTagInput.OfBlock(BlockState state)) {
+            if (state.getBlock().asItem() != Items.AIR) {
+                inputSlotBuilder.add(new ItemStack(state.getBlock()));
+            } else if (state.getBlock() instanceof LiquidBlock liquidBlock) {
+                inputSlotBuilder.add(liquidBlock.fluid, 1000);
+            }
+        } else if (input instanceof BlockOrTagInput.OfTag(TagKey<Block> tag)) {
+            List<ItemStack> stacks = new ArrayList<>();
+            for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(tag)) {
+                if (blockHolder.value().asItem() != Items.AIR) {
+                    stacks.add(new ItemStack(blockHolder.value()));
+                }
+            }
+            inputSlotBuilder.addItemStacks(stacks);
         }
 
-        builder.addSlot(RecipeIngredientRole.CATALYST, 29, 12)
-                .addIngredients(
-                        Ingredient.of(
-                                JustDireItemTags.GOO_RECIPE_TIERS.get(recipe.value().getTierRequirement()-1)));
+        HolderLookup.Provider registries = Minecraft.getInstance().level.registryAccess();
+        builder.addSlot(RecipeIngredientRole.CRAFTING_STATION, 29, 12)
+                .add(Ingredient.of(
+                        registries.lookupOrThrow(Registries.ITEM)
+                                .getOrThrow(ModTags.Items.GOO_RECIPE_TIERS.get(recipe.value().getTierRequirement() - 1))));
 
         BlockState output = recipe.value().getOutput();
         if (output.getBlock().asItem() != Items.AIR) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 12)
-                    .addItemStack(new ItemStack(output.getBlock()));
+                    .add(new ItemStack(output.getBlock()));
         } else if (output.getBlock() instanceof LiquidBlock liquidBlock) {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 12)
-                    .addFluidStack(liquidBlock.fluid, 1000);
+                    .add(liquidBlock.fluid, 1000);
         }
     }
 }

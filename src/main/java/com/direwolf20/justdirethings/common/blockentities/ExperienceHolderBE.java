@@ -4,16 +4,16 @@ import com.direwolf20.justdirethings.client.particles.itemparticle.ItemFlowParti
 import com.direwolf20.justdirethings.common.blockentities.basebe.AreaAffectingBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.common.capabilities.ExperienceHolderFluidTank;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.ExperienceUtils;
 import com.direwolf20.justdirethings.util.MiscHelpers;
+import com.direwolf20.justdirethings.util.ModTags;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
@@ -22,16 +22,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-
 import java.util.List;
 
 public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE, RedstoneControlledBE {
-    protected BlockCapabilityCache<IFluidHandler, Direction> attachedTank;
+    private ExperienceHolderFluidTank fluidTank;
     public FilterData filterData = new FilterData();
     public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
     public RedstoneControlData redstoneControlData = getDefaultRedstoneData();
@@ -43,7 +41,7 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
     public boolean showParticles = true;
 
     public ExperienceHolderBE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.ExperienceHolderBE.get(), pPos, pBlockState);
+        super(JDTRegistration.ExperienceHolderBE.get(), pPos, pBlockState);
     }
 
     @Override
@@ -251,40 +249,31 @@ public class ExperienceHolderBE extends BaseMachineBE implements AreaAffectingBE
         }
     }
 
-    private IFluidHandler getAttachedTank() {
-        if (attachedTank == null) {
-            assert this.level != null;
-            BlockState state = level.getBlockState(getBlockPos());
-            Direction facing = state.getValue(BlockStateProperties.FACING);
-            BlockPos inventoryPos = getBlockPos().relative(facing);
-            attachedTank = BlockCapabilityCache.create(
-                    Capabilities.FluidHandler.BLOCK, // capability to cache
-                    (ServerLevel) this.level, // level
-                    inventoryPos, // target position
-                    facing.getOpposite() // context (The side of the block we're trying to pull/push from?)
-            );
+    public ExperienceHolderFluidTank getFluidTank() {
+        if (fluidTank == null) {
+            fluidTank = new ExperienceHolderFluidTank(this, fluidResource -> fluidResource.is(ModTags.Fluids.EXPERIENCE));
         }
-        return attachedTank.getCapability();
+        return fluidTank;
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("exp", exp);
-        tag.putInt("targetExp", targetExp);
-        tag.putBoolean("collectExp", collectExp);
-        tag.putBoolean("ownerOnly", ownerOnly);
-        tag.putBoolean("showParticles", showParticles);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("exp", exp);
+        output.putInt("targetExp", targetExp);
+        output.putBoolean("collectExp", collectExp);
+        output.putBoolean("ownerOnly", ownerOnly);
+        output.putBoolean("showParticles", showParticles);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        exp = tag.getInt("exp");
-        targetExp = tag.getInt("targetExp");
-        collectExp = tag.getBoolean("collectExp");
-        ownerOnly = tag.getBoolean("ownerOnly");
-        showParticles = tag.getBoolean("showParticles");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        exp = input.getIntOr("exp", exp);
+        targetExp = input.getIntOr("targetExp", targetExp);
+        collectExp = input.getBooleanOr("collectExp", collectExp);
+        ownerOnly = input.getBooleanOr("ownerOnly", ownerOnly);
+        showParticles = input.getBooleanOr("showParticles", showParticles);
     }
 
     @Override

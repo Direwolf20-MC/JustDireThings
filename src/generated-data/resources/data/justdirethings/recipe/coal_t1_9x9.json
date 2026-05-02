@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "justdirethings",
+  "key": {
+    "#": "justdirethings:coal_t1"
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "id": "justdirethings:coalblock_t1"
+  }
+}

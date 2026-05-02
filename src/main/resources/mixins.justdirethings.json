@@ -5,7 +5,8 @@
   "refmap": "mixins.justdirethings.refmap.json",
   "mixins": [
     "CollisionMixin",
-    "EntityMixin"
+    "EntityMixin",
+    "FurnaceFuelRemainderMixin"
   ],
   "client": [
     "LightTextureMixin"

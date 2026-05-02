@@ -6,33 +6,35 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.List;
 
 import static net.minecraft.world.entity.Entity.RemovalReason.DISCARDED;
 
 public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, AreaAffectingBE, RedstoneControlledBE {
-    protected BlockCapabilityCache<IItemHandler, Direction> attachedInventory;
+    protected BlockCapabilityCache<ResourceHandler<ItemResource>, Direction> attachedInventory;
     public FilterData filterData = new FilterData();
     public AreaAffectingData areaAffectingData = new AreaAffectingData(getBlockState().getValue(BlockStateProperties.FACING).getOpposite());
     public RedstoneControlData redstoneControlData = new RedstoneControlData();
@@ -40,7 +42,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     public boolean showParticles = true;
 
     public ItemCollectorBE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.ItemCollectorBE.get(), pPos, pBlockState);
+        super(JDTRegistration.ItemCollectorBE.get(), pPos, pBlockState);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     public void doParticles(ItemStack itemStack, Vec3 sourcePos) {
@@ -104,7 +106,7 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
 
         if (entityList.isEmpty()) return;
 
-        IItemHandler handler = getAttachedInventory();
+        ResourceHandler<ItemResource> handler = getAttachedInventory();
 
         if (handler == null) return;
 
@@ -113,29 +115,33 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
                 continue;
             ItemStack stack = itemEntity.getItem();
             if (stack.isEmpty() || !isStackValidFilter(stack)) continue;
-            ItemStack leftover = ItemHandlerHelper.insertItemStacked(handler, stack, false);
-            if (leftover.isEmpty()) {
-                // If the stack is now empty, remove the ItemEntity from the collection
+            ItemResource resource = ItemResource.of(stack);
+            int inserted;
+            try (Transaction tx = Transaction.openRoot()) {
+                inserted = ResourceHandlerUtil.insertStacking(handler, resource, stack.getCount(), tx);
+                tx.commit();
+            }
+            int leftoverCount = stack.getCount() - inserted;
+            if (leftoverCount <= 0) {
                 doParticles(itemEntity.getItem(), itemEntity.getPosition(0));
                 itemEntity.remove(DISCARDED);
             } else {
-                // Otherwise, update the ItemEntity with the modified stack
-                itemEntity.setItem(leftover);
+                itemEntity.setItem(resource.toStack(leftoverCount));
             }
         }
     }
 
-    private IItemHandler getAttachedInventory() {
+    private ResourceHandler<ItemResource> getAttachedInventory() {
         if (attachedInventory == null) {
             assert this.level != null;
             BlockState state = level.getBlockState(getBlockPos());
             Direction facing = state.getValue(BlockStateProperties.FACING);
             BlockPos inventoryPos = getBlockPos().relative(facing);
             attachedInventory = BlockCapabilityCache.create(
-                    Capabilities.ItemHandler.BLOCK, // capability to cache
-                    (ServerLevel) this.level, // level
-                    inventoryPos, // target position
-                    facing.getOpposite() // context (The side of the block we're trying to pull/push from?)
+                    Capabilities.Item.BLOCK,
+                    (ServerLevel) this.level,
+                    inventoryPos,
+                    facing.getOpposite()
             );
         }
         return attachedInventory.getCapability();
@@ -147,16 +153,16 @@ public class ItemCollectorBE extends BaseMachineBE implements FilterableBE, Area
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putBoolean("respectPickupDelay", respectPickupDelay);
-        tag.putBoolean("showParticles", showParticles);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putBoolean("respectPickupDelay", respectPickupDelay);
+        output.putBoolean("showParticles", showParticles);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        respectPickupDelay = tag.getBoolean("respectPickupDelay");
-        showParticles = tag.getBoolean("showParticles");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        respectPickupDelay = input.getBooleanOr("respectPickupDelay", respectPickupDelay);
+        showParticles = input.getBooleanOr("showParticles", showParticles);
     }
 }

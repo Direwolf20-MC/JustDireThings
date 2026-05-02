@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "justdirethings:blazegold"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "justdirethings:blazegold"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "justdirethings:blazegold"
+      }
+    ]
+  }
+}

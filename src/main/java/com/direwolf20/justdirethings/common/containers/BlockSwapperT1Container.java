@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.containers;
 
 import com.direwolf20.justdirethings.common.blockentities.BlockSwapperT1BE;
 import com.direwolf20.justdirethings.common.containers.basecontainers.BaseMachineContainer;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,7 +19,7 @@ public class BlockSwapperT1Container extends BaseMachineContainer {
     }
 
     public BlockSwapperT1Container(int windowId, Inventory playerInventory, BlockPos blockPos) {
-        super(Registration.BlockSwapperT1_Container.get(), windowId, playerInventory, blockPos);
+        super(JDTRegistration.BlockSwapperT1_Container.get(), windowId, playerInventory, blockPos);
         addPlayerSlots(player.getInventory());
         if (baseMachineBE instanceof BlockSwapperT1BE blockSwapperT1BE) {
             swapperData = blockSwapperT1BE.swapperData;
@@ -33,7 +33,7 @@ public class BlockSwapperT1Container extends BaseMachineContainer {
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, Registration.BlockSwapperT1.get());
+        return stillValid(ContainerLevelAccess.create(player.level(), pos), player, JDTRegistration.BlockSwapperT1.get());
     }
 
     @Override

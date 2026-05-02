@@ -1,0 +1,14 @@
+{
+  "type": "justdirethings:goospread",
+  "craftingDuration": 4800,
+  "input": {
+    "id": "justdirethings:time_crystal_block"
+  },
+  "output": {
+    "id": "justdirethings:time_crystal_budding_block",
+    "properties": {
+      "stage": "0"
+    }
+  },
+  "tierRequirement": 4
+}

@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "justdirethings:ferricore"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "justdirethings:ferricore"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "justdirethings:ferricore"
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "f": "justdirethings:ferricore_ingot",
+    "s": "minecraft:stick"
+  },
+  "pattern": [
+    "fff",
+    " s ",
+    " s "
+  ],
+  "result": {
+    "id": "justdirethings:ferricore_pickaxe"
+  }
+}

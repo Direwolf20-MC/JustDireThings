@@ -1,6 +1,5 @@
 package com.direwolf20.justdirethings.client.events;
 
-import com.direwolf20.justdirethings.JustDireThings;
 import com.direwolf20.justdirethings.client.KeyBindings;
 import com.direwolf20.justdirethings.client.screens.AdvPortalRadialMenu;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
@@ -16,24 +15,22 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.client.settings.KeyModifier;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
 import static com.direwolf20.justdirethings.util.MiscTools.getHitResult;
 
-@EventBusSubscriber(modid = JustDireThings.MODID, value = Dist.CLIENT)
 public class EventKeyInput {
 
     @SubscribeEvent
@@ -43,14 +40,14 @@ public class EventKeyInput {
             return;
 
         if (KeyBindings.toolUI.consumeClick()) {
-            PacketDistributor.sendToServer(new ToolSettingsGUIPayload());
+            ClientPacketDistributor.sendToServer(new ToolSettingsGUIPayload());
         }
 
         KeyMapping keyMapping = KeyBindings.toggleTool;
         ItemStack portalGun = PortalGunV2.getPortalGunv2(mc.player);
         if (!portalGun.isEmpty()) {
             if (!(mc.screen instanceof AdvPortalRadialMenu) && keyMapping.consumeClick() && ((keyMapping.getKeyModifier() == KeyModifier.NONE
-                    && KeyModifier.getActiveModifier() == KeyModifier.NONE) || keyMapping.getKeyModifier() != KeyModifier.NONE)) {
+                    && KeyModifier.getActiveModifiers().isEmpty()) || keyMapping.getKeyModifier() != KeyModifier.NONE)) {
                 mc.setScreen(new AdvPortalRadialMenu(portalGun));
             }
         }
@@ -58,7 +55,7 @@ public class EventKeyInput {
         ItemStack toggleableItem = ToggleableItem.getToggleableItem(mc.player);
         if (!toggleableItem.isEmpty()) {
             if (KeyBindings.toggleTool.consumeClick()) {
-                PacketDistributor.sendToServer(new ToggleToolPayload("enabled"));
+                ClientPacketDistributor.sendToServer(new ToggleToolPayload("enabled"));
             }
         }
     }
@@ -71,25 +68,13 @@ public class EventKeyInput {
             return;
         Player player = mc.player;
         if (event.getAction() == InputConstants.PRESS) {
-            for (int i = 0; i < mc.player.getInventory().items.size(); i++) {
+            int totalSize = mc.player.getInventory().getContainerSize();
+            for (int i = 0; i < totalSize; i++) {
                 ItemStack itemStack = mc.player.getInventory().getItem(i);
                 if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.getItem() instanceof LeftClickableTool) {
                     activateAbilities(itemStack, event.getKey(), toggleableTool, player, i, false);
                 }
             }
-            for (int i = mc.player.getInventory().items.size(); i < mc.player.getInventory().items.size() + mc.player.getInventory().armor.size(); i++) {
-                ItemStack itemStack = mc.player.getInventory().getItem(i);
-                if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.getItem() instanceof LeftClickableTool) {
-                    activateAbilities(itemStack, event.getKey(), toggleableTool, player, i, false);
-                }
-            }
-            for (int i = mc.player.getInventory().items.size() + mc.player.getInventory().armor.size(); i < mc.player.getInventory().items.size() + mc.player.getInventory().armor.size() + mc.player.getInventory().offhand.size(); i++) {
-                ItemStack itemStack = mc.player.getInventory().getItem(i);
-                if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.getItem() instanceof LeftClickableTool) {
-                    activateAbilities(itemStack, event.getKey(), toggleableTool, player, i, false);
-                }
-            }
-
         }
     }
 
@@ -100,7 +85,7 @@ public class EventKeyInput {
         if (mc.level == null || mc.player == null || mc.screen != null || event.getButton() == 0 || event.getButton() == 1 || event.getAction() != InputConstants.PRESS)
             return;
         Player player = mc.player;
-        for (int i = 0; i < mc.player.getInventory().items.size(); i++) {
+        for (int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
             ItemStack itemStack = mc.player.getInventory().getItem(i);
             if (itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.getItem() instanceof LeftClickableTool) {
                 activateAbilities(itemStack, event.getButton(), toggleableTool, player, i, true);
@@ -118,7 +103,7 @@ public class EventKeyInput {
                 UseOnContext useoncontext = new UseOnContext(player.level(), player, InteractionHand.MAIN_HAND, itemStack, blockHitResult);
                 toggleableTool.useOnAbility(useoncontext, itemStack, key, isMouse);
             }
-            PacketDistributor.sendToServer(new LeftClickPayload(0, false, BlockPos.ZERO, -1, invSlot, key, isMouse)); //Type 0 == air
+            ClientPacketDistributor.sendToServer(new LeftClickPayload(0, false, BlockPos.ZERO, -1, invSlot, key, isMouse)); //Type 0 == air
         }
     }
 }

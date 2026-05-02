@@ -1,0 +1,14 @@
+{
+  "sources": [
+    {
+      "type": "justdirethings:rainbow_fluid",
+      "resource": "justdirethings:block/fluid_source",
+      "sprite": "justdirethings:block/fluid_source_polymorphic"
+    },
+    {
+      "type": "justdirethings:rainbow_fluid",
+      "resource": "justdirethings:block/fluid_flowing",
+      "sprite": "justdirethings:block/fluid_flowing_polymorphic"
+    }
+  ]
+}

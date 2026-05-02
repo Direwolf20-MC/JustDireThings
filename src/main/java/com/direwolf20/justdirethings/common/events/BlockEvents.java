@@ -7,7 +7,7 @@ import com.direwolf20.justdirethings.common.items.tools.BlazegoldHoe;
 import com.direwolf20.justdirethings.common.items.tools.CelestigemHoe;
 import com.direwolf20.justdirethings.common.items.tools.EclipseAlloyHoe;
 import com.direwolf20.justdirethings.common.items.tools.FerricoreHoe;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,25 +36,26 @@ public class BlockEvents {
             if (heldItem.getItem() instanceof FerricoreHoe && toggleableItem.getEnabled(heldItem)) {
                 BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getItemAbility(), true);
                 if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
-                    event.setFinalState(Registration.GooSoil_Tier1.get().defaultBlockState());
+                    event.setFinalState(JDTRegistration.GooSoil_Tier1.get().defaultBlockState());
             } else if (heldItem.getItem() instanceof BlazegoldHoe && toggleableItem.getEnabled(heldItem)) {
                 BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getItemAbility(), true);
                 if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
-                    event.setFinalState(Registration.GooSoil_Tier2.get().defaultBlockState());
+                    event.setFinalState(JDTRegistration.GooSoil_Tier2.get().defaultBlockState());
             } else if (heldItem.getItem() instanceof CelestigemHoe && toggleableItem.getEnabled(heldItem)) {
                 BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getItemAbility(), true);
                 if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
-                    event.setFinalState(Registration.GooSoil_Tier3.get().defaultBlockState());
+                    event.setFinalState(JDTRegistration.GooSoil_Tier3.get().defaultBlockState());
             } else if (heldItem.getItem() instanceof EclipseAlloyHoe && toggleableItem.getEnabled(heldItem)) {
                 BlockState modifiedState = event.getState().getBlock().getToolModifiedState(event.getState(), event.getContext(), event.getItemAbility(), true);
                 if (modifiedState != null && modifiedState.is(Blocks.FARMLAND))
-                    event.setFinalState(Registration.GooSoil_Tier4.get().defaultBlockState());
+                    event.setFinalState(JDTRegistration.GooSoil_Tier4.get().defaultBlockState());
             }
         }
     }
 
     @SubscribeEvent
-    public static void BlockBreakEvent(BlockEvent.BreakEvent event) {
+    public static void BlockBreakEvent(BreakBlockEvent event) {
+        if (event.getLevel().isClientSide()) return;
         ItemStack itemStack = event.getPlayer().getMainHandItem();
         if (!alreadyBreaking && itemStack.getItem() instanceof ToggleableTool toggleableTool && itemStack.isCorrectToolForDrops(event.getState())) {
             alreadyBreaking = true;

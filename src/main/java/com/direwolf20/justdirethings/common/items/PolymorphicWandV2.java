@@ -1,40 +1,49 @@
 package com.direwolf20.justdirethings.common.items;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
-import com.direwolf20.justdirethings.datagen.JustDireEntityTags;
 import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.util.MagicHelpers;
 import com.direwolf20.justdirethings.util.MiscTools;
+import com.direwolf20.justdirethings.util.ModTags;
+import com.direwolf20.justdirethings.util.PolymorphicEntitySanitizer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static com.direwolf20.justdirethings.common.items.datacomponents.JustDireDataComponents.ENTITIYTYPE;
 
 public class PolymorphicWandV2 extends BaseToggleableTool implements LeftClickableTool, FluidContainingItem, PoweredItem {
-    public PolymorphicWandV2() {
-        super(new Properties()
-                .fireResistant());
+    public PolymorphicWandV2(Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.POLYMORPH_RANDOM);
         registerAbility(Ability.POLYMORPH_TARGET);
     }
@@ -60,7 +69,7 @@ public class PolymorphicWandV2 extends BaseToggleableTool implements LeftClickab
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         Level level = player.level();
-        if (level.isClientSide) return true;
+        if (level.isClientSide()) return true;
         ItemStack itemStack = player.getMainHandItem();
         Set<Ability> abilities = LeftClickableTool.getLeftClickList(itemStack);
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool && !abilities.isEmpty()) {
@@ -70,48 +79,58 @@ public class PolymorphicWandV2 extends BaseToggleableTool implements LeftClickab
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         BlockHitResult blockhitresult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
         if (blockhitresult.getType() == HitResult.Type.BLOCK) {
             if (FluidContainingItem.pickupFluid(level, player, itemStack, blockhitresult))
-                return InteractionResultHolder.fail(itemStack);
+                return InteractionResult.FAIL;
         }
         Entity entity = MiscTools.getEntityLookedAt(player, 4);
-        if (!level.isClientSide && player.isShiftKeyDown() && entity instanceof LivingEntity livingEntity) { //Custom Handling due to shift-clicking mobs to set target
+        if (!level.isClientSide() && player.isShiftKeyDown() && entity instanceof LivingEntity livingEntity) { //Custom Handling due to shift-clicking mobs to set target
             savePolymorphTarget(itemStack, player, livingEntity);
-            return InteractionResultHolder.pass(player.getItemInHand(hand));
+            return InteractionResult.PASS;
         }
         return super.use(level, player, hand);
     }
 
     public static void savePolymorphTarget(ItemStack stack, Player player, LivingEntity interactionTarget) {
-        if (interactionTarget instanceof Mob && !interactionTarget.getType().is(JustDireEntityTags.POLYMORPHIC_TARGET_DENY)) {
-            stack.set(ENTITIYTYPE, EntityType.getKey(interactionTarget.getType()).toString());
-            player.displayClientMessage(Component.translatable("justdirethings.polymorphset", interactionTarget.getType().getDescription()), true);
+        if (interactionTarget instanceof Mob mob && !interactionTarget.getType().builtInRegistryHolder().is(ModTags.Entities.POLYMORPHIC_TARGET_DENY)) {
+            stack.set(ENTITIYTYPE, EntityType.getKey(mob.getType()).toString());
+
+            TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, mob.registryAccess());
+            mob.save(output);
+            CompoundTag cosmetic = PolymorphicEntitySanitizer.cosmeticOnly(output.buildResult());
+            stack.set(DataComponents.ENTITY_DATA, TypedEntityData.of(mob.getType(), cosmetic));
+
+            player.sendOverlayMessage(Component.translatable("justdirethings.polymorphset", mob.getType().getDescription()));
         } else {
-            player.displayClientMessage(Component.translatable("justdirethings.invalidpolymorphentity"), true);
+            player.sendOverlayMessage(Component.translatable("justdirethings.invalidpolymorphentity"));
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
         Level level = context.level();
         if (level == null) {
             return;
         }
-        IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        ResourceHandler<FluidResource> fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler == null) {
             return;
         }
-        tooltip.add(Component.translatable("justdirethings.polymorphicfluidamt", MagicHelpers.formatted(fluidHandler.getFluidInTank(0).getAmount()), MagicHelpers.formatted(fluidHandler.getTankCapacity(0))).withStyle(ChatFormatting.GREEN));
+        List<Component> buffer = new ArrayList<>();
+        buffer.add(Component.translatable("justdirethings.polymorphicfluidamt", MagicHelpers.formatted(fluidHandler.getAmountAsInt(0)), MagicHelpers.formatted(fluidHandler.getCapacityAsInt(0, fluidHandler.getResource(0)))).withStyle(ChatFormatting.GREEN));
 
-        if (!stack.has(ENTITIYTYPE)) return;
-        EntityType<?> newType = EntityType.byString(stack.get(ENTITIYTYPE)).orElse(null);
-        if (newType == null) return;
-        tooltip.add(Component.translatable("justdirethings.polymorphset", newType.getDescription())
-                .withStyle(ChatFormatting.AQUA));
+        if (stack.has(ENTITIYTYPE)) {
+            EntityType<?> newType = EntityType.byString(stack.get(ENTITIYTYPE)).orElse(null);
+            if (newType != null) {
+                buffer.add(Component.translatable("justdirethings.polymorphset", newType.getDescription())
+                        .withStyle(ChatFormatting.AQUA));
+            }
+        }
+        buffer.forEach(tooltip);
     }
 
     @Override
@@ -120,8 +139,8 @@ public class PolymorphicWandV2 extends BaseToggleableTool implements LeftClickab
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.NONE;
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.NONE;
     }
 
     @Override

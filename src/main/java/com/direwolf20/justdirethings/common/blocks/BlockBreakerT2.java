@@ -14,12 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public class BlockBreakerT2 extends BaseMachineBlock {
-    public BlockBreakerT2() {
-        super(Properties.of()
-                .sound(SoundType.METAL)
-                .strength(2.0f)
-                .isRedstoneConductor(BaseMachineBlock::never)
-        );
+    public BlockBreakerT2(Properties properties) {
+        super(properties);
     }
 
     @Nullable

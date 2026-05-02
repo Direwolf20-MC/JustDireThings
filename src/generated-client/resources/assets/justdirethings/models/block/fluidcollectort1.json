@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "bottom": "justdirethings:block/fluidcollectort1_bottom",
+    "front": "justdirethings:block/fluidcollectort1_side",
+    "side": "justdirethings:block/fluidcollectort1_side",
+    "top": "justdirethings:block/fluidcollectort1_top"
+  }
+}

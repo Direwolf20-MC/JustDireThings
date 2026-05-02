@@ -5,15 +5,16 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineContainerData;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
@@ -31,12 +32,12 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
     }
 
     public SensorT2BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.SensorT2BE.get(), pPos, pBlockState);
+        this(JDTRegistration.SensorT2BE.get(), pPos, pBlockState);
     }
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(JDTRegistration.ENERGYSTORAGE_MACHINES);
     }
 
     @Override
@@ -100,18 +101,18 @@ public class SensorT2BE extends SensorT1BE implements AreaAffectingBE, PoweredMa
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("senseTarget", sense_target.ordinal());
-        tag.putBoolean("strongSignal", strongSignal);
-        tag.put("blockStateProps", saveBlockStateProperties());
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("senseTarget", sense_target.ordinal());
+        output.putBoolean("strongSignal", strongSignal);
+        output.store("blockStateProps", CompoundTag.CODEC, saveBlockStateProperties());
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        this.sense_target = SENSE_TARGET.values()[tag.getInt("senseTarget")];
-        this.strongSignal = tag.getBoolean("strongSignal");
-        super.loadAdditional(tag, provider);
-        loadBlockStateProperties(tag.getCompound("blockStateProps")); //Do this after the filter data comes in, so we know the itemstack in the filter
+    protected void loadAdditional(ValueInput input) {
+        this.sense_target = SENSE_TARGET.values()[input.getIntOr("senseTarget", 0)];
+        this.strongSignal = input.getBooleanOr("strongSignal", strongSignal);
+        super.loadAdditional(input);
+        loadBlockStateProperties(input.read("blockStateProps", CompoundTag.CODEC).orElseGet(CompoundTag::new)); //Do this after the filter data comes in, so we know the itemstack in the filter
     }
 }

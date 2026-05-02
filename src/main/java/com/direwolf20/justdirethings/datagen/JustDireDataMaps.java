@@ -1,6 +1,6 @@
 package com.direwolf20.justdirethings.datagen;
 
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.DataMapProvider;
@@ -17,15 +17,15 @@ public class JustDireDataMaps extends DataMapProvider {
     @Override
     protected void gather(HolderLookup.Provider provider) {
         builder(NeoForgeDataMaps.FURNACE_FUELS)
-                .add(Registration.Coal_T1.getId(), new FurnaceFuel(4800), false)
-                .add(Registration.CoalBlock_T1.getId(), new FurnaceFuel(48000), false)
-                .add(Registration.Coal_T2.getId(), new FurnaceFuel(14400), false)
-                .add(Registration.CoalBlock_T2.getId(), new FurnaceFuel(144000), false)
-                .add(Registration.Coal_T3.getId(), new FurnaceFuel(43200), false)
-                .add(Registration.CoalBlock_T3.getId(), new FurnaceFuel(432000), false)
-                .add(Registration.Coal_T4.getId(), new FurnaceFuel(129600), false)
-                .add(Registration.CoalBlock_T4.getId(), new FurnaceFuel(1296000), false)
-                .add(Registration.CharcoalBlock.getId(), new FurnaceFuel(16000), false);
+                .add(JDTRegistration.Coal_T1.getId(), new FurnaceFuel(4800), false)
+                .add(JDTRegistration.CoalBlock_T1.getId(), new FurnaceFuel(48000), false)
+                .add(JDTRegistration.Coal_T2.getId(), new FurnaceFuel(14400), false)
+                .add(JDTRegistration.CoalBlock_T2.getId(), new FurnaceFuel(144000), false)
+                .add(JDTRegistration.Coal_T3.getId(), new FurnaceFuel(43200), false)
+                .add(JDTRegistration.CoalBlock_T3.getId(), new FurnaceFuel(432000), false)
+                .add(JDTRegistration.Coal_T4.getId(), new FurnaceFuel(129600), false)
+                .add(JDTRegistration.CoalBlock_T4.getId(), new FurnaceFuel(1296000), false)
+                .add(JDTRegistration.CharcoalBlock.getId(), new FurnaceFuel(16000), false);
         ;
     }
 }

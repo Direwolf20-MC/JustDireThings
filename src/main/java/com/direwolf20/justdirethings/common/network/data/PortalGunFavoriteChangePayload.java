@@ -6,7 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public record PortalGunFavoriteChangePayload(
@@ -16,7 +16,7 @@ public record PortalGunFavoriteChangePayload(
         boolean editing,
         Vec3 coordinates
 ) implements CustomPacketPayload {
-    public static final Type<PortalGunFavoriteChangePayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_favorite_change"));
+    public static final Type<PortalGunFavoriteChangePayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "portal_gun_favorite_change"));
 
     @Override
     public Type<PortalGunFavoriteChangePayload> type() {

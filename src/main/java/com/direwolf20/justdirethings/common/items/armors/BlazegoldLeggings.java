@@ -1,18 +1,16 @@
 package com.direwolf20.justdirethings.common.items.armors;
 
 import com.direwolf20.justdirethings.common.items.armors.basearmors.BaseLeggings;
-import com.direwolf20.justdirethings.common.items.armors.utils.ArmorTiers;
 import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.AbilityParams;
 import com.direwolf20.justdirethings.common.items.interfaces.Helpers;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class BlazegoldLeggings extends BaseLeggings {
-    public BlazegoldLeggings() {
-        super(ArmorTiers.BLAZEGOLD, new Properties()
-                .fireResistant()
-                .durability(Type.LEGGINGS.getDurability(25)));
+    public BlazegoldLeggings(Item.Properties pProperties) {
+        super(pProperties);
         registerAbility(Ability.RUNSPEED, new AbilityParams(1, 2, 1));
         registerAbility(Ability.WALKSPEED, new AbilityParams(1, 2, 1));
         registerAbility(Ability.SWIMSPEED, new AbilityParams(1, 2, 1));

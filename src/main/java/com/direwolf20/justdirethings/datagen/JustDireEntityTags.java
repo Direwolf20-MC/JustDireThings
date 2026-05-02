@@ -1,58 +1,45 @@
 package com.direwolf20.justdirethings.datagen;
 
 import com.direwolf20.justdirethings.JustDireThings;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 public class JustDireEntityTags extends EntityTypeTagsProvider {
-    public JustDireEntityTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> providerCompletableFuture, @Nullable ExistingFileHelper existingFileHelper) {
-        super(packOutput, providerCompletableFuture, JustDireThings.MODID, existingFileHelper);
+    public JustDireEntityTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider, JustDireThings.MODID);
     }
-
-    public static final TagKey<EntityType<?>> CREATURE_CATCHER_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "creature_catcher_deny"));
-    public static final TagKey<EntityType<?>> NO_AI_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_ai_deny"));
-    public static final TagKey<EntityType<?>> NO_EARTHQUAKE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "no_earthquake"));
-    public static final TagKey<EntityType<?>> PARADOX_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_deny"));
-    public static final TagKey<EntityType<?>> PARADOX_ABSORB_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "paradox_absorb_deny"));
-    public static final TagKey<EntityType<?>> POLYMORPHIC_PEACEFUL = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_peaceful"));
-    public static final TagKey<EntityType<?>> POLYMORPHIC_HOSTILE = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_hostile"));
-    public static final TagKey<EntityType<?>> POLYMORPHIC_TARGET_DENY = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "polymorphic_target_deny"));
 
     @Override
     public void addTags(HolderLookup.Provider lookupProvider) {
-        tag(CREATURE_CATCHER_DENY).add(EntityType.ENDER_DRAGON);
-        tag(NO_AI_DENY)
+        tag(ModTags.Entities.CREATURE_CATCHER_DENY).add(EntityType.ENDER_DRAGON);
+        tag(ModTags.Entities.NO_AI_DENY)
                 .add(EntityType.ENDER_DRAGON)
                 .add(EntityType.WITHER)
                 .add(EntityType.WARDEN);
-        tag(NO_EARTHQUAKE)
+        tag(ModTags.Entities.NO_EARTHQUAKE)
                 .add(EntityType.ENDER_DRAGON)
                 .add(EntityType.WITHER)
                 .add(EntityType.WARDEN);
         tag(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED)
-                .add(Registration.TimeWandEntity.get())
-                .add(Registration.ParadoxEntity.get());
-        tag(PARADOX_DENY)
-                .add(Registration.TimeWandEntity.get())
-                .add(Registration.ParadoxEntity.get());
-        tag(PARADOX_ABSORB_DENY)
-                .add(Registration.TimeWandEntity.get())
-                .add(Registration.ParadoxEntity.get());
+                .add(JDTRegistration.TimeWandEntity.get())
+                .add(JDTRegistration.ParadoxEntity.get());
+        tag(ModTags.Entities.PARADOX_DENY)
+                .add(JDTRegistration.TimeWandEntity.get())
+                .add(JDTRegistration.ParadoxEntity.get());
+        tag(ModTags.Entities.PARADOX_ABSORB_DENY)
+                .add(JDTRegistration.TimeWandEntity.get())
+                .add(JDTRegistration.ParadoxEntity.get());
         tag(EntityTypeTags.ARROWS)
-                .add(Registration.JustDireArrow.get());
-        tag(POLYMORPHIC_PEACEFUL).add(
+                .add(JDTRegistration.JustDireArrow.get());
+        tag(ModTags.Entities.POLYMORPHIC_PEACEFUL).add(
                 EntityType.SHEEP,
                 EntityType.PIG,
                 EntityType.COW,
@@ -90,7 +77,7 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
                 EntityType.CAMEL,
                 EntityType.AXOLOTL
         );
-        tag(POLYMORPHIC_HOSTILE).add(
+        tag(ModTags.Entities.POLYMORPHIC_HOSTILE).add(
                 EntityType.ZOMBIE,
                 EntityType.SKELETON,
                 EntityType.CREEPER,
@@ -123,7 +110,7 @@ public class JustDireEntityTags extends EntityTypeTagsProvider {
                 EntityType.PHANTOM,
                 EntityType.PILLAGER
         );
-        tag(POLYMORPHIC_TARGET_DENY)
+        tag(ModTags.Entities.POLYMORPHIC_TARGET_DENY)
                 .add(EntityType.ENDER_DRAGON)
                 .add(EntityType.WITHER)
                 .add(EntityType.WARDEN);

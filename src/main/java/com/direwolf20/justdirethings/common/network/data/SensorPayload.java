@@ -5,7 +5,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public record SensorPayload(
         int senseTarget,
@@ -13,7 +13,7 @@ public record SensorPayload(
         int senseCount,
         int equality
 ) implements CustomPacketPayload {
-    public static final Type<SensorPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "sensor_packet"));
+    public static final Type<SensorPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "sensor_packet"));
 
     @Override
     public Type<SensorPayload> type() {

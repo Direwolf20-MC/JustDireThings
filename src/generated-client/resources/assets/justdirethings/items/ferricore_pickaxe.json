@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/ferricore_pickaxe"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "justdirethings:item/ferricore_pickaxe_active"
+    },
+    "property": "justdirethings:tool_enabled"
+  }
+}

@@ -2,13 +2,11 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -16,7 +14,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public DropperT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.DropperT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.DropperT1BE.get(), pPos, pBlockState);
     }
 
     public void setDropperSettings(int dropCount, int pickupDelay) {
@@ -73,8 +75,8 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public void populateDropSlots() {
-        for (int slot = 0; slot < getMachineHandler().getSlots(); slot++) {
-            ItemStack itemStack = getMachineHandler().getStackInSlot(slot);
+        for (int slot = 0; slot < getMachineHandler().size(); slot++) {
+            ItemStack itemStack = getMachineHandler().getResource(slot).toStack(getMachineHandler().getAmountAsInt(slot));
             if (!itemStack.isEmpty()) {
                 slotsToDropList.add(slot);
                 return;
@@ -114,14 +116,25 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
         if (slotsToDropList.isEmpty())
             return;
         if (operationTicks == 0) { //Use this check, because we want to ensure we drop once every <Ticks>
-            ItemStack dropStack = getMachineHandler().getStackInSlot(slotsToDropList.remove(0));
-            if (dropStack.isEmpty()) { //If this occurs, something changed, so clear the remaining list of things to drop
+            int dropSlot = slotsToDropList.remove(0);
+            ItemResource resource = getMachineHandler().getResource(dropSlot);
+            if (resource.isEmpty()) { //If this occurs, something changed, so clear the remaining list of things to drop
                 slotsToDropList.clear();
                 return;
             }
             BlockPos dropPos = getDropPos();
             if (dropPos == null) return; //Happens if the position is invalid - like not air...
-            spawnItem(level, dropStack.split(dropCount), 0.3, Direction.values()[this.direction], new Vec3(dropPos.getX() + 0.5, dropPos.getY() + 0.5, dropPos.getZ() + 0.5));
+            ItemStack droppedStack;
+            try (Transaction tx = Transaction.openRoot()) {
+                int extracted = getMachineHandler().extract(dropSlot, resource, dropCount, tx);
+                tx.commit();
+                droppedStack = resource.toStack(extracted);
+            }
+            if (droppedStack.isEmpty()) {
+                slotsToDropList.clear();
+                return;
+            }
+            spawnItem(level, droppedStack, 0.3, Direction.values()[this.direction], new Vec3(dropPos.getX() + 0.5, dropPos.getY() + 0.5, dropPos.getZ() + 0.5));
         }
     }
 
@@ -163,16 +176,16 @@ public class DropperT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("dropCount", dropCount);
-        tag.putInt("pickupDelay", pickupDelay);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("dropCount", dropCount);
+        output.putInt("pickupDelay", pickupDelay);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        this.dropCount = tag.getInt("dropCount");
-        this.pickupDelay = tag.getInt("pickupDelay");
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.dropCount = input.getIntOr("dropCount", dropCount);
+        this.pickupDelay = input.getIntOr("pickupDelay", pickupDelay);
     }
 }

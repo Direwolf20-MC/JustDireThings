@@ -8,7 +8,7 @@ import com.direwolf20.justdirethings.common.containers.ItemCollectorContainer;
 import com.direwolf20.justdirethings.common.network.data.ItemCollectorSettingsPayload;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class ItemCollectorScreen extends BaseMachineScreen<ItemCollectorContainer> {
     public boolean respectPickupDelay = false;
@@ -24,12 +24,12 @@ public class ItemCollectorScreen extends BaseMachineScreen<ItemCollectorContaine
     @Override
     public void init() {
         super.init();
-        addRenderableWidget(ToggleButtonFactory.RESPECTPICKUPDELAY(getGuiLeft() + 116, topSectionTop + 62, respectPickupDelay, b -> {
+        addRenderableWidget(ToggleButtonFactory.RESPECTPICKUPDELAY(leftPos + 116, topSectionTop + 62, respectPickupDelay, b -> {
             respectPickupDelay = !respectPickupDelay;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
         }));
-        addRenderableWidget(ToggleButtonFactory.SHOWPARTICLESBUTTON(getGuiLeft() + 98, topSectionTop + 62, showParticles, b -> {
+        addRenderableWidget(ToggleButtonFactory.SHOWPARTICLESBUTTON(leftPos + 98, topSectionTop + 62, showParticles, b -> {
             showParticles = !showParticles;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
@@ -39,6 +39,6 @@ public class ItemCollectorScreen extends BaseMachineScreen<ItemCollectorContaine
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new ItemCollectorSettingsPayload(respectPickupDelay, showParticles));
+        ClientPacketDistributor.sendToServer(new ItemCollectorSettingsPayload(respectPickupDelay, showParticles));
     }
 }

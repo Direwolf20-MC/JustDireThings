@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.mixin;
 
-import com.direwolf20.justdirethings.datagen.JustDireBlockTags;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -11,6 +11,7 @@ import net.minecraft.world.level.CollisionGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,6 +45,19 @@ public interface CollisionMixin {
         }
     }
 
+    @Inject(method = "getPreMoveCollisions", at = @At("HEAD"), cancellable = true)
+    private void onGetPreMoveCollisions(Entity entity, AABB collisionBox, Vec3 oldPos, CallbackInfoReturnable<Iterable<VoxelShape>> cir) {
+        if (entity instanceof Player player && shouldPassThroughWalls(player)) {
+            Iterable<VoxelShape> originalBlockCollisions = getOriginalBlockCollisions(entity, collisionBox);
+
+            List<VoxelShape> filteredBlockCollisions = StreamSupport.stream(originalBlockCollisions.spliterator(), false)
+                    .filter(shape -> isVerticalCollision(shape, collisionBox, player))
+                    .collect(Collectors.toList());
+
+            cir.setReturnValue(filteredBlockCollisions);
+        }
+    }
+
     private Iterable<VoxelShape> getOriginalBlockCollisions(Entity entity, AABB collisionBox) {
         // This method should call the original implementation of getBlockCollisions
         return () -> new BlockCollisions<>((CollisionGetter) (Object) this, entity, collisionBox, false, (p_286215_, p_286216_) -> p_286216_);
@@ -53,7 +67,7 @@ public interface CollisionMixin {
         Level level = player.level();
         BlockPos blockPos = new BlockPos((int) shape.min(Direction.Axis.X), (int) shape.min(Direction.Axis.Y), (int) shape.min(Direction.Axis.Z));
         BlockState blockState = level.getBlockState(blockPos);
-        if (blockState.getDestroySpeed(level, blockPos) < 0 || blockState.is(JustDireBlockTags.PHASEDENY))
+        if (blockState.getDestroySpeed(level, blockPos) < 0 || blockState.is(ModTags.Blocks.PHASEDENY))
             return true;
         double maxY = shape.max(Direction.Axis.Y);
         double minY = collisionBox.minY;
@@ -63,6 +77,6 @@ public interface CollisionMixin {
     }
 
     default boolean shouldPassThroughWalls(Player player) {
-        return player.getAttributeValue(Registration.PHASE) > 0;
+        return player.getAttributeValue(JDTRegistration.PHASE) > 0;
     }
 }

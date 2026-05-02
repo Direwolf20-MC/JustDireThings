@@ -15,31 +15,38 @@ import com.direwolf20.justdirethings.client.screens.widgets.GrayscaleButton;
 import com.direwolf20.justdirethings.common.items.PortalGunV2;
 import com.direwolf20.justdirethings.common.network.data.PortalGunFavoriteChangePayload;
 import com.direwolf20.justdirethings.common.network.data.PortalGunFavoritePayload;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.NBTHelpers;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.joml.Matrix4f;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import org.joml.Matrix3x2f;
+import org.joml.Matrix3x2fStack;
+import org.jspecify.annotations.Nullable;
 
-import java.awt.*;
 
 public class AdvPortalRadialMenu extends Screen {
-    ToggleButtonFactory.TextureLocalization ADD_BUTTON = new ToggleButtonFactory.TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png"), Component.translatable("justdirethings.screen.add_favorite"));
-    ToggleButtonFactory.TextureLocalization REMOVE_BUTTON = new ToggleButtonFactory.TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png"), Component.translatable("justdirethings.screen.remove_favorite"));
-    ToggleButtonFactory.TextureLocalization EDIT_BUTTON = new ToggleButtonFactory.TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/matchnbttrue.png"), Component.translatable("justdirethings.screen.edit_favorite"));
-    ToggleButtonFactory.TextureLocalization STAYOPEN_BUTTON = new ToggleButtonFactory.TextureLocalization(ResourceLocation.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/area.png"), Component.translatable("justdirethings.screen.stay_open"));
+    private static final int WHITE_ARGB = 0xFFFFFFFF;
+    private static final int LIGHT_GRAY_ARGB = 0xFFC0C0C0;
+
+    ToggleButtonFactory.TextureLocalization ADD_BUTTON = new ToggleButtonFactory.TextureLocalization(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/add.png"), Component.translatable("justdirethings.screen.add_favorite"));
+    ToggleButtonFactory.TextureLocalization REMOVE_BUTTON = new ToggleButtonFactory.TextureLocalization(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/remove.png"), Component.translatable("justdirethings.screen.remove_favorite"));
+    ToggleButtonFactory.TextureLocalization EDIT_BUTTON = new ToggleButtonFactory.TextureLocalization(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/matchnbttrue.png"), Component.translatable("justdirethings.screen.edit_favorite"));
+    ToggleButtonFactory.TextureLocalization STAYOPEN_BUTTON = new ToggleButtonFactory.TextureLocalization(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "textures/gui/buttons/area.png"), Component.translatable("justdirethings.screen.stay_open"));
     private static final int SEGMENTS = PortalGunV2.MAX_FAVORITES;
 
     private int timeIn = 0;
@@ -66,7 +73,8 @@ public class AdvPortalRadialMenu extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        // Suppress default background.
     }
 
     @Override
@@ -95,107 +103,97 @@ public class AdvPortalRadialMenu extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mx, int my, float partialTicks) {
-        renderTooltip(guiGraphics, mx, my);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         portalGun = PortalGunV2.getPortalGunv2(Minecraft.getInstance().player);
-        PoseStack matrices = guiGraphics.pose();
-        float speedOfButtonGrowth = 5f; // How fast the buttons move during initial window opening
+        super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
+
+        boolean inRange = isInRange(mouseX, mouseY);
+        float speedOfButtonGrowth = 5f;
         float fract = Math.min(speedOfButtonGrowth, this.timeIn + partialTicks) / speedOfButtonGrowth;
         int x = this.width / 2;
         int y = this.height / 2;
 
-        boolean inRange = isInRange(mx, my);
-
-
-        // This triggers the animation on creation - only affects side buttons and slider(s)
-        matrices.pushPose();
-        matrices.translate((1 - fract) * x, (1 - fract) * y, 0);
-        matrices.scale(fract, fract, fract);
-        super.render(guiGraphics, mx, my, partialTicks);
-        matrices.popPose();
-
-        float angle = mouseAngle(x, y, mx, my);
+        float angle = mouseAngle(x, y, mouseX, mouseY);
         float totalDeg = 0;
         float degPer = 360F / SEGMENTS;
+        for (int seg = 0; seg < SEGMENTS; seg++) {
+            if (this.isCursorInSlice(angle, totalDeg, degPer, inRange)) {
+                this.slotHovered = seg;
+            }
+            totalDeg += degPer;
+        }
 
+        totalDeg = 0;
+        float delayBetweenSegments = 1f;
+        float speedOfSegmentGrowth = 25f;
+        Matrix3x2f capturedPose = new Matrix3x2f(graphics.pose());
+        ScreenRectangle scissor = graphics.peekScissorStack();
+        for (int seg = 0; seg < SEGMENTS; seg++) {
+            boolean mouseInSector = this.isCursorInSlice(angle, totalDeg, degPer, inRange);
+            float radius = Math.max(0F, Math.min((this.timeIn + partialTicks - seg * delayBetweenSegments / SEGMENTS) * speedOfSegmentGrowth, radiusMax));
+            float gs = 0.25F;
+            if (seg % 2 == 0) gs += 0.1F;
+            int r = (int) (gs * 255);
+            int g = (int) (gs * 255);
+            int b = (int) (gs * 255);
+            int a = (int) (0.4F * 255);
+            if (mouseInSector) {
+                r = g = b = 255;
+            }
+            if (seg == slotSelected) {
+                r = g = 255;
+                b = (int) (gs * 255);
+                a = (int) (0.6F * 255);
+            }
+            int color = (a << 24) | (r << 16) | (g << 8) | b;
+            graphics.submitGuiElementRenderState(new PieSliceRenderState(
+                    OurRenderTypes.TRIANGLE_STRIP_PIPELINE, capturedPose, x, y, totalDeg, degPer, radius, color, scissor));
+            totalDeg += degPer;
+        }
+
+        totalDeg = 0;
         for (int seg = 0; seg < SEGMENTS; seg++) {
             NBTHelpers.PortalDestination favorite = getFavorite(seg);
             String favoriteName = favorite != null ? favorite.name() : "Empty";
-            String dimension = favorite != null && !favorite.equals(NBTHelpers.PortalDestination.EMPTY) ? favorite.globalVec3().dimension().location().getPath().toString() : "";
+            String dimension = favorite != null && !favorite.equals(NBTHelpers.PortalDestination.EMPTY) ? favorite.globalVec3().dimension().identifier().getPath().toString() : "";
             String coordinates = favorite != null && !favorite.equals(NBTHelpers.PortalDestination.EMPTY) ? String.format("(%d, %d, %d)",
                     (int) favorite.globalVec3().position().x(),
                     (int) favorite.globalVec3().position().y(),
                     (int) favorite.globalVec3().position().z()) : "";
-            boolean mouseInSector = this.isCursorInSlice(angle, totalDeg, degPer, inRange);
-            float delayBetweenSegments = 1f;
-            float speedOfSegmentGrowth = 25f;
-            float radius = Math.max(0F, Math.min((this.timeIn + partialTicks - seg * delayBetweenSegments / SEGMENTS) * speedOfSegmentGrowth, radiusMax));
-            float gs = 0.25F;
-            if (seg % 2 == 0) {
-                gs += 0.1F;
-            }
-
-            float r = gs;
-            float g = gs;
-            float b = gs;
-            float a = 0.4F;
-            if (mouseInSector) {
-                this.slotHovered = seg;
-                r = g = b = 1F;
-            }
-            if (seg == slotSelected) {
-                r = g = 1F;
-                a = 0.6f;
-            }
-
-            MultiBufferSource.BufferSource bufferSource = Minecraft.getInstance().renderBuffers().bufferSource();
-            VertexConsumer buffer = bufferSource.getBuffer(OurRenderTypes.TRIANGLE_STRIP);
-
-            for (float i = degPer; i >= 0; i--) {
-                float rad = (float) ((i + totalDeg) / 180F * Math.PI);
-                float xp = (float) (x + Math.cos(rad) * radius);
-                float yp = (float) (y + Math.sin(rad) * radius);
-
-                Matrix4f pose = matrices.last().pose();
-                buffer.addVertex(pose, (float) (x + Math.cos(rad) * radius / 2.3F), (float) (y + Math.sin(rad) * radius / 2.3F), 0).setColor(r, g, b, a);
-                buffer.addVertex(xp, yp, 0).setColor(r, g, b, a);
-            }
-
-            bufferSource.endBatch(OurRenderTypes.TRIANGLE_STRIP);
-            totalDeg += degPer;
-
-            // Draw the name of the favorite destination, centered within each slice
-            float nameAngle = (totalDeg - degPer / 2) * (float) Math.PI / 180F;
-            float nameX = x + (float) (Math.cos(nameAngle) * (radiusMax / 1.4));
-            float nameY = y + (float) (Math.sin(nameAngle) * (radiusMax / 1.4));
+            float nameAngleDeg = totalDeg + degPer / 2F;
+            float nameAngleRad = nameAngleDeg * (float) Math.PI / 180F;
+            float nameX = x + (float) (Math.cos(nameAngleRad) * (radiusMax / 1.4)) * fract;
+            float nameY = y + (float) (Math.sin(nameAngleRad) * (radiusMax / 1.4)) * fract;
             int textWidth = this.font.width(favoriteName);
             int dimensionWidth = this.font.width(dimension);
             int coordinatesWidth = this.font.width(coordinates);
 
-            matrices.pushPose();
-            matrices.translate(nameX, nameY, 0);
-            matrices.scale(0.85f, 0.85f, 0.85f); // Scale down to simulate a smaller font
-            // Determine if the text is upside down and adjust the rotation
-            if (nameAngle > Math.PI / 2 && nameAngle < 3 * Math.PI / 2) {
-                matrices.mulPose(Axis.ZP.rotation(nameAngle + (float) Math.PI)); // Rotate the text upside down
-            } else {
-                matrices.mulPose(Axis.ZP.rotation(nameAngle)); // Rotate the text normally
-            }
-            guiGraphics.drawString(this.font, favoriteName, -textWidth / 2, -15, Color.WHITE.getRGB());
-            matrices.popPose();
+            boolean upsideDown = nameAngleRad > Math.PI / 2 && nameAngleRad < 3 * Math.PI / 2;
+            float rotation = upsideDown ? nameAngleRad + (float) Math.PI : nameAngleRad;
 
-            matrices.pushPose();
-            matrices.translate(nameX, nameY, 0);
-            // Draw the dimension and coordinates underneath the name in a smaller font
-            matrices.scale(0.7f, 0.7f, 0.7f); // Scale down to simulate a smaller font
-            if (nameAngle > Math.PI / 2 && nameAngle < 3 * Math.PI / 2) {
-                matrices.mulPose(Axis.ZP.rotation(nameAngle + (float) Math.PI)); // Rotate the text upside down
-            } else {
-                matrices.mulPose(Axis.ZP.rotation(nameAngle)); // Rotate the text normally
+            Matrix3x2fStack pose = graphics.pose();
+            pose.pushMatrix();
+            pose.translate(nameX, nameY);
+            pose.rotate(rotation);
+            pose.scale(0.85F, 0.85F);
+            graphics.text(this.font, favoriteName, -textWidth / 2, -15, WHITE_ARGB, false);
+            pose.popMatrix();
+
+            pose.pushMatrix();
+            pose.translate(nameX, nameY);
+            pose.rotate(rotation);
+            pose.scale(0.7F, 0.7F);
+            graphics.text(this.font, dimension, -dimensionWidth / 2, -5, LIGHT_GRAY_ARGB, false);
+            graphics.text(this.font, coordinates, -coordinatesWidth / 2, 10, LIGHT_GRAY_ARGB, false);
+            pose.popMatrix();
+
+            totalDeg += degPer;
+        }
+
+        for (Renderable renderable : this.renderables) {
+            if (renderable instanceof BaseButton button && !button.getLocalization(mouseX, mouseY).equals(Component.empty())) {
+                graphics.setTooltipForNextFrame(font, button.getLocalization(), mouseX, mouseY);
             }
-            guiGraphics.drawString(this.font, dimension, -dimensionWidth / 2, -5, Color.LIGHT_GRAY.getRGB());
-            guiGraphics.drawString(this.font, coordinates, -coordinatesWidth / 2, 10, Color.LIGHT_GRAY.getRGB());
-            matrices.popPose();
         }
     }
 
@@ -212,37 +210,28 @@ public class AdvPortalRadialMenu extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (isInRange(mouseX, mouseY))
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (isInRange(event.x(), event.y()))
             saveFavorite();
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (staysOpen && (p_keyPressed_1_ == 256 || p_keyPressed_1_ == KeyBindings.toggleTool.getKey().getValue())) {
+    public boolean keyPressed(KeyEvent event) {
+        int keyCode = event.key();
+        if (staysOpen && (keyCode == 256 || keyCode == KeyBindings.toggleTool.getKey().getValue())) {
             onClose();
             return true;
         }
-
-        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return super.keyPressed(event);
     }
 
     @Override
     public void tick() {
-        if (!staysOpen && !InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), KeyBindings.toggleTool.getKey().getValue())) {
+        if (!staysOpen && !InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), KeyBindings.toggleTool.getKey().getValue())) {
             onClose();
         }
-
         this.timeIn++;
-    }
-
-    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
-        for (Renderable renderable : this.renderables) {
-            if (renderable instanceof BaseButton button && !button.getLocalization(pX, pY).equals(Component.empty())) {
-                pGuiGraphics.renderTooltip(font, button.getLocalization(), pX, pY);
-            }
-        }
     }
 
     @Override
@@ -252,16 +241,16 @@ public class AdvPortalRadialMenu extends Screen {
 
     public void saveFavorite() {
         slotSelected = slotHovered;
-        PacketDistributor.sendToServer(new PortalGunFavoritePayload(slotSelected, staysOpen));
-        OurSounds.playSound(Registration.BEEP.get());
+        ClientPacketDistributor.sendToServer(new PortalGunFavoritePayload(slotSelected, staysOpen));
+        OurSounds.playSound(JDTRegistration.BEEP.get());
     }
 
     public void addFavorite() {
-        PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, "UNNAMED", false, Vec3.ZERO));
+        ClientPacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, true, "UNNAMED", false, Vec3.ZERO));
     }
 
     public void removeFavorite() {
-        PacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, false, "NOTNEEDED", false, Vec3.ZERO));
+        ClientPacketDistributor.sendToServer(new PortalGunFavoriteChangePayload(slotSelected, false, "NOTNEEDED", false, Vec3.ZERO));
     }
 
     public void editFavorite() {
@@ -270,6 +259,55 @@ public class AdvPortalRadialMenu extends Screen {
 
     public NBTHelpers.PortalDestination getFavorite(int slot) {
         return PortalGunV2.getFavorite(portalGun, slot);
+    }
+
+    private record PieSliceRenderState(
+            RenderPipeline pipeline,
+            Matrix3x2f pose,
+            int cx,
+            int cy,
+            float startDeg,
+            float spanDeg,
+            float outerRadius,
+            int color,
+            @Nullable ScreenRectangle scissorArea
+    ) implements GuiElementRenderState {
+        private static final float INNER_RATIO = 1F / 2.3F;
+
+        @Override
+        public void buildVertices(VertexConsumer buffer) {
+            if (outerRadius <= 0F || spanDeg <= 0F) return;
+            float innerRadius = outerRadius * INNER_RATIO;
+            for (float i = spanDeg; i >= 0; i--) {
+                float rad = (i + startDeg) * (float) Math.PI / 180F;
+                float cos = (float) Math.cos(rad);
+                float sin = (float) Math.sin(rad);
+                buffer.addVertexWith2DPose(pose, cx + cos * innerRadius, cy + sin * innerRadius).setColor(color);
+                buffer.addVertexWith2DPose(pose, cx + cos * outerRadius, cy + sin * outerRadius).setColor(color);
+            }
+        }
+
+        @Override
+        public RenderPipeline pipeline() {
+            return pipeline;
+        }
+
+        @Override
+        public TextureSetup textureSetup() {
+            return TextureSetup.noTexture();
+        }
+
+        @Override
+        public @Nullable ScreenRectangle scissorArea() {
+            return scissorArea;
+        }
+
+        @Override
+        public @Nullable ScreenRectangle bounds() {
+            int r = (int) Math.ceil(outerRadius) + 1;
+            ScreenRectangle rect = new ScreenRectangle(cx - r, cy - r, r * 2, r * 2).transformMaxBounds(pose);
+            return scissorArea != null ? scissorArea.intersection(rect) : rect;
+        }
     }
 
     private static class Vector2f {

@@ -8,12 +8,13 @@ import com.direwolf20.justdirethings.common.blockentities.BlockBreakerT1BE;
 import com.direwolf20.justdirethings.common.containers.BlockBreakerT1Container;
 import com.direwolf20.justdirethings.common.network.data.BreakerPayload;
 import com.direwolf20.justdirethings.util.MiscHelpers;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class BlockBreakerT1Screen extends BaseMachineScreen<BlockBreakerT1Container> {
     public boolean sneaking;
@@ -29,7 +30,7 @@ public class BlockBreakerT1Screen extends BaseMachineScreen<BlockBreakerT1Contai
     public void init() {
         super.init();
 
-        addRenderableWidget(ToggleButtonFactory.SNEAKCLICKBUTTON(getGuiLeft() + 56, topSectionTop + 38, sneaking, b -> {
+        addRenderableWidget(ToggleButtonFactory.SNEAKCLICKBUTTON(leftPos + 56, topSectionTop + 38, sneaking, b -> {
             sneaking = !sneaking;
             ((GrayscaleButton) b).toggleActive();
             saveSettings();
@@ -44,24 +45,24 @@ public class BlockBreakerT1Screen extends BaseMachineScreen<BlockBreakerT1Contai
 
     @Override
     public void addRedstoneButtons() {
-        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(getGuiLeft() + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
+        addRenderableWidget(ToggleButtonFactory.REDSTONEBUTTON(leftPos + 104, topSectionTop + 38, redstoneMode.ordinal(), b -> {
             redstoneMode = MiscHelpers.RedstoneMode.values()[((ToggleButton) b).getTexturePosition()];
             saveSettings();
         }));
     }
 
     @Override
-    protected void drawMachineSlot(GuiGraphics guiGraphics, Slot slot) {
+    protected void drawMachineSlot(GuiGraphicsExtractor graphics, Slot slot) {
         ItemStack itemStack = slot.getItem();
         if (itemStack.isEmpty())
-            guiGraphics.blit(JUSTSLOT, getGuiLeft() + slot.x - 1, getGuiTop() + slot.y - 1, 18, 0, 18, 18);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, JUSTSLOT, leftPos + slot.x - 1, topPos + slot.y - 1, 18.0F, 0.0F, 18, 18, 256, 256);
         else
-            super.drawMachineSlot(guiGraphics, slot);
+            super.drawMachineSlot(graphics, slot);
     }
 
     @Override
     public void saveSettings() {
         super.saveSettings();
-        PacketDistributor.sendToServer(new BreakerPayload(sneaking));
+        ClientPacketDistributor.sendToServer(new BreakerPayload(sneaking));
     }
 }

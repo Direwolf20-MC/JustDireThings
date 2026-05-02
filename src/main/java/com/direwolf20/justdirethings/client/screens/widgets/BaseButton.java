@@ -4,7 +4,7 @@ import com.direwolf20.justdirethings.util.MiscTools;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
-public class BaseButton extends Button {
+public abstract class BaseButton extends Button {
     protected Component localization = Component.empty();
 
     protected BaseButton(int pX, int pY, int pWidth, int pHeight, Component pMessage, OnPress pOnPress, CreateNarration pCreateNarration) {

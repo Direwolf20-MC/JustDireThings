@@ -2,7 +2,7 @@ package com.direwolf20.justdirethings.common.items.tools.basetools;
 
 import com.direwolf20.justdirethings.common.items.interfaces.*;
 import com.direwolf20.justdirethings.setup.Config;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -10,10 +10,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -21,30 +24,28 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.direwolf20.justdirethings.util.TooltipHelpers.*;
 
-public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClickableTool {
+public class BasePickaxe extends Item implements ToggleableTool, LeftClickableTool {
     protected final EnumSet<Ability> abilities = EnumSet.noneOf(Ability.class);
     protected final Map<Ability, AbilityParams> abilityParams = new EnumMap<>(Ability.class);
 
-
-    public BasePickaxe(Tier pTier, Item.Properties pProperties) {
-        super(pTier, pProperties);
+    public BasePickaxe(Item.Properties pProperties) {
+        super(pProperties);
     }
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getPlayer().isShiftKeyDown() && bindDrops(pContext))
+        if (pContext.getPlayer() != null && pContext.getPlayer().isShiftKeyDown() && bindDrops(pContext))
             return InteractionResult.SUCCESS;
         useOnAbility(pContext);
         return super.useOn(pContext);
@@ -56,27 +57,28 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        return hurtEnemyAbility(pStack, pTarget, pAttacker);
+    public void hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+        hurtEnemyAbility(pStack, pTarget, pAttacker);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay display, Consumer<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, display, tooltip, flagIn);
         Level level = context.level();
         if (level == null) {
             return;
         }
-
-        boolean sneakPressed = Screen.hasShiftDown();
-        appendFEText(stack, tooltip);
+        List<Component> buffer = new ArrayList<>();
+        boolean sneakPressed = Minecraft.getInstance().hasShiftDown();
+        appendFEText(stack, buffer);
         if (sneakPressed) {
-            appendToolEnabled(stack, tooltip);
-            appendAbilityList(stack, tooltip);
+            appendToolEnabled(stack, buffer);
+            appendAbilityList(stack, buffer);
         } else {
-            appendToolEnabled(stack, tooltip);
-            appendShiftForInfo(stack, tooltip);
+            appendToolEnabled(stack, buffer);
+            appendShiftForInfo(stack, buffer);
         }
+        buffer.forEach(tooltip);
     }
 
     @Override
@@ -97,8 +99,8 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (!level.isClientSide && player.isShiftKeyDown())
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide() && player.isShiftKeyDown())
             openSettings(player);
         useAbility(level, player, hand);
         return super.use(level, player, hand);
@@ -106,17 +108,20 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
 
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
-        if (stack.getItem() instanceof PoweredTool poweredTool) {
-            IEnergyStorage energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (stack.getItem() instanceof PoweredTool) {
+            EnergyHandler energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
             if (energyStorage == null) return amount;
             double reductionFactor = 0;
-            if (entity != null) {
+            if (entity != null && entity.level().getServer() != null) {
                 HolderLookup.RegistryLookup<Enchantment> registrylookup = entity.level().getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
                 int unbreakingLevel = stack.getEnchantmentLevel(registrylookup.getOrThrow(Enchantments.UNBREAKING));
                 reductionFactor = Math.min(1.0, unbreakingLevel * 0.1);
             }
             int finalEnergyCost = (int) Math.max(0, amount - (amount * reductionFactor));
-            energyStorage.extractEnergy(finalEnergyCost, false);
+            try (Transaction tx = Transaction.openRoot()) {
+                energyStorage.extract(finalEnergyCost, tx);
+                tx.commit();
+            }
             return 0;
         }
         return amount;
@@ -134,8 +139,8 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
     }
 
     @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return UseAnim.NONE;
+    public ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return ItemUseAnimation.NONE;
     }
 
     @Override
@@ -143,6 +148,7 @@ public class BasePickaxe extends PickaxeItem implements ToggleableTool, LeftClic
         return false;
     }
 
+    @Override
     public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
         if (oldStack.is(newStack.getItem())) return false;
         return super.shouldCauseBlockBreakReset(oldStack, newStack);

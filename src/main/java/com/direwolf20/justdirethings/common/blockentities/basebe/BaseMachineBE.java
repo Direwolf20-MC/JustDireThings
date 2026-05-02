@@ -1,7 +1,7 @@
 package com.direwolf20.justdirethings.common.blockentities.basebe;
 
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
@@ -12,6 +12,7 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -24,11 +25,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import java.util.Map;
 import java.util.UUID;
@@ -105,7 +108,7 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     protected boolean canPlaceAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
-        ChunkPos chunkPos = new ChunkPos(blockPos);
+        ChunkPos chunkPos = ChunkPos.containing(blockPos);
         if (chunkTestCache.containsKey(chunkPos))
             return chunkTestCache.get(chunkPos);
         boolean canPlace = !EventHooks.onBlockPlace(fakePlayer, BlockSnapshot.create(level.dimension(), level, blockPos.below()), Direction.UP);
@@ -123,7 +126,7 @@ public class BaseMachineBE extends BlockEntity {
     }
 
     protected boolean canBreakAndPlaceAt(Level level, BlockPos blockPos, FakePlayer fakePlayer) {
-        ChunkPos chunkPos = new ChunkPos(blockPos);
+        ChunkPos chunkPos = ChunkPos.containing(blockPos);
         if (chunkTestCache.containsKey(chunkPos))
             return chunkTestCache.get(chunkPos);
         boolean canBreak = canBreakAt(level, blockPos, fakePlayer) && canPlaceAt(level, blockPos, fakePlayer);
@@ -165,25 +168,23 @@ public class BaseMachineBE extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    public ItemStackHandler getMachineHandler() {
-        return getData(Registration.MACHINE_HANDLER);
+    public ItemStacksResourceHandler getMachineHandler() {
+        return getData(JDTRegistration.MACHINE_HANDLER);
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        this.loadAdditional(tag, lookupProvider);
+    public void handleUpdateTag(ValueInput input) {
+        this.loadWithComponents(input);
     }
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, provider);
-        return tag;
+        return saveCustomOnly(provider);
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
-        super.onDataPacket(net, pkt, lookupProvider);
+    public void onDataPacket(Connection net, ValueInput input) {
+        this.loadWithComponents(input);
         if (this instanceof AreaAffectingBE areaAffectingBE)
             areaAffectingBE.getAreaAffectingData().area = null; //Clear this cache when a packet comes in, so it can redraw properly if the area was changed
     }
@@ -228,8 +229,8 @@ public class BaseMachineBE extends BlockEntity {
             return false;
         if (this instanceof FilterableBE filterableBE) {
             FilterBasicHandler filteredItems = filterableBE.getFilterHandler();
-            for (int i = 0; i < filteredItems.getSlots(); i++) {
-                if (!filteredItems.getStackInSlot(i).isEmpty())
+            for (int i = 0; i < filteredItems.size(); i++) {
+                if (!filteredItems.getResource(i).isEmpty())
                     return false;
             }
         }
@@ -237,38 +238,46 @@ public class BaseMachineBE extends BlockEntity {
             return false;
         if (this instanceof RedstoneControlledBE redstoneControlledBE && !redstoneControlledBE.getRedstoneControlData().equals(getDefaultRedstoneData()))
             return false;
+        ItemStacksResourceHandler machineHandler = getMachineHandler();
+        for (int i = 0; i < machineHandler.size(); i++) {
+            if (!machineHandler.getResource(i).isEmpty())
+                return false;
+        }
         return true;
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putInt("tickspeed", tickSpeed);
-        if (placedByUUID != null)
-            tag.putUUID("placedBy", placedByUUID);
-        tag.putInt("direction", direction);
-        if (this instanceof AreaAffectingBE areaAffectingBE)
-            areaAffectingBE.saveAreaSettings(tag);
-        if (this instanceof FilterableBE filterableBE)
-            filterableBE.saveFilterSettings(tag);
-        if (this instanceof RedstoneControlledBE redstoneControlledBE)
-            redstoneControlledBE.saveRedstoneSettings(tag);
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        // Inventory is preserved inside the dropped block item via BaseMachineBlock.getDrops
+        // (CUSTOM_DATA_1 NBT). Do NOT drop slot contents here — that would dupe them.
+        super.preRemoveSideEffects(pos, state);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        if (tag.contains("direction"))
-            direction = tag.getInt("direction");
-        if (tag.contains("tickspeed"))
-            tickSpeed = tag.getInt("tickspeed");
-        if (tag.contains("placedBy"))
-            placedByUUID = tag.getUUID("placedBy");
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("tickspeed", tickSpeed);
+        output.storeNullable("placedBy", UUIDUtil.CODEC, placedByUUID);
+        output.putInt("direction", direction);
         if (this instanceof AreaAffectingBE areaAffectingBE)
-            areaAffectingBE.loadAreaSettings(tag);
+            areaAffectingBE.saveAreaSettings(output);
         if (this instanceof FilterableBE filterableBE)
-            filterableBE.loadFilterSettings(tag);
+            filterableBE.saveFilterSettings(output);
         if (this instanceof RedstoneControlledBE redstoneControlledBE)
-            redstoneControlledBE.loadRedstoneSettings(tag);
-        super.loadAdditional(tag, provider);
+            redstoneControlledBE.saveRedstoneSettings(output);
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        direction = input.getIntOr("direction", direction);
+        tickSpeed = input.getIntOr("tickspeed", tickSpeed);
+        placedByUUID = input.read("placedBy", UUIDUtil.CODEC).orElse(placedByUUID);
+        if (this instanceof AreaAffectingBE areaAffectingBE)
+            areaAffectingBE.loadAreaSettings(input);
+        if (this instanceof FilterableBE filterableBE)
+            filterableBE.loadFilterSettings(input);
+        if (this instanceof RedstoneControlledBE redstoneControlledBE)
+            redstoneControlledBE.loadRedstoneSettings(input);
+        super.loadAdditional(input);
     }
 }

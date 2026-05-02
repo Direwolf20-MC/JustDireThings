@@ -6,7 +6,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineB
 import com.direwolf20.justdirethings.common.blockentities.basebe.PoweredMachineContainerData;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
@@ -19,8 +19,6 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
 
 import java.util.Comparator;
@@ -33,7 +31,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
     public final PoweredMachineContainerData poweredMachineData;
 
     public ClickerT2BE(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.ClickerT2BE.get(), pPos, pBlockState);
+        super(JDTRegistration.ClickerT2BE.get(), pPos, pBlockState);
         poweredMachineData = new PoweredMachineContainerData(this);
     }
 
@@ -44,7 +42,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
 
     @Override
     public MachineEnergyStorage getEnergyStorage() {
-        return getData(Registration.ENERGYSTORAGE_MACHINES);
+        return getData(JDTRegistration.ENERGYSTORAGE_MACHINES);
     }
 
     @Override
@@ -59,7 +57,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
 
     @Override
     public FilterBasicHandler getFilterHandler() {
-        return getData(Registration.HANDLER_BASIC_FILTER);
+        return getData(JDTRegistration.HANDLER_BASIC_FILTER);
     }
 
     @Override
@@ -70,7 +68,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
     @Override
     public void tickServer() {
         super.tickServer();
-        chargeItemStack(getClickStack());
+        chargeItemStack(getMachineHandler(), 0);
     }
 
     @Override
@@ -101,7 +99,7 @@ public class ClickerT2BE extends ClickerT1BE implements PoweredMachineBE, AreaAf
         BlockState blockState = level.getBlockState(blockPos);
         if ((blockState.getBlock() instanceof LiquidBlock liquidBlock))
             return isStackValidFilter(liquidBlock);
-        ItemStack blockItemStack = blockState.getCloneItemStack(new BlockHitResult(Vec3.ZERO, getDirectionValue(), blockPos, false), level, blockPos, fakePlayer);
+        ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, level, false, fakePlayer);
         return isStackValidFilter(blockItemStack);
     }
 

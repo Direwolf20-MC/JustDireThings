@@ -2,19 +2,17 @@ package com.direwolf20.justdirethings.common.blockentities;
 
 import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.RedstoneControlledBE;
-import com.direwolf20.justdirethings.setup.Registration;
+import com.direwolf20.justdirethings.setup.JDTRegistration;
 import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.RedstoneControlData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -24,9 +22,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 import java.util.*;
 
@@ -50,7 +50,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public BlockBreakerT1BE(BlockPos pPos, BlockState pBlockState) {
-        this(Registration.BlockBreakerT1BE.get(), pPos, pBlockState);
+        this(JDTRegistration.BlockBreakerT1BE.get(), pPos, pBlockState);
     }
 
     public void setBreakerSettings(boolean sneaking) {
@@ -165,7 +165,7 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     public ItemStack getTool() {
-        return getMachineHandler().getStackInSlot(0);
+        return getMachineHandler().getResource(0).toStack(getMachineHandler().getAmountAsInt(0));
     }
 
     public int generatePosHash() {
@@ -239,21 +239,36 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
 
     public boolean tryBreakBlock(ItemStack tool, FakePlayer fakePlayer, BlockPos breakPos, BlockState blockState) {
         setFakePlayerData(tool, fakePlayer, breakPos, getFacing());
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
-        if (NeoForge.EVENT_BUS.post(event).isCanceled()) return false;
-        breakBlock(fakePlayer, breakPos, tool, blockState);
-        return true;
+        BreakBlockEvent event = new BreakBlockEvent(level, breakPos, level.getBlockState(breakPos), fakePlayer);
+        boolean cancelled = NeoForge.EVENT_BUS.post(event).isCanceled();
+        if (!cancelled) {
+            breakBlock(fakePlayer, breakPos, tool, blockState);
+        }
+        // ToggleableTool.mineBlocksAbility (triggered by the BreakEvent listener) drains energy/durability
+        // on the detached tool stack. Either way, sync the (possibly mutated) stack back to the slot so
+        // energy/durability changes aren't lost to the throwaway copy — see TRANSFER_API.md §4.
+        writeToolBack(tool);
+        return !cancelled;
     }
 
     public void breakBlock(FakePlayer player, BlockPos breakPos, ItemStack itemStack, BlockState state) {
-        //itemStack.onBlockStartBreak(breakPos, player);
         BlockEntity blockEntity = level.getBlockEntity(breakPos);
         boolean success = level.destroyBlock(breakPos, false, player);
         if (success) {
             Block.dropResources(state, level, breakPos, blockEntity, player, itemStack);
-            if (state.getDestroySpeed(level, breakPos) != 0.0F)
-                itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(InteractionHand.MAIN_HAND));
+            if (state.getDestroySpeed(level, breakPos) != 0.0F) {
+                itemStack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+            }
         }
+    }
+
+    private void writeToolBack(ItemStack itemStack) {
+        if (itemStack.isEmpty()) {
+            getMachineHandler().set(0, net.neoforged.neoforge.transfer.item.ItemResource.EMPTY, 0);
+        } else {
+            getMachineHandler().set(0, net.neoforged.neoforge.transfer.item.ItemResource.of(itemStack), itemStack.getCount());
+        }
+        setChanged();
     }
 
     public void sendPackets(int pBreakerId, BlockPos pPos, int pProgress) {
@@ -283,14 +298,14 @@ public class BlockBreakerT1BE extends BaseMachineBE implements RedstoneControlle
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
-        tag.putBoolean("sneaking", sneaking);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putBoolean("sneaking", sneaking);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        this.sneaking = tag.getBoolean("sneaking");
-        super.loadAdditional(tag, provider);
+    protected void loadAdditional(ValueInput input) {
+        this.sneaking = input.getBooleanOr("sneaking", sneaking);
+        super.loadAdditional(input);
     }
 }
