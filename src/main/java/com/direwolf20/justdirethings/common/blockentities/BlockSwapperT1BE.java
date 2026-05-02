@@ -15,10 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.level.block.Block;
@@ -329,19 +326,19 @@ public class BlockSwapperT1BE extends BaseMachineBE implements RedstoneControlle
             return false;
         if (entity.getType().builtInRegistryHolder().is(Tags.EntityTypes.TELEPORTING_NOT_SUPPORTED))
             return false;
-        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.HOSTILE) && !(entity instanceof Monster))
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.HOSTILE) && !MiscHelpers.isHostile(entity))
             return false;
-        if (((swap_entity_type.equals(SWAP_ENTITY_TYPE.PASSIVE)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.ADULT)) || (swap_entity_type.equals(SWAP_ENTITY_TYPE.CHILD))) && !(entity instanceof Animal))
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.PASSIVE) && !MiscHelpers.isPassiveLiving(entity))
             return false;
-        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.ADULT) && (entity instanceof Animal animal) && (animal.isBaby()))
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.ADULT) && !MiscHelpers.isAdult(entity))
             return false;
-        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.CHILD) && (entity instanceof Animal animal) && !(animal.isBaby()))
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.CHILD) && !MiscHelpers.isChild(entity))
             return false;
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.PLAYER) && !(entity instanceof Player))
             return false;
         if (swap_entity_type.equals(SWAP_ENTITY_TYPE.ITEM) && !(entity instanceof ItemEntity))
             return false;
-        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.MOB) && (!(entity instanceof LivingEntity) || entity instanceof Player))
+        if (swap_entity_type.equals(SWAP_ENTITY_TYPE.MOB) && !MiscHelpers.isMob(entity))
             return false;
         return true;
     }

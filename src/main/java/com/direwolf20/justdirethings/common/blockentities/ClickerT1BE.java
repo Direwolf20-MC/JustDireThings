@@ -14,8 +14,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -234,17 +232,17 @@ public class ClickerT1BE extends BaseMachineBE implements RedstoneControlledBE {
     }
 
     public boolean isValidEntity(Entity entity) {
-        if (clickTarget.equals(CLICK_TARGET.HOSTILE) && !(entity instanceof Monster))
+        if (clickTarget.equals(CLICK_TARGET.HOSTILE) && !MiscHelpers.isHostile(entity))
             return false;
-        if (((clickTarget.equals(CLICK_TARGET.PASSIVE)) || (clickTarget.equals(CLICK_TARGET.ADULT)) || (clickTarget.equals(CLICK_TARGET.CHILD))) && !(entity instanceof Animal))
+        if (clickTarget.equals(CLICK_TARGET.PASSIVE) && !MiscHelpers.isPassiveLiving(entity))
             return false;
-        if (clickTarget.equals(CLICK_TARGET.ADULT) && (entity instanceof Animal animal) && (animal.isBaby()))
+        if (clickTarget.equals(CLICK_TARGET.ADULT) && !MiscHelpers.isAdult(entity))
             return false;
-        if (clickTarget.equals(CLICK_TARGET.CHILD) && (entity instanceof Animal animal) && !(animal.isBaby()))
+        if (clickTarget.equals(CLICK_TARGET.CHILD) && !MiscHelpers.isChild(entity))
             return false;
         if (clickTarget.equals(CLICK_TARGET.PLAYER) && !(entity instanceof Player))
             return false;
-        if (clickTarget.equals(CLICK_TARGET.MOB) && (!(entity instanceof LivingEntity) || entity instanceof Player))
+        if (clickTarget.equals(CLICK_TARGET.MOB) && !MiscHelpers.isMob(entity))
             return false;
         return true;
     }

@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.BaseMachineBE;
 import com.direwolf20.justdirethings.common.blockentities.basebe.FilterableBE;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.MiscHelpers;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -11,10 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
@@ -267,19 +265,19 @@ public class SensorT1BE extends BaseMachineBE implements FilterableBE {
     }
 
     public boolean isValidEntity(Entity entity) {
-        if (sense_target.equals(SENSE_TARGET.HOSTILE) && !(entity instanceof Monster))
+        if (sense_target.equals(SENSE_TARGET.HOSTILE) && !MiscHelpers.isHostile(entity))
             return false;
-        if (((sense_target.equals(SENSE_TARGET.PASSIVE)) || (sense_target.equals(SENSE_TARGET.ADULT)) || (sense_target.equals(SENSE_TARGET.CHILD))) && !(entity instanceof Animal))
+        if (sense_target.equals(SENSE_TARGET.PASSIVE) && !MiscHelpers.isPassiveLiving(entity))
             return false;
-        if (sense_target.equals(SENSE_TARGET.ADULT) && (entity instanceof Animal animal) && (animal.isBaby()))
+        if (sense_target.equals(SENSE_TARGET.ADULT) && !MiscHelpers.isAdult(entity))
             return false;
-        if (sense_target.equals(SENSE_TARGET.CHILD) && (entity instanceof Animal animal) && !(animal.isBaby()))
+        if (sense_target.equals(SENSE_TARGET.CHILD) && !MiscHelpers.isChild(entity))
             return false;
         if (sense_target.equals(SENSE_TARGET.PLAYER) && !(entity instanceof Player))
             return false;
         if (sense_target.equals(SENSE_TARGET.ITEM) && !(entity instanceof ItemEntity))
             return false;
-        if (sense_target.equals(SENSE_TARGET.MOB) && (!(entity instanceof LivingEntity) || entity instanceof Player))
+        if (sense_target.equals(SENSE_TARGET.MOB) && !MiscHelpers.isMob(entity))
             return false;
         return isEntityValidFilter(entity, this.level);
     }
