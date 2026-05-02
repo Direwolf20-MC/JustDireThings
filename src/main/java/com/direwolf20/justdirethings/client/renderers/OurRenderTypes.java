@@ -44,6 +44,14 @@ public final class OurRenderTypes {
             .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLE_STRIP)
             .build();
 
+    // Portal-frame pipeline: same as DEBUG_QUADS (translucent QUADS, no cull). Drawn in an immediate
+    // buffer source from the AfterTranslucentBlocks event so it sequences after the portal swirl,
+    // independent of the entity-render submit-collector's HashMap-ordered translucent flush.
+    public static final RenderPipeline PORTAL_FRAME_PIPELINE = RenderPipelines.DEBUG_QUADS.toBuilder()
+            .withLocation(Identifier.fromNamespaceAndPath(JustDireThings.MODID, "pipeline/portal_frame"))
+            .withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+            .build();
+
     // Particle pipeline with depth test disabled — used by the ore/mob scanner so the marker particles
     // are visible through blocks. Replaces the 1.21.1 RenderSystem.disableDepthTest() trick that went
     // away with the particle rewrite.
@@ -89,6 +97,11 @@ public final class OurRenderTypes {
                     .sortOnUpload()
                     .createRenderSetup());
 
+    public static final RenderType PORTAL_FRAME = RenderType.create("portal_frame",
+            RenderSetup.builder(PORTAL_FRAME_PIPELINE)
+                    .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+                    .createRenderSetup());
+
     public static final RenderType TRIANGLE_STRIP = RenderType.create("triangle_strip",
             RenderSetup.builder(TRIANGLE_STRIP_PIPELINE)
                     .createRenderSetup());
@@ -121,6 +134,7 @@ public final class OurRenderTypes {
         event.registerPipeline(GOO_PATTERN_PIPELINE);
         event.registerPipeline(TRIANGLE_STRIP_PIPELINE);
         event.registerPipeline(ALWAYS_VISIBLE_PARTICLE_PIPELINE);
+        event.registerPipeline(PORTAL_FRAME_PIPELINE);
     }
 
     private OurRenderTypes() {}

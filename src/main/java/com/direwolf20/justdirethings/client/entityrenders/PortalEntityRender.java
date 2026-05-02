@@ -124,7 +124,10 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
         float g = state.isPrimary ? 0.6f : 0.647f;
         float b = state.isPrimary ? 1.0f : 0.0f;
         float alpha = 1.0f;
-        submitNodeCollector.submitCustomGeometry(poseStack, OurRenderTypes.TRANSPARENT_BOX, (pose, buffer) -> {
+        // Submit the frame at order(1) so it draws strictly after order(0)'s translucent custom geometry
+        // (the portal swirl). Without this, the swirl and frame both land in order(0)'s HashMap-keyed
+        // custom-geometry storage and the per-launch iteration order randomly buries one or the other.
+        submitNodeCollector.order(1).submitCustomGeometry(poseStack, OurRenderTypes.PORTAL_FRAME, (pose, buffer) -> {
             Matrix4f matrix = pose.pose();
             renderFlatFrame(matrix, buffer, renderBounds, 0.025f, r, g, b, alpha, direction.getAxis());
         });
@@ -151,10 +154,11 @@ public class PortalEntityRender<T extends PortalEntity> extends EntityRenderer<T
             renderBox(matrix, buffer, midX, minY, minZ, midX, minY + thickness, maxZ, r, g, b, alpha);
             renderBox(matrix, buffer, midX, maxY - thickness, minZ, midX, maxY, maxZ, r, g, b, alpha);
         } else {
-            renderBox(matrix, buffer, minX, minY, minZ, minX + thickness, minY, maxZ, r, g, b, alpha);
-            renderBox(matrix, buffer, maxX - thickness, minY, minZ, maxX, minY, maxZ, r, g, b, alpha);
-            renderBox(matrix, buffer, minX, minY, minZ, maxX, minY, minZ + thickness, r, g, b, alpha);
-            renderBox(matrix, buffer, minX, minY, maxZ - thickness, maxX, minY, maxZ, r, g, b, alpha);
+            float midY = (minY + maxY) / 2f;
+            renderBox(matrix, buffer, minX, midY, minZ, minX + thickness, midY, maxZ, r, g, b, alpha);
+            renderBox(matrix, buffer, maxX - thickness, midY, minZ, maxX, midY, maxZ, r, g, b, alpha);
+            renderBox(matrix, buffer, minX, midY, minZ, maxX, midY, minZ + thickness, r, g, b, alpha);
+            renderBox(matrix, buffer, minX, midY, maxZ - thickness, maxX, midY, maxZ, r, g, b, alpha);
         }
     }
 
