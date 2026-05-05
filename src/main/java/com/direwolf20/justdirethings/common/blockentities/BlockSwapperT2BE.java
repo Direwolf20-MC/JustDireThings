@@ -4,6 +4,7 @@ import com.direwolf20.justdirethings.common.blockentities.basebe.*;
 import com.direwolf20.justdirethings.common.capabilities.MachineEnergyStorage;
 import com.direwolf20.justdirethings.common.containers.handlers.FilterBasicHandler;
 import com.direwolf20.justdirethings.setup.JDTRegistration;
+import com.direwolf20.justdirethings.util.UsefulFakePlayer;
 import com.direwolf20.justdirethings.util.interfacehelpers.AreaAffectingData;
 import com.direwolf20.justdirethings.util.interfacehelpers.FilterData;
 import net.minecraft.core.BlockPos;
@@ -71,9 +72,9 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
     }
 
     public void setAreaOnly(double x, double y, double z) {
-        getAreaAffectingData().xRadius = Math.max(0, Math.min(x, maxRadius));
-        getAreaAffectingData().yRadius = Math.max(0, Math.min(y, maxRadius));
-        getAreaAffectingData().zRadius = Math.max(0, Math.min(z, maxRadius));
+        getAreaAffectingData().xRadius = Math.clamp(x, 0, maxRadius);
+        getAreaAffectingData().yRadius = Math.clamp(y, 0, maxRadius);
+        getAreaAffectingData().zRadius = Math.clamp(z, 0, maxRadius);
         getAreaAffectingData().area = null;
         if (getBlockEntity() instanceof BaseMachineBE baseMachineBE)
             baseMachineBE.markDirtyClient();
@@ -147,7 +148,7 @@ public class BlockSwapperT2BE extends BlockSwapperT1BE implements PoweredMachine
             return false;
         BlockState blockState = serverLevel.getBlockState(blockPos);
         if (blockState.isAir()) return true; //Don't need to filter AIR either way
-        ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, serverLevel, false, null);
+        ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, serverLevel, false, getUsefulFakePlayer(serverLevel));
         return isStackValidFilter(blockItemStack);
     }
 
