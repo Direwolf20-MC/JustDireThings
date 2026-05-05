@@ -1,3 +1,13 @@
+## [1.6.10]
+
+### Changed
+* Updated to 26.1 (a few versions ago)
+
+### Fixed
+* Use a Fake player when calling `getCloneItemStack` to prevent null issues.
+* Mob detection issues
+* Render issues
+
 ## [1.5.7]
 
 ### Added
