@@ -53,12 +53,13 @@ public class EventKeyInput {
                     && KeyModifier.getActiveModifier() == KeyModifier.NONE) || keyMapping.getKeyModifier() != KeyModifier.NONE)) {
                 mc.setScreen(new AdvPortalRadialMenu(portalGun));
             }
-        }
+        }else {
 
-        ItemStack toggleableItem = ToggleableItem.getToggleableItem(mc.player);
-        if (!toggleableItem.isEmpty()) {
-            if (KeyBindings.toggleTool.consumeClick()) {
-                PacketDistributor.sendToServer(new ToggleToolPayload("enabled"));
+            ItemStack toggleableItem = ToggleableItem.getToggleableItem(mc.player);
+            if (!toggleableItem.isEmpty()) {
+                if (KeyBindings.toggleTool.consumeClick()) {
+                    PacketDistributor.sendToServer(new ToggleToolPayload("enabled"));
+                }
             }
         }
     }
