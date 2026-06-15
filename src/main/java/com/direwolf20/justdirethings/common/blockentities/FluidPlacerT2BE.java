@@ -93,7 +93,7 @@ public class FluidPlacerT2BE extends FluidPlacerT1BE implements PoweredMachineBE
     public boolean isBlockPosValid(BlockPos blockPos, FakePlayer fakePlayer) {
         if (!super.isBlockPosValid(blockPos, fakePlayer))
             return false; //Do the same checks as normal, then check the filters
-        ItemStack blockItemStack = level.getBlockState(blockPos.relative(getDirectionValue())).getCloneItemStack(blockPos, level, false, null);
+        ItemStack blockItemStack = level.getBlockState(blockPos.relative(getDirectionValue())).getCloneItemStack(blockPos, level, false, fakePlayer);
         return isStackValidFilter(blockItemStack);
     }
 }

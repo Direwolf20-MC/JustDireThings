@@ -13,3 +13,7 @@
 !/settings.gradle
 !/src/
 !/CHANGELOG.md
+
+# macOS kipple
+.DS_Store
+

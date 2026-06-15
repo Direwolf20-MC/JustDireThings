@@ -374,7 +374,7 @@ public class EnergyTransmitterBE extends BaseMachineBE implements RedstoneContro
                     if (!foundAcceptableSide)
                         return;
 
-                    ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, level, false, null);
+                    ItemStack blockItemStack = blockState.getCloneItemStack(blockPos, level, false, getUsefulFakePlayer((ServerLevel) level));
                     if (!isStackValidFilter(blockItemStack)) return;
 
                     if (blockState.getBlock() instanceof EnergyTransmitter)
