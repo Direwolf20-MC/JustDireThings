@@ -1,3 +1,8 @@
+## [1.6.11]
+
+### Fixed
+* Fixed missing fake player when calling `getCloneItemStack` to prevent null issues, thanks to [@SubordinalBlue](https://github.com/SubordinalBlue)
+
 ## [1.6.10]
 
 ### Changed
