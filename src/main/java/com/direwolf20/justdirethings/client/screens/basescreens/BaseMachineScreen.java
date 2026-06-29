@@ -259,35 +259,69 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, relX, relY + 83 - 8, this.imageWidth, this.imageHeight - 73); //Inventory Section
     }
 
-    @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
-        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+    public void extractTitleSprite(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, topSectionLeft + 20, topSectionTop - 20,
+                topSectionWidth - 40, 20);
+    }
+
+    public void extractMachineSprite(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, topSectionLeft, topSectionTop,
+                topSectionWidth, topSectionHeight);
+    }
+
+    public void extractInventorySprite(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, topSectionLeft + 20, topSectionTop - 20, topSectionWidth - 40, 20);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SOCIALBACKGROUND, topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight);
+
         renderInventorySection(graphics, relX, relY);
         for (Slot slot : container.slots) {
             drawSlot(graphics, slot);
         }
+
+    }
+
+    public void extractPowerBarSprite(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
-            graphics.blit(RenderPipelines.GUI_TEXTURED, POWERBAR, topSectionLeft + getEnergyBarOffset(), topSectionTop + 5, 0.0F, 0.0F, 18, 72, 36, 72);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, POWERBAR, topSectionLeft + getEnergyBarOffset(),
+                    topSectionTop + 5, 0.0F, 0.0F, 18, 72, 36, 72);
             int maxEnergy = poweredMachineBE.getMaxEnergy(), height = 70;
             if (maxEnergy > 0) {
                 int remaining = (this.container.getEnergy() * height) / maxEnergy;
-                graphics.blit(RenderPipelines.GUI_TEXTURED, POWERBAR, topSectionLeft + getEnergyBarOffset() + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - remaining, 19.0F, 69.0F - remaining, 17, remaining + 1, 36, 72);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, POWERBAR, topSectionLeft + getEnergyBarOffset() + 1,
+                        topSectionTop + getEnergyBarOffset() + 72 - 2 - remaining, 19.0F, 69.0F - remaining, 17,
+                        remaining + 1, 36, 72);
             }
         }
+    }
+
+    public void extractFluidTankSprite(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
             int offset = getFluidBarOffset();
-            graphics.blit(RenderPipelines.GUI_TEXTURED, FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 0.0F, 0.0F, 18, 72, 36, 72);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 0.0F,
+                    0.0F, 18, 72, 36, 72);
             int maxMB = fluidMachineBE.getMaxMB(), height = 70;
             if (maxMB > 0) {
                 int remaining = (this.container.getFluidAmount() * height) / maxMB;
                 renderFluid(graphics, topSectionLeft + offset + 1, topSectionTop + 5 + 72 - 1, 16, remaining);
             }
-            graphics.blit(RenderPipelines.GUI_TEXTURED, FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 18.0F, 0.0F, 18, 72, 36, 72);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 18.0F,
+                    0.0F, 18, 72, 36, 72);
         }
+    }
+
+    @Override
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTicks);
+
+        extractTitleSprite(graphics, mouseX, mouseY, partialTicks);
+        extractMachineSprite(graphics, mouseX, mouseY, partialTicks);
+
+        extractInventorySprite(graphics, mouseX, mouseY, partialTicks);
+
+        extractPowerBarSprite(graphics, mouseX, mouseY, partialTicks);
+
+        extractFluidTankSprite(graphics, mouseX, mouseY, partialTicks);
+
         if (renderablesChanged)
             updateRenderables();
     }
