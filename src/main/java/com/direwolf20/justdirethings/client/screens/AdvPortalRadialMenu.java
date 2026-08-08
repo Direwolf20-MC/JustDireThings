@@ -20,6 +20,7 @@ import com.direwolf20.justdirethings.util.NBTHelpers;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.logging.LogUtils;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -32,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Matrix4f;
+import org.slf4j.Logger;
 
 import java.awt.*;
 
@@ -212,28 +214,52 @@ public class AdvPortalRadialMenu extends Screen {
     }
 
     @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int mouseButton) {
+        InputConstants.Key mouseKey = InputConstants.Type.MOUSE.getOrCreate(mouseButton);
+        if(!staysOpen && KeyBindings.toggleTool.getKey().equals(mouseKey)){
+            onClose();
+            return true;
+        }
+
+        return super.mouseReleased(mouseX, mouseY, mouseButton);
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (isInRange(mouseX, mouseY))
+        InputConstants.Key mouseKey = InputConstants.Type.MOUSE.getOrCreate(mouseButton);
+        if(staysOpen && KeyBindings.toggleTool.isActiveAndMatches(mouseKey)){
+            onClose();
+            return true;
+        }
+
+        if (isInRange(mouseX, mouseY) && mouseButton == 0)
             saveFavorite();
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        if (staysOpen && (p_keyPressed_1_ == 256 || p_keyPressed_1_ == KeyBindings.toggleTool.getKey().getValue())) {
+    public boolean keyPressed(int code, int scanCode, int modifiers) {
+        if (staysOpen && (code == 256 || KeyBindings.toggleTool.isActiveAndMatches(InputConstants.getKey(code, scanCode)))) {
             onClose();
             return true;
         }
 
-        return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+        return super.keyPressed(code, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int code, int scanCode, int modifiers) {
+        InputConstants.Key key = InputConstants.getKey(code, scanCode);
+        if (!staysOpen && (KeyBindings.toggleTool.getKey().equals(key) || KeyBindings.toggleTool.getKeyModifier().matches(key))) {
+            onClose();
+            return true;
+        }
+
+        return super.keyReleased(code, scanCode, modifiers);
     }
 
     @Override
     public void tick() {
-        if (!staysOpen && !InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), KeyBindings.toggleTool.getKey().getValue())) {
-            onClose();
-        }
-
         this.timeIn++;
     }
 
