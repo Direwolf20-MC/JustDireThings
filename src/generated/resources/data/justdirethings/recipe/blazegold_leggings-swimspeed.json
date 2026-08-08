@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_swimspeed",
+  "base": "justdirethings:blazegold_leggings"
+}

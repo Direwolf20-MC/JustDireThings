@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": "justdirethings:upgrade_blank",
+    "e": "minecraft:blaze_rod",
+    "f": "minecraft:blast_furnace"
+  },
+  "pattern": [
+    " e ",
+    "fbf",
+    " e "
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_smelter"
+  }
+}

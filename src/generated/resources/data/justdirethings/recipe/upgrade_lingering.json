@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": "justdirethings:upgrade_blank",
+    "g": "minecraft:glass_bottle",
+    "p": "minecraft:dragon_breath"
+  },
+  "pattern": [
+    "p p",
+    "gbg",
+    "p p"
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_lingering"
+  }
+}

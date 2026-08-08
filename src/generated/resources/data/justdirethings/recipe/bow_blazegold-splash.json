@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_splash",
+  "base": "justdirethings:bow_blazegold"
+}

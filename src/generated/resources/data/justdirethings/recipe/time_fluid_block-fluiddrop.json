@@ -1,0 +1,16 @@
+{
+  "type": "justdirethings:fluiddrop",
+  "catalyst": "justdirethings:time_crystal",
+  "input": {
+    "id": "justdirethings:polymorphic_fluid_block",
+    "properties": {
+      "level": "0"
+    }
+  },
+  "output": {
+    "id": "justdirethings:time_fluid_block",
+    "properties": {
+      "level": "0"
+    }
+  }
+}

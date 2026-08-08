@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "c": "minecraft:coal",
+    "i": "justdirethings:ferricore_ingot"
+  },
+  "pattern": [
+    " i ",
+    "ici",
+    " i "
+  ],
+  "result": {
+    "id": "justdirethings:fuel_canister"
+  }
+}

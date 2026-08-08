@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": "minecraft:magma_cream",
+    "b": "justdirethings:upgrade_blank",
+    "e": "minecraft:blaze_rod",
+    "f": "minecraft:water_bucket"
+  },
+  "pattern": [
+    "aea",
+    "fbf",
+    "aea"
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_extinguish"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "justdirethings:eclipsealloy_ingot",
+  "base": "justdirethings:celestigem_hoe",
+  "result": {
+    "id": "justdirethings:eclipsealloy_hoe"
+  },
+  "template": "justdirethings:template_eclipsealloy"
+}

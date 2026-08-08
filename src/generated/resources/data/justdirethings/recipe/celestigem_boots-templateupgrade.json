@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "justdirethings:celestigem",
+  "base": "justdirethings:blazegold_boots",
+  "result": {
+    "id": "justdirethings:celestigem_boots"
+  },
+  "template": "justdirethings:template_celestigem"
+}

@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_walkspeed",
+  "base": "justdirethings:celestigem_leggings"
+}

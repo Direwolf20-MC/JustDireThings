@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "justdirethings:blazegold_ingot",
+  "base": "justdirethings:bow_ferricore",
+  "result": {
+    "id": "justdirethings:bow_blazegold"
+  },
+  "template": "justdirethings:template_blazegold"
+}

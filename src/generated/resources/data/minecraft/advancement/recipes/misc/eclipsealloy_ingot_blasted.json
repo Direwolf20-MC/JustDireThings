@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_eclipsealloy_raw": {
+      "conditions": {
+        "items": [
+          {
+            "items": "justdirethings:raw_eclipsealloy"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:eclipsealloy_ingot_blasted"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_eclipsealloy_raw"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:eclipsealloy_ingot_blasted"
+    ]
+  }
+}

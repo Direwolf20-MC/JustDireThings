@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "c": "minecraft:chorus_fruit",
+    "l": "minecraft:lapis_lazuli"
+  },
+  "pattern": [
+    " c ",
+    "clc",
+    " c "
+  ],
+  "result": {
+    "id": "justdirethings:portal_fluid_catalyst"
+  }
+}

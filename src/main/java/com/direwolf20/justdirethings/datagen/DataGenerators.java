@@ -16,12 +16,16 @@ import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = JustDireThings.MODID)
 public class DataGenerators {
-
     @SubscribeEvent
-    public static void gatherServerData(GatherDataEvent.Server event) {
+    public static void gatherClientData(GatherDataEvent.Client event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+
+        generator.addProvider(true, new JustDireModels(packOutput));
+        generator.addProvider(true, new JustDireEquipmentAssets(packOutput));
+        generator.addProvider(true, new JustDireLanguageProvider(packOutput, "en_us"));
+        generator.addProvider(true, new JustDireSounds(packOutput));
 
         generator.addProvider(true, new JustDireRecipes.Runner(packOutput, lookupProvider));
         generator.addProvider(true, new LootTableProvider(packOutput, Collections.emptySet(),
@@ -32,16 +36,5 @@ public class DataGenerators {
         generator.addProvider(true, new JustDireEntityTags(packOutput, lookupProvider));
         generator.addProvider(true, new JustDireBiomeTags(packOutput, lookupProvider));
         generator.addProvider(true, new JustDireDataMaps(packOutput, lookupProvider));
-    }
-
-    @SubscribeEvent
-    public static void gatherClientData(GatherDataEvent.Client event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
-
-        generator.addProvider(true, new JustDireModels(packOutput));
-        generator.addProvider(true, new JustDireEquipmentAssets(packOutput));
-        generator.addProvider(true, new JustDireLanguageProvider(packOutput, "en_us"));
-        generator.addProvider(true, new JustDireSounds(packOutput));
     }
 }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "c": "minecraft:clay_ball",
+    "d": "minecraft:dirt",
+    "f": "minecraft:rotten_flesh",
+    "s": "minecraft:sugar"
+  },
+  "pattern": [
+    "csc",
+    "fdf",
+    "csc"
+  ],
+  "result": {
+    "id": "justdirethings:gooblock_tier1"
+  }
+}

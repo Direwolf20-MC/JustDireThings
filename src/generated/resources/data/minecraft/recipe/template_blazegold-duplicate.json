@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "justdirethings:template_blazegold",
+    "justdirethings:blazegold_ingot",
+    "justdirethings:blazegold_ingot"
+  ],
+  "result": {
+    "count": 2,
+    "id": "justdirethings:template_blazegold"
+  }
+}

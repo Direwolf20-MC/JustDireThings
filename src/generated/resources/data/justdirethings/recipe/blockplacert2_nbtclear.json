@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "justdirethings",
+  "ingredients": [
+    "justdirethings:blockplacert2"
+  ],
+  "result": {
+    "id": "justdirethings:blockplacert2"
+  }
+}

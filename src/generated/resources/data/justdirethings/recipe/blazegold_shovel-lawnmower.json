@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_lawnmower",
+  "base": "justdirethings:blazegold_shovel"
+}

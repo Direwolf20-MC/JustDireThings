@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": "justdirethings:upgrade_blank",
+    "f": "#minecraft:leaves"
+  },
+  "pattern": [
+    "   ",
+    "fbf",
+    "   "
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_leafbreaker"
+  }
+}

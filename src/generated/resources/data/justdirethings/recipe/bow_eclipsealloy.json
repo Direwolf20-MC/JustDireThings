@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "justdirethings",
+  "key": {
+    "f": "justdirethings:eclipsealloy_ingot",
+    "s": "minecraft:string"
+  },
+  "pattern": [
+    "sf ",
+    "s f",
+    "sf "
+  ],
+  "result": {
+    "id": "justdirethings:bow_eclipsealloy"
+  }
+}

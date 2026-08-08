@@ -1,0 +1,5 @@
+{
+  "type": "justdirethings:ability",
+  "addition": "justdirethings:upgrade_hammer",
+  "base": "justdirethings:celestigem_pickaxe"
+}

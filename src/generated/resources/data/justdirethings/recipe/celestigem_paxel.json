@@ -1,0 +1,9 @@
+{
+  "type": "justdirethings:paxel",
+  "addition": "justdirethings:celestigem_shovel",
+  "base": "justdirethings:celestigem_axe",
+  "result": {
+    "id": "justdirethings:celestigem_paxel"
+  },
+  "template": "justdirethings:celestigem_pickaxe"
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "justdirethings:time_wand"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_time_crystal": {
+      "conditions": {
+        "items": [
+          {
+            "items": "justdirethings:time_crystal"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_time_crystal"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "justdirethings:time_wand"
+    ]
+  }
+}

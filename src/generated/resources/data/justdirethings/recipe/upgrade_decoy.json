@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": "minecraft:phantom_membrane",
+    "b": "justdirethings:upgrade_blank",
+    "e": "minecraft:wither_skeleton_skull",
+    "f": "minecraft:armor_stand"
+  },
+  "pattern": [
+    "aea",
+    "fbf",
+    "aea"
+  ],
+  "result": {
+    "id": "justdirethings:upgrade_decoy"
+  }
+}

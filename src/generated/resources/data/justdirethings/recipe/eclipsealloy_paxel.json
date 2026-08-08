@@ -1,0 +1,9 @@
+{
+  "type": "justdirethings:paxel",
+  "addition": "justdirethings:eclipsealloy_shovel",
+  "base": "justdirethings:eclipsealloy_axe",
+  "result": {
+    "id": "justdirethings:eclipsealloy_paxel"
+  },
+  "template": "justdirethings:eclipsealloy_pickaxe"
+}
