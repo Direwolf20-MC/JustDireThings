@@ -32,6 +32,7 @@ import net.neoforged.neoforge.common.util.BlockSnapshot;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 import java.util.Map;
@@ -175,10 +176,10 @@ public class BaseMachineBE extends BlockEntity implements Clearable {
 
     @Override
     public void clearContent() {
-        ItemStackHandler machineHandler = getMachineHandler();
+        ItemStacksResourceHandler machineHandler = getMachineHandler();
 
-        for (int i = 0; i < machineHandler.getSlots(); i++) {
-            machineHandler.setStackInSlot(i, ItemStack.EMPTY);
+        for (int i = 0; i < machineHandler.size(); i++) {
+            machineHandler.set(i, ItemResource.EMPTY, 1);
         }
     }
     
