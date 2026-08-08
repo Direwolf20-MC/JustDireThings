@@ -269,36 +269,60 @@ public abstract class BaseMachineScreen<T extends BaseMachineContainer> extends 
         guiGraphics.blitSprite(SOCIALBACKGROUND, relX, relY + 83 - 8, this.imageWidth, this.imageHeight - 73); //Inventory Section
     }
 
+    public void renderTitleSprite(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        graphics.blitSprite(SOCIALBACKGROUND, topSectionLeft + 20, topSectionTop - 20, topSectionWidth - 40, 20);
+    }
+
+    public void renderMachineSprite(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        graphics.blitSprite(SOCIALBACKGROUND, topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight);
+    }
+
+    public void renderPowerBar(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        if (!(baseMachineBE instanceof PoweredMachineBE poweredMachineBE)) {
+            return;
+        }
+
+        graphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset(), topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+        int maxEnergy = poweredMachineBE.getMaxEnergy(), height = 70;
+        if (maxEnergy > 0) {
+            int remaining = (this.container.getEnergy() * height) / maxEnergy;
+            graphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset() + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
+        }
+    }
+
+    public void renderFluidTank(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+        if (!(baseMachineBE instanceof FluidMachineBE fluidMachineBE)) {
+            return;
+        }
+
+        int offset = getFluidBarOffset();
+        graphics.blit(FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
+        int maxMB = fluidMachineBE.getMaxMB(), height = 70;
+        if (maxMB > 0) {
+            int remaining = (this.container.getFluidAmount() * height) / maxMB;
+            renderFluid(graphics, topSectionLeft + offset + 1, topSectionTop + 5 + 72 - 1, 16, remaining);
+        }
+        graphics.blit(FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 18, 0, 18, 72, 36, 72);
+    }
+
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         int relX = (this.width - this.imageWidth) / 2;
         int relY = (this.height - this.imageHeight) / 2;
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        guiGraphics.blitSprite(SOCIALBACKGROUND, topSectionLeft + 20, topSectionTop - 20, topSectionWidth - 40, 20);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        guiGraphics.blitSprite(SOCIALBACKGROUND, topSectionLeft, topSectionTop, topSectionWidth, topSectionHeight);
+
+        renderTitleSprite(guiGraphics, mouseX, mouseY, partialTicks);
+        renderMachineSprite(guiGraphics, mouseX, mouseY, partialTicks);
+
         renderInventorySection(guiGraphics, relX, relY);
         for (Slot slot : container.slots) {
             drawSlot(guiGraphics, slot);
         }
-        if (baseMachineBE instanceof PoweredMachineBE poweredMachineBE) {
-            guiGraphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset(), topSectionTop + 5, 0, 0, 18, 72, 36, 72);
-            int maxEnergy = poweredMachineBE.getMaxEnergy(), height = 70;
-            if (maxEnergy > 0) {
-                int remaining = (this.container.getEnergy() * height) / maxEnergy;
-                guiGraphics.blit(POWERBAR, topSectionLeft + getEnergyBarOffset() + 1, topSectionTop + getEnergyBarOffset() + 72 - 2 - remaining, 19, 69 - remaining, 17, remaining + 1, 36, 72);
-            }
-        }
-        if (baseMachineBE instanceof FluidMachineBE fluidMachineBE) {
-            int offset = getFluidBarOffset();
-            guiGraphics.blit(FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 0, 0, 18, 72, 36, 72);
-            int maxMB = fluidMachineBE.getMaxMB(), height = 70;
-            if (maxMB > 0) {
-                int remaining = (this.container.getFluidAmount() * height) / maxMB;
-                renderFluid(guiGraphics, topSectionLeft + offset + 1, topSectionTop + 5 + 72 - 1, 16, remaining);
-            }
-            guiGraphics.blit(FLUIDBAR, topSectionLeft + offset, topSectionTop + 5, 18, 0, 18, 72, 36, 72);
-        }
+
+        renderPowerBar(guiGraphics, mouseX, mouseY, partialTicks);
+        renderFluidTank(guiGraphics, mouseX, mouseY, partialTicks);
+
         if (renderablesChanged)
             updateRenderables();
     }
