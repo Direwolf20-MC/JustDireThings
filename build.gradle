@@ -4,7 +4,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.moddev' version '2.0.141'
-    id "me.modmuss50.mod-publish-plugin" version "1.1.0"
+    id "me.modmuss50.mod-publish-plugin" version "2.1.1"
 }
 
 tasks.named('wrapper', Wrapper).configure {
@@ -97,20 +97,11 @@ neoForge {
             type = "gameTestServer"
         }
 
-        clientData {
+        data {
             clientData()
             programArguments.addAll '--mod', project.mod_id, '--all',
-                    '--output', file('src/generated-client/resources/').getAbsolutePath(),
-                    '--existing', file('src/main/resources/').getAbsolutePath(),
-                    '--existing', file('src/generated-data/resources/').getAbsolutePath()
-        }
-
-        serverData {
-            serverData()
-            programArguments.addAll '--mod', project.mod_id, '--all',
-                    '--output', file('src/generated-data/resources/').getAbsolutePath(),
-                    '--existing', file('src/main/resources/').getAbsolutePath(),
-                    '--existing', file('src/generated-client/resources/').getAbsolutePath()
+                    '--output', file('src/generated/resources/').getAbsolutePath(),
+                    '--existing', file('src/main/resources/').getAbsolutePath()
         }
     }
 
@@ -122,8 +113,7 @@ neoForge {
 }
 
 sourceSets.main.resources {
-    srcDir 'src/generated-client/resources'
-    srcDir 'src/generated-data/resources'
+    srcDir 'src/generated/resources'
 }
 
 configurations {
@@ -194,6 +184,8 @@ publishMods {
         modLoaders.add("neoforge")
         minecraftVersions.add("${minecraft_version}")
         javaVersions.add(JavaVersion.VERSION_25)
+        client = true
+        server = true
     }
 }
 
