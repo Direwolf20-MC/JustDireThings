@@ -424,6 +424,11 @@ public class FakePlayerUtil {
                 } else if (action == InteractionType.ATTACK) {
                     if (entity instanceof ItemEntity || entity instanceof ExperienceOrb || entity instanceof Arrow || entity == player)
                         return false;
+                    // The fake player is teleported into place rather than ticked, so onGround/fallDistance
+                    // never get set by normal physics. Sweeping Edge and critical hits both key off these,
+                    // so force grounded-and-not-falling here or they can never trigger.
+                    player.setOnGround(true);
+                    player.fallDistance = 0;
                     player.attack(entity);
                     return true;
                 }
