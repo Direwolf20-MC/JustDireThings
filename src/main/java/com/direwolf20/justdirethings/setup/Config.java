@@ -135,7 +135,7 @@ public class Config {
         playerAccessorConfig();
         timeCrystalConfig();
         SERVER_CONFIG = SERVER_BUILDER.build();
-        container.registerConfig(ModConfig.Type.SERVER, SERVER_BUILDER.build());
+        container.registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG);
     }
 
     private static void overlayConfig() {
