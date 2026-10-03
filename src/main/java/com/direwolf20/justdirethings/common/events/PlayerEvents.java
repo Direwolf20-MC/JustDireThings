@@ -7,6 +7,7 @@ import com.direwolf20.justdirethings.common.items.interfaces.Ability;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredItem;
 import com.direwolf20.justdirethings.common.items.interfaces.PoweredTool;
 import com.direwolf20.justdirethings.common.items.interfaces.ToggleableTool;
+import com.direwolf20.justdirethings.setup.Config;
 import com.direwolf20.justdirethings.setup.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -52,6 +53,9 @@ public class PlayerEvents {
 
     @SubscribeEvent
     public static void ItemAttributes(ItemAttributeModifierEvent event) {
+        if (!Config.SERVER_CONFIG.isLoaded())
+            return;
+
         ItemStack itemStack = event.getItemStack();
         if (itemStack.getItem() instanceof ToggleableTool toggleableTool) {
             if (toggleableTool.canUseAbility(itemStack, Ability.STEPHEIGHT))
