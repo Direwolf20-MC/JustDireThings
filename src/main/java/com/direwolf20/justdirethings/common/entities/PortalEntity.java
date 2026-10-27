@@ -524,7 +524,8 @@ public class PortalEntity extends Entity {
     }
 
     public boolean isSameLevel() {
-        return level().equals(getLinkedPortal().level());
+        PortalEntity partner = getLinkedPortal();
+        return partner != null && level().equals(partner.level());
     }
 
     // Helper method to transform the motion vector based on entry and exit directions
