@@ -17,6 +17,9 @@ public class ToolSettingsGUIPacket {
     public void handle(final ToolSettingsGUIPayload payload, final IPayloadContext context) {
         context.enqueueWork(() -> {
             Player sender = context.player();
+            if (sender.getMainHandItem().isEmpty()) {
+                return;
+            }
             sender.openMenu(new SimpleMenuProvider(
                     (windowId, playerInventory, playerEntity) -> new ToolSettingContainer(windowId, playerInventory, sender), Component.translatable("")));
 
